@@ -22,7 +22,7 @@ O objetivo é permitir correções graduais sem quebrar Dataview, DataCards, est
 |:--|:--|:--|:--|
 | Vezemir | [[Vezemir]] | `role: player`, tags `player` e `character` | Localização do frontmatter difere da localização descrita no corpo. |
 | Varkh Nimalis | [[Varkh Nimalis]] | `role: player`, tags `player` e `character` | `territory` aponta para uma nota inexistente; valores relacionados a lugar não seguem o mesmo formato. |
-| Raziel | [[Raziel]] | `role: player`, tags `player` e `character` | Classificação corrigida; conteúdo e conexões com a campanha ainda precisam ser desenvolvidos. |
+| Raziel | [[Raziel]] | `role: player`, tags `player` e `character` | Estrutura editorial consolidada; personalidade e conexão com o grupo aguardam decisões do jogador. |
 
 Essa tabela registra o estado encontrado. Ela não autoriza correções automáticas.
 
