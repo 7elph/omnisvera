@@ -3,8 +3,7 @@ NoteIcon: character
 tags:
   - Category/Character
   - character
-  - npc
-  - antagonist
+  - player
   - vampire
 thumbnail: zz_media/th_raziel.PNG
 status: Vivo
@@ -13,6 +12,7 @@ territory: "[[FORTALEZA DE GHAROK]]"
 faction: "Clã Sanguinallis"
 class: Executor / Hemomante
 race: Vampiro (Sanguinallis)
+role: player
 ---
 
 # RAZIEL — O ESPECTRO DA NÉVOA DE SANGUE

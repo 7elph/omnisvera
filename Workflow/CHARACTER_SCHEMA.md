@@ -22,7 +22,7 @@ O objetivo é permitir correções graduais sem quebrar Dataview, DataCards, est
 |:--|:--|:--|:--|
 | Vezemir | [[Vezemir]] | `role: player`, tags `player` e `character` | Localização do frontmatter difere da localização descrita no corpo. |
 | Varkh Nimalis | [[Varkh Nimalis]] | tag `pc`, sem propriedade `role` | `territory` aponta para uma nota inexistente; valores relacionados a lugar não seguem o mesmo formato. |
-| Raziel | [[Raziel]] | tags `npc` e `antagonist`, sem propriedade `role` | A classificação não expressa claramente seu lugar no núcleo de três personagens. |
+| Raziel | [[Raziel]] | `role: player`, tags `player` e `character` | Classificação corrigida; conteúdo e conexões com a campanha ainda precisam ser desenvolvidos. |
 
 Essa tabela registra o estado encontrado. Ela não autoriza correções automáticas.
 
@@ -97,14 +97,14 @@ Os arquivos atuais misturam:
 - `antagonist`;
 - descrições livres em `role`.
 
-Antes de consolidar os três personagens, o autor deve definir se `role` representará:
+Para os três protagonistas, `role` representa o controle na mesa:
 
-1. controle na mesa: `player` ou `npc`;
-2. função dramática: protagonista, aliado, antagonista;
-3. profissão ou título narrativo;
-4. uma combinação desses conceitos em propriedades separadas.
+- `player`: personagem de jogador;
+- `npc`: personagem controlado pelo mestre.
 
-Até essa decisão, nenhuma tag de Vezemir, Varkh ou Raziel deve ser removida por normalização.
+Função dramática, profissão e título não devem substituir `role`. Esses conceitos podem continuar no texto, nas tags existentes ou ganhar propriedades separadas quando isso for deliberadamente definido.
+
+Vezemir, Varkh e Raziel são personagens de jogador. A ficha de Varkh ainda precisa receber `role: player` em uma edição isolada.
 
 ## Processo de migração de uma página
 

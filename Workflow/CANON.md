@@ -36,7 +36,7 @@ Quando uma nota entrar em conflito com este arquivo, o conflito deve ser apontad
 
 ### Núcleo de personagens
 
-Existem três personagens centrais nesta campanha:
+Existem três personagens de jogador nesta campanha:
 
 1. [[Vezemir]]
 2. [[Varkh Nimalis]]
@@ -101,6 +101,7 @@ Earthropo vive uma estabilidade aparente. Coroa, religião, comércio e forças 
 ### Raziel
 
 - Conhecido como **O Espectro da Névoa de Sangue**.
+- É um personagem de jogador e um dos três protagonistas da campanha.
 - É um vampiro ligado ao Clã Sanguinallis.
 - Utiliza hemomancia e as Adagas de Espectro Fantasma.
 - Foi traído e aprisionado por aproximadamente trezentos anos.
@@ -132,7 +133,6 @@ Estas questões não devem ser resolvidas por inferência:
 | Calendário | A nota `CALENDAR.md` e a configuração do Calendarium usam nomes diferentes. |
 | Monarca | Augustus Terra Decimus e Alaric Valdris aparecem como governantes. |
 | Religião dominante | Igreja das Chamas e Igreja das Sete Chamas aparecem como nomes concorrentes. |
-| Papel de Raziel | Sua nota o marca como NPC/antagonista, mas ele faz parte do núcleo de três personagens. |
 | Geografia | Algumas regiões ainda usam nomes ou relações herdadas de versões anteriores. |
 | Primeiro capítulo | O arquivo atual ainda contém a trama e a data de Disgraceland. |
 
