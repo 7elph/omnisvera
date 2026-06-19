@@ -129,4 +129,3 @@ Ao converter uma página de Disgraceland:
 - verificar imagens e thumbnails;
 - remover referências semânticas a Disgraceland da nova cópia;
 - manter o arquivo-fonte disponível enquanto o novo template não tiver sido validado.
-

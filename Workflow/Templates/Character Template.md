@@ -23,20 +23,33 @@ tags:
 
 ## Visão Geral
 
-**Nome:**  
-**Título:**  
-**Apelido:**  
-**Reputação:**  
-**Classe:**  
-**Raça:**  
-**Idade:**  
-**Status:**  
-**Localização:**  
-**Território:**  
-**Facção:**  
-**Religião:**  
-**Associados:**  
-**Inimigos:**  
+**Nome:**
+
+**Título:**
+
+**Apelido:**
+
+**Reputação:**
+
+**Classe:**
+
+**Raça:**
+
+**Idade:**
+
+**Status:**
+
+**Localização:**
+
+**Território:**
+
+**Facção:**
+
+**Religião:**
+
+**Associados:**
+
+**Inimigos:**
 
 ---
 
@@ -48,15 +61,15 @@ Escrever a origem, o acontecimento transformador e a situação atual do persona
 
 ## Personalidade
 
-**Temperamento:**  
+**Temperamento:**
 
-**Virtudes:**  
+**Virtudes:**
 
-**Defeitos:**  
+**Defeitos:**
 
-**Medos:**  
+**Medos:**
 
-**Crenças:**  
+**Crenças:**
 
 ---
 
@@ -68,13 +81,13 @@ Descrever habilidades importantes para a narrativa e, quando necessário, para o
 
 ## Segredos
 
-- 
+- _Adicionar segredo._
 
 ---
 
 ## Equipamentos
 
-- 
+- _Adicionar equipamento._
 
 ---
 
