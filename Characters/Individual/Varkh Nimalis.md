@@ -1,15 +1,18 @@
 ---
+obsidianUIMode: preview
 NoteIcon: character
+NoteStatus: Draft
 tags:
   - Category/Character
   - character
   - player
   - rogue
   - alchemist
+  - chapter00_varkh
 thumbnail: zz_media/th_varkh.PNG
 status: Vivo
-location: "Nimalia"
-territory: "[[REINO DE NIMALIA]]"
+location: "[[Maré Baixa]]"
+territory: "[[Nimalia]]"
 faction: "[[Guilda dos Mercadores]]"
 class: Ladrão/Alquimista
 race: Kenku
@@ -21,22 +24,39 @@ role: player
 > [!NOTE|clean no-i right]+ Varkh Nimalis
 > ![[varkh.jpeg|400]]
 
-**Name:** Varkh Nimalis  
-**Title:** O Corvo da Maré Baixa  
-**Class:** Ladrão / Alquimista  
-**Race:** Kenku (Corvo)  
-**Age:** ~24 anos  
-**Status:** Vivo  
-**Faction:** [[Guilda dos Mercadores]] (informal)  
-**Location:** [[Territories/REINO DE NIMALIA|Nimalia]] — Maré Baixa
+## Visão Geral
+
+**Nome:** Varkh Nimalis
+
+**Título:** O Corvo da Maré Baixa
+
+**Classe:** Ladrão / Alquimista
+
+**Raça:** [[Kenku]]
+
+**Idade:** Aproximadamente 24 anos
+
+**Status:** Vivo
+
+**Origem:** [[Maré Baixa]], no sul de [[Nimalia]]
+
+**Afiliação:** [[Guilda dos Mercadores]], informal
+
+**Mentor:** Mestre Odran Veyl
+
+**Ofícios:** Alquimista de rua, ladrão, falsificador e possível assassino
+
+**Motivação atual:** Descobrir quem está usando o símbolo e os métodos de Odran para distribuir remédios falsos
+
+**Papel:** Personagem de jogador e um dos três protagonistas de Omnisvera
 
 ---
 
-<h5>História</h5>
+## História
 
 > <h4>"Alquimia não é transformar chumbo em ouro. É transformar problema em saída."</h4>
 
-Varkh Nimalis nasceu no extremo sul de Nimalia, em uma favela chamada **Maré Baixa** — um amontoado de passarelas de madeira, telhados remendados e negócios que ninguém registrava em papel.
+Varkh Nimalis nasceu no extremo sul de Nimalia, em uma favela chamada [[Maré Baixa]] — um amontoado de passarelas de madeira, telhados remendados e negócios que ninguém registrava em papel.
 
 Por ser Kenku, sua voz nunca era totalmente sua. Mas aprendeu que uma voz emprestada, usada na hora certa, podia abrir mais portas que uma chave.
 
@@ -48,13 +68,61 @@ Agora Varkh viaja porque alguém está usando o símbolo de Odran para vender re
 
 ---
 
-<h5>Aparência</h5>
+## O Frasco Afogado
+
+Varkh tentou roubar uma caixa da loja de Odran e encontrou apenas um bilhete que o convidava a aprender e a pagar por qualquer coisa quebrada trabalhando.
+
+O que começou como uma tentativa de roubo tornou-se aprendizado. Odran ensinou Varkh a limpar frascos, identificar ervas, distinguir remédios de venenos e transformar ingredientes baratos ou descartados em soluções úteis.
+
+Sua alquimia não nasceu em salões ricos. Ela foi construída com ervas do cais, álcool roubado, fungos de porão, carvão, óleo de peixe, ferrugem e vidro reaproveitado.
+
+Odran não era um homem santo, mas possuía princípios: não aceitava covardia, não permitia veneno em comida de criança e não entregava moradores de Maré Baixa à nobreza.
+
+## O Lado Assassino
+
+Odran percebeu que Varkh era leve, rápido, preciso e atento às rotas de fuga. Não o treinou para a crueldade, mas para sobreviver.
+
+Varkh aprendeu a usar adagas, espada curta e arco curto. Também transformou sua alquimia em ferramenta de combate, infiltração e fuga.
+
+Sua reputação tornou-se ambígua. Dependendo de quem conta a história, o corvo mascarado do sul de Nimalia é médico, ladrão, falsificador, protetor ou assassino de aluguel.
+
+A realidade é menos simples: Varkh aceita serviços. Às vezes rouba documentos, entrega frascos, assusta pessoas perigosas ou protege quem não pode pagar. Quando não encontra outra saída, sua lâmina fala por ele.
+
+## Situação Atual
+
+Remédios falsos começaram a circular por Nimalia usando o símbolo antigo de Odran. Pessoas compram cura e recebem veneno. Documentos surgem com assinaturas perfeitas demais. Guardas procuram por um “corvo alquimista”.
+
+Alguém conhece os métodos de seu mestre e está usando essa reputação para causar dano.
+
+Varkh deixou Maré Baixa para encontrar a origem das falsificações, proteger seu nome e descobrir o que Odran talvez tenha escondido. Ele não saiu em busca de heroísmo: quer respostas, bons ingredientes, dinheiro suficiente para continuar e uma forma de impedir que outros transformem cura em armadilha.
+
+## Personalidade
+
+**Temperamento:** Curioso, observador, pragmático e difícil de intimidar por muito tempo.
+
+**Humor:** Estranho e construído com vozes emprestadas. Pode responder usando a voz de um peixeiro furioso, de uma criança rindo ou de um guarda bêbado.
+
+**Virtudes:** Criatividade, lealdade a quem conquista sua confiança, precisão e disposição para proteger pessoas sem poder.
+
+**Defeitos:** Curiosidade invasiva, hábitos criminosos, desconfiança e tendência a transformar qualquer problema em oportunidade.
+
+**Afetos:** Guarda objetos inúteis porque os considera interessantes e demonstra carinho particular por coisas quebradas ou abandonadas.
+
+**Crenças:** Tudo possui algum valor; problemas podem ser transformados em saídas; existe honra mesmo entre ladrões, médicos e mentirosos.
+
+**Limites morais conhecidos:** Prefere incapacitar a matar e herdou de Odran a rejeição à crueldade covarde.
+
+**Medos:** A definir com o jogador.
+
+## Aparência
 
 Kenku corvo de porte médio. Penas negras com reflexos azulados. Olhos escuros e atentos. Usa um manto escuro de médico da peste com máscara de bico, frascos no cinto e um cachecol vermelho desbotado. Seu bico natural se confunde com a máscara. De longe, parece uma sombra com olhos.
 
+Sua roupa foi adaptada a partir dos equipamentos de Odran. A máscara, o capuz e os frascos não são fantasia: funcionam como proteção, ferramenta e forma de abrir caminho em surtos, quarentenas e noites perigosas.
+
 ---
 
-<h5>Equipamento</h5>
+## Equipamentos
 
 - **Espada curta** (herança de Odran)
 - **2 adagas** (uma para cortar, outra para ameaçar)
@@ -65,10 +133,45 @@ Kenku corvo de porte médio. Penas negras com reflexos azulados. Olhos escuros e
 
 ---
 
-<h5>Habilidades</h5>
+## Habilidades
 
 - **Alquimia de rua:** Preparar poções, venenos, fumos e ácidos com ingredientes improvisados
 - **Mimetismo:** Reproduzir vozes e sons com perfeição (kenku)
 - **Furtividade:** Movimento silencioso em telhados e becos
 - **Falsificação:** Alterar documentos com tintas e ácidos
 - **Conhecimento das ruas:** Maré Baixa, porto submundo de Nimalia
+
+## Relações
+
+### Mestre Odran Veyl
+
+Mentor de Varkh e proprietário d'O Frasco Afogado. Transformou repetidas tentativas de roubo em uma educação prática e transmitiu ao kenku tanto sua alquimia quanto parte de seu código moral.
+
+Seu paradeiro, seu envolvimento com as falsificações e a extensão de seus segredos ainda estão em aberto.
+
+### Maré Baixa
+
+É o lugar onde Varkh aprendeu a sobreviver, negociar, observar e desaparecer. A comunidade conhece suas falhas e suas utilidades. Pode protegê-lo, mas também conserva memórias, dívidas e favores que ainda podem ser cobrados.
+
+### Guilda dos Mercadores
+
+A ficha registra uma ligação informal com a Guilda. A natureza dessa relação — trabalho, contatos, proteção, dívida ou fachada — ainda precisa ser definida.
+
+## Papel na Campanha
+
+Varkh é um dos três personagens de jogador, ao lado de [[Vezemir]] e [[Raziel]].
+
+Seu arco oferece uma porta de entrada urbana para a campanha: mercados, porto, crime, falsificação, medicina clandestina e redes de informação de Nimalia.
+
+O gancho de trabalho atual propõe que Varkh reconheça, em um morto ou em um artefato, uma técnica semelhante à de Odran. Essa ligação pode aproximá-lo dos mistérios do Véu Cinzento e das relíquias de Vezemir, mas ainda não constitui um acontecimento definitivo.
+
+## Decisões Pendentes
+
+- Odran está vivo, morto, escondido ou comprometido?
+- Quem está produzindo e distribuindo os remédios falsos?
+- O símbolo de Odran foi roubado, copiado ou entregue voluntariamente?
+- Qual é a relação concreta de Varkh com a Guilda dos Mercadores?
+- Varkh já matou alguém por contrato ou sua fama exagera seus serviços?
+- Qual é seu maior medo?
+- Que tipo de voz ele considera mais próxima de sua identidade?
+- O que pode levá-lo a confiar em Vezemir e Raziel?
