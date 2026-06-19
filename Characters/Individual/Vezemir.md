@@ -1,19 +1,22 @@
 ---
 obsidianUIMode: preview
-NoteIcon: magicitem
+NoteIcon: character
 NoteStatus: New
 thumbnail: zz_media/th_vezemir.PNG
 status: Vivo
-location: "[[Leth'valora]]"
-territory: "[[Floresta de Avenor]]"
+location: "[[Floresta de Avenor]]"
+territory: "[[Nimalia]]"
 faction: "[[Conclave dos Errantes]]"
 class: Homem de Armas
 race: Humano|Elfo
 role: player
 chapter:
+  - 00 - O Bastardo de Ferro
 tags:
+  - Category/Character
   - player
   - character
+  - chapter00
   - warrior
   - human
   - elf
@@ -72,7 +75,7 @@ Entregou-lhe três relíquias ancestrais:
 
 - [[Grisalma]]
     
-- [[Muralha de Dorn]]
+- [[Mulhara de Dorn|Muralha de Dorn]]
     
 - O medalhão dos [[Guardiões do Véu Cinzento]]
     
@@ -210,7 +213,7 @@ Embora rejeite sua herança arcana, ocasionalmente manifesta explosões involunt
 
 Machado lendário entregue por Elarion Vaelthor.
 
-### [[Muralha de Dorn]]
+### [[Mulhara de Dorn|Muralha de Dorn]]
 
 Escudo ancestral entregue por Elarion Vaelthor.
 

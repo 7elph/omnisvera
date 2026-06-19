@@ -12,7 +12,7 @@ tags:
   - story
   - chapter0
   - earthropo
-cover: [[[zz_media/vezemir.png]]]
+cover: [[zz_media/vezemir.png]]
 description: A história de Vezemir, o Bastardo de Ferro, desde sua infância entre os elfos de Leth'valora até sua busca implacável pelo dragão que destruiu tudo o que ele amava.
 ---
 
@@ -109,7 +109,7 @@ Se tornaria exatamente aquilo que todos acreditavam que ele era.
 Antes da despedida, Elarion entregou três relíquias:
 
 - [[Grisalma]]
-- [[Muralha de Dorn]]
+- [[Mulhara de Dorn|Muralha de Dorn]]
 - [[O Medalhão dos Guardiões do Véu Cinzento]]
 
 E apenas uma frase.
@@ -130,7 +130,7 @@ Guarda.
 Escolta.
 Pouco importava.
 Sempre havia alguém disposto a pagar por uma espada.
-Foi durante essas campanhas que conheceu [[Cassian Valerius]], então um dos comandantes do Exército Real de [[Nimalia]].
+Foi durante essas campanhas que conheceu [[General Cassian Valerius|Cassian Valerius]], então um dos comandantes do Exército Real de [[Nimalia]].
 Enquanto muitos oficiais desconfiavam do meio-elfo, Cassian julgava homens por suas ações.
 Os dois lutaram juntos em diversas campanhas.
 Foi também nesse período que nasceu o apelido que o acompanharia pelo resto da vida.
