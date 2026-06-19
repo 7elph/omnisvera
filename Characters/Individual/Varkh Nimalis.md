@@ -3,7 +3,7 @@ NoteIcon: character
 tags:
   - Category/Character
   - character
-  - pc
+  - player
   - rogue
   - alchemist
 thumbnail: zz_media/th_varkh.PNG
@@ -13,6 +13,7 @@ territory: "[[REINO DE NIMALIA]]"
 faction: "[[Guilda dos Mercadores]]"
 class: Ladrão/Alquimista
 race: Kenku
+role: player
 ---
 
 # VARKH NIMALIS — O CORVO DA MARÉ BAIXA
