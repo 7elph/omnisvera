@@ -163,6 +163,7 @@ Antes de modificar uma nota:
 ### Proteção do frontmatter
 
 - Não remover propriedades desconhecidas.
+- Tratar propriedades como `NoteIcon` como parte potencial da taxonomia visual; não substituir seus valores por interpretação semântica.
 - Não converter listas em texto simples ou texto simples em listas sem necessidade.
 - Não mudar nomes, capitalização ou ordem de propriedades apenas por preferência estética.
 - Manter wikilinks entre aspas quando já estiverem entre aspas.

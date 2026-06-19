@@ -1,6 +1,6 @@
 ---
 obsidianUIMode: preview
-NoteIcon: character
+NoteIcon: magicitem
 NoteStatus: New
 thumbnail: zz_media/th_vezemir.PNG
 status: Vivo

@@ -1,6 +1,6 @@
 ---
 obsidianUIMode: preview
-NoteIcon: character
+NoteIcon:
 NoteStatus: New
 thumbnail:
 status:

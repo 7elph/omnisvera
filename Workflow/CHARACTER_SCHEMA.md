@@ -48,7 +48,7 @@ Uma propriedade não deve ser removida apenas porque está vazia. Campos vazios 
 | Propriedade | Formato preferido | Obrigatória | Observação |
 |:--|:--|:--|:--|
 | `obsidianUIMode` | texto | Não | Normalmente `preview`. |
-| `NoteIcon` | texto | Sim | Usar `character`. |
+| `NoteIcon` | texto | Sim | Taxonomia visual herdada do template. Preservar o valor existente; não inferir pelo nome da propriedade. |
 | `NoteStatus` | texto | Não | Estado editorial da nota, não do personagem. |
 | `thumbnail` | caminho de mídia | Sim | Preferir `zz_media/nome-do-arquivo.ext`. |
 | `status` | texto | Sim | Ex.: Vivo, Falecido, Desaparecido. |
@@ -63,6 +63,19 @@ Uma propriedade não deve ser removida apenas porque está vazia. Campos vazios 
 | `tags` | lista | Sim | Deve incluir `character`. |
 
 ## Tipos que devem ser preservados
+
+### Propriedades visuais
+
+Algumas propriedades podem ter funções de estilo que não são evidentes pelo nome.
+
+`NoteIcon`, por exemplo, pode participar da padronização visual de grupos, facções ou categorias de personagens. Um valor como `magicitem` não deve ser substituído por `character` apenas porque a nota descreve um personagem.
+
+Antes de alterar uma propriedade visual:
+
+1. comparar notas que apresentam a mesma aparência no Obsidian;
+2. verificar o template de origem;
+3. preservar o valor quando seu efeito ainda não estiver completamente documentado;
+4. confirmar visualmente no Obsidian antes de padronizar.
 
 ### Lista
 
