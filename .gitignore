@@ -1,0 +1,15 @@
+# Obsidian: estado local e índices regeneráveis
+.obsidian/workspace*.json
+.obsidian/copilot-index-*.json
+.trash/
+.smtcmp_json_db/
+.smtcmp_vector_db.tar.gz
+
+# Backup grande mantido apenas localmente
+/DisgracelandOnline.zip
+
+# Arquivos do sistema operacional
+.DS_Store
+Thumbs.db
+Desktop.ini
+
