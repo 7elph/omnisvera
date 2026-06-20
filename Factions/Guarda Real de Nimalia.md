@@ -39,8 +39,8 @@ cardSpacing: 4
 **Public Reputation:** Respected and Feared  
 **Current Leader:** [[Comandante Aldric Vane]]  
 **Status:** Active  
-**Primary Headquarters:** Fortaleza Real, Nimalia  
-**Controlled Territory:** All of [[Nimalia|Earthropo]]
+**Primary Headquarters:** Fortaleza Real, capital do Reino de Nimalia
+**Controlled Territory:** [[Nimalia]]
 
 ---
 
@@ -48,12 +48,12 @@ cardSpacing: 4
 
 > <h4>"Pela coroa e pela terra."</h4>
 
-A força militar oficial do Reino de Earthropo.
+A força militar oficial do Reino de Nimalia.
 
 ---
 
 <h5>Estrutura</h5>
 
 - **Guarda Real:** 2.000 soldados de elite
-- **Legioes de Earthropo:** 10.000 soldados
+- **Legiões de Nimalia:** 10.000 soldados
 - **Posto Vigilia:** defesa contra o Veu

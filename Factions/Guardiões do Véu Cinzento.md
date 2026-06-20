@@ -2,20 +2,17 @@
 obsidianUIMode: preview
 NoteIcon: faction 
 NoteStatus: New
-leader: Mestre-Caravaneiro Dorian Ashford
-state: Ativa
-location: Nimalia
+leader:
+state: Desaparecida
+location:
 tags:
   - faction
-  - guild
-  - commerce
+  - order
+  - veil
 ---
 
-# Guilda dos Mercadores
+# Guardiões do Véu Cinzento
 
-A maior organização comercial de Earthropo. Controla rotas de comércio, bancos e caravanas entre Nimalia, Leth'valora e os reinos humanos.
+Ordem desaparecida ligada à origem de [[Vezemir]], às relíquias entregues por [[Elarion Vaelthor]] e aos mistérios do Véu Cinzento.
 
-## Estrutura
-- **Mestre-Caravaneiro:** Dorian Ashford
-- **Conselho dos Mercadores:** 5 membros em Nimalia
-- **Relação com a Coroa:** Oficialmente neutra, mas financia ambos os lados
+Sua história, estrutura, liderança e objetivos ainda precisam ser desenvolvidos.

@@ -1,40 +1,45 @@
 ---
 obsidianUIMode: preview
 NoteIcon: lore
-NoteStatus: New
-status: 
+NoteStatus: Active
+status: Destruída
 territory: "[[Floresta de Avenor]]"
 district:
-info: O mais antigo reino élfico conhecido em Earthropo. Erguido entre florestas ancestrais e árvores tão antigas quanto a própria história registrada, Leth'valora é considerado por muitos o ápice da civilização élfica.
+info: Antiga vila élfica da Floresta de Avenor, destruída pelo dragão de colar dourado.
 cover: zz_media/leth'valora.png   
 tags:
 - lore
 - location
 - elf   
-- kingdom 
+- village
 ---
 
-# [[LETH'VALORA]]
+# VILA DE LETH'VALORA
 
-> [!NOTE|clean no-i right]+ ANTIGA ‎LETH'VALORA  
+> [!NOTE|clean no-i right]+ ‎LETH'VALORA
 > ![[leth'valora.png|400]]
 
-O mais antigo reino élfico conhecido em Earthropo.
-Erguido entre florestas ancestrais e árvores tão antigas quanto a própria história registrada, Leth'valora é considerado por muitos o ápice da civilização élfica.
-Suas cidades parecem ter sido moldadas pela própria natureza. Torres de mármore branco surgem entre árvores colossais, pontes vivas conectam distritos suspensos e rios cristalinos atravessam jardins encantados.
-Por trás de sua beleza, porém, existe uma sociedade rígida e profundamente tradicionalista.
+Leth'valora foi uma pequena vila élfica situada no interior da [[Floresta de Avenor]].
+
+Seus habitantes eram principalmente elfos que escolheram viver fora do grande reino élfico, cuja localização e organização ainda serão apresentadas. A vila preservava tradições antigas, mas não representava toda a civilização élfica de Earthropo.
+
+Casas, passarelas e construções comunitárias se misturavam às árvores, aos rios e às encostas de Avenor.
+
+Por trás de sua beleza, existia uma comunidade tradicionalista.
 A pureza da linhagem é considerada uma virtude.
 A tradição vale mais que a inovação.
 E aqueles que nascem fora dos padrões esperados raramente encontram seu lugar.
-Foi neste reino que [[Vezemir]] cresceu.
+Foi nesta vila que [[Vezemir]] cresceu.
 E foi também aqui que aprendeu que nem toda civilização é tão nobre quanto parece.
+
+Leth'valora foi destruída pelo dragão verde de colar dourado. Suas ruínas permanecem em Avenor.
 
 ---
 
 ## Coração de Valora
 
-Centro administrativo do reino.
-Abriga o Conselho de Leth'valora, as residências das famílias e salões diplomáticos.
+Centro comunitário da vila.
+Abriga a residência da família responsável pela chefia local e os espaços de reunião dos moradores.
 
 ---
 
@@ -47,7 +52,7 @@ Dizem que os primeiros elfos caminharam por estas terras.
 
 ## A Fortaleza
 
-Antiga fortaleza militar localizada nas montanhas ao norte do reino.
+Antiga fortaleza militar localizada nas elevações ao norte da vila.
 Originalmente construída durante as Guerras Antigas para vigiar passagens estratégicas.
 Foi abandonada após séculos de paz.
 Mais tarde tornou-se o lar de [[Elarion Vaelthor]] e de seu pupilo, [[Vezemir]].
@@ -56,23 +61,24 @@ Atualmente seu estado é desconhecido.
 
 ---
 
-## Conselho de Leth'valora
+## Chefia de Leth'valora
 
-Órgão responsável pelo governo do reino.
-Formado pelas principais famílias nobres élficas.
+A vila era liderada por um chefe humano cujo nome permanece não definido. Ele morreu durante o ataque do dragão.
+
+[[Mira Valen]] era filha desse chefe. O sobrenome Valen identifica sua família dentro da comunidade.
 
 ---
 
 ## [[Sentinelas de Leth'valora]]
 
-Força militar responsável pela defesa das fronteiras.
+Pequena força responsável pela defesa da vila, de suas trilhas e dos acessos próximos.
 Foi nesta organização que [[Elarion Vaelthor]] serviu durante séculos.
 
 ---
 
-## Casas Nobres Élficas
+## Famílias da Vila
 
-Famílias aristocráticas que exercem influência política, econômica e militar.
+Famílias antigas preservam tradições e exercem influência sobre as decisões da comunidade.
 
 ---
 

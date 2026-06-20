@@ -121,7 +121,7 @@ cardSpacing: 4
 - Guildas Mercantis
 - Bardos viajantes
 - Templos
-- Quadros de avisos da Guilda de Aventureiros
+- Quadros de avisos do [[Conclave dos Errantes]]
 
 ---
 
@@ -157,7 +157,7 @@ Poucas figuras são tão admiradas em Earthropo quanto os aventureiros.
 
 Enquanto nobres governam e exércitos defendem fronteiras, são os aventureiros que exploram ruínas, enfrentam monstros e descobrem os segredos esquecidos do mundo.
 
-Muitas crianças sonham em um dia ingressar na [[Guilda de Aventureiros]].
+Muitas crianças sonham em um dia ingressar no [[Conclave dos Errantes]].
 
 ---
 

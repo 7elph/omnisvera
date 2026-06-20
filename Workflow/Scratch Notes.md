@@ -16,14 +16,16 @@ Notas rápidas do cânone ativo. O material antigo foi preservado em [[Legacy - 
 ## Regra de Cânone
 
 - Omnisvera = universo.
-- Earthropo = reino principal.
-- Nimalia = cidade central.
+- Earthropo = continente principal da campanha.
+- Nimalia = reino dos antropos/beastfolks.
+- A capital do Reino de Nimalia ainda não tem nome definido.
+- Avenor faz fronteira com Nimalia.
 - Eryndor não existe mais no cânone ativo.
 - Disgraceland/Tribucia ficam como legado até conversão.
 
 ## Ganchos Imediatos
 
-- Um morto chega a Leth'valora carregando uma moeda impossível e um diário queimado.
+- Um morto chega às ruínas de Leth'valora carregando uma moeda impossível e um diário queimado.
 - A Igreja das Chamas quer recolher os artefatos antes que aventureiros, guildas ou a Coroa entendam seu valor.
 - Varkh Nimalis descobre que remédios falsificados usam o símbolo de Odran Veyl.
 - Vezemir encontra marcas dos Guardiões do Véu Cinzento onde não deveriam existir.
@@ -33,16 +35,17 @@ Notas rápidas do cânone ativo. O material antigo foi preservado em [[Legacy - 
 
 - [[Vezemir]]: origem, relíquias, dragão de colar dourado, Guardiões do Véu Cinzento.
 - [[Varkh Nimalis]]: Maré Baixa, alquimia de rua, voz emprestada, falsificações, Odran Veyl.
-- [[Augustus Terra Decimus]]: Grande Monarca de Earthropo, poder central de Nimalia.
+- [[Augustus Terra Decimus]]: rei soberano de Nimalia.
 - [[General Cassian Valerius]]: ponte entre a Coroa e o passado militar de Vezemir.
 - [[Padre Oric]]: peça espiritual e investigativa ligada ao mistério do medalhão.
 
 ## Lugares para Desenvolver
 
-- **Maré Baixa:** favela portuária no sul de Nimalia; origem de Varkh.
+- **Maré Baixa:** favela portuária no sul da capital do Reino de Nimalia; origem de Varkh.
 - **O Frasco Afogado:** loja de Odran Veyl, mistura de botica, laboratório e abrigo marginal.
-- **Nimalia:** cidade central de poder, fé, comércio e crime.
-- **Leth'valora:** origem élfica de Vezemir e cenário do primeiro sinal do Véu.
+- **Nimalia:** reino dos antropos, centro de poder, fé, comércio e crime.
+- **Leth'valora:** pequena vila élfica destruída em Avenor; origem de Vezemir.
+- **Ruínas de Valthor:** ruínas no sudeste de Earthropo, ligadas ao renascimento de Raziel.
 - **Véu Cinzento:** fronteira viva entre história, ruína e fragmentos dos Criadores.
 
 ## Perguntas Soltas

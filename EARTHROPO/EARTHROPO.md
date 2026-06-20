@@ -16,7 +16,7 @@ tags:
 </div>
 
 > [!world]- Premissa
-> **Omnisvera** e o universo. **Earthropo** e o reino onde a campanha acontece. **Nimalia** e a cidade-coração do reino: centro politico, religioso, comercial e militar.
+> **Omnisvera** é o universo. **Earthropo** é o continente onde a campanha acontece. O **Reino de Nimalia** é o principal reino dos antropos apresentado até agora.
 >
 > Ha trezentos anos, o **Eclipse de Obsidiana** engoliu o sol por sete dias e sete noites. Quando a luz voltou, uma parte do mundo havia sido tomada pelo **Véu Cinzento**, uma fronteira de névoa, ruina e memoria quebrada. Agora o Véu esta encolhendo, fragmentos de mundos perdidos começam a surgir, e os **Criadores** voltam a ser mais que mito.
 >
@@ -27,8 +27,9 @@ tags:
 ## Estrutura do Mundo
 
 - **Universo:** [[OMNISVERA|Omnisvera]]
-- **Reino Principal:** [[MAPA DE EARTHROPO|Earthropo]]
-- **Cidade Central:** [[Nimalia]]
+- **Continente Principal:** [[MAPA DE EARTHROPO|Earthropo]]
+- **Reino dos Antropos:** [[Nimalia]]
+- **Capital de Nimalia:** [[Capital de Nimalia|nome em aberto]]
 - **Campanha Atual:** Crônicas de Earthropo
 - **Sistema:** Old Dragon 2E
 
@@ -66,4 +67,5 @@ tags:
 
 - O nome **Eryndor** não faz parte do cânone ativo.
 - Materiais antigos de Disgraceland/Tribucia devem ser tratados como rascunho legado até serem convertidos para Omnisvera.
-- Earthropo não e o universo inteiro: e o reino principal dentro de Omnisvera.
+- Earthropo não é o universo nem o mundo inteiro: é o continente principal da campanha.
+- Nimalia é um reino de Earthropo, não o nome de sua capital.

@@ -12,7 +12,7 @@ reputation: misteriosa
 politics: Nenhum  
 leader:  
 region:
-  - Sudoeste de Nimalia  
+  - Fronteira do Reino de Nimalia
 size: Floresta  
 population: Desconhecida  
 religion:
@@ -34,11 +34,13 @@ imports:
 > [!NOTE|clean no-i right]+ ‎FLORESTA DE AVENOR  
 > ![[avenor.png|400]]
 
-A maior floresta das terras centrais de Earthropo. Suas árvores antigas se estendem por quilômetros, formando um mar verde que separa o Reino de [[Nimalia]] das fronteiras élficas de [[Leth'valora]].
+A maior floresta das terras centrais de Earthropo. Suas árvores antigas se estendem por quilômetros ao longo da fronteira do Reino de [[Nimalia]].
 
 Avenor é conhecida por suas trilhas esquecidas, ruínas cobertas pela vegetação e pela enorme quantidade de criaturas selvagens que habitam suas profundezas. Caçadores, aventureiros e eremitas frequentemente atravessam a floresta, mas poucos conhecem seus verdadeiros segredos.
 
-Foi nas estradas abandonadas próximas à floresta que o meio-elfo [[Vezemir]] foi encontrado ainda bebê por [[Elarion Vaelthor]].
+Em uma de suas regiões encontram-se as ruínas de [[Leth'valora]], uma pequena vila élfica que era habitada por elfos que viviam fora do reino élfico ainda não apresentado.
+
+Foi nas estradas abandonadas de Avenor que o meio-elfo [[Vezemir]] foi encontrado ainda bebê por [[Elarion Vaelthor]].
 
 ---
 
@@ -55,14 +57,6 @@ Uma região constantemente coberta por névoa densa. Viajantes costumam relatar 
 Antiga rota comercial abandonada há séculos. Hoje está tomada pela vegetação e por ruínas do velho mundo.
 
 Foi próximo a essa estrada que [[Vezemir]] foi encontrado quando ainda era uma criança.
-
----
-
-#### Colinas do Urso
-
-Território dominado por grandes predadores. Diversas cavernas naturais podem ser encontradas na região.
-
-Durante anos, [[Vezemir]] viveu isolado nessas colinas, ocupando cavernas abandonadas após derrotar seus habitantes.
 
 ---
 

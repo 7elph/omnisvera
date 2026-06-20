@@ -10,7 +10,7 @@ territory: "[[Nimalia]]"
 faction: "[[Coroa de Nimalia]]"
 class: Paladino
 race: Antropo
-role: "O Grande Monarca de [[Mapa de Earthropo|Nimalia]]"
+role: "Rei soberano de [[Nimalia]]"
 chapter:
 - 01 - Ecos do Mundo Perdido
 tags:
@@ -24,13 +24,13 @@ tags:
   - earthropo
 ---
 
-# O Grande Monarca de Earthropo
+# AUGUSTUS TERRA DECIMUS
 
 > [!NOTE|clean no-i right]+ ‎Retrato
 > ![[dukeofd.png|400]]  
 
 ## Visão Geral
-**Títulos:** 
+**Títulos:** Rei soberano de Nimalia
 **Apelido:**
 **Reputação:** Monarca com pulso de ferro
 **Gênero:** Homem
@@ -40,7 +40,7 @@ tags:
 **Idade:** 79
 **Status:** Vivo  
 **Faction:** [[Coroa de Nimalia]]  
-**Location:** [[Nimalia|Earthropo]]
+**Location:** [[Nimalia]]
 **Fé:** 
 **Aparições:**
 ```dataview
@@ -75,4 +75,4 @@ sort file.name asc
  **Beliefs:**  
 
 
-## Role In Disgraceland
+## Papel em Omnisvera

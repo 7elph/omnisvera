@@ -11,13 +11,13 @@ tags:
 
 # OUTLINES - OMNISVERA
 
-Este arquivo acompanha o contexto ativo da campanha: **Omnisvera** e o universo, **Earthropo** e o reino, **Nimalia** e a cidade central.
+Este arquivo acompanha o contexto ativo da campanha: **Omnisvera** como universo, **Earthropo** como continente e **Nimalia** como reino dos antropos.
 
 O material antigo de Disgraceland foi preservado em [[Legacy - Disgraceland OUTLINES]] para consulta e possível conversão futura.
 
 ## Premissa Ativa
 
-O reino de Earthropo vive uma paz aparente. Nimalia concentra coroa, comércio, religião e informação. O [[Eclipse de Obsidiana]] ainda define a memória coletiva, mas o medo real agora e o avanço do Véu Cinzento e o retorno de fragmentos ligados aos Criadores.
+O continente de Earthropo vive uma paz aparente. O Reino de Nimalia, governado pelos antropos, concentra coroa, comércio, religião e informação. O [[Eclipse de Obsidiana]] ainda define a memória coletiva, mas o medo real agora e o avanço do Véu Cinzento e o retorno de fragmentos ligados aos Criadores.
 
 Os personagens entram na história quando sinais antigos começam a reaparecer em lugares comuns: moedas impossíveis, diários queimados, relíquias de linhagens esquecidas e falsificações perfeitas demais para serem simples crime.
 
@@ -25,7 +25,7 @@ Os personagens entram na história quando sinais antigos começam a reaparecer e
 
 - **O Véu Cinzento:** não e apenas uma fronteira física, mas uma falha na história do mundo.
 - **Os Criadores:** arquitetos antigos de mundos-cópia, talvez responsáveis pela forma atual de Omnisvera.
-- **Nimalia:** cidade onde poder politico, fé e crime se misturam.
+- **Nimalia:** reino dos antropos onde poder político, fé e crime se misturam.
 - **A Coroa:** tenta manter estabilidade enquanto esconde o que sabe.
 - **A Igreja das Chamas:** caça heresias, artefatos e qualquer verdade que ameace sua doutrina.
 - **Os Guardiões do Véu Cinzento:** ordem esquecida ligada a Vezemir, relíquias antigas e segredos de origem.
@@ -34,7 +34,7 @@ Os personagens entram na história quando sinais antigos começam a reaparecer e
 
 ### [[Vezemir]]
 
-O Bastardo de Ferro. Meio humano, meio elfo, criado em Leth'valora por [[Elarion Vaelthor]]. Carrega [[Grisalma]], [[Mulhara de Dorn]] e o medalhão dos [[Guardiões do Véu Cinzento]]. Seu arco gira em torno do dragão de colar dourado, da morte de [[Mira Valen]] e da verdade sobre sua origem.
+O Bastardo de Ferro. Meio humano, meio elfo, criado na vila de Leth'valora por [[Elarion Vaelthor]]. Carrega [[Grisalma]], [[Mulhara de Dorn]] e o medalhão dos [[Guardiões do Véu Cinzento]]. Seu arco gira em torno do dragão de colar dourado, da morte de [[Mira Valen]] e da verdade sobre sua origem.
 
 ### [[Varkh Nimalis]]
 
@@ -52,7 +52,7 @@ Deve ser reescrito para o cânone Omnisvera. O foco recomendado e a chegada de u
 
 ## Próximo Arco Sugerido
 
-1. Um corpo aparece em Nimalia ou Leth'valora carregando uma moeda feita de metal desconhecido.
+1. Um corpo aparece em Nimalia ou nas ruínas de Leth'valora carregando uma moeda feita de metal desconhecido.
 2. A Igreja das Chamas tenta confiscar o corpo, o diário e a moeda.
 3. Varkh reconhece no veneno usado no morto uma técnica parecida com a de Odran Veyl.
 4. Vezemir percebe marcas ligadas aos Guardiões do Véu Cinzento.

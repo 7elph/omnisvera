@@ -7,12 +7,13 @@ tags:
   - character
   - player
   - vampire
+  - rogue
 thumbnail: zz_media/th_raziel.PNG
 status: Vivo
 location: "Fortaleza de Gharok"
 territory: "[[FORTALEZA DE GHAROK]]"
 faction: "Clã Sanguinallis"
-class: Executor / Hemomante
+class: Ladrão / Hemomante
 race: Vampiro (Sanguinallis)
 role: player
 ---
@@ -25,15 +26,10 @@ role: player
 ## Visão Geral
 
 **Nome:** Raziel
-
 **Título:** O Espectro da Névoa de Sangue
-
-**Classe:** Executor / Hemomante
-
+**Classe:** Ladrão / Hemomante
 **Raça:** Vampiro do Clã Sanguinallis
-
 **Idade:** Imortal; permaneceu aprisionado por mais de trezentos anos
-
 **Status:** Vivo
 
 **Afiliação:** Clã Sanguinallis, antes da traição
@@ -66,7 +62,7 @@ A traição veio de seus próprios irmãos e de seu mestre. Kaelen invejava seu 
 
 Sob o pretexto de conter uma heresia rúnica, Raziel foi atraído ao salão principal e subjugado por feitiçarias ancestrais. Sua sentença não foi a estaca — foi o tormento eterno. Pregos de prata pura perfuraram seus ombros, correntes do mesmo metal maldito cravadas em sua carne imortal, jogado no fundo de um poço vertical nos picos congelados ao norte de Nimalia.
 
-O ciclo infinito de agonia durou trezentos anos.
+O ciclo infinito de agonia durou mais de trezentos anos.
 
 ---
 
@@ -84,7 +80,7 @@ Ele entrou no poço como um assassino traído. Emergiu como a própria calamidad
 
 ## A Rota da Vingança
 
-1. **O Primeiro Sangue — [[Campos de Elyndor]]:** Kaelen, o Flagelo, lidera patrulhas militares e escava as Ruínas de Valthor atrás de relíquias. Caminha sobre as terras sob as quais Raziel renasceu.
+1. **O Primeiro Sangue — [[Campos de Earthropo]]:** Kaelen, o Flagelo, lidera patrulhas militares e escava as [[Ruínas de Valthor]] atrás de relíquias. Caminha sobre as terras sob as quais Raziel renasceu.
 2. **O Senhor das Feras — [[Floresta de Avenor]]:** Vandor, que outrora controlava os lobos da noite. Aprenderá que nenhuma criatura selvagem pode obedecer a um mestre cujo sangue está prestes a ser fervido de dentro para fora.
 3. **A Queda do Trono — Fortaleza de Gharok:** Lorde Malakar ainda se assenta em seu trono de opulência, acreditando que o passado está enterrado.
 
@@ -144,7 +140,7 @@ Antigo mestre de Raziel e responsável por sua condenação. Temia que seu execu
 
 ### Kaelen, o Flagelo
 
-Irmão de Raziel. Invejava seu domínio sobre a hemomancia e atualmente lidera patrulhas nos Campos de Elyndor.
+Irmão de Raziel. Invejava seu domínio sobre a hemomancia e atualmente lidera patrulhas nos [[Campos de Earthropo]].
 
 ### Vandor, o Senhor das Bestas
 

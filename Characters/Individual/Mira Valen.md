@@ -36,18 +36,19 @@ tags:
 **Status:** Falecida  
 **Território:** [[Floresta de Avenor]]  
 **Localização Final:** Vila Destruída de Avenor  
+**Família:** Filha do chefe humano de [[Leth'valora]], morto no mesmo ataque
 **Associados Conhecidos:** [[Vezemir]], moradores da vila
 
 ---
 
 ## História
 
-Mira Valen era uma caçadora e rastreadora que vivia nos bosques próximos a [[Nimalia]], na [[Floresta de Avenor]].
+Mira Valen era uma caçadora e rastreadora de [[Leth'valora]], uma pequena vila élfica da [[Floresta de Avenor]]. Era filha do chefe humano da vila, e o sobrenome Valen identificava sua família dentro da comunidade. Seu pai também morreu durante a destruição de Leth'valora.
 
 Foi ela quem encontrou [[Vezemir]] durante seus anos de isolamento nas florestas. Inicialmente acreditando estar observando um urso, descobriu que se tratava de um guerreiro solitário que havia abandonado o mundo.
 Ao contrário de muitos, Mira nunca enxergou Vezemir como um monstro ou uma ameaça.
 Com o tempo, tornou-se sua amiga, companheira e a pessoa mais importante de sua vida.
-Foi graças a ela que Vezemir encontrou um lar entre os habitantes de uma pequena vila próxima ao bosque.
+Foi graças a ela que Vezemir encontrou um lar entre os habitantes de Leth'valora.
 Durante alguns anos viveram em paz.
 Tudo mudou quando um misterioso dragão verde portando um colar dourado atacou a vila.
 Durante o combate, Mira sacrificou a própria vida para salvar Vezemir de um golpe mortal.

@@ -50,7 +50,7 @@ Nem um nome.
 Era o frio.
 O som da chuva.
 E vozes discutindo acima dele.
-Ainda bebê, foi encontrado próximo às ruínas de uma antiga estrada comercial nas fronteiras de [[Leth'valora]].
+Ainda bebê, foi encontrado próximo às ruínas de uma antiga estrada comercial nos arredores de [[Leth'valora]].
 Os elfos não queriam a criança.
 Para muitos, um meio-elfo representava a corrupção de uma linhagem ancestral.
 Um erro.
@@ -68,7 +68,7 @@ E desde então, Vezemir o conheceu apenas como:
 
 # A Fortaleza
 
-Longe das cidades élficas, Elarion criou o garoto em uma antiga fortaleza esquecida nas montanhas.
+Nos limites da vila, Elarion criou o garoto em uma antiga fortaleza esquecida nas elevações de Avenor.
 
 Ali Vezemir aprendeu:
 
@@ -116,7 +116,7 @@ E apenas uma frase.
 
 > "O mundo jamais decidirá quem você é... se você sobreviver tempo suficiente para decidir sozinho."
 
-Na manhã seguinte, Vezemir deixou Kaer Varyn.
+Na manhã seguinte, Vezemir deixou [[Leth'valora]].
 E nunca mais voltou.
 
 ---
@@ -155,12 +155,12 @@ Sobrevivendo.
 Ocupando cavernas de monstros que derrotava.
 Até encontrar alguém que mudaria sua vida.
 
-[[Mira Valen]].
+[[Mira Valen]], filha do chefe de Leth'valora.
 
 Ela foi a primeira pessoa a enxergá-lo como homem.
 Não como arma.
 Não como monstro.
-Graças a Mira, Vezemir encontrou um lar entre os habitantes de uma pequena vila.
+Graças a Mira, Vezemir encontrou um lar entre os habitantes de Leth'valora.
 Pela primeira vez em sua vida, sentiu que pertencia a algum lugar.
 
 ---
@@ -192,7 +192,7 @@ Vingança.
 Durante mais de trinta anos, Vezemir perseguiu pistas.
 Caçou monstros.
 Explorou ruínas.
-Trabalhou para a Guilda de Aventureiros.
+Trabalhou para o [[Conclave dos Errantes]].
 Buscou qualquer informação capaz de levá-lo até o dragão.
 Mas quanto mais investigava, mais perguntas surgiam.
 Por que o dragão parecia reconhecê-lo?

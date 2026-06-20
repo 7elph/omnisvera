@@ -4,7 +4,9 @@ tags:
   - Category/Settlement
   - territory
   - earthropo
-  - capital
+  - kingdom
+  - beastfolk
+  - antropo
 cover: zz_media/t7.png
 Alignment: Lawful Good
 Government: Monarquia
@@ -14,7 +16,7 @@ leader: [[Augustus Terra Decimus]]
 region: 
   - Reino Central
 size: Reino
-population: 450,000
+population:
 religion: 
   - Igreja das Chamas
 exports: 
@@ -23,20 +25,22 @@ imports:
   - Minérios, Madeira, Pedra de Mana
 ---
 
-# NIMALIA
+# REINO DE NIMALIA
 
 <h2>Overview</h2>
 
-> [!NOTE|clean no-i right]+ ‎NIMALIA
+> [!NOTE|clean no-i right]+ ‎REINO DE NIMALIA
 > ![[t7.png|400]]
 
-O coração da civilização humana. Um reino de planícies douradas e cidades muradas, governado pela [[Coroa de Nimalia]] há mais de duzentos anos.
+O principal reino dos antropos em Earthropo. Nimalia reúne diferentes povos beastfolks sob a autoridade de [[Augustus Terra Decimus]] e da [[Coroa de Nimalia]].
 
-A capital **Nimalia** é uma cidade de torres de pedra e mercados movimentados, onde a Biblioteca Real guarda os poucos registros que sobreviveram ao Cataclisma.
+A [[Capital de Nimalia]] ainda não possui nome definitivo. É uma grande cidade de torres de pedra e mercados movimentados, onde antropos convivem com comunidades humanas, élficas, anãs e estrangeiras.
 
 ---
 
-<h2>Regiões</h2>
+<h2>Capital do Reino</h2>
+
+Os distritos abaixo pertencem à [[Capital de Nimalia]], cujo nome ainda está em aberto.
 
 #### Bairro dos Humanos
 
@@ -52,7 +56,7 @@ Lugar onde os elfos se estabeleceram na cidade.
 
 #### Bairro dos Anões
 
-Lugar onde os snões se estabeleceram na cidade.
+Lugar onde os anões se estabeleceram na cidade.
 
 ---
 
@@ -86,21 +90,22 @@ Lugar onde qualquer um com pouca renda pode se estabelecer por um curto tempo. L
 
 ---
 
-#### Porto de Nimalia
+#### Porto Real
 
 Lugar da cidade onde os barcos fazem sua movimentação, carga e descarga.
 
 ---
 
-<h2>Capital: Nimalia</h2>
+<h2>Dados do Reino</h2>
 
-- **Populacao:** ~450.000
 - **Governante:** [[Augustus Terra Decimus]]
-- **Caracteristicas:** Biblioteca Real, Grande Templo das Chamas, Arena Divina
+- **Capital:** nome em aberto
+- **População da capital:** ainda não definida
+- **Características da capital:** Biblioteca Real, Grande Templo das Chamas, Arena Divina
 
 ---
 
-<h2>Residentes de Nimalia</h2>
+<h2>Residentes do Reino de Nimalia</h2>
 
   ```dataview
 table location, status, faction

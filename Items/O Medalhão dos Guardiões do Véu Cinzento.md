@@ -2,7 +2,7 @@
 obsidianUIMode: preview
 NoteIcon: items
 NoteStatus: New
-thumbnail: zz_media/med.png
+thumbnail: zz_media/med.PNG
 status: Ativo
 item: Artefato
 tags:

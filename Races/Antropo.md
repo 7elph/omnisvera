@@ -10,7 +10,7 @@ status: Active
 
 # Antropo
 
-Osantropos são humanoides com características animais, combinando traços humanos e bestiais em uma só criatura. Podem ter origens variadas, desde linhagens antigas até transformações mágicas ou bênçãos de divindades da natureza.
+Os antropos são humanoides com características animais, combinando traços humanos e bestiais em uma só criatura. Podem ter origens variadas, desde linhagens antigas até transformações mágicas ou bênçãos de divindades da natureza.
 
 <h2>Personalidade e Cultura</h2>
 

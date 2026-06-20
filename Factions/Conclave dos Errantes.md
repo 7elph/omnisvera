@@ -2,20 +2,19 @@
 obsidianUIMode: preview
 NoteIcon: faction 
 NoteStatus: New
-leader: Conselho dos Insurgentes
-state: Clandestina
-location: Floresta de Thornmarch
+leader:
+state: Ativa
+location:
 tags:
   - faction
-  - rebel
-  - anti-monarchy
+  - adventurer
+  - explorers
 ---
 
-# Os Guardiões dos Véu Cinzento
+# Conclave dos Errantes
 
-Facção rebelde que luta contra a monarquia de Nimalia e a opressão da Igreja das Sete Chamas. Formada por ex-soldados, camponeses desertores e estudiosos hereges.
+Organização que reúne aventureiros e errantes de Earthropo. O nome substitui a antiga denominação provisória “Guilda de Aventureiros”.
 
-## Objetivos
-- Derrubar a Coroa de Nimalia
-- Libertar o conhecimento sobre o Véu e os Criadores
-- Criar um conselho popular no lugar da monarquia
+[[Vezemir]] trabalhou ao lado do Conclave durante sua busca pelo dragão de colar dourado.
+
+Sua liderança, sede, estrutura e objetivos ainda precisam ser desenvolvidos.

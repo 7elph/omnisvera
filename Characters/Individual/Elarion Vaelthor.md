@@ -56,7 +56,7 @@ Para muitos, deveria ter sido abandonada.
 
 Para Elarion, era apenas uma criança.
 
-Desafiando expectativas e enfrentando críticas silenciosas da própria sociedade, levou o garoto para a fortaleza isolada de [[Kaer Varyn]], onde passou décadas treinando-o.
+Desafiando expectativas e enfrentando críticas silenciosas da própria sociedade, levou o garoto para uma fortaleza isolada em [[Leth'valora]], onde passou décadas treinando-o.
 
 Ali tornou-se mais do que um mentor.
 
@@ -149,7 +149,7 @@ Responsável pela formação de diversos capitães e sentinelas.
     
 - Demonstrava preocupação incomum com a magia que habitava o jovem meio-elfo.
     
-- Pode ter escondido documentos, artefatos ou registros em [[Kaer Varyn]].
+- Pode ter escondido documentos, artefatos ou registros em [[Leth'valora]].
     
 - Seu desaparecimento ocorreu pouco tempo após a partida de Vezemir.
     

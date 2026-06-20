@@ -5,7 +5,7 @@ NoteStatus: New
 thumbnail: zz_media/th_vezemir.PNG
 status: Vivo
 location: "[[Floresta de Avenor]]"
-territory: "[[Nimalia]]"
+territory: "[[Floresta de Avenor]]"
 faction: "[[Conclave dos Errantes]]"
 class: Homem de Armas
 race: Humano|Elfo
@@ -33,7 +33,7 @@ tags:
 **Títulos:** O Bastardo de Ferro
 **Apelido:** O Urso da [[Floresta de Avenor]], Guardião de [[Leth'valora]]
 **Localização Atual:** [[Floresta de Avenor]], próximo a [[Nimalia]]
-**Território:** [[Nimalia]]
+**Território:** [[Floresta de Avenor]]
 **Reputação Pública:** Guerreiro lendário, reservado e intimidador
 **Gênero:** Masculino
 **Classe:** Homem de Armas
@@ -55,9 +55,9 @@ tags:
 > <h4>"A honra não se herda. Se conquista."</h5>
 
 
-Vezemir foi encontrado ainda bebê nas ruínas de uma antiga estrada esquecida próxima ao reino élfico de [[Leth'valora]]. Rejeitado pela maioria dos elfos devido à sua ascendência mestiça, foi adotado pelo veterano [[Elarion Vaelthor]], antigo capitão das Sentinelas de Leth'valora.
+Vezemir foi encontrado ainda bebê nas ruínas de uma antiga estrada esquecida próxima à vila élfica de [[Leth'valora]]. Rejeitado por parte dos elfos devido à sua ascendência mestiça, foi adotado pelo veterano [[Elarion Vaelthor]], antigo capitão das Sentinelas de Leth'valora.
 
-Longe das cidades élficas, Elarion o criou em [[Leth'valora]], em uma fortaleza abandonada nas montanhas. Ali Vezemir recebeu treinamento rigoroso em combate, sobrevivência, estratégia, história e magia.
+Nos limites de [[Leth'valora]], Elarion o criou em uma fortaleza abandonada nas elevações de Avenor. Ali Vezemir recebeu treinamento rigoroso em combate, sobrevivência, estratégia, história e magia.
 
 Sua magia, porém, nunca se comportou como a dos elfos.
 
@@ -107,11 +107,11 @@ Foi assim que surgiu o título que o acompanha até hoje:
 ## [[Mira Valen]]
 
 Após abandonar a vida de mercenário, Vezemir viveu anos isolado nas florestas.
-Durante esse período conheceu [[Mira Valen]], uma caçadora humana.
+Durante esse período conheceu [[Mira Valen]], uma caçadora humana e filha do chefe de Leth'valora.
 Inicialmente ela acreditou estar observando um urso vivendo entre as árvores.
 Com o tempo descobriu que se tratava de um guerreiro solitário.
 Mira foi a primeira pessoa a enxergar Vezemir além de sua fama, força ou origem.
-Graças a ela, ele foi aceito em uma pequena vila próxima à floresta.
+Graças a ela, ele foi aceito pelos moradores de Leth'valora.
 Pela primeira vez em sua longa vida, encontrou algo semelhante a um lar.
 Embora jamais tenham oficializado um relacionamento, todos sabiam que pertenciam um ao outro.
 E durante alguns breves anos, Vezemir conheceu a paz.

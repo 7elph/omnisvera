@@ -20,9 +20,9 @@ Kenkus são humanoides de linhagem corvídea, conhecidos por sua memória sonora
 - Forte adaptação a cidades, portos, telhados e becos.
 - Reputação ambígua: úteis como mensageiros, espiões, falsificadores e informantes, mas raramente considerados confiáveis.
 
-## Em Nimalia
+## No Reino de Nimalia
 
-Na cidade de [[Nimalia]], kenkus costumam circular em bairros portuários, mercados, guildas menores e redes de informação informal. Em lugares como [[Maré Baixa]], a fama sombria de um corvo pode ser tanto proteção quanto ameaça.
+Na capital do Reino de [[Nimalia]], kenkus costumam circular em bairros portuários, mercados, guildas menores e redes de informação informal. Em lugares como [[Maré Baixa]], a fama sombria de um corvo pode ser tanto proteção quanto ameaça.
 
 ## Ganchos
 

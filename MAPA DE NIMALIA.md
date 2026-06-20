@@ -5,29 +5,32 @@ scale: 500
 distance: 2746
 NoteIcon: none
 cover: zz_media/nimalia.png
-Community-Size: Large
+Community-Size: Capital
 Alignment: 
-Government: Dictatorship
-type: Settlement
-politics: Duke
+Government: Monarquia de Nimalia
+type: City Map
+politics: Coroa de Nimalia
 region:
-  - This area
-  - Of this area
-size: Small Country
-population: 750,000
+  - Reino de Nimalia
+size: Capital
+population:
 religion:
 exports:
-  - Something
 imports:
-  - Something Else
 tags:
   - title
+  - map
+  - nimalia
+  - capital
 ---
 
+# MAPA DA CAPITAL DO REINO DE NIMALIA
+
+O nome da [[Capital de Nimalia]] ainda não foi definido. Este mapa representa a cidade capital, não todo o território do reino.
 
 
 ```leaflet
-id: tribucia-map
+id: nimalia-capital-map
 lock: true
 recenter: false
 noScrollZoom: false
@@ -45,6 +48,10 @@ unit: miles
 scale: 1
 darkMode: false
 ```
+
+## Marcadores
+
+Clique com o botão direito no mapa para criar um marcador e vincule-o à nota correspondente.
 
 ## HELP:
 Hold ALT + click & drag to measure the distance between one area and the next.

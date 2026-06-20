@@ -141,7 +141,7 @@ Importa:
 
 ### [[Leth'valora]]
 
-Exporta:
+Antes de sua destruição, exportava:
 
 - Artefatos Élficos
     
@@ -150,7 +150,7 @@ Exporta:
 - Conhecimento Arcano
     
 
-Importa:
+Antes de sua destruição, importava:
 
 - Metais
     

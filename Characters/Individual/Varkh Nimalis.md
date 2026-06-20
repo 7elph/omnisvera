@@ -13,7 +13,7 @@ thumbnail: zz_media/th_varkh.PNG
 status: Vivo
 location: "[[Maré Baixa]]"
 territory: "[[Nimalia]]"
-faction: "[[Guilda dos Mercadores]]"
+faction:
 class: Ladrão/Alquimista
 race: Kenku
 role: player
@@ -34,13 +34,13 @@ role: player
 
 **Raça:** [[Kenku]]
 
-**Idade:** Aproximadamente 24 anos
+**Idade:** A definir
 
 **Status:** Vivo
 
-**Origem:** [[Maré Baixa]], no sul de [[Nimalia]]
+**Origem:** [[Maré Baixa]], no sul da capital do Reino de [[Nimalia]]
 
-**Afiliação:** [[Guilda dos Mercadores]], informal
+**Afiliação:** A definir
 
 **Mentor:** Mestre Odran Veyl
 
@@ -56,7 +56,7 @@ role: player
 
 > <h4>"Alquimia não é transformar chumbo em ouro. É transformar problema em saída."</h4>
 
-Varkh Nimalis nasceu no extremo sul de Nimalia, em uma favela chamada [[Maré Baixa]] — um amontoado de passarelas de madeira, telhados remendados e negócios que ninguém registrava em papel.
+Varkh Nimalis nasceu no extremo sul da capital do Reino de Nimalia, em uma favela chamada [[Maré Baixa]] — um amontoado de passarelas de madeira, telhados remendados e negócios que ninguém registrava em papel.
 
 Por ser Kenku, sua voz nunca era totalmente sua. Mas aprendeu que uma voz emprestada, usada na hora certa, podia abrir mais portas que uma chave.
 
@@ -84,7 +84,7 @@ Odran percebeu que Varkh era leve, rápido, preciso e atento às rotas de fuga. 
 
 Varkh aprendeu a usar adagas, espada curta e arco curto. Também transformou sua alquimia em ferramenta de combate, infiltração e fuga.
 
-Sua reputação tornou-se ambígua. Dependendo de quem conta a história, o corvo mascarado do sul de Nimalia é médico, ladrão, falsificador, protetor ou assassino de aluguel.
+Sua reputação tornou-se ambígua. Dependendo de quem conta a história, o corvo mascarado do sul da capital é médico, ladrão, falsificador, protetor ou assassino de aluguel.
 
 A realidade é menos simples: Varkh aceita serviços. Às vezes rouba documentos, entrega frascos, assusta pessoas perigosas ou protege quem não pode pagar. Quando não encontra outra saída, sua lâmina fala por ele.
 
@@ -139,7 +139,7 @@ Sua roupa foi adaptada a partir dos equipamentos de Odran. A máscara, o capuz e
 - **Mimetismo:** Reproduzir vozes e sons com perfeição (kenku)
 - **Furtividade:** Movimento silencioso em telhados e becos
 - **Falsificação:** Alterar documentos com tintas e ácidos
-- **Conhecimento das ruas:** Maré Baixa, porto submundo de Nimalia
+- **Conhecimento das ruas:** Maré Baixa e o submundo portuário da capital de Nimalia
 
 ## Relações
 
@@ -152,10 +152,6 @@ Seu paradeiro, seu envolvimento com as falsificações e a extensão de seus seg
 ### Maré Baixa
 
 É o lugar onde Varkh aprendeu a sobreviver, negociar, observar e desaparecer. A comunidade conhece suas falhas e suas utilidades. Pode protegê-lo, mas também conserva memórias, dívidas e favores que ainda podem ser cobrados.
-
-### Guilda dos Mercadores
-
-A ficha registra uma ligação informal com a Guilda. A natureza dessa relação — trabalho, contatos, proteção, dívida ou fachada — ainda precisa ser definida.
 
 ## Papel na Campanha
 
@@ -170,7 +166,6 @@ O gancho de trabalho atual propõe que Varkh reconheça, em um morto ou em um ar
 - Odran está vivo, morto, escondido ou comprometido?
 - Quem está produzindo e distribuindo os remédios falsos?
 - O símbolo de Odran foi roubado, copiado ou entregue voluntariamente?
-- Qual é a relação concreta de Varkh com a Guilda dos Mercadores?
 - Varkh já matou alguém por contrato ou sua fama exagera seus serviços?
 - Qual é seu maior medo?
 - Que tipo de voz ele considera mais próxima de sua identidade?

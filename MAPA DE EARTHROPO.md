@@ -5,29 +5,29 @@ scale: 500
 distance: 2746
 NoteIcon: none
 cover: zz_media/earthropo.png
-Community-Size: Large
+Community-Size: Continental
 Alignment: 
-Government: Dictatorship
-type: Settlement
-politics: Duke
+Government: Diversos
+type: Continent
+politics: Diversos reinos
 region:
-  - This area
-  - Of this area
-size: Small Country
-population: 750,000
+  - Earthropo
+size: Continente
+population:
 religion:
 exports:
-  - Something
 imports:
-  - Something Else
 tags:
   - title
+  - map
+  - earthropo
 ---
 
+# MAPA DE EARTHROPO
 
 
 ```leaflet
-id: tribucia-map
+id: earthropo-map
 lock: true
 recenter: false
 noScrollZoom: false
@@ -45,6 +45,10 @@ unit: miles
 scale: 1
 darkMode: false
 ```
+
+## Marcadores
+
+Clique com o botão direito no mapa para criar um marcador e vincule-o à nota correspondente. Os marcadores deste mapa são independentes dos mapas legados.
 
 ## HELP:
 Hold ALT + click & drag to measure the distance between one area and the next.

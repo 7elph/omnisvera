@@ -1,10 +1,10 @@
 ---
 obsidianUIMode: preview
 NoteIcon: faction 
-NoteStatus: New
-leader: Mestre-Caravaneiro Dorian Ashford
-state: Ativa
-location: Nimalia
+NoteStatus: Draft
+leader:
+state: Em aberto
+location:
 tags:
   - faction
   - guild
@@ -13,9 +13,6 @@ tags:
 
 # Guilda dos Mercadores
 
-A maior organização comercial de Earthropo. Controla rotas de comércio, bancos e caravanas entre Nimalia, Leth'valora e os reinos humanos.
+Nome reservado para desenvolvimento futuro.
 
-## Estrutura
-- **Mestre-Caravaneiro:** Dorian Ashford
-- **Conselho dos Mercadores:** 5 membros em Nimalia
-- **Relação com a Coroa:** Oficialmente neutra, mas financia ambos os lados
+Sua liderança, estrutura, alcance, relação com a Coroa e vínculos com personagens ainda não foram definidos.

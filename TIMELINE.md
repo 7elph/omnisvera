@@ -12,7 +12,7 @@ cover: zz_media/t1.png
 
 # Linha do Tempo de Omnisvera
 
-Esta linha do tempo registra o cânone ativo da campanha: **Omnisvera** como universo, **Earthropo** como reino principal e **Nimalia** como cidade central.
+Esta linha do tempo registra o cânone ativo da campanha: **Omnisvera** como universo, **Earthropo** como continente principal e **Nimalia** como reino dos antropos.
 
 ```chronos
 > DEFAULTVIEW  1750|2110
@@ -27,7 +27,7 @@ Esta linha do tempo registra o cânone ativo da campanha: **Omnisvera** como uni
 - [1807] #yellow As primeiras expedições retornam incompletas, enlouquecidas ou marcadas por memórias que não pertencem a elas.
 
 @ [1810~1980] #blue RECONSTRUÇÃO DE EARTHROPO
-- [1840] #blue Nimalia se fortalece como cidade central de comércio, fé e poder militar.
+- [1840] #blue O Reino de Nimalia se fortalece como centro de comércio, fé e poder militar.
 - [1900] #green A Coroa de Nimalia consolida rotas, impostos e alianças sobre grande parte de Earthropo.
 - [1960] #green A Igreja das Chamas se torna a principal força religiosa institucional do reino.
 
@@ -36,11 +36,11 @@ Esta linha do tempo registra o cânone ativo da campanha: **Omnisvera** como uni
 - [1920] #orange Elarion Vaelthor treina Vezemir longe das cortes élficas.
 - [1940] #red Vezemir deixa Leth'valora carregando Grisalma, Mulhara de Dorn e o medalhão dos Guardiões do Véu Cinzento.
 - [1980] #blue Vezemir serve em campanhas humanas e conhece General Cassian Valerius.
-- [2040] #red Mira Valen morre durante o ataque do dragão de colar dourado.
+- [2040] #red Leth'valora é destruída pelo dragão de colar dourado. Mira Valen e seu pai, o chefe humano da vila, morrem no ataque.
 - [2040~2100] #orange Vezemir caça pistas sobre o dragão e sobre a origem dos Guardiões.
 
 @ [2099~2100] #cyan CAMPANHA ATUAL
-- [2100] #cyan Um viajante moribundo chega a Leth'valora trazendo uma moeda desconhecida e notícias do Véu.
+- [2100] #cyan Um viajante moribundo chega às ruínas de Leth'valora trazendo uma moeda desconhecida e notícias do Véu.
 - [2100] #cyan Inquisidores da Igreja das Chamas começam a disputar artefatos ligados aos Criadores.
 - [2100] #cyan Varkh Nimalis deixa Maré Baixa em busca de quem está usando os métodos de seu mestre.
 - [2100] #cyan CURRENT DAY
@@ -58,7 +58,7 @@ O [[Eclipse de Obsidiana]] e o Véu Cinzento dividem a história entre antes e d
 
 ### O Presente
 
-Em 2100, Earthropo parece estável na superfície. Nimalia governa, a Igreja observa, guildas negociam e aventureiros procuram trabalho. Por baixo disso, relíquias antigas reaparecem, nomes apagados retornam e o Véu começa a se mover.
+Em 2100, Earthropo parece estável na superfície. Nimalia exerce influência, a Igreja observa, guildas negociam e aventureiros procuram trabalho. Por baixo disso, relíquias antigas reaparecem, nomes apagados retornam e o Véu começa a se mover.
 
 ### Personagens-Chave
 

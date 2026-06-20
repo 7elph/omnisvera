@@ -12,7 +12,7 @@ cover: zz_media/news1.png
 
 ### Viajante Moribundo Encontrado em Oakvale
 
-Na pacífica vila de [[Leth'valora|Leth'valora]], um homem desconhecido foi encontrado cambaleando na praça central, vestindo roupas rasgadas cobertas por uma poeira cinzenta. Antes de falecer, entregou uma moeda de metal desconhecido e um diário parcialmente queimado a um grupo de aventureiros locais. Suas últimas palavras: *"O Véu... está... rasgando."*
+Nas ruínas de [[Leth'valora]], um homem desconhecido foi encontrado cambaleando entre as construções destruídas, vestindo roupas rasgadas cobertas por uma poeira cinzenta. Antes de falecer, entregou uma moeda de metal desconhecido e um diário parcialmente queimado. Suas últimas palavras: *"O Véu... está... rasgando."*
 
 ### Inquisidores Chegam a Oakvale
 

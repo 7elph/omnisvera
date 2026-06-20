@@ -10,7 +10,7 @@ tags:
   - chapter00
   - earthropo
 cover: [[zz_media/varkh.png]]
-description: A história de Varkh Nimalis, o Corvo da Maré Baixa, desde sua infância nos becos do porto de Nimalia até seu aprendizado como alquimista de rua e a descoberta de que alguém está usando o nome de seu mestre para espalhar remédios falsos pelo reino.
+description: A história de Varkh Nimalis, o Corvo da Maré Baixa, desde sua infância nos becos portuários da capital do Reino de Nimalia até seu aprendizado como alquimista de rua e a descoberta de que alguém está usando o nome de seu mestre para espalhar remédios falsos pelo reino.
 ---
 
 # Capítulo 00
@@ -19,7 +19,7 @@ description: A história de Varkh Nimalis, o Corvo da Maré Baixa, desde sua inf
 
 ## O Corvo da Maré Baixa
 
-Nascido no extremo sul de Nimalia, em uma favela espremida entre muros antigos e o cheiro salgado do porto, [[Varkh Nimalis]] aprendeu cedo que tudo tinha valor — até aquilo que os outros jogavam fora. Kenku, ladrão, alquimista e, ocasionalmente, assassino, sua história é feita de vozes roubadas, frascos quebrados e uma dívida de honra com o velho abutre que lhe ensinou a transformar problema em saída.
+Nascido no extremo sul da capital do Reino de Nimalia, em uma favela espremida entre muros antigos e o cheiro salgado do porto, [[Varkh Nimalis]] aprendeu cedo que tudo tinha valor — até aquilo que os outros jogavam fora. Kenku, ladrão, alquimista e, ocasionalmente, assassino, sua história é feita de vozes roubadas, frascos quebrados e uma dívida de honra com o velho abutre que lhe ensinou a transformar problema em saída.
 
 ## Personagens Importantes
 ```datacards
@@ -43,7 +43,7 @@ cardSpacing: 4
 
 O lugar era conhecido como **Maré Baixa**.
 
-Um amontoado de passarelas de madeira, telhados remendados, cordas penduradas, barracos tortos e lanternas que nunca apagavam por completo. Ali, a cidade parecia respirar diferente. Enquanto o centro de Nimalia era feito de pedra, brasões e casas altas, Maré Baixa era feita de vozes, fumaça, peixe seco, ferrugem, música ruim e negócios que ninguém registrava em papel.
+Um amontoado de passarelas de madeira, telhados remendados, cordas penduradas, barracos tortos e lanternas que nunca apagavam por completo. Ali, a cidade parecia respirar diferente. Enquanto o centro da capital era feito de pedra, brasões e casas altas, Maré Baixa era feita de vozes, fumaça, peixe seco, ferrugem, música ruim e negócios que ninguém registrava em papel.
 
 Mercadores demi-humanos descarregavam caixas durante o dia. Contrabandistas trocavam favores à noite. Crianças corriam pelos telhados. Ratos vendiam informações. Gaivotas roubavam frutas.
 
@@ -57,7 +57,7 @@ Por ser Kenku, sua voz nunca era totalmente sua.
 
 Mas isso nunca o impediu de falar. Ele apenas aprendeu que uma voz emprestada, quando usada na hora certa, podia abrir mais portas que uma chave.
 
-Em Earthropo, onde os demi-humanos são maioria e ocupam os lugares mais altos da sociedade, Varkh não era desprezado por ser uma criatura animal. Isso era normal. O problema era ser corvo.
+Em Earthropo, os humanos são maioria. Em Maré Baixa, porém, Varkh não era desprezado simplesmente por ser uma criatura animal. O problema era ser corvo.
 
 Corvos lembravam mau presságio. Lembravam carniça, doença, segredo e morte. Em Maré Baixa, isso não era exatamente ruim. Às vezes, ser temido evitava confusão. Mas em outras partes de Nimalia, Varkh percebia os olhares: alguns respeitosos, outros desconfiados.
 
@@ -123,7 +123,7 @@ Varkh também aprendeu a usar alquimia como arma.
 - Tinta falsa para alterar documentos.
 - Veneno leve para derrubar, não matar.
 
-Aos poucos, nasceu a fama de que havia um corvo mascarado rondando o sul de Nimalia. Alguns diziam que ele era médico. Outros, ladrão. Alguns juravam que ele matava por contrato.
+Aos poucos, nasceu a fama de que havia um corvo mascarado rondando o sul da capital. Alguns diziam que ele era médico. Outros, ladrão. Alguns juravam que ele matava por contrato.
 
 A verdade era mais simples:
 
