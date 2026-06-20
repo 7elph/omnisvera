@@ -1,3 +1,17 @@
+---
+obsidianUIMode: preview
+NoteIcon: chart
+NoteStatus: Template
+status: Ferramenta técnica
+tags:
+  - workflow
+  - template
+  - report
+  - frontmatter
+---
+
+# Propriedades do Vault
+
 ```dataviewjs
 const propertyMap = new Map();
 

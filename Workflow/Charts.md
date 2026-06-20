@@ -1,81 +1,58 @@
-## VAULT REPORT
+---
+obsidianUIMode: preview
+NoteIcon: chart
+NoteStatus: Active
+status: Active
+tags:
+  - workflow
+  - chart
+  - report
+  - omnisvera
+---
+
+# Painéis de Omnisvera
+
+## Relatório geral
+
 ![[Vault Report]]
 
-## RELIGION REPORT
+## Personagens por papel
+
 ```dataviewjs
-const pages = dv.pages().where(p => p.tags);
-let tagCounts = {};
+const pages = dv.pages('"Characters"')
+  .where(page => page.file.tags?.includes("character"));
 
-// Count key tags
-for (let page of pages) {
-  const tags = Array.isArray(page.tags) ? page.tags : [page.tags];
-  for (let tag of tags) {
-if (['stillborn-star', 'ember-saint', 'el-santo', 'mirella', 'none'].includes(tag)) {
-      tagCounts[tag] = (tagCounts[tag] || 0) + 1;
-    }
+const counts = {};
+for (const page of pages) {
+  const role = page.role ?? "não definido";
+  counts[role] = (counts[role] ?? 0) + 1;
+}
+
+const labels = Object.keys(counts);
+const values = Object.values(counts);
+
+window.renderChart({
+  type: "bar",
+  data: {
+    labels,
+    datasets: [{
+      label: "Personagens",
+      data: values,
+      backgroundColor: ["#8f6f43", "#6f8294", "#8b5f66", "#667a5b"]
+    }]
+  },
+  options: {
+    plugins: { legend: { display: false } },
+    scales: { y: { beginAtZero: true, ticks: { precision: 0 } } }
   }
-}
+}, this.container);
+```
 
-// Data
-const labels = Object.keys(tagCounts);
-const counts = Object.values(tagCounts);
+## Religiões em desenvolvimento
 
-// 💀 Grunge palette
-const colorMap = {
-  'stillborn-star': '#c8ae5f', // antique gold
-  'ember-saint': '#9e9e9e',   // blood rust red
-  'el-santo': '#D66843',      // steel blue
-  'none': '#91a6ba'           // swamp green
-};
-// Helper: Darken a hex color
-function shadeColor(hex, percent) {
-  let num = parseInt(hex.replace("#", ""), 16);
-  let r = (num >> 16) + percent;
-  let g = ((num >> 8) & 0x00FF) + percent;
-  let b = (num & 0x0000FF) + percent;
-
-  r = Math.min(255, Math.max(0, r));
-  g = Math.min(255, Math.max(0, g));
-  b = Math.min(255, Math.max(0, b));
-
-  return `rgb(${r}, ${g}, ${b})`;
-}
-
-const backgroundColors = labels.map(label => colorMap[label] || '#777');
-
-// Chart config
-const chartData = {
-    type: 'bar',
-    data: {
-        labels: labels,
-        datasets: [{
-            label: 'Religion',
-            data: counts,
-            backgroundColor: backgroundColors,
-            borderColor: '#222',
-            borderWidth: 1
-        }]
-    },
-    options: {
-        plugins: {
-            legend: {
-                labels: {
-                    color: '#CCC'
-                }
-            }
-        },
-        scales: {
-            x: {
-                ticks: { color: '#CCC' },
-                grid: { color: '#444' }
-            },
-            y: {
-                ticks: { color: '#CCC' },
-                grid: { color: '#444' }
-            }
-        }
-    }
-};
-
-window.renderChart(chartData, this.container);
+```dataview
+TABLE status, info
+FROM "Religion"
+WHERE contains(tags, "religion")
+SORT file.name ASC
 ```

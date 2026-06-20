@@ -1,0 +1,5 @@
+[mcp_servers.omnisvera_local]
+command = 'C:\Users\delib\Desktop\OMNISVERA\.omnisvera-tools\Scripts\python.exe'
+args = ['C:\Users\delib\Desktop\OMNISVERA\.local-tools\mcp_server.py']
+cwd = 'C:\Users\delib\Desktop\OMNISVERA'
+startup_timeout_sec = 60

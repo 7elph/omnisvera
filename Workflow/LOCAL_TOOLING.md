@@ -70,3 +70,13 @@ O Ollama foi configurado para carregar somente um modelo por vez e descarregá-l
 - O GitHub CLI está instalado, mas ainda não foi autenticado com `gh auth login`.
 - A busca semântica é auxiliar: resultados precisam ser confrontados com [[CANON]] e com as notas originais.
 - Recriar o índice após mudanças narrativas extensas.
+
+## Restaurar o assistente
+
+O ambiente Python e o índice são regeneráveis e ficam fora do Git. Para reconstruí-los:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .local-tools\bootstrap.ps1
+```
+
+O trecho de configuração do MCP local está em `.local-tools/codex-mcp-snippet.toml`.

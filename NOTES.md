@@ -1,25 +1,52 @@
+---
+obsidianUIMode: preview
+NoteIcon: notes
+NoteStatus: Active
+status: Active
+tags:
+  - home
+  - notes
+  - workflow
+  - omnisvera
+---
 
-##  Quick Notes & Ideas
+# Notas de Omnisvera
 
-### Current Threads
+Ponto de entrada para preparação, decisões de continuidade e material ainda em desenvolvimento.
 
-- Scumbag wants to kill Jaden Kade.
-- The Ashmoor Festival is coming up.
-- The Final Reckoning fight is coming up.
-- The Unseen Widows, Raina & Risa are hunting General Colt
-- The Rustwater Raiders chose to not deliver the slaves. The Duke will be pissed.
-- Mark & Lyla Bonetooth maybe flirted a bit.
-- Lash Hawkins has been taken by Hella and Ora Razchek and Ava Victoria is trying to find him.
-- Salem Quinn had his prophecy and is on his way to warn The Duke
-- Veerah had the same prophecy but interpreted it as she needs to kill men.
+## Estado da campanha
 
+- [[CANON|Cânone de Omnisvera]]
+- [[ASSISTANT_HANDOFF|Handoff dos Assistentes]]
+- [[MIGRATION_LEDGER|Registro da Migração]]
+- [[OUTLINES|Estrutura da Campanha]]
+- [[Scratch Notes|Notas de Trabalho]]
 
-### Notes:
+## Consulta rápida
 
+- [[LATEST_NEWS|Rumores e Descobertas]]
+- [[EARTHROPO]]
+- [[TIMELINE]]
+- [[LORE]]
+- [[RELIGION|Religiões de Earthropo]]
+- [[CULTURE|Cultura de Earthropo]]
+- [[ECONOMY|Economia de Earthropo]]
 
-- Nico goes to the Third Row for help moving Luxyn. Samson and the Row tell Nico that they are loyal to Lash Hawkins and suspect the Murray's to be involved. They won't help them.
-- Raina & Risa assassinate General Colt. The Duke is furious and demands a full investigation
-- Expand POUNDBALL more
-- Raiders in Steeltown
-- Ashmoor Festival
-- Final Reckoning
+## Material legado
+
+As notas rápidas originais de Disgraceland foram preservadas em [[Legacy - Disgraceland Quick Notes]] e não fazem parte do cânone ativo.
+
+## Modificado recentemente
+
+```dataview
+TABLE WITHOUT ID
+link(file.path, file.name) AS "Nota",
+file.mtime AS "Modificada"
+FROM "/"
+WHERE file.name != this.file.name
+AND !contains(file.path, "zz_media")
+AND !contains(file.path, ".obsidian")
+AND !contains(file.path, "Legacy - Disgraceland")
+SORT file.mtime DESC
+LIMIT 15
+```

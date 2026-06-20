@@ -1,9 +1,8 @@
 ---
 obsidianUIMode: preview
 NoteIcon: faction
-NoteStatus: New
-leader:
-  - - Comandante Aldric Vane
+NoteStatus: Draft
+leader: Comandante Aldric Vane
 status: Active
 location: "[[Nimalia]]"
 faction: "[[Guarda Real de Nimalia]]"
@@ -37,7 +36,7 @@ cardSpacing: 4
 **Group:** [[Guarda Real de Nimalia]]  
 **Home Location:** [[Nimalia|Nimalia]]  
 **Public Reputation:** Respected and Feared  
-**Current Leader:** [[Comandante Aldric Vane]]  
+**Liderança registrada:** Comandante Aldric Vane
 **Status:** Active  
 **Primary Headquarters:** Fortaleza Real, capital do Reino de Nimalia
 **Controlled Territory:** [[Nimalia]]
@@ -49,6 +48,9 @@ cardSpacing: 4
 > <h4>"Pela coroa e pela terra."</h4>
 
 A força militar oficial do Reino de Nimalia.
+
+> [!warning] Cânone em revisão
+> O nome do comandante, os números das tropas e a estrutura abaixo ainda não foram confirmados pelo mestre. Permanecem como conteúdo de trabalho, sem criação automática de uma nota de personagem.
 
 ---
 

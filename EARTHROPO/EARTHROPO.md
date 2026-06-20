@@ -35,7 +35,7 @@ tags:
 
 ## Eixos Ativos
 
-- O avanço do [[Véu do Eclipse|Véu Cinzento]] e seus fragmentos impossíveis.
+- O avanço do [[Véu Cinzento]] e seus fragmentos impossíveis.
 - A memória dos [[Guardiões do Véu Cinzento]].
 - A influência da [[Coroa de Nimalia]] sobre Earthropo.
 - A pressão religiosa da [[Igreja das Chamas]].

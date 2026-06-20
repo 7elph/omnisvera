@@ -15,6 +15,8 @@ Desktop.ini
 .codex-tools/
 .tmp_refs/
 .omnisvera-tools/
-.local-tools/
 .local-index/
-.ollama/
+.local-proposals/
+.assistant-runtime/
+__pycache__/
+*.pyc

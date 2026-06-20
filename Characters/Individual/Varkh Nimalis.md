@@ -42,7 +42,7 @@ role: player
 
 **Afiliação:** A definir
 
-**Mentor:** Mestre Odran Veyl
+**Mentor:** [[Mestre Odran Veyl]]
 
 **Ofícios:** Alquimista de rua, ladrão, falsificador e possível assassino
 
@@ -60,7 +60,7 @@ Varkh Nimalis nasceu no extremo sul da capital do Reino de Nimalia, em uma favel
 
 Por ser Kenku, sua voz nunca era totalmente sua. Mas aprendeu que uma voz emprestada, usada na hora certa, podia abrir mais portas que uma chave.
 
-Sua vida mudou quando tentou roubar a loja do velho alquimista **Mestre Odran Veyl**, um demi-humano abutre dono d'O Frasco Afogado. Em vez de chamar a guarda, Odran o fez aprender algo útil cada vez que era pego. Com o tempo, Varkh dominou alquimia de rua: ervas do cais, álcool roubado, fungos de porão, pó de carvão.
+Sua vida mudou quando tentou roubar a loja do velho alquimista [[Mestre Odran Veyl]], um demi-humano abutre dono d'O Frasco Afogado. Em vez de chamar a guarda, Odran o fez aprender algo útil cada vez que era pego. Com o tempo, Varkh dominou alquimia de rua: ervas do cais, álcool roubado, fungos de porão, pó de carvão.
 
 Também aprendeu a usar adagas, espada curta e arco curto — não por brutalidade, mas por precisão. Odran dizia que ele era "leve nos passos, rápido nas mãos e parado no escuro por tempo demais".
 
