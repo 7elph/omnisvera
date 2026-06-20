@@ -164,7 +164,7 @@ O gancho de trabalho atual propõe que Varkh reconheça, em um morto ou em um ar
 ## Ficha mecânica recebida — identificação pendente
 
 > [!warning] Conflito de fonte
-> `Ficha do Jão.pdf` não contém o nome do personagem. Ela descreve um kenku de nível 1 com Mimetismo, Falsificação, espada curta, adaga e arco curto, o que corresponde fortemente a Varkh. Entretanto, o campo de classe registra **Homem de Armas**, em conflito com o cânone atual de **Ladrão / Alquimista**. Por isso, os valores abaixo foram transcritos como referência provisória e a classe de Varkh não foi alterada.
+> `Ficha do Jão.pdf` não contém o nome do personagem e usa um modelo da edição anterior. Ela descreve um kenku de nível 1 com Mimetismo, Falsificação, espada curta, adaga e arco curto, o que corresponde fortemente a Varkh. Entretanto, o campo de classe registra **Homem de Armas**, em conflito com o cânone atual de **Ladrão / Alquimista**. Os valores abaixo foram preservados como referência e nenhuma classe foi aplicada automaticamente. Consulte [[Workflow/RULES_SOURCES|Fontes de Regras da Campanha]].
 
 | Campo | Valor |
 |:--|:--|

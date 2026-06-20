@@ -1,5 +1,6 @@
 ---
 NoteIcon: race
+NoteStatus: Draft
 tags:
   - Category/Race
   - race
@@ -7,11 +8,15 @@ tags:
   - anthropomorph
 cover: zz_media/Characters.png
 status: Active
+ruleset: Raça autoral - mecânica pendente
 ---
 
 # Kenku
 
 Kenkus são humanoides de linhagem corvídea, conhecidos por sua memória sonora, imitação vocal e presença associada a presságios. Em Earthropo, onde demi-humanos ocupam todos os níveis da sociedade, kenkus não são estranhos por serem animalescos, mas carregam o peso simbólico dos corvos: segredo, morte, carniça, doença e má sorte.
+
+> [!warning] Estado mecânico
+> A cultura dos kenkus faz parte de Omnisvera, mas os traços mecânicos abaixo vieram da ficha recebida e ainda são uma regra autoral pendente. Consulte [[Workflow/RULES_SOURCES|Fontes de Regras da Campanha]].
 
 ## Traços Culturais
 

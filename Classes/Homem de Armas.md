@@ -1,13 +1,13 @@
 ---
 NoteIcon: class
-NoteStatus: Draft
+NoteStatus: Reference
 tags:
   - Category/Class
   - class
   - warrior
 cover: zz_media/mestre de armas.png
 status: Active
-ruleset: Edição a confirmar
+ruleset: Old Dragon anterior (conteúdo legado)
 ---
 
 # Homem de Armas
@@ -15,7 +15,7 @@ ruleset: Edição a confirmar
 O Homem de Armas é o especialista em combate do Old Dragon. Ele representa guerreiros, soldados, mercenários, guardas, cavaleiros, gladiadores e praticamente qualquer personagem cuja principal ferramenta seja a habilidade marcial.
 
 > [!warning] Fonte de regras
-> Esta nota foi preservada do conteúdo anterior do vault. Os livros encontrados em Downloads pertencem a edições ou suplementos diferentes, e a campanha usa Old Dragon 2E. A progressão abaixo deve ser conferida no livro efetivamente adotado pela mesa antes de ser tratada como regra definitiva.
+> Esta nota usa a denominação e a progressão da edição anterior. Em Old Dragon 2, a classe-base equivalente é **Guerreiro**. O conteúdo abaixo foi mantido como referência e não deve ser aplicado como regra da campanha. Consulte [[Workflow/RULES_SOURCES|Fontes de Regras da Campanha]].
 
 <h2>Papel na Aventura</h2>
 

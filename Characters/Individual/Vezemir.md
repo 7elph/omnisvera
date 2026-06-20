@@ -288,4 +288,4 @@ cardSpacing: 4
 - **Velocidade:** toque; duração de 1d4 + nível; dobra a movimentação, concede +2 na CA e um ataque adicional. A descrição corresponde à versão antiga de `Velocidade Arcana` encontrada em `odlb.pdf`, com a diferença de que o livro também registra envelhecimento biológico de um ano.
 
 > [!warning] Validação de regras
-> A ficha digital exibe `JP final: +3` e acesso a poderes de 2º e 3º círculos para um Homem de Armas de nível 1. `Força Arcana` não teve uma descrição completa localizada nos livros fornecidos. Esses valores e poderes foram preservados como referência recebida, mas ainda precisam ser confirmados na mesa antes de serem tratados como regra definitiva.
+> A ficha digital usa o modelo da edição anterior e exibe `JP final: +3` e acesso a poderes de 2º e 3º círculos para um Homem de Armas de nível 1. `Força Arcana` e `Velocidade` foram localizadas no livro de 2017; os nomes também existem em OD2, mas com redação e duração revisadas. Os valores foram preservados como recebidos. A origem e a versão desses poderes ainda precisam ser definidas em mesa. Consulte [[Workflow/RULES_SOURCES|Fontes de Regras da Campanha]].

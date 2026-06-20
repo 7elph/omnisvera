@@ -2,7 +2,7 @@
 NoteIcon: class
 NoteStatus: Draft
 status: Regra opcional
-ruleset: Material compatível com Old Dragon
+ruleset: Old Dragon anterior - suplemento independente
 tags:
   - Category/Class
   - class
@@ -15,7 +15,7 @@ tags:
 Classe opcional apresentada no suplemento independente **Expansão de Classes**, de Caio Mouriz.
 
 > [!warning] Compatibilidade
-> O suplemento declara compatibilidade com Old Dragon, mas não se identifica como material oficial de Old Dragon 2ª Edição. A classe não deve ser aplicada automaticamente a [[Varkh Nimalis]] até o mestre confirmar que este suplemento faz parte das regras da campanha.
+> O suplemento declara compatibilidade com Old Dragon, mas usa a estrutura da edição anterior e não é material oficial de Old Dragon 2ª Edição. A classe não foi adotada e não deve ser aplicada automaticamente a [[Varkh Nimalis]]. Consulte [[Workflow/RULES_SOURCES|Fontes de Regras da Campanha]].
 
 ## Conceito
 

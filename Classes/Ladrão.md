@@ -1,16 +1,21 @@
 ---
 NoteIcon: class
+NoteStatus: Reference
 tags:
   - Category/Class
   - class
   - thief
 cover: zz_media/ladrão.png
 status: Active
+ruleset: Old Dragon anterior (conteúdo legado)
 ---
 
 # Ladrão
 
 O Ladrão é o especialista em habilidades. Enquanto outras classes resolvem problemas com força, fé ou magia, o ladrão depende de astúcia, precisão, furtividade e talento.
+
+> [!warning] Fonte de regras
+> A progressão desta nota foi herdada da edição anterior de Old Dragon. Ela permanece como referência de migração, não como regra válida de OD2. Consulte [[Workflow/RULES_SOURCES|Fontes de Regras da Campanha]] antes de usar qualquer valor mecânico abaixo.
 
 Ele é responsável por lidar com:
 

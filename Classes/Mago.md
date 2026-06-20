@@ -1,16 +1,21 @@
 ---
 NoteIcon: class
+NoteStatus: Reference
 tags:
   - Category/Class
   - class
   - wizard
 cover: zz_media/mago.png
 status: Active
+ruleset: Old Dragon anterior (conteúdo legado)
 ---
 
 # Mago
 
 O Mago é o mestre das artes arcanas. Diferente das outras classes, sua principal força não está em armas ou armaduras, mas no conhecimento, nos grimórios e nas magias capazes de alterar a própria realidade.
+
+> [!warning] Fonte de regras
+> A progressão desta nota foi herdada da edição anterior de Old Dragon. Ela permanece como referência de migração, não como regra válida de OD2. Consulte [[Workflow/RULES_SOURCES|Fontes de Regras da Campanha]] antes de usar qualquer valor mecânico abaixo.
 
 <h2>Papel na Aventura</h2>
 

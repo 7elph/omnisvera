@@ -1,16 +1,21 @@
 ---
 NoteIcon: class
+NoteStatus: Reference
 tags:
   - Category/Class
   - class
   - cleric
 cover: zz_media/clérigo.png
 status: Active
+ruleset: Old Dragon anterior (conteúdo legado)
 ---
 
 # Clérigo
 
 O Clérigo é o líder espiritual do grupo de aventureiros. Sua força vem da devoção a uma divindade ou princípio superior, recebendo poderes divinos em troca de sua fé. Ao mesmo tempo em que é um conjurador, também é um combatente resistente, capaz de atuar na linha de frente.
+
+> [!warning] Fonte de regras
+> A progressão desta nota foi herdada da edição anterior de Old Dragon. Ela permanece como referência de migração, não como regra válida de OD2. Consulte [[Workflow/RULES_SOURCES|Fontes de Regras da Campanha]] antes de usar qualquer valor mecânico abaixo.
 
 <h2>Papel na Aventura</h2>
 

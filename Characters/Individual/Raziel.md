@@ -18,6 +18,7 @@ race: Vampiro (Humano Amaldiçoado / Sanguinallis)
 age: 340
 alignment: Caótico Neutro
 role: player
+ruleset: Old Dragon 2E com elementos autorais pendentes
 ---
 
 # RAZIEL — O ESPECTRO DA NÉVOA DE SANGUE
@@ -49,6 +50,9 @@ role: player
 **Papel:** Personagem de jogador e um dos três protagonistas de Omnisvera
 
 ---
+
+> [!warning] Estado mecânico
+> **Ladrão** pertence às regras-base de OD2 e **Assassino** é uma opção oficial do Livro II. Vampiro, Hemomante, Reserva de Sangue e os poderes descritos nesta nota são elementos autorais até receberem regras próprias. Nenhum valor foi convertido automaticamente. Consulte [[Workflow/RULES_SOURCES|Fontes de Regras da Campanha]].
 
 ## História
 

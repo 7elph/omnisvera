@@ -174,7 +174,7 @@ Estas questões não devem ser resolvidas por inferência:
 | Data atual | A linha do tempo usa 2100; o Calendarium e páginas importadas usam 2186. |
 | Calendário | A nota `CALENDAR.md` e a configuração do Calendarium usam nomes diferentes. |
 | Religião dominante | Igreja das Chamas e Igreja das Sete Chamas aparecem como nomes concorrentes. |
-| Fontes de regras | `odlb.pdf` e o Livro Básico Aprimorado são referências antigas; os Tomos de Magia se declaram adaptações de fã para Old Dragon 2. A ficha de Vezemir usa uma versão de `Velocidade` compatível com `Velocidade Arcana` de `odlb.pdf`, enquanto `Força Arcana` não foi localizada integralmente nas referências. A edição e os suplementos adotados pela mesa precisam ser confirmados antes de reescrever classes ou magias. |
+| Fontes de regras | A base está definida como Old Dragon 2 oficial, conforme [[Workflow/RULES_SOURCES|Fontes de Regras da Campanha]]. Os PDFs de 2017 são da edição anterior; os Tomos de Magia são adaptações de fã; `Expansão de Classes` e `Mestres do Arcano` são independentes. Permanecem em aberto apenas as regras opcionais e autorais adotadas para cada personagem. |
 | Geografia | Algumas regiões ainda usam nomes ou relações herdadas de versões anteriores. |
 | Primeiro capítulo | O arquivo atual ainda contém a trama e a data de Disgraceland. |
 
@@ -188,6 +188,8 @@ Ao decidir qual informação prevalece, usar esta ordem:
 4. `EARTHROPO/EARTHROPO.md`, `TIMELINE.md` e `Workflow/OUTLINES.md`;
 5. demais notas de Omnisvera;
 6. conteúdo de Disgraceland, apenas como fonte de template.
+
+Para decisões mecânicas, usar a hierarquia específica de [[Workflow/RULES_SOURCES|Fontes de Regras da Campanha]].
 
 ## Regras para edições seguras
 
