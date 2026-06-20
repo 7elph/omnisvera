@@ -1475,6 +1475,50 @@
         "MAPA DE NIMALIA.md",
         "MAPA DE EARTHROPO.md"
       ]
+    },
+    {
+      "id": "nimalia-capital-map",
+      "locked": false,
+      "lastAccessed": 1781918829634,
+      "markers": [
+        {
+          "id": "ID_2908bac8d9fa",
+          "type": "Territory",
+          "loc": [
+            152.59364418927643,
+            139.38842424139818
+          ],
+          "layer": "zz_media%2Fnimalia.png",
+          "mutable": true,
+          "command": false,
+          "percent": null,
+          "description": null,
+          "minZoom": null,
+          "maxZoom": null,
+          "tooltip": "hover"
+        },
+        {
+          "id": "ID_8b789b6899da",
+          "type": "Territory",
+          "loc": [
+            155.06851792342934,
+            138.85809415550827
+          ],
+          "layer": "zz_media%2Fnimalia.png",
+          "mutable": true,
+          "command": false,
+          "percent": null,
+          "description": null,
+          "minZoom": null,
+          "maxZoom": null,
+          "tooltip": "hover"
+        }
+      ],
+      "overlays": [],
+      "shapes": [],
+      "files": [
+        "MAPA DE NIMALIA.md"
+      ]
     }
   ],
   "defaultMarker": {
