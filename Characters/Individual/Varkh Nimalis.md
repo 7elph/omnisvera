@@ -30,7 +30,7 @@ role: player
 
 **Título:** O Corvo da Maré Baixa
 
-**Classe:** Ladrão / Alquimista
+**Classe:** [[Ladrão]] / [[Alquimista]]
 
 **Raça:** [[Kenku]]
 
@@ -161,6 +161,46 @@ Seu arco oferece uma porta de entrada urbana para a campanha: mercados, porto, c
 
 O gancho de trabalho atual propõe que Varkh reconheça, em um morto ou em um artefato, uma técnica semelhante à de Odran. Essa ligação pode aproximá-lo dos mistérios do Véu Cinzento e das relíquias de Vezemir, mas ainda não constitui um acontecimento definitivo.
 
+## Ficha mecânica recebida — identificação pendente
+
+> [!warning] Conflito de fonte
+> `Ficha do Jão.pdf` não contém o nome do personagem. Ela descreve um kenku de nível 1 com Mimetismo, Falsificação, espada curta, adaga e arco curto, o que corresponde fortemente a Varkh. Entretanto, o campo de classe registra **Homem de Armas**, em conflito com o cânone atual de **Ladrão / Alquimista**. Por isso, os valores abaixo foram transcritos como referência provisória e a classe de Varkh não foi alterada.
+
+| Campo | Valor |
+|:--|:--|
+| Jogador | João |
+| Nível | 1 |
+| Alinhamento | Neutro |
+| Força | 12 |
+| Destreza | 15 |
+| Constituição | 12 |
+| Inteligência | 9 |
+| Sabedoria | 13 |
+| Carisma | 6 |
+| Classe de Armadura | 15 |
+| Pontos de Vida | 11 |
+| Bônus de Ataque | +4 |
+| Movimento | 9 m |
+| Ouro inicial | 120 PO |
+
+### Equipamento registrado
+
+- Espada curta: 1d6.
+- Adaga: 1d4; alcance 3/6.
+- Arco curto: 1d6; alcance 15/30.
+- 45 flechas.
+- Armadura de couro batido.
+- Kit básico.
+
+### Talentos e traços registrados
+
+- Escalar Muros.
+- Mover-se em Silêncio.
+- Pungar.
+- Mimetismo: reproduzir sons e vozes ouvidos.
+- Falsificação.
+- Comum e Élfico escritos.
+
 ## Decisões Pendentes
 
 - Odran está vivo, morto, escondido ou comprometido?
@@ -170,3 +210,4 @@ O gancho de trabalho atual propõe que Varkh reconheça, em um morto ou em um ar
 - Qual é seu maior medo?
 - Que tipo de voz ele considera mais próxima de sua identidade?
 - O que pode levá-lo a confiar em Vezemir e Raziel?
+- `Ficha do Jão.pdf` pertence a Varkh? Se sim, a classe `Homem de Armas` é uma escolha nova ou um preenchimento incorreto?

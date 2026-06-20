@@ -92,7 +92,7 @@ Na manhã da despedida, entregou ao jovem três relíquias:
 
 - [[Grisalma]]
     
-- [[Mulhara de Dorn|Muralha de Dorn]]
+- [[Muralha de Dorn]]
     
 - Um medalhão dos [[Guardiões do Véu Cinzento]]
     

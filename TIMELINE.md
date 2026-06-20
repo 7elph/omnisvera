@@ -34,7 +34,7 @@ Esta linha do tempo registra o cânone ativo da campanha: **Omnisvera** como uni
 @ [1900~2070] #orange A ERA DE VEZEMIR
 - [1900] #orange Vezemir é encontrado ainda bebê próximo às fronteiras de Leth'valora.
 - [1920] #orange Elarion Vaelthor treina Vezemir longe das cortes élficas.
-- [1940] #red Vezemir deixa Leth'valora carregando Grisalma, Mulhara de Dorn e o medalhão dos Guardiões do Véu Cinzento.
+- [1940] #red Vezemir deixa Leth'valora carregando Grisalma, Muralha de Dorn e o medalhão dos Guardiões do Véu Cinzento.
 - [1980] #blue Vezemir serve em campanhas humanas e conhece General Cassian Valerius.
 - [2040] #red Leth'valora é destruída pelo dragão de colar dourado. Mira Valen e seu pai, o chefe humano da vila, morrem no ataque.
 - [2040~2100] #orange Vezemir caça pistas sobre o dragão e sobre a origem dos Guardiões.

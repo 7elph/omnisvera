@@ -12,4 +12,5 @@
 .DS_Store
 Thumbs.db
 Desktop.ini
-
+.codex-tools/
+.tmp_refs/

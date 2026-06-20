@@ -1,8 +1,8 @@
 ---
 obsidianUIMode: preview
 NoteIcon: lore
-NoteStatus: 
-status:
+NoteStatus: Draft
+status: Cânone de trabalho
 tags: home
 cover: zz_media/t6.png
 ---

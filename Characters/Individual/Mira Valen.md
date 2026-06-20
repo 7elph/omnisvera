@@ -1,13 +1,13 @@
 ---
 obsidianUIMode: preview  
 NoteIcon: magicitem 
-NoteStatus: New 
+NoteStatus: Active
 thumbnail: zz_media/th_mira.PNG  
 status: Falecida  
 location: "[[Leth'valora]]"
 territory: "[[Floresta de Avenor]]"  
 faction: Nenhum
-class: Comum  
+class: Caçadora / Aventureira
 race: Humana  
 role: npc  
 tags:
@@ -28,16 +28,20 @@ tags:
 
 ## Visão Geral
 **Nome:** Mira Valen  
-**Títulos:** A Caçadora de Avenor  
+**Títulos:** A Caçadora de Avenor; A Filha da Vila
 **Reputação Pública:** A Heroína da Vila Perdida  
 **Raça:** Humana  
-**Classe:** Caçadora  Comum
-**Idade:** 28 anos (ao falecer)  
+**Classe:** Caçadora / Aventureira
+**Idade:** 22 anos (ao falecer)
+**Altura:** 1,72 m
+**Alinhamento:** Caótico Bom
 **Status:** Falecida  
 **Território:** [[Floresta de Avenor]]  
-**Localização Final:** Vila Destruída de Avenor  
+**Localização Final:** [[Leth'valora]]
 **Família:** Filha do chefe humano de [[Leth'valora]], morto no mesmo ataque
 **Associados Conhecidos:** [[Vezemir]], moradores da vila
+**Ocupação:** Exploradora, mensageira, caçadora e rastreadora
+**Símbolo:** Flor silvestre
 
 ---
 
@@ -82,6 +86,9 @@ Excelente arqueira e sobrevivente.
 
 **Conhecimento da Floresta:**  
 Conhecia os bosques da região como ninguém.
+
+**Mensageria e Exploração:**
+Percorria trilhas entre a vila e regiões vizinhas, transportando notícias, encontrando rotas seguras e observando mudanças na floresta.
 
 ---
 

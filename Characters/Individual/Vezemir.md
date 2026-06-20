@@ -1,14 +1,16 @@
 ---
 obsidianUIMode: preview
 NoteIcon: magicitem
-NoteStatus: New
+NoteStatus: Active
 thumbnail: zz_media/th_vezemir.PNG
 status: Vivo
 location: "[[Floresta de Avenor]]"
 territory: "[[Floresta de Avenor]]"
 faction: "[[Conclave dos Errantes]]"
 class: Homem de Armas
-race: Humano|Elfo
+race: Meio-Elfo
+level: 1
+alignment: Neutro
 role: player
 chapter:
   - 00 - O Bastardo de Ferro
@@ -36,16 +38,19 @@ tags:
 **Território:** [[Floresta de Avenor]]
 **Reputação Pública:** Guerreiro lendário, reservado e intimidador
 **Gênero:** Masculino
-**Classe:** Homem de Armas
+**Classe:** [[Homem de Armas]]
 **Raça:** Meio Humano / Meio Elfo
-**Idade:** 200+
+**Idade:** 200 anos
+**Altura:** 2,02 m
+**Nível:** 1
+**Alinhamento:** Neutro
 **Status:** Vivo  
 **Afiliação:** [[Conclave dos Errantes]]  
 **Afiliações Anteriores:** [[Sentinelas de Leth'valora]]
 **Associados Conhecidos:** [[Elarion Vaelthor]], [[Mira Valen]], [[Padre Oric]]  
 **Inimigos Conhecidos:** [[Theron Elensar]]  
 **Origem:** [[Leth'valora]]  
-**Posses:** [[Grisalma]], [[Mulhara de Dorn]], O Medalhão dos [[Guardiões do Véu Cinzento]]
+**Posses:** [[Grisalma]], [[Muralha de Dorn]], [[O Medalhão dos Guardiões do Véu Cinzento]]
 
 
 ---
@@ -75,7 +80,7 @@ Entregou-lhe três relíquias ancestrais:
 
 - [[Grisalma]]
     
-- [[Mulhara de Dorn|Muralha de Dorn]]
+- [[Muralha de Dorn]]
     
 - O medalhão dos [[Guardiões do Véu Cinzento]]
     
@@ -213,7 +218,7 @@ Embora rejeite sua herança arcana, ocasionalmente manifesta explosões involunt
 
 Machado lendário entregue por Elarion Vaelthor.
 
-### [[Mulhara de Dorn|Muralha de Dorn]]
+### [[Muralha de Dorn]]
 
 Escudo ancestral entregue por Elarion Vaelthor.
 
@@ -225,7 +230,7 @@ Artefato misterioso cuja verdadeira função permanece desconhecida.
 
 ## Aparência
 
-Alto, Muculoso, olhos azuis frios. Cabelos e pele branca. Cicatriz vertical que cruza o rosto da testa ao queixo. Veste couro escuro com placas de ferro.
+Com 2,02 m de altura, Vezemir é alto e musculoso. Possui cabelos e pele muito claros, olhos verdes e uma cicatriz vertical que cruza o rosto da testa ao queixo. Usa armadura pesada escura, reforçada por placas de ferro.
 
 ---
 
@@ -244,7 +249,7 @@ showImageOnHover: true
 cardSpacing: 4
 ```
 
-## Atributos
+## Ficha Mecânica — Nível 1
 
 | Status           | Valor |
 |------------------|-------|
@@ -254,3 +259,33 @@ cardSpacing: 4
 | Inteligência     | 8     |
 | Sabedoria        | 10    |
 | Carisma          | 4     |
+
+| Combate e recursos | Valor |
+|:--|:--|
+| Classe de Armadura | 22 |
+| Pontos de Vida | 13 |
+| Bônus de Ataque | +2 |
+| Movimento | 9 m |
+| Ouro inicial | 90 PO |
+
+### Armas e carga
+
+- **[[Grisalma]]:** dano registrado de 2d8.
+- **Adaga oculta na bota:** dano de 1d4.
+- **Armadura pesada:** peso registrado de 20 kg.
+- **[[Muralha de Dorn]]:** bônus de +2 na CA.
+- **[[O Medalhão dos Guardiões do Véu Cinzento|Amuleto do Véu]]**.
+- Kit básico.
+
+### Idiomas
+
+- Comum: escrita.
+- Élfico: fala.
+
+### Poderes registrados na ficha
+
+- **Força Arcana:** toque; duração de 1d6 + nível; concede 1 ponto adicional para cada 5 pontos de Força já possuídos.
+- **Velocidade:** toque; duração de 1d4 + nível; dobra a movimentação, concede +2 na CA e um ataque adicional. A descrição corresponde à versão antiga de `Velocidade Arcana` encontrada em `odlb.pdf`, com a diferença de que o livro também registra envelhecimento biológico de um ano.
+
+> [!warning] Validação de regras
+> A ficha digital exibe `JP final: +3` e acesso a poderes de 2º e 3º círculos para um Homem de Armas de nível 1. `Força Arcana` não teve uma descrição completa localizada nos livros fornecidos. Esses valores e poderes foram preservados como referência recebida, mas ainda precisam ser confirmados na mesa antes de serem tratados como regra definitiva.

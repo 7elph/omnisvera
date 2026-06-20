@@ -46,7 +46,7 @@ tags:
 ```dataview
 list
 from "EARTHROPO"
-where contains(this.chapters, file.name)
+where contains(this.chapter, file.name)
 sort file.name asc
 ```
 ---

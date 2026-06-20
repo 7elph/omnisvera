@@ -109,7 +109,7 @@ Se tornaria exatamente aquilo que todos acreditavam que ele era.
 Antes da despedida, Elarion entregou três relíquias:
 
 - [[Grisalma]]
-- [[Mulhara de Dorn|Muralha de Dorn]]
+- [[Muralha de Dorn]]
 - [[O Medalhão dos Guardiões do Véu Cinzento]]
 
 E apenas uma frase.

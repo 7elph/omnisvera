@@ -1,19 +1,13 @@
 ---
-
-obsidianUIMode: preview  
-NoteIcon: lore  
-NoteStatus:  
-status: Everywhere  
+obsidianUIMode: preview
+NoteIcon: lore
+NoteStatus: Draft
+status: Cânone de trabalho
 tags:
-
-- economy
-    
-- currency
-    
-- earthropo  
-    cover: zz_media/cash.png
-    
-
+  - economy
+  - currency
+  - earthropo
+cover: zz_media/cash.png
 ---
 
 # ECONOMIA DE EARTHROPO
@@ -161,9 +155,9 @@ Antes de sua destruição, importava:
 
 ---
 
-### Guilda dos Aventureiros
+### [[Conclave dos Errantes]]
 
-A maior movimentadora de riquezas fora dos governos.
+Uma das organizações que movimentam riquezas fora dos governos.
 
 Recompensas por monstros, exploração de ruínas e contratos especiais frequentemente movimentam mais ouro do que pequenas cidades inteiras.
 

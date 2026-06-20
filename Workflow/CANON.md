@@ -109,12 +109,15 @@ Earthropo vive uma estabilidade aparente. Coroa, religião, comércio e forças 
 
 - Conhecido como **O Bastardo de Ferro**.
 - É um guerreiro de origem humana e élfica.
+- Sua ficha atual registra **nível 1**, alinhamento **Neutro**, 200 anos e 2,02 m de altura.
 - Foi criado por [[Elarion Vaelthor]] na vila de [[Leth'valora]].
 - `Kaer Varyn` foi um nome anterior descartado para esse lugar e não deve ser usado no cânone atual.
 - A antiga referência à Guilda de Aventureiros foi substituída pelo [[Conclave dos Errantes]], conforme decisão dos jogadores.
-- Carrega [[Grisalma]], [[Mulhara de Dorn]] e [[O Medalhão dos Guardiões do Véu Cinzento]].
+- Carrega [[Grisalma]], [[Muralha de Dorn]] e [[O Medalhão dos Guardiões do Véu Cinzento]].
 - Busca o dragão de colar dourado ligado à morte de [[Mira Valen]].
 - [[Mira Valen]] era filha do chefe de Leth'valora; Valen é o sobrenome da família da chefia local.
+- A referência visual de Mira registra 22 anos, 1,72 m, alinhamento Caótico Bom e atuação como caçadora, exploradora e mensageira.
+- A referência visual de [[Padre Oric]] registra 58 anos, origem na [[Capital de Nimalia]], classe Clérigo e ocupação de sacerdote e escriba.
 - Sua origem e sua magia possuem relação ainda desconhecida com os Guardiões do Véu Cinzento.
 - Os [[Guardiões do Véu Cinzento]] foram criados para esta campanha e fazem parte da lore de Omnisvera; seus detalhes ainda precisam ser desenvolvidos.
 
@@ -127,6 +130,7 @@ Earthropo vive uma estabilidade aparente. Coroa, religião, comércio e forças 
 - Seu arco envolve identidade, voz, reputação e honra entre pessoas marginalizadas.
 - Sua idade ainda não foi revisada e permanece em aberto.
 - Nenhuma afiliação com a Guilda dos Mercadores foi confirmada.
+- `Ficha do Jão.pdf` descreve um kenku de nível 1 compatível com Varkh, mas não contém nome e registra a classe Homem de Armas. A associação e a classe permanecem em aberto; não substituir Ladrão / Alquimista automaticamente.
 
 ### Raziel
 
@@ -134,7 +138,9 @@ Earthropo vive uma estabilidade aparente. Coroa, religião, comércio e forças 
 - É um personagem de jogador e um dos três protagonistas da campanha.
 - É um vampiro ligado ao Clã Sanguinallis.
 - Sua classe atual é ladrão; a hemomancia permanece como parte de sua identidade e de seus poderes narrativos.
+- A referência visual mais recente registra 340 anos, aparência de 30 anos, 1,88 m de altura e alinhamento Caótico Neutro.
 - Utiliza hemomancia e as Adagas de Espectro Fantasma.
+- Também porta o [[Manto Primordial do Ancião]].
 - Foi traído e permaneceu aprisionado por mais de trezentos anos.
 - Sua trajetória atual é movida por vingança contra Kaelen, Vandor e Lorde Malakar.
 - A forma como sua história se encontra com Vezemir e Varkh ainda precisa ser definida.
@@ -164,9 +170,11 @@ Estas questões não devem ser resolvidas por inferência:
 | Capital de Nimalia | O mapa urbano atual pode representar a capital, mas ela ainda não possui nome próprio. |
 | Reinos raciais | Reino élfico na maior região florestal; reino anão no norte/nordeste montanhoso e vulcânico. Nomes e fronteiras permanecem em aberto. |
 | Região de Raziel | Valthor está no sudeste; Gharok e os demais pontos de sua trajetória ainda precisam ser posicionados após revisão da lore. |
+| Ficha do kenku de João | A ficha provavelmente pertence a Varkh, mas está sem nome e registra Homem de Armas em vez de Ladrão / Alquimista. |
 | Data atual | A linha do tempo usa 2100; o Calendarium e páginas importadas usam 2186. |
 | Calendário | A nota `CALENDAR.md` e a configuração do Calendarium usam nomes diferentes. |
 | Religião dominante | Igreja das Chamas e Igreja das Sete Chamas aparecem como nomes concorrentes. |
+| Fontes de regras | `odlb.pdf` e o Livro Básico Aprimorado são referências antigas; os Tomos de Magia se declaram adaptações de fã para Old Dragon 2. A ficha de Vezemir usa uma versão de `Velocidade` compatível com `Velocidade Arcana` de `odlb.pdf`, enquanto `Força Arcana` não foi localizada integralmente nas referências. A edição e os suplementos adotados pela mesa precisam ser confirmados antes de reescrever classes ou magias. |
 | Geografia | Algumas regiões ainda usam nomes ou relações herdadas de versões anteriores. |
 | Primeiro capítulo | O arquivo atual ainda contém a trama e a data de Disgraceland. |
 

@@ -20,9 +20,9 @@ O objetivo é permitir correções graduais sem quebrar Dataview, DataCards, est
 
 | Personagem | Arquivo | Classificação atual | Ponto a revisar |
 |:--|:--|:--|:--|
-| Vezemir | [[Vezemir]] | `role: player`, tags `player` e `character` | Consistência técnica auditada; Theron Elensar e a grafia do arquivo `Mulhara de Dorn` continuam pendentes. |
-| Varkh Nimalis | [[Varkh Nimalis]] | `role: player`, tags `player` e `character` | Estrutura editorial consolidada; idade, afiliação, medos e situação de Odran aguardam decisões. |
-| Raziel | [[Raziel]] | `role: player`, tags `player` e `character` | Estrutura editorial consolidada; personalidade e conexão com o grupo aguardam decisões do jogador. |
+| Vezemir | [[Vezemir]] | `role: player`, tags `player` e `character` | Consistência técnica auditada; [[Muralha de Dorn]] foi corrigida e [[Theron Elensar]] recebeu uma nota provisória. A identidade e a história de Theron continuam pendentes. |
+| Varkh Nimalis | [[Varkh Nimalis]] | `role: player`, tags `player` e `character` | Idade e afiliação permanecem abertas; a ficha do jogador João precisa ser identificada e reconciliada com a classe. |
+| Raziel | [[Raziel]] | `role: player`, tags `player` e `character` | Referência visual consolidada; personalidade e conexão com o grupo aguardam decisões do jogador. |
 
 Essa tabela registra o estado encontrado. Ela não autoriza correções automáticas.
 

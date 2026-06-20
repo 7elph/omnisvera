@@ -6,35 +6,35 @@ tags:
 cover: zz_media/t8.png
 ---
 
-# RELIGIOES DE EARTHROPO
+# RELIGIÕES DE EARTHROPO
 
-<h2>Overview</h2>
+<h2>Visão Geral</h2>
 
 > [!NOTE|clean no-i right]+ ‎RELIGIOES
 > ![[t8.png|400]]
 
-As religioes moldam a vida em Earthropo, desde as cerimonias reais ate os rituais secretos nas bordas do Veu.
+As religiões de Earthropo ainda estão em desenvolvimento. As notas abaixo organizam conceitos existentes sem tratá-los como doutrinas completamente confirmadas.
 
 ---
 
 ## [[Igreja das Chamas]]
 
-Fé dominante. Sete virtudes representadas por chamas. O Sumo Pontifice Valerius III lidera.
+Fé organizada associada ao simbolismo das chamas. O nome definitivo, as sete virtudes e sua liderança permanecem em revisão.
 
 ---
 
 ## [[Fé dos Antigos]]
 
-Religião pré-Eclipse. Acredita nos Criadores. Proibida pela Igreja.
+Conjunto provisório de crenças anteriores ao Eclipse. Sua relação com os Criadores ainda precisa ser definida.
 
 ---
 
 ## [[Caminho dos Errantes]]
 
-Comum entre viajantes e mercadores. Acredita na reencarnacao.
+Tradição espiritual ligada a viajantes, ciclos e reencarnação.
 
 ---
 
-## [[Culto dos Sussurrantes]]
+## Conceitos ainda não consolidados
 
-Seita proibida que venera o Veu Cinzento.
+O arquivo [[Culto dos Sussurrantes]] foi herdado de uma versão anterior da campanha e não deve ser tratado como religião canônica até ser revisado.

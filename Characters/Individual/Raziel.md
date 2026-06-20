@@ -10,11 +10,13 @@ tags:
   - rogue
 thumbnail: zz_media/th_raziel.PNG
 status: Vivo
-location: "Fortaleza de Gharok"
-territory: "[[FORTALEZA DE GHAROK]]"
+location: "[[Fortaleza de Gharok]]"
+territory: "[[Fortaleza de Gharok]]"
 faction: "Clã Sanguinallis"
-class: Ladrão / Hemomante
-race: Vampiro (Sanguinallis)
+class: Ladrão (Assassino) / Hemomante
+race: Vampiro (Humano Amaldiçoado / Sanguinallis)
+age: 340
+alignment: Caótico Neutro
 role: player
 ---
 
@@ -27,14 +29,16 @@ role: player
 
 **Nome:** Raziel
 **Título:** O Espectro da Névoa de Sangue
-**Classe:** Ladrão / Hemomante
-**Raça:** Vampiro do Clã Sanguinallis
-**Idade:** Imortal; permaneceu aprisionado por mais de trezentos anos
+**Classe:** [[Ladrão]] — especialização Assassino / Hemomante
+**Raça:** Vampiro; humano amaldiçoado ligado ao Clã Sanguinallis
+**Idade:** 340 anos; aparência de aproximadamente 30 anos
+**Altura:** 1,88 m
+**Alinhamento:** Caótico Neutro
 **Status:** Vivo
 
 **Afiliação:** Clã Sanguinallis, antes da traição
 
-**Localização ligada à origem:** Fortaleza de Gharok
+**Localização ligada à origem:** [[Fortaleza de Gharok]]
 
 **Associados conhecidos:** Ancião Primordial
 
@@ -50,7 +54,7 @@ role: player
 
 > <h4>"O sangue da nova era é fraco e diluído. Mas o teu foi refinado pelo ódio perfeito."</h4>
 
-Raziel foi o ápice do Clã Sanguinallis — o executor pessoal de **Lorde Malakar** na Fortaleza de Gharok. Enquanto seus irmãos **Kaelen**, o Flagelo, e **Vandor**, o Senhor das Bestas, marchavam na superfície como generais brutais, Raziel movia-se onde a luz não ousava tocar.
+Raziel foi o ápice do Clã Sanguinallis — o executor pessoal de **Lorde Malakar** na [[Fortaleza de Gharok]]. Enquanto seus irmãos **Kaelen**, o Flagelo, e **Vandor**, o Senhor das Bestas, marchavam na superfície como generais brutais, Raziel movia-se onde a luz não ousava tocar.
 
 Sua perícia com as **Adagas de Espectro Fantasma** — lâminas forjadas na fronteira entre o plano material e o etéreo — desafiava a própria realidade. Quando Raziel erguia o braço, seus alvos viam apenas um rastro efêmero de fumaça escura antes de suas vidas serem drenadas.
 
@@ -82,7 +86,7 @@ Ele entrou no poço como um assassino traído. Emergiu como a própria calamidad
 
 1. **O Primeiro Sangue — [[Campos de Earthropo]]:** Kaelen, o Flagelo, lidera patrulhas militares e escava as [[Ruínas de Valthor]] atrás de relíquias. Caminha sobre as terras sob as quais Raziel renasceu.
 2. **O Senhor das Feras — [[Floresta de Avenor]]:** Vandor, que outrora controlava os lobos da noite. Aprenderá que nenhuma criatura selvagem pode obedecer a um mestre cujo sangue está prestes a ser fervido de dentro para fora.
-3. **A Queda do Trono — Fortaleza de Gharok:** Lorde Malakar ainda se assenta em seu trono de opulência, acreditando que o passado está enterrado.
+3. **A Queda do Trono — [[Fortaleza de Gharok]]:** Lorde Malakar ainda se assenta em seu trono de opulência, acreditando que o passado está enterrado.
 
 ---
 
@@ -112,25 +116,46 @@ Esta seção deve ser revisada quando a interpretação do personagem estiver ma
 
 ## Habilidades
 
-- **Hemomancia:** Controle absoluto sobre o sangue — solidificar plasma em lanças, drenar vida, evaporar sangue em névoa carmesim
-- **Adagas de Espectro Fantasma:** Lâminas que cortam entre o plano material e o etéreo
-- **Asas Escarlates:** Asas de sangue solidificado que permitem voo e domínio dos céus
-- **Sangue Antigo:** Regeneração acelerada, força sobre-humana, imortalidade
-- **Névoa de Sangue:** Capacidade de se dissolver em névoa carmesim para locomoção e furtividade
+- **Furto Sombrio:** Especialização em infiltração, arrombamento e desarme de armadilhas.
+- **Passo nas Sombras:** Movimento silencioso entre áreas escuras.
+- **Hemomancia:** Manipula sangue para causar dano, defender-se, curar-se e enfraquecer inimigos.
+- **Drenar Vida:** Rouba energia vital para recuperar o próprio corpo.
+- **Névoa de Sangue:** Transforma o próprio sangue em névoa densa para cegar, confundir ou atravessar pequenas frestas.
+- **Domínio sobre o Sangue:** Molda sangue como arma, escudo ou corrente.
+- **Visão Noturna Aprimorada:** Enxerga mesmo na escuridão absoluta.
+- **Regeneração Acelerada:** Consome sua reserva de sangue para recuperar ferimentos graves.
+- **Asas Escarlates:** Manifestação de sangue solidificado associada ao poder recebido do Ancião Primordial.
 
 ## Equipamentos
 
-### Adagas de Espectro Fantasma
+### [[Adagas de Espectro Fantasma]]
 
-Lâminas forjadas na fronteira entre os planos material e etéreo. Faziam parte da identidade de Raziel como executor do Clã Sanguinallis.
+Lâminas de arremesso etéreas praticamente invisíveis quando empunhadas. Ao perfurar uma criatura, drenam energia vital para alimentar a reserva de sangue de Raziel.
 
-O estado atual das adagas após os trezentos anos de aprisionamento ainda precisa ser confirmado.
+### [[Manto Primordial do Ancião]]
+
+Armadura de couro batido extraplanar, tecida com a escuridão das cavernas sob as [[Ruínas de Valthor]]. Abafa os movimentos de Raziel e reforça sua capacidade de desaparecer nas sombras.
 
 ## Aparência
 
-O retrato atual apresenta Raziel como uma figura encapuzada, envolvida em vestes e armadura escuras, com uma presença carmesim associada à sua hemomancia.
+Raziel possui aproximadamente 1,88 m de altura e a aparência de um humano de 30 anos. Tem cabelos longos e negros, pele pálida e olhos marcados pelo brilho vermelho de sua hemomancia.
 
-Detalhes como altura, olhos, cabelos, cicatrizes, símbolos do clã e alterações causadas pelo Sangue Antigo ainda precisam ser definidos pelo jogador.
+Usa couro e placas negras, um manto escuro e as Adagas de Espectro Fantasma. Quando utiliza o Sangue Antigo, névoa e filamentos carmesins se formam ao redor de seu corpo.
+
+## Atributos da referência visual
+
+| Atributo | Valor |
+|:--|--:|
+| Força | 16 |
+| Destreza | 20 |
+| Constituição | 18 |
+| Inteligência | 16 |
+| Sabedoria | 14 |
+| Carisma | 16 |
+
+### Reserva de Sangue
+
+Raziel utiliza uma reserva de sangue para alimentar habilidades vampíricas, regeneração e hemomancia. A referência visual representa uma reserva máxima de **seis unidades**, com **cinco disponíveis** no momento retratado.
 
 ## Relações
 
