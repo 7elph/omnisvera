@@ -47,11 +47,12 @@ zoomDelta: 0.5
 unit: miles
 scale: 1
 darkMode: false
+marker: Location, 42, 99, [[Maré Baixa]]
 ```
 
 ## Marcadores
 
-Clique com o botão direito no mapa para criar um marcador e vincule-o à nota correspondente.
+[[Maré Baixa]] foi posicionada provisoriamente na zona portuária ao sul da capital. Clique com o botão direito no mapa para criar outros marcadores e vinculá-los às notas correspondentes.
 
 ## HELP:
 Hold ALT + click & drag to measure the distance between one area and the next.

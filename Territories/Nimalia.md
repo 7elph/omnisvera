@@ -14,7 +14,7 @@ reputation: civilizado
 politics: Rei
 leader: [[Augustus Terra Decimus]]
 region: 
-  - Reino Central
+  - Região Central de Earthropo
 size: Reino
 population:
 religion: 
@@ -35,6 +35,8 @@ imports:
 O principal reino dos antropos em Earthropo. Nimalia reúne diferentes povos beastfolks sob a autoridade de [[Augustus Terra Decimus]] e da [[Coroa de Nimalia]].
 
 A [[Capital de Nimalia]] ainda não possui nome definitivo. É uma grande cidade de torres de pedra e mercados movimentados, onde antropos convivem com comunidades humanas, élficas, anãs e estrangeiras.
+
+Como referência inicial de cartografia, o reino ocupa as terras centrais ao redor da capital. Sua fronteira oriental ou nordeste encontra a [[Floresta de Avenor]]. As demais bordas ainda não foram traçadas.
 
 ---
 

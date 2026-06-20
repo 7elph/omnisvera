@@ -44,11 +44,22 @@ zoomDelta: 0.5
 unit: miles
 scale: 1
 darkMode: false
+marker: Territory, 105, 128, [[Nimalia]]
+marker: Territory, 91, 137, [[Capital de Nimalia]]
+marker: Territory, 108, 169, [[Floresta de Avenor]]
+marker: Location, 99, 182, [[Leth'valora]]
 ```
 
 ## Marcadores
 
-Clique com o botão direito no mapa para criar um marcador e vincule-o à nota correspondente. Os marcadores deste mapa são independentes dos mapas legados.
+Esta primeira camada fixa apenas os pontos confirmados do núcleo jogável:
+
+- [[Nimalia]] ocupa provisoriamente a região central do continente;
+- a [[Capital de Nimalia]] corresponde à grande cidade central;
+- a [[Floresta de Avenor]] fica a leste/nordeste da capital e faz fronteira com o reino;
+- as ruínas de [[Leth'valora]] ficam dentro de Avenor.
+
+As coordenadas são aproximações de trabalho e podem ser refinadas sem alterar o cânone. Clique com o botão direito no mapa para criar outros marcadores vinculados a notas. Os marcadores deste mapa são independentes dos mapas legados.
 
 ## HELP:
 Hold ALT + click & drag to measure the distance between one area and the next.

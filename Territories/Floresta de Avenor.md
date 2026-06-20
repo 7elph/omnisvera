@@ -34,7 +34,7 @@ imports:
 > [!NOTE|clean no-i right]+ ‎FLORESTA DE AVENOR  
 > ![[avenor.png|400]]
 
-A maior floresta das terras centrais de Earthropo. Suas árvores antigas se estendem por quilômetros ao longo da fronteira do Reino de [[Nimalia]].
+A maior floresta das terras centrais de Earthropo. No mapa de trabalho, ocupa a região florestal a leste ou nordeste da [[Capital de Nimalia]], estendendo-se por quilômetros ao longo da fronteira do Reino de [[Nimalia]].
 
 Avenor é conhecida por suas trilhas esquecidas, ruínas cobertas pela vegetação e pela enorme quantidade de criaturas selvagens que habitam suas profundezas. Caçadores, aventureiros e eremitas frequentemente atravessam a floresta, mas poucos conhecem seus verdadeiros segredos.
 

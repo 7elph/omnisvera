@@ -94,6 +94,11 @@ Earthropo vive uma estabilidade aparente. Coroa, religião, comércio e forças 
 
 ### Geografia de trabalho
 
+- O Reino de Nimalia ocupa provisoriamente a região central de Earthropo, ao redor de sua capital.
+- A grande cidade central do mapa de Earthropo representa a [[Capital de Nimalia]].
+- A Floresta de Avenor foi posicionada provisoriamente na região florestal a leste ou nordeste da capital, formando fronteira com Nimalia.
+- As ruínas de Leth'valora ficam dentro de Avenor.
+- [[Maré Baixa]] fica na zona portuária ao sul da capital.
 - O futuro reino élfico ficará na região de maior concentração florestal do continente.
 - O futuro reino anão ficará próximo às montanhas e áreas vulcânicas do norte ou nordeste.
 - As [[Ruínas de Valthor]] ficam no sudeste de Earthropo.
