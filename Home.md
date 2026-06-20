@@ -9,34 +9,32 @@ banner-fade: -45
 
 ---
 
-<div style="text-align: center;">
-  <img src="omnisvera.png" width="1300px">
-</div>
+# 🜂 NIMALIA
 
-<br>
+> *“Toda estrada parece simples antes do primeiro passo. Nas fronteiras de Nimalia, a floresta guarda nomes esquecidos, as ruínas preservam vozes antigas e cada viajante carrega uma história que ainda pode mudar Earthropo.”*
 
-
+Nimalia é o primeiro horizonte das **Crônicas de Earthropo**: um ponto de partida para jornadas, descobertas e histórias que serão construídas durante a campanha.
 
 > [!cards|5]
-> **OMNISVERA**
-> [![[sool.png\|sban htiny ctr p+t]]](EARTHROPO/EARTHROPO.md)
+> **NIMALIA**
+> [![[sool.png\|sban htiny ctr p+t]]](Territories/Nimalia.md)
 >
-> **OUTLINES**
-> [![[eo.png\|sban htiny ctr]]](Workflow/OUTLINES.md)
+> **CRÔNICAS**
+> [![[eo.png\|sban htiny ctr]]](EARTHROPO/EARTHROPO.md)
 >
-> **NOTES**
+> **NOTAS**
 > [![[t2.png\|sban htiny ctr]]](NOTES.md)
 > 
-> **NOTÍCIAS DO REINO**
-> [![[guild.png\|sban htiny ctr]]](LATEST_NEWS.md)
+> **RUMORES E DESCOBERTAS**
+> [![[news1.png\|sban htiny ctr]]](LATEST_NEWS.md)
 > 
-> **MAPA DE EARTHROPO**
+> **MAPAS DE EARTHROPO**
 > [![[mapp.png\|sban htiny ctr]]](MAPA%20DE%20EARTHROPO.md)
 >
 
 
 
-> [!world]- OMNISVERA DE PERTO
+> [!world]- UM PRIMEIRO OLHAR SOBRE EARTHROPO
 > ```datacards 
 > TABLE cover FROM #home
 > SORT file.name asc
@@ -57,9 +55,9 @@ banner-fade: -45
 > [!infobox]
 >```calendarium
 >```
-> **ÚLTIMOS CAPÍTULOS:**
+> **CRÔNICAS DISPONÍVEIS:**
 >```datacards 
->TABLE cover, date, description FROM #story
+>TABLE cover, date, description FROM #story AND #earthropo
 >SORT file.ctime desc
 >limit 3
 >
@@ -71,12 +69,14 @@ banner-fade: -45
 >```
 
 
-> [!news]+ CORREIO DO REINO — NOTÍCIAS DE EARTHROPO
-> ### Capítulo 01: Sombras do Evento Principal
-> - Um viajante moribundo chamado **Elias Vorn** chega a [[Locations/Oakvale|Oakvale]] carregando um artefato desconhecido.
-> - A [[Factions/Igreja das Sete Chamas|Igreja das Sete Chamas]] envia o Inquisidor **Aldous Vane** para recuperar o artefato.
-> - Os heróis descobrem o primeiro **Fragmento dos Criadores** nas ruínas da Floresta de Thornmarch.
-> - O [[Factions/Culto dos Sussurrantes|Culto dos Sussurrantes]] começa a se revelar nas sombras.
+> [!news]+ FIOS DA CAMPANHA
+> Três histórias avançam por Earthropo, ainda sem saber onde irão se encontrar:
+>
+> - [[Vezemir]] percorre a [[Floresta de Avenor]] em busca do dragão de colar dourado que destruiu [[Leth'valora]].
+> - [[Varkh Nimalis]] deixa [[Maré Baixa]] para descobrir quem está usando os métodos de seu mestre na fabricação de remédios falsos.
+> - [[Raziel]] retorna a um mundo transformado depois de mais de trezentos anos de aprisionamento, carregando antigas dívidas de sangue.
+>
+> A campanha começa no nível 1. O mapa não será entregue pronto: lugares, perigos e histórias ganharão forma à medida que forem descobertos.
 > #### **[[LATEST_NEWS|Leia Mais...]]**
 
 
@@ -154,6 +154,7 @@ banner-fade: -45
  FROM "/"
  WHERE file.mtime >= date(today) - dur(30 days)
  AND file.name != this.file.name
+     AND !contains(file.path, "zz_media")
      AND !contains(file.path, "z_Assets")
     AND !contains(file.path, "Inline Scripts")
      AND !contains(file.path, "z_Templates")

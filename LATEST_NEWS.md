@@ -6,36 +6,41 @@ tags: home
 cover: zz_media/news1.png
 ---
 
-# 📰 Crônicas do Reino de Eryndor
+# Rumores e Descobertas
 
-## ⚔️ Primeday, 12º de Floriscer, 2100
+Esta página acompanha os fios narrativos que já pertencem à campanha. Ela não representa um jornal oficial de Nimalia e não transforma ideias futuras em acontecimentos já ocorridos.
 
-### Viajante Moribundo Encontrado em Oakvale
+## Caminhos dos personagens
 
-Nas ruínas de [[Leth'valora]], um homem desconhecido foi encontrado cambaleando entre as construções destruídas, vestindo roupas rasgadas cobertas por uma poeira cinzenta. Antes de falecer, entregou uma moeda de metal desconhecido e um diário parcialmente queimado. Suas últimas palavras: *"O Véu... está... rasgando."*
+### O Bastardo de Ferro
 
-### Inquisidores Chegam a Oakvale
+[[Vezemir]] continua sua busca pelo dragão verde de colar dourado responsável pela destruição de [[Leth'valora]] e pela morte de [[Mira Valen]]. As relíquias que carrega ainda guardam perguntas sobre sua origem e sobre os [[Guardiões do Véu Cinzento]].
 
-O Inquisidor [[Characters/Individual/Aldous Vane|Aldous Vane]] da [[Factions/Igreja das Sete Chamas|Igreja das Sete Chamas]] chegou à vila horas depois, exigindo a entrega dos artefatos. O homem morto, identificado como **Elias Vorn**, era um herege procurado. A população local está dividida — alguns querem cooperar com a Igreja, outros desconfiam das intenções do Inquisidor.
+### O Corvo da Maré Baixa
 
-### Fragmento dos Criadores Descoberto
+Alguém está usando o símbolo e os métodos de Mestre Odran Veyl para distribuir remédios falsos. [[Varkh Nimalis]] deixou [[Maré Baixa]] seguindo esse rastro, sem saber até onde ele se estende.
 
-Seguindo pistas do diário, aventureiros encontraram ruínas antigas na Floresta de Thornmarch. Lá, descobriram um pedestal que aceitava a moeda misteriosa, revelando uma câmara selada contendo um **Fragmento de Cristal Primitivo** — o primeiro dos seis artefatos dos Criadores.
+### O Espectro da Névoa de Sangue
 
-### Movimentações do Culto dos Sussurrantes
-
-Relatos da Fronteira do Véu indicam atividade aumentada do [[Factions/Culto dos Sussurrantes|Culto dos Sussurrantes]]. Rituais foram realizados nas bordas do Véu Cinzento. A guarda do Posto Avançado Vigília foi reforçada.
+Depois de mais de trezentos anos aprisionado, [[Raziel]] despertou nas cavernas sob as [[Ruínas de Valthor]]. O mundo que conhecia desapareceu, mas os nomes daqueles que o traíram permanecem.
 
 ---
 
-## 📜 Edições Anteriores
+## Lugares no horizonte
 
-| Data | Manchete |
-|:--|:--|
-| 10º de Floriscer | Exploração na Floresta de Thornmarch Revela Ruínas Antigas |
-| 8º de Floriscer | Caravana Desaparecida na Estrada de Millhaven |
-| 5º de Floriscer | Festival da Coroa em Astrahold reúne nobres de todo o reino |
+- **[[Capital de Nimalia]]:** ponto de referência inicial do reino e lar de [[Maré Baixa]].
+- **[[Floresta de Avenor]]:** fronteira viva de Nimalia, marcada por trilhas antigas, ruínas e pela história de Vezemir.
+- **[[Leth'valora]]:** vila élfica destruída pelo dragão de colar dourado.
+- **[[Ruínas de Valthor]]:** ruínas do sudeste de Earthropo, ligadas ao retorno de Raziel.
 
 ---
 
-*Publicado pela Guilda dos Mensageiros de Astrahold.*
+## Perguntas que movem a campanha
+
+- Quem está falsificando os métodos de Odran?
+- Onde está o dragão que destruiu Leth'valora?
+- O que o Ancião Primordial deseja de Raziel?
+- Por que as relíquias de Vezemir reagem a forças que ele não compreende?
+- O que fará esses três viajantes seguirem o mesmo caminho?
+
+As respostas surgirão durante a campanha. Até lá, rumores devem permanecer rumores.
