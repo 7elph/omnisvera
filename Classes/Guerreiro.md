@@ -6,7 +6,7 @@ tags:
   - class
   - warrior
   - old-dragon-2
-cover: zz_media/mestre de armas.png
+cover: zz_media/avenor.png
 status: Active
 ruleset: Old Dragon 2E
 source: https://olddragon.com.br/classes/guerreiro

@@ -6,7 +6,7 @@ tags:
   - race
   - kenku
   - anthropomorph
-cover: zz_media/Characters.png
+cover: zz_media/earthropo.png
 status: Active
 ruleset: Raça autoral - mecânica pendente
 ---

@@ -4,7 +4,7 @@ tags:
   - Category/Race
   - race
   - human
-cover: zz_media/human.png
+cover: zz_media/earthropo.png
 status: Active
 ---
 

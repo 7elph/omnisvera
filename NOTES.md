@@ -46,7 +46,7 @@ FROM "/"
 WHERE file.name != this.file.name
 AND !contains(file.path, "zz_media")
 AND !contains(file.path, ".obsidian")
-AND !contains(file.path, "Legacy - Disgraceland")
+AND !contains(file.name, "Legacy -")
 SORT file.mtime DESC
 LIMIT 15
 ```

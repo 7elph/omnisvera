@@ -4,7 +4,7 @@ tags:
   - Category/Race
   - race
   - halfling
-cover: zz_media/halfling.png
+cover: zz_media/earthropo.png
 status: Active
 ---
 

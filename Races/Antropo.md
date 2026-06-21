@@ -4,7 +4,7 @@ tags:
   - Category/Race
   - race
   - anthropomorph
-cover: zz_media/anthropo.png
+cover: zz_media/earthropo.png
 status: Active
 ---
 

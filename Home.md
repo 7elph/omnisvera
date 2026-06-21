@@ -1,6 +1,6 @@
 ---
 obsidianUIMode: preview
-banner: "[[zz_media/big1.png]]"
+banner: "[[zz_media/avenor.png]]"
 banner-x: 51
 banner-y: 34
 banner-height: 280
@@ -83,7 +83,7 @@ Nimalia é o primeiro horizonte das **Crônicas de Earthropo**: um ponto de part
 > [!home]+ ÚLTIMOS (5) PERSONAGENS ATUALIZADOS
 > ```dataview
 > table 
->  "<img src='" + thumbnail + "' width='60' style='border-radius:4px;box-shadow:0 0 3px rgba(255, 255, 255, 0.4);' />" as "IMAGEM",
+>  choice(thumbnail, "<img src='" + thumbnail + "' width='60' style='border-radius:4px;box-shadow:0 0 3px rgba(255, 255, 255, 0.4);' />", "—") as "IMAGEM",
 >   status, 
 >   role, 
 >   district, 
@@ -160,6 +160,7 @@ Nimalia é o primeiro horizonte das **Crônicas de Earthropo**: um ponto de part
      AND !contains(file.path, "z_Templates")
      AND !contains(file.path, "daily notes")
      AND !contains(file.path, "BRAT")
+     AND !contains(file.name, "Legacy -")
  SORT file.mtime DESC
  LIMIT 10
 ```

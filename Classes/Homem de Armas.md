@@ -5,7 +5,7 @@ tags:
   - rules-reference
   - legacy-term
   - old-dragon
-cover: zz_media/mestre de armas.png
+cover: zz_media/avenor.png
 status: Termo legado
 ruleset: Old Dragon anterior
 ---

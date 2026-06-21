@@ -69,3 +69,4 @@ Este arquivo é a memória operacional compartilhada entre Codex e a IA local. E
 - `NOTES.md` e o caminho ativo do Capítulo 01 já foram separados de seus equivalentes legados.
 - O modelo local de contingência exige fontes explícitas; busca semântica isolada não autoriza síntese.
 - As notas ativas de Guerreiro, Ladrão, Clérigo e Mago agora resumem OD2; as versões da edição anterior estão arquivadas como `Legacy`.
+- A auditoria de runtime verifica consultas, mídias, frontmatter e Leaflet por `Workflow/audit_runtime.py`.

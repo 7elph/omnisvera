@@ -21,7 +21,7 @@ length(filter(rows, (row) => contains(row.file.tags, "location"))) AS "Localiza�
 length(filter(rows, (row) => contains(row.file.tags, "territory"))) AS "Territórios",
 length(filter(rows, (row) => contains(row.file.tags, "religion"))) AS "Religiões"
 FROM "/"
-WHERE !contains(file.name, "Legacy - Disgraceland")
+WHERE !startswith(file.name, "Legacy -")
 GROUP BY true
 ```
 
@@ -33,7 +33,7 @@ NoteStatus AS "Estado",
 length(rows) AS "Quantidade"
 FROM "/"
 WHERE NoteStatus
-AND !contains(file.name, "Legacy - Disgraceland")
+AND !startswith(file.name, "Legacy -")
 GROUP BY NoteStatus
 SORT NoteStatus ASC
 ```
@@ -43,8 +43,8 @@ SORT NoteStatus ASC
 ```dataview
 TABLE status, info, file.mtime AS "Modificada"
 FROM "/"
-WHERE NoteStatus = "Placeholder" OR NoteStatus = "Draft"
-AND !contains(file.name, "Legacy - Disgraceland")
+WHERE (NoteStatus = "Placeholder" OR NoteStatus = "Draft")
+AND !startswith(file.name, "Legacy -")
 SORT file.path ASC
 ```
 

@@ -10,6 +10,9 @@ cover: zz_media/t6.png
 
 Earthropo é um continente moldado por diversas raças, reinos e tradições. Embora cada território possua seus próprios costumes, algumas práticas se tornaram universais ao longo dos séculos, criando uma identidade compartilhada entre seus habitantes.
 
+> [!note] Estrutura em preparação
+> Os cartões de entretenimento, música, esportes e notícias permanecerão vazios até que notas canônicas dessas categorias sejam criadas. As consultas já estão preparadas e não representam erro de plugin.
+
 ---
 ## Entretenimento
 <br>

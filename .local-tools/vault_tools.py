@@ -47,6 +47,10 @@ FRONTMATTER = re.compile(r"\A---\s*\n(.*?)\n---\s*(?:\n|\Z)", re.DOTALL)
 HEADING = re.compile(r"(?m)^#{1,6}\s+.+$")
 
 
+def is_legacy_note(path: Path) -> bool:
+    return path.name.startswith("Legacy -")
+
+
 class UniqueLoader(yaml.SafeLoader):
     pass
 
@@ -71,7 +75,7 @@ def markdown_files(root: Path, include_legacy: bool = False) -> list[Path]:
     for path in root.rglob("*.md"):
         if any(part in EXCLUDED_DIRS for part in path.parts):
             continue
-        if not include_legacy and path.name.startswith("Legacy - Disgraceland"):
+        if not include_legacy and is_legacy_note(path):
             continue
         files.append(path)
     return sorted(files)
@@ -110,7 +114,7 @@ def audit(root: Path, changed_only: bool, include_legacy: bool) -> int:
         else markdown_files(root, include_legacy=include_legacy)
     )
     if not include_legacy:
-        files = [path for path in files if not path.name.startswith("Legacy - Disgraceland")]
+        files = [path for path in files if not is_legacy_note(path)]
     all_notes = markdown_files(root, include_legacy=True)
     stems = {path.stem.casefold() for path in all_notes}
     yaml_errors: list[tuple[str, str]] = []

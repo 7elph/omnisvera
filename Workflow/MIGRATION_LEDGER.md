@@ -66,7 +66,9 @@ Este documento controla a retirada de Disgraceland do conteúdo ativo sem perder
 - [ ] Raças e terminologia racial.
 - [ ] Religiões.
 - [ ] Facções ainda não consolidadas.
-- [ ] Mapas e marcadores Leaflet.
+- [x] Validação técnica de Dataview, DataCards, frontmatter e Leaflet — registrada em `Workflow/Runtime Audit Report.md`.
+- [x] Mapas Leaflet — IDs, imagens e links ativos validados; estado persistido de Tribucia isolado dos mapas ativos.
+- [ ] Revisar posições e nomes dos marcadores conforme a geografia canônica for definida.
 
 ## Placeholders deliberados
 

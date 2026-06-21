@@ -6,7 +6,7 @@ tags:
   - class
   - wizard
   - old-dragon-2
-cover: zz_media/mago.png
+cover: zz_media/avenor.png
 status: Active
 ruleset: Old Dragon 2E
 source: https://olddragon.com.br/classes/mago

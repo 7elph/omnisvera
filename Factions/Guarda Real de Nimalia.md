@@ -11,11 +11,13 @@ tags:
   - military
   - legalista
   - army
-thumbnail:
-  - - zz_media/t7.png
+thumbnail: zz_media/t7.png
 ---
 
 # GUARDA REAL DE NIMALIA
+
+> [!note] Membros ainda não consolidados
+> A consulta abaixo permanecerá vazia enquanto nenhum personagem confirmado receber a tag `guarda`. O comandante registrado continua apenas como texto provisório.
 
 ```datacards
 TABLE thumbnail, location, status FROM #guarda

@@ -12,11 +12,11 @@ tags:
 
 # Relatório de Auditoria
 
-_Atualizado em 20 de junho de 2026._
+_Atualizado em 21 de junho de 2026._
 
 ## Resultado atual
 
-- **Notas ativas verificadas:** 80
+- **Notas ativas verificadas:** 83
 - **Erros de YAML:** 0
 - **Arquivos vazios:** 0
 - **Wikilinks ativos ainda sem nota:** 0
@@ -32,7 +32,7 @@ O relatório exclui:
 - arquivos de mídia;
 - configurações internas do Obsidian;
 - ambientes e índices locais;
-- notas cujo nome começa com `Legacy - Disgraceland`.
+- notas cujo nome começa com `Legacy -`.
 
 ## Comando de verificação
 

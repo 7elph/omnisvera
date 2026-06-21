@@ -4,7 +4,7 @@ tags:
   - Category/Race
   - race
   - dragonborn
-cover: zz_media/dragonborn.png
+cover: zz_media/earthropo.png
 status: Active
 ---
 

@@ -3,6 +3,7 @@ NoteIcon: class
 NoteStatus: Draft
 status: Regra opcional
 ruleset: Old Dragon anterior - suplemento independente
+cover: zz_media/avenor.png
 tags:
   - Category/Class
   - class
