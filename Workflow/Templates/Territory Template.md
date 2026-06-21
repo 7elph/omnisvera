@@ -1,7 +1,7 @@
 ---
 obsidianUIMode: preview
 NoteIcon: settlement
-NoteStatus: Draft
+NoteStatus: Template
 status: Ativo
 visibility: shared
 type:

@@ -2,10 +2,15 @@
 obsidianUIMode: preview
 NoteIcon: lore
 NoteStatus: Draft
-status: Cânone de trabalho
-info: Fenômeno de névoa, ruínas e memória quebrada associado ao Eclipse de Obsidiana.
+status: Mistério
+visibility: gm
+info: Fenômeno de névoa, ruínas e memória fragmentada associado ao Eclipse de Obsidiana.
+related:
+  - "[[Eclipse de Obsidiana]]"
+  - "[[O Fraturamento]]"
+  - "[[Criadores]]"
+cover:
 tags:
-  - Category/Lore
   - lore
   - veil
   - mystery
@@ -14,20 +19,25 @@ tags:
 
 # Véu Cinzento
 
-Nome usado para uma fronteira ou fenômeno surgido ou revelado após o [[Eclipse de Obsidiana]].
+## Conhecimento público
 
-## Cânone de trabalho
+O Véu Cinzento é o nome dado a um fenômeno associado a névoas incomuns, caminhos que deixam de levar ao mesmo lugar e ruínas cuja arquitetura não corresponde a nenhuma cultura conhecida.
 
-- Está associado a névoa, ruínas impossíveis e memórias fragmentadas.
-- Possui alguma relação com os Criadores e com fragmentos de mundos perdidos.
-- Os [[Guardiões do Véu Cinzento]] podem ter protegido conhecimentos ligados ao fenômeno.
-- Sua natureza, extensão e comportamento ainda não foram definidos completamente.
+Relatos sobre o Véu são raros, contraditórios e frequentemente tratados como superstição. Viajantes prudentes evitam regiões onde a paisagem parece repetir-se ou onde memórias deixam de concordar.
 
-## Em aberto
+## Registros e versões
 
-- Se é uma região física, uma barreira, uma ruptura ou mais de uma dessas coisas.
-- Se está encolhendo, avançando ou alternando entre estados.
-- O que ocorre com pessoas e lugares que o atravessam.
-- Relação exata com [[O Fraturamento]].
+- Alguns cronistas afirmam que o Véu surgiu durante o [[Eclipse de Obsidiana]].
+- Outros acreditam que ele sempre existiu e apenas se tornou visível.
+- A expressão “Véu do Eclipse” aparece em textos antigos, mas não é o nome adotado atualmente.
+- A relação com [[O Fraturamento]] é uma hipótese, não conhecimento estabelecido.
 
-Esta nota substitui a denominação inconsistente **Véu do Eclipse**. O nome usado no cânone de trabalho é **Véu Cinzento**.
+## Questões em aberto
+
+- O fenômeno ocupa um lugar fixo?
+- Ele avança, recua ou reaparece?
+- O que acontece com pessoas e lugares tocados por ele?
+- Por que certos artefatos parecem reagir à sua presença?
+
+> [!gm]- Verdade do mestre
+> O Véu é um fenômeno real, mas sua natureza permanece deliberadamente indefinida. Ele pode aproximar fragmentos, memórias e lugares incompatíveis sem funcionar como uma simples barreira ou portal. Qualquer explicação definitiva deve ser aprovada antes de entrar no cânone.

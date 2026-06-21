@@ -1,34 +1,39 @@
 ---
+obsidianUIMode: preview
 cssclasses:
   - religion
 NoteIcon: religion
 NoteStatus: Draft
-status: Em desenvolvimento
-info: Tradição espiritual ligada a viagens, ciclos e reencarnação.
+status: Ativa
+visibility: shared
+deities: []
+cover:
+leader:
+headquarters:
+territory: Earthropo
+info: Tradição espiritual sobre viagem, transformação e ciclos de vida.
 tags:
   - religion
   - faith
   - travelers
   - earthropo
-  - draft
 ---
 
 # Caminho dos Errantes
 
-Tradição espiritual difundida entre viajantes, mercadores e pessoas que passam longos períodos longe de sua terra natal.
+Tradição espiritual difundida entre viajantes, mercadores, mensageiros e pessoas que vivem longe de sua terra natal.
 
-## Cânone de trabalho
+## Princípios
 
-- A viagem é tratada como transformação, não apenas deslocamento.
-- Seus seguidores acreditam que vidas e caminhos podem formar ciclos.
-- A reencarnação aparece como uma ideia central nas notas atuais.
+- Toda viagem transforma quem a realiza.
+- Caminhos podem se repetir sem levar ao mesmo destino.
+- Hospitalidade cria uma dívida sagrada.
+- A morte pode ser compreendida como passagem, retorno ou novo caminho.
 
-## Em aberto
+## Prática
 
-- Ritos, símbolos e lugares sagrados.
-- Existência de sacerdotes ou apenas praticantes.
-- Relação com morte, memória e retorno.
-- Presença entre diferentes povos de Earthropo.
+O Caminho não exige uma igreja central. Seus praticantes usam pequenos marcos de estrada, nós em cordas, moedas deixadas em encruzilhadas e histórias compartilhadas ao redor do fogo.
 
-> [!note]
-> O Caminho dos Errantes não deve ser confundido automaticamente com o [[Conclave dos Errantes]]. A semelhança de nomes pode ser coincidência ou receber uma explicação futura.
+## Relação com o Conclave
+
+O [[Conclave dos Errantes]] não é uma organização religiosa, embora alguns membros sigam essa tradição e tenham inspirado parte de seu nome.

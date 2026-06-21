@@ -1,32 +1,41 @@
 ---
+obsidianUIMode: preview
 cssclasses:
   - religion
 NoteIcon: religion
 NoteStatus: Draft
-status: Em desenvolvimento
-info: Conjunto de crenças anteriores ao Eclipse de Obsidiana.
+status: Ativa
+visibility: shared
+deities:
+  - "[[Criadores]]"
+cover:
+leader:
+headquarters:
+territory: Earthropo
+info: Conjunto de tradições anteriores às igrejas organizadas atuais.
 tags:
   - religion
   - faith
   - creators
   - earthropo
-  - draft
 ---
 
 # Fé dos Antigos
 
-Nome provisório para tradições religiosas anteriores ao [[Eclipse de Obsidiana]].
+Nome coletivo para crenças regionais, familiares e raciais que preservam histórias anteriores às instituições religiosas atuais.
 
-## Cânone de trabalho
+Não é uma única igreja. Seus mitos, ritos e nomes mudam entre povos, mas muitos falam de entidades que moldaram a terra, ergueram estruturas impossíveis ou ensinaram os primeiros ofícios.
 
-Essas crenças preservam histórias sobre entidades, povos ou forças anteriores às religiões organizadas atuais. Algumas tradições relacionam os Antigos aos Criadores, mas essa ligação ainda não foi confirmada.
+## Práticas comuns
 
-## Em aberto
+- Culto a ancestrais.
+- Preservação oral de histórias.
+- Oferendas em ruínas, florestas, montanhas ou fontes.
+- Ritos próprios de cada povo.
 
-- Se constitui uma religião única ou diversas tradições.
-- Relação real com os Criadores.
-- Símbolos, ritos, sacerdotes e lugares sagrados.
-- Sobrevivência dessas crenças no presente.
+## Relação com os Criadores
 
-> [!warning] Estado do conteúdo
-> O conceito existe no vault, mas sua doutrina ainda precisa ser desenvolvida como cânone.
+Algumas tradições identificam seus deuses antigos com os [[Criadores]]. Outras rejeitam essa interpretação.
+
+> [!gm]- Verdade do mestre
+> Parte dessas tradições preserva memórias autênticas, mas nenhuma contém sozinha toda a verdade.

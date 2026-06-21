@@ -3,8 +3,13 @@ obsidianUIMode: preview
 NoteIcon: items
 NoteStatus: Active
 thumbnail: zz_media/med.PNG
+cover: zz_media/med.PNG
 status: Ativo
-item: Artefato
+visibility: gm
+item_type: Artefato
+owner: "[[Vezemir]]"
+origin: "[[Elarion Valthor]]"
+source: Lore de Vezemir
 tags:
   - item
   - artifact
@@ -36,4 +41,5 @@ O metal permanece frio mesmo próximo ao fogo. Marcas, runas e pequenas irregula
 
 O medalhão representa dever, silêncio e a responsabilidade de guardar conhecimentos capazes de ameaçar o equilíbrio entre luz e sombra.
 
-Sua reação à magia de Vezemir, ao dragão de colar dourado e ao Véu Cinzento permanece em aberto.
+> [!gm]- Verdade do mestre
+> Sua reação à magia de Vezemir, ao dragão de colar dourado e ao Véu Cinzento permanece em aberto. O medalhão não deve receber uma função definitiva antes da consolidação dos Guardiões.

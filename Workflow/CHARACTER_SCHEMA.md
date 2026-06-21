@@ -2,162 +2,93 @@
 obsidianUIMode: preview
 NoteIcon: outline
 NoteStatus: Active
-status: Active
+status: Ativo
+visibility: gm
 tags:
   - workflow
   - schema
-  - template
   - character-system
 ---
 
-# Schema de Personagens
+# Schema de personagens
 
-Este documento define o contrato de compatibilidade das páginas de personagem. Ele não substitui o conteúdo narrativo e não exige que todas as notas sejam normalizadas imediatamente.
+## Templates
 
-O objetivo é permitir correções graduais sem quebrar Dataview, DataCards, estilos, links ou filtros.
+- Jogador: [[Workflow/Templates/Player Character Template]]
+- NPC completo: [[Workflow/Templates/Character Template]]
+- NPC mínimo: [[Workflow/Templates/NPC Placeholder Template]]
 
-Para personagens de jogador, a referência estrutural é [[Workflow/Templates/Player Character Template|Player Character Template]], derivada da ficha de [[Vezemir]]. A seção de atributos permanece específica de cada ficha e não deve ser copiada sem fonte confirmada.
+## Propriedades comuns
 
-## Personagens centrais
+| Propriedade | Função |
+|:--|:--|
+| `NoteStatus` | Estado editorial da nota. |
+| `status` | Estado do personagem no mundo. |
+| `visibility` | `player`, `shared` ou `gm`. |
+| `thumbnail` | Retrato usado em consultas. |
+| `location` | Localização atual. |
+| `territory` | Território atual. |
+| `faction` | Afiliação atual. |
+| `religion` | Religião, quando definida. |
+| `class` | Classe mecânica. |
+| `race` | Raça. |
+| `level` | Nível, sempre em minúsculas. |
+| `role` | `player` ou `npc`. |
+| `occupation` | Cargo ou profissão de NPC. |
+| `chapters` | Lista de capítulos. |
 
-| Personagem | Arquivo | Classificação atual | Ponto a revisar |
-|:--|:--|:--|:--|
-| Vezemir | [[Vezemir]] | `role: player`, tags `player` e `character` | Consistência técnica auditada; [[Muralha de Dorn]] foi corrigida e [[Theron Elensar]] recebeu uma nota provisória. A identidade e a história de Theron continuam pendentes. |
-| Varkh Nimalis | [[Varkh Nimalis]] | `role: player`, tags `player` e `character` | Idade e afiliação permanecem abertas; a ficha do jogador João precisa ser identificada e reconciliada com a classe. |
-| Raziel | [[Raziel]] | `role: player`, tags `player` e `character` | Referência visual consolidada; personalidade e conexão com o grupo aguardam decisões do jogador. |
+## Atributos de jogadores
 
-Essa tabela registra o estado encontrado. Ela não autoriza correções automáticas.
-
-## Dependências observadas no vault
-
-As páginas e consultas atuais esperam principalmente:
-
-- `thumbnail` para retratos em tabelas e cartões;
-- `status` para estado do personagem;
-- `role` para função narrativa;
-- `location` para localização atual;
-- `territory` para agrupamento geográfico;
-- `faction` para afiliação;
-- `religion` em algumas consultas;
-- `class` e `race` para identificação;
-- `chapter` ou tags de capítulo para aparições;
-- a tag `character` para o personagem aparecer nas consultas gerais.
-
-Uma propriedade não deve ser removida apenas porque está vazia. Campos vazios ainda funcionam como parte do contrato do template.
-
-## Propriedades-base
-
-| Propriedade | Formato preferido | Obrigatória | Observação |
-|:--|:--|:--|:--|
-| `obsidianUIMode` | texto | Não | Normalmente `preview`. |
-| `NoteIcon` | texto | Sim | Taxonomia visual herdada do template. Preservar o valor existente; não inferir pelo nome da propriedade. |
-| `NoteStatus` | texto | Não | Estado editorial da nota, não do personagem. |
-| `thumbnail` | caminho de mídia | Sim | Preferir `zz_media/nome-do-arquivo.ext`. |
-| `status` | texto | Sim | Ex.: Vivo, Falecido, Desaparecido. |
-| `location` | texto ou wikilink entre aspas | Sim | Não mudar o tipo de uma nota existente sem necessidade. |
-| `territory` | texto ou wikilink entre aspas | Recomendável | Deve apontar para uma nota real quando for wikilink. |
-| `faction` | texto ou wikilink entre aspas | Recomendável | Pode ser `Nenhuma` quando aplicável. |
-| `religion` | texto ou wikilink entre aspas | Não | Manter se consultas ou narrativa utilizarem. |
-| `class` | texto | Sim | Classe mecânica ou descrição funcional. |
-| `race` | texto | Sim | Raça do personagem. |
-| `role` | texto | Sim | A taxonomia definitiva ainda precisa ser decidida. |
-| `chapters` | lista | Não | Propriedade adotada pelo template dos personagens de jogador. |
-| `tags` | lista | Sim | Deve incluir `character`. |
-
-## Tipos que devem ser preservados
-
-### Propriedades visuais
-
-Algumas propriedades podem ter funções de estilo que não são evidentes pelo nome.
-
-`NoteIcon`, por exemplo, pode participar da padronização visual de grupos, facções ou categorias de personagens. Um valor como `magicitem` não deve ser substituído por `character` apenas porque a nota descreve um personagem.
-
-Antes de alterar uma propriedade visual:
-
-1. comparar notas que apresentam a mesma aparência no Obsidian;
-2. verificar o template de origem;
-3. preservar o valor quando seu efeito ainda não estiver completamente documentado;
-4. confirmar visualmente no Obsidian antes de padronizar.
-
-### Lista
+Os valores mecânicos ficam no frontmatter para poderem ser reutilizados por Dataview:
 
 ```yaml
-chapter:
-  - 00 - Nome do Capítulo
-  - 01 - Outro Capítulo
+forca:
+destreza:
+constituicao:
+inteligencia:
+sabedoria:
+carisma:
+classe_armadura:
+pontos_vida:
+bonus_ataque:
+jogada_protecao:
+movimento:
 ```
 
-```yaml
-tags:
-  - character
-  - player
+Exemplo de consulta:
+
+```text
+`= [[Vezemir]].forca`
 ```
 
-### Wikilink como texto
+As fichas usam uma tabela no início da nota e podem ser vinculadas diretamente por seção, como `[[Vezemir#Atributos]]`.
 
-```yaml
-location: "[[Nimalia]]"
-faction: "[[Coroa de Nimalia]]"
-```
+## Ordem das fichas de jogadores
 
-O uso de aspas evita que os colchetes sejam interpretados incorretamente pelo YAML.
+1. Retrato.
+2. Atributos.
+3. Visão geral.
+4. História e marcos.
+5. Atualidade.
+6. Personalidade.
+7. Habilidades.
+8. Segredos do mestre.
+9. Equipamentos.
+10. Aparência.
+11. Consultas de itens.
+12. Regras específicas e capítulos.
 
-## Taxonomia narrativa pendente
+## Personagens atuais
 
-Outros arquivos do vault ainda podem misturar:
+| Personagem | Classe | Situação mecânica |
+|:--|:--|:--|
+| [[Vezemir]] | Guerreiro | Atributos transcritos; poderes autorais em teste. |
+| [[Varkh Nimalis]] | Alquimista | Atributos da Ficha do Jão; classe em adaptação. |
+| [[Raziel]] | Ladrão / Assassino | Atributos ainda não fornecidos; vampiro e hemomante pendentes. |
 
-- `player`;
-- `npc`;
-- `antagonist`;
-- descrições livres em `role`.
+## Regra de segurança
 
-Para os três protagonistas, `role` representa o controle na mesa:
-
-- `player`: personagem de jogador;
-- `npc`: personagem controlado pelo mestre.
-
-Função dramática, profissão e título não devem substituir `role`. Esses conceitos podem continuar no texto, nas tags existentes ou ganhar propriedades separadas quando isso for deliberadamente definido.
-
-Vezemir, Varkh e Raziel são personagens de jogador e agora compartilham `NoteIcon: magicitem`, `role: player`, `level: 1`, a propriedade `chapters` e a tag `player`.
-
-## Estrutura das notas de jogadores
-
-As três notas seguem a mesma ordem:
-
-1. retrato principal;
-2. visão geral;
-3. história e marcos individuais;
-4. atualidade;
-5. personalidade com infobox;
-6. habilidades;
-7. segredos ou questões reservadas;
-8. equipamentos;
-9. aparência;
-10. armas e equipamentos vinculados;
-11. ficha mecânica sem inventar atributos.
-
-Se um personagem ainda não possuir dados para uma seção, manter a seção com uma indicação clara de que a informação está em aberto.
-
-## Processo de migração de uma página
-
-1. Copiar a nota ou garantir que o estado atual esteja commitado.
-2. Comparar seu frontmatter com este schema.
-3. Adicionar somente propriedades necessárias.
-4. Corrigir links inexistentes apenas após confirmar o destino correto.
-5. Não reordenar todas as propriedades.
-6. Não trocar tags em massa.
-7. Validar o YAML.
-8. Abrir a nota no Obsidian.
-9. Verificar Home, DataCards, Dataview e backlinks.
-10. Criar um commit exclusivo para a nota ou para um conjunto pequeno e relacionado.
-
-## Regra para templates de Disgraceland
-
-Ao converter uma página de Disgraceland:
-
-- preservar a estrutura que produz o visual desejado;
-- substituir completamente nomes, tags e links narrativos antigos;
-- revisar consultas embutidas;
-- verificar imagens e thumbnails;
-- remover referências semânticas a Disgraceland da nova cópia;
-- manter o arquivo-fonte disponível enquanto o novo template não tiver sido validado.
+- Não inventar atributos ausentes.
+- Não usar cargo ou título como `role`.
+- Segredos ficam em callout `gm` e em notas com `visibility: gm`.
+- Para material compartilhado, usar os resumos em `Players/Characters/`.

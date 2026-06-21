@@ -1,96 +1,54 @@
 ---
-NoteIcon: settlement  
+obsidianUIMode: preview
+NoteIcon: settlement
+NoteStatus: Active
+status: Ativa
+visibility: shared
+type: Região florestal
+capital:
+leader: Desconhecido
+government: Nenhum governo unificado
+region: Fronteira oriental de Nimalia
+population: Desconhecida
+cover: zz_media/avenor.png
 tags:
-  - Category/Settlement
   - territory
   - earthropo
-  - forest  
-cover: zz_media/avenor.png  
-Alignment: Neutro
-Government: Nenhum  
-reputation: Misteriosa  
-politics: 
-leader: Desconhecido
-region:
-  - Fronteira do Reino de Nimalia
-size: Floresta  
-population: Desconhecida  
-religion:
-exports:
-  - Madeira  
-  - Ervas Medicinais 
-  - Peles
-  - Cogumelos Raros  
-imports:
-  - Ferramentas 
-  - Suprimentos
-
+  - forest
+  - avenor
 ---
 
-# FLORESTA DE AVENOR
+# Floresta de Avenor
 
-<h2>Visão Geral</h2>
-
-> [!NOTE|clean no-i right]+ ‎FLORESTA DE AVENOR  
+> [!NOTE|clean no-i right]+ Floresta de Avenor
 > ![[avenor.png|400]]
 
-Uma grande floresta das terras centrais de Earthropo. No mapa de trabalho, ocupa a região florestal a leste ou nordeste da [[Nimalis]], estendendo-se ao longo da fronteira do Reino de [[Nimalia]].
+Avenor é uma grande região florestal fora do Reino de [[Nimalia]]. Sua borda ocidental forma parte da fronteira do reino, enquanto seu interior reúne trilhas antigas, rios, comunidades pequenas e áreas pouco conhecidas.
 
-Avenor é conhecida por suas trilhas esquecidas, ruínas cobertas pela vegetação e pela enorme quantidade de criaturas selvagens que habitam suas profundezas. Caçadores, aventureiros e eremitas frequentemente atravessam a floresta, mas poucos conhecem seus verdadeiros segredos.
+## Geografia
 
-Em uma de suas regiões encontram-se as ruínas de [[Leth'valora]], uma pequena vila élfica que era habitada por elfos que viviam fora do reino élfico ainda não apresentado.
+- **Oeste:** campos e estradas de Nimalia.
+- **Interior:** floresta densa, colinas, cursos d’água e ruínas.
+- **Posição cartográfica:** leste ou nordeste de [[Nimalis]].
 
-Foi nas estradas abandonadas de Avenor que o meio-elfo [[Vezemir]] foi encontrado ainda bebê por [[Elarion Valthor]].
+## Lugares conhecidos
 
----
+- [[Leth'valora]], pequena vila élfica destruída.
+- A antiga fortaleza onde [[Elarion Valthor]] criou [[Vezemir]].
+- Trilhas usadas por caçadores, mensageiros e viajantes.
 
-<h2>Rascunhos de Regiões Internas</h2>
+## Relação com os elfos
 
-> [!warning] Nomes não confirmados
-> Os lugares abaixo foram preservados de rascunhos anteriores. Nenhum deles deve receber nota própria, marcador ou peso de cânone até aprovação explícita.
+Leth'valora não era o reino élfico. Seus habitantes escolheram viver fora do grande território élfico que será apresentado futuramente.
 
-#### Bosque das Névoas
-
-Uma região constantemente coberta por névoa densa. Viajantes costumam relatar sons estranhos vindos entre as árvores.
-
----
-
-#### Estrada Esquecida
-
-Antiga rota comercial abandonada há séculos. Hoje está tomada pela vegetação e por ruínas do velho mundo.
-
-Foi próximo a essa estrada que [[Vezemir]] foi encontrado quando ainda era uma criança.
-
----
-
-#### Lago Espelhado
-
-Um lago de águas cristalinas que reflete o céu com perfeição. Muitas histórias locais afirmam que espíritos observam os viajantes através de sua superfície.
-
----
-
-#### Bosque de Mira
-
-Uma pequena clareira próxima a uma antiga vila de caçadores.
-
-Foi nessa região que [[Mira Valen]] encontrou [[Vezemir]] pela primeira vez, iniciando a amizade que mudaria o destino de ambos.
-
----
-
-#### Ruínas de Arkenfall
-
-Vestígios de uma fortificação esquecida pelas guerras antigas. Pouco se sabe sobre seus antigos habitantes.
-
-Exploradores afirmam que túneis subterrâneos ainda existem sob as ruínas.
-
-
----
-
-<h2>Residentes Notáveis</h2>
+## Pessoas relacionadas
 
 ```dataview
-table location, status, faction
-from "Characters"
-where contains(lower(string(location)), "leth'valora")
-limit 10
+TABLE status, location, faction
+FROM "Characters"
+WHERE contains(string(territory), this.file.name)
+SORT file.name ASC
 ```
+
+> [!gm]- Desenvolvimento
+> [[Bosque Sussurrante]] pode tornar-se uma região interna de Avenor, mas ainda não possui posição ou função confirmada.

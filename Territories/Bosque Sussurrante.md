@@ -1,15 +1,22 @@
 ---
+obsidianUIMode: preview
 NoteIcon: settlement
 NoteStatus: Placeholder
-status: Sem cânone definido
+status: Em desenvolvimento
+visibility: gm
+cover:
+type: Bosque
+region: Possivelmente Avenor
 tags:
-  - Category/Settlement
   - territory
+  - forest
   - placeholder
 ---
 
 # Bosque Sussurrante
 
-Nome preservado como placeholder. Nenhuma fonte localizada em Downloads ou no cânone atual define sua posição, habitantes ou função.
+Nome de trabalho para uma possível região interna da [[Floresta de Avenor]].
 
-Esta região não deve ser colocada no mapa nem tratada como existente até receber uma decisão explícita.
+Ainda não existem posição, habitantes ou função narrativa confirmados. O nome pode ser reaproveitado para um lugar onde sons, vozes ou memórias tenham comportamento incomum, desde que isso seja introduzido em jogo.
+
+Não recebe pin público.

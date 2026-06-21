@@ -1,7 +1,7 @@
 ---
 obsidianUIMode: preview
 NoteIcon: magicitem
-NoteStatus: Draft
+NoteStatus: Template
 thumbnail:
 cover:
 status: Vivo

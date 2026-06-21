@@ -1,80 +1,85 @@
 ---
 obsidianUIMode: preview
-NoteIcon: lore
+NoteIcon: location
 NoteStatus: Active
 status: Ativa
+visibility: shared
 territory: "[[Nimalia]]"
 district: Capital
-info: Capital pulsante do reino de Nimalia
+leader: "[[Augustus Terra Decimus]]"
+population: 120000
+info: Capital murada e principal ponto de encontro das rotas de Nimalia.
+cover: zz_media/nimalia.png
 tags:
-  - lore
   - location
   - capital
   - nimalia
   - earthropo
 ---
 
-# NIMALIS
+# Nimalis
 
-> [!NOTE|clean no-i right]+ ‎NIMALIS
-> ![[nimalis.png|400]]
+> [!NOTE|clean no-i right]+ Nimalis
+> ![[nimalia.png|400]]
 
-**Nimalis** A capital Pulsante de Nimalia
+Nimalis é a capital do Reino de [[Nimalia]] e sede da [[Coroa de Nimalia]]. A cidade cresceu onde rios navegáveis, estradas e rotas mercantis se encontram, tornando-se o principal ponto de partida para viajantes no centro de Earthropo.
 
-Capital do Reino de [[Nimalia]] e sede da [[Coroa de Nimalia]], governada pelo rei soberano [[Augustus Terra Decimus]].
+Sua população de trabalho é de aproximadamente **120.000 habitantes**.
 
-<h2>Os Distritos</h2>
+## Distritos
 
-#### Bairro dos Humanos
+### Cidadela Real
 
-Lugar onde os humanos se estabeleceram na cidade.
+Centro administrativo, religioso e cerimonial. Abriga o palácio, arquivos, salões da Coroa e parte das instalações da Guarda Real.
 
----
+### Bairro dos Humanos
 
-#### Bairro dos Elfos
+Um dos bairros mais antigos fora da cidadela, conhecido por hospedarias, oficinas, pátios de caravana e famílias vindas de diferentes regiões.
 
-Lugar onde os elfos se estabeleceram na cidade.
+### Bairro Élfico
 
----
+Comunidade de comerciantes, artesãos, estudiosos e viajantes élficos. Não representa o reino élfico nem fala por todos os elfos de Earthropo.
 
-#### Bairro dos Anões
+### Bairro Anão
 
-Lugar onde os anões se estabeleceram na cidade.
+Área de forjas, armazéns de pedra, metalurgia e casas comerciais ligadas às rotas do norte.
 
----
+### Bairro Dracônico
 
-#### Bairro dos Dragonbourns
+Distrito associado a famílias dragonborn e outros povos de linhagem dracônica. O nome pode mudar conforme a cultura dragonborn for consolidada.
 
-Lugar onde os Dragonbourns se estabeleceram na cidade.
+### Bairro Nobre
 
----
+Residências de famílias influentes, embaixadas, jardins murados e casas vinculadas à administração do reino.
 
-#### Bairro Nobre
+### Mercado Central
 
-Área de alto padrão da cidade, onde estão os nobres.
+Praças, feiras e entrepostos onde produtos comuns chegam diariamente. É o lugar mais fácil para encontrar rumores, trabalho e viajantes.
 
----
+### Distrito dos Ofícios
 
-#### Mercado Central
+Lojas especializadas, alquimistas, escribas, armeiros, casas de câmbio e serviços que exigem licença ou conhecimento técnico.
 
-Área comercial da cidade, onde estão localizados todos os produtos que se pode encontrar.
+### Bairro dos Forasteiros
 
----
+Hospedarias baratas, cortiços e pátios para quem chega sem contatos ou pretende permanecer pouco tempo. É movimentado, precário e diverso.
 
-#### Distrito Comercial
+### Porto Real
 
-Área com lojas especializadas onde pode se encontrar desde poções até escravos.
+Docas oficiais, alfândega e grandes armazéns. Ao sul e fora de sua parte mais controlada começa [[Maré Baixa]].
 
----
+### [[Maré Baixa]]
 
-#### Bairro dos Forasteiros
+Distrito portuário de passarelas, pequenos ofícios, contrabando e redes comunitárias. É a origem de [[Varkh Nimalis]].
 
-Lugar onde qualquer um com pouca renda pode se estabelecer por um curto tempo. Local das favelas da cidade.
+## Residentes
 
----
+```dataview
+TABLE status, role, faction, occupation
+FROM "Characters"
+WHERE contains(string(location), this.file.name)
+SORT file.name ASC
+```
 
-#### Porto Real
-
-Lugar da cidade onde os barcos fazem sua movimentação, carga e descarga.
-
----
+> [!gm]- Preparação
+> [[Raziel]] encontrará o grupo em Nimalis. A cena e o distrito exatos ainda serão definidos no capítulo inicial.

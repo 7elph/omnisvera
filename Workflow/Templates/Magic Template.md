@@ -1,7 +1,7 @@
 ---
 obsidianUIMode: preview
 NoteIcon: magic
-NoteStatus: Draft
+NoteStatus: Template
 status: Em revisão
 visibility: gm
 magic_type:

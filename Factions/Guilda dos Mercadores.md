@@ -1,10 +1,13 @@
 ---
 obsidianUIMode: preview
-NoteIcon: faction 
+NoteIcon: faction
 NoteStatus: Draft
+status: Ativa
+visibility: shared
+cover:
 leader:
-state: Em aberto
-location:
+headquarters: "[[Nimalis]]"
+territory: "[[Nimalia]]"
 tags:
   - faction
   - guild
@@ -13,6 +16,15 @@ tags:
 
 # Guilda dos Mercadores
 
-Nome reservado para desenvolvimento futuro.
+Associação de casas comerciais, caravanas, armadores e intermediários com sede principal em [[Nimalis]].
 
-Sua liderança, estrutura, alcance, relação com a Coroa e vínculos com personagens ainda não foram definidos.
+## Funções
+
+- Registrar caravanas e cargas.
+- Financiar viagens e expedições comerciais.
+- Mediar preços, dívidas e contratos.
+- Manter informações sobre estradas e portos.
+
+## Limites do cânone
+
+Liderança, monopólios e disputas internas ainda não foram definidos. [[Varkh Nimalis]] não possui vínculo automático com esta guilda.

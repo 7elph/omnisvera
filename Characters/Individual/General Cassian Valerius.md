@@ -2,19 +2,21 @@
 
 obsidianUIMode: preview  
 NoteIcon: magicitem  
-NoteStatus: 
+NoteStatus: Draft
 thumbnail: zz_media/th_cassian.PNG 
 religion: "[[Igreja das Chamas]]"  
 status: Vivo  
-location: "[[Nimalia]]"  
+visibility: gm
+location: "[[Nimalis]]"
 territory: "[[Nimalia]]"  
 faction: "[[Coroa de Nimalia]]"  
 class: Paladino  
 race: Antropo  
-role: "General da [[Coroa de Nimalia]]"  
-chapter:  
+role: npc
+occupation: General da Coroa de Nimalia
+chapters:
 - 00 - O Bastardo de Ferro
-- 01 - Ecos do Mundo Perdido
+- 01 - Ecos de Um Mal Antigo
 tags:
 - coroa
 - character
@@ -45,7 +47,7 @@ tags:
 **Idade:** 62  
 **Status:** Vivo  
 **Faction:** [[Coroa de Nimalia]]  
-**Location:** [[Nimalia]]  
+**Location:** [[Nimalis]]
 **Fé:** [[Igreja das Chamas]]
 **Aparições:**
 
@@ -112,7 +114,7 @@ Cassian raramente levanta a voz. Sua autoridade vem de sua presença, experiênc
 
 ## Papel em Earthropo
 
-General supremo das forças armadas de[[Nimalia]] e principal conselheiro militar da Coroa.
+General das forças armadas de [[Nimalia]] e conselheiro militar da Coroa.
 É uma figura amplamente respeitada por soldados, cavaleiros e cidadãos comuns. Sua influência se estende muito além dos campos de batalha, sendo frequentemente consultado em decisões políticas e diplomáticas.
 Para [[Vezemir]], Cassian representa uma das poucas autoridades que jamais o julgaram por sua origem.
 Para Nimalia, ele é a muralha que permanece de pé quando todas as outras caem.

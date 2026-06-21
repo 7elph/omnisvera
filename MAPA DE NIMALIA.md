@@ -1,35 +1,24 @@
 ---
-width: 3415
-height: 2879
-scale: 500
-distance: 2746
-NoteIcon: none
+obsidianUIMode: preview
+NoteIcon: map
+NoteStatus: Active
+status: Ativo
+visibility: player
+map_id: nimalis-map
+map_type: Cidade
+region: "[[Nimalia]]"
 cover: zz_media/nimalia.png
-Community-Size: Capital
-Alignment: 
-Government: Monarquia de Nimalia
-type: City Map
-politics: Coroa de Nimalia
-region:
-  - Reino de Nimalia
-size: Capital
-population:
-religion:
-exports:
-imports:
 tags:
   - title
   - map
-  - nimalia
+  - nimalis
   - capital
 ---
 
-# MAPA DA CAPITAL DO REINO DE NIMALIA
+# Mapa de Nimalis
 
-O nome da [[Nimalis]] ainda não foi definido. Este mapa representa a cidade capital, não todo o território do reino.
-
-> [!warning] Rótulo provisório na arte
-> A palavra **Nimalia** impressa na imagem é um título antigo de trabalho. No cânone atual, Nimalia é o reino; a cidade representada ainda não possui nome próprio.
+> [!note] Arte cartográfica
+> A palavra **Nimalia** permanece impressa na imagem por ser o título original da arte. No cânone, o mapa representa **Nimalis**, capital do Reino de Nimalia.
 
 ```leaflet
 id: nimalia-capital-map
@@ -52,11 +41,6 @@ darkMode: false
 marker: Location, 42, 99, [[Maré Baixa]]
 ```
 
-## Marcadores
+## Descobertas
 
-[[Maré Baixa]] foi posicionada provisoriamente na zona portuária ao sul da capital. Clique com o botão direito no mapa para criar outros marcadores e vinculá-los às notas correspondentes.
-
-Os dois marcadores manuais sem link preservados pelo plugin continuam sem identificação e não constituem cânone.
-
-## HELP:
-Hold ALT + click & drag to measure the distance between one area and the next.
+Os pins serão vinculados às notas dos distritos e pontos de interesse conforme forem criados ou visitados.

@@ -4,21 +4,33 @@ NoteIcon: magicitem
 NoteStatus: Active
 thumbnail: zz_media/th_varkh.PNG
 status: Vivo
-location: "[[Nimalia]]"
+visibility: gm
+location: "[[Nimalis]]"
 territory: "[[Nimalia]]"
-faction: Nenhuma
-class: Ladrão / Alquimista
+faction: "[[Conclave dos Errantes]]"
+religion:
+class: Alquimista
 race: Kenku
 level: 1
-alignment: Em aberto
+alignment: Neutro
 role: player
 chapters:
   - 00 - O Corvo da Maré Baixa
+forca: 12
+destreza: 15
+constituicao: 12
+inteligencia: 11
+sabedoria: 13
+carisma: 6
+classe_armadura: 15
+pontos_vida: 9
+bonus_ataque: 1
+jogada_protecao: 9
+movimento: 9
 tags:
   - player
   - character
   - chapter00_varkh
-  - rogue
   - alchemist
   - kenku
   - earthropo
@@ -29,22 +41,35 @@ tags:
 > [!NOTE|clean no-i right]+ Varkh Nimalis
 > ![[varkh.jpeg|400]]
 
+## Atributos
+
+| FOR | DES | CON | INT | SAB | CAR |
+|:--:|:--:|:--:|:--:|:--:|:--:|
+| `= this.forca` | `= this.destreza` | `= this.constituicao` | `= this.inteligencia` | `= this.sabedoria` | `= this.carisma` |
+
+| Combate | Valor |
+|:--|--:|
+| Classe de Armadura | `= this.classe_armadura` |
+| Pontos de Vida | `= this.pontos_vida` |
+| Bônus de Ataque | `= this.bonus_ataque` |
+| Jogada de Proteção | `= this.jogada_protecao` |
+| Movimento | `= this.movimento` m |
 
 ## Visão Geral
 **Títulos:** O Corvo da Maré Baixa
 **Apelido:** O Corvo
-**Localização Atual:** Em viagem pelo Reino de [[Nimalia]]
+**Localização Atual:** [[Nimalis]]
 **Território:** [[Nimalia]]
-**Reputação Pública:** Alquimista de rua, ladrão, falsificador e possível assassino
+**Reputação Pública:** Alquimista de rua, falsificador e agente acostumado ao submundo portuário
 **Gênero:** Masculino
-**Classe:** [[Ladrão]] / [[Alquimista]]
+**Classe:** [[Alquimista]]
 **Raça:** [[Kenku]]
-**Idade:** Em aberto
-**Altura:** Em aberto
+**Idade:** 35 anos
+**Altura:** 1,70 m
 **Nível:** 1
-**Alinhamento:** Em aberto
+**Alinhamento:** Neutro
 **Status:** Vivo
-**Afiliação:** Nenhuma confirmada
+**Afiliação:** [[Conclave dos Errantes]]
 **Afiliações Anteriores:** Nenhuma confirmada
 **Associados Conhecidos:** [[Mestre Odran Veyl]]
 **Inimigos Conhecidos:** Responsáveis ainda não identificados pelos remédios falsos
@@ -69,7 +94,7 @@ Curioso e atento a tudo que os outros descartavam, Varkh colecionava frascos rac
 
 ## O Corvo que Não Sabia Voar
 
-Em Earthropo, os humanos são maioria. Em Maré Baixa, Varkh não era desprezado simplesmente por ser uma criatura animal. O problema era ser corvo.
+Em Earthropo, os humanos são o povo mais numeroso. Dentro de Nimalia, porém, os antropos são maioria e uma criatura de traços animais não é estranha por si só. O problema de Varkh era ser corvo.
 
 Corvos lembravam mau presságio, carniça, doença, segredo e morte. Às vezes, ser temido evitava confusão. Em outras partes de Nimalia, porém, Varkh percebia olhares desconfiados.
 
@@ -159,19 +184,16 @@ Move-se silenciosamente por telhados, becos e ambientes urbanos.
 Altera documentos e reproduz marcas usando tintas, solventes e ácidos.
 
 **Conhecimento das Ruas:**
-Conhece o porto, Maré Baixa e parte do submundo da capital de Nimalia.
+Conhece o porto, Maré Baixa e parte do submundo de [[Nimalis]].
 
 ---
 
 ## Segredos
 
-- A identidade de quem está usando os métodos de Odran ainda é desconhecida.
-
-- O envolvimento de Odran com as falsificações, caso exista, ainda não foi definido.
-
-- A extensão real da fama de Varkh como assassino pode ser maior ou menor do que os rumores indicam.
-
-- A classe mecânica definitiva de Varkh ainda precisa ser reconciliada com a ficha sem nome recebida do jogador.
+> [!gm]- Segredos do mestre
+> - A identidade de quem está usando os métodos de Odran permanece desconhecida.
+> - O envolvimento de Odran com as falsificações, caso exista, ainda não foi definido.
+> - A extensão real da fama de Varkh como assassino pode ser maior ou menor do que os rumores indicam.
 
 ---
 
@@ -217,8 +239,8 @@ Os equipamentos de Varkh ainda não possuem notas individuais no vault. Quando f
 
 ## Ficha Mecânica — Nível 1
 
-> [!warning] Reconciliação pendente
-> A ficha sem nome atribuída provisoriamente a Varkh registra Homem de Armas, enquanto sua história o define como ladrão e alquimista de rua. Nenhum valor mecânico será substituído até confirmação com o jogador.
+> [!info] Origem dos valores
+> Os atributos foram transcritos da “Ficha do Jão”, confirmada como ficha de Varkh. A classe antiga Homem de Armas foi substituída por Alquimista; a progressão da classe ainda precisa de adaptação para Old Dragon 2.
 
 ### Armas e carga
 
@@ -236,4 +258,5 @@ Os equipamentos de Varkh ainda não possuem notas individuais no vault. Quando f
 
 ### Habilidades especiais
 
-- Alquimia de rua, Kenku e seus demais traços mecânicos permanecem como regras autorais pendentes.
+- A alquimia usa a classe independente [[Alquimista]], em adaptação.
+- Mimetismo e Falsificação são traços kenku.

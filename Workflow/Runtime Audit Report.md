@@ -1,8 +1,9 @@
 ---
 obsidianUIMode: preview
 NoteIcon: audit
-NoteStatus: Active
-status: Atualizado
+NoteStatus: Archived
+status: Superado
+visibility: gm
 tags:
   - workflow
   - audit

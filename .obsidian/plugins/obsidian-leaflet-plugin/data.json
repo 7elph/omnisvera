@@ -1,1765 +1,277 @@
 {
-  "mapMarkers": [
-    {
-      "id": "tribucia-map",
-      "locked": true,
-      "lastAccessed": 1781772997239,
-      "markers": [
-        {
-          "id": "ID_aadbfa7a5ad9",
-          "type": "Territory",
-          "loc": [
-            115.75,
-            69.62511857332575
-          ],
-          "link": "THRESHTON",
-          "layer": "zz_media%2FTribucia.png",
-          "mutable": true,
-          "command": false,
-          "percent": [
-            0.3262084618369581,
-            -0.6432789162903786
-          ],
-          "description": null,
-          "minZoom": null,
-          "maxZoom": null,
-          "tooltip": "hover"
-        },
-        {
-          "id": "ID_2b7849c9e819",
-          "type": "Territory",
-          "loc": [
-            81.375,
-            68.25
-          ],
-          "link": "STEELTOWN",
-          "layer": "zz_media%2FTribucia.png",
-          "mutable": true,
-          "command": false,
-          "percent": [
-            0.31976573938506586,
-            -0.4522403612365405
-          ],
-          "description": null,
-          "minZoom": null,
-          "maxZoom": null,
-          "tooltip": "hover"
-        },
-        {
-          "id": "ID_c85b1aaa99ab",
-          "type": "Territory",
-          "loc": [
-            69.625,
-            143.75011857332575
-          ],
-          "link": "GUTTER ROW",
-          "layer": "zz_media%2FTribucia.png",
-          "mutable": true,
-          "command": false,
-          "percent": [
-            0.6734998234767824,
-            -0.3869399096908649
-          ],
-          "description": null,
-          "minZoom": null,
-          "maxZoom": null,
-          "tooltip": "hover"
-        },
-        {
-          "id": "ID_89ca083b2a9a",
-          "type": "Territory",
-          "loc": [
-            118.447265625,
-            162.51709036868397
-          ],
-          "link": "ASHMOOR",
-          "layer": "zz_media%2FTribucia.png",
-          "mutable": true,
-          "command": false,
-          "percent": null,
-          "description": null,
-          "minZoom": null,
-          "maxZoom": null,
-          "tooltip": "hover"
-        },
-        {
-          "id": "ID_c9f9cb8afa78",
-          "type": "Territory",
-          "loc": [
-            97.5,
-            205.37507904888383
-          ],
-          "link": "CHARSPIRE",
-          "layer": "zz_media%2FTribucia.png",
-          "mutable": true,
-          "command": false,
-          "percent": [
-            0.9622258462026768,
-            -0.5418548106981591
-          ],
-          "description": null,
-          "minZoom": null,
-          "maxZoom": null,
-          "tooltip": "hover"
-        },
-        {
-          "id": "ID_2b59d869696b",
-          "type": "Territory",
-          "loc": [
-            121.947265625,
-            119.52495573262505
-          ],
-          "link": "THE DROWNLANDS",
-          "layer": "zz_media%2FTribucia.png",
-          "mutable": true,
-          "command": false,
-          "percent": null,
-          "description": null,
-          "minZoom": null,
-          "maxZoom": null,
-          "tooltip": "hover"
-        },
-        {
-          "id": "ID_2b8bb9db79e9",
-          "type": "Location",
-          "loc": [
-            141.625,
-            111.00007407711314
-          ],
-          "link": "Coffin Island",
-          "layer": "zz_media%2FTribucia.png",
-          "mutable": true,
-          "command": false,
-          "percent": [
-            0.5200589122207351,
-            -0.7870788468218132
-          ],
-          "description": null,
-          "minZoom": null,
-          "maxZoom": null,
-          "tooltip": "hover"
-        },
-        {
-          "id": "ID_abdae988d8eb",
-          "type": "Location",
-          "loc": [
-            78.947265625,
-            113.40971826977803
-          ],
-          "link": "Steeltown Wrecking Crew",
-          "layer": "zz_media%2FTribucia.png",
-          "mutable": true,
-          "command": false,
-          "percent": null,
-          "description": null,
-          "minZoom": null,
-          "maxZoom": null,
-          "tooltip": "hover"
-        },
-        {
-          "id": "ID_db491a3aab48",
-          "type": "Location",
-          "loc": [
-            76.197265625,
-            183.76645797761336
-          ],
-          "link": "Hollow House",
-          "layer": "zz_media%2FTribucia.png",
-          "mutable": true,
-          "command": false,
-          "percent": null,
-          "description": null,
-          "minZoom": null,
-          "maxZoom": null,
-          "tooltip": "hover"
-        },
-        {
-          "id": "ID_b8eb393aebe8",
-          "type": "Location",
-          "loc": [
-            101.90625,
-            152.812727265541
-          ],
-          "link": "The Silo",
-          "layer": "zz_media%2FTribucia.png",
-          "mutable": true,
-          "command": false,
-          "percent": [
-            0.7159600691796943,
-            -0.5663424800277874
-          ],
-          "description": null,
-          "minZoom": null,
-          "maxZoom": null,
-          "tooltip": "hover"
-        },
-        {
-          "id": "ID_f8f968289909",
-          "type": "Location",
-          "loc": [
-            98.572265625,
-            197.51594415986847
-          ],
-          "link": "TTV Studios",
-          "layer": "zz_media%2FTribucia.png",
-          "mutable": true,
-          "command": false,
-          "percent": null,
-          "description": null,
-          "minZoom": null,
-          "maxZoom": null,
-          "tooltip": "hover"
-        },
-        {
-          "id": "ID_18eb9b0a8baa",
-          "type": "Location",
-          "loc": [
-            79.072265625,
-            161.65228767469802
-          ],
-          "link": "Tribucia Tribute",
-          "layer": "zz_media%2FTribucia.png",
-          "mutable": true,
-          "command": false,
-          "percent": null,
-          "description": null,
-          "minZoom": null,
-          "maxZoom": null,
-          "tooltip": "hover"
-        },
-        {
-          "id": "ID_680b7abafb8a",
-          "type": "Location",
-          "loc": [
-            62.28125,
-            161.7498715455638
-          ],
-          "link": "Three Nail Market",
-          "layer": "zz_media%2FTribucia.png",
-          "mutable": true,
-          "command": false,
-          "percent": [
-            0.7578324874755551,
-            -0.34612712747481766
-          ],
-          "description": null,
-          "minZoom": null,
-          "maxZoom": null,
-          "tooltip": "hover"
-        },
-        {
-          "id": "ID_4a9b8ab8688b",
-          "type": "Memorial",
-          "loc": [
-            105.14484486733483,
-            224.4280871386051
-          ],
-          "link": "Blackshift Massacre",
-          "layer": "zz_media%2FTribucia.png",
-          "mutable": true,
-          "command": false,
-          "percent": null,
-          "description": null,
-          "minZoom": null,
-          "maxZoom": null,
-          "tooltip": "hover"
-        },
-        {
-          "id": "ID_2ac839b8caa8",
-          "type": "Wrecking Crew",
-          "loc": [
-            79.53086846640454,
-            115.40403118690006
-          ],
-          "link": "Jimmy Douglass",
-          "layer": "zz_media%2FTribucia.png",
-          "mutable": true,
-          "command": false,
-          "percent": null,
-          "description": null,
-          "minZoom": null,
-          "maxZoom": null,
-          "tooltip": "hover"
-        },
-        {
-          "id": "ID_09792829089b",
-          "type": "Wrecking Crew",
-          "loc": [
-            78.73537333756967,
-            114.96208944865846
-          ],
-          "link": "Mark Jeffrey",
-          "layer": "zz_media%2FTribucia.png",
-          "mutable": true,
-          "command": false,
-          "percent": null,
-          "description": null,
-          "minZoom": null,
-          "maxZoom": null,
-          "tooltip": "hover"
-        },
-        {
-          "id": "ID_993978dada4b",
-          "type": "Wrecking Crew",
-          "loc": [
-            79.1331209019871,
-            116.24331524354604
-          ],
-          "link": "Abel May Jr.",
-          "layer": "zz_media%2FTribucia.png",
-          "mutable": true,
-          "command": false,
-          "percent": null,
-          "description": null,
-          "minZoom": null,
-          "maxZoom": null,
-          "tooltip": "hover"
-        },
-        {
-          "id": "ID_696b0a59c98a",
-          "type": "Wrecking Crew",
-          "loc": [
-            78.24923742550392,
-            115.80151324530893
-          ],
-          "link": "Joe Ameen",
-          "layer": "zz_media%2FTribucia.png",
-          "mutable": true,
-          "command": false,
-          "percent": null,
-          "description": null,
-          "minZoom": null,
-          "maxZoom": null,
-          "tooltip": "hover"
-        },
-        {
-          "id": "ID_28c948fac8cb",
-          "type": "Wrecking Crew",
-          "loc": [
-            80.41475194288772,
-            114.69700824971622
-          ],
-          "link": "Katie Kowalski",
-          "layer": "zz_media%2FTribucia.png",
-          "mutable": true,
-          "command": false,
-          "percent": null,
-          "description": null,
-          "minZoom": null,
-          "maxZoom": null,
-          "tooltip": "hover"
-        },
-        {
-          "id": "ID_785aa88ad809",
-          "type": "Wrecking Crew",
-          "loc": [
-            77.36535394902073,
-            115.71315284566151
-          ],
-          "link": "Selena Matissao",
-          "layer": "zz_media%2FTribucia.png",
-          "mutable": true,
-          "command": false,
-          "percent": null,
-          "description": null,
-          "minZoom": null,
-          "maxZoom": null,
-          "tooltip": "hover"
-        },
-        {
-          "id": "ID_db480b0bda59",
-          "type": "Wrecking Crew",
-          "loc": [
-            77.63051899196569,
-            114.65282804989249
-          ],
-          "link": "Rodney Blythe",
-          "layer": "zz_media%2FTribucia.png",
-          "mutable": true,
-          "command": false,
-          "percent": null,
-          "description": null,
-          "minZoom": null,
-          "maxZoom": null,
-          "tooltip": "hover"
-        },
-        {
-          "id": "ID_a9ba19ebcb09",
-          "type": "Wrecking Crew",
-          "loc": [
-            79.5,
-            115
-          ],
-          "link": "Lincoln Jones",
-          "layer": "zz_media%2FTribucia.png",
-          "mutable": true,
-          "command": false,
-          "percent": null,
-          "description": null,
-          "minZoom": null,
-          "maxZoom": null,
-          "tooltip": "hover"
-        },
-        {
-          "id": "ID_9ada9bdab918",
-          "type": "Rancher",
-          "loc": [
-            110.18298068328897,
-            68.44554295206066
-          ],
-          "link": "Beau DuNoir",
-          "layer": "zz_media%2FTribucia.png",
-          "mutable": true,
-          "command": false,
-          "percent": null,
-          "description": null,
-          "minZoom": null,
-          "maxZoom": null,
-          "tooltip": "hover"
-        },
-        {
-          "id": "ID_b9e8ea497869",
-          "type": "Rancher",
-          "loc": [
-            127.06515508411779,
-            72.68558447509619
-          ],
-          "link": "Danny Dandelion",
-          "layer": "zz_media%2FTribucia.png",
-          "mutable": true,
-          "command": false,
-          "percent": null,
-          "description": null,
-          "minZoom": null,
-          "maxZoom": null,
-          "tooltip": "hover"
-        },
-        {
-          "id": "ID_694bc989e838",
-          "type": "Rancher",
-          "loc": [
-            107.26616521089446,
-            90.71110600316943
-          ],
-          "link": "Freddy Blanchard",
-          "layer": "zz_media%2FTribucia.png",
-          "mutable": true,
-          "command": false,
-          "percent": null,
-          "description": null,
-          "minZoom": null,
-          "maxZoom": null,
-          "tooltip": "hover"
-        },
-        {
-          "id": "ID_28bb29cb19f8",
-          "type": "Rancher",
-          "loc": [
-            130.54999542236328,
-            69.5
-          ],
-          "link": "Harp Langston",
-          "layer": "zz_media%2FTribucia.png",
-          "mutable": true,
-          "command": false,
-          "percent": [
-            0.7239583333333334,
-            -2.0398436784744263
-          ],
-          "description": null,
-          "minZoom": null,
-          "maxZoom": null,
-          "tooltip": "hover"
-        },
-        {
-          "id": "ID_ab5a08782948",
-          "type": "Rancher",
-          "loc": [
-            107.17777686324614,
-            54.748423346670386
-          ],
-          "link": "Turner Anderson",
-          "layer": "zz_media%2FTribucia.png",
-          "mutable": true,
-          "command": false,
-          "percent": null,
-          "description": null,
-          "minZoom": null,
-          "maxZoom": null,
-          "tooltip": "hover"
-        },
-        {
-          "id": "ID_98a9da6b8818",
-          "type": "Raider",
-          "loc": [
-            100,
-            136.49287378171638
-          ],
-          "link": "Silas Vayne",
-          "layer": "zz_media%2FTribucia.png",
-          "mutable": true,
-          "command": false,
-          "percent": [
-            0.6394980909245863,
-            -0.5557485237929837
-          ],
-          "description": null,
-          "minZoom": null,
-          "maxZoom": null,
-          "tooltip": "hover"
-        },
-        {
-          "id": "ID_382a4b8bd818",
-          "type": "Raider",
-          "loc": [
-            96.16652224137047,
-            141.59174252026466
-          ],
-          "link": "Clinton Firebay",
-          "layer": "zz_media%2FTribucia.png",
-          "mutable": true,
-          "command": false,
-          "percent": [
-            0.6633873734477993,
-            -0.5344440277394678
-          ],
-          "description": null,
-          "minZoom": null,
-          "maxZoom": null,
-          "tooltip": "hover"
-        },
-        {
-          "id": "ID_59f9a82a7ae9",
-          "type": "Raider",
-          "loc": [
-            94.375,
-            139.11818490559156
-          ],
-          "link": "Darius Adeyemi",
-          "layer": "zz_media%2FTribucia.png",
-          "mutable": true,
-          "command": false,
-          "percent": [
-            0.6517982308900336,
-            -0.5244876693296283
-          ],
-          "description": null,
-          "minZoom": null,
-          "maxZoom": null,
-          "tooltip": "hover"
-        },
-        {
-          "id": "ID_fabb783b5818",
-          "type": "Raider",
-          "loc": [
-            94.75230867899738,
-            137.87874049737215
-          ],
-          "link": "Zadie Adeyemi",
-          "layer": "zz_media%2FTribucia.png",
-          "mutable": true,
-          "command": false,
-          "percent": [
-            0.6459911707051111,
-            -0.5265845567432991
-          ],
-          "description": null,
-          "minZoom": null,
-          "maxZoom": null,
-          "tooltip": "hover"
-        },
-        {
-          "id": "ID_bb186a9b2aea",
-          "type": "Raider",
-          "loc": [
-            97.58073580374356,
-            140.53074711373907
-          ],
-          "link": "Blacktide Cray",
-          "layer": "zz_media%2FTribucia.png",
-          "mutable": true,
-          "command": false,
-          "percent": [
-            0.6584163847203002,
-            -0.5423034987356363
-          ],
-          "description": null,
-          "minZoom": null,
-          "maxZoom": null,
-          "tooltip": "hover"
-        },
-        {
-          "id": "ID_aba85b1a4a79",
-          "type": "Raider",
-          "loc": [
-            97.05040571785365,
-            135.9341758969375
-          ],
-          "link": "Lyla Bonetooth",
-          "layer": "zz_media%2FTribucia.png",
-          "mutable": true,
-          "command": false,
-          "percent": [
-            0.6368804727235724,
-            -0.539356197112073
-          ],
-          "description": null,
-          "minZoom": null,
-          "maxZoom": null,
-          "tooltip": "hover"
-        },
-        {
-          "id": "ID_599a1beb59da",
-          "type": "Raider",
-          "loc": [
-            98.625,
-            138.74322935185947
-          ],
-          "link": "Salt-Eye Marlow",
-          "layer": "zz_media%2FTribucia.png",
-          "mutable": true,
-          "command": false,
-          "percent": [
-            0.6500414845182289,
-            -0.5481069815908302
-          ],
-          "description": null,
-          "minZoom": null,
-          "maxZoom": null,
-          "tooltip": "hover"
-        },
-        {
-          "id": "ID_ba898ada781b",
-          "type": "Loyalist",
-          "loc": [
-            100.65568355435265,
-            154.55963600109115
-          ],
-          "link": "The Duke",
-          "layer": "zz_media%2FTribucia.png",
-          "mutable": true,
-          "command": false,
-          "percent": null,
-          "description": null,
-          "minZoom": null,
-          "maxZoom": null,
-          "tooltip": "hover"
-        },
-        {
-          "id": "ID_d94ba9a90a09",
-          "type": "Loyalist",
-          "loc": [
-            100.2579359899352,
-            155.35487959791791
-          ],
-          "link": "Emily Burton",
-          "layer": "zz_media%2FTribucia.png",
-          "mutable": true,
-          "command": false,
-          "percent": null,
-          "description": null,
-          "minZoom": null,
-          "maxZoom": null,
-          "tooltip": "hover"
-        },
-        {
-          "id": "ID_395b490ba8db",
-          "type": "Loyalist",
-          "loc": [
-            101.93731459525327,
-            155.31069939809421
-          ],
-          "link": "Raynar Ventura",
-          "layer": "zz_media%2FTribucia.png",
-          "mutable": true,
-          "command": false,
-          "percent": null,
-          "description": null,
-          "minZoom": null,
-          "maxZoom": null,
-          "tooltip": "hover"
-        },
-        {
-          "id": "ID_4999d8995b59",
-          "type": "Loyalist",
-          "loc": [
-            98.11106588963348,
-            168.0274226954912
-          ],
-          "link": "Jacoban Clay",
-          "layer": "zz_media%2FTribucia.png",
-          "mutable": true,
-          "command": false,
-          "percent": [
-            0.7872441473288021,
-            -0.5452508003591996
-          ],
-          "description": null,
-          "minZoom": null,
-          "maxZoom": null,
-          "tooltip": "hover"
-        },
-        {
-          "id": "ID_18ea1919a828",
-          "type": "Loyalist",
-          "loc": [
-            99.9485767731661,
-            154.73635680038598
-          ],
-          "link": "Brady & Brody",
-          "layer": "zz_media%2FTribucia.png",
-          "mutable": true,
-          "command": false,
-          "percent": null,
-          "description": null,
-          "minZoom": null,
-          "maxZoom": null,
-          "tooltip": "hover"
-        },
-        {
-          "id": "ID_a8d9e9cbfa5a",
-          "type": "Loyalist",
-          "loc": [
-            100.47890685905601,
-            153.80857260408814
-          ],
-          "link": "Davis Pollard",
-          "layer": "zz_media%2FTribucia.png",
-          "mutable": true,
-          "command": false,
-          "percent": null,
-          "description": null,
-          "minZoom": null,
-          "maxZoom": null,
-          "tooltip": "hover"
-        },
-        {
-          "id": "ID_798b1a185bc8",
-          "type": "Loyalist",
-          "loc": [
-            107.54997467092149,
-            131.58593209276253
-          ],
-          "link": "General Colt",
-          "layer": "zz_media%2FTribucia.png",
-          "mutable": true,
-          "command": false,
-          "percent": null,
-          "description": null,
-          "minZoom": null,
-          "maxZoom": null,
-          "tooltip": "hover"
-        },
-        {
-          "id": "ID_5be93be868fa",
-          "type": "Loyalist",
-          "loc": [
-            99.24146999197956,
-            155.6641409966839
-          ],
-          "link": "Sgt. Rottwyler",
-          "layer": "zz_media%2FTribucia.png",
-          "mutable": true,
-          "command": false,
-          "percent": null,
-          "description": null,
-          "minZoom": null,
-          "maxZoom": null,
-          "tooltip": "hover"
-        },
-        {
-          "id": "ID_286b9ac969ca",
-          "type": "Loyalist",
-          "loc": [
-            141.447265625,
-            114.54455985581484
-          ],
-          "link": "Katarina Volkoff",
-          "layer": "zz_media%2FTribucia.png",
-          "mutable": true,
-          "command": false,
-          "percent": null,
-          "description": null,
-          "minZoom": null,
-          "maxZoom": null,
-          "tooltip": "hover"
-        },
-        {
-          "id": "ID_bae97ac8abf9",
-          "type": "Widow",
-          "loc": [
-            128.65614534178752,
-            126.68924390416656
-          ],
-          "link": "Prophet Veerah",
-          "layer": "zz_media%2FTribucia.png",
-          "mutable": true,
-          "command": false,
-          "percent": null,
-          "description": null,
-          "minZoom": null,
-          "maxZoom": null,
-          "tooltip": "hover"
-        },
-        {
-          "id": "ID_b82ab88a1bc8",
-          "type": "Widow",
-          "loc": [
-            128.0986328125,
-            125.82887102384115
-          ],
-          "link": "Riley Thorne",
-          "layer": "zz_media%2FTribucia.png",
-          "mutable": true,
-          "command": false,
-          "percent": null,
-          "description": null,
-          "minZoom": null,
-          "maxZoom": null,
-          "tooltip": "hover"
-        },
-        {
-          "id": "ID_799acac9e8c8",
-          "type": "Widow",
-          "loc": [
-            127.5361328125,
-            127.76575839499145
-          ],
-          "link": "Nita Blackbird",
-          "layer": "zz_media%2FTribucia.png",
-          "mutable": true,
-          "command": false,
-          "percent": null,
-          "description": null,
-          "minZoom": null,
-          "maxZoom": null,
-          "tooltip": "hover"
-        },
-        {
-          "id": "ID_c839eae88889",
-          "type": "Widow",
-          "loc": [
-            127.0361328125,
-            126.57863387718965
-          ],
-          "link": "Raina & Risa",
-          "layer": "zz_media%2FTribucia.png",
-          "mutable": true,
-          "command": false,
-          "percent": null,
-          "description": null,
-          "minZoom": null,
-          "maxZoom": null,
-          "tooltip": "hover"
-        },
-        {
-          "id": "ID_da8b886b7b9a",
-          "type": "Widow",
-          "loc": [
-            128.8486328125,
-            128.82792243723517
-          ],
-          "link": "Len Vyne",
-          "layer": "zz_media%2FTribucia.png",
-          "mutable": true,
-          "command": false,
-          "percent": null,
-          "description": null,
-          "minZoom": null,
-          "maxZoom": null,
-          "tooltip": "hover"
-        },
-        {
-          "id": "ID_5a995ad88848",
-          "type": "Individual",
-          "loc": [
-            75.26958336220318,
-            182.18429809489714
-          ],
-          "link": "Shana",
-          "layer": "zz_media%2FTribucia.png",
-          "mutable": true,
-          "command": false,
-          "percent": null,
-          "description": null,
-          "minZoom": null,
-          "maxZoom": null,
-          "tooltip": "hover"
-        },
-        {
-          "id": "ID_29fb08ab1a68",
-          "type": "Individual",
-          "loc": [
-            78.7167289204876,
-            160.44638212159182
-          ],
-          "link": "Royce Sincayd",
-          "layer": "zz_media%2FTribucia.png",
-          "mutable": true,
-          "command": false,
-          "percent": null,
-          "description": null,
-          "minZoom": null,
-          "maxZoom": null,
-          "tooltip": "hover"
-        },
-        {
-          "id": "ID_aaa898fbdba8",
-          "type": "Individual",
-          "loc": [
-            77.83284544400442,
-            161.329986118066
-          ],
-          "link": "Rachel Gold",
-          "layer": "zz_media%2FTribucia.png",
-          "mutable": true,
-          "command": false,
-          "percent": null,
-          "description": null,
-          "minZoom": null,
-          "maxZoom": null,
-          "tooltip": "hover"
-        },
-        {
-          "id": "ID_49eb0948aa8a",
-          "type": "Individual",
-          "loc": [
-            78.09801048694938,
-            159.91621972370731
-          ],
-          "link": "Marlon Lambert",
-          "layer": "zz_media%2FTribucia.png",
-          "mutable": true,
-          "command": false,
-          "percent": null,
-          "description": null,
-          "minZoom": null,
-          "maxZoom": null,
-          "tooltip": "hover"
-        },
-        {
-          "id": "ID_9a7b48789879",
-          "type": "Third",
-          "loc": [
-            61.6611328125,
-            160.76461218617592
-          ],
-          "link": "Samson Knight",
-          "layer": "zz_media%2FTribucia.png",
-          "mutable": true,
-          "command": false,
-          "percent": null,
-          "description": null,
-          "minZoom": null,
-          "maxZoom": null,
-          "tooltip": "hover"
-        },
-        {
-          "id": "ID_4aaa1b68a82a",
-          "type": "Third",
-          "loc": [
-            61.0361328125,
-            161.5757881173718
-          ],
-          "link": "Jailface",
-          "layer": "zz_media%2FTribucia.png",
-          "mutable": true,
-          "command": false,
-          "percent": null,
-          "description": null,
-          "minZoom": null,
-          "maxZoom": null,
-          "tooltip": "hover"
-        },
-        {
-          "id": "ID_aaea88386bd9",
-          "type": "Mayor",
-          "loc": [
-            99.08333771376498,
-            167.04304938696973
-          ],
-          "link": "Soria Langston-Clay",
-          "layer": "zz_media%2FTribucia.png",
-          "mutable": true,
-          "command": false,
-          "percent": [
-            0.7826321493972227,
-            -0.5506541866690655
-          ],
-          "description": null,
-          "minZoom": null,
-          "maxZoom": null,
-          "tooltip": "hover"
-        },
-        {
-          "id": "ID_5b397a181aab",
-          "type": "Mayor",
-          "loc": [
-            71.64566110862212,
-            90.19108872961186
-          ],
-          "link": "Ellis Westmount",
-          "layer": "zz_media%2FTribucia.png",
-          "mutable": true,
-          "command": false,
-          "percent": null,
-          "description": null,
-          "minZoom": null,
-          "maxZoom": null,
-          "tooltip": "hover"
-        },
-        {
-          "id": "ID_29d8b8cb9a18",
-          "type": "Mayor",
-          "loc": [
-            50.572265625,
-            156.5266948080693
-          ],
-          "link": "Cricket Granger",
-          "layer": "zz_media%2FTribucia.png",
-          "mutable": true,
-          "command": false,
-          "percent": null,
-          "description": null,
-          "minZoom": null,
-          "maxZoom": null,
-          "tooltip": "hover"
-        },
-        {
-          "id": "ID_29583b094a1b",
-          "type": "Mayor",
-          "loc": [
-            99.697265625,
-            236.87628059191803
-          ],
-          "link": "Gorren Brile",
-          "layer": "zz_media%2FTribucia.png",
-          "mutable": true,
-          "command": false,
-          "percent": null,
-          "description": null,
-          "minZoom": null,
-          "maxZoom": null,
-          "tooltip": "hover"
-        },
-        {
-          "id": "ID_495ab89ac8da",
-          "type": "Mayor",
-          "loc": [
-            132.8103976812585,
-            83.99431822992067
-          ],
-          "link": "Marla Rusk",
-          "layer": "zz_media%2FTribucia.png",
-          "mutable": true,
-          "command": false,
-          "percent": null,
-          "description": null,
-          "minZoom": null,
-          "maxZoom": null,
-          "tooltip": "hover"
-        },
-        {
-          "id": "ID_da4bfab92989",
-          "type": "Third",
-          "loc": [
-            60.899571529691414,
-            160.82317148013388
-          ],
-          "link": "Ninepack",
-          "layer": "zz_media%2FTribucia.png",
-          "mutable": true,
-          "command": false,
-          "percent": [
-            0.7534907009318133,
-            -0.3384484697725122
-          ],
-          "description": null,
-          "minZoom": null,
-          "maxZoom": null,
-          "tooltip": "hover"
-        },
-        {
-          "id": "ID_9b1b5848a9ba",
-          "type": "Individual",
-          "loc": [
-            105.14677620452096,
-            152.6997072393163
-          ],
-          "link": "Morris Gable",
-          "layer": "zz_media%2FTribucia.png",
-          "mutable": true,
-          "command": false,
-          "percent": [
-            1.5906219504095447,
-            -1.64291837819564
-          ],
-          "description": null,
-          "minZoom": null,
-          "maxZoom": null,
-          "tooltip": "hover"
-        },
-        {
-          "id": "ID_0b1b1b0aabaa",
-          "type": "Individual",
-          "loc": [
-            98.0361328125,
-            198.634928539809
-          ],
-          "link": "Jaden Kade",
-          "layer": "zz_media%2FTribucia.png",
-          "mutable": true,
-          "command": false,
-          "percent": null,
-          "description": null,
-          "minZoom": null,
-          "maxZoom": null,
-          "tooltip": "hover"
-        },
-        {
-          "id": "ID_48a9b838583b",
-          "type": "Individual",
-          "loc": [
-            80.39610752580565,
-            186.256282698917
-          ],
-          "link": "Cassidy LaRue",
-          "layer": "zz_media%2FTribucia.png",
-          "mutable": true,
-          "command": false,
-          "percent": null,
-          "description": null,
-          "minZoom": null,
-          "maxZoom": null,
-          "tooltip": "hover"
-        },
-        {
-          "id": "ID_9bb908080afb",
-          "type": "Individual",
-          "loc": [
-            94.36146645423997,
-            80.65260929983393
-          ],
-          "link": "The Grand Mascara",
-          "layer": "zz_media%2FTribucia.png",
-          "mutable": true,
-          "command": false,
-          "percent": null,
-          "description": null,
-          "minZoom": null,
-          "maxZoom": null,
-          "tooltip": "hover"
-        },
-        {
-          "id": "ID_7b08c8fba8c8",
-          "type": "Individual",
-          "loc": [
-            98.3486328125,
-            238.3924579459938
-          ],
-          "link": "Flint Garritt",
-          "layer": "zz_media%2FTribucia.png",
-          "mutable": true,
-          "command": false,
-          "percent": null,
-          "description": null,
-          "minZoom": null,
-          "maxZoom": null,
-          "tooltip": "hover"
-        },
-        {
-          "id": "ID_fa498bd9b9a9",
-          "type": "Individual",
-          "loc": [
-            97.3486328125,
-            237.45525437930817
-          ],
-          "link": "Bobby Cutman",
-          "layer": "zz_media%2FTribucia.png",
-          "mutable": true,
-          "command": false,
-          "percent": null,
-          "description": null,
-          "minZoom": null,
-          "maxZoom": null,
-          "tooltip": "hover"
-        },
-        {
-          "id": "ID_8bd8596ba948",
-          "type": "Individual",
-          "loc": [
-            135.79985678739678,
-            95.91903055211787
-          ],
-          "link": "Bastian Redd",
-          "layer": "zz_media%2FTribucia.png",
-          "mutable": true,
-          "command": false,
-          "percent": [
-            0.9991565682512279,
-            -2.1218727623030746
-          ],
-          "description": null,
-          "minZoom": null,
-          "maxZoom": null,
-          "tooltip": "hover"
-        },
-        {
-          "id": "ID_3ab88b8b2aa9",
-          "type": "Individual",
-          "loc": [
-            63.322265625,
-            174.8204483652691
-          ],
-          "link": "Dusty Dillon",
-          "layer": "zz_media%2FTribucia.png",
-          "mutable": true,
-          "command": false,
-          "percent": null,
-          "description": null,
-          "minZoom": null,
-          "maxZoom": null,
-          "tooltip": "hover"
-        },
-        {
-          "id": "ID_2babea4afada",
-          "type": "Danger",
-          "loc": [
-            61.822265625,
-            201.43702965914122
-          ],
-          "link": "Ora Razchek",
-          "layer": "zz_media%2FTribucia.png",
-          "mutable": true,
-          "command": false,
-          "percent": null,
-          "description": null,
-          "minZoom": null,
-          "maxZoom": null,
-          "tooltip": "hover"
-        },
-        {
-          "id": "ID_5b68f80b3869",
-          "type": "Danger",
-          "loc": [
-            61.164736572636365,
-            197.9896682583456
-          ],
-          "link": "Hella",
-          "layer": "zz_media%2FTribucia.png",
-          "mutable": true,
-          "command": false,
-          "percent": [
-            0.9276236287360262,
-            -0.3399221205842938
-          ],
-          "description": null,
-          "minZoom": null,
-          "maxZoom": null,
-          "tooltip": "hover"
-        },
-        {
-          "id": "ID_386958aac838",
-          "type": "Danger",
-          "loc": [
-            70.75,
-            180.87430367513653
-          ],
-          "link": "The Grim Man",
-          "layer": "zz_media%2FTribucia.png",
-          "mutable": true,
-          "command": false,
-          "percent": [
-            0.847434512094344,
-            -0.39319208058353594
-          ],
-          "description": null,
-          "minZoom": null,
-          "maxZoom": null,
-          "tooltip": "hover"
-        },
-        {
-          "id": "ID_09690a588a6a",
-          "type": "Danger",
-          "loc": [
-            57.45242597140699,
-            199.7571209287378
-          ],
-          "link": "Lash Hawkins",
-          "layer": "zz_media%2FTribucia.png",
-          "mutable": true,
-          "command": false,
-          "percent": [
-            0.9359045197246867,
-            -0.3192910092193511
-          ],
-          "description": null,
-          "minZoom": null,
-          "maxZoom": null,
-          "tooltip": "hover"
-        },
-        {
-          "id": "ID_79286938b948",
-          "type": "Murray",
-          "loc": [
-            64.822265625,
-            141.5373268829444
-          ],
-          "link": "Marco Murray",
-          "layer": "zz_media%2FTribucia.png",
-          "mutable": true,
-          "command": false,
-          "percent": null,
-          "description": null,
-          "minZoom": null,
-          "maxZoom": null,
-          "tooltip": "hover"
-        },
-        {
-          "id": "ID_89e839787aba",
-          "type": "Murray",
-          "loc": [
-            64.3094282538117,
-            141.26672553792653
-          ],
-          "link": "Rosa Murray",
-          "layer": "zz_media%2FTribucia.png",
-          "mutable": true,
-          "command": false,
-          "percent": null,
-          "description": null,
-          "minZoom": null,
-          "maxZoom": null,
-          "tooltip": "hover"
-        },
-        {
-          "id": "ID_7b391b384958",
-          "type": "Murray",
-          "loc": [
-            64.57459329675665,
-            143.91753752734908
-          ],
-          "link": "Francis Murray",
-          "layer": "zz_media%2FTribucia.png",
-          "mutable": true,
-          "command": false,
-          "percent": null,
-          "description": null,
-          "minZoom": null,
-          "maxZoom": null,
-          "tooltip": "hover"
-        },
-        {
-          "id": "ID_982828f919f8",
-          "type": "Murray",
-          "loc": [
-            63.60232147262515,
-            142.50377113299038
-          ],
-          "link": "Nico Murray",
-          "layer": "zz_media%2FTribucia.png",
-          "mutable": true,
-          "command": false,
-          "percent": null,
-          "description": null,
-          "minZoom": null,
-          "maxZoom": null,
-          "tooltip": "hover"
-        },
-        {
-          "id": "ID_db298888cb3b",
-          "type": "Individual",
-          "loc": [
-            100.0361328125,
-            199.0070432555492
-          ],
-          "link": "Owen McCready",
-          "layer": "zz_media%2FTribucia.png",
-          "mutable": true,
-          "command": false,
-          "percent": null,
-          "description": null,
-          "minZoom": null,
-          "maxZoom": null,
-          "tooltip": "hover"
-        },
-        {
-          "id": "ID_28ca08394a2a",
-          "type": "Individual",
-          "loc": [
-            42.072265625,
-            140.78835451843418
-          ],
-          "link": "Salem Quinn",
-          "layer": "zz_media%2FTribucia.png",
-          "mutable": true,
-          "command": false,
-          "percent": null,
-          "description": null,
-          "minZoom": null,
-          "maxZoom": null,
-          "tooltip": "hover"
-        },
-        {
-          "id": "ID_6beafbc98ad8",
-          "type": "Individual",
-          "loc": [
-            41.572265625,
-            142.91268260292165
-          ],
-          "link": "Tate Faulkner",
-          "layer": "zz_media%2FTribucia.png",
-          "mutable": true,
-          "command": false,
-          "percent": null,
-          "description": null,
-          "minZoom": null,
-          "maxZoom": null,
-          "tooltip": "hover"
-        },
-        {
-          "id": "ID_ab7adaa9d95b",
-          "type": "Third",
-          "loc": [
-            60.59711765258232,
-            160.51586802103077
-          ],
-          "link": "Sable",
-          "layer": "zz_media%2FTribucia.png",
-          "mutable": true,
-          "command": false,
-          "percent": null,
-          "description": null,
-          "minZoom": null,
-          "maxZoom": null,
-          "tooltip": "hover"
-        },
-        {
-          "id": "ID_1bb9090878d9",
-          "type": "Third",
-          "loc": [
-            61.76806640625,
-            162.03234605636243
-          ],
-          "link": "Malika Locke",
-          "layer": "zz_media%2FTribucia.png",
-          "mutable": true,
-          "command": false,
-          "percent": null,
-          "description": null,
-          "minZoom": null,
-          "maxZoom": null,
-          "tooltip": "hover"
-        },
-        {
-          "id": "ID_fadada3abb58",
-          "type": "Location",
-          "loc": [
-            78.3486328125,
-            145.1229889359433
-          ],
-          "link": "Ha Ha Hole",
-          "layer": "zz_media%2FTribucia.png",
-          "mutable": true,
-          "command": false,
-          "percent": null,
-          "description": null,
-          "minZoom": null,
-          "maxZoom": null,
-          "tooltip": "hover"
-        }
-      ],
-      "overlays": [],
-      "shapes": [],
-      "files": []
-    },
-    {
-      "id": "nimalia-capital-map",
-      "locked": false,
-      "lastAccessed": 1781918829634,
-      "markers": [
-        {
-          "id": "ID_2908bac8d9fa",
-          "type": "Territory",
-          "loc": [
-            152.59364418927643,
-            139.38842424139818
-          ],
-          "layer": "zz_media%2Fnimalia.png",
-          "mutable": true,
-          "command": false,
-          "percent": null,
-          "description": null,
-          "minZoom": null,
-          "maxZoom": null,
-          "tooltip": "hover"
-        },
-        {
-          "id": "ID_8b789b6899da",
-          "type": "Territory",
-          "loc": [
-            155.06851792342934,
-            138.85809415550827
-          ],
-          "layer": "zz_media%2Fnimalia.png",
-          "mutable": true,
-          "command": false,
-          "percent": null,
-          "description": null,
-          "minZoom": null,
-          "maxZoom": null,
-          "tooltip": "hover"
-        }
-      ],
-      "overlays": [],
-      "shapes": [],
-      "files": [
-        "MAPA DE NIMALIA.md"
-      ]
-    }
-  ],
-  "defaultMarker": {
-    "type": "default",
-    "iconName": "map-marker",
-    "color": "#dddddd",
-    "transform": {
-      "size": 6,
-      "x": 0,
-      "y": -2
-    }
-  },
-  "markerIcons": [
-    {
-      "type": "Territory",
-      "iconName": "city",
-      "color": "#e65151",
-      "alpha": 1,
-      "layer": true,
-      "transform": {
-        "size": 6,
-        "x": 0,
-        "y": -2
-      },
-      "isImage": false,
-      "tags": [],
-      "minZoom": null,
-      "maxZoom": null
-    },
-    {
-      "type": "Location",
-      "iconName": "home",
-      "color": "#eabf76",
-      "alpha": 1,
-      "layer": true,
-      "transform": {
-        "size": 6,
-        "x": 0,
-        "y": -2
-      },
-      "isImage": false,
-      "tags": [],
-      "minZoom": null,
-      "maxZoom": null
-    },
-    {
-      "type": "Memorial",
-      "iconName": "cross",
-      "color": "#9a7a23",
-      "alpha": 1,
-      "layer": true,
-      "transform": {
-        "size": 6,
-        "x": 0,
-        "y": -2
-      },
-      "isImage": false,
-      "tags": [],
-      "minZoom": null,
-      "maxZoom": null
-    },
-    {
-      "type": "Wrecking Crew",
-      "iconName": "walking",
-      "color": "#ffd747",
-      "alpha": 1,
-      "layer": false,
-      "transform": {
-        "size": 6,
-        "x": 0,
-        "y": -2
-      },
-      "isImage": false,
-      "tags": [],
-      "minZoom": null,
-      "maxZoom": null
-    },
-    {
-      "type": "Rancher",
-      "iconName": "walking",
-      "color": "#997f24",
-      "alpha": 1,
-      "layer": false,
-      "transform": {
-        "size": 6,
-        "x": 0,
-        "y": -2
-      },
-      "isImage": false,
-      "tags": [],
-      "minZoom": null,
-      "maxZoom": null
-    },
-    {
-      "type": "Raider",
-      "iconName": "walking",
-      "color": "#3d8fe6",
-      "alpha": 1,
-      "layer": false,
-      "transform": {
-        "size": 6,
-        "x": 0,
-        "y": -2
-      },
-      "isImage": false,
-      "tags": [],
-      "minZoom": null,
-      "maxZoom": null
-    },
-    {
-      "type": "Loyalist",
-      "iconName": "walking",
-      "color": "#ff0000",
-      "alpha": 1,
-      "layer": false,
-      "transform": {
-        "size": 6,
-        "x": 0,
-        "y": -2
-      },
-      "isImage": false,
-      "tags": [],
-      "minZoom": null,
-      "maxZoom": null
-    },
-    {
-      "type": "Widow",
-      "iconName": "walking",
-      "color": "#e873e4",
-      "alpha": 1,
-      "layer": false,
-      "transform": {
-        "size": 6,
-        "x": 0,
-        "y": -2
-      },
-      "isImage": false,
-      "tags": [],
-      "minZoom": null,
-      "maxZoom": null
-    },
-    {
-      "type": "Individual",
-      "iconName": "walking",
-      "color": "#7bd0db",
-      "alpha": 1,
-      "layer": false,
-      "transform": {
-        "size": 6,
-        "x": 0,
-        "y": -2
-      },
-      "isImage": false,
-      "tags": [],
-      "minZoom": null,
-      "maxZoom": null
-    },
-    {
-      "type": "Mayor",
-      "iconName": "walking",
-      "color": "#53b27c",
-      "alpha": 1,
-      "layer": false,
-      "transform": {
-        "size": 6,
-        "x": 0,
-        "y": -2
-      },
-      "isImage": false,
-      "tags": [],
-      "minZoom": null,
-      "maxZoom": null
-    },
-    {
-      "type": "Third",
-      "iconName": "walking",
-      "color": "#cd78ce",
-      "alpha": 1,
-      "layer": false,
-      "transform": {
-        "size": 6,
-        "x": 0,
-        "y": -2
-      },
-      "isImage": false,
-      "tags": [],
-      "minZoom": null,
-      "maxZoom": null
-    },
-    {
-      "type": "Murray",
-      "iconName": "walking",
-      "color": "#a7496a",
-      "alpha": 1,
-      "layer": false,
-      "transform": {
-        "size": 6,
-        "x": 0,
-        "y": -2
-      },
-      "isImage": false,
-      "tags": [],
-      "minZoom": null,
-      "maxZoom": null
-    },
-    {
-      "type": "Danger",
-      "iconName": "walking",
-      "color": "#242424",
-      "alpha": 1,
-      "layer": false,
-      "transform": {
-        "size": 6,
-        "x": 0,
-        "y": -2
-      },
-      "isImage": false,
-      "tags": [],
-      "minZoom": null,
-      "maxZoom": null
-    }
-  ],
-  "color": "#dddddd",
-  "lat": 39.983334,
-  "long": -82.98333,
-  "notePreview": true,
-  "layerMarkers": true,
-  "previousVersion": "6.0.5",
-  "version": {
-    "major": 6,
-    "minor": 0,
-    "patch": 5
-  },
-  "warnedAboutMapMarker": false,
-  "copyOnClick": false,
-  "displayMarkerTooltips": "hover",
-  "displayOverlayTooltips": true,
-  "configDirectory": null,
-  "mapViewEnabled": true,
-  "mapViewParameters": {},
-  "enableDraw": true,
-  "defaultUnitType": "imperial",
-  "defaultTile": "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png",
-  "defaultTileDark": "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png",
-  "defaultAttribution": "&copy; <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors &copy; <a href=\"https://carto.com/attributions\">CARTO</a>",
-  "defaultTileSubdomains": "a,b,c,d"
+    "mapMarkers":  [
+
+                   ],
+    "defaultMarker":  {
+                          "type":  "default",
+                          "iconName":  "map-marker",
+                          "color":  "#dddddd",
+                          "transform":  {
+                                            "size":  6,
+                                            "x":  0,
+                                            "y":  -2
+                                        }
+                      },
+    "markerIcons":  [
+                        {
+                            "type":  "Territory",
+                            "iconName":  "city",
+                            "color":  "#e65151",
+                            "alpha":  1,
+                            "layer":  true,
+                            "transform":  {
+                                              "size":  6,
+                                              "x":  0,
+                                              "y":  -2
+                                          },
+                            "isImage":  false,
+                            "tags":  [
+
+                                     ],
+                            "minZoom":  null,
+                            "maxZoom":  null
+                        },
+                        {
+                            "type":  "Location",
+                            "iconName":  "home",
+                            "color":  "#eabf76",
+                            "alpha":  1,
+                            "layer":  true,
+                            "transform":  {
+                                              "size":  6,
+                                              "x":  0,
+                                              "y":  -2
+                                          },
+                            "isImage":  false,
+                            "tags":  [
+
+                                     ],
+                            "minZoom":  null,
+                            "maxZoom":  null
+                        },
+                        {
+                            "type":  "Memorial",
+                            "iconName":  "cross",
+                            "color":  "#9a7a23",
+                            "alpha":  1,
+                            "layer":  true,
+                            "transform":  {
+                                              "size":  6,
+                                              "x":  0,
+                                              "y":  -2
+                                          },
+                            "isImage":  false,
+                            "tags":  [
+
+                                     ],
+                            "minZoom":  null,
+                            "maxZoom":  null
+                        },
+                        {
+                            "type":  "Wrecking Crew",
+                            "iconName":  "walking",
+                            "color":  "#ffd747",
+                            "alpha":  1,
+                            "layer":  false,
+                            "transform":  {
+                                              "size":  6,
+                                              "x":  0,
+                                              "y":  -2
+                                          },
+                            "isImage":  false,
+                            "tags":  [
+
+                                     ],
+                            "minZoom":  null,
+                            "maxZoom":  null
+                        },
+                        {
+                            "type":  "Rancher",
+                            "iconName":  "walking",
+                            "color":  "#997f24",
+                            "alpha":  1,
+                            "layer":  false,
+                            "transform":  {
+                                              "size":  6,
+                                              "x":  0,
+                                              "y":  -2
+                                          },
+                            "isImage":  false,
+                            "tags":  [
+
+                                     ],
+                            "minZoom":  null,
+                            "maxZoom":  null
+                        },
+                        {
+                            "type":  "Raider",
+                            "iconName":  "walking",
+                            "color":  "#3d8fe6",
+                            "alpha":  1,
+                            "layer":  false,
+                            "transform":  {
+                                              "size":  6,
+                                              "x":  0,
+                                              "y":  -2
+                                          },
+                            "isImage":  false,
+                            "tags":  [
+
+                                     ],
+                            "minZoom":  null,
+                            "maxZoom":  null
+                        },
+                        {
+                            "type":  "Loyalist",
+                            "iconName":  "walking",
+                            "color":  "#ff0000",
+                            "alpha":  1,
+                            "layer":  false,
+                            "transform":  {
+                                              "size":  6,
+                                              "x":  0,
+                                              "y":  -2
+                                          },
+                            "isImage":  false,
+                            "tags":  [
+
+                                     ],
+                            "minZoom":  null,
+                            "maxZoom":  null
+                        },
+                        {
+                            "type":  "Widow",
+                            "iconName":  "walking",
+                            "color":  "#e873e4",
+                            "alpha":  1,
+                            "layer":  false,
+                            "transform":  {
+                                              "size":  6,
+                                              "x":  0,
+                                              "y":  -2
+                                          },
+                            "isImage":  false,
+                            "tags":  [
+
+                                     ],
+                            "minZoom":  null,
+                            "maxZoom":  null
+                        },
+                        {
+                            "type":  "Individual",
+                            "iconName":  "walking",
+                            "color":  "#7bd0db",
+                            "alpha":  1,
+                            "layer":  false,
+                            "transform":  {
+                                              "size":  6,
+                                              "x":  0,
+                                              "y":  -2
+                                          },
+                            "isImage":  false,
+                            "tags":  [
+
+                                     ],
+                            "minZoom":  null,
+                            "maxZoom":  null
+                        },
+                        {
+                            "type":  "Mayor",
+                            "iconName":  "walking",
+                            "color":  "#53b27c",
+                            "alpha":  1,
+                            "layer":  false,
+                            "transform":  {
+                                              "size":  6,
+                                              "x":  0,
+                                              "y":  -2
+                                          },
+                            "isImage":  false,
+                            "tags":  [
+
+                                     ],
+                            "minZoom":  null,
+                            "maxZoom":  null
+                        },
+                        {
+                            "type":  "Third",
+                            "iconName":  "walking",
+                            "color":  "#cd78ce",
+                            "alpha":  1,
+                            "layer":  false,
+                            "transform":  {
+                                              "size":  6,
+                                              "x":  0,
+                                              "y":  -2
+                                          },
+                            "isImage":  false,
+                            "tags":  [
+
+                                     ],
+                            "minZoom":  null,
+                            "maxZoom":  null
+                        },
+                        {
+                            "type":  "Murray",
+                            "iconName":  "walking",
+                            "color":  "#a7496a",
+                            "alpha":  1,
+                            "layer":  false,
+                            "transform":  {
+                                              "size":  6,
+                                              "x":  0,
+                                              "y":  -2
+                                          },
+                            "isImage":  false,
+                            "tags":  [
+
+                                     ],
+                            "minZoom":  null,
+                            "maxZoom":  null
+                        },
+                        {
+                            "type":  "Danger",
+                            "iconName":  "walking",
+                            "color":  "#242424",
+                            "alpha":  1,
+                            "layer":  false,
+                            "transform":  {
+                                              "size":  6,
+                                              "x":  0,
+                                              "y":  -2
+                                          },
+                            "isImage":  false,
+                            "tags":  [
+
+                                     ],
+                            "minZoom":  null,
+                            "maxZoom":  null
+                        }
+                    ],
+    "color":  "#dddddd",
+    "lat":  39.983334,
+    "long":  -82.98333,
+    "notePreview":  true,
+    "layerMarkers":  true,
+    "previousVersion":  "6.0.5",
+    "version":  {
+                    "major":  6,
+                    "minor":  0,
+                    "patch":  5
+                },
+    "warnedAboutMapMarker":  false,
+    "copyOnClick":  false,
+    "displayMarkerTooltips":  "hover",
+    "displayOverlayTooltips":  true,
+    "configDirectory":  null,
+    "mapViewEnabled":  true,
+    "mapViewParameters":  {
+
+                          },
+    "enableDraw":  true,
+    "defaultUnitType":  "imperial",
+    "defaultTile":  "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png",
+    "defaultTileDark":  "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png",
+    "defaultAttribution":  "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors \u0026copy; \u003ca href=\"https://carto.com/attributions\"\u003eCARTO\u003c/a\u003e",
+    "defaultTileSubdomains":  "a,b,c,d"
 }

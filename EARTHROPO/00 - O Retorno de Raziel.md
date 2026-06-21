@@ -9,6 +9,16 @@ tags:
   - story
   - chapter00
   - earthropo
+NoteStatus: Active
+status: História de personagem
+visibility: gm
+character: "[[Raziel]]"
+characters:
+  - "[[Raziel]]"
+  - "[[Lorde Malakar]]"
+  - "[[Kaelen]]"
+  - "[[Vandor]]"
+  - "[[Ancião Primordial]]"
 cover: [[zz_media/raziel.png]]
 description: A história de Raziel, o Espectro da Névoa de Sangue — desde seu auge como executor do Clã Sanguinallis na Fortaleza de Gharok até a traição que o aprisionou por trezentos anos e seu renascimento nas cavernas abissais sob as Ruínas de Valthor.
 ---

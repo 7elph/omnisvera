@@ -3,6 +3,7 @@ obsidianUIMode: preview
 NoteIcon: map
 NoteStatus: Active
 status: Em desenvolvimento
+visibility: gm
 tags:
   - workflow
   - geography
@@ -12,60 +13,79 @@ tags:
 
 # Registro Geográfico de Earthropo
 
-Esta nota separa fatos geográficos confirmados, posições de trabalho e nomes ainda sem cânone. Coordenadas do Leaflet servem para preparação e podem mudar sem alterar a lore.
+Esta nota separa geografia confirmada, posições provisórias do mestre e informações que podem ser apresentadas aos jogadores.
 
-## Estrutura confirmada
+## Hierarquia confirmada
 
-| Lugar | Tipo | Relação confirmada | Mapa |
-|:--|:--|:--|:--|
-| [[MAPA DE EARTHROPO\|Earthropo]] | Continente | Continente principal da campanha; não é o mundo inteiro. | Mapa continental ativo. |
-| [[Nimalia]] | Reino | Reino dos antropos governado por [[Augustus Terra Decimus]]. | Região central provisória. |
-| [[Nimalis]] | Cidade | Capital e sede da [[Coroa de Nimalia]]; o nome próprio ainda não foi definido. | Grande cidade central. |
-| [[Floresta de Avenor]] | Região florestal | Faz fronteira com Nimalia. | Leste ou nordeste da capital. |
-| [[Leth'valora]] | Vila destruída | Pequena vila élfica situada dentro de Avenor. | Ruínas no interior da floresta. |
-| [[Maré Baixa]] | Distrito portuário | Fica no extremo sul da capital de Nimalia. | Zona portuária sul do mapa urbano. |
-| [[Ruínas de Valthor]] | Ruínas | Ficam no sudeste de Earthropo e estão ligadas ao retorno de [[Raziel]]. | Complexo em ruínas no sudeste. |
+| Lugar | Tipo | Relação |
+|:--|:--|:--|
+| Earthropo | Continente | Continente da campanha; o nome do mundo permanece oculto. |
+| [[Nimalia]] | Reino | Reino dos antropos, governado por [[Augustus Terra Decimus]]. |
+| [[Nimalis]] | Capital | Capital definitiva e sede da [[Coroa de Nimalia]]. |
+| [[Floresta de Avenor]] | Região | Região externa que forma a fronteira oriental de Nimalia. |
+| [[Leth'valora]] | Vila destruída | Ruínas de uma pequena vila élfica dentro de Avenor. |
+| [[Maré Baixa]] | Distrito | Distrito portuário ao sul de Nimalis. |
+| [[Ruínas de Valthor]] | Ruínas | Complexo no sudeste de Earthropo. |
+| [[Fortaleza de Gharok]] | Fortaleza e domínio antigo | Região montanhosa e vulcânica do norte ou nordeste. |
 
-## Posições de trabalho
+## Reino de Nimalia
 
-- Nimalia ocupa a região central ao redor da capital, mas suas fronteiras ainda não foram desenhadas.
-- Avenor foi posicionada a leste ou nordeste da capital para representar sua fronteira com Nimalia.
-- As coordenadas de Leth'valora indicam apenas uma área aproximada dentro de Avenor.
-- O marcador de Valthor indica o sudeste confirmado, não fronteiras ou domínio político.
-- O mapa urbano representa a capital, mesmo que a arte ainda exiba **Nimalia** como título.
+Nimalia ocupa a bacia central de Earthropo, organizada ao redor de Nimalis e das rotas fluviais que convergem para a capital.
 
-## Existentes, mas ainda não posicionados
+### Fronteiras políticas de trabalho
 
-### [[Fortaleza de Gharok]]
+- **Leste:** borda ocidental da Floresta de Avenor.
+- **Norte:** rios superiores e primeiras elevações que antecedem a cordilheira.
+- **Sul:** confluências fluviais, campos centrais e rotas que descem para as montanhas meridionais.
+- **Oeste:** estradas, rios e colinas que separam a bacia central das cidades costeiras.
 
-A fortaleza existe na história de Raziel, mas sua posição atual e sua relação com o futuro reino anão permanecem em aberto. Não deve receber marcador ainda.
+Essas fronteiras são completas para preparação, mas ainda podem ser ajustadas quando o mapa receber polígonos ou novos reinos.
+
+## População
+
+- Reino de Nimalia: aproximadamente **750.000 habitantes**.
+- Nimalis: estimativa de trabalho de **120.000 habitantes**, suficiente para uma grande capital sem absorver a maior parte do reino.
+- Antropos são maioria dentro do reino.
+- Humanos, elfos, anões, dragonborns e outros povos formam comunidades importantes na capital.
+
+## Avenor e Leth'valora
+
+- Avenor não pertence a Nimalia.
+- A fronteira segue trilhas, rios menores e o limite entre campos cultivados e floresta antiga.
+- Leth'valora será representada como ruína.
+- Sua localização pode ser conhecida no mapa dos jogadores porque a destruição não é segredo.
+
+## Regiões em desenvolvimento
 
 ### [[Campos de Earthropo]]
 
-O nome substitui a antiga referência a Campos de Eryndor. A história de Raziel relaciona a região a Kaelen e às Ruínas de Valthor, mas suas fronteiras e posição exata ainda precisam ser aprovadas.
+Faixa de campos do leste ou sudeste, entre a bacia central e as Ruínas de Valthor. O nome é genérico e pode ser substituído futuramente.
 
-## Reservados para desenvolvimento
+### [[Bosque Sussurrante]]
 
-- Futuro reino élfico: ficará em uma região de grande concentração florestal, fora de Leth'valora.
-- Futuro reino anão: ficará próximo às montanhas e áreas vulcânicas do norte ou nordeste.
-- Região de origem e domínio do Clã Sanguinallis: ainda depende da consolidação da história de Raziel.
+Nome de trabalho para uma região menor e incomum de Avenor. Sua posição e natureza permanecem indefinidas; não recebe pin público.
 
-Essas indicações não autorizam nomes, capitais, fronteiras ou marcadores.
+### [[Vale Dourado]]
 
-## Nomes sem existência confirmada
+Nome de trabalho para um vale agrícola ou rota ocidental de Nimalia. Não recebe pin até ganhar função em jogo.
 
-- [[Bosque Sussurrante]]
-- [[Vale Dourado]]
+### [[Mar da Neblina]]
 
-Esses nomes permanecem como placeholders e não devem aparecer no mapa ativo.
+Nome aplicado às águas e bancos de névoa do litoral oriental. Sua relação com o Véu permanece apenas como rumor.
 
-## Regra para novos marcadores
+## Territórios raciais reservados
 
-Um lugar só recebe marcador quando:
+> [!gm]- Planejamento
+> - **Reino élfico:** maior massa florestal do continente, ao sul ou sudoeste da região central. Nome provisório a ser criado somente na área do mestre.
+> - **Reino anão:** cordilheira do norte ou nordeste, incluindo áreas vulcânicas. Gharok ocupa ou ocupou uma zona marginal dessa região.
+> - **Antropos:** Nimalia.
+> - **Humanos:** numerosos e dispersos; um reino próprio ainda não é necessário.
+> - **Dragonborns e demais povos:** posicionamento reservado até que entrem na campanha.
 
-1. sua existência estiver confirmada;
-2. houver uma região aproximada aprovada;
-3. existir uma nota de destino;
-4. o marcador não revelar informação que deveria ser descoberta apenas em jogo.
+## Cartografia pública e privada
 
-Marcadores de preparação devem ser identificados como provisórios na nota correspondente.
+- [[MAPA DE EARTHROPO]] contém apenas pins confirmados.
+- [[GM/Mapa de Earthropo — Mestre]] contém posições provisórias e segredos.
+- Todo pin deve abrir uma nota.
+- Lugares desconhecidos podem existir sem pin.
+- Coordenadas são ferramentas de preparação, não fatos narrativos imutáveis.

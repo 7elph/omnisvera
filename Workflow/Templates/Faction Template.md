@@ -1,7 +1,7 @@
 ---
 obsidianUIMode: preview
 NoteIcon: faction
-NoteStatus: Draft
+NoteStatus: Template
 status: Ativa
 visibility: gm
 leader:

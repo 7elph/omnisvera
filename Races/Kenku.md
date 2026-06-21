@@ -1,44 +1,42 @@
 ---
+obsidianUIMode: preview
 NoteIcon: race
 NoteStatus: Draft
+status: Ativa
+visibility: shared
+parent_race: "[[Antropo]]"
+ruleset: Regra autoral
+source: Ficha de Varkh
+cover: zz_media/earthropo.png
 tags:
-  - Category/Race
   - race
   - kenku
-  - anthropomorph
-cover: zz_media/earthropo.png
-status: Active
-ruleset: Raça autoral - mecânica pendente
+  - antropo
 ---
 
 # Kenku
 
-Kenkus são humanoides de linhagem corvídea, conhecidos por sua memória sonora, imitação vocal e presença associada a presságios. Em Earthropo, onde demi-humanos ocupam todos os níveis da sociedade, kenkus não são estranhos por serem animalescos, mas carregam o peso simbólico dos corvos: segredo, morte, carniça, doença e má sorte.
+## Lore
 
-> [!warning] Estado mecânico
-> A cultura dos kenkus faz parte de Omnisvera, mas os traços mecânicos abaixo vieram da ficha recebida e ainda são uma regra autoral pendente. Consulte [[Workflow/RULES_SOURCES|Fontes de Regras da Campanha]].
+Kenkus são antropos de linhagem corvídea, reconhecidos por memória sonora, imitação vocal e adaptação a cidades, portos, telhados e redes de informação.
 
-## Traços Culturais
+Em [[Nimalia]], não são estranhos por possuírem traços animais. Ainda assim, corvos carregam associações com segredo, doença, morte e mau presságio.
 
-- Memória auditiva excepcional.
-- Comunicação marcada por vozes, frases e sons aprendidos.
-- Forte adaptação a cidades, portos, telhados e becos.
-- Reputação ambígua: úteis como mensageiros, espiões, falsificadores e informantes, mas raramente considerados confiáveis.
+## Regras
 
-## No Reino de Nimalia
+| Campo | Valor |
+|:--|:--|
+| Movimento | 9 m |
+| Tamanho | Médio |
+| Idiomas | Conforme Inteligência e origem |
 
-Na capital do Reino de [[Nimalia]], kenkus costumam circular em bairros portuários, mercados, guildas menores e redes de informação informal. Em lugares como [[Maré Baixa]], a fama sombria de um corvo pode ser tanto proteção quanto ameaça.
+### Mimetismo
 
-## Traços registrados na ficha de personagem
+Pode reproduzir sons e vozes já ouvidos. A imitação não concede conhecimento do significado ou da língua.
 
-- **Mimetismo:** reproduzir sons e vozes que o kenku já tenha ouvido.
-- **Falsificação:** copiar ou alterar escrita, assinaturas e documentos.
-- **Movimentação base:** 9 metros.
+### Falsificação
 
-Esses traços aparecem na ficha recebida do jogador João. A redação mecânica definitiva da raça ainda deve ser confrontada com a regra adotada pela mesa.
+Memória visual e coordenação permitem copiar escrita, assinaturas e marcas quando houver material e tempo adequados.
 
-## Ganchos
-
-- Vozes copiadas podem incriminar, salvar ou assombrar.
-- Um kenku pode carregar memórias sonoras de pessoas mortas.
-- Em rituais antigos, corvos podem ser tratados como mensageiros entre mundo, ruína e presságio.
+> [!gm]- Ajuste pendente
+> Definir testes e limites depois das primeiras sessões de [[Varkh Nimalis]].

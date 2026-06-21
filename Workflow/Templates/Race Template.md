@@ -1,7 +1,7 @@
 ---
 obsidianUIMode: preview
 NoteIcon: race
-NoteStatus: Draft
+NoteStatus: Template
 status: Ativa
 visibility: shared
 parent_race:

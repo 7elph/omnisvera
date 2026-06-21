@@ -1,7 +1,7 @@
 ---
 obsidianUIMode: preview
 NoteIcon: chapter
-NoteStatus: Draft
+NoteStatus: Template
 status: Planejado
 visibility: gm
 chapter_number:

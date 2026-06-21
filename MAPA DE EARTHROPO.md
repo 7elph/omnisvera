@@ -1,30 +1,20 @@
 ---
-width: 3415
-height: 2879
-scale: 500
-distance: 2746
-NoteIcon: none
+obsidianUIMode: preview
+NoteIcon: map
+NoteStatus: Active
+status: Ativo
+visibility: player
+map_id: earthropo-map
+map_type: Continente
+region: Earthropo
 cover: zz_media/earthropo.png
-Community-Size: Continental
-Alignment: 
-Government: Diversos
-type: Continent
-politics: Diversos reinos
-region:
-  - Earthropo
-size: Continente
-population:
-religion:
-exports:
-imports:
 tags:
   - title
   - map
   - earthropo
 ---
 
-# MAPA DE EARTHROPO
-
+# Mapa de Earthropo
 
 ```leaflet
 id: earthropo-map
@@ -45,34 +35,22 @@ unit: miles
 scale: 1
 darkMode: false
 marker: Territory, 105, 128, [[Nimalia]]
-marker: Territory, 91, 137, [[Capital de Nimalia]]
+marker: Location, 91, 137, [[Nimalis]]
 marker: Territory, 108, 169, [[Floresta de Avenor]]
 marker: Location, 99, 182, [[Leth'valora]]
 marker: Location, 78, 199, [[Ruínas de Valthor]]
 ```
 
-## Marcadores
+## Lugares conhecidos
 
-Esta camada fixa apenas lugares com existência e região aproximada sustentadas pelo cânone:
+- [[Nimalia]] ocupa a região central.
+- [[Nimalis]] é a capital do reino.
+- A [[Floresta de Avenor]] faz fronteira com Nimalia.
+- [[Leth'valora]] aparece como ruína dentro de Avenor.
+- As [[Ruínas de Valthor]] ficam no sudeste.
 
-- [[Nimalia]] ocupa provisoriamente a região central do continente;
-- a [[Nimalis]] corresponde à grande cidade central;
-- a [[Floresta de Avenor]] fica a leste/nordeste da capital e faz fronteira com o reino;
-- as ruínas de [[Leth'valora]] ficam dentro de Avenor;
-- as [[Ruínas de Valthor]] ficam no sudeste de Earthropo.
+O mapa não apresenta todas as fronteiras, estradas ou regiões. Novos pins serão adicionados conforme a campanha os revelar.
 
-## Estado cartográfico
+## Medição
 
-| Elemento | Estado |
-|:--|:--|
-| Posição geral de Nimalia | Provisória |
-| Capital na grande cidade central | Provisória, mas funcional |
-| Fronteira Nimalia–Avenor | Confirmada; traçado exato em aberto |
-| Leth'valora dentro de Avenor | Confirmado; coordenada aproximada |
-| Valthor no sudeste | Confirmado; coordenada aproximada |
-| Gharok, reinos racializados e demais fronteiras | Não posicionados |
-
-As coordenadas podem ser refinadas sem alterar o cânone. Consulte [[Workflow/GEOGRAPHY|Registro Geográfico de Earthropo]] antes de criar outros marcadores. Os marcadores deste mapa são independentes dos mapas legados.
-
-## HELP:
-Hold ALT + click & drag to measure the distance between one area and the next.
+Segure **ALT** e arraste para medir distâncias.

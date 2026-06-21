@@ -3,11 +3,12 @@ obsidianUIMode: preview
 NoteIcon: location
 NoteStatus: Draft
 status: Cânone de trabalho
+visibility: gm
+cover:
 territory: "[[Nimalia]]"
 district: "[[Nimalis]]"
 info: Instituição responsável pela cunhagem das moedas oficiais de Nimalia.
 tags:
-  - Category/Location
   - location
   - economy
   - nimalia

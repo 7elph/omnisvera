@@ -3,8 +3,13 @@ obsidianUIMode: preview
 NoteIcon: items
 NoteStatus: Active
 thumbnail: zz_media/grisalma.png
+cover: zz_media/grisalma.png
 status: Ativo
-item: Artefato
+visibility: gm
+item_type: Artefato
+owner: "[[Vezemir]]"
+origin: "[[Leth'valora]]"
+source: Referência visual e ficha de Vezemir
 tags:
   - item
   - artifact

@@ -1,7 +1,7 @@
 ---
 obsidianUIMode: preview
 NoteIcon: lore
-NoteStatus: Draft
+NoteStatus: Template
 status: Em desenvolvimento
 visibility: gm
 info:

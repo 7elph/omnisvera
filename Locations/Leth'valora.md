@@ -3,17 +3,19 @@ obsidianUIMode: preview
 NoteIcon: lore
 NoteStatus: Active
 status: Destruída
+visibility: shared
 territory: "[[Floresta de Avenor]]"
 district:
 info: Antiga vila élfica da Floresta de Avenor, destruída pelo dragão de colar dourado.
 cover: zz_media/leth'valora.png   
 tags:
-- lore
-- location
-- elf   
-- village
-- avenor
-- earthropo
+  - lore
+  - location
+  - elf
+  - village
+  - ruins
+  - avenor
+  - earthropo
 ---
 
 # VILA DE LETH'VALORA

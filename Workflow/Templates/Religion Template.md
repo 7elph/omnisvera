@@ -1,7 +1,7 @@
 ---
 obsidianUIMode: preview
 NoteIcon: religion
-NoteStatus: Draft
+NoteStatus: Template
 status: Em desenvolvimento
 visibility: shared
 deities: []

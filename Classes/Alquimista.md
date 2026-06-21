@@ -1,62 +1,70 @@
 ---
+obsidianUIMode: preview
 NoteIcon: class
 NoteStatus: Draft
-status: Regra opcional
-ruleset: Old Dragon anterior - suplemento independente
+status: Adotada em adaptação
+visibility: gm
+ruleset: Old Dragon 2 — adaptação da campanha
+source: Expansão de Classes, de Caio Mouriz
+class_type: Classe independente
 cover: zz_media/avenor.png
 tags:
-  - Category/Class
   - class
   - alchemist
-  - optional-rule
+  - authorial
+  - old-dragon-2
 ---
 
 # Alquimista
 
-Classe opcional apresentada no suplemento independente **Expansão de Classes**, de Caio Mouriz.
+O Alquimista foi adotado como classe independente de [[Varkh Nimalis]]. Sua base vem do suplemento **Expansão de Classes**, escrito para uma estrutura anterior de Old Dragon, e será adaptada gradualmente para Old Dragon 2.
 
-> [!warning] Compatibilidade
-> O suplemento declara compatibilidade com Old Dragon, mas usa a estrutura da edição anterior e não é material oficial de Old Dragon 2ª Edição. A classe não foi adotada e não deve ser aplicada automaticamente a [[Varkh Nimalis]]. Consulte [[Workflow/RULES_SOURCES|Fontes de Regras da Campanha]].
+> [!warning] Estado mecânico
+> Esta é uma versão inicial de campanha. Ela deve ser testada em jogo antes de receber `NoteStatus: Active`.
 
-## Conceito
+## Referência de nível 1
 
-O alquimista combina estudo, preparação de poções e círculos de transmutação. Inteligência, planejamento e acesso a ingredientes são mais importantes que combate direto.
+| Campo | Valor de trabalho |
+|:--|--:|
+| Pontos de Vida | 6 + ajuste de Constituição |
+| Base de Ataque | 0 |
+| Jogada de Proteção | 5 |
+| Pontos Alquímicos | 5 |
 
-## Estrutura básica
+## Restrições
 
-- **Dado de Vida:** d6.
-- **Armaduras:** couro e escudo pequeno; proteções mais pesadas impedem o uso da alquimia.
-- **Armas:** pequenas e de ataque à distância.
-- **Itens mágicos:** pode identificá-los, mas seu uso depende das restrições da mesa.
-- **Recurso principal:** Pontos Alquímicos.
-- **Nível 1 no suplemento:** 5 Pontos Alquímicos e acesso a um círculo pequeno de 1º nível.
+- **Armas:** armas pequenas e armas de ataque à distância.
+- **Armaduras:** couro e escudo pequeno.
+- **Itens mágicos:** identificação e uso dependem do tipo do item.
+- **Atributo principal:** Inteligência.
 
-## Recursos de classe
+## Recursos
 
 ### Tomo Alquímico
 
-Registra receitas, experiências, círculos e descobertas. Um alquimista pode aprender com o tomo de outro praticante.
+Registra fórmulas, ingredientes, experiências e preparações. Perder o tomo impede preparar fórmulas ainda não memorizadas até que seja recuperado ou reconstruído.
 
-### Preparação de poções
+### Preparações
 
-Poções são preparadas antecipadamente a partir de receitas ou pela análise de exemplares existentes. Ingredientes, tempo e testes dependem da complexidade.
+No início do dia, o alquimista distribui seus Pontos Alquímicos entre fórmulas conhecidas. Uma preparação exige recipientes e ingredientes plausíveis.
 
-### Círculos de Transmutação
+### Alquimia de campo
 
-Permitem criar, reparar, transformar ou destruir matéria mediante gasto de Pontos Alquímicos. Círculos pequenos, médios e grandes possuem custos e efeitos progressivamente maiores.
+Ácido, antitoxina, fogo de alquimista, incenso e pedra-trovão seguem as regras dos itens correspondentes sempre que possível. Criar versões improvisadas pode reduzir custo, duração ou dano, a critério do mestre.
 
-### Homúnculo
+### Círculo pequeno
 
-A partir do 4º nível, o suplemento permite criar um homúnculo ligado ao alquimista.
+Varkh conhece transmutações pequenas e locais: reparar um objeto simples, alterar temporariamente uma substância comum ou produzir um efeito equivalente a uma ferramenta. Nenhuma transmutação cria riqueza permanente, vida ou item mágico.
 
-## Especializações
+## Especializações futuras
 
-A partir do 5º nível:
+- Doutor.
+- Mestre de Poções.
+- Especialista em Transmutação.
 
-- **Doutor:** medicina, cura e tratamento de doenças.
-- **Mestre de Poções:** poções, bombas, fumaças e resistência a venenos.
-- **Especialista em Transmutação:** manipulação direta da matéria e ampliação dos círculos.
+## Uso por Varkh
 
-## Uso em Omnisvera
+A alquimia de Varkh nasceu em [[Maré Baixa]] e usa ervas, álcool, fungos, ferrugem, óleo, carvão e vidro reaproveitado. Mimetismo e Falsificação pertencem à raça [[Kenku]], não à classe.
 
-A alquimia de rua de Varkh pode usar partes desta classe como inspiração, mesmo que sua classe mecânica definitiva continue sendo [[Ladrão]]. É possível adotar apenas receitas, poções e técnicas sem importar toda a progressão do suplemento.
+> [!gm]- Próxima validação
+> Antes da primeira sessão, definir de três a cinco fórmulas iniciais e o custo de Pontos Alquímicos de cada uma.

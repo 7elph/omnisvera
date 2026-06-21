@@ -1,7 +1,7 @@
 ---
 obsidianUIMode: preview
 NoteIcon: class
-NoteStatus: Draft
+NoteStatus: Template
 status: Ativa
 visibility: shared
 ruleset: Old Dragon 2

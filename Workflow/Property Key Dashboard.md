@@ -3,6 +3,7 @@ obsidianUIMode: preview
 NoteIcon: chart
 NoteStatus: Template
 status: Ferramenta técnica
+visibility: gm
 tags:
   - workflow
   - template

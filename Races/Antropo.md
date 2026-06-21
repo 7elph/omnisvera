@@ -1,70 +1,40 @@
 ---
+obsidianUIMode: preview
 NoteIcon: race
-tags:
-  - Category/Race
-  - race
-  - anthropomorph
+NoteStatus: Draft
+status: Ativa
+visibility: shared
+parent_race:
+ruleset: Regra autoral
+source: Omnisvera
 cover: zz_media/earthropo.png
-status: Active
+tags:
+  - race
+  - antropo
+  - beastfolk
 ---
 
 # Antropo
 
-Os antropos são humanoides com características animais, combinando traços humanos e bestiais em uma só criatura. Podem ter origens variadas, desde linhagens antigas até transformações mágicas ou bênçãos de divindades da natureza.
+## Lore
 
-<h2>Personalidade e Cultura</h2>
+Antropos são uma raça humanoide formada por diversas linhagens animais. Eles constituem a população principal do Reino de [[Nimalia]] e podem apresentar traços de mamíferos, aves, répteis e outras criaturas.
 
-Os antropo geralmente carregam traços de personalidade associados ao animal de sua linhagem.
+Linhagem não determina personalidade, inteligência ou profissão. Associações culturais com animais existem, mas variam entre regiões e indivíduos.
 
-Características marcantes:
+Não existe uma cultura antropo única. Famílias, bairros e comunidades preservam costumes próprios, enquanto Nimalia oferece uma identidade política compartilhada.
 
-- Instintos aguçados.
-- Forte conexão com a natureza.
-- Tendência a agir por emoção e instinto.
-- Lealdade feroz ao seu bando.
+### Linhagens
 
-<h2>Aparência</h2>
+[[Kenku]] são uma linhagem corvídea dos antropos. Outras linhagens podem ganhar notas próprias quando se tornarem relevantes.
 
-- Altura: entre **1,60 m e 2,00 m**
-- Peso: variável conforme a linhagem
+## Regras
 
-<h2>Expectativa de Vida</h2>
+> [!warning] Mecânica em desenvolvimento
+> Antropo funciona como raça-base autoral. Traços específicos devem vir da linhagem escolhida, evitando bônus ou penalidades universais baseados em estereótipos animais.
 
-- Maturidade: aproximadamente **15 anos**
-- Vida média: cerca de **60 anos**
-
-<h2>Idiomas</h2>
-
-Os antropo começam falando:
-
-- Comum
-
-Com Inteligência elevada podem aprender idiomas adicionais.
-
-<h2>Atributos Raciais</h2>
-
-- **+2 Destreza**
-- **−2 Inteligência**
-
-São ágeis e rápidos como seus parentes animais, mas tendem a agir mais por instinto que por razão.
-
-<h2>Sentidos Aguçados</h2>
-
-- Recebem **+1 em testes de Percepção** envolvendo visão, audição ou olfato.
-
-<h2>Movimentação</h2>
-
-- Movimentação base: **9 metros**.
-
----
-
-# Antropo em Jogo (Resumo Oficial)
-
-- Tendem ao Caos.
-- Medem entre 1,60 m e 2,00 m.
-- Maturidade aos 15 anos.
-- Vivem cerca de 60 anos.
-- Falam Comum.
-- Recebem **+2 Destreza** e **−2 Inteligência**.
-- Sentidos Aguçados: +1 em Percepção.
-- Movimentação base de **9 metros**.
+| Campo | Valor de trabalho |
+|:--|:--|
+| Movimento | 9 m |
+| Idioma | Comum e idioma regional |
+| Tamanho | Médio, salvo linhagem específica |

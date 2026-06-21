@@ -1,7 +1,7 @@
 ---
 obsidianUIMode: preview
 NoteIcon: chapter
-NoteStatus: Draft
+NoteStatus: Template
 status: História de personagem
 visibility: gm
 character:

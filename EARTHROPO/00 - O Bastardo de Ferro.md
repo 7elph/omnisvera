@@ -3,7 +3,7 @@ cssclasses:
   - b-sides-script
   - chapter
   - character/Vezemir
-  - character/Elarion Vaelthor
+  - character/Elarion Valthor
   - character/Mira Valen
   - character/Padre Oric
   - character/General Cassian Valerius
@@ -13,6 +13,16 @@ tags:
   - chapter0
   - earthropo
 cover: "[[zz_media/vezemir.png]]"
+NoteStatus: Active
+status: História de personagem
+visibility: gm
+character: "[[Vezemir]]"
+characters:
+  - "[[Vezemir]]"
+  - "[[Elarion Valthor]]"
+  - "[[Mira Valen]]"
+  - "[[Padre Oric]]"
+  - "[[General Cassian Valerius]]"
 description: A história de Vezemir, o Bastardo de Ferro, desde sua infância entre os elfos de Leth'valora até sua busca implacável pelo dragão que destruiu tudo o que ele amava.
 ---
 
@@ -117,7 +127,7 @@ E apenas uma frase.
 > "O mundo jamais decidirá quem você é... se você sobreviver tempo suficiente para decidir sozinho."
 
 Na manhã seguinte, Vezemir deixou [[Leth'valora]].
-E nunca mais voltou.
+E não voltou por muitas décadas.
 
 ---
 
@@ -189,7 +199,7 @@ Vingança.
 
 # O DRAGÃO DE COLAR DOURADO
 
-Durante mais de trinta anos, Vezemir perseguiu pistas.
+Durante cerca de sessenta anos, Vezemir perseguiu ativamente pistas.
 Caçou monstros.
 Explorou ruínas.
 Trabalhou para o [[Conclave dos Errantes]].

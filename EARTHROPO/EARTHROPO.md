@@ -2,6 +2,8 @@
 obsidianUIMode: preview
 NoteIcon: lore
 NoteStatus: Active
+status: Ativo
+visibility: player
 cover: zz_media/earthropo.png
 tags:
   - title
@@ -11,62 +13,40 @@ tags:
 ---
 
 <div style="text-align: center;">
-  <h1>OMNISVERA</h1>
-  <h3><em>Crônicas de Earthropo - Old Dragon 2E</em></h3>
+  <h1>CRÔNICAS DE EARTHROPO</h1>
+  <h3><em>Old Dragon 2</em></h3>
 </div>
 
 > [!world]- Premissa
-> **Omnisvera** é o universo. **Earthropo** é o continente onde a campanha acontece. O **Reino de Nimalia** é o principal reino dos antropos apresentado até agora.
+> Earthropo é um continente de reinos, florestas antigas, caminhos esquecidos e ruínas que não entregam facilmente sua história.
 >
-> Ha trezentos anos, o **Eclipse de Obsidiana** engoliu o sol por sete dias e sete noites. Quando a luz voltou, uma parte do mundo havia sido tomada pelo **Véu Cinzento**, uma fronteira de névoa, ruina e memoria quebrada. Agora o Véu esta encolhendo, fragmentos de mundos perdidos começam a surgir, e os **Criadores** voltam a ser mais que mito.
->
-> Os personagens vivem no ponto em que mito, politica e sobrevivência se encontram.
+> A campanha começa em [[Nimalis]], capital do Reino de [[Nimalia]]. Os personagens iniciarão no nível 1 e conhecerão o mapa durante suas viagens.
 
----
+## Estrutura conhecida
 
-## Estrutura do Mundo
+- **Universo:** [[OMNISVERA|Omnisvera]].
+- **Continente:** Earthropo.
+- **Região inicial:** [[Nimalia]].
+- **Capital:** [[Nimalis]].
+- **Fronteira próxima:** [[Floresta de Avenor]].
+- **Sistema:** Old Dragon 2.
+- **Data inicial:** 3 de Ventara de 2377.
 
-- **Universo:** [[OMNISVERA|Omnisvera]]
-- **Continente Principal:** [[MAPA DE EARTHROPO|Earthropo]]
-- **Reino dos Antropos:** [[Nimalia]]
-- **Capital de Nimalia:** [[Nimalis|nome em aberto]]
-- **Registro Geográfico:** [[Workflow/GEOGRAPHY|Geografia de Earthropo]]
-- **Campanha Atual:** Crônicas de Earthropo
-- **Sistema:** Old Dragon 2E
+## Crônicas públicas
 
-## Eixos Ativos
+```datacards
+TABLE cover, date, description
+FROM #chapter
+WHERE visibility = "player" OR visibility = "shared"
+SORT file.name ASC
 
-- O avanço do [[Véu Cinzento]] e seus fragmentos impossíveis.
-- A memória dos [[Guardiões do Véu Cinzento]].
-- A influência da [[Coroa de Nimalia]] sobre Earthropo.
-- A pressão religiosa da [[Igreja das Chamas]].
-- O surgimento de personagens marcados por relíquias, sangue antigo e dívidas mal enterradas.
+// Settings
+preset: grid
+columns: 4
+cardSpacing: 4
+imageProperty: cover
+```
 
-> [!world]+ Capítulos
-> ```datacards
-> TABLE cover, date, description FROM #chapter
-> SORT file.name ASC
->
-> // Settings
-> preset: grid
-> columns: 4
-> cardSpacing: 4
-> imageProperty: cover
-> ```
+## Princípio da campanha
 
-## Arcos da Campanha
-
-| # | Níveis | Título | Função |
-|:--|:--|:--|:--|
-| 1 | 1-4 | Ecos do Mundo Perdido | Os personagens encontram os primeiros sinais dos Criadores e do Véu. |
-| 2 | 5-8 | O Despertar das Cinzas | Fragmentos perdidos colidem com Earthropo e tornam o impossível visível. |
-| 3 | 9-12 | Os Deuses Mentiram | A Igreja das Chamas e outras fés revelam contradições antigas. |
-| 4 | 13-16 | O Arquivo dos Criadores | A verdade sobre a construção do mundo começa a aparecer. |
-| 5 | 17-20 | A Reconstrução | O grupo decide o que Omnisvera ainda pode se tornar. |
-
-## Notas de Cânone
-
-- O nome **Eryndor** não faz parte do cânone ativo.
-- Materiais antigos de Disgraceland/Tribucia devem ser tratados como rascunho legado até serem convertidos para Omnisvera.
-- Earthropo não é o universo nem o mundo inteiro: é o continente principal da campanha.
-- Nimalia é um reino de Earthropo, não o nome de sua capital.
+O mapa não será entregue pronto. Povos, reinos, ruínas e perigos serão apresentados à medida que os personagens viajarem e investigarem.

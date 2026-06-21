@@ -1,7 +1,7 @@
 ---
 obsidianUIMode: preview
 NoteIcon: location
-NoteStatus: Draft
+NoteStatus: Template
 status: Ativa
 visibility: shared
 territory:

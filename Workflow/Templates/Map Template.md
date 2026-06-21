@@ -1,7 +1,7 @@
 ---
 obsidianUIMode: preview
 NoteIcon: map
-NoteStatus: Draft
+NoteStatus: Template
 status: Em desenvolvimento
 visibility: gm
 map_id:
@@ -16,11 +16,11 @@ tags:
 # MAPA — NOME
 
 ```leaflet
-id: definir-id-unico
+id: template-map
 lock: true
 recenter: false
 noScrollZoom: false
-image: zz_media/definir-imagem.png
+image: zz_media/earthropo.png
 bounds: [[0, 0], [100, 100]]
 height: 1000px
 width: 95%

@@ -4,16 +4,30 @@ NoteIcon: magicitem
 NoteStatus: Active
 thumbnail: zz_media/th_raziel.PNG
 status: Vivo
-location: Em aberto
-territory: Earthropo
-faction: Clã Sanguinallis
+visibility: gm
+location: "[[Nimalis]]"
+territory: "[[Nimalia]]"
+faction: Clã Sanguinallis (antiga)
+religion:
 class: Ladrão
+specialization: Assassino
 race: Vampiro (Sanguinallis)
 level: 1
 alignment: Caótico Neutro
 role: player
 chapters:
   - 00 - O Retorno de Raziel
+forca:
+destreza:
+constituicao:
+inteligencia:
+sabedoria:
+carisma:
+classe_armadura:
+pontos_vida:
+bonus_ataque:
+jogada_protecao:
+movimento:
 tags:
   - player
   - character
@@ -29,22 +43,30 @@ tags:
 > [!NOTE|clean no-i right]+ Raziel
 > ![[raziel.PNG|400]]
 
+## Atributos
+
+> [!warning] Ficha mecânica pendente
+> Nenhum valor numérico foi encontrado nas fontes disponíveis. Os campos permanecem no frontmatter para serem preenchidos sem alterar a estrutura.
+
+| FOR | DES | CON | INT | SAB | CAR |
+|:--:|:--:|:--:|:--:|:--:|:--:|
+| `= this.forca` | `= this.destreza` | `= this.constituicao` | `= this.inteligencia` | `= this.sabedoria` | `= this.carisma` |
 
 ## Visão Geral
 **Títulos:** O Espectro da Névoa de Sangue
 **Apelido:** O Espectro
-**Localização Atual:** Em aberto; sua origem está ligada à [[Fortaleza de Gharok]] e seu retorno às [[Ruínas de Valthor]]
-**Território:** Em aberto
+**Localização Atual:** [[Nimalis]]
+**Território:** [[Nimalia]]
 **Reputação Pública:** Antigo executor do Clã Sanguinallis, apagado da história durante seu aprisionamento
 **Gênero:** Masculino
-**Classe:** [[Ladrão]]; hemomante como identidade narrativa
+**Classe:** [[Ladrão]], com especialização em Assassino; hemomante como identidade autoral
 **Raça:** Vampiro ligado ao Clã Sanguinallis
 **Idade:** 340 anos; aparência de aproximadamente 30 anos
 **Altura:** 1,88 m
 **Nível:** 1
 **Alinhamento:** Caótico Neutro
 **Status:** Vivo
-**Afiliação:** Clã Sanguinallis, antes da traição
+**Afiliação:** Nenhuma atual; antigo membro do Clã Sanguinallis
 **Afiliações Anteriores:** Executor pessoal de Lorde Malakar
 **Associados Conhecidos:** Ancião Primordial
 **Inimigos Conhecidos:** Lorde Malakar, Kaelen e Vandor
@@ -111,7 +133,7 @@ A ordem e a posição exata desses confrontos permanecem como estrutura narrativ
 
 Raziel escapou do tormento que deveria aprisioná-lo para sempre. O Sangue Antigo restaurou seu corpo e transformou a hemomancia que já dominava.
 
-Sua trajetória atual é movida pela vingança contra Kaelen, Vandor e Lorde Malakar. As circunstâncias que o levarão a encontrar Vezemir e Varkh ainda não foram estabelecidas.
+Sua trajetória atual é movida pela vingança contra Kaelen, Vandor e [[Lorde Malakar]]. O caminho das ruínas o levará até [[Nimalis]], onde encontrará Vezemir e Varkh no início da campanha.
 
 O mundo mudou durante seu aprisionamento. Raziel conhece nomes, juramentos e estruturas de poder que podem já não existir da mesma forma.
 
@@ -161,13 +183,11 @@ Manifestação de sangue solidificado associada ao poder recebido do Ancião Pri
 
 ## Segredos
 
-- O verdadeiro motivo pelo qual o Ancião Primordial libertou Raziel permanece desconhecido.
-
-- A heresia rúnica usada como pretexto para sua captura ainda não foi definida.
-
-- A forma como as Adagas de Espectro Fantasma permaneceram ligadas a Raziel durante o aprisionamento continua em aberto.
-
-- Sua relação com o Véu Cinzento e com os Criadores ainda não foi confirmada.
+> [!gm]- Segredos do mestre
+> - O verdadeiro motivo pelo qual o Ancião Primordial libertou Raziel permanece desconhecido.
+> - A heresia rúnica usada como pretexto para sua captura ainda não foi definida.
+> - A forma como as Adagas de Espectro Fantasma permaneceram ligadas a Raziel durante o aprisionamento continua em aberto.
+> - Sua relação com o Véu Cinzento e com os Criadores ainda não foi confirmada.
 
 ---
 
@@ -194,7 +214,7 @@ Usa couro e placas negras, um manto escuro e as Adagas de Espectro Fantasma. Qua
 ## Armas e Equipamento
 
 ```datacards
-TABLE thumbnail, item, status FROM #raziel
+TABLE thumbnail, item_type, status FROM #raziel
 SORT name ASC
 
 // Settings
@@ -209,7 +229,7 @@ cardSpacing: 4
 ## Ficha Mecânica — Nível 1
 
 > [!warning] Regras autorais pendentes
-> Ladrão pertence às regras-base de OD2. Assassino depende de adoção do Livro II. Vampiro, Hemomante, Reserva de Sangue e os poderes atuais ainda precisam de regras próprias.
+> Ladrão pertence às regras-base de OD2. Assassino foi adotado como especialização. Vampiro, Hemomante, Reserva de Sangue e os poderes atuais ainda precisam de regras próprias.
 
 ### Armas e carga
 

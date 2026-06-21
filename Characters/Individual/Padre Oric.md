@@ -5,9 +5,11 @@ NoteIcon: magicitem
 NoteStatus: Active
 thumbnail: zz_media/th_oric.PNG  
 status: Desaparecido  
+visibility: gm
 location: Desconhecida  
-territory: "[[Floresta de Avenor]]"  
-faction: Desconhecido
+territory: Desconhecido
+faction: Desconhecida
+religion: "[[Igreja das Chamas]]"
 class: Clérigo
 race: Humano  
 role: npc  
@@ -40,7 +42,8 @@ tags:
 **Altura:** 1,75 m
 **Alinhamento:** Neutro Bom
 **Status:** Desaparecido  
-**Território:** [[Nimalia]] e regiões vizinhas  
+**Território:** Desconhecido
+**Religião:** [[Igreja das Chamas]]
 **Associados Conhecidos:** [[Vezemir]], [[Guardiões do Véu Cinzento]]
 **Origem:** [[Nimalis]]
 **Ocupação:** Sacerdote e escriba
@@ -50,7 +53,7 @@ tags:
 
 ## História
 
-Padre Oric nasceu na [[Nimalis]] e tornou-se sacerdote, escriba e guardião de registros. Mais tarde passou a viajar por reinos, ruínas e templos esquecidos em busca de conhecimento sobre antigas ordens e poderes perdidos.
+Padre Oric nasceu em [[Nimalis]] e tornou-se sacerdote da [[Igreja das Chamas]], escriba e guardião de registros. Mais tarde passou a viajar por reinos, ruínas e templos esquecidos em busca de conhecimento sobre antigas ordens e poderes perdidos.
 Durante uma de suas jornadas conheceu [[Vezemir]], então um mercenário em ascensão.
 Enquanto outros enxergavam apenas um guerreiro, Oric percebeu algo diferente.
 Segundo ele, a magia de Vezemir não parecia fluir naturalmente.

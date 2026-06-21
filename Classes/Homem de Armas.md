@@ -1,6 +1,7 @@
 ---
 NoteIcon: class
 NoteStatus: Reference
+visibility: gm
 tags:
   - rules-reference
   - legacy-term

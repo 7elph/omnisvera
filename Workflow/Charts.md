@@ -2,7 +2,8 @@
 obsidianUIMode: preview
 NoteIcon: chart
 NoteStatus: Active
-status: Active
+status: Ativo
+visibility: gm
 tags:
   - workflow
   - chart

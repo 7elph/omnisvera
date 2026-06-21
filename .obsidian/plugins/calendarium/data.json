@@ -2,8 +2,8 @@
   "autoParse": false,
   "calendars": [
     {
-      "name": "Calendário de Omnisvera (rascunho)",
-      "description": "Estrutura provisória baseada em CALENDAR.md; ainda não constitui cânone definitivo.",
+      "name": "Calendário de Earthropo",
+      "description": "Calendário usado em Earthropo. A campanha começa em 3 de Ventara de 2377.",
       "id": "ID_2bf89b3b6bcb",
       "showIntercalarySeparately": true,
       "static": {
@@ -154,9 +154,9 @@
         "padDays": 2
       },
       "current": {
-        "day": 1,
-        "month": 0,
-        "year": 2100
+        "day": 3,
+        "month": 6,
+        "year": 2377
       },
       "events": [],
       "categories": [],

@@ -5,10 +5,12 @@ NoteIcon: magicitem
 NoteStatus: Active  
 thumbnail: zz_media/th_elarion.PNG  
 status: Desaparecido  
-location: "[[Leth'valora]]"  
+visibility: gm
+location: Desconhecida
 territory: "[[Floresta de Avenor]]"
 faction: "[[Sentinelas de Leth'valora]]"  
-class: Capitão 
+religion:
+class: Guerreiro
 race: Meio-Elfo
 level: Desconhecido
 alignment: Neutro
@@ -38,10 +40,10 @@ tags:
 **Território:** [[Floresta de Avenor]]
 **Reputação Pública:** Herói de guerra e veterano respeitado  
 **Gênero:** Masculino
-**Classe:** [[Guerreiro|Capitão]]
+**Classe:** [[Guerreiro]]
 **Raça:** Meio-Elfo
 **Idade:** Desconhecida   
-**Altura:** 2,30
+**Altura:** 2,30 m
 **Nível:** Desconhecido
 **Alinhamento:** Neutro
 **Status:** Desaparecido    
@@ -94,7 +96,7 @@ Parecia menos interessado em fortalecer aquele poder do que em mantê-lo adormec
 
 ## A Partida de Vezemir
 
-Após o incidente envolvendo [[Theron Elensar]], Elarion compreendeu que Vezemir jamais seria aceito entre os elfos.
+Após um incidente envolvendo [[Theron Elensar]], Elarion compreendeu que Vezemir jamais seria aceito por parte da comunidade.
 
 Mas havia algo pior.
 
@@ -106,7 +108,7 @@ Na manhã da despedida, entregou ao jovem três relíquias:
     
 - [[Muralha de Dorn]]
     
-- Um medalhão 
+- [[O Medalhão]]
     
 
 Sem explicações.

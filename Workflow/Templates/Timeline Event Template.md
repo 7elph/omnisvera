@@ -1,7 +1,7 @@
 ---
 obsidianUIMode: preview
 NoteIcon: timeline
-NoteStatus: Draft
+NoteStatus: Template
 status: Em desenvolvimento
 visibility: gm
 date:

@@ -3,14 +3,19 @@ obsidianUIMode: preview
 NoteIcon: character
 NoteStatus: Draft
 status: Desconhecido
+visibility: gm
+thumbnail:
+cover:
 location: "[[Maré Baixa]]"
 territory: "[[Nimalia]]"
-faction:
+faction: Desconhecida
+religion:
 class: Alquimista
 race: Antropo abutre
 role: npc
+chapters:
+  - 00 - O Corvo da Maré Baixa
 tags:
-  - Category/Character
   - character
   - npc
   - alchemist
@@ -38,4 +43,4 @@ Alquimista veterano de [[Maré Baixa]], proprietário do estabelecimento conheci
 - Relações com guildas, Coroa ou outras facções.
 - Natureza exata d'O Frasco Afogado.
 
-Nenhuma dessas questões deve ser resolvida sem informação do jogador ou decisão do mestre.
+Essas questões permanecem como mistério e não devem ser resolvidas apenas por inferência.

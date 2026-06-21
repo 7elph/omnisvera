@@ -1,14 +1,14 @@
 ---
 NoteIcon: class
 NoteStatus: Active
+visibility: shared
 tags:
-  - Category/Class
   - class
   - thief
   - old-dragon-2
 cover: zz_media/avenor.png
-status: Active
-ruleset: Old Dragon 2E
+status: Ativa
+ruleset: Old Dragon 2
 source: https://olddragon.com.br/classes/ladrao
 ---
 

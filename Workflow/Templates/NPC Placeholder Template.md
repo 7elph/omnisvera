@@ -1,7 +1,7 @@
 ---
 obsidianUIMode: preview
 NoteIcon: magicitem
-NoteStatus: Placeholder
+NoteStatus: Template
 thumbnail:
 status: Desconhecido
 visibility: gm

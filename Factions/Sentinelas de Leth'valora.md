@@ -1,10 +1,13 @@
 ---
 obsidianUIMode: preview
-NoteIcon: faction 
-NoteStatus: New
+NoteIcon: faction
+NoteStatus: Draft
+status: Destruída
+visibility: gm
+cover:
 leader:
-state: Situação desconhecida após a destruição da vila
-location: "[[Leth'valora]]"
+headquarters: "[[Leth'valora]]"
+territory: "[[Floresta de Avenor]]"
 tags:
   - faction
   - military
@@ -14,10 +17,16 @@ tags:
 
 # Sentinelas de Leth'valora
 
-Pequena força que era responsável pela proteção da vila de [[Leth'valora]], das trilhas próximas e dos acessos da [[Floresta de Avenor]].
+Pequena força responsável pela proteção de [[Leth'valora]], de suas trilhas e dos acessos próximos da [[Floresta de Avenor]].
 
-## Estrutura
+## Integrantes conhecidos
 
-- Seu destino após a destruição da vila ainda não foi definido.
-- [[Elarion Valthor]] foi um de seus capitães mais respeitados.
-- A quantidade de sentinelas e sua relação com o futuro reino élfico permanecem em aberto.
+- [[Elarion Valthor]], capitão.
+- [[Mira Valen]], caçadora e mensageira ligada ao grupo.
+
+## Queda
+
+Os Sentinelas foram destruídos junto com a vila durante o ataque do dragão verde de colar dourado.
+
+> [!gm]- Em aberto
+> A existência de sobreviventes permanece incerta. Não apresentar Mira como sobrevivente; sua morte está confirmada.

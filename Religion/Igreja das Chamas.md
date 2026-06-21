@@ -1,34 +1,45 @@
 ---
+obsidianUIMode: preview
 cssclasses:
   - religion
 NoteIcon: religion
 NoteStatus: Draft
-status: Em desenvolvimento
-info: Fé organizada associada ao simbolismo das chamas.
+status: Ativa
+visibility: shared
+deities:
+  - "[[Criadores]]"
+cover:
+leader:
+headquarters: Grande Templo das Chamas, Nimalis
+territory: Earthropo
+info: Fé organizada que representa virtudes, memória e orientação por meio da chama.
 tags:
   - religion
   - faith
   - earthropo
-  - draft
 ---
 
 # Igreja das Chamas
 
-Fé organizada presente em Nimalia e em outras regiões de Earthropo. Seus ensinamentos utilizam chamas como símbolos de virtudes, memória, purificação e orientação.
+A Igreja das Chamas é uma das instituições religiosas mais visíveis de [[Nimalia]] e possui templos ou sacerdotes em outras regiões de Earthropo.
 
-## Cânone de trabalho
+## Doutrina conhecida
 
-- É uma das instituições religiosas mais visíveis de Nimalia.
-- Algumas notas mencionam **sete chamas** ou **sete virtudes**.
-- A liderança aparece associada ao título de **Sumo Pontífice**.
-- [[Padre Oric]] é um clérigo, mas sua ligação formal com esta igreja ainda não foi confirmada.
+A chama simboliza luz diante do desconhecido, preservação da memória, transformação e responsabilidade. Diferentes templos descrevem **sete chamas** ou **sete virtudes**, mas isso é parte da doutrina, não o nome de outra igreja.
 
-## Em aberto
+## Organização
 
-- Nome definitivo: Igreja das Chamas ou Igreja das Sete Chamas.
-- Doutrina e virtudes representadas pelas chamas.
-- Liderança atual.
-- Relação com outras crenças e com o Véu Cinzento.
+- **Sede de trabalho:** Grande Templo das Chamas, em [[Nimalis]].
+- **Liderança:** ainda não definida.
+- **Clero conhecido:** [[Padre Oric]].
 
-> [!warning] Estado do conteúdo
-> Esta nota organiza conceitos já existentes no vault, mas não resolve as decisões religiosas ainda abertas no [[CANON]].
+## Relações
+
+A Igreja convive com crenças regionais e pode discordar da [[Fé dos Antigos]] sobre a interpretação de ruínas e mitos de criação.
+
+## Conhecimento público
+
+A maioria dos fiéis não conhece verdades cosmológicas. Para eles, histórias sobre os [[Criadores]] são parábolas, deuses antigos ou nomes dados a forças de criação.
+
+> [!gm]- Verdade do mestre
+> Os Criadores são reais, mas a Igreja não possui uma compreensão completa deles. Diferentes setores podem proteger, distorcer ou investigar registros antigos.

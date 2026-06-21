@@ -4,12 +4,14 @@ NoteIcon: magicitem
 NoteStatus: Active
 thumbnail: zz_media/th_mira.PNG  
 status: Falecida  
+visibility: gm
 location: "[[Leth'valora]]"
 territory: "[[Floresta de Avenor]]"  
-faction: Nenhum
+faction: "[[Sentinelas de Leth'valora]]"
+religion:
 class: Caçadora
 race: Humana  
-Level: Desconhecido
+level: Desconhecido
 alignment: Bom
 role: npc  
 chapters:
@@ -33,7 +35,7 @@ tags:
 ## Visão Geral
 **Títulos:** A Caçadora da Floresta
 **Apelido:** A Filha da vila
-**Localização Atual:** Proximidades da [[Floresta de Avenor]]
+**Localização Atual:** Ruínas de [[Leth'valora]]
 **Território:** [[Floresta de Avenor]]
 **Reputação Pública:** A Heroína da Vila Perdida  
 **Gênero:** Feminino

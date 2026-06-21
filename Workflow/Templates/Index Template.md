@@ -1,7 +1,7 @@
 ---
 obsidianUIMode: preview
 NoteIcon: home
-NoteStatus: Active
+NoteStatus: Template
 status: Ativo
 visibility: shared
 cover:
@@ -18,7 +18,7 @@ Breve orientação sobre o conteúdo desta área.
 
 ```datacards
 TABLE cover, info, status
-FROM "PASTA"
+FROM "Workflow/Templates"
 WHERE NoteStatus != "Archived"
 SORT file.name ASC
 
@@ -33,7 +33,7 @@ cardSpacing: 4
 
 ```dataview
 TABLE NoteStatus, status
-FROM "PASTA"
+FROM "Workflow/Templates"
 WHERE NoteStatus = "Draft" OR NoteStatus = "Placeholder"
 SORT file.name ASC
 ```

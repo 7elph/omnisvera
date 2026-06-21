@@ -1,7 +1,7 @@
 ---
 obsidianUIMode: preview
 NoteIcon: items
-NoteStatus: Draft
+NoteStatus: Template
 thumbnail:
 cover:
 status: Ativo

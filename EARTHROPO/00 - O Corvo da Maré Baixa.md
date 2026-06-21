@@ -9,6 +9,13 @@ tags:
   - story
   - chapter00
   - earthropo
+NoteStatus: Active
+status: História de personagem
+visibility: gm
+character: "[[Varkh Nimalis]]"
+characters:
+  - "[[Varkh Nimalis]]"
+  - "[[Mestre Odran Veyl]]"
 cover: "[[zz_media/varkh.jpeg]]"
 description: A história de Varkh Nimalis, o Corvo da Maré Baixa, desde sua infância nos becos portuários da capital do Reino de Nimalia até seu aprendizado como alquimista de rua e a descoberta de que alguém está usando o nome de seu mestre para espalhar remédios falsos pelo reino.
 ---

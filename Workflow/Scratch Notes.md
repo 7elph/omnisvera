@@ -2,64 +2,41 @@
 obsidianUIMode: preview
 NoteIcon: notes
 NoteStatus: Active
+status: Ativo
+visibility: gm
 tags:
   - workflow
   - notes
   - earthropo
-  - omnisvera
 ---
 
-# Scratch Notes - Omnisvera
+# Notas de trabalho
 
-Notas rápidas do cânone ativo. O material antigo foi preservado em [[Legacy - Disgraceland Scratch Notes]].
+## Próxima sessão
 
-## Regra de Cânone
+- Data: 3 de Ventara de 2377.
+- Local: [[Nimalis]].
+- Nível: 1.
+- Personagens: [[Vezemir]], [[Varkh Nimalis]] e [[Raziel]].
+- Outline: [[01 - Ecos de Um Mal Antigo]].
 
-- Omnisvera = universo.
-- Earthropo = continente principal da campanha.
-- Nimalia = reino dos antropos/beastfolks.
-- A capital do Reino de Nimalia ainda não tem nome definido.
-- Avenor faz fronteira com Nimalia.
-- Eryndor não existe mais no cânone ativo.
-- Disgraceland/Tribucia ficam como legado até conversão.
+## Mistérios que não devem receber resposta automática
 
-## Ganchos Imediatos
+- Identidade do falsificador.
+- Paradeiro e lealdade de [[Mestre Odran Veyl]].
+- Motivo do dragão de colar dourado.
+- Motivo do [[Ancião Primordial]].
+- Destino dos Guardiões.
+- Natureza final do Véu.
 
-- Um morto chega às ruínas de Leth'valora carregando uma moeda impossível e um diário queimado.
-- A Igreja das Chamas quer recolher os artefatos antes que aventureiros, guildas ou a Coroa entendam seu valor.
-- Varkh Nimalis descobre que remédios falsificados usam o símbolo de Odran Veyl.
-- Vezemir encontra marcas dos Guardiões do Véu Cinzento onde não deveriam existir.
-- A Coroa de Nimalia tenta controlar a narrativa antes que a população descubra que o Véu está mudando.
+## Desenvolvimento próximo
 
-## Personagens em Foco
+- Fórmulas iniciais de Alquimista.
+- Regras de Vampiro e Hemomante.
+- Cena de encontro em Nimalis.
+- Primeiro destino fora da capital.
+- Pins e notas de distritos visitados.
 
-- [[Vezemir]]: origem, relíquias, dragão de colar dourado, Guardiões do Véu Cinzento.
-- [[Varkh Nimalis]]: Maré Baixa, alquimia de rua, voz emprestada, falsificações, Odran Veyl.
-- [[Augustus Terra Decimus]]: rei soberano de Nimalia.
-- [[General Cassian Valerius]]: ponte entre a Coroa e o passado militar de Vezemir.
-- [[Padre Oric]]: peça espiritual e investigativa ligada ao mistério do medalhão.
+## Ideias não canônicas
 
-## Lugares para Desenvolver
-
-- **Maré Baixa:** favela portuária no sul da capital do Reino de Nimalia; origem de Varkh.
-- **O Frasco Afogado:** loja de Odran Veyl, mistura de botica, laboratório e abrigo marginal.
-- **Nimalia:** reino dos antropos, centro de poder, fé, comércio e crime.
-- **Leth'valora:** pequena vila élfica destruída em Avenor; origem de Vezemir.
-- **Ruínas de Valthor:** ruínas no sudeste de Earthropo, ligadas ao renascimento de Raziel.
-- **Véu Cinzento:** fronteira viva entre história, ruína e fragmentos dos Criadores.
-
-## Perguntas Soltas
-
-- Odran Veyl está vivo, morto, escondido ou comprometido?
-- Quem lucra com remédios falsos em Nimalia?
-- O símbolo de Odran foi roubado ou entregue?
-- A moeda impossível e as falsificações alquímicas têm a mesma origem?
-- Varkh e Vezemir se encontram por acidente, contrato ou perseguição?
-
-## Cenas Possíveis
-
-- Varkh reconhece uma falsificação pelo cheiro antes de qualquer mago perceber magia.
-- Vezemir vê o medalhão reagir perto de um frasco preparado com metal impossível.
-- Um mensageiro da Coroa tenta comprar silêncio em vez de investigar.
-- A Igreja das Chamas declara o caso como heresia para justificar confisco.
-- Maré Baixa protege Varkh, mas cobra favores antigos por isso.
+Adicionar aqui possibilidades antes de promovê-las a uma nota de lore ou ao [[Workflow/CANON|Cânone]].

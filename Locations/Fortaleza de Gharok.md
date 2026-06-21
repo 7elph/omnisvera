@@ -2,11 +2,13 @@
 obsidianUIMode: preview
 NoteIcon: location
 NoteStatus: Placeholder
-status: Localização em aberto
-territory: Earthropo
+status: Localização provisória
+visibility: gm
+cover:
+territory: Norte ou nordeste de Earthropo
+region: Cordilheira vulcânica
 info: Antiga sede do Clã Sanguinallis e origem de Raziel.
 tags:
-  - Category/Location
   - location
   - fortress
   - vampire
@@ -27,9 +29,9 @@ Fortaleza ligada ao Clã Sanguinallis, onde [[Raziel]] serviu como executor de L
 
 ## Em aberto
 
-- Posição exata no mapa.
+- Coordenada exata dentro da região montanhosa.
 - Relação com as montanhas e o futuro reino anão.
 - Estado atual da fortaleza após mais de trezentos anos.
 - Natureza política do domínio: fortaleza isolada, área vampírica ou reino.
 
-Gharok não possui marcador no mapa ativo. A faixa montanhosa ao norte ou nordeste é apenas uma possibilidade de trabalho, não uma localização aprovada.
+Gharok possui um marcador provisório apenas no [[GM/Mapa de Earthropo — Mestre|mapa do mestre]]. Sua posição pode mudar durante a consolidação do reino anão.

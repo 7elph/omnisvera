@@ -4,9 +4,11 @@ NoteIcon: magicitem
 NoteStatus: Active
 thumbnail: zz_media/th_vezemir.PNG
 status: Vivo
-location: "[[Floresta de Avenor]], [[Leth'valora]]"
+visibility: gm
+location: "[[Floresta de Avenor]]"
 territory: "[[Floresta de Avenor]]"
 faction: "[[Conclave dos Errantes]]"
+religion:
 class: Guerreiro
 race: Meio-Elfo
 level: 1
@@ -14,6 +16,17 @@ alignment: Neutro-Bom
 role: player
 chapters:
   - 00 - O Bastardo de Ferro
+forca: 13
+destreza: 10
+constituicao: 16
+inteligencia: 8
+sabedoria: 10
+carisma: 4
+classe_armadura: 22
+pontos_vida: 13
+bonus_ataque: 2
+jogada_protecao:
+movimento: 9
 tags:
   - player
   - character
@@ -29,6 +42,19 @@ tags:
 > [!NOTE|clean no-i right]+ Vezemir
 > ![[vezemir.png|400]]
 
+## Atributos
+
+| FOR | DES | CON | INT | SAB | CAR |
+|:--:|:--:|:--:|:--:|:--:|:--:|
+| `= this.forca` | `= this.destreza` | `= this.constituicao` | `= this.inteligencia` | `= this.sabedoria` | `= this.carisma` |
+
+| Combate | Valor |
+|:--|--:|
+| Classe de Armadura | `= this.classe_armadura` |
+| Pontos de Vida | `= this.pontos_vida` |
+| Bônus de Ataque | `= this.bonus_ataque` |
+| Jogada de Proteção | `= this.jogada_protecao` |
+| Movimento | `= this.movimento` m |
 
 ## Visão geral
 **Títulos:** O Bastardo de Ferro
@@ -39,7 +65,7 @@ tags:
 **Gênero:** Masculino
 **Classe:** [[Guerreiro]]
 **Raça:** Meio-Elfo
-**Idade:** 200 anos
+**Idade:** aproximadamente 477 anos
 **Altura:** 2,02 m
 **Nível:** 1
 **Alinhamento:** Neutro-Bom
@@ -137,12 +163,13 @@ Desde aquele dia, sua vida passou a ser guiada por um único propósito:
 
 ## Atualidade
 
-Durante cerca de 60 anos, Vezemir percorreu o continente perseguindo pistas sobre o dragão.
+Durante cerca de 60 anos, Vezemir percorreu o continente perseguindo ativamente pistas sobre o dragão.
 Trabalha ao lado do [[Conclave dos Errantes]], enfrentando monstros, explorando ruínas e investigando rumores.
 Com o passar dos anos compreendeu que sua busca era quase impossível.
 Dragões atravessam continentes em poucos dias.
 As pistas desaparecem.
 Os rastros esfriam.
+Nos séculos seguintes, a perseguição deixou de ser uma marcha contínua e tornou-se uma vigília: longos períodos de silêncio interrompidos por rumores, contratos e sinais que ainda o fazem voltar à estrada.
 Hoje vive recluso próximo à [[Floresta de Avenor]], nas proximidades de [[Nimalia]].
 Pouco fala.
 Pouco sorri.
@@ -193,15 +220,12 @@ Embora rejeite sua herança arcana, ocasionalmente manifesta explosões involunt
 
 ## Segredos
 
-- O medalhão dos [[Guardiões do Véu Cinzento]] pode estar ligado à verdadeira origem de Vezemir.
-    
-- [[Padre Oric]] desapareceu investigando conexões entre os Guardiões e o dragão de colar dourado.
-    
-- O dragão demonstrou reconhecer Vezemir durante o ataque à vila.
-    
-- [[Elarion Valthor]] pode ter ocultado informações sobre seus pais biológicos.
-    
-- Existe a possibilidade de Vezemir descender da última linhagem dos Guardiões do Véu Cinzento.
+> [!gm]- Segredos do mestre
+> - O medalhão dos [[Guardiões do Véu Cinzento]] pode estar ligado à verdadeira origem de Vezemir.
+> - [[Padre Oric]] desapareceu investigando conexões entre os Guardiões e o dragão de colar dourado.
+> - O dragão demonstrou reconhecer Vezemir durante o ataque à vila.
+> - [[Elarion Valthor]] pode ter ocultado informações sobre seus pais biológicos.
+> - A natureza do vínculo entre Vezemir e os Guardiões permanece em aberto.
     
 
 ---
@@ -210,11 +234,11 @@ Embora rejeite sua herança arcana, ocasionalmente manifesta explosões involunt
 
 ### [[Grisalma]]
 
-Machado lendário entregue por Elarion Vaelthor.
+Machado lendário entregue por [[Elarion Valthor]].
 
 ### [[Muralha de Dorn]]
 
-Escudo ancestral entregue por Elarion Vaelthor.
+Escudo ancestral entregue por [[Elarion Valthor]].
 
 ### [[O Medalhão]]
 
@@ -231,7 +255,7 @@ Com 2,02 m de altura, Vezemir é alto e musculoso. Possui cabelos e pele muito c
 ## Armas e Equipamento
 
 ```datacards
-TABLE thumbnail, item, status FROM #vezemir
+TABLE thumbnail, item_type, status FROM #vezemir
 SORT name ASC
 
 // Settings
@@ -245,22 +269,9 @@ cardSpacing: 4
 
 ## Ficha Mecânica — Nível 1
 
-| Status           | Valor |
-|------------------|-------|
-| Força            | 13    |
-| Destreza         | 10    |
-| Constituição     | 16    |
-| Inteligência     | 8     |
-| Sabedoria        | 10    |
-| Carisma          | 4     |
+Os atributos e valores de combate ficam no frontmatter e na tabela do início da ficha para poderem ser reutilizados por Dataview.
 
-| Combate e recursos | Valor |
-|:--|:--|
-| Classe de Armadura | 22 |
-| Pontos de Vida | 13 |
-| Bônus de Ataque | +2 |
-| Movimento | 9 m |
-| Ouro inicial | 90 PO |
+**Ouro inicial:** 90 PO.
 
 ### Armas e carga
 

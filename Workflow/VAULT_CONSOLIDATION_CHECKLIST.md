@@ -1,8 +1,9 @@
 ---
 obsidianUIMode: preview
 NoteIcon: outline
-NoteStatus: Active
-status: Aguardando decisões
+NoteStatus: Archived
+status: Respondido
+visibility: gm
 tags:
   - workflow
   - consolidation
@@ -926,4 +927,3 @@ Preencha somente depois das demais seções:
 Instruções finais:
 
 > 
-
