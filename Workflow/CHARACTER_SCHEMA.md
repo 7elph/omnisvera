@@ -16,6 +16,8 @@ Este documento define o contrato de compatibilidade das páginas de personagem. 
 
 O objetivo é permitir correções graduais sem quebrar Dataview, DataCards, estilos, links ou filtros.
 
+Para personagens de jogador, a referência estrutural é [[Workflow/Templates/Player Character Template|Player Character Template]], derivada da ficha de [[Vezemir]]. A seção de atributos permanece específica de cada ficha e não deve ser copiada sem fonte confirmada.
+
 ## Personagens centrais
 
 | Personagem | Arquivo | Classificação atual | Ponto a revisar |
@@ -59,7 +61,7 @@ Uma propriedade não deve ser removida apenas porque está vazia. Campos vazios 
 | `class` | texto | Sim | Classe mecânica ou descrição funcional. |
 | `race` | texto | Sim | Raça do personagem. |
 | `role` | texto | Sim | A taxonomia definitiva ainda precisa ser decidida. |
-| `chapter` | lista | Não | Manter como lista quando já existir como lista. |
+| `chapters` | lista | Não | Propriedade adotada pelo template dos personagens de jogador. |
 | `tags` | lista | Sim | Deve incluir `character`. |
 
 ## Tipos que devem ser preservados
@@ -116,7 +118,25 @@ Para os três protagonistas, `role` representa o controle na mesa:
 
 Função dramática, profissão e título não devem substituir `role`. Esses conceitos podem continuar no texto, nas tags existentes ou ganhar propriedades separadas quando isso for deliberadamente definido.
 
-Vezemir, Varkh e Raziel são personagens de jogador e agora compartilham `role: player` e a tag `player`.
+Vezemir, Varkh e Raziel são personagens de jogador e agora compartilham `NoteIcon: magicitem`, `role: player`, `level: 1`, a propriedade `chapters` e a tag `player`.
+
+## Estrutura das notas de jogadores
+
+As três notas seguem a mesma ordem:
+
+1. retrato principal;
+2. visão geral;
+3. história e marcos individuais;
+4. atualidade;
+5. personalidade com infobox;
+6. habilidades;
+7. segredos ou questões reservadas;
+8. equipamentos;
+9. aparência;
+10. armas e equipamentos vinculados;
+11. ficha mecânica sem inventar atributos.
+
+Se um personagem ainda não possuir dados para uma seção, manter a seção com uma indicação clara de que a informação está em aberto.
 
 ## Processo de migração de uma página
 

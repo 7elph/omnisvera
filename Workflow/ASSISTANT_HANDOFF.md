@@ -75,3 +75,4 @@ Este arquivo é a memória operacional compartilhada entre Codex e a IA local. E
 - O snippet ativo de perfil chama-se `omnisvera-profile`; a classe antiga continua disponível apenas como compatibilidade.
 - A geografia consolidada está registrada em [[GEOGRAPHY]]; Valthor possui marcador aproximado no sudeste e Gharok permanece sem posição.
 - Bosque Sussurrante e Vale Dourado continuam fora do mapa por não terem existência confirmada.
+- As notas de [[Vezemir]], [[Varkh Nimalis]] e [[Raziel]] usam a mesma estrutura visual e editorial; atributos numéricos continuam dependentes das fichas individuais.
