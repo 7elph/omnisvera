@@ -32,9 +32,10 @@ MEDIA_EXTENSIONS = {".png", ".jpg", ".jpeg", ".gif", ".webp", ".svg", ".bmp"}
 
 
 def is_active_note(path: Path) -> bool:
-    return not path.name.startswith("Legacy -") and not any(
-        part in EXCLUDED_DIRS for part in path.parts
+    is_legacy = path.name.startswith("Legacy -") or (
+        "Workflow" in path.parts and "Legacy" in path.parts
     )
+    return not is_legacy and not any(part in EXCLUDED_DIRS for part in path.parts)
 
 
 def strip_quote_prefix(text: str) -> str:

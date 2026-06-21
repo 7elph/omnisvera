@@ -48,7 +48,9 @@ HEADING = re.compile(r"(?m)^#{1,6}\s+.+$")
 
 
 def is_legacy_note(path: Path) -> bool:
-    return path.name.startswith("Legacy -")
+    return path.name.startswith("Legacy -") or (
+        "Workflow" in path.parts and "Legacy" in path.parts
+    )
 
 
 class UniqueLoader(yaml.SafeLoader):

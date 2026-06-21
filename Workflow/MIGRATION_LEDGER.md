@@ -40,12 +40,14 @@ Este documento controla a retirada de Disgraceland do conteúdo ativo sem perder
 
 ## Resíduos de Disgraceland a isolar
 
-- [x] `NOTES.md` — conteúdo legado movido para `Workflow/Legacy - Disgraceland Quick Notes.md`; a nota ativa agora é um índice de Omnisvera.
+- [x] `NOTES.md` — conteúdo legado movido para `Workflow/Legacy/Disgraceland/Legacy - Disgraceland Quick Notes.md`; a nota ativa agora é um índice de Omnisvera.
 - [x] `EARTHROPO/01 - Ecos do Mundo Perdido.md` — capítulo legado arquivado; o caminho ativo agora contém apenas o outline de Omnisvera.
-- [ ] `Workflow/Legacy - Disgraceland OUTLINES.md` — manter arquivado como fonte.
-- [ ] `Workflow/Legacy - Disgraceland Scratch Notes.md` — manter arquivado como fonte.
+- [x] `Workflow/Legacy/Disgraceland/Legacy - Disgraceland OUTLINES.md` — arquivado como fonte.
+- [x] `Workflow/Legacy/Disgraceland/Legacy - Disgraceland Scratch Notes.md` — arquivado como fonte.
 - [x] `Workflow/Vault Report.md` — dashboard de Disgraceland arquivado; relatório ativo refeito para Omnisvera.
 - [x] `Workflow/Format Audit Report.md` — relatório antigo substituído pelo estado atual.
+- [x] Calendarium de Tribucia — configuração original preservada como template; calendário ativo migrado para o rascunho de Omnisvera.
+- [x] Snippet de perfil — renomeado para `omnisvera-profile`, mantendo a classe antiga como alias de compatibilidade.
 
 ## Templates e ferramentas a preservar
 
@@ -54,6 +56,7 @@ Este documento controla a retirada de Disgraceland do conteúdo ativo sem perder
 - [x] `Workflow/Property Key Dashboard.md` — preservado como ferramenta técnica com frontmatter explícito.
 - [x] Plugins, snippets e configurações do Obsidian.
 - [x] Frontmatter herdado quando necessário ao funcionamento visual.
+- [x] `scriptwrite.css` e classes regionais antigas — preservados como compatibilidade de template; não são usados como lore ativa.
 
 ## Conteúdo de Omnisvera ainda em revisão
 
@@ -68,6 +71,7 @@ Este documento controla a retirada de Disgraceland do conteúdo ativo sem perder
 - [ ] Facções ainda não consolidadas.
 - [x] Validação técnica de Dataview, DataCards, frontmatter e Leaflet — registrada em `Workflow/Runtime Audit Report.md`.
 - [x] Mapas Leaflet — IDs, imagens e links ativos validados; estado persistido de Tribucia isolado dos mapas ativos.
+- [x] Arquivo de legado — notas narrativas antigas agrupadas em `Workflow/Legacy/`.
 - [ ] Revisar posições e nomes dos marcadores conforme a geografia canônica for definida.
 
 ## Placeholders deliberados

@@ -1,7 +1,9 @@
+/* Perfil visual de Omnisvera.
+   A classe .disgraceland-profile permanece como alias para páginas importadas. */
 @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&display=swap');
 
 /* ───────────── CHARACTER PROFILE ───────────── */
-.disgraceland-profile {
+:is(.omnisvera-profile, .disgraceland-profile) {
   background-color: #1a1a1a;
   color: #f8f8f2;
   border: 2px solid #ff6600;
@@ -11,7 +13,7 @@
   line-height: 1.6;
 }
 
-.disgraceland-profile h1 {
+:is(.omnisvera-profile, .disgraceland-profile) h1 {
   color: #ffcc00;
   border-bottom: 2px solid #ff6600;
   padding-bottom: 0.25rem;
@@ -20,7 +22,7 @@
   margin-top: 0;
 }
 
-.disgraceland-profile h2 {
+:is(.omnisvera-profile, .disgraceland-profile) h2 {
   color: #ff8800;
   margin-top: 1.5rem;
   border-left: 4px solid #ffcc00;
@@ -29,7 +31,7 @@
   font-size: 1.25rem;
 }
 
-.disgraceland-profile blockquote {
+:is(.omnisvera-profile, .disgraceland-profile) blockquote {
   font-style: italic;
   color: #cccccc;
   border-left: 4px solid #666;
@@ -37,13 +39,13 @@
   margin-left: 0;
 }
 
-.disgraceland-profile a {
+:is(.omnisvera-profile, .disgraceland-profile) a {
   color: #00ffff;
   text-decoration: none;
   font-weight: bold;
 }
 
-.disgraceland-profile img {
+:is(.omnisvera-profile, .disgraceland-profile) img {
   display: block;
   margin: 1rem auto;
   width: 320px;

@@ -171,12 +171,11 @@ Estas questões não devem ser resolvidas por inferência:
 | Reinos raciais | Reino élfico na maior região florestal; reino anão no norte/nordeste montanhoso e vulcânico. Nomes e fronteiras permanecem em aberto. |
 | Região de Raziel | Valthor está no sudeste; Gharok e os demais pontos de sua trajetória ainda precisam ser posicionados após revisão da lore. |
 | Ficha do kenku de João | A ficha provavelmente pertence a Varkh, mas está sem nome e registra Homem de Armas em vez de Ladrão / Alquimista. |
-| Data atual | A linha do tempo usa 2100; o Calendarium e páginas importadas usam 2186. |
-| Calendário | A nota `CALENDAR.md` e a configuração do Calendarium usam nomes diferentes. |
+| Data atual | A linha do tempo usa o ano 2100; o dia e o mês exatos ainda não foram definidos. |
+| Calendário | O Calendarium espelha o rascunho de `CALENDAR.md`, mas nomes, feriados e significados ainda precisam de aprovação como cânone. |
 | Religião dominante | Igreja das Chamas e Igreja das Sete Chamas aparecem como nomes concorrentes. |
 | Fontes de regras | A base está definida como Old Dragon 2 oficial, conforme [[Workflow/RULES_SOURCES|Fontes de Regras da Campanha]]. Os PDFs de 2017 são da edição anterior; os Tomos de Magia são adaptações de fã; `Expansão de Classes` e `Mestres do Arcano` são independentes. Permanecem em aberto apenas as regras opcionais e autorais adotadas para cada personagem. |
 | Geografia | Algumas regiões ainda usam nomes ou relações herdadas de versões anteriores. |
-| Primeiro capítulo | O arquivo atual ainda contém a trama e a data de Disgraceland. |
 
 ## Hierarquia de fontes
 

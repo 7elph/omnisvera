@@ -53,11 +53,11 @@ Este arquivo é a memória operacional compartilhada entre Codex e a IA local. E
 
 ## Próxima sequência
 
-1. Atualizar relatórios técnicos antigos para que não apresentem erros já corrigidos.
-2. Resolver notas e links essenciais ausentes.
-3. Revisar conteúdo de trabalho por pasta.
-4. Validar consultas Dataview/DataCards, mapas e frontmatter.
-5. Somente depois remover ou arquivar os últimos resíduos legados.
+1. Revisar o calendário de trabalho e decidir quais nomes e feriados entram no cânone.
+2. Revisar conteúdo de trabalho por pasta, começando por geografia e regiões.
+3. Consolidar fronteiras, capital e marcadores do mapa sem antecipar descobertas dos jogadores.
+4. Revisar as histórias dos três personagens em busca de nomes, lugares e datas inconsistentes.
+5. Registrar cada decisão aprovada em [[CANON]] antes de fazer correções em massa.
 
 ## Última atualização
 
@@ -70,3 +70,6 @@ Este arquivo é a memória operacional compartilhada entre Codex e a IA local. E
 - O modelo local de contingência exige fontes explícitas; busca semântica isolada não autoriza síntese.
 - As notas ativas de Guerreiro, Ladrão, Clérigo e Mago agora resumem OD2; as versões da edição anterior estão arquivadas como `Legacy`.
 - A auditoria de runtime verifica consultas, mídias, frontmatter e Leaflet por `Workflow/audit_runtime.py`.
+- As notas narrativas antigas foram agrupadas em `Workflow/Legacy/`; configurações reutilizáveis permanecem em `Workflow/Templates/`.
+- O Calendarium ativo usa um rascunho de Omnisvera no ano 2100; a configuração original de Tribucia foi preservada como template.
+- O snippet ativo de perfil chama-se `omnisvera-profile`; a classe antiga continua disponível apenas como compatibilidade.

@@ -62,7 +62,7 @@ O PDF oficial do Livro I não foi localizado entre os arquivos de `Downloads`. A
 
 - [[Guerreiro]], [[Ladrão]], [[Clérigo]] e [[Mago]] possuem notas ativas resumidas a partir do Livro I e do SRD oficial.
 - [[Homem de Armas]] permanece como ponte para a denominação da edição anterior usada na ficha de Vezemir.
-- As quatro notas mecânicas antigas foram arquivadas em `Workflow/Legacy - Old Dragon anterior - *.md`.
+- As quatro notas mecânicas antigas foram arquivadas em `Workflow/Legacy/Old Dragon anterior/Legacy - Old Dragon anterior - *.md`.
 - [[Alquimista]] vem de suplemento independente e não foi adotado como classe mecânica.
 
 ### Vezemir

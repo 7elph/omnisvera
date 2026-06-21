@@ -2,8 +2,8 @@
 
 obsidianUIMode: preview  
 NoteIcon: lore  
-NoteStatus: Complete  
-status:  
+NoteStatus: In progress
+status: Em revisão
 location:  
 faction:  
 cover: zz_media/t52.png  
@@ -17,6 +17,9 @@ tag:
 
 ```calendarium
 ```
+
+> [!warning] Calendário de trabalho
+> Os nomes, feriados e significados abaixo ainda precisam de aprovação antes de serem tratados como cânone definitivo. O plugin Calendarium usa esta estrutura provisoriamente.
 
 ## 📆 Dias da Semana
 

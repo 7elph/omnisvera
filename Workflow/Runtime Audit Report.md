@@ -70,6 +70,20 @@ O mapa da capital também conserva dois marcadores manuais ainda sem link. Eles 
 
 O grupo persistido `tribucia-map`, com 82 marcadores de Disgraceland, foi mantido como fonte de template, mas teve sua associação com os dois mapas ativos removida. O plugin carrega dados persistidos por `id`; portanto, esse grupo não é aplicado aos IDs `earthropo-map` ou `nimalia-capital-map`.
 
+## Calendarium
+
+- A configuração original de Tribucia foi preservada em `Workflow/Templates/Plugin Configs/Calendarium - Disgraceland Template.json`.
+- O calendário ativo passou a espelhar os nomes de dias e meses de `CALENDAR.md`.
+- O ano de trabalho foi ajustado para 2100, acompanhando `TIMELINE.md`.
+- Eventos, categorias e links narrativos de Disgraceland foram retirados da configuração ativa.
+- O calendário permanece um rascunho editorial: seus nomes, feriados e significados ainda não são cânone confirmado.
+
+## Snippets de template
+
+- O snippet habilitado de perfil foi renomeado para `omnisvera-profile`.
+- A classe `.disgraceland-profile` e as classes regionais antigas permanecem como aliases de compatibilidade para páginas importadas.
+- `scriptwrite.css` continua disponível como template, mas não está habilitado na aparência ativa.
+
 ## Plugins
 
 As integrações necessárias estão instaladas e habilitadas:
