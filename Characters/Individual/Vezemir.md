@@ -38,7 +38,7 @@ tags:
 **Território:** [[Floresta de Avenor]]
 **Reputação Pública:** Guerreiro lendário, reservado e intimidador
 **Gênero:** Masculino
-**Classe:** [[Homem de Armas]]
+**Classe:** [[Guerreiro|Homem de Armas]]
 **Raça:** Meio Humano / Meio Elfo
 **Idade:** 200 anos
 **Altura:** 2,02 m

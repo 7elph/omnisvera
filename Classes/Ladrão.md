@@ -1,291 +1,83 @@
 ---
 NoteIcon: class
-NoteStatus: Reference
+NoteStatus: Active
 tags:
   - Category/Class
   - class
   - thief
+  - old-dragon-2
 cover: zz_media/ladrão.png
 status: Active
-ruleset: Old Dragon anterior (conteúdo legado)
+ruleset: Old Dragon 2E
+source: https://olddragon.com.br/classes/ladrao
 ---
 
 # Ladrão
 
-O Ladrão é o especialista em habilidades. Enquanto outras classes resolvem problemas com força, fé ou magia, o ladrão depende de astúcia, precisão, furtividade e talento.
+O Ladrão é a classe-base de exploração, infiltração e ataques oportunistas de Old Dragon 2. Esta nota resume o necessário para consulta; a progressão completa está na [página oficial](https://olddragon.com.br/classes/ladrao).
 
-> [!warning] Fonte de regras
-> A progressão desta nota foi herdada da edição anterior de Old Dragon. Ela permanece como referência de migração, não como regra válida de OD2. Consulte [[Workflow/RULES_SOURCES|Fontes de Regras da Campanha]] antes de usar qualquer valor mecânico abaixo.
+> [!info] Fonte
+> **Livro I: Regras Básicas**, página 36, e **SRD oficial**. Consulte também [[Workflow/RULES_SOURCES|Fontes de Regras da Campanha]].
 
-Ele é responsável por lidar com:
+## Referência de nível 1
 
-- Armadilhas
-- Fechaduras
-- Infiltração
-- Espionagem
-- Exploração de masmorras
-- Ataques oportunistas
+| Campo | Valor |
+|:--|--:|
+| Pontos de Vida | 6 |
+| Base de Ataque | 1 |
+| Jogada de Proteção | 5 |
 
-Embora seu nome seja "Ladrão", nem todos os personagens da classe são criminosos. Exploradores, espiões, caçadores de tesouros, batedores e investigadores podem usar a mesma estrutura de habilidades.
+## Restrições
 
----
+- **Armas:** pequenas e médias; armas Grandes geram ataques difíceis.
+- **Armaduras:** apenas leves.
+- Escudos e armaduras médias ou pesadas impedem os talentos da classe e fornecem somente metade da CA normal.
+- **Itens mágicos:** não usa cajados, varinhas ou pergaminhos mágicos, exceto pergaminhos de proteção.
 
-# Papel na Aventura
+## Habilidades
 
-As funções mais comuns do ladrão são:
+### Ataque Furtivo
 
-- Explorar áreas perigosas.
-- Encontrar armadilhas.
-- Abrir fechaduras.
-- Mover-se sem ser percebido.
-- Escalar superfícies difíceis.
-- Atacar inimigos desprevenidos.
+Quando ataca após aproximar-se furtivamente, o Ladrão realiza um ataque muito fácil e multiplica o dano:
 
----
+| Nível | Multiplicador |
+|:--|--:|
+| 1º | ×2 |
+| 6º | ×3 |
+| 10º | ×4 |
 
-# Atributo Principal
+### Ouvir Ruídos
 
-### Destreza
+Fora de combate e em ambiente silencioso, pode detectar conversas, aproximações e outros sons discretos.
 
-A Destreza influencia diretamente:
+| Nível | Chance |
+|:--|:--|
+| 1º | 1–2 em 1d6 |
+| 3º | 1–3 em 1d6 |
+| 6º | 1–4 em 1d6 |
+| 10º | 1–5 em 1d6 |
 
-- Ataques à distância.
-- Classe de Armadura.
-- Diversas habilidades da classe.
+### Talentos de Ladrão
 
-É normalmente o atributo mais importante para um ladrão.
+Começa com 2 pontos em cada talento e mais 2 pontos para distribuir. Recebe outros 2 pontos nos níveis 3, 6 e 10.
 
----
+- **Armadilha:** detectar e desarmar armadilhas.
+- **Arrombar:** abrir fechaduras e trancas sem destruí-las.
+- **Escalar:** vencer superfícies difíceis sem cordas.
+- **Furtividade:** esconder-se imóvel nas sombras.
+- **Punga:** furtar objetos pequenos e executar prestidigitação.
 
-# Armaduras
+A resolução completa dos testes deve seguir o Livro I ou o SRD.
 
-Pode utilizar:
+### Reputação — 11º nível
 
-- Armaduras leves
+Começa com Reputação 1 em 1d6 e progride até 1–5 em 1d6 no 15º nível.
 
-Não pode utilizar:
+## Uso em Omnisvera
 
-- Armaduras médias
-- Armaduras pesadas
+- [[Varkh Nimalis]] possui Ladrão como identidade narrativa, mas sua ficha mecânica definitiva ainda precisa ser confirmada.
+- [[Raziel]] usa Ladrão como classe-base; Assassino e Hemomante são camadas adicionais tratadas separadamente.
 
-Armaduras pesadas prejudicam suas habilidades especiais.
+## Fonte legada
 
----
-
-# Armas
-
-Pode utilizar:
-
-- Adagas
-- Espadas curtas
-- Arcos
-- Bestas leves
-- Fundas
-- Outras armas leves
-
-O foco da classe está na precisão e mobilidade, não na força bruta.
-
----
-
-# Dados de Vida
-
-- **d6**
-
-Mais resistente que o mago, porém menos resistente que clérigos e homens de armas.
-
----
-
-# Habilidades de Ladrão
-
-O grande diferencial da classe.
-
-As habilidades começam com uma chance percentual e aumentam conforme o personagem sobe de nível.
-
-<h2>Abrir Fechaduras</h2>
-
-Permite abrir:
-
-- Fechaduras comuns.
-- Trancas complexas.
-- Mecanismos especiais.
-
-Sem a necessidade da chave.
-
----
-
-<h2>Encontrar Armadilhas</h2>
-
-Permite detectar:
-
-- Armadilhas mecânicas.
-- Dispositivos ocultos.
-- Perigos escondidos.
-
-Extremamente útil em masmorras.
-
----
-
-<h2>Remover Armadilhas</h2>
-
-Após localizar uma armadilha:
-
-- Pode desarmá-la.
-- Evita que seja acionada.
-
----
-
-<h2>Furtividade</h2>
-
-Permite:
-
-- Mover-se silenciosamente.
-- Permanecer escondido.
-- Evitar ser percebido.
-
----
-
-<h2>Escalar Muros</h2>
-
-Consegue subir:
-
-- Paredes.
-- Torres.
-- Penhascos.
-- Estruturas difíceis.
-
----
-
-<h2>Ouvir Ruídos</h2>
-
-Permite perceber:
-
-- Conversas atrás de portas.
-- Movimentações escondidas.
-- Sons distantes.
-
----
-
-# Ataque Furtivo
-
-A habilidade mais famosa da classe.
-
-Quando ataca um alvo:
-
-- Surpreendido
-- Desprevenido
-- Incapaz de reagir
-
-O ladrão causa dano adicional.
-
-O bônus aumenta conforme os níveis.
-
-Representa:
-
-- Golpes em pontos vitais.
-- Emboscadas.
-- Ataques precisos.
-
----
-
-# Guilda e Seguidores
-
-### A partir do 11º nível
-
-O ladrão pode:
-
-- Fundar uma guilda.
-- Atrair subordinados.
-- Criar uma rede de contatos.
-
-Essa organização pode ser criminosa ou legítima, dependendo do personagem.
-
----
-
-# Especializações
-
-A partir do 5º nível o ladrão pode seguir caminhos mais específicos.
-
-<h2>Assassino</h2>
-
-Especialista em eliminar alvos.
-
-Características gerais:
-
-- Disfarces.
-- Infiltração.
-- Eliminação rápida.
-- Ataques letais.
-
----
-
-<h2>Bardo</h2>
-
-Mistura habilidades sociais e conhecimento.
-
-Características gerais:
-
-- Música.
-- Histórias.
-- Diplomacia.
-- Conhecimento de lendas.
-
-Transforma o ladrão em um especialista social.
-
----
-
-<h2>Explorador</h2>
-
-Especialista em sobrevivência.
-
-Características gerais:
-
-- Rastreamento.
-- Natureza.
-- Viagens.
-- Caça.
-
-Excelente para campanhas focadas em exploração.
-
----
-
-<h2>Gatuno</h2>
-
-Representa o ladrão clássico.
-
-Características gerais:
-
-- Roubo.
-- Acrobacias.
-- Mobilidade.
-- Infiltração urbana.
-
-É a evolução mais próxima do arquétipo tradicional do ladrão.
-
----
-
-# Ladrão em Jogo (Resumo)
-
-- Dados de Vida: d6.
-- Atributo principal: Destreza.
-- Usa armaduras leves.
-- Especialista em habilidades.
-- Possui Ataque Furtivo.
-- Pode abrir fechaduras.
-- Pode encontrar e remover armadilhas.
-- Pode escalar muros.
-- Pode mover-se furtivamente.
-- Pode ouvir ruídos ocultos.
-- Pode fundar uma guilda no 11º nível.
-- Especializações:
-    - Assassino
-    - Bardo
-    - Explorador
-    - Gatuno
-
-### Arquétipo do Ladrão
-
-🗝️ Mestre das fechaduras  
-👣 Especialista em infiltração  
-🎯 Perito em ataques oportunistas  
-🏙️ Habitante natural das cidades  
-🕵️ Explorador e investigador
+O texto da edição anterior foi preservado em [[Workflow/Legacy - Old Dragon anterior - Ladrão|Legacy — Ladrão]].

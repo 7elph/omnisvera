@@ -62,7 +62,7 @@ Este documento controla a retirada de Disgraceland do conteúdo ativo sem perder
 - [ ] `LORE.md`
 - [ ] `TIMELINE.md`
 - [x] Fontes de regras de Old Dragon — fontes oficiais, independentes e legadas classificadas em `Workflow/RULES_SOURCES.md`.
-- [ ] Reescrever as notas mecânicas de classes para OD2, preservando as versões legadas até a substituição.
+- [x] Classes-base — notas ativas de Guerreiro, Ladrão, Clérigo e Mago reescritas como resumos de OD2; versões anteriores arquivadas.
 - [ ] Raças e terminologia racial.
 - [ ] Religiões.
 - [ ] Facções ainda não consolidadas.

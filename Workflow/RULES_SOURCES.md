@@ -60,9 +60,9 @@ O PDF oficial do Livro I não foi localizado entre os arquivos de `Downloads`. A
 
 ### Classes
 
-- [[Homem de Armas]] usa a denominação e a progressão da edição anterior. Em OD2, a classe-base equivalente é **Guerreiro**.
-- [[Ladrão]], [[Clérigo]] e [[Mago]] contêm progressões herdadas da edição anterior.
-- Essas quatro notas permanecem disponíveis como referência, mas não devem orientar criação ou evolução de personagem até serem substituídas por resumos conferidos em OD2.
+- [[Guerreiro]], [[Ladrão]], [[Clérigo]] e [[Mago]] possuem notas ativas resumidas a partir do Livro I e do SRD oficial.
+- [[Homem de Armas]] permanece como ponte para a denominação da edição anterior usada na ficha de Vezemir.
+- As quatro notas mecânicas antigas foram arquivadas em `Workflow/Legacy - Old Dragon anterior - *.md`.
 - [[Alquimista]] vem de suplemento independente e não foi adotado como classe mecânica.
 
 ### Vezemir

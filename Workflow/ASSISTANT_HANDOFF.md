@@ -61,10 +61,11 @@ Este arquivo é a memória operacional compartilhada entre Codex e a IA local. E
 
 ## Última atualização
 
-- Data: 2026-06-20
+- Data: 2026-06-21
 - Branch: `main`
 - Repositório remoto privado: `7elph/omnisvera`
 - Conector remoto antigo: indisponível por depender de túnel ngrok expirado.
 - Substituição: servidor MCP local por `stdio`, configurado no próprio notebook.
 - `NOTES.md` e o caminho ativo do Capítulo 01 já foram separados de seus equivalentes legados.
 - O modelo local de contingência exige fontes explícitas; busca semântica isolada não autoriza síntese.
+- As notas ativas de Guerreiro, Ladrão, Clérigo e Mago agora resumem OD2; as versões da edição anterior estão arquivadas como `Legacy`.

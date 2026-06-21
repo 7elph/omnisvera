@@ -135,7 +135,7 @@ Nimalia é o primeiro horizonte das **Crônicas de Earthropo**: um ponto de part
 
 > [!note]- CLASSES
 > ```datacards
-> TABLE cover, status FROM #class
+> TABLE cover, status FROM "Classes" AND #class
 > SORT name ASC
 > 
 > // Settings

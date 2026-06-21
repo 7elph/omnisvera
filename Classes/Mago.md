@@ -1,257 +1,72 @@
 ---
 NoteIcon: class
-NoteStatus: Reference
+NoteStatus: Active
 tags:
   - Category/Class
   - class
   - wizard
+  - old-dragon-2
 cover: zz_media/mago.png
 status: Active
-ruleset: Old Dragon anterior (conteúdo legado)
+ruleset: Old Dragon 2E
+source: https://olddragon.com.br/classes/mago
 ---
 
 # Mago
 
-O Mago é o mestre das artes arcanas. Diferente das outras classes, sua principal força não está em armas ou armaduras, mas no conhecimento, nos grimórios e nas magias capazes de alterar a própria realidade.
+O Mago é a classe-base de magia arcana de Old Dragon 2. Esta nota oferece uma referência curta; a progressão completa está na [página oficial](https://olddragon.com.br/classes/mago).
 
-> [!warning] Fonte de regras
-> A progressão desta nota foi herdada da edição anterior de Old Dragon. Ela permanece como referência de migração, não como regra válida de OD2. Consulte [[Workflow/RULES_SOURCES|Fontes de Regras da Campanha]] antes de usar qualquer valor mecânico abaixo.
+> [!info] Fonte
+> **Livro I: Regras Básicas**, página 42, e **SRD oficial**. Consulte também [[Workflow/RULES_SOURCES|Fontes de Regras da Campanha]].
 
-<h2>Papel na Aventura</h2>
+## Referência de nível 1
 
-As funções mais comuns do mago são:
+| Campo | Valor |
+|:--|--:|
+| Pontos de Vida | 4 |
+| Base de Ataque | 0 |
+| Jogada de Proteção | 5 |
 
-- Controle de campo de batalha.
-- Conhecimento arcano.
-- Resolução de problemas através de magia.
-- Identificação de itens mágicos.
-- Dano mágico.
-- Utilidade fora de combate.
+## Restrições
 
-<h2>Atributo Principal</h2>
+- **Armas:** apenas pequenas; armas médias ou Grandes geram ataques difíceis.
+- **Armaduras:** nenhuma.
+- Escudos ou armaduras impedem a conjuração e fornecem somente metade da CA normal.
+- **Itens mágicos:** todos.
 
-### Inteligência
+## Habilidades
 
-A Inteligência determina:
+### Magias Arcanas — 1º nível
 
-- Quantas magias o mago pode memorizar.
-- Seu potencial arcano.
-- Sua capacidade de aprender novas magias.
+O Mago memoriza diariamente magias registradas em seu grimório.
 
-<h2>Armaduras</h2>
+- Começa com três magias de 1º círculo escolhidas pelo jogador e uma determinada aleatoriamente.
+- Pode copiar novas magias de pergaminhos ou outros grimórios.
+- Pode registrar magias de círculos superiores, mas só pode memorizá-las quando alcançar o nível necessário.
+- Sem o grimório, não consegue memorizar novas magias.
 
-O mago não pode utilizar:
+### Ler Magias — 1º nível
 
-- Armaduras leves
-- Armaduras médias
-- Armaduras pesadas
-- Escudos
+Pode decifrar inscrições mágicas uma vez ao dia por nível. Isso identifica a magia escrita, mas não revela automaticamente as propriedades de itens mágicos.
 
-Usar armadura ou escudo impede o lançamento de magias.
+### Detectar Magias — 1º nível
 
-<h2>Armas</h2>
+Pode procurar a presença de magia uma vez ao dia por nível em uma área de 9 metros mais 3 metros por nível.
 
-O mago pode utilizar normalmente:
+- Exige concentração ativa.
+- Revela a presença de aura, não sua magia, efeito ou poder.
+- O exame leva 1d8 rodadas.
+- No 6º nível, leva 1d4 rodadas.
+- No 10º nível, leva 1 rodada.
 
-- Adagas
-- Cajados
+### Reputação — 11º nível
 
-Outras armas podem ser usadas, mas sofrem:
+Começa com Reputação 1 em 1d6 e progride até 1–5 em 1d6 no 15º nível.
 
-- −2 nos ataques
-- −2 no dano
+## Magia opcional
 
-<h2>Dados de Vida</h2>
+Os arquivos `Tomo de Magia Arcana - OD2.pdf` e `Tomo de Magia Divina - OD2.pdf` são adaptações de fã e não integram automaticamente esta classe. Consulte [[Workflow/RULES_SOURCES|Fontes de Regras da Campanha]].
 
-- **d4**
+## Fonte legada
 
-É a classe mais frágil do jogo.
-
-<h2>Itens Mágicos</h2>
-
-A maior vantagem da classe.
-
-O mago pode utilizar praticamente qualquer item mágico:
-
-- Anéis
-- Varinhas
-- Cajados mágicos
-- Bastões
-- Mantos
-- Pergaminhos
-
-E diversos outros artefatos arcanos.
-
----
-
-# O Grimório
-
-O grimório é o bem mais importante de um mago.
-
-### No início do jogo
-
-O personagem começa com:
-
-- Um grimório.
-- Duas magias à sua escolha.
-
-### Aprendendo Novas Magias
-
-Novas magias podem ser obtidas através de:
-
-- Outro mago.
-- Pergaminhos.
-- Grimórios encontrados durante aventuras.
-
-### Importância
-
-Sem o grimório:
-
-- Não é possível preparar novas magias.
-- O desenvolvimento arcano fica praticamente interrompido.
-
-Por isso muitos magos mantêm cópias escondidas de seus livros.
-
----
-
-# Preparação de Magias
-
-O mago não possui acesso automático a todas as magias.
-
-Ele deve:
-
-1. Escrever magias no grimório.
-2. Escolher quais memorizar.
-3. Prepará-las no início do dia.
-
-Uma magia memorizada e lançada:
-
-- É esquecida.
-- Precisa ser preparada novamente.
-
----
-
-# Conjuração
-
-Para lançar uma magia o mago precisa:
-
-- Falar.
-- Gesticular.
-- Estar livre de perturbações físicas.
-
-Limitações:
-
-- Apenas uma magia por turno.
-- Não pode conjurar correndo ou sob forte interrupção.
-
----
-
-# Torre e Criação de Itens
-
-### A partir do 11º nível
-
-O mago pode:
-
-- Construir uma torre.
-- Criar itens mágicos.
-- Desenvolver pesquisas arcanas próprias.
-
----
-
-# Especializações
-
-A partir do 5º nível o mago pode seguir escolas específicas.
-
-<h2>Feiticeiro</h2>
-
-Especialista em poder mágico bruto.
-
-Características gerais:
-
-- Foco em magias ofensivas.
-- Grande capacidade destrutiva.
-- Domínio de energias arcanas.
-
----
-
-<h2>Bruxo</h2>
-
-Especialista em maldições e manipulação.
-
-Características gerais:
-
-- Encantamentos.
-- Controle.
-- Conhecimento proibido.
-- Pactos e segredos arcanos.
-
----
-
-<h2>Necromante</h2>
-
-Especialista em morte e não-vida.
-
-### Nível 16
-
-Pode tornar-se um **Lich**.
-
-Benefícios:
-
-- Imunidade a sono.
-- Imunidade a medo.
-- Imunidade a frio.
-- Imunidade a venenos.
-- Imunidade a acertos críticos.
-
-Sua alma passa a residir em uma filactéria.
-
-Se destruído:
-
-- Retorna em 1d4 dias.
-- Desde que a filactéria permaneça intacta.
-
----
-
-<h2>Adivinhador</h2>
-
-Especialista em descoberta de conhecimento.
-
-### Nível 5
-
-Pode analisar itens mágicos.
-
-Para cada turno de análise descobre:
-
-1. Alinhamento.
-2. Propósito.
-3. Material.
-4. Uma habilidade mágica do item.
-
-Ideal para campanhas focadas em exploração e mistérios.
-
----
-
-# Mago em Jogo (Resumo)
-
-- Dados de Vida: d4.
-- Atributo principal: Inteligência.
-- Usa apenas adagas e cajados sem penalidade.
-- Não pode usar armaduras ou escudos.
-- Começa com um grimório contendo duas magias.
-- Aprende novas magias através de estudo.
-- Prepara magias diariamente.
-- Pode construir uma torre no 11º nível.
-- Pode criar itens mágicos.
-- Especializações:
-    - Feiticeiro
-    - Bruxo
-    - Necromante
-    - Adivinhador
-
-### Arquétipo do Mago
-
-📚 Estudioso do oculto  
-🔮 Mestre das artes arcanas  
-🏰 Futuro senhor de uma torre mágica  
-📖 Dependente de seu grimório  
-✨ A classe com o maior potencial de alterar o mundo
+O texto da edição anterior foi preservado em [[Workflow/Legacy - Old Dragon anterior - Mago|Legacy — Mago]].
