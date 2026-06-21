@@ -56,7 +56,7 @@ marker: Location, 78, 199, [[Ruínas de Valthor]]
 Esta camada fixa apenas lugares com existência e região aproximada sustentadas pelo cânone:
 
 - [[Nimalia]] ocupa provisoriamente a região central do continente;
-- a [[Capital de Nimalia]] corresponde à grande cidade central;
+- a [[Nimalis]] corresponde à grande cidade central;
 - a [[Floresta de Avenor]] fica a leste/nordeste da capital e faz fronteira com o reino;
 - as ruínas de [[Leth'valora]] ficam dentro de Avenor;
 - as [[Ruínas de Valthor]] ficam no sudeste de Earthropo.

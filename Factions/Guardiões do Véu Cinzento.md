@@ -13,7 +13,7 @@ tags:
 
 # Guardiões do Véu Cinzento
 
-Ordem desaparecida ligada à origem de [[Vezemir]], às relíquias entregues por [[Elarion Vaelthor]] e aos mistérios do Véu Cinzento.
+Ordem desaparecida ligada à origem de [[Vezemir]], às relíquias entregues por [[Elarion Valthor]] e aos mistérios do Véu Cinzento.
 
 ## Cânone de trabalho
 
@@ -35,14 +35,14 @@ Seus símbolos recorrentes são:
 
 ## Relação com Vezemir
 
-[[O Medalhão dos Guardiões do Véu Cinzento]] sugere que Vezemir possui algum vínculo com a ordem, mas ainda não está definido se ele é herdeiro, último membro, escolhido ou apenas portador de uma relíquia.
+[[O Medalhão]] sugere que Vezemir possui algum vínculo com a ordem, mas ainda não está definido se ele é herdeiro, último membro, escolhido ou apenas portador de uma relíquia.
 
 ## Em aberto
 
 - Fundação e liderança.
 - Relação exata com o Véu Cinzento.
 - Motivo do desaparecimento.
-- Participação de [[Elarion Vaelthor]].
+- Participação de [[Elarion Valthor]].
 - Natureza do vínculo de Vezemir.
 
 > [!warning] Estado do conteúdo

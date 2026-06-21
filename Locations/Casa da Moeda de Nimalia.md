@@ -4,7 +4,7 @@ NoteIcon: location
 NoteStatus: Draft
 status: Cânone de trabalho
 territory: "[[Nimalia]]"
-district: "[[Capital de Nimalia]]"
+district: "[[Nimalis]]"
 info: Instituição responsável pela cunhagem das moedas oficiais de Nimalia.
 tags:
   - Category/Location
@@ -16,7 +16,7 @@ tags:
 
 # Casa da Moeda de Nimalia
 
-Instituição localizada na [[Capital de Nimalia]] e responsável pela produção das moedas oficiais do reino.
+Instituição localizada na [[Nimalis]] e responsável pela produção das moedas oficiais do reino.
 
 ## Funções atribuídas
 

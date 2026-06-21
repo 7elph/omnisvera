@@ -7,9 +7,13 @@ status: Falecida
 location: "[[Leth'valora]]"
 territory: "[[Floresta de Avenor]]"  
 faction: Nenhum
-class: Caçadora / Aventureira
+class: Caçadora
 race: Humana  
+Level: Desconhecido
+alignment: Bom
 role: npc  
+chapters:
+  - 00 - O Bastardo de Ferro
 tags:
 - npc
 - character  
@@ -27,21 +31,23 @@ tags:
 
 
 ## Visão Geral
-**Nome:** Mira Valen  
-**Títulos:** A Caçadora de Avenor; A Filha da Vila
+**Títulos:** A Caçadora da Floresta
+**Apelido:** A Filha da vila
+**Localização Atual:** Proximidades da [[Floresta de Avenor]]
+**Território:** [[Floresta de Avenor]]
 **Reputação Pública:** A Heroína da Vila Perdida  
-**Raça:** Humana  
+**Gênero:** Feminino
 **Classe:** Caçadora / Aventureira
-**Idade:** 22 anos (ao falecer)
+**Raça:** Humana  
+**Idade:** 22 anos
 **Altura:** 1,72 m
-**Alinhamento:** Caótico Bom
+**Alinhamento:** Bom
+**Nível:** Desconhecido
 **Status:** Falecida  
-**Território:** [[Floresta de Avenor]]  
-**Localização Final:** [[Leth'valora]]
-**Família:** Filha do chefe humano de [[Leth'valora]], morto no mesmo ataque
+**Afiliação:** [[Sentinelas de Leth'valora]]
+**Família:** Filha do chefe de [[Leth'valora]], morto no mesmo ataque
 **Associados Conhecidos:** [[Vezemir]], moradores da vila
 **Ocupação:** Exploradora, mensageira, caçadora e rastreadora
-**Símbolo:** Flor silvestre
 
 ---
 
@@ -87,7 +93,7 @@ Excelente arqueira e sobrevivente.
 **Conhecimento da Floresta:**  
 Conhecia os bosques da região como ninguém.
 
-**Mensageria e Exploração:**
+**Exploração:**
 Percorria trilhas entre a vila e regiões vizinhas, transportando notícias, encontrando rotas seguras e observando mudanças na floresta.
 
 ---

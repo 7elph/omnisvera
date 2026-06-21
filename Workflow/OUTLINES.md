@@ -34,7 +34,7 @@ Os personagens entram na história quando sinais antigos começam a reaparecer e
 
 ### [[Vezemir]]
 
-O Bastardo de Ferro. Meio humano, meio elfo, criado na vila de Leth'valora por [[Elarion Vaelthor]]. Carrega [[Grisalma]], [[Muralha de Dorn]] e o medalhão dos [[Guardiões do Véu Cinzento]]. Seu arco gira em torno do dragão de colar dourado, da morte de [[Mira Valen]] e da verdade sobre sua origem.
+O Bastardo de Ferro. Meio humano, meio elfo, criado na vila de Leth'valora por [[Elarion Valthor]]. Carrega [[Grisalma]], [[Muralha de Dorn]] e o medalhão dos [[Guardiões do Véu Cinzento]]. Seu arco gira em torno do dragão de colar dourado, da morte de [[Mira Valen]] e da verdade sobre sua origem.
 
 ### [[Varkh Nimalis]]
 

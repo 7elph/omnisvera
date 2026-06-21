@@ -28,7 +28,7 @@ O metal permanece frio mesmo próximo ao fogo. Marcas, runas e pequenas irregula
 
 - **Tipo:** amuleto e símbolo de ordem.
 - **Portador:** [[Vezemir]].
-- **Origem:** entregue por [[Elarion Vaelthor]].
+- **Origem:** entregue por [[Elarion Valthor]].
 - **Vínculo:** [[Guardiões do Véu Cinzento]].
 - **Função conhecida:** nenhuma confirmada.
 

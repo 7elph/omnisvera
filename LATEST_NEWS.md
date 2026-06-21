@@ -28,7 +28,7 @@ Depois de mais de trezentos anos aprisionado, [[Raziel]] despertou nas cavernas 
 
 ## Lugares no horizonte
 
-- **[[Capital de Nimalia]]:** ponto de referência inicial do reino e lar de [[Maré Baixa]].
+- **[[Nimalis]]:** ponto de referência inicial do reino e lar de [[Maré Baixa]].
 - **[[Floresta de Avenor]]:** fronteira viva de Nimalia, marcada por trilhas antigas, ruínas e pela história de Vezemir.
 - **[[Leth'valora]]:** vila élfica destruída pelo dragão de colar dourado.
 - **[[Ruínas de Valthor]]:** ruínas do sudeste de Earthropo, ligadas ao retorno de Raziel.

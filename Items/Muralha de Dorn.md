@@ -26,7 +26,7 @@ tags:
 - **Portador:** [[Vezemir]].
 - **Requisito indicado na referência visual:** Força 13 ou mais.
 - **Peso indicado:** 17 kg.
-- **Origem canônica:** entregue por [[Elarion Vaelthor]] em [[Leth'valora]].
+- **Origem canônica:** entregue por [[Elarion Valthor]] em [[Leth'valora]].
 
 ## Regra em uso
 

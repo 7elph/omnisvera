@@ -24,7 +24,7 @@ Elfo relacionado a um incidente decisivo da juventude de [[Vezemir]].
 
 ## Informações confirmadas
 
-- O incidente envolvendo Theron contribuiu para que [[Elarion Vaelthor]] concluísse que Vezemir jamais seria aceito por parte da comunidade élfica.
+- O incidente envolvendo Theron contribuiu para que [[Elarion Valthor]] concluísse que Vezemir jamais seria aceito por parte da comunidade élfica.
 - Vezemir o considera um inimigo conhecido.
 
 ## Em aberto

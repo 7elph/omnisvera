@@ -4,18 +4,17 @@ NoteIcon: magicitem
 NoteStatus: Active
 thumbnail: zz_media/th_vezemir.PNG
 status: Vivo
-location: "[[Floresta de Avenor]]"
+location: "[[Floresta de Avenor]], [[Leth'valora]]"
 territory: "[[Floresta de Avenor]]"
 faction: "[[Conclave dos Errantes]]"
 class: Guerreiro
 race: Meio-Elfo
 level: 1
-alignment: Neutro
+alignment: Neutro-Bom
 role: player
-chapter:
+chapters:
   - 00 - O Bastardo de Ferro
 tags:
-  - Category/Character
   - player
   - character
   - chapter00
@@ -33,24 +32,24 @@ tags:
 
 ## Visão geral
 **Títulos:** O Bastardo de Ferro
-**Apelido:** O Urso da [[Floresta de Avenor]], Guardião de [[Leth'valora]]
-**Localização Atual:** [[Floresta de Avenor]], próximo a [[Nimalia]]
+**Apelido:** O Urso da [[Floresta de Avenor]]
+**Localização Atual:** Proximidades da [[Floresta de Avenor]], próximo a [[Nimalia]]
 **Território:** [[Floresta de Avenor]]
 **Reputação Pública:** Guerreiro lendário, reservado e intimidador
 **Gênero:** Masculino
 **Classe:** [[Guerreiro]]
-**Raça:** Meio Humano / Meio Elfo
+**Raça:** Meio-Elfo
 **Idade:** 200 anos
 **Altura:** 2,02 m
 **Nível:** 1
-**Alinhamento:** Neutro
+**Alinhamento:** Neutro-Bom
 **Status:** Vivo  
 **Afiliação:** [[Conclave dos Errantes]]  
 **Afiliações Anteriores:** [[Sentinelas de Leth'valora]]
-**Associados Conhecidos:** [[Elarion Vaelthor]], [[Mira Valen]], [[Padre Oric]]  
-**Inimigos Conhecidos:** [[Theron Elensar]]  
+**Associados Conhecidos:** [[Elarion Valthor]], [[Mira Valen]], [[Padre Oric]]  
+**Inimigos Conhecidos:** Desconhecido
 **Origem:** [[Leth'valora]]  
-**Posses:** [[Grisalma]], [[Muralha de Dorn]], [[O Medalhão dos Guardiões do Véu Cinzento]]
+**Posses:** [[Grisalma]], [[Muralha de Dorn]], [[O Medalhão]]
 
 
 ---
@@ -60,7 +59,7 @@ tags:
 > <h4>"A honra não se herda. Se conquista."</h5>
 
 
-Vezemir foi encontrado ainda bebê nas ruínas de uma antiga estrada esquecida próxima à vila élfica de [[Leth'valora]]. Rejeitado por parte dos elfos devido à sua ascendência mestiça, foi adotado pelo veterano [[Elarion Vaelthor]], antigo capitão das Sentinelas de Leth'valora.
+Vezemir foi encontrado ainda bebê nas ruínas de uma antiga estrada esquecida próxima à vila élfica de [[Leth'valora]]. Rejeitado por parte dos elfos devido à sua ascendência mestiça, foi adotado pelo veterano [[Elarion Valthor]], antigo capitão das [[Sentinelas de Leth'valora]].
 
 Nos limites de [[Leth'valora]], Elarion o criou em uma fortaleza abandonada nas elevações de Avenor. Ali Vezemir recebeu treinamento rigoroso em combate, sobrevivência, estratégia, história e magia.
 
@@ -73,17 +72,12 @@ Instável.
 Violenta.
 
 Enquanto os magos élficos buscavam precisão, a magia de Vezemir parecia uma tempestade presa dentro de um corpo mortal.
-
 Percebendo que seu pupilo estava caminhando para a destruição, Elarion tomou uma decisão difícil.
-
 Entregou-lhe três relíquias ancestrais:
 
 - [[Grisalma]]
-    
 - [[Muralha de Dorn]]
-    
 - O medalhão dos [[Guardiões do Véu Cinzento]]
-    
 
 Na manhã seguinte, Vezemir deixou [[Leth'valora]].
 
@@ -93,7 +87,7 @@ E nunca mais voltou.
 
 ## O Bastardo de Ferro
 
-Durante décadas, Vezemir serviu como mercenário nos reinos humanos.
+Durante décadas, Vezemir serviu como mercenário no reino de [[Nimalia]].
 Participou de guerras, cercos e batalhas que hoje são lembradas apenas em canções e registros esquecidos.
 Sua reputação cresceu rapidamente.
 Diziam que atravessava muralhas de escudos sozinho.
@@ -143,8 +137,8 @@ Desde aquele dia, sua vida passou a ser guiada por um único propósito:
 
 ## Atualidade
 
-Durante cerca de trinta anos, Vezemir percorreu o continente perseguindo pistas sobre o dragão.
-Trabalhou ao lado do [[Conclave dos Errantes]], enfrentando monstros, explorando ruínas e investigando rumores.
+Durante cerca de 60 anos, Vezemir percorreu o continente perseguindo pistas sobre o dragão.
+Trabalha ao lado do [[Conclave dos Errantes]], enfrentando monstros, explorando ruínas e investigando rumores.
 Com o passar dos anos compreendeu que sua busca era quase impossível.
 Dragões atravessam continentes em poucos dias.
 As pistas desaparecem.
@@ -205,7 +199,7 @@ Embora rejeite sua herança arcana, ocasionalmente manifesta explosões involunt
     
 - O dragão demonstrou reconhecer Vezemir durante o ataque à vila.
     
-- [[Elarion Vaelthor]] pode ter ocultado informações sobre seus pais biológicos.
+- [[Elarion Valthor]] pode ter ocultado informações sobre seus pais biológicos.
     
 - Existe a possibilidade de Vezemir descender da última linhagem dos Guardiões do Véu Cinzento.
     
@@ -222,7 +216,7 @@ Machado lendário entregue por Elarion Vaelthor.
 
 Escudo ancestral entregue por Elarion Vaelthor.
 
-### Medalhão dos Guardiões do Véu Cinzento
+### [[O Medalhão]]
 
 Artefato misterioso cuja verdadeira função permanece desconhecida.
 
@@ -274,7 +268,7 @@ cardSpacing: 4
 - **Adaga oculta na bota:** dano de 1d4.
 - **Armadura pesada:** peso registrado de 20 kg.
 - **[[Muralha de Dorn]]:** bônus de +2 na CA.
-- **[[O Medalhão dos Guardiões do Véu Cinzento|Amuleto do Véu]]**.
+- **[[O Medalhão]]**.
 - Kit básico.
 
 ### Idiomas
@@ -282,10 +276,7 @@ cardSpacing: 4
 - Comum: escrita.
 - Élfico: fala.
 
-### Poderes registrados na ficha
+### [[Magic|Magias]]
 
-- **Força Arcana:** toque; duração de 1d6 + nível; concede 1 ponto adicional para cada 5 pontos de Força já possuídos.
-- **Velocidade:** toque; duração de 1d4 + nível; dobra a movimentação, concede +2 na CA e um ataque adicional. A descrição corresponde à versão antiga de `Velocidade Arcana` encontrada em `odlb.pdf`, com a diferença de que o livro também registra envelhecimento biológico de um ano.
-
-> [!warning] Validação de regras
-> A ficha digital usa o modelo da edição anterior e exibe `JP final: +3` e acesso a poderes de 2º e 3º círculos para um Homem de Armas de nível 1. `Força Arcana` e `Velocidade` foram localizadas no livro de 2017; os nomes também existem em OD2, mas com redação e duração revisadas. Os valores foram preservados como recebidos. A origem e a versão desses poderes ainda precisam ser definidas em mesa. Consulte [[Workflow/RULES_SOURCES|Fontes de Regras da Campanha]].
+- **[[Força Arcana]]:** toque; duração de 1d6 + nível; concede 1 ponto adicional para cada 5 pontos de Força já possuídos.
+- **[[Velocidade]]:** toque; duração de 1d4 + nível; dobra a movimentação, concede +2 na CA e um ataque adicional. Envelhecimento biológico de um ano.

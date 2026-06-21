@@ -39,7 +39,7 @@ cardSpacing: 4
 ```
 
 > [!world]- RESUMO
-> Meio-elfo criado pelo veterano [[Elarion Vaelthor]], Vezemir cresceu enfrentando o preconceito da sociedade élfica de [[Leth'valora]]. Após ser exilado por seu mentor, tornou-se mercenário, soldado e herói de inúmeras guerras humanas. Durante seus anos de isolamento encontrou [[Mira Valen]], a mulher que lhe deu um lar. Tudo foi destruído quando um misterioso dragão verde usando um colar dourado massacrou sua vila. Desde então, Vezemir dedica sua vida a encontrar a criatura, enquanto investiga os mistérios dos [[Guardiões do Véu Cinzento]], sua própria origem e a estranha magia que habita dentro dele.
+> Meio-elfo criado pelo veterano [[Elarion Valthor]], Vezemir cresceu enfrentando o preconceito da sociedade élfica de [[Leth'valora]]. Após ser exilado por seu mentor, tornou-se mercenário, soldado e herói de inúmeras guerras humanas. Durante seus anos de isolamento encontrou [[Mira Valen]], a mulher que lhe deu um lar. Tudo foi destruído quando um misterioso dragão verde usando um colar dourado massacrou sua vila. Desde então, Vezemir dedica sua vida a encontrar a criatura, enquanto investiga os mistérios dos [[Guardiões do Véu Cinzento]], sua própria origem e a estranha magia que habita dentro dele.
 
 ---
 
@@ -56,7 +56,7 @@ Para muitos, um meio-elfo representava a corrupção de uma linhagem ancestral.
 Um erro.
 Uma vergonha.
 Mas um único guerreiro se recusou a abandoná-lo.
-[[Elarion Vaelthor]].
+[[Elarion Valthor]].
 Capitão veterano das [[Sentinelas de Leth'valora]].
 Sem explicações.
 Sem pedir permissão.
@@ -110,7 +110,7 @@ Antes da despedida, Elarion entregou três relíquias:
 
 - [[Grisalma]]
 - [[Muralha de Dorn]]
-- [[O Medalhão dos Guardiões do Véu Cinzento]]
+- [[O Medalhão]]
 
 E apenas uma frase.
 

@@ -19,5 +19,5 @@ Pequena força que era responsável pela proteção da vila de [[Leth'valora]], 
 ## Estrutura
 
 - Seu destino após a destruição da vila ainda não foi definido.
-- [[Elarion Vaelthor]] foi um de seus capitães mais respeitados.
+- [[Elarion Valthor]] foi um de seus capitães mais respeitados.
 - A quantidade de sentinelas e sua relação com o futuro reino élfico permanecem em aberto.

@@ -2,7 +2,7 @@
 
 obsidianUIMode: preview  
 NoteIcon: magicitem  
-NoteStatus: New  
+NoteStatus: 
 thumbnail: zz_media/th_cassian.PNG 
 religion: "[[Igreja das Chamas]]"  
 status: Vivo  
@@ -22,6 +22,7 @@ tags:
 - antropo
 - military
 - nimalia
+- nimalis
 - earthropo
 - chapter00
 - chapter01

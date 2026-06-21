@@ -1,16 +1,20 @@
 ---
 
 obsidianUIMode: preview  
-NoteIcon: character  
-NoteStatus: Complete  
+NoteIcon: magicitem  
+NoteStatus: Active  
 thumbnail: zz_media/th_elarion.PNG  
 status: Desaparecido  
 location: "[[Leth'valora]]"  
 territory: "[[Floresta de Avenor]]"
 faction: "[[Sentinelas de Leth'valora]]"  
 class: Capitão 
-race: Elfo  
-role: npc  
+race: Meio-Elfo
+level: Desconhecido
+alignment: Neutro
+role: npc
+chapters:
+  - 00 - O Bastardo de Ferro
 tags:
 - npc  
 - character   
@@ -22,29 +26,37 @@ tags:
 
 ---
 
-# ELARION VAELTHOR
+# ELARION VALTHOR
 
-> [!NOTE|clean no-i right]+ Elarion Vaelthor  
+> [!NOTE|clean no-i right]+ Elarion Valthor  
 > ![[elarion.png|400]]
 
 ## Visão Geral
-
-**Nome:** Elarion Vaelthor  
-**Títulos:** Capitão das Sentinelas, Guardião de [[Leth'valora]]
+**Títulos:** Capitão das Sentinelas
+**Apelidos:** Guardião de [[Leth'valora]]
+**Localização Atual:** Desconhecida
+**Território:** [[Floresta de Avenor]]
 **Reputação Pública:** Herói de guerra e veterano respeitado  
-**Raça:** Elfo  
-**Classe:** Capitão
+**Gênero:** Masculino
+**Classe:** [[Guerreiro|Capitão]]
+**Raça:** Meio-Elfo
 **Idade:** Desconhecida   
-**Status:** Desaparecido  
-**Território:** [[Leth'valora]]  
+**Altura:** 2,30
+**Nível:** Desconhecido
+**Alinhamento:** Neutro
+**Status:** Desaparecido    
 **Afiliação:** [[Sentinelas de Leth'valora]]  
+**Afiliações Anteriores:** Desconhecido
 **Associados Conhecidos:** [[Vezemir]], [[General Cassian Valerius]]
+**Inimigos Conhecidos:** Desconhecido
+**Origem:** Desconhecido
+**Posses:** Nenhuma
 
 ---
 
 ## História
 
-Elarion Vaelthor foi um dos mais respeitados capitães das [[Sentinelas de Leth'valora]], veterano de guerras antigas e defensor das fronteiras élficas durante décadas.
+Elarion Valthor foi um dos mais respeitados capitães das [[Sentinelas de Leth'valora]], veterano de guerras antigas e defensor das fronteiras élficas durante décadas.
 
 Conhecido por sua disciplina rigorosa, serenidade inabalável e senso de dever, era considerado um exemplo do ideal élfico.
 
@@ -94,7 +106,7 @@ Na manhã da despedida, entregou ao jovem três relíquias:
     
 - [[Muralha de Dorn]]
     
-- Um medalhão dos [[Guardiões do Véu Cinzento]]
+- Um medalhão 
     
 
 Sem explicações.
@@ -138,21 +150,6 @@ Especialista em magia defensiva, selamentos e contenção arcana.
 
 **Treinamento de Elite:**  
 Responsável pela formação de diversos capitães e sentinelas.
-
----
-
-## Segredos
-
-- Sabia muito mais sobre a origem de [[Vezemir]] do que jamais revelou.
-    
-- Possivelmente possuía ligações com os [[Guardiões do Véu Cinzento]].
-    
-- Demonstrava preocupação incomum com a magia que habitava o jovem meio-elfo.
-    
-- Pode ter escondido documentos, artefatos ou registros em [[Leth'valora]].
-    
-- Seu desaparecimento ocorreu pouco tempo após a partida de Vezemir.
-    
 
 ---
 

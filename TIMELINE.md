@@ -64,6 +64,6 @@ Em 2100, Earthropo parece estável na superfície. Nimalia exerce influência, a
 
 - [[Vezemir]]: o Bastardo de Ferro, ligado aos Guardiões do Véu Cinzento.
 - [[Varkh Nimalis]]: alquimista e ladrão de Maré Baixa, envolvido em falsificações perigosas.
-- [[Elarion Vaelthor]]: mentor desaparecido de Vezemir.
+- [[Elarion Valthor]]: mentor desaparecido de Vezemir.
 - [[Mira Valen]]: memória central da queda pessoal de Vezemir.
 - [[General Cassian Valerius]]: autoridade militar de Nimalia e antigo aliado de Vezemir.

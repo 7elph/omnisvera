@@ -8,7 +8,7 @@ tags:
   - beastfolk
   - antropo
 cover: zz_media/t7.png
-Alignment: Lawful Good
+Alignment: Bom
 Government: Monarquia
 reputation: civilizado
 politics: Rei
@@ -16,7 +16,7 @@ leader: [[Augustus Terra Decimus]]
 region: 
   - Região Central de Earthropo
 size: Reino
-population:
+population: 750.000
 religion: 
   - Igreja das Chamas
 exports: 
@@ -32,20 +32,18 @@ imports:
 > [!NOTE|clean no-i right]+ ‎REINO DE NIMALIA
 > ![[t7.png|400]]
 
-Nimalia é o reino dos antropos apresentado até agora em Earthropo. Reúne diferentes povos beastfolks sob a autoridade de [[Augustus Terra Decimus]] e da [[Coroa de Nimalia]].
+Nimalia é o reino dos antropos em Earthropo. Reúne diferentes povos beastfolks sob a autoridade de [[Augustus Terra Decimus]] e da [[Coroa de Nimalia]].
 
-A [[Capital de Nimalia]] ainda não possui nome definitivo. É uma grande cidade de torres de pedra e mercados movimentados, onde antropos convivem com comunidades humanas, élficas, anãs e estrangeiras.
+A [[Nimalis]] é uma grande cidade de torres de pedra e mercados movimentados, onde antropos convivem com comunidades humanas, élficas, anãs e estrangeiras.
 
-Como referência inicial de cartografia, o reino ocupa as terras centrais ao redor da capital. Sua fronteira oriental ou nordeste encontra a [[Floresta de Avenor]]. As demais bordas ainda não foram traçadas.
+Como referência inicial de cartografia, o reino ocupa as terras centrais ao redor da capital. Sua fronteira oriental ou nordeste encontra a [[Floresta de Avenor]]. 
 
 ---
 
 <h2>Capital do Reino</h2>
 
-Os distritos abaixo pertencem à [[Capital de Nimalia]], cujo nome ainda está em aberto.
+Os distritos abaixo pertencem à [[Nimalis]]
 
-> [!warning] Estrutura urbana em revisão
-> Os nomes e funções dos distritos abaixo vieram de rascunhos anteriores. Eles servem como material de preparação, mas ainda não foram confirmados individualmente como cânone.
 
 #### Bairro dos Humanos
 
@@ -104,8 +102,8 @@ Lugar da cidade onde os barcos fazem sua movimentação, carga e descarga.
 <h2>Dados do Reino</h2>
 
 - **Governante:** [[Augustus Terra Decimus]]
-- **Capital:** nome em aberto
-- **População da capital:** ainda não definida
+- **Capital:**[[Nimalis]]
+- **População da capital:** [[Antropo]]
 - **Características da capital:** Biblioteca Real, Grande Templo das Chamas, Arena Divina
 
 ---

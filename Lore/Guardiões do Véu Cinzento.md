@@ -18,7 +18,7 @@ Os Guardiões do Véu Cinzento são uma ordem ancestral de protetores cuja exist
 
 ## Conexões conhecidas
 
-- [[Vezemir]] carrega um medalhão gravado com o símbolo dos Guardiões, recebido de [[Elarion Vaelthor]] antes de seu exílio.
+- [[Vezemir]] carrega um medalhão gravado com o símbolo dos Guardiões, recebido de [[Elarion Valthor]] antes de seu exílio.
 - O medalhão parece reagir à presença de artefatos dos Criadores e a fenômenos relacionados ao Véu Cinzento.
 - [[Padre Oric]] desapareceu enquanto investigava a ligação entre os Guardiões e o dragão de colar dourado.
 - Existe a suspeita de que Vezemir descenda da última linhagem dos Guardiões.

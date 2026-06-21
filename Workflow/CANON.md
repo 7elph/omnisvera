@@ -33,7 +33,7 @@ Quando uma nota entrar em conflito com este arquivo, o conflito deve ser apontad
 - **Earthropo** é o continente principal onde a campanha acontece. Não é o mundo inteiro.
 - O nome do mundo onde fica Earthropo existe, mas não será revelado ainda.
 - **Nimalia** é o reino dos beastfolks, conhecidos em Earthropo como **antropos**.
-- A [[Capital de Nimalia]] existe, mas seu nome ainda não foi definido. Esse título é apenas uma identificação provisória para a nota e para o marcador do mapa.
+- A [[Nimalis]] existe, mas seu nome ainda não foi definido. Esse título é apenas uma identificação provisória para a nota e para o marcador do mapa.
 - A [[Floresta de Avenor]] é uma grande região florestal de Earthropo.
 - A Floresta de Avenor faz fronteira com o Reino de Nimalia.
 - [[Leth'valora]] é uma pequena vila élfica situada dentro da Floresta de Avenor.
@@ -95,7 +95,7 @@ Earthropo vive uma estabilidade aparente. Coroa, religião, comércio e forças 
 ### Geografia de trabalho
 
 - O Reino de Nimalia ocupa provisoriamente a região central de Earthropo, ao redor de sua capital.
-- A grande cidade central do mapa de Earthropo representa a [[Capital de Nimalia]].
+- A grande cidade central do mapa de Earthropo representa a [[Nimalis]].
 - A Floresta de Avenor foi posicionada provisoriamente na região florestal a leste ou nordeste da capital, formando fronteira com Nimalia.
 - As ruínas de Leth'valora ficam dentro de Avenor.
 - [[Maré Baixa]] fica na zona portuária ao sul da capital.
@@ -110,14 +110,14 @@ Earthropo vive uma estabilidade aparente. Coroa, religião, comércio e forças 
 - Conhecido como **O Bastardo de Ferro**.
 - É um guerreiro de origem humana e élfica.
 - Sua ficha atual registra **nível 1**, alinhamento **Neutro**, 200 anos e 2,02 m de altura.
-- Foi criado por [[Elarion Vaelthor]] na vila de [[Leth'valora]].
+- Foi criado por [[Elarion Valthor]] na vila de [[Leth'valora]].
 - `Kaer Varyn` foi um nome anterior descartado para esse lugar e não deve ser usado no cânone atual.
 - A antiga referência à Guilda de Aventureiros foi substituída pelo [[Conclave dos Errantes]], conforme decisão dos jogadores.
-- Carrega [[Grisalma]], [[Muralha de Dorn]] e [[O Medalhão dos Guardiões do Véu Cinzento]].
+- Carrega [[Grisalma]], [[Muralha de Dorn]] e [[O Medalhão]].
 - Busca o dragão de colar dourado ligado à morte de [[Mira Valen]].
 - [[Mira Valen]] era filha do chefe de Leth'valora; Valen é o sobrenome da família da chefia local.
 - A referência visual de Mira registra 22 anos, 1,72 m, alinhamento Caótico Bom e atuação como caçadora, exploradora e mensageira.
-- A referência visual de [[Padre Oric]] registra 58 anos, origem na [[Capital de Nimalia]], classe Clérigo e ocupação de sacerdote e escriba.
+- A referência visual de [[Padre Oric]] registra 58 anos, origem na [[Nimalis]], classe Clérigo e ocupação de sacerdote e escriba.
 - Sua origem e sua magia possuem relação ainda desconhecida com os Guardiões do Véu Cinzento.
 - Os [[Guardiões do Véu Cinzento]] foram criados para esta campanha e fazem parte da lore de Omnisvera; seus detalhes ainda precisam ser desenvolvidos.
 

@@ -1,16 +1,19 @@
 ---
 
 obsidianUIMode: preview  
-NoteIcon: character  
-NoteStatus: Complete  
+NoteIcon: magicitem
+NoteStatus: Active
 thumbnail: zz_media/th_oric.PNG  
 status: Desaparecido  
 location: Desconhecida  
-territory: "[[Nimalia]]"  
-faction: Nenhum
+territory: "[[Floresta de Avenor]]"  
+faction: Desconhecido
 class: Clérigo
 race: Humano  
 role: npc  
+level: Desconhecido
+chapters:
+  - 00 - O Bastardo de Ferro
 tags:
 - npc
 - character  
@@ -28,7 +31,6 @@ tags:
 > ![[oric.png|400]]
 
 ## Visão Geral
-
 **Nome:** Padre Oric  
 **Títulos:** O Guardião dos Registros; O Peregrino
 **Reputação Pública:** Sacerdote errante e estudioso de antigas lendas  
@@ -40,7 +42,7 @@ tags:
 **Status:** Desaparecido  
 **Território:** [[Nimalia]] e regiões vizinhas  
 **Associados Conhecidos:** [[Vezemir]], [[Guardiões do Véu Cinzento]]
-**Origem:** [[Capital de Nimalia]]
+**Origem:** [[Nimalis]]
 **Ocupação:** Sacerdote e escriba
 **Símbolo:** Círculo da Verdade
 
@@ -48,7 +50,7 @@ tags:
 
 ## História
 
-Padre Oric nasceu na [[Capital de Nimalia]] e tornou-se sacerdote, escriba e guardião de registros. Mais tarde passou a viajar por reinos, ruínas e templos esquecidos em busca de conhecimento sobre antigas ordens e poderes perdidos.
+Padre Oric nasceu na [[Nimalis]] e tornou-se sacerdote, escriba e guardião de registros. Mais tarde passou a viajar por reinos, ruínas e templos esquecidos em busca de conhecimento sobre antigas ordens e poderes perdidos.
 Durante uma de suas jornadas conheceu [[Vezemir]], então um mercenário em ascensão.
 Enquanto outros enxergavam apenas um guerreiro, Oric percebeu algo diferente.
 Segundo ele, a magia de Vezemir não parecia fluir naturalmente.
