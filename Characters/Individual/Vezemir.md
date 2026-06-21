@@ -7,7 +7,7 @@ status: Vivo
 location: "[[Floresta de Avenor]]"
 territory: "[[Floresta de Avenor]]"
 faction: "[[Conclave dos Errantes]]"
-class: Homem de Armas
+class: Guerreiro
 race: Meio-Elfo
 level: 1
 alignment: Neutro
@@ -38,7 +38,7 @@ tags:
 **Território:** [[Floresta de Avenor]]
 **Reputação Pública:** Guerreiro lendário, reservado e intimidador
 **Gênero:** Masculino
-**Classe:** [[Guerreiro|Homem de Armas]]
+**Classe:** [[Guerreiro]]
 **Raça:** Meio Humano / Meio Elfo
 **Idade:** 200 anos
 **Altura:** 2,02 m
