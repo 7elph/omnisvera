@@ -1,4 +1,16 @@
-# CHECKLIST MESTRE — CONSOLIDAÇÃO DO VAULT
+---
+obsidianUIMode: preview
+NoteIcon: outline
+NoteStatus: Active
+status: Confirmado
+visibility: gm
+tags:
+  - workflow
+  - consolidation
+  - decisions
+---
+
+# CHECKLIST MESTRE — DECISÕES DA CONSOLIDAÇÃO
 
 > [!important] Como preencher
 > - Marque **uma opção** em cada decisão.
@@ -915,4 +927,3 @@ Preencha somente depois das demais seções:
 Instruções finais:
 
 > 
-

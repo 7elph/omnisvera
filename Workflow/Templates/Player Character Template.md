@@ -1,50 +1,99 @@
 ---
 obsidianUIMode: preview
 NoteIcon: magicitem
-NoteStatus: New
+NoteStatus: Draft
 thumbnail:
-status:
+cover:
+status: Vivo
+visibility: gm
 location:
 territory:
 faction:
+religion:
 class:
 race:
 level: 1
 alignment:
 role: player
 chapters: []
+forca:
+destreza:
+constituicao:
+inteligencia:
+sabedoria:
+carisma:
+classe_armadura:
+pontos_vida:
+bonus_ataque:
+jogada_protecao:
+movimento:
 tags:
   - template
-  - player-template
+  - character
+  - player
 ---
 
 # NOME — TÍTULO
 
 > [!NOTE|clean no-i right]+ Nome
-> Adicionar o retrato principal.
+> Adicionar o retrato principal quando estiver disponível.
 
+## Atributos
+
+> [!info] Valores reutilizáveis
+> Os números abaixo vêm do frontmatter. Outras notas podem consultá-los com Dataview, por exemplo: `` `= [[Vezemir]].forca` ``.
+
+| FOR | DES | CON | INT | SAB | CAR |
+|:--:|:--:|:--:|:--:|:--:|:--:|
+| `= this.forca` | `= this.destreza` | `= this.constituicao` | `= this.inteligencia` | `= this.sabedoria` | `= this.carisma` |
+
+| Combate | Valor |
+|:--|--:|
+| Classe de Armadura | `= this.classe_armadura` |
+| Pontos de Vida | `= this.pontos_vida` |
+| Bônus de Ataque | `= this.bonus_ataque` |
+| Jogada de Proteção | `= this.jogada_protecao` |
+| Movimento | `= this.movimento` |
 
 ## Visão Geral
-**Títulos:**
-**Apelido:**
-**Localização Atual:**
-**Território:**
-**Reputação Pública:**
-**Gênero:**
-**Classe:**
-**Raça:**
-**Idade:**
-**Altura:**
-**Nível:** 1
-**Alinhamento:**
-**Status:**
-**Afiliação:**
-**Afiliações Anteriores:**
-**Associados Conhecidos:**
-**Inimigos Conhecidos:**
-**Origem:**
-**Posses:**
 
+**Títulos:**
+
+**Apelido:**
+
+**Localização Atual:**
+
+**Território:**
+
+**Reputação Pública:**
+
+**Gênero:**
+
+**Classe:**
+
+**Raça:**
+
+**Idade:**
+
+**Altura:**
+
+**Nível:** 1
+
+**Alinhamento:**
+
+**Status:**
+
+**Afiliação:**
+
+**Afiliações Anteriores:**
+
+**Associados Conhecidos:**
+
+**Inimigos Conhecidos:**
+
+**Origem:**
+
+**Posses:**
 
 ---
 
@@ -74,7 +123,7 @@ Registrar a situação no início da campanha.
 
 > [!infobox]
 >
-> Adicionar o thumbnail.
+> Adicionar o thumbnail quando estiver disponível.
 
 **Virtudes:**
 
@@ -95,7 +144,8 @@ Descrição.
 
 ## Segredos
 
-- _Adicionar segredo ou questão deliberadamente em aberto._
+> [!gm]- Segredos do mestre
+> - Adicionar segredo ou questão deliberadamente em aberto.
 
 ---
 
@@ -117,11 +167,6 @@ Descrever características físicas, roupas, postura e elementos reconhecíveis.
 
 Adicionar uma consulta DataCards somente quando existirem notas de itens vinculadas ao personagem.
 
-## Ficha Mecânica — Nível 1
-
-> [!warning] Em revisão
-> Não preencher números sem uma fonte confirmada.
-
 ### Armas e carga
 
 - _Adicionar._
@@ -133,3 +178,14 @@ Adicionar uma consulta DataCards somente quando existirem notas de itens vincula
 ### Habilidades especiais
 
 - _Adicionar apenas regras confirmadas ou marcar como autorais pendentes._
+
+---
+
+## Capítulos
+
+```dataview
+TABLE date, description
+FROM #story
+WHERE contains(characters, this.file.link)
+SORT file.name ASC
+```
