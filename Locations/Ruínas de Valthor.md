@@ -20,3 +20,7 @@ Ruínas localizadas no sudeste de Earthropo.
 Sob suas estruturas encontram-se cavernas abissais ligadas ao renascimento de [[Raziel]] e ao encontro com o Ancião Primordial.
 
 A civilização que construiu Valthor, sua relação com os [[Campos de Earthropo]] e sua posição política antes da ruína ainda precisam ser definidas.
+
+## Posição no mapa
+
+Valthor possui um marcador aproximado no [[MAPA DE EARTHROPO]], sobre um complexo em ruínas no sudeste. O ponto confirma apenas a região geral; não define fronteiras, estradas ou domínio político.

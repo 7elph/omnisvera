@@ -28,6 +28,8 @@ tags:
 
 O nome da [[Capital de Nimalia]] ainda não foi definido. Este mapa representa a cidade capital, não todo o território do reino.
 
+> [!warning] Rótulo provisório na arte
+> A palavra **Nimalia** impressa na imagem é um título antigo de trabalho. No cânone atual, Nimalia é o reino; a cidade representada ainda não possui nome próprio.
 
 ```leaflet
 id: nimalia-capital-map
@@ -53,6 +55,8 @@ marker: Location, 42, 99, [[Maré Baixa]]
 ## Marcadores
 
 [[Maré Baixa]] foi posicionada provisoriamente na zona portuária ao sul da capital. Clique com o botão direito no mapa para criar outros marcadores e vinculá-los às notas correspondentes.
+
+Os dois marcadores manuais sem link preservados pelo plugin continuam sem identificação e não constituem cânone.
 
 ## HELP:
 Hold ALT + click & drag to measure the distance between one area and the next.

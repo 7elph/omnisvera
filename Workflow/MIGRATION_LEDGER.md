@@ -72,7 +72,9 @@ Este documento controla a retirada de Disgraceland do conteúdo ativo sem perder
 - [x] Validação técnica de Dataview, DataCards, frontmatter e Leaflet — registrada em `Workflow/Runtime Audit Report.md`.
 - [x] Mapas Leaflet — IDs, imagens e links ativos validados; estado persistido de Tribucia isolado dos mapas ativos.
 - [x] Arquivo de legado — notas narrativas antigas agrupadas em `Workflow/Legacy/`.
-- [ ] Revisar posições e nomes dos marcadores conforme a geografia canônica for definida.
+- [x] Geografia inicial — relações confirmadas, posições provisórias e lugares sem cânone classificados em `Workflow/GEOGRAPHY.md`.
+- [x] Marcadores iniciais — Nimalia, capital, Avenor, Leth'valora, Maré Baixa e Valthor registrados; Gharok permanece deliberadamente sem marcador.
+- [ ] Refinar fronteiras e posições quando novas decisões geográficas forem aprovadas.
 
 ## Placeholders deliberados
 

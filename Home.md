@@ -100,6 +100,7 @@ Nimalia é o primeiro horizonte das **Crônicas de Earthropo**: um ponto de part
 > [!note]+ TERRITÓRIOS
 > ```datacards
 > TABLE cover, region, leader, population FROM #territory
+> WHERE NoteStatus != "Placeholder"
 > SORT name DESC
 > 
 > // Settings
@@ -112,6 +113,7 @@ Nimalia é o primeiro horizonte das **Crônicas de Earthropo**: um ponto de part
 > [!note]- LOCALIZAÇÕES
 > ```datacards
 > TABLE cover, territory, info FROM #location
+> WHERE NoteStatus != "Placeholder"
 > SORT rating ASC
 > 
 > // Settings

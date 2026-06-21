@@ -31,3 +31,5 @@ Fortaleza ligada ao Clã Sanguinallis, onde [[Raziel]] serviu como executor de L
 - Relação com as montanhas e o futuro reino anão.
 - Estado atual da fortaleza após mais de trezentos anos.
 - Natureza política do domínio: fortaleza isolada, área vampírica ou reino.
+
+Gharok não possui marcador no mapa ativo. A faixa montanhosa ao norte ou nordeste é apenas uma possibilidade de trabalho, não uma localização aprovada.

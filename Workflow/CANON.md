@@ -184,9 +184,10 @@ Ao decidir qual informação prevalece, usar esta ordem:
 1. decisão explícita mais recente do autor;
 2. este documento;
 3. notas consolidadas dos três personagens;
-4. `EARTHROPO/EARTHROPO.md`, `TIMELINE.md` e `Workflow/OUTLINES.md`;
-5. demais notas de Omnisvera;
-6. conteúdo de Disgraceland, apenas como fonte de template.
+4. `Workflow/GEOGRAPHY.md`, para a implementação cartográfica dos fatos geográficos confirmados;
+5. `EARTHROPO/EARTHROPO.md`, `TIMELINE.md` e `Workflow/OUTLINES.md`;
+6. demais notas de Omnisvera;
+7. conteúdo de Disgraceland, apenas como fonte de template.
 
 Para decisões mecânicas, usar a hierarquia específica de [[Workflow/RULES_SOURCES|Fontes de Regras da Campanha]].
 

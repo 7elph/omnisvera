@@ -53,10 +53,10 @@ Este arquivo é a memória operacional compartilhada entre Codex e a IA local. E
 
 ## Próxima sequência
 
-1. Revisar o calendário de trabalho e decidir quais nomes e feriados entram no cânone.
-2. Revisar conteúdo de trabalho por pasta, começando por geografia e regiões.
-3. Consolidar fronteiras, capital e marcadores do mapa sem antecipar descobertas dos jogadores.
-4. Revisar as histórias dos três personagens em busca de nomes, lugares e datas inconsistentes.
+1. Revisar as histórias dos três personagens em busca de nomes, lugares e datas inconsistentes.
+2. Começar por Raziel, porque Gharok, Campos de Earthropo e sua rota de vingança ainda afetam a geografia.
+3. Revisar o calendário de trabalho e decidir quais nomes e feriados entram no cânone.
+4. Consolidar facções e religiões somente depois das histórias dos personagens.
 5. Registrar cada decisão aprovada em [[CANON]] antes de fazer correções em massa.
 
 ## Última atualização
@@ -73,3 +73,5 @@ Este arquivo é a memória operacional compartilhada entre Codex e a IA local. E
 - As notas narrativas antigas foram agrupadas em `Workflow/Legacy/`; configurações reutilizáveis permanecem em `Workflow/Templates/`.
 - O Calendarium ativo usa um rascunho de Omnisvera no ano 2100; a configuração original de Tribucia foi preservada como template.
 - O snippet ativo de perfil chama-se `omnisvera-profile`; a classe antiga continua disponível apenas como compatibilidade.
+- A geografia consolidada está registrada em [[GEOGRAPHY]]; Valthor possui marcador aproximado no sudeste e Gharok permanece sem posição.
+- Bosque Sussurrante e Vale Dourado continuam fora do mapa por não terem existência confirmada.

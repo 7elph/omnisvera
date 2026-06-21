@@ -19,7 +19,7 @@ Esta auditoria cobre integrações que não são verificadas apenas pela valida�
 
 ## Resultado
 
-- **Notas ativas:** 83.
+- **Notas ativas:** 84.
 - **Blocos DataCards:** 16.
 - **Blocos Dataview:** 12.
 - **Blocos DataviewJS:** 2.
@@ -32,7 +32,7 @@ Esta auditoria cobre integrações que não são verificadas apenas pela valida�
 
 As consultas centrais possuem fontes com resultados:
 
-- Home: 8 notas `#home`, 2 histórias, 10 personagens, 5 territórios, 6 localizações, 7 raças e 5 classes ativas.
+- Home: 8 notas `#home`, 2 histórias, 10 personagens, 2 territórios visíveis, 5 localizações visíveis, 7 raças e 5 classes ativas.
 - Capítulos: 3 notas `#chapter`.
 - Itens de Vezemir: 4 notas.
 - Lore: 5 notas.
@@ -59,10 +59,12 @@ Essas consultas pertencem a notas em desenvolvimento. Avisos foram adicionados �
 
 | Mapa | ID | Imagem | Marcadores no Markdown |
 |:--|:--|:--|--:|
-| [[MAPA DE EARTHROPO]] | `earthropo-map` | `zz_media/earthropo.png` | 4 |
+| [[MAPA DE EARTHROPO]] | `earthropo-map` | `zz_media/earthropo.png` | 5 |
 | [[MAPA DE NIMALIA]] | `nimalia-capital-map` | `zz_media/nimalia.png` | 1 |
 
-Todos os cinco marcadores declarados no Markdown apontam para notas existentes.
+Todos os seis marcadores declarados no Markdown apontam para notas existentes.
+
+O novo marcador de [[Ruínas de Valthor]] registra apenas a posição geral confirmada no sudeste. [[Fortaleza de Gharok]], [[Campos de Earthropo]], [[Bosque Sussurrante]] e [[Vale Dourado]] permanecem sem marcador.
 
 O mapa da capital também conserva dois marcadores manuais ainda sem link. Eles não foram removidos nem convertidos.
 

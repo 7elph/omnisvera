@@ -26,6 +26,7 @@ Ponto de entrada para preparação, decisões de continuidade e material ainda e
 
 - [[LATEST_NEWS|Rumores e Descobertas]]
 - [[EARTHROPO]]
+- [[Workflow/GEOGRAPHY|Registro Geográfico de Earthropo]]
 - [[TIMELINE]]
 - [[LORE]]
 - [[RELIGION|Religiões de Earthropo]]

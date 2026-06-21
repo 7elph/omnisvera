@@ -98,6 +98,19 @@ def source_candidates(source: str, notes: list[dict]) -> list[dict]:
     return candidates
 
 
+def apply_supported_where_filters(body: str, notes: list[dict]) -> list[dict]:
+    if re.search(
+        r'(?im)^\s*WHERE\s+NoteStatus\s*!=\s*["\']Placeholder["\']\s*$',
+        body,
+    ):
+        notes = [
+            note
+            for note in notes
+            if note["frontmatter"].get("NoteStatus") != "Placeholder"
+        ]
+    return notes
+
+
 def audit_queries(notes: list[dict]) -> dict:
     queries = []
     counts = Counter()
@@ -111,6 +124,7 @@ def audit_queries(notes: list[dict]) -> dict:
             source_match = re.search(r"(?im)\bFROM\s+(.+?)\s*$", body)
             source = source_match.group(1).strip() if source_match else None
             candidates = source_candidates(source, notes) if source else []
+            candidates = apply_supported_where_filters(body, candidates)
             line = note["text"].count("\n", 0, match.start()) + 1
             queries.append(
                 {

@@ -32,7 +32,7 @@ imports:
 > [!NOTE|clean no-i right]+ ‎REINO DE NIMALIA
 > ![[t7.png|400]]
 
-O principal reino dos antropos em Earthropo. Nimalia reúne diferentes povos beastfolks sob a autoridade de [[Augustus Terra Decimus]] e da [[Coroa de Nimalia]].
+Nimalia é o reino dos antropos apresentado até agora em Earthropo. Reúne diferentes povos beastfolks sob a autoridade de [[Augustus Terra Decimus]] e da [[Coroa de Nimalia]].
 
 A [[Capital de Nimalia]] ainda não possui nome definitivo. É uma grande cidade de torres de pedra e mercados movimentados, onde antropos convivem com comunidades humanas, élficas, anãs e estrangeiras.
 
@@ -43,6 +43,9 @@ Como referência inicial de cartografia, o reino ocupa as terras centrais ao red
 <h2>Capital do Reino</h2>
 
 Os distritos abaixo pertencem à [[Capital de Nimalia]], cujo nome ainda está em aberto.
+
+> [!warning] Estrutura urbana em revisão
+> Os nomes e funções dos distritos abaixo vieram de rascunhos anteriores. Eles servem como material de preparação, mas ainda não foram confirmados individualmente como cânone.
 
 #### Bairro dos Humanos
 

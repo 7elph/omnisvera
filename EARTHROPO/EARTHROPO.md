@@ -30,6 +30,7 @@ tags:
 - **Continente Principal:** [[MAPA DE EARTHROPO|Earthropo]]
 - **Reino dos Antropos:** [[Nimalia]]
 - **Capital de Nimalia:** [[Capital de Nimalia|nome em aberto]]
+- **Registro Geográfico:** [[Workflow/GEOGRAPHY|Geografia de Earthropo]]
 - **Campanha Atual:** Crônicas de Earthropo
 - **Sistema:** Old Dragon 2E
 
