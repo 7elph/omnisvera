@@ -25,6 +25,6 @@ tags:
 
 # Kaelen
 
-Conhecido como **o Flagelo**, Kaelen fazia parte do grupo que traiu [[Raziel]].
+Conhecido como **o Flagelo**, Kaelen fazia parte do grupo que traiu [[Characters/Individual/Players/Raziel]].
 
 Sua ligação atual com os [[Campos de Earthropo]] e as [[Ruínas de Valthor]] é uma direção de preparação, não um encontro confirmado.

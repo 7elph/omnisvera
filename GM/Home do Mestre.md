@@ -41,7 +41,7 @@ tags:
 - **Data inicial:** 3 de Ventara de 2377.
 - **Nível inicial:** 1.
 - **Ponto de encontro:** [[Nimalis]].
-- **Personagens:** [[Vezemir]], [[Varkh Nimalis]] e [[Raziel]].
+- **Personagens:** [[Players/Characters/Vezemir]], [[Players/Characters/Varkh Nimalis]] e [[Players/Characters/Raziel]].
 - **Tom:** exploração, mistério, ruínas e horror ocasional; política como pano de fundo.
 
 ## Preparação imediata

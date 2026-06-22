@@ -19,13 +19,12 @@ tags:
   - character
   - npc
   - elf
-  - vezemir
   - placeholder
 ---
 
 # Theron Elensar
 
-Elfo relacionado a um incidente decisivo da juventude de [[Vezemir]].
+Elfo relacionado a um incidente decisivo da juventude de [[Characters/Individual/Players/Vezemir]].
 
 ## Informações confirmadas
 

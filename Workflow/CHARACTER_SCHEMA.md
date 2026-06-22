@@ -82,9 +82,9 @@ As fichas usam uma tabela no início da nota e podem ser vinculadas diretamente 
 
 | Personagem | Classe | Situação mecânica |
 |:--|:--|:--|
-| [[Vezemir]] | Guerreiro | Atributos transcritos; poderes autorais em teste. |
-| [[Varkh Nimalis]] | Alquimista | Atributos da Ficha do Jão; classe em adaptação. |
-| [[Raziel]] | Ladrão / Assassino | Atributos ainda não fornecidos; vampiro e hemomante pendentes. |
+| [[Players/Characters/Vezemir]] | Guerreiro | Atributos transcritos; poderes autorais em teste. |
+| [[Players/Characters/Varkh Nimalis]] | Alquimista | Atributos da Ficha do Jão; classe em adaptação. |
+| [[Players/Characters/Raziel]] | Ladrão / Assassino | Atributos ainda não fornecidos; vampiro e hemomante pendentes. |
 
 ## Regra de segurança
 

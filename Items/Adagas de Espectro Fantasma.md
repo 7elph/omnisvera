@@ -7,7 +7,7 @@ visibility: gm
 thumbnail:
 cover:
 item_type: Relíquia
-owner: "[[Raziel]]"
+owner: "[[Players/Characters/Raziel]]"
 origin: "[[Clã Sanguinallis]]"
 source: História de Raziel
 tags:
@@ -19,7 +19,7 @@ tags:
 
 # Adagas de Espectro Fantasma
 
-Par de lâminas de arremesso etéreas pertencentes a [[Raziel]] desde o período em que servia como executor do Clã Sanguinallis.
+Par de lâminas de arremesso etéreas pertencentes a [[Players/Characters/Raziel]] desde o período em que servia como executor do Clã Sanguinallis.
 
 ## Propriedades conhecidas
 

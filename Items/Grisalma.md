@@ -7,7 +7,7 @@ cover: zz_media/grisalma.png
 status: Ativo
 visibility: gm
 item_type: Artefato
-owner: "[[Vezemir]]"
+owner: "[[Players/Characters/Vezemir]]"
 origin: "[[Leth'valora]]"
 source: Referência visual e ficha de Vezemir
 tags:
@@ -30,7 +30,7 @@ tags:
 
 - **Tipo:** machado de batalha de duas mãos.
 - **Categoria:** arma marcial e relíquia única.
-- **Portador:** [[Vezemir]].
+- **Portador:** [[Players/Characters/Vezemir]].
 - **Requisito indicado na referência visual:** Força 13 ou mais.
 - **Peso indicado:** 14 kg.
 - **Origem canônica:** entregue por [[Elarion Valthor]] em [[Leth'valora]].

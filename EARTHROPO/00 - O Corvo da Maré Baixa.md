@@ -12,9 +12,9 @@ tags:
 NoteStatus: Active
 status: História de personagem
 visibility: gm
-character: "[[Varkh Nimalis]]"
+character: "[[Players/Characters/Varkh Nimalis]]"
 characters:
-  - "[[Varkh Nimalis]]"
+  - "[[Players/Characters/Varkh Nimalis]]"
   - "[[Mestre Odran Veyl]]"
 cover: "[[zz_media/varkh.jpeg]]"
 description: A história de Varkh Nimalis, o Corvo da Maré Baixa, desde sua infância nos becos portuários da capital do Reino de Nimalia até seu aprendizado como alquimista de rua e a descoberta de que alguém está usando o nome de seu mestre para espalhar remédios falsos pelo reino.
@@ -26,7 +26,7 @@ description: A história de Varkh Nimalis, o Corvo da Maré Baixa, desde sua inf
 
 ## O Corvo da Maré Baixa
 
-Nascido no extremo sul da capital do Reino de Nimalia, em uma favela espremida entre muros antigos e o cheiro salgado do porto, [[Varkh Nimalis]] aprendeu cedo que tudo tinha valor — até aquilo que os outros jogavam fora. Kenku, ladrão, alquimista e, ocasionalmente, assassino, sua história é feita de vozes roubadas, frascos quebrados e uma dívida de honra com o velho abutre que lhe ensinou a transformar problema em saída.
+Nascido no extremo sul da capital do Reino de Nimalia, em uma favela espremida entre muros antigos e o cheiro salgado do porto, [[Players/Characters/Varkh Nimalis]] aprendeu cedo que tudo tinha valor — até aquilo que os outros jogavam fora. Kenku, ladrão, alquimista e, ocasionalmente, assassino, sua história é feita de vozes roubadas, frascos quebrados e uma dívida de honra com o velho abutre que lhe ensinou a transformar problema em saída.
 
 ## Personagens Importantes
 ```datacards

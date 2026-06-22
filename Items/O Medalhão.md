@@ -7,7 +7,7 @@ cover: zz_media/med.PNG
 status: Ativo
 visibility: gm
 item_type: Artefato
-owner: "[[Vezemir]]"
+owner: "[[Players/Characters/Vezemir]]"
 origin: "[[Elarion Valthor]]"
 source: Lore de Vezemir
 tags:
@@ -32,7 +32,7 @@ O metal permanece frio mesmo próximo ao fogo. Marcas, runas e pequenas irregula
 ## Identificação
 
 - **Tipo:** amuleto e símbolo de ordem.
-- **Portador:** [[Vezemir]].
+- **Portador:** [[Players/Characters/Vezemir]].
 - **Origem:** entregue por [[Elarion Valthor]].
 - **Vínculo:** [[Guardiões do Véu Cinzento]].
 - **Função conhecida:** nenhuma confirmada.

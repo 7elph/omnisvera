@@ -27,4 +27,4 @@ Associação de casas comerciais, caravanas, armadores e intermediários com sed
 
 ## Limites do cânone
 
-Liderança, monopólios e disputas internas ainda não foram definidos. [[Varkh Nimalis]] não possui vínculo automático com esta guilda.
+Liderança, monopólios e disputas internas ainda não foram definidos. [[Players/Characters/Varkh Nimalis]] não possui vínculo automático com esta guilda.

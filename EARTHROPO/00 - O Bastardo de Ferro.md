@@ -16,9 +16,9 @@ cover: "[[zz_media/vezemir.png]]"
 NoteStatus: Active
 status: História de personagem
 visibility: gm
-character: "[[Vezemir]]"
+character: "[[Players/Characters/Vezemir]]"
 characters:
-  - "[[Vezemir]]"
+  - "[[Players/Characters/Vezemir]]"
   - "[[Elarion Valthor]]"
   - "[[Mira Valen]]"
   - "[[Padre Oric]]"
@@ -32,7 +32,7 @@ description: A história de Vezemir, o Bastardo de Ferro, desde sua infância en
 
 ## O Bastardo de Ferro
 
-Nascido entre dois mundos, rejeitado por ambos e moldado pela guerra, [[Vezemir]] tornou-se uma figura temida e respeitada de Earthropo.
+Nascido entre dois mundos, rejeitado por ambos e moldado pela guerra, [[Players/Characters/Vezemir]] tornou-se uma figura temida e respeitada de Earthropo.
 Sua história atravessa mais de um século de batalhas, perdas e segredos antigos que remontam aos esquecidos [[Guardiões do Véu Cinzento]].
 
 ## Personagens Importantes

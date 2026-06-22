@@ -34,9 +34,9 @@ tags:
 
 ## Personagens
 
-- [[Vezemir]]: Guerreiro, Neutro-Bom.
-- [[Varkh Nimalis]]: Alquimista, Neutro, membro do Conclave.
-- [[Raziel]]: Ladrão com especialização Assassino; vampiro e hemomante autorais.
+- [[Players/Characters/Vezemir]]: Guerreiro, Neutro-Bom.
+- [[Players/Characters/Varkh Nimalis]]: Alquimista, Neutro, membro do Conclave.
+- [[Players/Characters/Raziel]]: Ladrão com especialização Assassino; vampiro e hemomante autorais.
 
 ## Regras de trabalho
 

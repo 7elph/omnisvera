@@ -12,14 +12,15 @@ tags:
 NoteStatus: Active
 status: História de personagem
 visibility: gm
-character: "[[Raziel]]"
+character: "[[Players/Characters/Raziel]]"
 characters:
-  - "[[Raziel]]"
+  - "[[Players/Characters/Raziel]]"
   - "[[Lorde Malakar]]"
   - "[[Kaelen]]"
   - "[[Vandor]]"
   - "[[Ancião Primordial]]"
-cover: [[zz_media/raziel.png]]
+cover:
+  - - zz_media/raziel.png
 description: A história de Raziel, o Espectro da Névoa de Sangue — desde seu auge como executor do Clã Sanguinallis na Fortaleza de Gharok até a traição que o aprisionou por trezentos anos e seu renascimento nas cavernas abissais sob as Ruínas de Valthor.
 ---
 
@@ -29,7 +30,7 @@ description: A história de Raziel, o Espectro da Névoa de Sangue — desde seu
 
 ## O Retorno de Raziel
 
-Ápice do Clã Sanguinallis, executor pessoal de [[Lorde Malakar]] e mestre das [[Adagas de Espectro Fantasma]], [[Raziel]] movia-se onde a luz não ousava tocar. Traído por seus próprios irmãos e por seu senhor, foi condenado ao tormento eterno em um poço de prata nos picos congelados ao norte de Nimalia. Trezentos anos depois, uma entidade primordial nas profundezas das [[Ruínas de Valthor]] o reconstruiu. Agora ele volta — não como assassino, mas como calamidade.
+Ápice do Clã Sanguinallis, executor pessoal de [[Lorde Malakar]] e mestre das [[Adagas de Espectro Fantasma]], [[Players/Characters/Raziel]] movia-se onde a luz não ousava tocar. Traído por seus próprios irmãos e por seu senhor, foi condenado ao tormento eterno em um poço de prata nos picos congelados ao norte de Nimalia. Trezentos anos depois, uma entidade primordial nas profundezas das [[Ruínas de Valthor]] o reconstruiu. Agora ele volta — não como assassino, mas como calamidade.
 
 ## Personagens Importantes
 ```datacards

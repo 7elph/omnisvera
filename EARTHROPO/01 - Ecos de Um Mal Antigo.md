@@ -7,9 +7,9 @@ visibility: gm
 cover:
 date: 2377-07-03
 characters:
-  - "[[Vezemir]]"
-  - "[[Varkh Nimalis]]"
-  - "[[Raziel]]"
+  - "[[Players/Characters/Vezemir]]"
+  - "[[Players/Characters/Varkh Nimalis]]"
+  - "[[Players/Characters/Raziel]]"
 locations:
   - "[[Nimalis]]"
 factions:
@@ -35,9 +35,9 @@ Em [[Nimalis]], Vezemir e Varkh aceitam ou são levados a investigar um caso que
 
 ## Pontos já sustentados pelo vault
 
-- [[Vezemir]] busca o dragão de colar dourado e respostas sobre os [[Guardiões do Véu Cinzento]].
-- [[Varkh Nimalis]] investiga remédios falsos ligados aos métodos de Mestre Odran Veyl.
-- [[Raziel]] despertou após mais de trezentos anos e procura os responsáveis por sua traição.
+- [[Players/Characters/Vezemir]] busca o dragão de colar dourado e respostas sobre os [[Guardiões do Véu Cinzento]].
+- [[Players/Characters/Varkh Nimalis]] investiga remédios falsos ligados aos métodos de Mestre Odran Veyl.
+- [[Players/Characters/Raziel]] despertou após mais de trezentos anos e procura os responsáveis por sua traição.
 - Os três se encontram em Nimalis.
 
 ## Estrutura de preparação

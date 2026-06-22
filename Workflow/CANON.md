@@ -54,7 +54,7 @@ Este é o registro central de continuidade. A decisão explícita mais recente d
 
 ## Personagens jogadores
 
-### [[Vezemir]]
+### [[Players/Characters/Vezemir]]
 
 - Meio-elfo, Guerreiro, nível 1 e alinhamento Neutro-Bom.
 - Foi criado em Leth'valora por [[Elarion Valthor]].
@@ -68,7 +68,7 @@ Este é o registro central de continuidade. A decisão explícita mais recente d
 - As datas confirmadas colocam seu nascimento em 1900. Na abertura da campanha, sua idade cronológica é de aproximadamente 477 anos.
 - [[Força Arcana]] e [[Velocidade]] estão disponíveis no nível 1, mas sua redação mecânica precisa ser equilibrada para Old Dragon 2.
 
-### [[Varkh Nimalis]]
+### [[Players/Characters/Varkh Nimalis]]
 
 - Kenku, 35 anos, 1,70 m, alinhamento Neutro.
 - É um **Alquimista** de nível 1; Alquimista será tratado como classe independente.
@@ -77,7 +77,7 @@ Este é o registro central de continuidade. A decisão explícita mais recente d
 - A ficha conhecida como “Ficha do Jão” pertence a Varkh e deve ser reconciliada com sua classe atual.
 - A identidade de quem falsifica os remédios permanece um mistério.
 
-### [[Raziel]]
+### [[Players/Characters/Raziel]]
 
 - A versão atual como Ladrão substitui integralmente a antiga versão de mago.
 - Assassino será uma especialização de Ladrão.

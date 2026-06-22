@@ -48,7 +48,7 @@ tags:
 **Status:** Falecida  
 **Afiliação:** [[Sentinelas de Leth'valora]]
 **Família:** Filha do chefe de [[Leth'valora]], morto no mesmo ataque
-**Associados Conhecidos:** [[Vezemir]], moradores da vila
+**Associados Conhecidos:** [[Characters/Individual/Players/Vezemir]], moradores da vila
 **Ocupação:** Exploradora, mensageira, caçadora e rastreadora
 
 ---
@@ -57,7 +57,7 @@ tags:
 
 Mira Valen era uma caçadora e rastreadora de [[Leth'valora]], uma pequena vila élfica da [[Floresta de Avenor]]. Era filha do chefe humano da vila, e o sobrenome Valen identificava sua família dentro da comunidade. Seu pai também morreu durante a destruição de Leth'valora.
 
-Foi ela quem encontrou [[Vezemir]] durante seus anos de isolamento nas florestas. Inicialmente acreditando estar observando um urso, descobriu que se tratava de um guerreiro solitário que havia abandonado o mundo.
+Foi ela quem encontrou [[Characters/Individual/Players/Vezemir]] durante seus anos de isolamento nas florestas. Inicialmente acreditando estar observando um urso, descobriu que se tratava de um guerreiro solitário que havia abandonado o mundo.
 Ao contrário de muitos, Mira nunca enxergou Vezemir como um monstro ou uma ameaça.
 Com o tempo, tornou-se sua amiga, companheira e a pessoa mais importante de sua vida.
 Foi graças a ela que Vezemir encontrou um lar entre os habitantes de Leth'valora.
@@ -102,7 +102,7 @@ Percorria trilhas entre a vila e regiões vizinhas, transportando notícias, enc
 
 ## Legado
 
-Mesmo após sua morte, Mira continua presente na vida de [[Vezemir]].
+Mesmo após sua morte, Mira continua presente na vida de [[Characters/Individual/Players/Vezemir]].
 
 Seu nome é lembrado pelos poucos sobreviventes da região e sua memória é a única razão pela qual o Bastardo de Ferro ainda luta para não se tornar consumido pelo ódio.
 

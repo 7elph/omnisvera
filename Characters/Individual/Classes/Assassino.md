@@ -17,7 +17,7 @@ tags:
 
 # Assassino
 
-Assassino é a especialização adotada para [[Raziel]], usando [[Ladrão]] como classe-base.
+Assassino é a especialização adotada para [[Players/Characters/Raziel]], usando [[Ladrão]] como classe-base.
 
 ## Uso na campanha
 

@@ -55,7 +55,7 @@ O PDF oficial do Livro I não foi localizado entre os arquivos de `Downloads`. A
 | `Tomo de Magia Divina - OD2.pdf` | Adaptação de fã de Rangel Perez Sardinha para OD2 | **Opcional e não adotado.** |
 | Aventuras de Tio Nitro, fichas de personagens de 2013 e materiais semelhantes | Aventuras e personagens preparados para a edição anterior | Inspiração, encontros e estrutura; não são regra-base. |
 | `Vezemir.pdf` | Ficha recebida do jogador, preenchida sobre um modelo da edição anterior | Registro do personagem. Valores preservados até revisão em mesa. |
-| `Ficha do Jão.pdf` | Ficha recebida sobre modelo da edição anterior | Registro confirmado de [[Varkh Nimalis]]; os atributos foram transcritos, mas a classe foi substituída por Alquimista. |
+| `Ficha do Jão.pdf` | Ficha recebida sobre modelo da edição anterior | Registro confirmado de [[Players/Characters/Varkh Nimalis]]; os atributos foram transcritos, mas a classe foi substituída por Alquimista. |
 
 ## Impacto nas notas atuais
 
@@ -74,11 +74,11 @@ Os dois poderes foram confirmados no nível 1 e registrados como poderes autorai
 
 ### Varkh
 
-[[Varkh Nimalis]] usa a classe independente [[Alquimista]]. A “Ficha do Jão” pertence ao personagem e preserva seus atributos, equipamentos e traços kenku; a classe Homem de Armas nela impressa deixou de valer.
+[[Players/Characters/Varkh Nimalis]] usa a classe independente [[Alquimista]]. A “Ficha do Jão” pertence ao personagem e preserva seus atributos, equipamentos e traços kenku; a classe Homem de Armas nela impressa deixou de valer.
 
 ### Raziel
 
-[[Raziel]] usa **Ladrão** como classe-base de OD2 e **Assassino** como especialização adotada. Vampiro, Hemomante, Reserva de Sangue e seus poderes atuais são elementos autorais da campanha até receberem regras próprias.
+[[Players/Characters/Raziel]] usa **Ladrão** como classe-base de OD2 e **Assassino** como especialização adotada. Vampiro, Hemomante, Reserva de Sangue e seus poderes atuais são elementos autorais da campanha até receberem regras próprias.
 
 ### Kenku
 

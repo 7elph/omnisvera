@@ -22,7 +22,7 @@ Elfos formam diferentes comunidades, tradições e linhagens em Earthropo. O fut
 
 ## Regras
 
-Usar as regras raciais oficiais adotadas pela mesa. Meio-elfos, como [[Vezemir]] e [[Elarion Valthor]], podem receber ajustes próprios quando suas fichas forem revisadas.
+Usar as regras raciais oficiais adotadas pela mesa. Meio-elfos, como [[Players/Characters/Vezemir]] e [[Elarion Valthor]], podem receber ajustes próprios quando suas fichas forem revisadas.
 
 ## Em aberto
 

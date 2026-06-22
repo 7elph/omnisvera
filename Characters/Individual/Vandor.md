@@ -25,6 +25,6 @@ tags:
 
 # Vandor
 
-Conhecido como **o Senhor das Bestas**, Vandor fazia parte do grupo que traiu [[Raziel]].
+Conhecido como **o Senhor das Bestas**, Vandor fazia parte do grupo que traiu [[Characters/Individual/Players/Raziel]].
 
 Sua relação com feras e seu paradeiro atual permanecem em aberto.

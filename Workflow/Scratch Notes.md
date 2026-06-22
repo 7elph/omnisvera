@@ -17,7 +17,7 @@ tags:
 - Data: 3 de Ventara de 2377.
 - Local: [[Nimalis]].
 - Nível: 1.
-- Personagens: [[Vezemir]], [[Varkh Nimalis]] e [[Raziel]].
+- Personagens: [[Players/Characters/Vezemir]], [[Players/Characters/Varkh Nimalis]] e [[Players/Characters/Raziel]].
 - Outline: [[01 - Ecos de Um Mal Antigo]].
 
 ## Mistérios que não devem receber resposta automática

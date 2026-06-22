@@ -35,7 +35,7 @@ Enquanto o centro da capital é feito de pedra, brasões e casas altas, Maré Ba
 
 Pequena loja de alquimia perto do porto, pertencente ao velho Odran Veyl. Vende tônicos, pomadas, antídotos, calmantes, venenos fracos para ratos e remédios de gosto horrível.
 
-Foi ali que [[Varkh Nimalis]] aprendeu alquimia de rua.
+Foi ali que [[Players/Characters/Varkh Nimalis]] aprendeu alquimia de rua.
 
 ## Reputação
 

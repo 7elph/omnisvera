@@ -64,7 +64,7 @@ sort file.name asc
 
 Cassian Valerius é um dos mais respeitados comandantes da história recente de Nimalia.
 Filho de uma tradicional família militar, serviu ao reino desde a juventude, participando de inúmeras campanhas contra invasores, monstros e senhores da guerra que ameaçaram a estabilidade do Reino Central.
-Durante as Guerras da Fronteira Norte, conheceu um jovem mercenário meio-elfo chamado [[Vezemir]]. Enquanto muitos oficiais desconfiavam dele por sua origem, Cassian julgava homens por suas ações, não por seu sangue.
+Durante as Guerras da Fronteira Norte, conheceu um jovem mercenário meio-elfo chamado [[Characters/Individual/Players/Vezemir]]. Enquanto muitos oficiais desconfiavam dele por sua origem, Cassian julgava homens por suas ações, não por seu sangue.
 Após testemunhar Vezemir defender sozinho uma linha de batalha que estava prestes a ruir, passou a respeitá-lo profundamente.
 Desde então, tornou-se um dos poucos membros da nobreza militar que mantiveram contato com o Bastardo de Ferro ao longo dos anos.
 Hoje atua como principal estrategista da [[Coroa de Nimalia]], aconselhando o rei em assuntos militares e supervisionando a defesa das fronteiras do reino.
@@ -116,5 +116,5 @@ Cassian raramente levanta a voz. Sua autoridade vem de sua presença, experiênc
 
 General das forças armadas de [[Nimalia]] e conselheiro militar da Coroa.
 É uma figura amplamente respeitada por soldados, cavaleiros e cidadãos comuns. Sua influência se estende muito além dos campos de batalha, sendo frequentemente consultado em decisões políticas e diplomáticas.
-Para [[Vezemir]], Cassian representa uma das poucas autoridades que jamais o julgaram por sua origem.
+Para [[Characters/Individual/Players/Vezemir]], Cassian representa uma das poucas autoridades que jamais o julgaram por sua origem.
 Para Nimalia, ele é a muralha que permanece de pé quando todas as outras caem.

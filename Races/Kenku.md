@@ -39,4 +39,4 @@ Pode reproduzir sons e vozes já ouvidos. A imitação não concede conhecimento
 Memória visual e coordenação permitem copiar escrita, assinaturas e marcas quando houver material e tempo adequados.
 
 > [!gm]- Ajuste pendente
-> Definir testes e limites depois das primeiras sessões de [[Varkh Nimalis]].
+> Definir testes e limites depois das primeiras sessões de [[Players/Characters/Varkh Nimalis]].

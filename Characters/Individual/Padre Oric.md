@@ -44,7 +44,7 @@ tags:
 **Status:** Desaparecido  
 **Território:** Desconhecido
 **Religião:** [[Igreja das Chamas]]
-**Associados Conhecidos:** [[Vezemir]], [[Guardiões do Véu Cinzento]]
+**Associados Conhecidos:** [[Characters/Individual/Players/Vezemir]], [[Guardiões do Véu Cinzento]]
 **Origem:** [[Nimalis]]
 **Ocupação:** Sacerdote e escriba
 **Símbolo:** Círculo da Verdade
@@ -54,7 +54,7 @@ tags:
 ## História
 
 Padre Oric nasceu em [[Nimalis]] e tornou-se sacerdote da [[Igreja das Chamas]], escriba e guardião de registros. Mais tarde passou a viajar por reinos, ruínas e templos esquecidos em busca de conhecimento sobre antigas ordens e poderes perdidos.
-Durante uma de suas jornadas conheceu [[Vezemir]], então um mercenário em ascensão.
+Durante uma de suas jornadas conheceu [[Characters/Individual/Players/Vezemir]], então um mercenário em ascensão.
 Enquanto outros enxergavam apenas um guerreiro, Oric percebeu algo diferente.
 Segundo ele, a magia de Vezemir não parecia fluir naturalmente.
 Parecia estar sendo contida.

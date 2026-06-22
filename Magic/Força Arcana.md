@@ -22,7 +22,7 @@ tags:
 
 # Força Arcana
 
-Manifestação da magia instável de [[Vezemir]]. Não concede acesso geral à lista de magias arcanas.
+Manifestação da magia instável de [[Players/Characters/Vezemir]]. Não concede acesso geral à lista de magias arcanas.
 
 ## Efeito de campanha
 

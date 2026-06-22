@@ -17,7 +17,7 @@ tags:
 
 # Alquimista
 
-O Alquimista foi adotado como classe independente de [[Varkh Nimalis]]. Sua base vem do suplemento **Expansão de Classes**, escrito para uma estrutura anterior de Old Dragon, e será adaptada gradualmente para Old Dragon 2.
+O Alquimista foi adotado como classe independente de [[Players/Characters/Varkh Nimalis]]. Sua base vem do suplemento **Expansão de Classes**, escrito para uma estrutura anterior de Old Dragon, e será adaptada gradualmente para Old Dragon 2.
 
 > [!warning] Estado mecânico
 > Esta é uma versão inicial de campanha. Ela deve ser testada em jogo antes de receber `NoteStatus: Active`.

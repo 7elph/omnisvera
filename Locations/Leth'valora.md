@@ -33,7 +33,7 @@ Por trás de sua beleza, existia uma comunidade tradicionalista.
 A pureza da linhagem é considerada uma virtude.
 A tradição vale mais que a inovação.
 E aqueles que nascem fora dos padrões esperados raramente encontram seu lugar.
-Foi nesta vila que [[Vezemir]] cresceu.
+Foi nesta vila que [[Players/Characters/Vezemir]] cresceu.
 E foi também aqui que aprendeu que nem toda civilização é tão nobre quanto parece.
 
 Leth'valora foi destruída pelo dragão verde de colar dourado. Suas ruínas permanecem em Avenor.
@@ -52,7 +52,7 @@ Abrigava a residência da família responsável pela chefia local e os espaços 
 Antiga fortaleza militar localizada nas elevações ao norte da vila.
 Originalmente construída durante as Guerras Antigas para vigiar passagens estratégicas.
 Foi abandonada após séculos de paz.
-Mais tarde tornou-se o lar de [[Elarion Valthor]] e de seu pupilo, [[Vezemir]].
+Mais tarde tornou-se o lar de [[Elarion Valthor]] e de seu pupilo, [[Players/Characters/Vezemir]].
 Atualmente seu estado é desconhecido.
 
 

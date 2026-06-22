@@ -17,9 +17,9 @@ tags:
 
 As Crônicas de Earthropo começam em [[Nimalis]], quando três histórias independentes se cruzam:
 
-- [[Vezemir]] procura o dragão de colar dourado e respostas sobre suas relíquias.
-- [[Varkh Nimalis]] investiga remédios falsificados com os métodos de seu mestre.
-- [[Raziel]] chega a um mundo transformado, buscando os responsáveis por sua traição.
+- [[Players/Characters/Vezemir]] procura o dragão de colar dourado e respostas sobre suas relíquias.
+- [[Players/Characters/Varkh Nimalis]] investiga remédios falsificados com os métodos de seu mestre.
+- [[Players/Characters/Raziel]] chega a um mundo transformado, buscando os responsáveis por sua traição.
 
 O primeiro arco deve apresentar a capital, formar o grupo e abrir uma rota de exploração sem explicar a cosmologia.
 

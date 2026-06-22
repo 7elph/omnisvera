@@ -33,8 +33,8 @@ Esta linha do tempo usa datas exatas apenas quando foram confirmadas. Eventos m�
 - O [[Eclipse de Obsidiana]].
 - [[O Fraturamento]], se ocorreu como descrevem os estudiosos.
 - A existência e o desaparecimento dos [[Guardiões do Véu Cinzento]].
-- As guerras em que [[Vezemir]] lutou.
-- A traição e o aprisionamento de [[Raziel]].
+- As guerras em que [[Players/Characters/Vezemir]] lutou.
+- A traição e o aprisionamento de [[Players/Characters/Raziel]].
 - A fundação de Nimalia e a ascensão da atual dinastia.
 
 ## Coerência de Vezemir

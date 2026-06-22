@@ -2,6 +2,7 @@
 obsidianUIMode: preview
 NoteIcon: magicitem
 NoteStatus: Active
+cover: zz_media/th_vezemir.PNG
 thumbnail: zz_media/th_vezemir.PNG
 status: Vivo
 visibility: gm

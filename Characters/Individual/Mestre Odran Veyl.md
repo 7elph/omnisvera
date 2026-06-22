@@ -25,7 +25,7 @@ tags:
 
 # Mestre Odran Veyl
 
-Alquimista veterano de [[Maré Baixa]], proprietário do estabelecimento conhecido como **O Frasco Afogado** e mentor de [[Varkh Nimalis]].
+Alquimista veterano de [[Maré Baixa]], proprietário do estabelecimento conhecido como **O Frasco Afogado** e mentor de [[Characters/Individual/Players/Varkh Nimalis]].
 
 ## Informações sustentadas
 

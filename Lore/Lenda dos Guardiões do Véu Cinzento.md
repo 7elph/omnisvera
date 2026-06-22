@@ -28,7 +28,7 @@ Não há uma versão aceita sobre quem foram, quando viveram ou por que desapare
 
 ## Vestígios confirmados
 
-- [[Vezemir]] carrega [[O Medalhão]], recebido de [[Elarion Valthor]].
+- [[Players/Characters/Vezemir]] carrega [[O Medalhão]], recebido de [[Elarion Valthor]].
 - [[Padre Oric]] investigou a ordem antes de desaparecer.
 - Símbolos atribuídos ao grupo aparecem em referências ligadas ao Véu.
 

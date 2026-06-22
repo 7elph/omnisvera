@@ -34,7 +34,7 @@ Avenor é uma grande região florestal fora do Reino de [[Nimalia]]. Sua borda o
 ## Lugares conhecidos
 
 - [[Leth'valora]], pequena vila élfica destruída.
-- A antiga fortaleza onde [[Elarion Valthor]] criou [[Vezemir]].
+- A antiga fortaleza onde [[Elarion Valthor]] criou [[Players/Characters/Vezemir]].
 - Trilhas usadas por caçadores, mensageiros e viajantes.
 
 ## Relação com os elfos

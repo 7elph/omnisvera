@@ -31,5 +31,5 @@ Ela não é uma religião consolidada. Reúne contrabandistas de relíquias, ocu
 ## Em aberto
 
 - Existência real do Arauto Sombrio.
-- Relação com os remédios falsos investigados por [[Varkh Nimalis]].
+- Relação com os remédios falsos investigados por [[Players/Characters/Varkh Nimalis]].
 - Grau de conhecimento sobre o Véu.

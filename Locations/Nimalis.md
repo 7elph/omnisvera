@@ -70,7 +70,7 @@ Docas oficiais, alfândega e grandes armazéns. Ao sul e fora de sua parte mais 
 
 ### [[Maré Baixa]]
 
-Distrito portuário de passarelas, pequenos ofícios, contrabando e redes comunitárias. É a origem de [[Varkh Nimalis]].
+Distrito portuário de passarelas, pequenos ofícios, contrabando e redes comunitárias. É a origem de [[Players/Characters/Varkh Nimalis]].
 
 ## Residentes
 
@@ -82,4 +82,4 @@ SORT file.name ASC
 ```
 
 > [!gm]- Preparação
-> [[Raziel]] encontrará o grupo em Nimalis. A cena e o distrito exatos ainda serão definidos no capítulo inicial.
+> [[Players/Characters/Raziel]] encontrará o grupo em Nimalis. A cena e o distrito exatos ainda serão definidos no capítulo inicial.

@@ -39,7 +39,7 @@ A **Mesa dos Caminhos** é formada por membros veteranos que organizam contratos
 
 ## Membros conhecidos
 
-- [[Vezemir]].
-- [[Varkh Nimalis]].
+- [[Players/Characters/Vezemir]].
+- [[Players/Characters/Varkh Nimalis]].
 
-[[Raziel]] pode colaborar com o Conclave depois de encontrar o grupo em Nimalis.
+[[Players/Characters/Raziel]] pode colaborar com o Conclave depois de encontrar o grupo em Nimalis.

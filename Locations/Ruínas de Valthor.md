@@ -18,12 +18,12 @@ tags:
 
 Ruínas localizadas no sudeste de Earthropo.
 
-Sob suas estruturas encontram-se cavernas abissais ligadas ao renascimento de [[Raziel]] e ao encontro com o Ancião Primordial.
+Sob suas estruturas encontram-se cavernas abissais ligadas ao renascimento de [[Players/Characters/Raziel]] e ao encontro com o Ancião Primordial.
 
 A civilização que construiu Valthor, sua relação com os [[Campos de Earthropo]] e sua posição política antes da ruína ainda precisam ser definidas.
 
 > [!gm]- Segredo
-> Cavernas sob as ruínas abrigaram o encontro entre [[Raziel]] e o [[Ancião Primordial]].
+> Cavernas sob as ruínas abrigaram o encontro entre [[Players/Characters/Raziel]] e o [[Ancião Primordial]].
 
 ## Posição no mapa
 

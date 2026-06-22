@@ -7,7 +7,7 @@ visibility: gm
 thumbnail:
 cover:
 item_type: Relíquia
-owner: "[[Raziel]]"
+owner: "[[Players/Characters/Raziel]]"
 origin: "[[Ancião Primordial]]"
 source: História de Raziel
 tags:
@@ -19,7 +19,7 @@ tags:
 
 # Manto Primordial do Ancião
 
-Armadura de couro batido extraplanar concedida a [[Raziel]] após seu encontro com o [[Ancião Primordial]] nas cavernas sob as [[Ruínas de Valthor]].
+Armadura de couro batido extraplanar concedida a [[Players/Characters/Raziel]] após seu encontro com o [[Ancião Primordial]] nas cavernas sob as [[Ruínas de Valthor]].
 
 ## Propriedades conhecidas
 

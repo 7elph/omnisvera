@@ -75,8 +75,8 @@ Começa com Reputação 1 em 1d6 e progride até 1–5 em 1d6 no 15º nível.
 
 ## Uso em Omnisvera
 
-- [[Varkh Nimalis]] possui Ladrão como identidade narrativa, mas sua ficha mecânica definitiva ainda precisa ser confirmada.
-- [[Raziel]] usa Ladrão como classe-base; Assassino e Hemomante são camadas adicionais tratadas separadamente.
+- [[Players/Characters/Varkh Nimalis]] possui Ladrão como identidade narrativa, mas sua ficha mecânica definitiva ainda precisa ser confirmada.
+- [[Players/Characters/Raziel]] usa Ladrão como classe-base; Assassino e Hemomante são camadas adicionais tratadas separadamente.
 
 ## Fonte legada
 

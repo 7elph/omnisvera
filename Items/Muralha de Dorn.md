@@ -7,7 +7,7 @@ cover: zz_media/muralha_dorn.png
 status: Ativo
 visibility: gm
 item_type: Artefato
-owner: "[[Vezemir]]"
+owner: "[[Players/Characters/Vezemir]]"
 origin: "[[Leth'valora]]"
 source: Referência visual e ficha de Vezemir
 tags:
@@ -28,7 +28,7 @@ tags:
 ## Identificação
 
 - **Tipo:** escudo grande e relíquia marcial.
-- **Portador:** [[Vezemir]].
+- **Portador:** [[Players/Characters/Vezemir]].
 - **Requisito indicado na referência visual:** Força 13 ou mais.
 - **Peso indicado:** 17 kg.
 - **Origem canônica:** entregue por [[Elarion Valthor]] em [[Leth'valora]].

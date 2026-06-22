@@ -64,7 +64,7 @@ Passa a ser reconhecido por seus feitos. Começa com Reputação 1 em 1d6 e prog
 
 ## Uso em Omnisvera
 
-[[Vezemir]] foi recebido com a classe escrita como **Homem de Armas**, denominação da edição anterior. A equivalência com Guerreiro é a referência de trabalho, mas sua ficha não deve ser recalculada sem confirmação do jogador e do mestre.
+[[Players/Characters/Vezemir]] foi recebido com a classe escrita como **Homem de Armas**, denominação da edição anterior. A equivalência com Guerreiro é a referência de trabalho, mas sua ficha não deve ser recalculada sem confirmação do jogador e do mestre.
 
 ## Fonte legada
 

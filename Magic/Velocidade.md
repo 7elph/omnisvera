@@ -22,7 +22,7 @@ tags:
 
 # Velocidade
 
-Explosão breve da magia instável de [[Vezemir]]. Não concede acesso à magia arcana completa de mesmo nome.
+Explosão breve da magia instável de [[Players/Characters/Vezemir]]. Não concede acesso à magia arcana completa de mesmo nome.
 
 ## Efeito de campanha
 

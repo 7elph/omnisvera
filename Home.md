@@ -69,10 +69,16 @@ Esta é a entrada dos jogadores para as **Crônicas de Earthropo**. O mapa será
 > [[LATEST_NEWS|Ler rumores e descobertas]]
 
 > [!home]+ Personagens jogadores
-> ```dataview
-> TABLE thumbnail, class, race, level, status
-> FROM "Players/Characters"
+> ```datacards
+> TABLE cover, class, race, level, status
+> FROM "Characters/Individual"
 > SORT file.name ASC
+> 
+> // Settings
+> preset: portrait
+> columns: 5
+> imageProperty: cover
+> cardSpacing: 4
 > ```
 
 > [!note]+ Territórios conhecidos

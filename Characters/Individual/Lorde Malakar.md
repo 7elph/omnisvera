@@ -26,7 +26,7 @@ tags:
 
 # Lorde Malakar
 
-Antigo mestre de [[Raziel]] e autoridade do [[Clã Sanguinallis]] na [[Fortaleza de Gharok]].
+Antigo mestre de [[Characters/Individual/Players/Raziel]] e autoridade do [[Clã Sanguinallis]] na [[Fortaleza de Gharok]].
 
 ## Fatos confirmados
 

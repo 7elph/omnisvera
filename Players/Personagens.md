@@ -13,8 +13,8 @@ tags:
 # Personagens
 
 ```datacards
-TABLE thumbnail, class, race, level, alignment, status
-FROM "Players/Characters"
+TABLE cover, class, race, level, alignment, status
+FROM "Characters/Individual/Players"
 SORT file.name ASC
 
 // Settings

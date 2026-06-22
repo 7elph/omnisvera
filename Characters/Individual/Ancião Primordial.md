@@ -25,7 +25,7 @@ tags:
 
 # Ancião Primordial
 
-Entidade ou criatura que libertou [[Raziel]] nas cavernas sob as [[Ruínas de Valthor]] e o alimentou com o Sangue Antigo.
+Entidade ou criatura que libertou [[Characters/Individual/Players/Raziel]] nas cavernas sob as [[Ruínas de Valthor]] e o alimentou com o Sangue Antigo.
 
 ## Fatos confirmados
 

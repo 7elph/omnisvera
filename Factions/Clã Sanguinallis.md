@@ -16,12 +16,12 @@ tags:
 
 # Clã Sanguinallis
 
-Antigo grupo vampírico associado à [[Fortaleza de Gharok]] e à história de [[Raziel]].
+Antigo grupo vampírico associado à [[Fortaleza de Gharok]] e à história de [[Players/Characters/Raziel]].
 
 ## Membros conhecidos
 
 - [[Lorde Malakar]].
-- [[Raziel]], antigo executor.
+- [[Players/Characters/Raziel]], antigo executor.
 - [[Kaelen]].
 - [[Vandor]].
 

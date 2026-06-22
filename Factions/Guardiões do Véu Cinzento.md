@@ -33,7 +33,7 @@ Antigo grupo de heróis cuja existência quase desapareceu dos registros de Eart
 - Sede.
 - Feitos.
 - Motivo do desaparecimento.
-- Relação exata com [[Vezemir]].
+- Relação exata com [[Players/Characters/Vezemir]].
 
 > [!warning] Limite
 > Não definir a história completa dos Guardiões antes de aprovação do mestre.

@@ -49,7 +49,7 @@ tags:
 **Status:** Desaparecido    
 **Afiliação:** [[Sentinelas de Leth'valora]]  
 **Afiliações Anteriores:** Desconhecido
-**Associados Conhecidos:** [[Vezemir]], [[General Cassian Valerius]]
+**Associados Conhecidos:** [[Characters/Individual/Players/Vezemir]], [[General Cassian Valerius]]
 **Inimigos Conhecidos:** Desconhecido
 **Origem:** Desconhecido
 **Posses:** Nenhuma
@@ -161,7 +161,7 @@ Para os elfos, Elarion é lembrado como um capitão lendário.
 
 Para os poucos que serviram sob seu comando, foi um líder exemplar.
 
-Para [[Vezemir]], porém, ele foi algo muito mais raro.
+Para [[Characters/Individual/Players/Vezemir]], porém, ele foi algo muito mais raro.
 
 Foi o único homem que escolheu ficar.
 

@@ -13,7 +13,7 @@ ruleset: Old Dragon anterior
 
 # Homem de Armas
 
-**Homem de Armas** é a denominação usada na edição anterior de Old Dragon e na ficha recebida de [[Vezemir]].
+**Homem de Armas** é a denominação usada na edição anterior de Old Dragon e na ficha recebida de [[Players/Characters/Vezemir]].
 
 Em Old Dragon 2, a classe-base marcial correspondente é [[Guerreiro]].
 

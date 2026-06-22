@@ -1,277 +1,247 @@
 {
-    "mapMarkers":  [
-
-                   ],
-    "defaultMarker":  {
-                          "type":  "default",
-                          "iconName":  "map-marker",
-                          "color":  "#dddddd",
-                          "transform":  {
-                                            "size":  6,
-                                            "x":  0,
-                                            "y":  -2
-                                        }
-                      },
-    "markerIcons":  [
-                        {
-                            "type":  "Territory",
-                            "iconName":  "city",
-                            "color":  "#e65151",
-                            "alpha":  1,
-                            "layer":  true,
-                            "transform":  {
-                                              "size":  6,
-                                              "x":  0,
-                                              "y":  -2
-                                          },
-                            "isImage":  false,
-                            "tags":  [
-
-                                     ],
-                            "minZoom":  null,
-                            "maxZoom":  null
-                        },
-                        {
-                            "type":  "Location",
-                            "iconName":  "home",
-                            "color":  "#eabf76",
-                            "alpha":  1,
-                            "layer":  true,
-                            "transform":  {
-                                              "size":  6,
-                                              "x":  0,
-                                              "y":  -2
-                                          },
-                            "isImage":  false,
-                            "tags":  [
-
-                                     ],
-                            "minZoom":  null,
-                            "maxZoom":  null
-                        },
-                        {
-                            "type":  "Memorial",
-                            "iconName":  "cross",
-                            "color":  "#9a7a23",
-                            "alpha":  1,
-                            "layer":  true,
-                            "transform":  {
-                                              "size":  6,
-                                              "x":  0,
-                                              "y":  -2
-                                          },
-                            "isImage":  false,
-                            "tags":  [
-
-                                     ],
-                            "minZoom":  null,
-                            "maxZoom":  null
-                        },
-                        {
-                            "type":  "Wrecking Crew",
-                            "iconName":  "walking",
-                            "color":  "#ffd747",
-                            "alpha":  1,
-                            "layer":  false,
-                            "transform":  {
-                                              "size":  6,
-                                              "x":  0,
-                                              "y":  -2
-                                          },
-                            "isImage":  false,
-                            "tags":  [
-
-                                     ],
-                            "minZoom":  null,
-                            "maxZoom":  null
-                        },
-                        {
-                            "type":  "Rancher",
-                            "iconName":  "walking",
-                            "color":  "#997f24",
-                            "alpha":  1,
-                            "layer":  false,
-                            "transform":  {
-                                              "size":  6,
-                                              "x":  0,
-                                              "y":  -2
-                                          },
-                            "isImage":  false,
-                            "tags":  [
-
-                                     ],
-                            "minZoom":  null,
-                            "maxZoom":  null
-                        },
-                        {
-                            "type":  "Raider",
-                            "iconName":  "walking",
-                            "color":  "#3d8fe6",
-                            "alpha":  1,
-                            "layer":  false,
-                            "transform":  {
-                                              "size":  6,
-                                              "x":  0,
-                                              "y":  -2
-                                          },
-                            "isImage":  false,
-                            "tags":  [
-
-                                     ],
-                            "minZoom":  null,
-                            "maxZoom":  null
-                        },
-                        {
-                            "type":  "Loyalist",
-                            "iconName":  "walking",
-                            "color":  "#ff0000",
-                            "alpha":  1,
-                            "layer":  false,
-                            "transform":  {
-                                              "size":  6,
-                                              "x":  0,
-                                              "y":  -2
-                                          },
-                            "isImage":  false,
-                            "tags":  [
-
-                                     ],
-                            "minZoom":  null,
-                            "maxZoom":  null
-                        },
-                        {
-                            "type":  "Widow",
-                            "iconName":  "walking",
-                            "color":  "#e873e4",
-                            "alpha":  1,
-                            "layer":  false,
-                            "transform":  {
-                                              "size":  6,
-                                              "x":  0,
-                                              "y":  -2
-                                          },
-                            "isImage":  false,
-                            "tags":  [
-
-                                     ],
-                            "minZoom":  null,
-                            "maxZoom":  null
-                        },
-                        {
-                            "type":  "Individual",
-                            "iconName":  "walking",
-                            "color":  "#7bd0db",
-                            "alpha":  1,
-                            "layer":  false,
-                            "transform":  {
-                                              "size":  6,
-                                              "x":  0,
-                                              "y":  -2
-                                          },
-                            "isImage":  false,
-                            "tags":  [
-
-                                     ],
-                            "minZoom":  null,
-                            "maxZoom":  null
-                        },
-                        {
-                            "type":  "Mayor",
-                            "iconName":  "walking",
-                            "color":  "#53b27c",
-                            "alpha":  1,
-                            "layer":  false,
-                            "transform":  {
-                                              "size":  6,
-                                              "x":  0,
-                                              "y":  -2
-                                          },
-                            "isImage":  false,
-                            "tags":  [
-
-                                     ],
-                            "minZoom":  null,
-                            "maxZoom":  null
-                        },
-                        {
-                            "type":  "Third",
-                            "iconName":  "walking",
-                            "color":  "#cd78ce",
-                            "alpha":  1,
-                            "layer":  false,
-                            "transform":  {
-                                              "size":  6,
-                                              "x":  0,
-                                              "y":  -2
-                                          },
-                            "isImage":  false,
-                            "tags":  [
-
-                                     ],
-                            "minZoom":  null,
-                            "maxZoom":  null
-                        },
-                        {
-                            "type":  "Murray",
-                            "iconName":  "walking",
-                            "color":  "#a7496a",
-                            "alpha":  1,
-                            "layer":  false,
-                            "transform":  {
-                                              "size":  6,
-                                              "x":  0,
-                                              "y":  -2
-                                          },
-                            "isImage":  false,
-                            "tags":  [
-
-                                     ],
-                            "minZoom":  null,
-                            "maxZoom":  null
-                        },
-                        {
-                            "type":  "Danger",
-                            "iconName":  "walking",
-                            "color":  "#242424",
-                            "alpha":  1,
-                            "layer":  false,
-                            "transform":  {
-                                              "size":  6,
-                                              "x":  0,
-                                              "y":  -2
-                                          },
-                            "isImage":  false,
-                            "tags":  [
-
-                                     ],
-                            "minZoom":  null,
-                            "maxZoom":  null
-                        }
-                    ],
-    "color":  "#dddddd",
-    "lat":  39.983334,
-    "long":  -82.98333,
-    "notePreview":  true,
-    "layerMarkers":  true,
-    "previousVersion":  "6.0.5",
-    "version":  {
-                    "major":  6,
-                    "minor":  0,
-                    "patch":  5
-                },
-    "warnedAboutMapMarker":  false,
-    "copyOnClick":  false,
-    "displayMarkerTooltips":  "hover",
-    "displayOverlayTooltips":  true,
-    "configDirectory":  null,
-    "mapViewEnabled":  true,
-    "mapViewParameters":  {
-
-                          },
-    "enableDraw":  true,
-    "defaultUnitType":  "imperial",
-    "defaultTile":  "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png",
-    "defaultTileDark":  "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png",
-    "defaultAttribution":  "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors \u0026copy; \u003ca href=\"https://carto.com/attributions\"\u003eCARTO\u003c/a\u003e",
-    "defaultTileSubdomains":  "a,b,c,d"
+  "mapMarkers": [],
+  "defaultMarker": {
+    "type": "default",
+    "iconName": "map-marker",
+    "color": "#dddddd",
+    "transform": {
+      "size": 6,
+      "x": 0,
+      "y": -2
+    }
+  },
+  "markerIcons": [
+    {
+      "type": "Territory",
+      "iconName": "city",
+      "color": "#e65151",
+      "alpha": 1,
+      "layer": true,
+      "transform": {
+        "size": 6,
+        "x": 0,
+        "y": -2
+      },
+      "isImage": false,
+      "tags": [],
+      "minZoom": null,
+      "maxZoom": null
+    },
+    {
+      "type": "Location",
+      "iconName": "home",
+      "color": "#eabf76",
+      "alpha": 1,
+      "layer": true,
+      "transform": {
+        "size": 6,
+        "x": 0,
+        "y": -2
+      },
+      "isImage": false,
+      "tags": [],
+      "minZoom": null,
+      "maxZoom": null
+    },
+    {
+      "type": "Memorial",
+      "iconName": "cross",
+      "color": "#9a7a23",
+      "alpha": 1,
+      "layer": true,
+      "transform": {
+        "size": 6,
+        "x": 0,
+        "y": -2
+      },
+      "isImage": false,
+      "tags": [],
+      "minZoom": null,
+      "maxZoom": null
+    },
+    {
+      "type": "Wrecking Crew",
+      "iconName": "walking",
+      "color": "#ffd747",
+      "alpha": 1,
+      "layer": false,
+      "transform": {
+        "size": 6,
+        "x": 0,
+        "y": -2
+      },
+      "isImage": false,
+      "tags": [],
+      "minZoom": null,
+      "maxZoom": null
+    },
+    {
+      "type": "Rancher",
+      "iconName": "walking",
+      "color": "#997f24",
+      "alpha": 1,
+      "layer": false,
+      "transform": {
+        "size": 6,
+        "x": 0,
+        "y": -2
+      },
+      "isImage": false,
+      "tags": [],
+      "minZoom": null,
+      "maxZoom": null
+    },
+    {
+      "type": "Raider",
+      "iconName": "walking",
+      "color": "#3d8fe6",
+      "alpha": 1,
+      "layer": false,
+      "transform": {
+        "size": 6,
+        "x": 0,
+        "y": -2
+      },
+      "isImage": false,
+      "tags": [],
+      "minZoom": null,
+      "maxZoom": null
+    },
+    {
+      "type": "Loyalist",
+      "iconName": "walking",
+      "color": "#ff0000",
+      "alpha": 1,
+      "layer": false,
+      "transform": {
+        "size": 6,
+        "x": 0,
+        "y": -2
+      },
+      "isImage": false,
+      "tags": [],
+      "minZoom": null,
+      "maxZoom": null
+    },
+    {
+      "type": "Widow",
+      "iconName": "walking",
+      "color": "#e873e4",
+      "alpha": 1,
+      "layer": false,
+      "transform": {
+        "size": 6,
+        "x": 0,
+        "y": -2
+      },
+      "isImage": false,
+      "tags": [],
+      "minZoom": null,
+      "maxZoom": null
+    },
+    {
+      "type": "Individual",
+      "iconName": "walking",
+      "color": "#7bd0db",
+      "alpha": 1,
+      "layer": false,
+      "transform": {
+        "size": 6,
+        "x": 0,
+        "y": -2
+      },
+      "isImage": false,
+      "tags": [],
+      "minZoom": null,
+      "maxZoom": null
+    },
+    {
+      "type": "Mayor",
+      "iconName": "walking",
+      "color": "#53b27c",
+      "alpha": 1,
+      "layer": false,
+      "transform": {
+        "size": 6,
+        "x": 0,
+        "y": -2
+      },
+      "isImage": false,
+      "tags": [],
+      "minZoom": null,
+      "maxZoom": null
+    },
+    {
+      "type": "Third",
+      "iconName": "walking",
+      "color": "#cd78ce",
+      "alpha": 1,
+      "layer": false,
+      "transform": {
+        "size": 6,
+        "x": 0,
+        "y": -2
+      },
+      "isImage": false,
+      "tags": [],
+      "minZoom": null,
+      "maxZoom": null
+    },
+    {
+      "type": "Murray",
+      "iconName": "walking",
+      "color": "#a7496a",
+      "alpha": 1,
+      "layer": false,
+      "transform": {
+        "size": 6,
+        "x": 0,
+        "y": -2
+      },
+      "isImage": false,
+      "tags": [],
+      "minZoom": null,
+      "maxZoom": null
+    },
+    {
+      "type": "Danger",
+      "iconName": "walking",
+      "color": "#242424",
+      "alpha": 1,
+      "layer": false,
+      "transform": {
+        "size": 6,
+        "x": 0,
+        "y": -2
+      },
+      "isImage": false,
+      "tags": [],
+      "minZoom": null,
+      "maxZoom": null
+    }
+  ],
+  "color": "#dddddd",
+  "lat": 39.983334,
+  "long": -82.98333,
+  "notePreview": true,
+  "layerMarkers": true,
+  "previousVersion": "6.0.5",
+  "version": {
+    "major": 6,
+    "minor": 0,
+    "patch": 5
+  },
+  "warnedAboutMapMarker": false,
+  "copyOnClick": false,
+  "displayMarkerTooltips": "hover",
+  "displayOverlayTooltips": true,
+  "configDirectory": null,
+  "mapViewEnabled": true,
+  "mapViewParameters": {},
+  "enableDraw": true,
+  "defaultUnitType": "imperial",
+  "defaultTile": "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png",
+  "defaultTileDark": "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png",
+  "defaultAttribution": "&copy; <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors &copy; <a href=\"https://carto.com/attributions\">CARTO</a>",
+  "defaultTileSubdomains": "a,b,c,d"
 }

@@ -18,7 +18,7 @@ tags:
 
 # Fortaleza de Gharok
 
-Fortaleza ligada ao Clã Sanguinallis, onde [[Raziel]] serviu como executor de Lorde Malakar antes de ser traído e aprisionado.
+Fortaleza ligada ao Clã Sanguinallis, onde [[Players/Characters/Raziel]] serviu como executor de Lorde Malakar antes de ser traído e aprisionado.
 
 ## Informações confirmadas
 
