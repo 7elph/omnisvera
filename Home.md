@@ -1,6 +1,6 @@
----
+﻿---
 obsidianUIMode: preview
-banner: "[[zz_media/avenor.png]]"
+banner: "[[zz_media/locations/floresta-de-avenor.webp]]"
 banner-x: 51
 banner-y: 34
 banner-height: 280
@@ -22,19 +22,19 @@ Esta é a entrada dos jogadores para as **Crônicas de Earthropo**. O mapa será
 
 > [!cards|5]
 > **GUIA DO JOGADOR**
-> [![[sool.png\|sban htiny ctr p+t]]](Players/Guia%20do%20Jogador.md)
+> [![[zz_media/ui/card-guia.webp\|sban htiny ctr p+t]]](Players/Guia%20do%20Jogador.md)
 >
 > **CRÔNICAS**
-> [![[eo.png\|sban htiny ctr]]](EARTHROPO/EARTHROPO.md)
+> [![[zz_media/ui/card-cronicas.webp\|sban htiny ctr]]](EARTHROPO/EARTHROPO.md)
 >
 > **PERSONAGENS**
-> [![[t2.png\|sban htiny ctr]]](Players/Personagens.md)
+> [![[zz_media/ui/card-notas.webp\|sban htiny ctr]]](Players/Personagens.md)
 >
 > **RUMORES**
-> [![[news1.png\|sban htiny ctr]]](LATEST_NEWS.md)
+> [![[zz_media/ui/card-boletim.webp\|sban htiny ctr]]](LATEST_NEWS.md)
 >
 > **MAPA**
-> [![[mapp.png\|sban htiny ctr]]](MAPA%20DE%20EARTHROPO.md)
+> [![[zz_media/ui/card-mapa.webp\|sban htiny ctr]]](MAPA%20DE%20EARTHROPO.md)
 
 > [!world]- O que é conhecido
 > **Earthropo** é um continente de caminhos antigos, reinos ainda pouco conhecidos e ruínas que sobreviveram às histórias contadas sobre elas.

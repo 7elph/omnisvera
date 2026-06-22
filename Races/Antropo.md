@@ -1,4 +1,4 @@
----
+﻿---
 obsidianUIMode: preview
 NoteIcon: race
 NoteStatus: Draft
@@ -7,7 +7,7 @@ visibility: shared
 parent_race:
 ruleset: Regra autoral
 source: Omnisvera
-cover: zz_media/earthropo.png
+cover: zz_media/maps/earthropo.png
 tags:
   - race
   - antropo

@@ -1,4 +1,4 @@
----
+﻿---
 NoteIcon: class
 NoteStatus: Active
 visibility: shared
@@ -6,7 +6,7 @@ tags:
   - class
   - cleric
   - old-dragon-2
-cover: zz_media/avenor.png
+cover: zz_media/locations/floresta-de-avenor.webp
 status: Ativa
 ruleset: Old Dragon 2
 source: https://olddragon.com.br/classes/clerigo

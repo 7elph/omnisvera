@@ -1,10 +1,10 @@
----
+﻿---
 obsidianUIMode: preview
 NoteIcon: timeline
 NoteStatus: Active
 status: Ativo
 visibility: gm
-cover: zz_media/t1.png
+cover: zz_media/ui/card-linha-do-tempo.webp
 tags:
   - home
   - timeline

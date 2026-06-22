@@ -9,7 +9,7 @@ related:
   - "[[Eclipse de Obsidiana]]"
   - "[[O Fraturamento]]"
   - "[[Criadores]]"
-cover:
+cover: zz_media/lore/veu-cinzento.webp
 tags:
   - lore
   - veil
@@ -18,6 +18,8 @@ tags:
 ---
 
 # Véu Cinzento
+
+> ![[zz_media/lore/veu-cinzento.webp|500]]
 
 ## Conhecimento público
 

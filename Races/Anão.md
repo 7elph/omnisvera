@@ -1,4 +1,4 @@
----
+﻿---
 obsidianUIMode: preview
 NoteIcon: race
 NoteStatus: Active
@@ -6,7 +6,7 @@ status: Ativa
 visibility: shared
 ruleset: Regras oficiais
 source: Livro básico e referência oficial
-cover: zz_media/earthropo.png
+cover: zz_media/maps/earthropo.png
 tags:
   - race
   - dwarf

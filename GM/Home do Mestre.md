@@ -1,6 +1,6 @@
----
+﻿---
 obsidianUIMode: preview
-banner: "[[zz_media/earthropo.png]]"
+banner: "[[zz_media/maps/earthropo.png]]"
 banner-x: 50
 banner-y: 40
 banner-height: 280
@@ -22,19 +22,19 @@ tags:
 
 > [!cards|5]
 > **CÂNONE**
-> [![[sool.png\|sban htiny ctr p+t]]](../Workflow/CANON.md)
+> [![[zz_media/ui/card-guia.webp\|sban htiny ctr p+t]]](../Workflow/CANON.md)
 >
 > **DECISÕES**
-> [![[eo.png\|sban htiny ctr]]](../Workflow/CONSOLIDATION_DECISIONS.md)
+> [![[zz_media/ui/card-cronicas.webp\|sban htiny ctr]]](../Workflow/CONSOLIDATION_DECISIONS.md)
 >
 > **PREPARAÇÃO**
-> [![[t2.png\|sban htiny ctr]]](../Workflow/OUTLINES.md)
+> [![[zz_media/ui/card-notas.webp\|sban htiny ctr]]](../Workflow/OUTLINES.md)
 >
 > **LORE**
-> [![[news1.png\|sban htiny ctr]]](../LORE.md)
+> [![[zz_media/ui/card-boletim.webp\|sban htiny ctr]]](../LORE.md)
 >
 > **MAPA DO MESTRE**
-> [![[mapp.png\|sban htiny ctr]]](Mapa%20de%20Earthropo%20—%20Mestre.md)
+> [![[zz_media/ui/card-mapa.webp\|sban htiny ctr]]](Mapa%20de%20Earthropo%20—%20Mestre.md)
 
 ## Estado da campanha
 

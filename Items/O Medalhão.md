@@ -1,9 +1,9 @@
----
+﻿---
 obsidianUIMode: preview
 NoteIcon: items
 NoteStatus: Active
-thumbnail: zz_media/med.PNG
-cover: zz_media/med.PNG
+thumbnail: zz_media/items/medalhao-dos-guardioes.webp
+cover: zz_media/items/medalhao-dos-guardioes.webp
 status: Ativo
 visibility: gm
 item_type: Artefato
@@ -19,7 +19,7 @@ tags:
 # O Medalhão dos Guardiões do Véu Cinzento
 
 > [!NOTE|clean no-i right]+ O Medalhão
-> ![[med.png|300]]
+> ![[zz_media/items/medalhao-dos-guardioes.webp|300]]
 
 *"Nem tudo que é verdade deve ser dito. Nem tudo que é oculto é mentira."*
 

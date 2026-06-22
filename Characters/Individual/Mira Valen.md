@@ -1,8 +1,8 @@
----
+﻿---
 obsidianUIMode: preview  
 NoteIcon: magicitem 
 NoteStatus: Active
-thumbnail: zz_media/th_mira.PNG  
+thumbnail: zz_media/characters/thumbnails/mira-valen.webp
 status: Falecida  
 visibility: gm
 location: "[[Leth'valora]]"
@@ -29,7 +29,7 @@ tags:
 # MIRA VALEN
 
 > [!NOTE|clean no-i right]+ Mira Valen  
-> ![[mira.png|400]]
+> ![[zz_media/characters/mira-valen.webp|400]]
 
 
 ## Visão Geral

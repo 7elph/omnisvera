@@ -1,9 +1,9 @@
----
+﻿---
 
 obsidianUIMode: preview  
 NoteIcon: magicitem  
 NoteStatus: Draft
-thumbnail: zz_media/th_cassian.PNG 
+thumbnail: zz_media/characters/thumbnails/general-cassian-valerius.webp
 religion: "[[Igreja das Chamas]]"  
 status: Vivo  
 visibility: gm
@@ -34,7 +34,7 @@ tags:
 # GENERAL CASSIAN VALERIUS
 
 > [!NOTE|clean no-i right]+ ‎Retrato  
-> ![[cassian.png|400]]
+> ![[zz_media/characters/general-cassian-valerius.webp|400]]
 
 ## Visão Geral
 **Títulos:** General de Nimalia

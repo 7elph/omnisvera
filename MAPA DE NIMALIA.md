@@ -1,4 +1,4 @@
----
+﻿---
 obsidianUIMode: preview
 NoteIcon: map
 NoteStatus: Active
@@ -7,7 +7,7 @@ visibility: player
 map_id: nimalis-map
 map_type: Cidade
 region: "[[Nimalia]]"
-cover: zz_media/nimalia.png
+cover: zz_media/maps/nimalis.png
 tags:
   - title
   - map
@@ -25,7 +25,7 @@ id: nimalia-capital-map
 lock: true
 recenter: false
 noScrollZoom: false
-image: zz_media/nimalia.png
+image: zz_media/maps/nimalis.png
 bounds: [[0, 0], [185.7, 274.6]]
 height: 1000px
 width: 95%

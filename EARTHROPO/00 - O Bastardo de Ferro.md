@@ -1,4 +1,4 @@
----
+﻿---
 cssclasses:
   - b-sides-script
   - chapter
@@ -12,7 +12,7 @@ tags:
   - story
   - chapter0
   - earthropo
-cover: "[[zz_media/vezemir.png]]"
+cover: "[[zz_media/characters/vezemir.webp]]"
 NoteStatus: Active
 status: História de personagem
 visibility: gm

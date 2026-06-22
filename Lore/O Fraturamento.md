@@ -1,4 +1,4 @@
----
+﻿---
 obsidianUIMode: preview
 NoteIcon: lore
 NoteStatus: Draft
@@ -9,7 +9,7 @@ era:
 related:
   - "[[Criadores]]"
   - "[[Véu Cinzento]]"
-cover: zz_media/w.png
+cover: zz_media/lore/o-fraturamento.webp
 tags:
   - lore
   - theory

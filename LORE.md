@@ -1,10 +1,10 @@
----
+﻿---
 obsidianUIMode: preview
 NoteIcon: lore
 NoteStatus: Active
 status: Ativo
 visibility: gm
-cover: zz_media/t7.png
+cover: zz_media/ui/card-nimalia.webp
 tags:
   - home
   - lore

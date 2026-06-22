@@ -1,4 +1,4 @@
----
+﻿---
 obsidianUIMode: preview
 NoteIcon: class
 NoteStatus: Draft
@@ -7,7 +7,7 @@ visibility: gm
 ruleset: Old Dragon 2 — adaptação da campanha
 source: Expansão de Classes, de Caio Mouriz
 class_type: Classe independente
-cover: zz_media/avenor.png
+cover: zz_media/locations/floresta-de-avenor.webp
 tags:
   - class
   - alchemist

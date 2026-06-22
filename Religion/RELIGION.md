@@ -1,10 +1,10 @@
----
+﻿---
 obsidianUIMode: preview
 NoteIcon: religion
 NoteStatus: Active
 status: Ativo
 visibility: shared
-cover: zz_media/t8.png
+cover: zz_media/ui/card-religiao.webp
 tags:
   - home
   - religion
@@ -14,7 +14,7 @@ tags:
 # Religiões de Earthropo
 
 > [!NOTE|clean no-i right]+ Religiões
-> ![[t8.png|400]]
+> ![[zz_media/ui/card-religiao.webp|400]]
 
 Earthropo possui vários deuses, tradições raciais e crenças regionais. Nenhuma nota pública confirma toda a verdade cosmológica.
 

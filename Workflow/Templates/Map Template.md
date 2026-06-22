@@ -1,4 +1,4 @@
----
+﻿---
 obsidianUIMode: preview
 NoteIcon: map
 NoteStatus: Template
@@ -20,7 +20,7 @@ id: template-map
 lock: true
 recenter: false
 noScrollZoom: false
-image: zz_media/earthropo.png
+image: zz_media/maps/earthropo.png
 bounds: [[0, 0], [100, 100]]
 height: 1000px
 width: 95%

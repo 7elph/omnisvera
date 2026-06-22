@@ -1,9 +1,9 @@
----
+﻿---
 obsidianUIMode: preview
 NoteIcon: items
 NoteStatus: Active
-thumbnail: zz_media/muralha_dorn.png
-cover: zz_media/muralha_dorn.png
+thumbnail: zz_media/items/muralha-de-dorn.webp
+cover: zz_media/items/muralha-de-dorn.webp
 status: Ativo
 visibility: gm
 item_type: Artefato
@@ -21,7 +21,7 @@ tags:
 ## Escudo Grande
 
 > [!NOTE|clean no-i right]+ Muralha de Dorn
-> ![[muralha_dorn.png|300]]
+> ![[zz_media/items/muralha-de-dorn.webp|300]]
 
 *"Entre o aço e a lenda, há uma muralha. Entre o guerreiro e o fim, há um escudo."*
 

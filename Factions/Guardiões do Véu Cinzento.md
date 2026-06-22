@@ -4,7 +4,7 @@ NoteIcon: faction
 NoteStatus: Draft
 status: Desaparecida
 visibility: gm
-cover:
+cover: zz_media/factions/guardioes-do-veu-cinzento.webp
 leader:
 headquarters:
 territory: Earthropo
@@ -16,6 +16,8 @@ tags:
 ---
 
 # Guardiões do Véu Cinzento
+
+> ![[zz_media/factions/guardioes-do-veu-cinzento.webp|500]]
 
 Antigo grupo de heróis cuja existência quase desapareceu dos registros de Earthropo.
 

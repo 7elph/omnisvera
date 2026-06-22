@@ -1,10 +1,10 @@
----
+﻿---
 obsidianUIMode: preview
 NoteIcon: lore
 NoteStatus: Active
 status: Ativo
 visibility: player
-cover: zz_media/earthropo.png
+cover: zz_media/maps/earthropo.png
 tags:
   - title
   - home

@@ -1,9 +1,9 @@
----
+﻿---
 obsidianUIMode: preview
 NoteIcon: magicitem
 NoteStatus: Active
-cover: zz_media/th_vezemir.PNG
-thumbnail: zz_media/th_vezemir.PNG
+cover: zz_media/characters/thumbnails/vezemir.webp
+thumbnail: zz_media/characters/thumbnails/vezemir.webp
 status: Vivo
 visibility: gm
 location: "[[Floresta de Avenor]]"
@@ -41,7 +41,7 @@ tags:
 # VEZEMIR — O BASTARDO DE FERRO
 
 > [!NOTE|clean no-i right]+ Vezemir
-> ![[vezemir.png|400]]
+> ![[zz_media/characters/vezemir.webp|400]]
 
 ## Atributos
 
@@ -187,7 +187,7 @@ Reservado, disciplinado e resiliente. Vezemir raramente demonstra emoções, mas
 
 > [!infobox]
 >
-> ![[th_vezemir.PNG]]
+> ![[zz_media/characters/thumbnails/vezemir.webp]]
 
 **Virtudes:**  
 Lealdade, coragem, humildade, perseverança.

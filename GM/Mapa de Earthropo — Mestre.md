@@ -1,4 +1,4 @@
----
+﻿---
 obsidianUIMode: preview
 NoteIcon: map
 NoteStatus: Draft
@@ -7,7 +7,7 @@ visibility: gm
 map_id: earthropo-gm-map
 map_type: Continente
 region: Earthropo
-cover: zz_media/earthropo.png
+cover: zz_media/maps/earthropo.png
 tags:
   - map
   - earthropo
@@ -24,7 +24,7 @@ id: earthropo-gm-map
 lock: true
 recenter: false
 noScrollZoom: false
-image: zz_media/earthropo.png
+image: zz_media/maps/earthropo.png
 bounds: [[0, 0], [185.7, 274.6]]
 height: 1000px
 width: 95%

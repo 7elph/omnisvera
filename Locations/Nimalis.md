@@ -1,4 +1,4 @@
----
+﻿---
 obsidianUIMode: preview
 NoteIcon: location
 NoteStatus: Active
@@ -9,7 +9,7 @@ district: Capital
 leader: "[[Augustus Terra Decimus]]"
 population: 120000
 info: Capital murada e principal ponto de encontro das rotas de Nimalia.
-cover: zz_media/nimalia.png
+cover: zz_media/maps/nimalis.png
 tags:
   - location
   - capital
@@ -20,7 +20,7 @@ tags:
 # Nimalis
 
 > [!NOTE|clean no-i right]+ Nimalis
-> ![[nimalia.png|400]]
+> ![[zz_media/maps/nimalis.png|400]]
 
 Nimalis é a capital do Reino de [[Nimalia]] e sede da [[Coroa de Nimalia]]. A cidade cresceu onde rios navegáveis, estradas e rotas mercantis se encontram, tornando-se o principal ponto de partida para viajantes no centro de Earthropo.
 

@@ -1,10 +1,10 @@
----
+﻿---
 obsidianUIMode: preview
 NoteIcon: calendar
 NoteStatus: Active
 status: Ativo
 visibility: shared
-cover: zz_media/t52.png
+cover: zz_media/ui/card-calendario.webp
 tags:
   - world
   - calendar

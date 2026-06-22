@@ -1,4 +1,4 @@
----
+﻿---
 obsidianUIMode: preview
 NoteIcon: race
 NoteStatus: Draft
@@ -7,7 +7,7 @@ visibility: shared
 parent_race: "[[Antropo]]"
 ruleset: Regra autoral
 source: Ficha de Varkh
-cover: zz_media/earthropo.png
+cover: zz_media/maps/earthropo.png
 tags:
   - race
   - kenku

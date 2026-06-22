@@ -1,4 +1,4 @@
----
+﻿---
 cssclasses:
   - b-sides-script
   - chapter
@@ -20,7 +20,7 @@ characters:
   - "[[Vandor]]"
   - "[[Ancião Primordial]]"
 cover:
-  - - zz_media/raziel.png
+  - - zz_media/characters/raziel.webp
 description: A história de Raziel, o Espectro da Névoa de Sangue — desde seu auge como executor do Clã Sanguinallis na Fortaleza de Gharok até a traição que o aprisionou por trezentos anos e seu renascimento nas cavernas abissais sob as Ruínas de Valthor.
 ---
 

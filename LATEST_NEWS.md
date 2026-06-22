@@ -1,10 +1,10 @@
----
+﻿---
 obsidianUIMode: preview
 NoteIcon: news
 NoteStatus: Active
 status: Ativo
 visibility: player
-cover: zz_media/news1.png
+cover: zz_media/ui/card-boletim.webp
 tags:
   - home
   - news

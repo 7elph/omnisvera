@@ -4,7 +4,7 @@ NoteIcon: location
 NoteStatus: Draft
 status: Ruínas
 visibility: shared
-cover:
+cover: zz_media/locations/ruinas-de-valthor.webp
 territory: Earthropo
 region: Sudeste de Earthropo
 tags:
@@ -15,6 +15,8 @@ tags:
 ---
 
 # Ruínas de Valthor
+
+> ![[zz_media/locations/ruinas-de-valthor.webp|500]]
 
 Ruínas localizadas no sudeste de Earthropo.
 

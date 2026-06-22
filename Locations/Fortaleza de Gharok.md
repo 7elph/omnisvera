@@ -4,7 +4,7 @@ NoteIcon: location
 NoteStatus: Placeholder
 status: Localização provisória
 visibility: gm
-cover:
+cover: zz_media/locations/fortaleza-de-gharok.webp
 territory: Norte ou nordeste de Earthropo
 region: Cordilheira vulcânica
 info: Antiga sede do Clã Sanguinallis e origem de Raziel.
@@ -17,6 +17,8 @@ tags:
 ---
 
 # Fortaleza de Gharok
+
+> ![[zz_media/locations/fortaleza-de-gharok.webp|500]]
 
 Fortaleza ligada ao Clã Sanguinallis, onde [[Players/Characters/Raziel]] serviu como executor de Lorde Malakar antes de ser traído e aprisionado.
 

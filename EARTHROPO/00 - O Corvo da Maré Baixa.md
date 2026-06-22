@@ -1,4 +1,4 @@
----
+﻿---
 cssclasses:
   - b-sides-script
   - chapter
@@ -16,7 +16,7 @@ character: "[[Players/Characters/Varkh Nimalis]]"
 characters:
   - "[[Players/Characters/Varkh Nimalis]]"
   - "[[Mestre Odran Veyl]]"
-cover: "[[zz_media/varkh.jpeg]]"
+cover: "[[zz_media/characters/varkh-nimalis.webp]]"
 description: A história de Varkh Nimalis, o Corvo da Maré Baixa, desde sua infância nos becos portuários da capital do Reino de Nimalia até seu aprendizado como alquimista de rua e a descoberta de que alguém está usando o nome de seu mestre para espalhar remédios falsos pelo reino.
 ---
 

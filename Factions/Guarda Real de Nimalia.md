@@ -1,4 +1,4 @@
----
+﻿---
 obsidianUIMode: preview
 NoteIcon: faction
 NoteStatus: Draft
@@ -7,7 +7,7 @@ visibility: shared
 leader: "[[General Cassian Valerius]]"
 headquarters: Fortaleza Real, Nimalis
 territory: "[[Nimalia]]"
-thumbnail: zz_media/t7.png
+thumbnail: zz_media/ui/card-nimalia.webp
 tags:
   - faction
   - military
@@ -18,7 +18,7 @@ tags:
 # Guarda Real de Nimalia
 
 > [!NOTE|clean no-i right]+ Guarda Real
-> ![[t7.png|400]]
+> ![[zz_media/ui/card-nimalia.webp|400]]
 
 A Guarda Real é a força responsável pela segurança da Coroa, da capital e das principais rotas do Reino de [[Nimalia]].
 

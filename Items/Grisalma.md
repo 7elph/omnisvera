@@ -1,9 +1,9 @@
----
+﻿---
 obsidianUIMode: preview
 NoteIcon: items
 NoteStatus: Active
-thumbnail: zz_media/grisalma.png
-cover: zz_media/grisalma.png
+thumbnail: zz_media/items/grisalma.webp
+cover: zz_media/items/grisalma.webp
 status: Ativo
 visibility: gm
 item_type: Artefato
@@ -21,7 +21,7 @@ tags:
 ## Machado de Batalha
 
 > [!NOTE|clean no-i right]+ Grisalma
-> ![[grisalma.png|300]]
+> ![[zz_media/items/grisalma.webp|300]]
 
 
 *"Não é o machado que faz o guerreiro. É o guerreiro que dá propósito ao machado."*

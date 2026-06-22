@@ -1,4 +1,4 @@
----
+﻿---
 obsidianUIMode: preview
 NoteIcon: settlement
 NoteStatus: Active
@@ -20,7 +20,7 @@ imports:
   - Minérios
   - Madeira
   - Pedra de Mana
-cover: zz_media/t7.png
+cover: zz_media/ui/card-nimalia.webp
 tags:
   - territory
   - earthropo
@@ -32,7 +32,7 @@ tags:
 # Reino de Nimalia
 
 > [!NOTE|clean no-i right]+ Reino de Nimalia
-> ![[t7.png|400]]
+> ![[zz_media/ui/card-nimalia.webp|400]]
 
 Nimalia é o reino dos antropos na região central de Earthropo. Diferentes linhagens beastfolk vivem sob a autoridade do rei [[Augustus Terra Decimus]] e da [[Coroa de Nimalia]], ao lado de comunidades humanas, élficas, anãs, dragonborns e estrangeiras.
 

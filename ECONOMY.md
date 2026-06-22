@@ -1,10 +1,10 @@
----
+﻿---
 obsidianUIMode: preview
 NoteIcon: lore
 NoteStatus: Draft
 status: Em desenvolvimento
 visibility: gm
-cover: zz_media/cash.png
+cover: zz_media/ui/economia.webp
 tags:
   - economy
   - currency
@@ -14,7 +14,7 @@ tags:
 # Economia de Earthropo
 
 > [!NOTE|clean no-i right]+ Moedas
-> ![[cash.png|400]]
+> ![[zz_media/ui/economia.webp|400]]
 
 ## Moedas
 

@@ -1,9 +1,9 @@
----
+﻿---
 
 obsidianUIMode: preview  
 NoteIcon: magicitem  
 NoteStatus: Active  
-thumbnail: zz_media/th_elarion.PNG  
+thumbnail: zz_media/characters/thumbnails/elarion-valthor.webp
 status: Desaparecido  
 visibility: gm
 location: Desconhecida
@@ -31,7 +31,7 @@ tags:
 # ELARION VALTHOR
 
 > [!NOTE|clean no-i right]+ Elarion Valthor  
-> ![[elarion.png|400]]
+> ![[zz_media/characters/elarion-valthor.webp|400]]
 
 ## Visão Geral
 **Títulos:** Capitão das Sentinelas

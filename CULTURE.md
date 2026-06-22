@@ -1,10 +1,10 @@
----
+﻿---
 obsidianUIMode: preview
 NoteIcon: lore
 NoteStatus: Draft
 status: Em desenvolvimento
 visibility: gm
-cover: zz_media/t6.png
+cover: zz_media/ui/card-cultura.webp
 tags:
   - home
   - culture

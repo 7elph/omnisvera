@@ -1,9 +1,9 @@
----
+﻿---
 obsidianUIMode: preview
 NoteIcon: magicitem
 NoteStatus: Active
-cover: zz_media/th_raziel.PNG
-thumbnail: zz_media/th_raziel.PNG
+cover: zz_media/characters/thumbnails/raziel.webp
+thumbnail: zz_media/characters/thumbnails/raziel.webp
 status: Vivo
 visibility: gm
 location: "[[Nimalis]]"
@@ -42,7 +42,7 @@ tags:
 # RAZIEL — O ESPECTRO DA NÉVOA DE SANGUE
 
 > [!NOTE|clean no-i right]+ Raziel
-> ![[raziel.PNG|400]]
+> ![[zz_media/characters/raziel.webp|400]]
 
 ## Atributos
 
@@ -147,7 +147,7 @@ Silencioso, paciente e ameaçador; acostumado a agir fora da luz e sem necessida
 
 > [!infobox]
 >
-> ![[th_raziel.PNG]]
+> ![[zz_media/characters/thumbnails/raziel.webp]]
 
 **Virtudes:**
 Determinação, domínio próprio, resistência ao sofrimento e conhecimento de uma era desaparecida.

@@ -1,8 +1,8 @@
----
+﻿---
 obsidianUIMode: preview
 NoteIcon: magicitem
 NoteStatus: Draft
-thumbnail: zz_media/th_dukeofd.png
+thumbnail: zz_media/characters/thumbnails/augustus-terra-decimus.webp
 religion: "[[Igreja das Chamas]]" 
 status: Vivo
 visibility: gm
@@ -29,7 +29,7 @@ tags:
 # AUGUSTUS TERRA DECIMUS
 
 > [!NOTE|clean no-i right]+ ‎Retrato
-> ![[dukeofd.png|400]]  
+> ![[zz_media/characters/augustus-terra-decimus.webp|400]]
 
 ## Visão Geral
 **Títulos:** Rei soberano de Nimalia
@@ -68,7 +68,7 @@ Seu conhecimento sobre o [[Véu Cinzento]] e sobre artefatos antigos pode coloc�
 
 > [!infobox]
 >
-> ![[prop.png|260]]
+> ![[zz_media/characters/augustus-terra-decimus-retrato.webp|260]]
 
 **Defeitos:** Pode priorizar estabilidade e controle sobre transparência.
 

@@ -1,4 +1,4 @@
----
+﻿---
 obsidianUIMode: preview
 NoteIcon: settlement
 NoteStatus: Active
@@ -10,7 +10,7 @@ leader: Desconhecido
 government: Nenhum governo unificado
 region: Fronteira oriental de Nimalia
 population: Desconhecida
-cover: zz_media/avenor.png
+cover: zz_media/locations/floresta-de-avenor.webp
 tags:
   - territory
   - earthropo
@@ -21,7 +21,7 @@ tags:
 # Floresta de Avenor
 
 > [!NOTE|clean no-i right]+ Floresta de Avenor
-> ![[avenor.png|400]]
+> ![[zz_media/locations/floresta-de-avenor.webp|400]]
 
 Avenor é uma grande região florestal fora do Reino de [[Nimalia]]. Sua borda ocidental forma parte da fronteira do reino, enquanto seu interior reúne trilhas antigas, rios, comunidades pequenas e áreas pouco conhecidas.
 

@@ -4,7 +4,7 @@ NoteIcon: faction
 NoteStatus: Draft
 status: Clandestina
 visibility: gm
-cover:
+cover: zz_media/factions/guilda-das-trevas.webp
 leader: O Arauto Sombrio (desconhecido)
 headquarters: Desconhecida
 territory: Earthropo
@@ -16,6 +16,8 @@ tags:
 ---
 
 # Guilda das Trevas
+
+> ![[zz_media/factions/guilda-das-trevas.webp|500]]
 
 **Culto dos Sussurrantes** é um dos nomes atribuídos a uma rede clandestina conhecida informalmente como **Guilda das Trevas**.
 

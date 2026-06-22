@@ -1,9 +1,9 @@
----
+﻿---
 
 obsidianUIMode: preview  
 NoteIcon: magicitem
 NoteStatus: Active
-thumbnail: zz_media/th_oric.PNG  
+thumbnail: zz_media/characters/thumbnails/padre-oric.webp
 status: Desaparecido  
 visibility: gm
 location: Desconhecida  
@@ -30,7 +30,7 @@ tags:
 # PADRE ORIC
 
 > [!NOTE|clean no-i right]+ Padre Oric  
-> ![[oric.png|400]]
+> ![[zz_media/characters/padre-oric.webp|400]]
 
 ## Visão Geral
 **Nome:** Padre Oric  

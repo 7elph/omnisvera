@@ -1,4 +1,4 @@
----
+﻿---
 NoteIcon: class
 NoteStatus: Reference
 visibility: gm
@@ -6,7 +6,7 @@ tags:
   - rules-reference
   - legacy-term
   - old-dragon
-cover: zz_media/avenor.png
+cover: zz_media/locations/floresta-de-avenor.webp
 status: Termo legado
 ruleset: Old Dragon anterior
 ---

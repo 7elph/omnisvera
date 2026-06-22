@@ -1,4 +1,4 @@
----
+﻿---
 obsidianUIMode: preview
 NoteIcon: race
 NoteStatus: Draft
@@ -6,7 +6,7 @@ status: Ativa
 visibility: shared
 ruleset: Regra a confirmar
 source:
-cover: zz_media/earthropo.png
+cover: zz_media/maps/earthropo.png
 tags:
   - race
   - dragonborn

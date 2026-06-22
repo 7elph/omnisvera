@@ -1,9 +1,9 @@
----
+﻿---
 obsidianUIMode: preview
 NoteIcon: magicitem
 NoteStatus: Active
-cover: zz_media/th_varkh.PNG
-thumbnail: zz_media/th_varkh.PNG
+cover: zz_media/characters/thumbnails/varkh-nimalis.webp
+thumbnail: zz_media/characters/thumbnails/varkh-nimalis.webp
 status: Vivo
 visibility: gm
 location: "[[Nimalis]]"
@@ -40,7 +40,7 @@ tags:
 # VARKH NIMALIS — O CORVO DA MARÉ BAIXA
 
 > [!NOTE|clean no-i right]+ Varkh Nimalis
-> ![[varkh.jpeg|400]]
+> ![[zz_media/characters/varkh-nimalis.webp|400]]
 
 ## Atributos
 
@@ -154,7 +154,7 @@ Curioso, observador, pragmático e difícil de intimidar por muito tempo.
 
 > [!infobox]
 >
-> ![[th_varkh.PNG]]
+> ![[zz_media/characters/thumbnails/varkh-nimalis.webp]]
 
 **Virtudes:**
 Criatividade, precisão, lealdade a quem conquista sua confiança e disposição para proteger pessoas sem poder.
