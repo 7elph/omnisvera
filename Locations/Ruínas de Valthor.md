@@ -4,7 +4,7 @@ NoteIcon: location
 NoteStatus: Draft
 status: Ruínas
 visibility: shared
-cover: zz_media/locations/ruinas-de-valthor.webp
+cover: zz_media/locations/ruinas-de-valthor.png
 territory: Earthropo
 region: Sudeste de Earthropo
 tags:

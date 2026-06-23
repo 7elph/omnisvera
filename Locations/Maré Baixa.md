@@ -8,7 +8,7 @@ territory: "[[Nimalia]]"
 location: "[[Nimalis]]"
 district: Sul de Nimalis
 info: Distrito portuário de passarelas, moradias, pequenos ofícios, contrabando e sobrevivência.
-cover: zz_media/locations/mare-baixa.webp
+cover: zz_media/locations/porto-da-mare-baixa.png
 tags:
   - location
   - nimalia

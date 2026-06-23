@@ -4,7 +4,7 @@ NoteIcon: location
 NoteStatus: Placeholder
 status: Localização provisória
 visibility: gm
-cover: zz_media/locations/fortaleza-de-gharok.webp
+cover: zz_media/locations/fortaleza-de-gharok.png
 territory: Norte ou nordeste de Earthropo
 region: Cordilheira vulcânica
 info: Antiga sede do Clã Sanguinallis e origem de Raziel.

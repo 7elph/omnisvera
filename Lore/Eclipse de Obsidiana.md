@@ -8,7 +8,7 @@ info: Catástrofe ou mito segundo o qual parte de Earthropo desapareceu durante 
 era:
 related:
   - "[[Véu Cinzento]]"
-cover: zz_media/lore/eclipse-de-obsidiana.webp
+cover: zz_media/lore/eclipse-obsidiana.png
 tags:
   - lore
   - history

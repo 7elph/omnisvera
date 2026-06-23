@@ -9,7 +9,7 @@ related:
   - "[[Eclipse de Obsidiana]]"
   - "[[O Fraturamento]]"
   - "[[Criadores]]"
-cover: zz_media/lore/veu-cinzento.webp
+cover: zz_media/lore/veu-cinzento.png
 tags:
   - lore
   - veil

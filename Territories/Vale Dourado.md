@@ -4,8 +4,7 @@ NoteIcon: settlement
 NoteStatus: Placeholder
 status: Em desenvolvimento
 visibility: gm
-cover:
-type: Vale
+cover: zz_media/territories/vale-dourado.png
 region: Possivelmente oeste de Nimalia
 tags:
   - territory

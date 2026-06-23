@@ -6,7 +6,7 @@ status: Em desenvolvimento
 visibility: gm
 type: Região de campos
 region: Leste ou sudeste de Earthropo
-cover:
+cover: zz_media/territories/campos-de-earthropo.png
 tags:
   - territory
   - earthropo

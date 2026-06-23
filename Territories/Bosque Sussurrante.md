@@ -4,7 +4,7 @@ NoteIcon: settlement
 NoteStatus: Placeholder
 status: Em desenvolvimento
 visibility: gm
-cover:
+cover: zz_media/territories/bosque-sussurrante.png
 type: Bosque
 region: Possivelmente Avenor
 tags:

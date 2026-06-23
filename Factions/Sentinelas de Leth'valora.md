@@ -4,8 +4,7 @@ NoteIcon: faction
 NoteStatus: Draft
 status: Destruída
 visibility: gm
-cover:
-leader:
+cover: zz_media/factions/sentinelas-de-leth-valora.png
 headquarters: "[[Leth'valora]]"
 territory: "[[Floresta de Avenor]]"
 tags:

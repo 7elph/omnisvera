@@ -5,7 +5,7 @@ NoteStatus: Active
 status: Ativa
 visibility: shared
 cover:
-leader: Mesa dos Caminhos
+zz_media/factions/conclave-dos-errantes.png
 headquarters: Casa dos Caminhos, Nimalis
 territory: Earthropo
 alignment: Neutro

@@ -5,7 +5,7 @@ NoteStatus: Draft
 status: Cânone de trabalho
 visibility: gm
 cover:
-territory: "[[Nimalia]]"
+zz_media/locations/casa-da-moeda-externo.png
 district: "[[Nimalis]]"
 info: Instituição responsável pela cunhagem das moedas oficiais de Nimalia.
 tags:

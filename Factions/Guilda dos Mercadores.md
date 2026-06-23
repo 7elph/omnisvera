@@ -5,7 +5,7 @@ NoteStatus: Draft
 status: Ativa
 visibility: shared
 cover:
-leader:
+zz_media/factions/guilda-dos-mercadores.png
 headquarters: "[[Nimalis]]"
 territory: "[[Nimalia]]"
 tags:

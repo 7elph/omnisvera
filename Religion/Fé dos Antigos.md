@@ -8,8 +8,7 @@ status: Ativa
 visibility: shared
 deities:
   - "[[Criadores]]"
-cover:
-leader:
+cover: zz_media/factions/fe-dos-antigos.png
 headquarters:
 territory: Earthropo
 info: Conjunto de tradições anteriores às igrejas organizadas atuais.

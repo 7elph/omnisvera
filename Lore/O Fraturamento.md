@@ -9,7 +9,7 @@ era:
 related:
   - "[[Criadores]]"
   - "[[Véu Cinzento]]"
-cover: zz_media/lore/o-fraturamento.webp
+cover: zz_media/lore/o-fraturamento.png
 tags:
   - lore
   - theory

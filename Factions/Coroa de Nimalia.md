@@ -5,7 +5,7 @@ NoteStatus: Active
 status: Ativa
 visibility: gm
 cover:
-leader: "[[Augustus Terra Decimus]]"
+zz_media/factions/coroa-de-nimalia.png
 headquarters: "[[Nimalis]]"
 territory: "[[Nimalia]]"
 alignment: Ordeira

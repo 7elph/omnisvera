@@ -8,8 +8,7 @@ status: Ativa
 visibility: shared
 deities:
   - "[[Criadores]]"
-cover:
-leader:
+cover: zz_media/factions/igreja-das-chamas.png
 headquarters: Grande Templo das Chamas, Nimalis
 territory: Earthropo
 info: Fé organizada que representa virtudes, memória e orientação por meio da chama.

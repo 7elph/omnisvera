@@ -10,7 +10,7 @@ info: Memória quase apagada de um antigo grupo de heróis associado ao Véu Cin
 related:
   - "[[Guardiões do Véu Cinzento]]"
   - "[[Véu Cinzento]]"
-cover: zz_media/factions/guardioes-do-veu-cinzento.webp
+cover: zz_media/lore/guardioes-do-veu-sombrio.png
 tags:
   - lore
   - mystery
