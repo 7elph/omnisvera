@@ -1,31 +1,41 @@
 ---
+obsidianUIMode: preview
 NoteIcon: lore
+NoteStatus: Draft
+status: Evento histórico contestado
+visibility: gm
+info: Catástrofe ou mito segundo o qual parte de Earthropo desapareceu durante sete dias de escuridão.
+era:
+related:
+  - "[[Véu Cinzento]]"
+cover: zz_media/lore/eclipse-obsidiana.png
 tags:
-  - Category/Lore
   - lore
   - history
   - cataclysm
-cover: zz_media/w.png
-status: Historical
-info: O evento que engoliu metade do continente ha 300 anos. Marca o inicio da era atual.
+  - mystery
 ---
 
-# ECLIPSE DE OBSIDIANA
+# Eclipse de Obsidiana
 
-<h2>Overview</h2>
+> ![[zz_media/lore/eclipse-de-obsidiana.webp|500]]
 
-> [!NOTE|clean no-i right]+ ‎ECLIPSE DE OBSIDIANA
-> ![[w.png|400]]
+## Conhecimento público
 
-Ha trezentos anos, o sol foi engolido pela escuridao por sete dias e sete noites. Quando a luz retornou, metade do continente de Earthropo havia desaparecido, substituido pelo Veu Cinzento.
+Crônicas, canções e tradições de diferentes povos descrevem um período em que o sol desapareceu por sete dias e sete noites. Quando a luz retornou, parte de Earthropo teria desaparecido ou se tornado irreconhecível.
 
-Nenhuma explicacao natural foi encontrada. Nenhum deus respondeu. Nenhum explorador que cruzou o Veu jamais voltou.
+Não existe consenso sobre a extensão do desastre. Algumas versões falam de cidades; outras, de reinos inteiros. Os registros sobreviventes discordam até mesmo sobre a data.
 
----
+## Consequências atribuídas
 
-<h5>Consequencias</h5>
+- Desaparecimento de territórios e rotas.
+- Migrações e perda de registros.
+- Primeiros relatos amplamente conhecidos do [[Véu Cinzento]].
+- Surgimento de ruínas e objetos sem origem reconhecida.
 
-- Metade do continente perdida
-- Criacao do Veu Cinzento
-- Desaparecimento dos Criadores
-- Inicio da Era dos Fragmentos
+## Confiabilidade
+
+O evento é tratado como histórico, mas seus detalhes chegaram ao presente misturados a mito, propaganda religiosa e memória coletiva.
+
+> [!gm]- Verdade do mestre
+> Alguma parte do continente realmente desapareceu ou foi substituída. A proporção, a causa e a relação exata com o Véu ainda não estão definidas. Não usar “metade do continente” como fato.

@@ -1,8 +1,9 @@
 ---
 obsidianUIMode: preview
 NoteIcon: chart
-NoteStatus: Active
-status: Active
+NoteStatus: Archived
+status: Superado
+visibility: gm
 tags:
   - workflow
   - report

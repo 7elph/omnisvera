@@ -1,46 +1,36 @@
----
+﻿---
 obsidianUIMode: preview
 NoteIcon: news
 NoteStatus: Active
-tags: home
-cover: zz_media/news1.png
+status: Ativo
+visibility: player
+cover: zz_media/ui/card-boletim.webp
+tags:
+  - home
+  - news
+  - player
 ---
 
 # Rumores e Descobertas
 
-Esta página acompanha os fios narrativos que já pertencem à campanha. Ela não representa um jornal oficial de Nimalia e não transforma ideias futuras em acontecimentos já ocorridos.
+Esta página reúne informações que podem circular entre viajantes, tavernas, mercados e quadros de aviso. Rumores não são garantia de verdade.
 
-## Caminhos dos personagens
+## Nimalis
 
-### O Bastardo de Ferro
+- Remédios de procedência duvidosa começaram a aparecer nos bairros próximos ao porto.
+- A Guarda recomenda atenção a frascos sem selo de origem.
+- O [[Conclave dos Errantes]] procura pessoas capazes de viajar além das estradas mais seguras.
 
-[[Vezemir]] continua sua busca pelo dragão verde de colar dourado responsável pela destruição de [[Leth'valora]] e pela morte de [[Mira Valen]]. As relíquias que carrega ainda guardam perguntas sobre sua origem e sobre os [[Guardiões do Véu Cinzento]].
+## Estradas
 
-### O Corvo da Maré Baixa
+- Mercadores relatam névoa persistente em caminhos onde o céu permanece limpo.
+- Exploradores voltaram a discutir antigas ruínas no sudeste de Earthropo.
+- Caçadores da fronteira de Avenor afirmam ter visto uma sombra grande demais cruzando as árvores.
 
-Alguém está usando o símbolo e os métodos de Mestre Odran Veyl para distribuir remédios falsos. [[Varkh Nimalis]] deixou [[Maré Baixa]] seguindo esse rastro, sem saber até onde ele se estende.
+## Personagens
 
-### O Espectro da Névoa de Sangue
+- [[Players/Characters/Vezemir|Vezemir]] permanece ligado às estradas próximas da Floresta de Avenor.
+- [[Players/Characters/Varkh Nimalis|Varkh]] chegou a Nimalis seguindo o rastro de falsificações.
+- [[Players/Characters/Raziel|Raziel]] é um viajante recém-chegado cuja origem poucos conseguem reconhecer.
 
-Depois de mais de trezentos anos aprisionado, [[Raziel]] despertou nas cavernas sob as [[Ruínas de Valthor]]. O mundo que conhecia desapareceu, mas os nomes daqueles que o traíram permanecem.
-
----
-
-## Lugares no horizonte
-
-- **[[Capital de Nimalia]]:** ponto de referência inicial do reino e lar de [[Maré Baixa]].
-- **[[Floresta de Avenor]]:** fronteira viva de Nimalia, marcada por trilhas antigas, ruínas e pela história de Vezemir.
-- **[[Leth'valora]]:** vila élfica destruída pelo dragão de colar dourado.
-- **[[Ruínas de Valthor]]:** ruínas do sudeste de Earthropo, ligadas ao retorno de Raziel.
-
----
-
-## Perguntas que movem a campanha
-
-- Quem está falsificando os métodos de Odran?
-- Onde está o dragão que destruiu Leth'valora?
-- O que o Ancião Primordial deseja de Raziel?
-- Por que as relíquias de Vezemir reagem a forças que ele não compreende?
-- O que fará esses três viajantes seguirem o mesmo caminho?
-
-As respostas surgirão durante a campanha. Até lá, rumores devem permanecer rumores.
+As respostas surgirão em jogo. Até lá, rumores permanecem rumores.

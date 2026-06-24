@@ -2,77 +2,56 @@
 obsidianUIMode: preview
 NoteIcon: outline
 NoteStatus: Active
-status: Active
+status: Ativo
+visibility: gm
 tags:
   - workflow
-  - assistant
   - handoff
-  - backup
+  - assistant
 ---
 
-# Handoff dos Assistentes
+# Handoff do assistente
 
-Este arquivo é a memória operacional compartilhada entre Codex e a IA local. Ele deve permanecer curto, factual e versionado no Git.
+## Estado do vault
 
-## Objetivo atual
+- Branch de trabalho: `codex/vault-consolidation`.
+- Backup externo criado antes da consolidação.
+- Decisões do autor: [[Workflow/CONSOLIDATION_DECISIONS]].
+- Cânone central: [[Workflow/CANON]].
+- Templates: [[Workflow/TEMPLATES]].
+- Exclusões aguardando revisão: [[Workflow/DELETION_REVIEW]].
 
-1. Concluir a migração técnica e narrativa do template Disgraceland para Omnisvera.
-2. Preservar frontmatter, YAML, plugins, estilos e funcionalidades do Obsidian.
-3. Manter um assistente local capaz de consultar o vault, preparar evidências e continuar tarefas seguras quando Codex não estiver disponível.
-4. Manter backups recuperáveis do repositório e das alterações ainda não commitadas.
+## Cânone essencial
 
-## Estado atual
+- Omnisvera é o universo.
+- Earthropo é o continente.
+- Nimalia é o reino dos antropos.
+- Nimalis é a capital.
+- Avenor faz fronteira com Nimalia.
+- Leth'valora foi destruída.
+- Augustus Terra Decimus é o rei.
+- Campanha em Old Dragon 2, nível 1, iniciada em 3 de Ventara de 2377.
 
-- Omnisvera é o universo; Earthropo é o continente principal.
-- Nimalia é o reino dos antropos e faz fronteira com a Floresta de Avenor.
-- [[Leth'valora]] era uma pequena vila élfica em Avenor e foi destruída.
-- Os personagens de jogador são [[Vezemir]], [[Varkh Nimalis]] e [[Raziel]].
-- Disgraceland é fonte de template e referência técnica, nunca cânone automático.
-- O registro central de continuidade é [[CANON]].
-- O estado da migração é controlado em [[MIGRATION_LEDGER]].
-- A IA local usa `nomic-embed-text` para busca e `omnisvera-local` para síntese auxiliar.
+## Personagens
 
-## Restrições obrigatórias
+- [[Players/Characters/Vezemir]]: Guerreiro, Neutro-Bom.
+- [[Players/Characters/Varkh Nimalis]]: Alquimista, Neutro, membro do Conclave.
+- [[Players/Characters/Raziel]]: Ladrão com especialização Assassino; vampiro e hemomante autorais.
 
-- Não alterar fatos confirmados em [[CANON]] sem decisão explícita do usuário.
-- Não editar diretamente notas canônicas a partir de saída da IA local.
-- A IA local deve produzir propostas em `.local-proposals/`.
-- Não normalizar `NoteIcon`, listas, wikilinks ou nomes de propriedades por preferência estética.
-- Não varrer `zz_media` integralmente sem necessidade.
-- Não incluir automaticamente mudanças de mapa ou Leaflet em commits de outras tarefas.
-- Nunca tratar conteúdo de Disgraceland como Omnisvera apenas porque está dentro do vault.
+## Regras de trabalho
 
-## Hierarquia de fontes
+1. Ler o cânone e a nota inteira antes de editar.
+2. Usar os templates do vault.
+3. Não transformar mistério em resposta.
+4. Separar material dos jogadores e do mestre.
+5. Ignorar `zz_media` durante análises narrativas.
+6. Não excluir mídia sem relatório.
+7. Não restaurar nomes ou lore de Disgraceland.
 
-1. Decisão explícita mais recente do usuário.
-2. [[CANON]].
-3. Notas consolidadas dos três personagens.
-4. Referências fornecidas pelos jogadores.
-5. Notas de Omnisvera.
-6. Disgraceland, exclusivamente como template ou inspiração deliberada.
+## Próximos pontos
 
-## Próxima sequência
-
-1. Revisar as histórias dos três personagens em busca de nomes, lugares e datas inconsistentes.
-2. Começar por Raziel, porque Gharok, Campos de Earthropo e sua rota de vingança ainda afetam a geografia.
-3. Revisar o calendário de trabalho e decidir quais nomes e feriados entram no cânone.
-4. Consolidar facções e religiões somente depois das histórias dos personagens.
-5. Registrar cada decisão aprovada em [[CANON]] antes de fazer correções em massa.
-
-## Última atualização
-
-- Data: 2026-06-21
-- Branch: `main`
-- Repositório remoto privado: `7elph/omnisvera`
-- Conector remoto antigo: indisponível por depender de túnel ngrok expirado.
-- Substituição: servidor MCP local por `stdio`, configurado no próprio notebook.
-- `NOTES.md` e o caminho ativo do Capítulo 01 já foram separados de seus equivalentes legados.
-- O modelo local de contingência exige fontes explícitas; busca semântica isolada não autoriza síntese.
-- As notas ativas de Guerreiro, Ladrão, Clérigo e Mago agora resumem OD2; as versões da edição anterior estão arquivadas como `Legacy`.
-- A auditoria de runtime verifica consultas, mídias, frontmatter e Leaflet por `Workflow/audit_runtime.py`.
-- As notas narrativas antigas foram agrupadas em `Workflow/Legacy/`; configurações reutilizáveis permanecem em `Workflow/Templates/`.
-- O Calendarium ativo usa um rascunho de Omnisvera no ano 2100; a configuração original de Tribucia foi preservada como template.
-- O snippet ativo de perfil chama-se `omnisvera-profile`; a classe antiga continua disponível apenas como compatibilidade.
-- A geografia consolidada está registrada em [[GEOGRAPHY]]; Valthor possui marcador aproximado no sudeste e Gharok permanece sem posição.
-- Bosque Sussurrante e Vale Dourado continuam fora do mapa por não terem existência confirmada.
-- As notas de [[Vezemir]], [[Varkh Nimalis]] e [[Raziel]] usam a mesma estrutura visual e editorial; atributos numéricos continuam dependentes das fichas individuais.
+- Testar Alquimista e poderes de Vezemir.
+- Criar regras de Vampiro e Hemomante.
+- Preparar o capítulo [[01 - Ecos de Um Mal Antigo]].
+- Revisar a lista de exclusões.
+- Validar visualmente Home, Dataview, Calendarium e Leaflet.

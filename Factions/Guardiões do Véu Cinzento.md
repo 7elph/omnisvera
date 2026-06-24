@@ -1,49 +1,41 @@
 ---
 obsidianUIMode: preview
-NoteIcon: faction 
+NoteIcon: faction
 NoteStatus: Draft
+status: Desaparecida
+visibility: gm
+cover: zz_media/factions/guardioes-do-veu-cinzento.webp
 leader:
-state: Desaparecida
-location:
+headquarters:
+territory: Earthropo
 tags:
   - faction
   - order
+  - heroes
   - veil
 ---
 
 # Guardiões do Véu Cinzento
 
-Ordem desaparecida ligada à origem de [[Vezemir]], às relíquias entregues por [[Elarion Vaelthor]] e aos mistérios do Véu Cinzento.
+> ![[zz_media/factions/guardioes-do-veu-cinzento.webp|500]]
 
-## Cânone de trabalho
+Antigo grupo de heróis cuja existência quase desapareceu dos registros de Earthropo.
 
-As referências visuais apresentam os Guardiões como uma ordem antiga surgida nas fronteiras frias do norte. Seus membros não buscavam reconhecimento público: protegiam registros, relíquias e conhecimentos que deveriam permanecer ocultos.
+## Conhecido
 
-Seus símbolos recorrentes são:
+- O grupo existiu.
+- Era associado a relíquias, perigos e conhecimentos ligados ao [[Véu Cinzento]].
+- [[O Medalhão]] carrega um símbolo atribuído aos Guardiões.
+- [[Elarion Valthor]] possuía ao menos uma relíquia relacionada ao grupo.
 
-- uma figura encapuzada;
-- a Rosa do Véu;
-- aço escuro, prata envelhecida e inscrições ancestrais;
-- o juramento: *“Nem tudo que é verdade deve ser dito. Nem tudo que é oculto é mentira.”*
+## Desconhecido
 
-## Princípios atribuídos
-
-- Dever acima de glória.
-- Silêncio diante de conhecimentos perigosos.
-- Proteção do equilíbrio entre luz e sombra.
-- Destruição daquilo que ameaça romper esse equilíbrio.
-
-## Relação com Vezemir
-
-[[O Medalhão dos Guardiões do Véu Cinzento]] sugere que Vezemir possui algum vínculo com a ordem, mas ainda não está definido se ele é herdeiro, último membro, escolhido ou apenas portador de uma relíquia.
-
-## Em aberto
-
-- Fundação e liderança.
-- Relação exata com o Véu Cinzento.
+- Integrantes.
+- Liderança.
+- Sede.
+- Feitos.
 - Motivo do desaparecimento.
-- Participação de [[Elarion Vaelthor]].
-- Natureza do vínculo de Vezemir.
+- Relação exata com [[Players/Characters/Vezemir]].
 
-> [!warning] Estado do conteúdo
-> Os elementos acima vieram das referências visuais da campanha e permanecem como cânone de trabalho até serem confirmados em jogo.
+> [!warning] Limite
+> Não definir a história completa dos Guardiões antes de aprovação do mestre.

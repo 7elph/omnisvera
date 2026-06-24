@@ -2,7 +2,8 @@
 obsidianUIMode: preview
 NoteIcon: notes
 NoteStatus: Active
-status: Active
+status: Ativo
+visibility: gm
 tags:
   - home
   - notes
@@ -33,9 +34,11 @@ Ponto de entrada para preparação, decisões de continuidade e material ainda e
 - [[CULTURE|Cultura de Earthropo]]
 - [[ECONOMY|Economia de Earthropo]]
 
-## Material legado
+## Consolidação
 
-As notas rápidas originais de Disgraceland foram preservadas em [[Legacy - Disgraceland Quick Notes]] e não fazem parte do cânone ativo.
+- [[Workflow/CONSOLIDATION_DECISIONS|Decisões respondidas]]
+- [[Workflow/TEMPLATES|Templates]]
+- [[Workflow/DELETION_REVIEW|Revisão de exclusões]]
 
 ## Modificado recentemente
 

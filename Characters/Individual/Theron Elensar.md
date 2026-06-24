@@ -3,29 +3,33 @@ obsidianUIMode: preview
 NoteIcon: character
 NoteStatus: Placeholder
 status: Desconhecido
+visibility: gm
+thumbnail:
+cover:
 location: "[[Leth'valora]]"
 territory: "[[Floresta de Avenor]]"
 faction:
+religion:
 class:
 race: Elfo
 role: npc
+chapters:
+  - 00 - O Bastardo de Ferro
 tags:
-  - Category/Character
   - character
   - npc
   - elf
-  - vezemir
   - placeholder
 ---
 
 # Theron Elensar
 
-Elfo relacionado a um incidente decisivo da juventude de [[Vezemir]].
+Elfo relacionado a um incidente decisivo da juventude de [[Characters/Individual/Players/Vezemir]].
 
 ## Informações confirmadas
 
-- O incidente envolvendo Theron contribuiu para que [[Elarion Vaelthor]] concluísse que Vezemir jamais seria aceito por parte da comunidade élfica.
-- Vezemir o considera um inimigo conhecido.
+- O incidente envolvendo Theron contribuiu para que [[Elarion Valthor]] concluísse que Vezemir jamais seria aceito por parte da comunidade élfica.
+- Theron não é um inimigo conhecido na situação atual de Vezemir.
 
 ## Em aberto
 
@@ -34,4 +38,4 @@ Elfo relacionado a um incidente decisivo da juventude de [[Vezemir]].
 - Destino após a partida de Vezemir e a destruição da vila.
 - Motivações e relação atual com Vezemir.
 
-Nenhuma fonte localizada em Downloads fornece detalhes adicionais confiáveis.
+Theron é um personagem secundário. Não desenvolver além do necessário para sustentar esse episódio.

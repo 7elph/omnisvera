@@ -1,25 +1,30 @@
 ---
 obsidianUIMode: preview
-NoteIcon:
-NoteStatus: New
+NoteIcon: magicitem
+NoteStatus: Template
 thumbnail:
-status:
+cover:
+status: Desconhecido
+visibility: gm
 location:
 territory:
 faction:
 religion:
 class:
 race:
-role:
-chapter: []
+role: npc
+occupation:
+chapters: []
 tags:
   - template
+  - character
+  - npc
 ---
 
 # NOME DO PERSONAGEM
 
 > [!NOTE|clean no-i right]+ Retrato
-> Adicionar o embed do retrato após definir `thumbnail`.
+> Adicionar o retrato quando estiver disponível.
 
 ## Visão Geral
 
@@ -46,6 +51,8 @@ tags:
 **Facção:**
 
 **Religião:**
+
+**Ocupação:**
 
 **Associados:**
 
@@ -81,7 +88,8 @@ Descrever habilidades importantes para a narrativa e, quando necessário, para o
 
 ## Segredos
 
-- _Adicionar segredo._
+> [!gm]- Segredos do mestre
+> - Adicionar segredo, verdade oculta ou informação ainda não confirmada.
 
 ---
 
@@ -100,3 +108,12 @@ Descrever características físicas, roupas, postura e elementos reconhecíveis.
 ## Papel na Campanha
 
 Registrar como o personagem se conecta aos outros protagonistas, às facções e ao conflito central.
+
+## Aparições
+
+```dataview
+TABLE date, description
+FROM #story
+WHERE contains(characters, this.file.link)
+SORT file.name ASC
+```

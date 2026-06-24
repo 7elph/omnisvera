@@ -1,120 +1,77 @@
----
+﻿---
+obsidianUIMode: preview
 NoteIcon: settlement
+NoteStatus: Active
+status: Ativo
+visibility: shared
+type: Reino
+capital: "[[Nimalis]]"
+leader: "[[Augustus Terra Decimus]]"
+government: Monarquia
+region: Bacia central de Earthropo
+population: 750000
+religion:
+  - "[[Igreja das Chamas]]"
+exports:
+  - Grãos
+  - Artesanato
+  - Equipamentos
+imports:
+  - Minérios
+  - Madeira
+  - Pedra de Mana
+cover: zz_media/ui/card-nimalia.webp
 tags:
-  - Category/Settlement
   - territory
   - earthropo
   - kingdom
   - beastfolk
   - antropo
-cover: zz_media/t7.png
-Alignment: Lawful Good
-Government: Monarquia
-reputation: civilizado
-politics: Rei
-leader: [[Augustus Terra Decimus]]
-region: 
-  - Região Central de Earthropo
-size: Reino
-population:
-religion: 
-  - Igreja das Chamas
-exports: 
-  - Grãos, Artesanato, Magia
-imports: 
-  - Minérios, Madeira, Pedra de Mana
 ---
 
-# REINO DE NIMALIA
+# Reino de Nimalia
 
-<h2>Overview</h2>
+> [!NOTE|clean no-i right]+ Reino de Nimalia
+> ![[zz_media/ui/card-nimalia.webp|400]]
 
-> [!NOTE|clean no-i right]+ ‎REINO DE NIMALIA
-> ![[t7.png|400]]
+Nimalia é o reino dos antropos na região central de Earthropo. Diferentes linhagens beastfolk vivem sob a autoridade do rei [[Augustus Terra Decimus]] e da [[Coroa de Nimalia]], ao lado de comunidades humanas, élficas, anãs, dragonborns e estrangeiras.
 
-Nimalia é o reino dos antropos apresentado até agora em Earthropo. Reúne diferentes povos beastfolks sob a autoridade de [[Augustus Terra Decimus]] e da [[Coroa de Nimalia]].
+Sua capital é [[Nimalis]], uma grande cidade murada construída onde rios e estradas convergem.
 
-A [[Capital de Nimalia]] ainda não possui nome definitivo. É uma grande cidade de torres de pedra e mercados movimentados, onde antropos convivem com comunidades humanas, élficas, anãs e estrangeiras.
+## Geografia
 
-Como referência inicial de cartografia, o reino ocupa as terras centrais ao redor da capital. Sua fronteira oriental ou nordeste encontra a [[Floresta de Avenor]]. As demais bordas ainda não foram traçadas.
+- **Leste:** fronteira com a [[Floresta de Avenor]].
+- **Norte:** rios superiores e elevações anteriores à cordilheira.
+- **Sul:** campos centrais, confluências e rotas para as montanhas meridionais.
+- **Oeste:** colinas, estradas e caminhos para cidades costeiras.
 
----
+As fronteiras são conhecidas pelo mestre, mas podem ser descobertas gradualmente pelos jogadores.
 
-<h2>Capital do Reino</h2>
+## Governo
 
-Os distritos abaixo pertencem à [[Capital de Nimalia]], cujo nome ainda está em aberto.
+- **Governante:** [[Augustus Terra Decimus]].
+- **Capital:** [[Nimalis]].
+- **Instituição central:** [[Coroa de Nimalia]].
+- **Força oficial:** [[Guarda Real de Nimalia]].
 
-> [!warning] Estrutura urbana em revisão
-> Os nomes e funções dos distritos abaixo vieram de rascunhos anteriores. Eles servem como material de preparação, mas ainda não foram confirmados individualmente como cânone.
+A política existe como parte do cenário, mas a campanha não gira em torno da corte. O reino funciona principalmente como ponto de partida, mercado, abrigo e ligação entre rotas de exploração.
 
-#### Bairro dos Humanos
+## População
 
-Lugar onde os humanos se estabeleceram na cidade.
+A estimativa de trabalho é de aproximadamente **750.000 habitantes** em todo o reino. Antropos são maioria dentro de Nimalia, embora humanos sejam o povo mais numeroso de Earthropo como um todo.
 
----
+## Economia
 
-#### Bairro dos Elfos
+Nimalia produz grãos, artesanato e equipamentos e importa madeira, minérios e materiais raros. A moeda real circula além das fronteiras do reino, mas não é necessariamente o padrão de todo o continente.
 
-Lugar onde os elfos se estabeleceram na cidade.
+## Localizações
 
----
-
-#### Bairro dos Anões
-
-Lugar onde os anões se estabeleceram na cidade.
-
----
-
-#### Bairro dos Dragonbourns
-
-Lugar onde os Dragonbourns se estabeleceram na cidade.
-
----
-
-#### Bairro Nobre
-
-Área de alto padrão da cidade, onde estão os nobres.
-
----
-
-#### Mercado Central
-
-Área comercial da cidade, onde estão localizados todos os produtos que se pode encontrar.
-
----
-
-#### Distrito Comercial
-
-Área com lojas especializadas onde pode se encontrar desde poções até escravos.
-
----
-
-#### Bairro dos Forasteiros
-
-Lugar onde qualquer um com pouca renda pode se estabelecer por um curto tempo. Local das favelas da cidade.
-
----
-
-#### Porto Real
-
-Lugar da cidade onde os barcos fazem sua movimentação, carga e descarga.
-
----
-
-<h2>Dados do Reino</h2>
-
-- **Governante:** [[Augustus Terra Decimus]]
-- **Capital:** nome em aberto
-- **População da capital:** ainda não definida
-- **Características da capital:** Biblioteca Real, Grande Templo das Chamas, Arena Divina
-
----
-
-<h2>Residentes do Reino de Nimalia</h2>
-
-  ```dataview
-table location, status, faction
-from "Characters"
-where contains(lower(string(location)), "nimalia")
-limit 10
+```dataview
+TABLE status, info, population
+FROM "Locations"
+WHERE contains(string(territory), this.file.name)
+SORT file.name ASC
 ```
+
+> [!gm]- Bastidores
+> A Coroa mantém registros sobre fenômenos e artefatos ligados ao Véu, mas o alcance desse conhecimento ainda não está definido. Augustus pode funcionar como aliado, obstáculo ou antagonista circunstancial sem ser um vilão automático.

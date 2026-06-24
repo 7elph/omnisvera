@@ -1,15 +1,21 @@
 ---
+obsidianUIMode: preview
 NoteIcon: settlement
 NoteStatus: Placeholder
-status: Sem cânone definido
+status: Em desenvolvimento
+visibility: gm
+cover: zz_media/territories/vale-dourado.png
+region: Possivelmente oeste de Nimalia
 tags:
-  - Category/Settlement
   - territory
+  - valley
   - placeholder
 ---
 
 # Vale Dourado
 
-Nome preservado como placeholder. Nenhuma fonte localizada em Downloads ou no cânone atual define sua posição, habitantes ou função.
+Nome de trabalho para um possível vale agrícola ou rota comercial a oeste do núcleo de [[Nimalia]].
 
-Esta região não deve ser colocada no mapa nem tratada como existente até receber uma decisão explícita.
+O nome não possui posição, população ou função confirmada. Pode ser usado futuramente como região produtora, caminho para a costa ou território de uma comunidade ainda não apresentada.
+
+Não recebe pin público.

@@ -3,6 +3,7 @@ obsidianUIMode: preview
 NoteIcon: lore
 NoteStatus: Active
 status: Cânone confirmado
+visibility: shared
 tags:
   - home
   - lore

@@ -3,7 +3,13 @@ obsidianUIMode: preview
 NoteIcon: items
 NoteStatus: Active
 status: Ativo
-item: Relíquia
+visibility: gm
+thumbnail:
+cover:
+item_type: Relíquia
+owner: "[[Players/Characters/Raziel]]"
+origin: "[[Clã Sanguinallis]]"
+source: História de Raziel
 tags:
   - item
   - artifact
@@ -13,7 +19,7 @@ tags:
 
 # Adagas de Espectro Fantasma
 
-Par de lâminas de arremesso etéreas pertencentes a [[Raziel]] desde o período em que servia como executor do Clã Sanguinallis.
+Par de lâminas de arremesso etéreas pertencentes a [[Players/Characters/Raziel]] desde o período em que servia como executor do Clã Sanguinallis.
 
 ## Propriedades conhecidas
 
@@ -22,4 +28,5 @@ Par de lâminas de arremesso etéreas pertencentes a [[Raziel]] desde o período
 - Ao perfurar uma criatura, drenam parte de sua energia vital.
 - A energia drenada cura Raziel ou alimenta sua reserva de sangue.
 
-Sua origem, o método de forja e a forma como permaneceram ligadas a Raziel durante seu aprisionamento ainda precisam ser definidos.
+> [!gm]- Em aberto
+> Sua origem, o método de forja e a forma como permaneceram ligadas a Raziel durante o aprisionamento ainda precisam ser definidos.

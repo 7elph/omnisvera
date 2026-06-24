@@ -1,63 +1,47 @@
----
+﻿---
 obsidianUIMode: preview
 NoteIcon: faction
 NoteStatus: Draft
-leader: Comandante Aldric Vane
-status: Active
-location: "[[Nimalia]]"
-faction: "[[Guarda Real de Nimalia]]"
+status: Ativa
+visibility: shared
+leader: "[[General Cassian Valerius]]"
+headquarters: Fortaleza Real, Nimalis
+territory: "[[Nimalia]]"
+thumbnail: zz_media/ui/card-nimalia.webp
 tags:
   - faction
   - military
-  - legalista
-  - army
-thumbnail: zz_media/t7.png
+  - guard
+  - nimalia
 ---
 
-# GUARDA REAL DE NIMALIA
+# Guarda Real de Nimalia
 
-> [!note] Membros ainda não consolidados
-> A consulta abaixo permanecerá vazia enquanto nenhum personagem confirmado receber a tag `guarda`. O comandante registrado continua apenas como texto provisório.
+> [!NOTE|clean no-i right]+ Guarda Real
+> ![[zz_media/ui/card-nimalia.webp|400]]
 
-```datacards
-TABLE thumbnail, location, status FROM #guarda
-SORT name ASC
+A Guarda Real é a força responsável pela segurança da Coroa, da capital e das principais rotas do Reino de [[Nimalia]].
 
-// Settings
-preset: grid 
-columns: 6
-imageProperty: thumbnail
-imageHeight: 30px
-showImageOnHover: true
-cardSpacing: 4
+## Liderança
+
+[[General Cassian Valerius]] coordena a defesa estratégica do reino e responde diretamente a [[Augustus Terra Decimus]].
+
+## Funções
+
+- Proteger Nimalis e instalações reais.
+- Patrulhar estradas e fronteiras prioritárias.
+- Responder a monstros, desastres e ameaças organizadas.
+- Apoiar autoridades locais quando o risco supera sua capacidade.
+
+## Estrutura
+
+Números exatos de soldados, companhias e postos permanecem em aberto. A Guarda deve parecer suficiente para proteger o reino, mas incapaz de resolver sozinha todos os perigos encontrados pelos aventureiros.
+
+## Membros
+
+```dataview
+TABLE thumbnail, location, status, occupation
+FROM "Characters"
+WHERE contains(string(faction), this.file.name)
+SORT file.name ASC
 ```
-
-> [!NOTE|clean no-i right]+ Guarda Real de Nimalia
-> ![[t7.png|400]]
-
-**Group:** [[Guarda Real de Nimalia]]  
-**Home Location:** [[Nimalia|Nimalia]]  
-**Public Reputation:** Respected and Feared  
-**Liderança registrada:** Comandante Aldric Vane
-**Status:** Active  
-**Primary Headquarters:** Fortaleza Real, capital do Reino de Nimalia
-**Controlled Territory:** [[Nimalia]]
-
----
-
-<h5>História</h5>
-
-> <h4>"Pela coroa e pela terra."</h4>
-
-A força militar oficial do Reino de Nimalia.
-
-> [!warning] Cânone em revisão
-> O nome do comandante, os números das tropas e a estrutura abaixo ainda não foram confirmados pelo mestre. Permanecem como conteúdo de trabalho, sem criação automática de uma nota de personagem.
-
----
-
-<h5>Estrutura</h5>
-
-- **Guarda Real:** 2.000 soldados de elite
-- **Legiões de Nimalia:** 10.000 soldados
-- **Posto Vigilia:** defesa contra o Veu

@@ -1,190 +1,46 @@
----
+﻿---
 obsidianUIMode: preview
 NoteIcon: lore
 NoteStatus: Draft
-status: Cânone de trabalho
-tags: home
-cover: zz_media/t6.png
+status: Em desenvolvimento
+visibility: gm
+cover: zz_media/ui/card-cultura.webp
+tags:
+  - home
+  - culture
+  - earthropo
 ---
-# CULTURA DE EARTHROPO
 
-Earthropo é um continente moldado por diversas raças, reinos e tradições. Embora cada território possua seus próprios costumes, algumas práticas se tornaram universais ao longo dos séculos, criando uma identidade compartilhada entre seus habitantes.
+# Cultura de Earthropo
 
-> [!note] Estrutura em preparação
-> Os cartões de entretenimento, música, esportes e notícias permanecerão vazios até que notas canônicas dessas categorias sejam criadas. As consultas já estão preparadas e não representam erro de plugin.
+Earthropo não possui uma cultura única. Reinos, raças, cidades e comunidades preservam tradições próprias, e esta nota registra apenas práticas que podem circular entre várias regiões.
 
----
+## Viagem e informação
+
+- Arautos, mensageiros, caravanas, templos e viajantes espalham notícias.
+- Mapas completos são raros; rotas locais são mais confiáveis que cartas continentais.
+- Histórias orais misturam informação, exagero e memória.
+- O [[Conclave dos Errantes]] registra caminhos, perigos e expedições.
+
 ## Entretenimento
-<br>
 
-```datacards
-TABLE cover, info, status FROM #entertainment
-SORT name ASC
+- Contadores de histórias e bardos.
+- Feiras e festivais sazonais.
+- Jogos de taverna.
+- Torneios, duelos e competições locais.
+- Teatro e apresentações itinerantes.
 
-// Settings
-preset: square 
-columns: 6
-imageProperty: cover
-showImageOnHover: true
-cardSpacing: 4
-```
+## Relações entre povos
 
-### Formas populares de entretenimento
+Grandes cidades como [[Nimalis]] reúnem antropos, humanos, elfos, anões, dragonborns e outros povos. Convivência não elimina preconceito, mas origem racial não define automaticamente profissão, moral ou posição social.
 
-- Contadores de histórias
-- Teatros itinerantes
-- Companhias de bardos
-- Festivais sazonais
-- Feiras comerciais
-- Competições de magia
-- Torneios de combate
-- Jogos de taverna
-- Caçadas comunitárias
+## Aventureiros
 
----
+Aventureiros podem ser admirados, temidos ou vistos como trabalhadores perigosos. Seu prestígio depende do lugar, do contratante e dos problemas deixados pelo caminho.
 
-## Música
-<br>
+## Conteúdo a desenvolver
 
-```datacards
-TABLE cover, info, status FROM #music
-SORT name ASC
+Notas de entretenimento, música e esportes serão criadas quando uma tradição local aparecer em jogo. Nenhuma categoria vazia precisa ser exibida antes disso.
 
-// Settings
-preset: portrait 
-columns: 5
-imageProperty: cover
-showImageOnHover: true
-cardSpacing: 4
-```
-
-### Instrumentos comuns
-
-- Alaúde
-- Harpa Élfica
-- Flauta de Carvalho
-- Tambor de Guerra Anão
-- Trompa Dracônica
-
-### Estilos populares
-
-- Canções heroicas
-- Baladas românticas
-- Cantos religiosos
-- Música de guerra
-- Danças folclóricas
-
----
-
-## Esportes e Competições
-<br>
-
-```datacards
-TABLE cover, info, status FROM #sport
-SORT name ASC
-
-// Settings
-preset: grid 
-columns: 6
-imageProperty: cover
-showImageOnHover: true
-cardSpacing: 4
-```
-
-### Competições populares
-
-- Torneios de Cavalaria
-- Arquearia
-- Duelo Arcano
-- Lutas de Arena
-- Corridas de Montaria
-- Desafios de Sobrevivência
-
----
-
-## Notícias e Informação
-<br>
-
-```datacards
-TABLE cover, info, status FROM #news
-SORT name ASC
-
-// Settings
-preset: grid 
-columns: 5
-imageProperty: cover
-showImageOnHover: true
-cardSpacing: 4
-```
-
-### Como as notícias se espalham
-
-- Mensageiros Reais
-- Arautos
-- Guildas Mercantis
-- Bardos viajantes
-- Templos
-- Quadros de avisos do [[Conclave dos Errantes]]
-
----
-
-## Tradições Comuns
-
-### Festival da Colheita
-
-Celebrado em praticamente todos os reinos.
-
-Marca o fim da estação agrícola e o início das grandes feiras comerciais.
-
----
-
-### Dia dos Heróis
-
-Uma celebração dedicada aos aventureiros e figuras históricas que protegeram Earthropo.
-
-Muitas cidades realizam torneios e apresentações públicas.
-
----
-
-### Festival das Chamas
-
-Comum entre seguidores da [[Igreja das Chamas]].
-
-Fogueiras são acesas durante toda a noite em homenagem aos ancestrais.
-
----
-
-## A Visão Sobre Aventureiros
-
-Poucas figuras são tão admiradas em Earthropo quanto os aventureiros.
-
-Enquanto nobres governam e exércitos defendem fronteiras, são os aventureiros que exploram ruínas, enfrentam monstros e descobrem os segredos esquecidos do mundo.
-
-Muitas crianças sonham em um dia ingressar no [[Conclave dos Errantes]].
-
----
-
-## Relações Entre Raças
-
-Apesar de conflitos históricos, humanos, elfos, anões, dragonborns e antropomorfos convivem relativamente bem dentro dos grandes centros urbanos.
-
-Preconceitos ainda existem, especialmente em regiões mais isoladas, mas a cooperação tornou-se necessária para a sobrevivência dos reinos.
-
----
-
-## Valores de Earthropo
-
-- Honra
-- Coragem
-- Conhecimento
-- Liberdade
-- Comunidade
-- Exploração
-
-A maioria dos povos de Earthropo acredita que o destino não é herdado.
-
-Ele é construído.
-
-Por isso o continente ficou conhecido como:
-
-> **A Terra dos Destinos e das Possibilidades.**
+> [!gm]- Regra editorial
+> Novos costumes devem nascer de um povo ou lugar específico antes de serem apresentados como universais.

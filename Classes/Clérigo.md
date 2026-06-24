@@ -6,7 +6,7 @@ tags:
   - class
   - cleric
   - old-dragon-2
-cover: zz_media/avenor.png
+cover: zz_media/characters/padre-oric.webp
 status: Active
 ruleset: Old Dragon 2E
 source: https://olddragon.com.br/classes/clerigo

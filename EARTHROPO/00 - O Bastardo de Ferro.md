@@ -1,9 +1,9 @@
----
+﻿---
 cssclasses:
   - b-sides-script
   - chapter
   - character/Vezemir
-  - character/Elarion Vaelthor
+  - character/Elarion Valthor
   - character/Mira Valen
   - character/Padre Oric
   - character/General Cassian Valerius
@@ -12,7 +12,17 @@ tags:
   - story
   - chapter0
   - earthropo
-cover: "[[zz_media/vezemir.png]]"
+cover: "[[zz_media/characters/vezemir.webp]]"
+NoteStatus: Active
+status: História de personagem
+visibility: gm
+character: "[[Players/Characters/Vezemir]]"
+characters:
+  - "[[Players/Characters/Vezemir]]"
+  - "[[Elarion Valthor]]"
+  - "[[Mira Valen]]"
+  - "[[Padre Oric]]"
+  - "[[General Cassian Valerius]]"
 description: A história de Vezemir, o Bastardo de Ferro, desde sua infância entre os elfos de Leth'valora até sua busca implacável pelo dragão que destruiu tudo o que ele amava.
 ---
 
@@ -22,7 +32,7 @@ description: A história de Vezemir, o Bastardo de Ferro, desde sua infância en
 
 ## O Bastardo de Ferro
 
-Nascido entre dois mundos, rejeitado por ambos e moldado pela guerra, [[Vezemir]] tornou-se uma figura temida e respeitada de Earthropo.
+Nascido entre dois mundos, rejeitado por ambos e moldado pela guerra, [[Players/Characters/Vezemir]] tornou-se uma figura temida e respeitada de Earthropo.
 Sua história atravessa mais de um século de batalhas, perdas e segredos antigos que remontam aos esquecidos [[Guardiões do Véu Cinzento]].
 
 ## Personagens Importantes
@@ -39,7 +49,7 @@ cardSpacing: 4
 ```
 
 > [!world]- RESUMO
-> Meio-elfo criado pelo veterano [[Elarion Vaelthor]], Vezemir cresceu enfrentando o preconceito da sociedade élfica de [[Leth'valora]]. Após ser exilado por seu mentor, tornou-se mercenário, soldado e herói de inúmeras guerras humanas. Durante seus anos de isolamento encontrou [[Mira Valen]], a mulher que lhe deu um lar. Tudo foi destruído quando um misterioso dragão verde usando um colar dourado massacrou sua vila. Desde então, Vezemir dedica sua vida a encontrar a criatura, enquanto investiga os mistérios dos [[Guardiões do Véu Cinzento]], sua própria origem e a estranha magia que habita dentro dele.
+> Meio-elfo criado pelo veterano [[Elarion Valthor]], Vezemir cresceu enfrentando o preconceito da sociedade élfica de [[Leth'valora]]. Após ser exilado por seu mentor, tornou-se mercenário, soldado e herói de inúmeras guerras humanas. Durante seus anos de isolamento encontrou [[Mira Valen]], a mulher que lhe deu um lar. Tudo foi destruído quando um misterioso dragão verde usando um colar dourado massacrou sua vila. Desde então, Vezemir dedica sua vida a encontrar a criatura, enquanto investiga os mistérios dos [[Guardiões do Véu Cinzento]], sua própria origem e a estranha magia que habita dentro dele.
 
 ---
 
@@ -56,7 +66,7 @@ Para muitos, um meio-elfo representava a corrupção de uma linhagem ancestral.
 Um erro.
 Uma vergonha.
 Mas um único guerreiro se recusou a abandoná-lo.
-[[Elarion Vaelthor]].
+[[Elarion Valthor]].
 Capitão veterano das [[Sentinelas de Leth'valora]].
 Sem explicações.
 Sem pedir permissão.
@@ -110,14 +120,14 @@ Antes da despedida, Elarion entregou três relíquias:
 
 - [[Grisalma]]
 - [[Muralha de Dorn]]
-- [[O Medalhão dos Guardiões do Véu Cinzento]]
+- [[O Medalhão]]
 
 E apenas uma frase.
 
 > "O mundo jamais decidirá quem você é... se você sobreviver tempo suficiente para decidir sozinho."
 
 Na manhã seguinte, Vezemir deixou [[Leth'valora]].
-E nunca mais voltou.
+E não voltou por muitas décadas.
 
 ---
 
@@ -189,7 +199,7 @@ Vingança.
 
 # O DRAGÃO DE COLAR DOURADO
 
-Durante mais de trinta anos, Vezemir perseguiu pistas.
+Durante cerca de sessenta anos, Vezemir perseguiu ativamente pistas.
 Caçou monstros.
 Explorou ruínas.
 Trabalhou para o [[Conclave dos Errantes]].

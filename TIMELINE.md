@@ -1,69 +1,50 @@
----
+﻿---
 obsidianUIMode: preview
 NoteIcon: timeline
 NoteStatus: Active
-status: Active
+status: Ativo
+visibility: gm
+cover: zz_media/ui/card-linha-do-tempo.webp
 tags:
   - home
   - timeline
   - earthropo
-cover: zz_media/t1.png
 ---
 
 # Linha do Tempo de Omnisvera
 
-Esta linha do tempo registra o cânone ativo da campanha: **Omnisvera** como universo, **Earthropo** como continente principal e **Nimalia** como reino dos antropos.
+Esta linha do tempo usa datas exatas apenas quando foram confirmadas. Eventos míticos permanecem sem ano até que o cânone exija uma cronologia.
 
 ```chronos
-> DEFAULTVIEW  1750|2110
+> DEFAULTVIEW  1880|2390
 
-@ [0~1700] #purple ERA DOS CRIADORES
-- [0] #purple Os Criadores moldam mundos-cópia e deixam estruturas impossíveis enterradas sob Earthropo.
-- [1200] #purple Os primeiros registros dos Guardiões do Véu Cinzento aparecem em ruínas élficas e humanas.
+@ [1900~2377] #orange A VIDA DE VEZEMIR
+- [1900] #orange Vezemir é encontrado ainda bebê próximo a Leth'valora.
+- [1940] #orange Vezemir deixa Leth'valora com Grisalma, Muralha de Dorn e O Medalhão.
+- [2040] #red Leth'valora é destruída pelo dragão de colar dourado. Mira Valen e seu pai morrem.
+- [2040~2100] #orange Período principal da perseguição de Vezemir ao dragão.
 
-@ [1800~1807] #red ECLIPSE DE OBSIDIANA
-- [1800] #red O sol desaparece por sete dias e sete noites.
-- [1800] #red O Véu Cinzento surge e devora parte do mundo conhecido.
-- [1807] #yellow As primeiras expedições retornam incompletas, enlouquecidas ou marcadas por memórias que não pertencem a elas.
-
-@ [1810~1980] #blue RECONSTRUÇÃO DE EARTHROPO
-- [1840] #blue O Reino de Nimalia se fortalece como centro de comércio, fé e poder militar.
-- [1900] #green A Coroa de Nimalia consolida rotas, impostos e alianças sobre grande parte de Earthropo.
-- [1960] #green A Igreja das Chamas se torna a principal força religiosa institucional do reino.
-
-@ [1900~2070] #orange A ERA DE VEZEMIR
-- [1900] #orange Vezemir é encontrado ainda bebê próximo às fronteiras de Leth'valora.
-- [1920] #orange Elarion Vaelthor treina Vezemir longe das cortes élficas.
-- [1940] #red Vezemir deixa Leth'valora carregando Grisalma, Muralha de Dorn e o medalhão dos Guardiões do Véu Cinzento.
-- [1980] #blue Vezemir serve em campanhas humanas e conhece General Cassian Valerius.
-- [2040] #red Leth'valora é destruída pelo dragão de colar dourado. Mira Valen e seu pai, o chefe humano da vila, morrem no ataque.
-- [2040~2100] #orange Vezemir caça pistas sobre o dragão e sobre a origem dos Guardiões.
-
-@ [2099~2100] #cyan CAMPANHA ATUAL
-- [2100] #cyan Um viajante moribundo chega às ruínas de Leth'valora trazendo uma moeda desconhecida e notícias do Véu.
-- [2100] #cyan Inquisidores da Igreja das Chamas começam a disputar artefatos ligados aos Criadores.
-- [2100] #cyan Varkh Nimalis deixa Maré Baixa em busca de quem está usando os métodos de seu mestre.
-- [2100] #cyan CURRENT DAY
+@ [2377~2378] #cyan CAMPANHA ATUAL
+- [2377] #cyan 3 de Ventara: início das Crônicas de Earthropo, em Nimalis.
 ```
 
-## Leitura Rápida
+## Eventos sem data confirmada
 
-### O Passado Distante
+- O [[Eclipse de Obsidiana]].
+- [[O Fraturamento]], se ocorreu como descrevem os estudiosos.
+- A existência e o desaparecimento dos [[Guardiões do Véu Cinzento]].
+- As guerras em que [[Players/Characters/Vezemir]] lutou.
+- A traição e o aprisionamento de [[Players/Characters/Raziel]].
+- A fundação de Nimalia e a ascensão da atual dinastia.
 
-Os Criadores são a camada mais antiga conhecida. Eles não são apenas uma civilização perdida: são a suspeita de que Earthropo talvez tenha sido construído, copiado ou remendado.
+## Coerência de Vezemir
 
-### O Trauma Central
+As datas confirmadas tornam Vezemir aproximadamente **477 anos** no início da campanha. Os 60 anos registram sua perseguição ativa e contínua ao dragão; depois disso, a busca tornou-se intermitente.
 
-O [[Eclipse de Obsidiana]] e o Véu Cinzento dividem a história entre antes e depois. O mundo sobreviveu, mas não voltou inteiro.
+## Regra editorial
 
-### O Presente
+Novas datas só entram nesta nota quando forem:
 
-Em 2100, Earthropo parece estável na superfície. Nimalia exerce influência, a Igreja observa, guildas negociam e aventureiros procuram trabalho. Por baixo disso, relíquias antigas reaparecem, nomes apagados retornam e o Véu começa a se mover.
-
-### Personagens-Chave
-
-- [[Vezemir]]: o Bastardo de Ferro, ligado aos Guardiões do Véu Cinzento.
-- [[Varkh Nimalis]]: alquimista e ladrão de Maré Baixa, envolvido em falsificações perigosas.
-- [[Elarion Vaelthor]]: mentor desaparecido de Vezemir.
-- [[Mira Valen]]: memória central da queda pessoal de Vezemir.
-- [[General Cassian Valerius]]: autoridade militar de Nimalia e antigo aliado de Vezemir.
+1. declaradas pelo mestre;
+2. necessárias para a campanha;
+3. compatíveis com as histórias dos personagens.

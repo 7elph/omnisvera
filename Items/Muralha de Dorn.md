@@ -1,10 +1,15 @@
----
+﻿---
 obsidianUIMode: preview
 NoteIcon: items
 NoteStatus: Active
-thumbnail: zz_media/muralha_dorn.png
+thumbnail: zz_media/items/muralha-de-dorn.webp
+cover: zz_media/items/muralha-de-dorn.webp
 status: Ativo
-item: Artefato
+visibility: gm
+item_type: Artefato
+owner: "[[Players/Characters/Vezemir]]"
+origin: "[[Leth'valora]]"
+source: Referência visual e ficha de Vezemir
 tags:
   - item
   - artifact
@@ -16,17 +21,17 @@ tags:
 ## Escudo Grande
 
 > [!NOTE|clean no-i right]+ Muralha de Dorn
-> ![[muralha_dorn.png|300]]
+> ![[zz_media/items/muralha-de-dorn.webp|300]]
 
 *"Entre o aço e a lenda, há uma muralha. Entre o guerreiro e o fim, há um escudo."*
 
 ## Identificação
 
 - **Tipo:** escudo grande e relíquia marcial.
-- **Portador:** [[Vezemir]].
+- **Portador:** [[Players/Characters/Vezemir]].
 - **Requisito indicado na referência visual:** Força 13 ou mais.
 - **Peso indicado:** 17 kg.
-- **Origem canônica:** entregue por [[Elarion Vaelthor]] em [[Leth'valora]].
+- **Origem canônica:** entregue por [[Elarion Valthor]] em [[Leth'valora]].
 
 ## Regra em uso
 

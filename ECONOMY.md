@@ -1,193 +1,70 @@
----
+﻿---
 obsidianUIMode: preview
 NoteIcon: lore
 NoteStatus: Draft
-status: Cânone de trabalho
+status: Em desenvolvimento
+visibility: gm
+cover: zz_media/ui/economia.webp
 tags:
   - economy
   - currency
   - earthropo
-cover: zz_media/cash.png
 ---
 
-# ECONOMIA DE EARTHROPO
+# Economia de Earthropo
 
-> [!NOTE|clean no-i right]+ Moedas de Earthropo  
-> ![[cash.png|400]]
-
-## Sistema Monetário
-
-A economia de Earthropo utiliza quatro moedas padronizadas cunhadas pela [[Coroa de Nimalia]] e aceitas na maior parte dos reinos civilizados.
-
-As moedas são produzidas em cobre, prata, ouro e platina.
-
-Embora algumas nações utilizem moedas locais, o padrão monetário de Nimalia tornou-se a referência comercial do continente.
-
----
+> [!NOTE|clean no-i right]+ Moedas
+> ![[zz_media/ui/economia.webp|400]]
 
 ## Moedas
 
-**Peça de Cobre (PC)**  
-Moeda mais comum entre camponeses, trabalhadores e viajantes.
+Nimalia cunha moedas de cobre, prata, ouro e platina. Elas circulam amplamente nas rotas próximas ao reino, mas outros territórios podem usar moedas próprias, peso de metal, crédito ou escambo.
 
-**Peça de Prata (PP)**  
-Utilizada para comércio cotidiano, hospedagens e serviços especializados.
-
-**Peça de Ouro (PO)**  
-Utilizada por mercadores, nobres, aventureiros experientes e transações de grande valor.
-
-**Peça de Platina (PPL)**  
-Extremamente rara. Utilizada para grandes negócios, tesouros, propriedades e contratos reais.
-
----
-
-## Conversão Oficial
-
-|Moeda|Valor|
-|---|---|
-|10 Cobre|1 Prata|
-|10 Prata|1 Ouro|
-|10 Ouro|1 Platina|
-
----
-
-## Tabela de Valores Comuns
-
-|Item|Valor Médio|
-|---|---|
-|Pão simples|2 PC|
-|Refeição comum|5 PC|
-|Caneca de cerveja|3 PC|
-|Hospedagem simples|1 PP|
-|Cavalo comum|75 PO|
-|Espada Longa|15 PO|
-|Armadura de Malha|75 PO|
-|Armadura Completa|1.500 PO|
-|Pergaminho mágico simples|50+ PO|
-|Propriedade urbana|500+ PO|
-
----
-
-## Classes Sociais
-
-|Classe Social|Patrimônio Médio|
-|---|---|
-|Mendigos|0-10 PC|
-|Trabalhadores|1-20 PP|
-|Artesãos|5-50 PO|
-|Mercadores|50-500 PO|
-|Nobres Menores|500-5.000 PO|
-|Grandes Nobres|5.000+ PO|
-|Realeza|Incalculável|
-
----
-
-> [!infobox]
-> 
-> ![[econ.png|260]]
+| Conversão de campanha | Valor |
+|:--|--:|
+| 10 peças de cobre | 1 peça de prata |
+| 10 peças de prata | 1 peça de ouro |
+| 10 peças de ouro | 1 peça de platina |
 
 ## Cunhagem
 
-As moedas oficiais são produzidas principalmente pela [[Casa da Moeda de Nimalia]].
+A [[Casa da Moeda de Nimalia]] controla peso, composição, brasão e marcas contra falsificação. Moedas antigas são avaliadas por metal, procedência e interesse histórico.
 
-Cada moeda possui:
+## Comércio de Nimalia
 
-- Peso padronizado
-    
-- Brasão Real de Nimalia
-    
-- Ano de cunhagem
-    
-- Marcas anti-falsificação
-    
+- **Produção:** grãos, artesanato, serviços e equipamentos.
+- **Importação:** minérios, madeira e materiais raros.
+- **Centro comercial:** [[Nimalis]].
+- **Porto e mercado informal:** [[Maré Baixa]].
+- **Organização mercantil:** [[Guilda dos Mercadores]].
 
-Moedas antigas de impérios desaparecidos ainda circulam ocasionalmente, sendo aceitas conforme seu peso em metal precioso.
+## Catálogo de itens do vault
 
----
+```dataview
+TABLE item_type, owner, status, source
+FROM "Items"
+SORT item_type ASC, file.name ASC
+```
 
-## Comércio Entre Reinos
+## Equipamentos e preços de regras
 
-### [[Nimalia]]
+O estoque mecânico completo permanece nos livros e referências adotados em [[Workflow/RULES_SOURCES|Fontes de Regras]]. O vault registra itens quando eles:
 
-Principal centro econômico de Earthropo.
+1. pertencem a um personagem;
+2. aparecem em uma loja ou tesouro;
+3. recebem alteração de preço ou regra;
+4. tornam-se relevantes para a campanha.
 
-Exporta:
+Isso evita duplicar listas integrais de livros e permite que cada loja tenha estoque próprio por Dataview.
 
-- Grãos
-    
-- Artesanato
-    
-- Equipamentos militares
-    
-- Conhecimento
-    
+## Lojas
 
-Importa:
+```dataview
+TABLE territory, district, info
+FROM #location
+WHERE contains(tags, "shop") OR contains(tags, "market")
+SORT file.name ASC
+```
 
-- Madeira
-    
-- Minérios
-    
-- Pedras de Mana
-    
-
----
-
-### [[Leth'valora]]
-
-Antes de sua destruição, exportava:
-
-- Artefatos Élficos
-    
-- Madeira Encantada
-    
-- Conhecimento Arcano
-    
-
-Antes de sua destruição, importava:
-
-- Metais
-    
-- Gemas
-    
-- Produtos Humanos
-    
-
----
-
-### [[Conclave dos Errantes]]
-
-Uma das organizações que movimentam riquezas fora dos governos.
-
-Recompensas por monstros, exploração de ruínas e contratos especiais frequentemente movimentam mais ouro do que pequenas cidades inteiras.
-
----
-
-## Tesouros e Aventureiros
-
-Para a maioria dos habitantes de Earthropo:
-
-- 1 PO é um bom pagamento.
-    
-- 10 PO é muito dinheiro.
-    
-- 100 PO muda uma vida.
-    
-- 1.000 PO compra influência.
-    
-
-Para aventureiros experientes...
-
-É apenas o começo.
-
----
-
-## Tags
-
-`#economy`  
-`#currency`  
-`#earthropo`  
-`#gold`  
-`#silver`  
-`#copper`  
-`#platinum`
+> [!gm]- Próxima expansão
+> Criar notas de estoque para lojas específicas de Nimalis, começando pelo Frasco Afogado, Mercado Central e Distrito dos Ofícios.

@@ -1,4 +1,5 @@
 ---
+obsidianUIMode: preview
 NoteIcon: class
 NoteStatus: Active
 tags:
@@ -6,7 +7,7 @@ tags:
   - class
   - warrior
   - old-dragon-2
-cover: zz_media/avenor.png
+cover: zz_media/characters/guerreiro.png
 status: Active
 ruleset: Old Dragon 2E
 source: https://olddragon.com.br/classes/guerreiro

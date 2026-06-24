@@ -1,40 +1,43 @@
----
+﻿---
+obsidianUIMode: preview
 NoteIcon: religion
+NoteStatus: Active
+status: Ativo
+visibility: shared
+cover: zz_media/ui/card-religiao.webp
 tags:
   - home
   - religion
-cover: zz_media/t8.png
+  - index
 ---
 
-# RELIGIÕES DE EARTHROPO
+# Religiões de Earthropo
 
-<h2>Visão Geral</h2>
+> [!NOTE|clean no-i right]+ Religiões
+> ![[zz_media/ui/card-religiao.webp|400]]
 
-> [!NOTE|clean no-i right]+ ‎RELIGIOES
-> ![[t8.png|400]]
+Earthropo possui vários deuses, tradições raciais e crenças regionais. Nenhuma nota pública confirma toda a verdade cosmológica.
 
-As religiões de Earthropo ainda estão em desenvolvimento. As notas abaixo organizam conceitos existentes sem tratá-los como doutrinas completamente confirmadas.
+## Religiões conhecidas
 
----
+```datacards
+TABLE cover, info, status
+FROM "Religion"
+WHERE file.name != this.file.name
+AND (visibility = "player" OR visibility = "shared")
+SORT file.name ASC
 
-## [[Igreja das Chamas]]
+// Settings
+preset: grid
+columns: 4
+imageProperty: cover
+cardSpacing: 4
+```
 
-Fé organizada associada ao simbolismo das chamas. O nome definitivo, as sete virtudes e sua liderança permanecem em revisão.
+## Referências
 
----
+- [[Igreja das Chamas]] — instituição organizada presente em Nimalia.
+- [[Fé dos Antigos]] — conjunto de tradições antigas e regionais.
+- [[Caminho dos Errantes]] — tradição espiritual de viajantes.
 
-## [[Fé dos Antigos]]
-
-Conjunto provisório de crenças anteriores ao Eclipse. Sua relação com os Criadores ainda precisa ser definida.
-
----
-
-## [[Caminho dos Errantes]]
-
-Tradição espiritual ligada a viajantes, ciclos e reencarnação.
-
----
-
-## Conceitos ainda não consolidados
-
-O arquivo [[Culto dos Sussurrantes]] foi herdado de uma versão anterior da campanha e não deve ser tratado como religião canônica até ser revisado.
+O antigo nome “Igreja das Sete Chamas” foi consolidado como uma referência às sete chamas da doutrina da Igreja das Chamas.

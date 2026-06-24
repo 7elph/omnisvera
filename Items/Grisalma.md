@@ -1,10 +1,15 @@
----
+﻿---
 obsidianUIMode: preview
 NoteIcon: items
 NoteStatus: Active
-thumbnail: zz_media/grisalma.png
+thumbnail: zz_media/items/grisalma.webp
+cover: zz_media/items/grisalma.webp
 status: Ativo
-item: Artefato
+visibility: gm
+item_type: Artefato
+owner: "[[Players/Characters/Vezemir]]"
+origin: "[[Leth'valora]]"
+source: Referência visual e ficha de Vezemir
 tags:
   - item
   - artifact
@@ -16,7 +21,7 @@ tags:
 ## Machado de Batalha
 
 > [!NOTE|clean no-i right]+ Grisalma
-> ![[grisalma.png|300]]
+> ![[zz_media/items/grisalma.webp|300]]
 
 
 *"Não é o machado que faz o guerreiro. É o guerreiro que dá propósito ao machado."*
@@ -25,10 +30,10 @@ tags:
 
 - **Tipo:** machado de batalha de duas mãos.
 - **Categoria:** arma marcial e relíquia única.
-- **Portador:** [[Vezemir]].
+- **Portador:** [[Players/Characters/Vezemir]].
 - **Requisito indicado na referência visual:** Força 13 ou mais.
 - **Peso indicado:** 14 kg.
-- **Origem canônica:** entregue por [[Elarion Vaelthor]] em [[Leth'valora]].
+- **Origem canônica:** entregue por [[Elarion Valthor]] em [[Leth'valora]].
 
 ## Regra em uso
 

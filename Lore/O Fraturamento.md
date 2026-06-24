@@ -1,33 +1,42 @@
----
+﻿---
+obsidianUIMode: preview
 NoteIcon: lore
+NoteStatus: Draft
+status: Teoria
+visibility: gm
+info: Teoria sobre mundos semelhantes, fragmentos incompatíveis e a obra dos Criadores.
+era:
+related:
+  - "[[Criadores]]"
+  - "[[Véu Cinzento]]"
+cover: zz_media/lore/o-fraturamento.png
 tags:
-  - Category/Lore
   - lore
-  - history
+  - theory
   - creation
-cover: zz_media/w.png
-status: Historical
-info: O cataclisma cosmico que despedaçou o mundo original em seis fragmentos.
+  - mystery
 ---
 
-# O FRATURAMENTO
+# O Fraturamento
 
-<h2>Overview</h2>
+## Conhecimento público
 
-> [!NOTE|clean no-i right]+ ‎O FRATURAMENTO
-> ![[w.png|400]]
+“O Fraturamento” é o nome usado por poucos estudiosos para reunir relatos sobre lugares duplicados, histórias incompatíveis e objetos que parecem pertencer a versões diferentes do mundo.
 
-Antes do Eclipse de Obsidiana, existiam Os Criadores — uma civilizacao que podia moldar mundos. Eles construiram seis mundos-copia, incluindo Earthropo, como refugios apos um cataclisma cosmico.
+A teoria não é aceita pelas instituições mais conhecidas de Earthropo. Seus defensores discordam sobre quase tudo: quando aconteceu, se foi uma criação ou uma ruptura e quantos mundos ou fragmentos estariam envolvidos.
 
-Os Criadores morreram. Os sistemas de manutencao ficaram corrompidos. A memoria foi apagada.
+## Hipóteses recorrentes
 
----
+- Os [[Criadores]] teriam moldado mais de um mundo semelhante.
+- O [[Véu Cinzento]] permitiria que fragmentos incompatíveis se aproximassem.
+- Certos artefatos funcionariam como âncoras, chaves ou registros.
+- O [[Eclipse de Obsidiana]] teria revelado o fenômeno em vez de causá-lo.
 
-<h5>Os Seis Fragmentos</h5>
+## Questões em aberto
 
-1. Fragmento de Cristal Primitivo (encontrado)
-2. Lamina do Primeiro Cavaleiro
-3. O Livro Sem Fim
-4. Coroa do Rei Perdido
-5. Amuleto dos Mortos-Vivos
-6. Chave das Mil Portas
+- Existem mundos completos, ecos ou apenas memórias materializadas?
+- Os fragmentos podem ser reunidos?
+- Quem se beneficia quando duas versões entram em contato?
+
+> [!gm]- Verdade do mestre
+> A estrutura de preparação trabalha com **seis ecos ou mundos-cópia**, mas o número não deve ser apresentado como certeza dentro do cenário. Não existe uma lista canônica fechada de seis artefatos.

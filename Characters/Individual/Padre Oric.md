@@ -1,16 +1,21 @@
----
+﻿---
 
 obsidianUIMode: preview  
-NoteIcon: character  
-NoteStatus: Complete  
-thumbnail: zz_media/th_oric.PNG  
+NoteIcon: magicitem
+NoteStatus: Active
+thumbnail: zz_media/characters/thumbnails/padre-oric.webp
 status: Desaparecido  
+visibility: gm
 location: Desconhecida  
-territory: "[[Nimalia]]"  
-faction: Nenhum
+territory: Desconhecido
+faction: Desconhecida
+religion: "[[Igreja das Chamas]]"
 class: Clérigo
 race: Humano  
 role: npc  
+level: Desconhecido
+chapters:
+  - 00 - O Bastardo de Ferro
 tags:
 - npc
 - character  
@@ -25,10 +30,9 @@ tags:
 # PADRE ORIC
 
 > [!NOTE|clean no-i right]+ Padre Oric  
-> ![[oric.png|400]]
+> ![[zz_media/characters/padre-oric.webp|400]]
 
 ## Visão Geral
-
 **Nome:** Padre Oric  
 **Títulos:** O Guardião dos Registros; O Peregrino
 **Reputação Pública:** Sacerdote errante e estudioso de antigas lendas  
@@ -38,9 +42,10 @@ tags:
 **Altura:** 1,75 m
 **Alinhamento:** Neutro Bom
 **Status:** Desaparecido  
-**Território:** [[Nimalia]] e regiões vizinhas  
-**Associados Conhecidos:** [[Vezemir]], [[Guardiões do Véu Cinzento]]
-**Origem:** [[Capital de Nimalia]]
+**Território:** Desconhecido
+**Religião:** [[Igreja das Chamas]]
+**Associados Conhecidos:** [[Characters/Individual/Players/Vezemir]], [[Guardiões do Véu Cinzento]]
+**Origem:** [[Nimalis]]
 **Ocupação:** Sacerdote e escriba
 **Símbolo:** Círculo da Verdade
 
@@ -48,8 +53,8 @@ tags:
 
 ## História
 
-Padre Oric nasceu na [[Capital de Nimalia]] e tornou-se sacerdote, escriba e guardião de registros. Mais tarde passou a viajar por reinos, ruínas e templos esquecidos em busca de conhecimento sobre antigas ordens e poderes perdidos.
-Durante uma de suas jornadas conheceu [[Vezemir]], então um mercenário em ascensão.
+Padre Oric nasceu em [[Nimalis]] e tornou-se sacerdote da [[Igreja das Chamas]], escriba e guardião de registros. Mais tarde passou a viajar por reinos, ruínas e templos esquecidos em busca de conhecimento sobre antigas ordens e poderes perdidos.
+Durante uma de suas jornadas conheceu [[Characters/Individual/Players/Vezemir]], então um mercenário em ascensão.
 Enquanto outros enxergavam apenas um guerreiro, Oric percebeu algo diferente.
 Segundo ele, a magia de Vezemir não parecia fluir naturalmente.
 Parecia estar sendo contida.
