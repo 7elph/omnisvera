@@ -12,7 +12,7 @@ tags:
   - story
   - chapter0
   - earthropo
-cover: "[[zz_media/vezemir.png]]"
+cover: "[[zz_media/banner-bastardo-de-ferro.png]]"
 description: A história de Vezemir, o Bastardo de Ferro, desde sua infância entre os elfos de Leth'valora até sua busca implacável pelo dragão que destruiu tudo o que ele amava.
 ---
 

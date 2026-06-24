@@ -9,7 +9,7 @@ tags:
   - story
   - chapter00
   - earthropo
-cover: "[[zz_media/varkh.jpeg]]"
+cover: "[[zz_media/banner-o-corvo-da-mare-baixa.png]]"
 description: A história de Varkh Nimalis, o Corvo da Maré Baixa, desde sua infância nos becos portuários da capital do Reino de Nimalia até seu aprendizado como alquimista de rua e a descoberta de que alguém está usando o nome de seu mestre para espalhar remédios falsos pelo reino.
 ---
 

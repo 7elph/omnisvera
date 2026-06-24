@@ -17,19 +17,19 @@ Nimalia é o primeiro horizonte das **Crônicas de Earthropo**: um ponto de part
 
 > [!cards|5]
 > **NIMALIA**
-> [![[sool.png\|sban htiny ctr p+t]]](Territories/Nimalia.md)
+> [![[mapa-de-nimalia.png\|sban htiny ctr]]](Territories/Nimalia.md)
 >
 > **CRÔNICAS**
-> [![[eo.png\|sban htiny ctr]]](EARTHROPO/EARTHROPO.md)
+> [![[banner-earthropo.png\|sban htiny ctr]]](EARTHROPO/EARTHROPO.md)
 >
 > **NOTAS**
-> [![[t2.png\|sban htiny ctr]]](NOTES.md)
+> [![[guild.png\|sban htiny ctr]]](NOTES.md)
 > 
 > **RUMORES E DESCOBERTAS**
-> [![[news1.png\|sban htiny ctr]]](LATEST_NEWS.md)
+> [![[guild1.png\|sban htiny ctr]]](LATEST_NEWS.md)
 > 
 > **MAPAS DE EARTHROPO**
-> [![[mapp.png\|sban htiny ctr]]](MAPA%20DE%20EARTHROPO.md)
+> [![[earthropo.png\|sban htiny ctr]]](MAPA%20DE%20EARTHROPO.md)
 >
 
 
