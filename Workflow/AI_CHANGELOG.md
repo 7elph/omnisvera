@@ -55,3 +55,29 @@ Consolidou estrutura do vault Omnisvera, organizou biblioteca de mídia em subpa
 - Limpeza de Tribucia/Disgraceland no Leaflet deve ser feita depois, de forma cirúrgica
 
 **Status:** Pendente de revisão final do Sage
+
+### 2026-06-24 — Sage — devin/create-vault-audit-scripts
+
+**IA executora:** Cascade  
+**Solicitante:** Sage  
+**Branch:** devin/create-vault-audit-scripts  
+**Commit(s):** Pendente  
+**Tipo de tarefa:** Criação de scripts de auditoria para vault  
+**Arquivos alterados:**  
+- .local-tools/validate_frontmatter.py (novo)
+- .local-tools/validate_links.py (novo)
+- .local-tools/validate_media.py (novo)
+- .local-tools/vault_audit.py (novo)
+- .local-tools/README.md (novo)
+- Workflow/Reports/.gitkeep (novo)
+
+**Mudou cânone?** Não  
+**Mudou mídia?** Não  
+**Mudou estrutura?** Sim (ferramentas de auditoria adicionadas)  
+**Resumo:**  
+Criou scripts Python locais para validação e auditoria do vault Obsidian. Scripts validam frontmatter YAML, wikilinks e referências de mídia. O vault_audit.py executa todos os validadores e gera relatório consolidado em Markdown. Scripts não modificam arquivos, apenas leem e reportam problemas.
+
+**Pendências:**  
+- Nenhuma
+
+**Status:** Pendente de revisão do Sage
