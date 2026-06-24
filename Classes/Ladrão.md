@@ -6,7 +6,7 @@ tags:
   - class
   - thief
   - old-dragon-2
-cover: zz_media/avenor.png
+cover: zz_media/characters/ladrao.png
 status: Active
 ruleset: Old Dragon 2E
 source: https://olddragon.com.br/classes/ladrao
