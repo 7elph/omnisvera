@@ -19,12 +19,12 @@ Este documento lista notas que precisam ser criadas para dar suporte à campanha
 
 | Nota | Pasta Sugerida | Categoria | Motivo da Criação | Notas Relacionadas | Status |
 |:--|:--|:--|:--|:--|:--|
-| Clã Sanguinallis | Factions/ | Facção | Facção de origem de Raziel, onde serviu como executor de Lorde Malakar | Raziel, Lorde Malakar, Kaelen, Vandor, Fortaleza de Gharok | Pendente |
-| Lorde Malakar | Characters/Individual/ | Personagem NPC | Traidor de Raziel, lorde do Clã Sanguinallis, ocupa Fortaleza de Gharok | Raziel, Clã Sanguinallis, Fortaleza de Gharok | Pendente |
-| Kaelen, o Flagelo | Characters/Individual/ | Personagem NPC | Irmão de linhagem de Raziel, general do clã, invejava hemomancia de Raziel | Raziel, Clã Sanguinallis, Campos de Earthropo | Pendente |
-| Vandor, o Senhor das Bestas | Characters/Individual/ | Personagem NPC | Irmão de linhagem de Raziel, general do clã, controlava feras | Raziel, Clã Sanguinallis, Floresta de Avenor | Pendente |
-| Ancião Primordial | Lore/ | Lore | Entidade esquecida que libertou Raziel nas cavernas abissais sob Valthor | Raziel, Ruínas de Valthor, Sangue Antigo | Pendente |
-| Sangue Antigo | Lore/ | Lore | Fluido que transformou a hemomancia de Raziel, concedido pelo Ancião Primordial | Raziel, Ancião Primordial, Vampiro Sanguinallis | Pendente |
+| Clã Sanguinallis | Factions/ | Facção | Facção de origem de Raziel, onde serviu como executor de Lorde Malakar | Raziel, Lorde Malakar, Kaelen, Vandor, Fortaleza de Gharok | Criado (Batch 01) |
+| Lorde Malakar | Characters/Individual/ | Personagem NPC | Traidor de Raziel, lorde do Clã Sanguinallis, ocupa Fortaleza de Gharok | Raziel, Clã Sanguinallis, Fortaleza de Gharok | Criado (Batch 01) |
+| Kaelen, o Flagelo | Characters/Individual/ | Personagem NPC | Irmão de linhagem de Raziel, general do clã, invejava hemomancia de Raziel | Raziel, Clã Sanguinallis, Campos de Earthropo | Criado (Batch 01) |
+| Vandor, o Senhor das Bestas | Characters/Individual/ | Personagem NPC | Irmão de linhagem de Raziel, general do clã, controlava feras | Raziel, Clã Sanguinallis, Floresta de Avenor | Criado (Batch 01) |
+| Ancião Primordial | Lore/ | Lore | Entidade esquecida que libertou Raziel nas cavernas abissais sob Valthor | Raziel, Ruínas de Valthor, Sangue Antigo | Criado (Batch 01) |
+| Sangue Antigo | Lore/ | Lore | Fluido que transformou a hemomancia de Raziel, concedido pelo Ancião Primordial | Raziel, Ancião Primordial, Vampiro Sanguinallis | Criado (Batch 01) |
 | Poço nos Picos Congelados | Locations/ | Localização | Prisão de prata onde Raziel foi condenado por trezentos anos | Raziel, Fortaleza de Gharok, Nimalia | Pendente |
 | Cavernas Abissais sob Valthor | Locations/ | Localização | Local onde Raziel encontrou o Ancião Primordial e recebeu o Sangue Antigo | Raziel, Ruínas de Valthor, Ancião Primordial | Pendente |
 | Vampiro Sanguinallis | Lore/ | Lore | Tipo de vampiro ao qual Raziel pertence, ligado ao Clã Sanguinallis | Raziel, Clã Sanguinallis, Sangue Antigo | Pendente |
@@ -33,10 +33,10 @@ Este documento lista notas que precisam ser criadas para dar suporte à campanha
 
 | Nota | Pasta Sugerida | Categoria | Motivo da Criação | Notas Relacionadas | Status |
 |:--|:--|:--|:--|:--|:--|
-| Dragão de Colar Dourado | Characters/Individual/ | Personagem NPC | Dragão que destruiu Leth'valora, alvo de vingança de Vezemir | Vezemir, Leth'valora, Mira Valen | Pendente |
-| Kaer Varyn | Locations/ | Localização | Nome anterior descartado para Leth'valora, não deve ser usado no cânone atual | Vezemir, Leth'valora | Pendente |
-| Antiga Estrada Esquecida | Locations/ | Localização | Rota mencionada no contexto de Vezemir | Vezemir, Floresta de Avenor | Pendente |
-| Fortaleza Abandonada de Avenor | Locations/ | Localização | Localização mencionada no contexto de Vezemir | Vezemir, Floresta de Avenor | Pendente |
+| Dragão de Colar Dourado | Characters/Individual/ | Personagem NPC | Dragão que destruiu Leth'valora, alvo de vingança de Vezemir | Vezemir, Leth'valora, Mira Valen | Peneene
+| Kaer Varyn | Locations/ | Localização | Nome anterior descartado para Leth'valora, não deve ser usado no cânone atual | Vezemir, Leth'valora | Pnne
+| Antiga Estrada Esquecida | Locations/ | Localização | Rota mencionada no contexto de Vezemir | Vezemir, Floresta de Avenor | Peneene
+| Fortaleza Abandonada de Avenor | Locations/ | Localização | Localização mencionada no contexto de Vezemir | Vezemir, Floresta de Avenor | Peneene
 
 ### Varkh
 
@@ -86,6 +86,15 @@ As seguintes notas foram criadas no Batch 01:
 - Characters/Individual/Vandor, o Senhor das Bestas.md
 - Lore/Ancião Primordial.md
 - Lore/Sangue Antigo.md
+
+## Batch 02 — Notas Criadas
+
+As seguintes notas foram crsiadas esno Ba 02 etch 02:
+
+- Characters/Individual/Dragão de Colar Dourado.md
+- Locations/Antiga Estrada Esquecidsa.mdefas
+- Kar Varyn oi identificado como nome descrtado e não deve ser usado no cânone atual
+- Locations/Fortaleza Abandonada de Avenor.md
 
 ## Notas
 

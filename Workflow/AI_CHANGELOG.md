@@ -112,3 +112,32 @@ Criou Batch 01 de notas faltantes focado no arco de Raziel. Todas as notas foram
 - Definição de regras mecânicas para vampiro, hemomancia e regeneração
 
 **Status:** Pendente de revisão do Sage
+
+### 2026-06-25 — Sage — devin/create-missing-vezemir-notes-batch-02
+
+**IA executora:** Cascade  
+**Solicitante:** Sage  
+**Branch:** devin/create-missing-vezemir-notes-batch-02  
+**Commit(s):** Pendente  
+**Tipo de tarefa:** Criação de notas Draft de suporte ao arco de Vezemir  
+**Arquivos alterados:**  
+- Workflow/MISSING_NOTES_BACKLOG.md (atualizado)
+- Characters/Individual/Dragão de Colar Dourado.md (novo)
+- Locations/Antiga Estrada Esquecida.md (novo)
+- Locations/Fortaleza Abandonada de Avenor.md (novo)
+
+**Mudou cânone?** Não (todas as notas são Draft/Em desenvolvimento)  
+**Mudou mídia?** Não  
+**Mudou estrutura?** Sim (notas Draft adicionadas)  
+**Resumo:**  
+Criou Batch 02 de notas faltantes focado no arco de Vezemir. Todas as notas foram criadas como Draft/Em desenvolvimento com canon_status: Draft. Conteúdo baseado apenas em fontes internas existentes (Vezemir.md, EARTHROPO/00 - O Bastardo de Ferro.md, Items, Factions, Territories). Kaer Varyn foi identificado como nome descartado em CANON.md e não foi criado. Incertezas foram marcadas como "Pendente de confirmação do Sage". Nenhuma estatística de jogo, nome verdadeiro do dragão, localização exata ou regra final foi definida.
+
+**Pendências:**  
+- Confirmação do Sage sobre nome verdadeiro e origem do dragão
+- Confirmação do Sage sobre natureza do colar dourado
+- Confirmação do Sage sobre relação exata com Guardiões do Véu Cinzento
+- Confirmação do Sage sobre origem e história da Antiga Estrada Esquecida
+- Confirmação do Sage sobre origem e história da Fortaleza Abandonada
+- Definição de estatísticas de jogo para o dragão
+
+**Status:** Pendente de revisão do Sage

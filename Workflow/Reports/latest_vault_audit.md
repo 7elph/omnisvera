@@ -1,25 +1,25 @@
 # Relatório de Auditoria do Vault
 
-**Data/Hora:** 2026-06-24 20:59:55
-**Branch:** devin/create-missing-raziel-notes-batch-01
-**Commit:** 0b09fc13
+**Data/Hora:** 2026-06-25 02:48:29
+**Branch:** devin/create-missing-vezemir-notes-batch-02
+**Commit:** e6cb7cc1
 **Status Git:** dirty
 
 ---
 
 ## Resumo Git
 
-- **Branch atual:** devin/create-missing-raziel-notes-batch-01
-- **Commit:** 0b09fc13
+- **Branch atual:** devin/create-missing-vezemir-notes-batch-02
+- **Commit:** e6cb7cc1
 - **Status:** dirty
 
 ---
 
 ## Validação de Frontmatter
 
-- **Total de notas analisadas:** 128
-- **Notas sem frontmatter:** 24
-- **Notas com frontmatter inválido:** 81
+- **Total de notas analisadas:** 132
+- **Notas sem frontmatter:** 25
+- **Notas com frontmatter inválido:** 84
 - **Notas com campos vazios importantes:** 0
 
 ### Notas sem frontmatter
@@ -37,6 +37,7 @@
 - Workflow\AI_CONTEXT\07_VALIDATION_CHECKLIST.md
 - Workflow\AI_CONTEXT\08_DO_NOT_INVENT.md
 - Workflow\AI_CONTEXT\09_SESSION_STATE.md
+- Workflow\Reports\latest_vault_audit.md
 - Workflow\Legacy\Disgraceland\Legacy - Disgraceland Scratch Notes.md
 - .omnisvera-tools\Lib\site-packages\pymupdf-1.27.2.3.dist-info\README.md
 - .omnisvera-tools\Lib\site-packages\win32comext\mapi\NOTICE.md
@@ -62,9 +63,9 @@
 - Classes\Homem de Armas.md
 - Classes\Ladrão.md
 - Classes\Mago.md
+- EARTHROPO\00 - As Crônicas de Névoa de Sangue.md
 - EARTHROPO\00 - O Bastardo de Ferro.md
 - EARTHROPO\00 - O Corvo da Maré Baixa.md
-- EARTHROPO\00 - O Retorno de Raziel.md
 - EARTHROPO\01 - Ecos do Mundo Perdido.md
 - EARTHROPO\EARTHROPO.md
 - Factions\Clã Sanguinallis.md
@@ -80,11 +81,13 @@
 - Items\Manto Primordial do Ancião.md
 - Items\Muralha de Dorn.md
 - Items\O Medalhão dos Guardiões do Véu Cinzento.md
-- Locations\Capital de Nimalia.md
+- Locations\Antiga Estrada Esquecida.md
 - Locations\Casa da Moeda de Nimalia.md
+- Locations\Fortaleza Abandonada de Avenor.md
 - Locations\Fortaleza de Gharok.md
 - Locations\Leth'valora.md
 - Locations\Maré Baixa.md
+- Locations\Nimalis.md
 - Locations\Ruínas de Valthor.md
 - Lore\Ancião Primordial.md
 - Lore\Eclipse de Obsidiana.md
@@ -118,6 +121,7 @@
 - Workflow\Legacy\Old Dragon anterior\Legacy - Old Dragon anterior - Ladrão.md
 - Workflow\Legacy\Old Dragon anterior\Legacy - Old Dragon anterior - Mago.md
 - Characters\Individual\Augustus Terra Decimus.md
+- Characters\Individual\Dragão de Colar Dourado.md
 - Characters\Individual\Elarion Vaelthor.md
 - Characters\Individual\General Cassian Valerius.md
 - Characters\Individual\Kaelen, o Flagelo.md
@@ -138,63 +142,285 @@ Nenhuma
 
 ## Validação de Wikilinks
 
-- **Total de wikilinks encontrados:** 782
-- **Links resolvidos:** 544
-- **Links quebrados:** 238
+- **Total de wikilinks encontrados:** 1065
+- **Links resolvidos:** 619
+- **Links quebrados:** 446
 
 ### Links quebrados
 - [[cash.png]] em ECONOMY.md:16
 - [[econ.png]] em ECONOMY.md:87
 - [[zz_media/avenor.png]] em Home.md:3
-- [[sool.png\]] em Home.md:20
-- [[eo.png\]] em Home.md:23
-- [[t2.png\]] em Home.md:26
-- [[news1.png\]] em Home.md:29
-- [[mapp.png\]] em Home.md:32
+- [[mapa-de-nimalia.png\]] em Home.md:21
+- [[banner-earthropo.png\]] em Home.md:24
+- [[guild.png\]] em Home.md:27
+- [[guild1.png\]] em Home.md:30
+- [[earthropo.png\]] em Home.md:33
+- [[Capital de Nimalia]] em MAPA DE EARTHROPO.md:48
 - [[Earthropo]] em OMNISVERA.md:19
 - [[Workflow/Legacy - Old Dragon anterior - Clérigo]] em Classes\Clérigo.md:77
 - [[Workflow/Legacy - Old Dragon anterior - Homem de Armas]] em Classes\Guerreiro.md:71
 - [[Workflow/Legacy - Old Dragon anterior - Homem de Armas]] em Classes\Homem de Armas.md:22
 - [[Workflow/Legacy - Old Dragon anterior - Ladrão]] em Classes\Ladrão.md:83
 - [[Workflow/Legacy - Old Dragon anterior - Mago]] em Classes\Mago.md:72
-- [[zz_media/vezemir.png]] em EARTHROPO\00 - O Bastardo de Ferro.md:15
-- [[zz_media/varkh.jpeg]] em EARTHROPO\00 - O Corvo da Maré Baixa.md:12
-- [[zz_media/raziel.png]] em EARTHROPO\00 - O Retorno de Raziel.md:12
+- [[zz_media/banner-as-cronicas-de-nevoa-de-sangue.png]] em EARTHROPO\00 - As Crônicas de Névoa de Sangue.md:12
+- [[zz_media/banner-bastardo-de-ferro.png]] em EARTHROPO\00 - O Bastardo de Ferro.md:15
+- [[zz_media/banner-o-corvo-da-mare-baixa.png]] em EARTHROPO\00 - O Corvo da Maré Baixa.md:12
 - [[Vampiro Sanguinallis]] em Factions\Clã Sanguinallis.md:37
-- [[Characters/Individual/Raziel.md]] em Factions\Clã Sanguinallis.md:64
-- [[Characters/Individual/Lorde Malakar.md]] em Factions\Clã Sanguinallis.md:65
-- [[Characters/Individual/Kaelen, o Flagelo.md]] em Factions\Clã Sanguinallis.md:66
-- [[Characters/Individual/Vandor, o Senhor das Bestas.md]] em Factions\Clã Sanguinallis.md:67
-- [[Locations/Fortaleza de Gharok.md]] em Factions\Clã Sanguinallis.md:68
-- [[Lore/Sangue Antigo.md]] em Factions\Clã Sanguinallis.md:69
 - [[t7.png]] em Factions\Guarda Real de Nimalia.md:36
 - [[grisalma.png]] em Items\Grisalma.md:19
 - [[muralha_dorn.png]] em Items\Muralha de Dorn.md:19
 - [[med.png]] em Items\O Medalhão dos Guardiões do Véu Cinzento.md:17
 - [[leth'valora.png]] em Locations\Leth'valora.md:20
-- [[Characters/Individual/Raziel.md]] em Lore\Ancião Primordial.md:64
-- [[Locations/Ruínas de Valthor.md]] em Lore\Ancião Primordial.md:65
-- [[Lore/Sangue Antigo.md]] em Lore\Ancião Primordial.md:66
-- [[Items/Manto Primordial do Ancião.md]] em Lore\Ancião Primordial.md:67
 - [[w.png]] em Lore\Eclipse de Obsidiana.md:18
 - [[Criadores]] em Lore\Guardiões do Véu Cinzento.md:31
 - [[w.png]] em Lore\O Fraturamento.md:18
 - [[Vampiro Sanguinallis]] em Lore\Sangue Antigo.md:35
-- [[Characters/Individual/Raziel.md]] em Lore\Sangue Antigo.md:65
-- [[Lore/Ancião Primordial.md]] em Lore\Sangue Antigo.md:66
-- [[Locations/Ruínas de Valthor.md]] em Lore\Sangue Antigo.md:67
-- [[Factions/Clã Sanguinallis.md]] em Lore\Sangue Antigo.md:68
 - [[anao.PNG]] em Races\Anão.md:14
 - [[prop_anao.PNG]] em Races\Anão.md:48
 - [[elf.PNG]] em Races\Elfo.md:15
 - [[elfs.png]] em Races\Elfo.md:40
 - [[t8.png]] em Religion\RELIGION.md:14
 - [[avenor.png]] em Territories\Floresta de Avenor.md:35
-- [[t7.png]] em Territories\Nimalia.md:33
+- [[mapa-de-nimalia.png]] em Territories\Nimalia.md:33
 - [[]] em Workflow\AI_REVIEW_CHECKLIST.md:38
 - [[MAPA DE EARTHROPO\]] em Workflow\GEOGRAPHY.md:21
 - [[]] em Workflow\AI_CONTEXT\04_MEDIA_RULES.md:31
 - [[]] em Workflow\AI_CONTEXT\07_VALIDATION_CHECKLIST.md:39
+- [[cash.png]] em Workflow\Reports\latest_vault_audit.md:146
+- [[econ.png]] em Workflow\Reports\latest_vault_audit.md:147
+- [[zz_media/avenor.png]] em Workflow\Reports\latest_vault_audit.md:148
+- [[sool.png\]] em Workflow\Reports\latest_vault_audit.md:149
+- [[eo.png\]] em Workflow\Reports\latest_vault_audit.md:150
+- [[t2.png\]] em Workflow\Reports\latest_vault_audit.md:151
+- [[news1.png\]] em Workflow\Reports\latest_vault_audit.md:152
+- [[mapp.png\]] em Workflow\Reports\latest_vault_audit.md:153
+- [[Earthropo]] em Workflow\Reports\latest_vault_audit.md:154
+- [[Workflow/Legacy - Old Dragon anterior - Clérigo]] em Workflow\Reports\latest_vault_audit.md:155
+- [[Workflow/Legacy - Old Dragon anterior - Homem de Armas]] em Workflow\Reports\latest_vault_audit.md:156
+- [[Workflow/Legacy - Old Dragon anterior - Homem de Armas]] em Workflow\Reports\latest_vault_audit.md:157
+- [[Workflow/Legacy - Old Dragon anterior - Ladrão]] em Workflow\Reports\latest_vault_audit.md:158
+- [[Workflow/Legacy - Old Dragon anterior - Mago]] em Workflow\Reports\latest_vault_audit.md:159
+- [[zz_media/vezemir.png]] em Workflow\Reports\latest_vault_audit.md:160
+- [[zz_media/varkh.jpeg]] em Workflow\Reports\latest_vault_audit.md:161
+- [[zz_media/raziel.png]] em Workflow\Reports\latest_vault_audit.md:162
+- [[Vampiro Sanguinallis]] em Workflow\Reports\latest_vault_audit.md:163
+- [[Characters/Individual/Raziel.md]] em Workflow\Reports\latest_vault_audit.md:164
+- [[Characters/Individual/Lorde Malakar.md]] em Workflow\Reports\latest_vault_audit.md:165
+- [[Characters/Individual/Kaelen, o Flagelo.md]] em Workflow\Reports\latest_vault_audit.md:166
+- [[Characters/Individual/Vandor, o Senhor das Bestas.md]] em Workflow\Reports\latest_vault_audit.md:167
+- [[Locations/Fortaleza de Gharok.md]] em Workflow\Reports\latest_vault_audit.md:168
+- [[Lore/Sangue Antigo.md]] em Workflow\Reports\latest_vault_audit.md:169
+- [[t7.png]] em Workflow\Reports\latest_vault_audit.md:170
+- [[grisalma.png]] em Workflow\Reports\latest_vault_audit.md:171
+- [[muralha_dorn.png]] em Workflow\Reports\latest_vault_audit.md:172
+- [[med.png]] em Workflow\Reports\latest_vault_audit.md:173
+- [[leth'valora.png]] em Workflow\Reports\latest_vault_audit.md:174
+- [[Characters/Individual/Raziel.md]] em Workflow\Reports\latest_vault_audit.md:175
+- [[Locations/Ruínas de Valthor.md]] em Workflow\Reports\latest_vault_audit.md:176
+- [[Lore/Sangue Antigo.md]] em Workflow\Reports\latest_vault_audit.md:177
+- [[Items/Manto Primordial do Ancião.md]] em Workflow\Reports\latest_vault_audit.md:178
+- [[w.png]] em Workflow\Reports\latest_vault_audit.md:179
+- [[Criadores]] em Workflow\Reports\latest_vault_audit.md:180
+- [[w.png]] em Workflow\Reports\latest_vault_audit.md:181
+- [[Vampiro Sanguinallis]] em Workflow\Reports\latest_vault_audit.md:182
+- [[Characters/Individual/Raziel.md]] em Workflow\Reports\latest_vault_audit.md:183
+- [[Lore/Ancião Primordial.md]] em Workflow\Reports\latest_vault_audit.md:184
+- [[Locations/Ruínas de Valthor.md]] em Workflow\Reports\latest_vault_audit.md:185
+- [[Factions/Clã Sanguinallis.md]] em Workflow\Reports\latest_vault_audit.md:186
+- [[anao.PNG]] em Workflow\Reports\latest_vault_audit.md:187
+- [[prop_anao.PNG]] em Workflow\Reports\latest_vault_audit.md:188
+- [[elf.PNG]] em Workflow\Reports\latest_vault_audit.md:189
+- [[elfs.png]] em Workflow\Reports\latest_vault_audit.md:190
+- [[t8.png]] em Workflow\Reports\latest_vault_audit.md:191
+- [[avenor.png]] em Workflow\Reports\latest_vault_audit.md:192
+- [[t7.png]] em Workflow\Reports\latest_vault_audit.md:193
+- [[MAPA DE EARTHROPO\]] em Workflow\Reports\latest_vault_audit.md:195
+- [[zz_media/lyladuke.png]] em Workflow\Reports\latest_vault_audit.md:198
+- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:199
+- [[The Silo]] em Workflow\Reports\latest_vault_audit.md:200
+- [[the Black Marauder]] em Workflow\Reports\latest_vault_audit.md:201
+- [[The Duke]] em Workflow\Reports\latest_vault_audit.md:202
+- [[Unseen Widows]] em Workflow\Reports\latest_vault_audit.md:203
+- [[The Duke]] em Workflow\Reports\latest_vault_audit.md:204
+- [[The Duke]] em Workflow\Reports\latest_vault_audit.md:205
+- [[The Duke]] em Workflow\Reports\latest_vault_audit.md:206
+- [[Charspire]] em Workflow\Reports\latest_vault_audit.md:207
+- [[Gutter Row]] em Workflow\Reports\latest_vault_audit.md:208
+- [[Steeltown Wrecking Crew]] em Workflow\Reports\latest_vault_audit.md:209
+- [[Rustwater Raiders]] em Workflow\Reports\latest_vault_audit.md:210
+- [[Loyalist Guard]] em Workflow\Reports\latest_vault_audit.md:211
+- [[Charspire]] em Workflow\Reports\latest_vault_audit.md:212
+- [[Gutter Row]] em Workflow\Reports\latest_vault_audit.md:213
+- [[Rachel Gold]] em Workflow\Reports\latest_vault_audit.md:214
+- [[The Duke]] em Workflow\Reports\latest_vault_audit.md:215
+- [[Salem Quinn]] em Workflow\Reports\latest_vault_audit.md:216
+- [[Prophet Veerah]] em Workflow\Reports\latest_vault_audit.md:217
+- [[The Duke]] em Workflow\Reports\latest_vault_audit.md:218
+- [[Faith of Mirella]] em Workflow\Reports\latest_vault_audit.md:219
+- [[Bobby Cutman]] em Workflow\Reports\latest_vault_audit.md:220
+- [[Bastian Redd]] em Workflow\Reports\latest_vault_audit.md:221
+- [[Abel May Jr.]] em Workflow\Reports\latest_vault_audit.md:222
+- [[World Lucha Libre]] em Workflow\Reports\latest_vault_audit.md:223
+- [[Blacktide Cray]] em Workflow\Reports\latest_vault_audit.md:224
+- [[Bastian Redd]] em Workflow\Reports\latest_vault_audit.md:225
+- [[Morris Gable]] em Workflow\Reports\latest_vault_audit.md:226
+- [[Hella]] em Workflow\Reports\latest_vault_audit.md:227
+- [[The Grim Man]] em Workflow\Reports\latest_vault_audit.md:228
+- [[The Grim Man]] em Workflow\Reports\latest_vault_audit.md:229
+- [[Gorren Brile]] em Workflow\Reports\latest_vault_audit.md:230
+- [[Emily Burton]] em Workflow\Reports\latest_vault_audit.md:231
+- [[The Duke]] em Workflow\Reports\latest_vault_audit.md:232
+- [[Ora Razchek]] em Workflow\Reports\latest_vault_audit.md:233
+- [[Bastian Redd]] em Workflow\Reports\latest_vault_audit.md:234
+- [[Hella]] em Workflow\Reports\latest_vault_audit.md:235
+- [[The Silo]] em Workflow\Reports\latest_vault_audit.md:236
+- [[Valkaara]] em Workflow\Reports\latest_vault_audit.md:237
+- [[Valkaara]] em Workflow\Reports\latest_vault_audit.md:238
+- [[VALKAARA]] em Workflow\Reports\latest_vault_audit.md:239
+- [[Valkaara]] em Workflow\Reports\latest_vault_audit.md:240
+- [[Valkaara]] em Workflow\Reports\latest_vault_audit.md:241
+- [[Steeltown#Gage Park]] em Workflow\Reports\latest_vault_audit.md:242
+- [[The Black Marauder]] em Workflow\Reports\latest_vault_audit.md:243
+- [[Water#Rustwater Bay]] em Workflow\Reports\latest_vault_audit.md:244
+- [[Steeltown Wrecking Crew]] em Workflow\Reports\latest_vault_audit.md:245
+- [[The Black Marauder]] em Workflow\Reports\latest_vault_audit.md:246
+- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:247
+- [[Blacktide Cray]] em Workflow\Reports\latest_vault_audit.md:248
+- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:249
+- [[Steeltown Wrecking Crew]] em Workflow\Reports\latest_vault_audit.md:250
+- [[The Black Marauder]] em Workflow\Reports\latest_vault_audit.md:251
+- [[Steeltown Wrecking Crew]] em Workflow\Reports\latest_vault_audit.md:252
+- [[Steeltown#Gage Park]] em Workflow\Reports\latest_vault_audit.md:253
+- [[Steeltown Wrecking Crew]] em Workflow\Reports\latest_vault_audit.md:254
+- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:255
+- [[Mark Jeffrey]] em Workflow\Reports\latest_vault_audit.md:256
+- [[Abel May Jr.]] em Workflow\Reports\latest_vault_audit.md:257
+- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:258
+- [[Blacktide Cray]] em Workflow\Reports\latest_vault_audit.md:259
+- [[Abel May Jr.]] em Workflow\Reports\latest_vault_audit.md:260
+- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:261
+- [[Mark Jeffrey]] em Workflow\Reports\latest_vault_audit.md:262
+- [[Flint Garritt]] em Workflow\Reports\latest_vault_audit.md:263
+- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:264
+- [[Abel May Jr.]] em Workflow\Reports\latest_vault_audit.md:265
+- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:266
+- [[Abel May Jr.]] em Workflow\Reports\latest_vault_audit.md:267
+- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:268
+- [[Blacktide Cray]] em Workflow\Reports\latest_vault_audit.md:269
+- [[Steeltown#Gage Park]] em Workflow\Reports\latest_vault_audit.md:270
+- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:271
+- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:272
+- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:273
+- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:274
+- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:275
+- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:276
+- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:277
+- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:278
+- [[Mark Jeffrey]] em Workflow\Reports\latest_vault_audit.md:279
+- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:280
+- [[Mark Jeffrey]] em Workflow\Reports\latest_vault_audit.md:281
+- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:282
+- [[Steeltown Wrecking Crew]] em Workflow\Reports\latest_vault_audit.md:283
+- [[Katie Kowalski]] em Workflow\Reports\latest_vault_audit.md:284
+- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:285
+- [[Mark Jeffrey]] em Workflow\Reports\latest_vault_audit.md:286
+- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:287
+- [[Steeltown Wrecking Crew]] em Workflow\Reports\latest_vault_audit.md:288
+- [[Loyalist Guard]] em Workflow\Reports\latest_vault_audit.md:289
+- [[Rustwater Raiders]] em Workflow\Reports\latest_vault_audit.md:290
+- [[Steeltown Wrecking Crew]] em Workflow\Reports\latest_vault_audit.md:291
+- [[Blacktide Cray]] em Workflow\Reports\latest_vault_audit.md:292
+- [[Abel May Jr.]] em Workflow\Reports\latest_vault_audit.md:293
+- [[Steeltown]] em Workflow\Reports\latest_vault_audit.md:294
+- [[Threshton]] em Workflow\Reports\latest_vault_audit.md:295
+- [[Bastian Redd]] em Workflow\Reports\latest_vault_audit.md:296
+- [[Flint Garritt]] em Workflow\Reports\latest_vault_audit.md:297
+- [[Bastian Redd]] em Workflow\Reports\latest_vault_audit.md:298
+- [[Bastian Redd]] em Workflow\Reports\latest_vault_audit.md:299
+- [[Steeltown#Gage Park]] em Workflow\Reports\latest_vault_audit.md:300
+- [[The Black Marauder]] em Workflow\Reports\latest_vault_audit.md:301
+- [[Wrecking Crew]] em Workflow\Reports\latest_vault_audit.md:302
+- [[Abel May Jr.]] em Workflow\Reports\latest_vault_audit.md:303
+- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:304
+- [[Mark Jeffrey]] em Workflow\Reports\latest_vault_audit.md:305
+- [[Flint Garritt]] em Workflow\Reports\latest_vault_audit.md:306
+- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:307
+- [[Abel May Jr.]] em Workflow\Reports\latest_vault_audit.md:308
+- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:309
+- [[Katie Kowalski]] em Workflow\Reports\latest_vault_audit.md:310
+- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:311
+- [[Bastian Redd]] em Workflow\Reports\latest_vault_audit.md:312
+- [[Threshton]] em Workflow\Reports\latest_vault_audit.md:313
+- [[01 - Main Event Shadows]] em Workflow\Reports\latest_vault_audit.md:314
+- [[World Lucha Libre]] em Workflow\Reports\latest_vault_audit.md:315
+- [[Steeltown]] em Workflow\Reports\latest_vault_audit.md:316
+- [[Bobby Cutman]] em Workflow\Reports\latest_vault_audit.md:317
+- [[Steeltown Wrecking Crew]] em Workflow\Reports\latest_vault_audit.md:318
+- [[Abel May Jr.]] em Workflow\Reports\latest_vault_audit.md:319
+- [[Bobby Cutman]] em Workflow\Reports\latest_vault_audit.md:320
+- [[02 - Ghosts On The Waves]] em Workflow\Reports\latest_vault_audit.md:321
+- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:322
+- [[Rustwater Raiders]] em Workflow\Reports\latest_vault_audit.md:323
+- [[The Silo]] em Workflow\Reports\latest_vault_audit.md:324
+- [[Ashmoor]] em Workflow\Reports\latest_vault_audit.md:325
+- [[Steeltown]] em Workflow\Reports\latest_vault_audit.md:326
+- [[The Black Marauder]] em Workflow\Reports\latest_vault_audit.md:327
+- [[The Duke]] em Workflow\Reports\latest_vault_audit.md:328
+- [[Unseen Widows]] em Workflow\Reports\latest_vault_audit.md:329
+- [[03 - The Devil In The Row]] em Workflow\Reports\latest_vault_audit.md:330
+- [[Loyalist Guard]] em Workflow\Reports\latest_vault_audit.md:331
+- [[Gutter Row]] em Workflow\Reports\latest_vault_audit.md:332
+- [[Hollow House]] em Workflow\Reports\latest_vault_audit.md:333
+- [[Shana]] em Workflow\Reports\latest_vault_audit.md:334
+- [[The Grim Man]] em Workflow\Reports\latest_vault_audit.md:335
+- [[Steeltown]] em Workflow\Reports\latest_vault_audit.md:336
+- [[04 - Glowing Darkness]] em Workflow\Reports\latest_vault_audit.md:337
+- [[Lash Hawkins]] em Workflow\Reports\latest_vault_audit.md:338
+- [[Murray Boys]] em Workflow\Reports\latest_vault_audit.md:339
+- [[Luxyn]] em Workflow\Reports\latest_vault_audit.md:340
+- [[Nico Murray]] em Workflow\Reports\latest_vault_audit.md:341
+- [[Gutter Row]] em Workflow\Reports\latest_vault_audit.md:342
+- [[Marco Murray]] em Workflow\Reports\latest_vault_audit.md:343
+- [[Rosa Murray]] em Workflow\Reports\latest_vault_audit.md:344
+- [[Luxyn]] em Workflow\Reports\latest_vault_audit.md:345
+- [[Ashmoor]] em Workflow\Reports\latest_vault_audit.md:346
+- [[05 - Sight Unseen]] em Workflow\Reports\latest_vault_audit.md:347
+- [[The Drownlands]] em Workflow\Reports\latest_vault_audit.md:348
+- [[Raina & Risa]] em Workflow\Reports\latest_vault_audit.md:349
+- [[Raina & Risa]] em Workflow\Reports\latest_vault_audit.md:350
+- [[Faith of Mirella]] em Workflow\Reports\latest_vault_audit.md:351
+- [[Riley Thorne]] em Workflow\Reports\latest_vault_audit.md:352
+- [[Ava Victoria]] em Workflow\Reports\latest_vault_audit.md:353
+- [[Gutter Row]] em Workflow\Reports\latest_vault_audit.md:354
+- [[Lash Hawkins]] em Workflow\Reports\latest_vault_audit.md:355
+- [[Nico Murray]] em Workflow\Reports\latest_vault_audit.md:356
+- [[dukeofd.png]] em Workflow\Reports\latest_vault_audit.md:357
+- [[prop.png]] em Workflow\Reports\latest_vault_audit.md:358
+- [[elarion.png]] em Workflow\Reports\latest_vault_audit.md:359
+- [[cassian.png]] em Workflow\Reports\latest_vault_audit.md:360
+- [[Characters/Individual/Raziel.md]] em Workflow\Reports\latest_vault_audit.md:361
+- [[Characters/Individual/Lorde Malakar.md]] em Workflow\Reports\latest_vault_audit.md:362
+- [[Characters/Individual/Vandor, o Senhor das Bestas.md]] em Workflow\Reports\latest_vault_audit.md:363
+- [[Factions/Clã Sanguinallis.md]] em Workflow\Reports\latest_vault_audit.md:364
+- [[Locations/Ruínas de Valthor.md]] em Workflow\Reports\latest_vault_audit.md:365
+- [[Characters/Individual/Raziel.md]] em Workflow\Reports\latest_vault_audit.md:366
+- [[Characters/Individual/Kaelen, o Flagelo.md]] em Workflow\Reports\latest_vault_audit.md:367
+- [[Characters/Individual/Vandor, o Senhor das Bestas.md]] em Workflow\Reports\latest_vault_audit.md:368
+- [[Factions/Clã Sanguinallis.md]] em Workflow\Reports\latest_vault_audit.md:369
+- [[Locations/Fortaleza de Gharok.md]] em Workflow\Reports\latest_vault_audit.md:370
+- [[mira.png]] em Workflow\Reports\latest_vault_audit.md:371
+- [[oric.png]] em Workflow\Reports\latest_vault_audit.md:372
+- [[raziel.PNG]] em Workflow\Reports\latest_vault_audit.md:373
+- [[th_raziel.PNG]] em Workflow\Reports\latest_vault_audit.md:374
+- [[Characters/Individual/Raziel.md]] em Workflow\Reports\latest_vault_audit.md:375
+- [[Characters/Individual/Lorde Malakar.md]] em Workflow\Reports\latest_vault_audit.md:376
+- [[Characters/Individual/Kaelen, o Flagelo.md]] em Workflow\Reports\latest_vault_audit.md:377
+- [[Factions/Clã Sanguinallis.md]] em Workflow\Reports\latest_vault_audit.md:378
+- [[Locations/Floresta de Avenor.md]] em Workflow\Reports\latest_vault_audit.md:379
+- [[varkh.jpeg]] em Workflow\Reports\latest_vault_audit.md:380
+- [[th_varkh.PNG]] em Workflow\Reports\latest_vault_audit.md:381
+- [[vezemir.png]] em Workflow\Reports\latest_vault_audit.md:382
+- [[th_vezemir.PNG]] em Workflow\Reports\latest_vault_audit.md:383
 - [[zz_media/lyladuke.png]] em Workflow\Legacy\Disgraceland\Legacy - Disgraceland Chapter 01 - Ghosts on the Waves.md:6
 - [[Lyla Bonetooth]] em Workflow\Legacy\Disgraceland\Legacy - Disgraceland Chapter 01 - Ghosts on the Waves.md:33
 - [[The Silo]] em Workflow\Legacy\Disgraceland\Legacy - Disgraceland Chapter 01 - Ghosts on the Waves.md:33
@@ -358,25 +584,11 @@ Nenhuma
 - [[prop.png]] em Characters\Individual\Augustus Terra Decimus.md:67
 - [[elarion.png]] em Characters\Individual\Elarion Vaelthor.md:28
 - [[cassian.png]] em Characters\Individual\General Cassian Valerius.md:34
-- [[Characters/Individual/Raziel.md]] em Characters\Individual\Kaelen, o Flagelo.md:65
-- [[Characters/Individual/Lorde Malakar.md]] em Characters\Individual\Kaelen, o Flagelo.md:66
-- [[Characters/Individual/Vandor, o Senhor das Bestas.md]] em Characters\Individual\Kaelen, o Flagelo.md:67
-- [[Factions/Clã Sanguinallis.md]] em Characters\Individual\Kaelen, o Flagelo.md:68
-- [[Locations/Ruínas de Valthor.md]] em Characters\Individual\Kaelen, o Flagelo.md:69
-- [[Characters/Individual/Raziel.md]] em Characters\Individual\Lorde Malakar.md:62
-- [[Characters/Individual/Kaelen, o Flagelo.md]] em Characters\Individual\Lorde Malakar.md:63
-- [[Characters/Individual/Vandor, o Senhor das Bestas.md]] em Characters\Individual\Lorde Malakar.md:64
-- [[Factions/Clã Sanguinallis.md]] em Characters\Individual\Lorde Malakar.md:65
-- [[Locations/Fortaleza de Gharok.md]] em Characters\Individual\Lorde Malakar.md:66
 - [[mira.png]] em Characters\Individual\Mira Valen.md:26
 - [[oric.png]] em Characters\Individual\Padre Oric.md:28
 - [[raziel.PNG]] em Characters\Individual\Raziel.md:30
 - [[th_raziel.PNG]] em Characters\Individual\Raziel.md:127
-- [[Characters/Individual/Raziel.md]] em Characters\Individual\Vandor, o Senhor das Bestas.md:64
-- [[Characters/Individual/Lorde Malakar.md]] em Characters\Individual\Vandor, o Senhor das Bestas.md:65
-- [[Characters/Individual/Kaelen, o Flagelo.md]] em Characters\Individual\Vandor, o Senhor das Bestas.md:66
-- [[Factions/Clã Sanguinallis.md]] em Characters\Individual\Vandor, o Senhor das Bestas.md:67
-- [[Locations/Floresta de Avenor.md]] em Characters\Individual\Vandor, o Senhor das Bestas.md:68
+- [[Locations/Floresta de Avenor]] em Characters\Individual\Vandor, o Senhor das Bestas.md:68
 - [[varkh.jpeg]] em Characters\Individual\Varkh Nimalis.md:30
 - [[th_varkh.PNG]] em Characters\Individual\Varkh Nimalis.md:131
 - [[vezemir.png]] em Characters\Individual\Vezemir.md:31
@@ -386,11 +598,11 @@ Nenhuma
 
 ## Validação de Mídia
 
-- **Total de referências de mídia:** 74
+- **Total de referências de mídia:** 132
 - **Referências válidas:** 0
-- **Referências quebradas (ativas):** 74
+- **Referências quebradas (ativas):** 132
 - **Referências quebradas (legacy):** 0
-- **Imagens órfãs:** 890
+- **Imagens órfãs:** 150
 
 ### Referências quebradas em notas ativas
 - zz_media/t52.png em CALENDAR.md
@@ -402,20 +614,21 @@ Nenhuma
 - zz_media/earthropo.png em MAPA DE EARTHROPO.md
 - zz_media/nimalia.png em MAPA DE NIMALIA.md
 - zz_media/t1.png em TIMELINE.md
-- zz_media/avenor.png em Classes\Alquimista.md
-- zz_media/avenor.png em Classes\Clérigo.md
-- zz_media/avenor.png em Classes\Guerreiro.md
+- zz_media/alquimista.png em Classes\Alquimista.md
+- zz_media/clerigo.png em Classes\Clérigo.md
+- zz_media/guerreiro.png em Classes\Guerreiro.md
 - zz_media/avenor.png em Classes\Homem de Armas.md
-- zz_media/avenor.png em Classes\Ladrão.md
-- zz_media/avenor.png em Classes\Mago.md
-- zz_media/vezemir.png em EARTHROPO\00 - O Bastardo de Ferro.md
-- zz_media/varkh.jpeg em EARTHROPO\00 - O Corvo da Maré Baixa.md
-- zz_media/raziel.png em EARTHROPO\00 - O Retorno de Raziel.md
+- zz_media/ladrao.png em Classes\Ladrão.md
+- zz_media/mago.png em Classes\Mago.md
+- zz_media/banner-as-cronicas-de-nevoa-de-sangue.png em EARTHROPO\00 - As Crônicas de Névoa de Sangue.md
+- zz_media/banner-bastardo-de-ferro.png em EARTHROPO\00 - O Bastardo de Ferro.md
+- zz_media/banner-o-corvo-da-mare-baixa.png em EARTHROPO\00 - O Corvo da Maré Baixa.md
 - zz_media/earthropo.png em EARTHROPO\EARTHROPO.md
 - zz_media/t7.png em Factions\Guarda Real de Nimalia.md
 - zz_media/grisalma.png em Items\Grisalma.md
 - zz_media/muralha_dorn.png em Items\Muralha de Dorn.md
 - zz_media/med.PNG em Items\O Medalhão dos Guardiões do Véu Cinzento.md
+- zz_media/fortaleza-de-gharok.png em Locations\Fortaleza de Gharok.md
 - zz_media/leth'valora.png em Locations\Leth'valora.md
 - zz_media/gutt.png em Locations\Maré Baixa.md
 - zz_media/w.png em Lore\Eclipse de Obsidiana.md
@@ -429,7 +642,7 @@ Nenhuma
 - zz_media/earthropo.png em Races\Kenku.md
 - zz_media/t8.png em Religion\RELIGION.md
 - zz_media/avenor.png em Territories\Floresta de Avenor.md
-- zz_media/t7.png em Territories\Nimalia.md
+- zz_media/mapa-de-nimalia.png em Territories\Nimalia.md
 - zz_media/nome-do-arquivo.ext`. em Workflow\CHARACTER_SCHEMA.md
 - zz_media/avenor.png`; em Workflow\Runtime Audit Report.md
 - zz_media/earthropo.png` em Workflow\Runtime Audit Report.md
@@ -453,6 +666,63 @@ Nenhuma
 - zz_media/factions/filename.webp em Workflow\AI_CONTEXT\05_FRONTMATTER_SCHEMA.md
 - zz_media/lore/filename.webp em Workflow\AI_CONTEXT\05_FRONTMATTER_SCHEMA.md
 - zz_media/territories/filename.webp em Workflow\AI_CONTEXT\05_FRONTMATTER_SCHEMA.md
+- zz_media/avenor.png em Workflow\Reports\latest_vault_audit.md
+- zz_media/vezemir.png em Workflow\Reports\latest_vault_audit.md
+- zz_media/varkh.jpeg em Workflow\Reports\latest_vault_audit.md
+- zz_media/raziel.png em Workflow\Reports\latest_vault_audit.md
+- zz_media/lyladuke.png em Workflow\Reports\latest_vault_audit.md
+- zz_media/t52.png em Workflow\Reports\latest_vault_audit.md
+- zz_media/t6.png em Workflow\Reports\latest_vault_audit.md
+- zz_media/cash.png em Workflow\Reports\latest_vault_audit.md
+- zz_media/news1.png em Workflow\Reports\latest_vault_audit.md
+- zz_media/t7.png em Workflow\Reports\latest_vault_audit.md
+- zz_media/earthropo.png em Workflow\Reports\latest_vault_audit.md
+- zz_media/nimalia.png em Workflow\Reports\latest_vault_audit.md
+- zz_media/t1.png em Workflow\Reports\latest_vault_audit.md
+- zz_media/grisalma.png em Workflow\Reports\latest_vault_audit.md
+- zz_media/muralha_dorn.png em Workflow\Reports\latest_vault_audit.md
+- zz_media/med.PNG em Workflow\Reports\latest_vault_audit.md
+- zz_media/leth'valora.png em Workflow\Reports\latest_vault_audit.md
+- zz_media/gutt.png em Workflow\Reports\latest_vault_audit.md
+- zz_media/w.png em Workflow\Reports\latest_vault_audit.md
+- zz_media/th_anao.PNG em Workflow\Reports\latest_vault_audit.md
+- zz_media/th_elf.PNG em Workflow\Reports\latest_vault_audit.md
+- zz_media/t8.png em Workflow\Reports\latest_vault_audit.md
+- zz_media/nome-do-arquivo.ext`. em Workflow\Reports\latest_vault_audit.md
+- zz_media/avenor.png`; em Workflow\Reports\latest_vault_audit.md
+- zz_media/earthropo.png` em Workflow\Reports\latest_vault_audit.md
+- zz_media/nimalia.png` em Workflow\Reports\latest_vault_audit.md
+- zz_media/` em Workflow\Reports\latest_vault_audit.md
+- zz_media/characters/` em Workflow\Reports\latest_vault_audit.md
+- zz_media/characters/thumbnails/` em Workflow\Reports\latest_vault_audit.md
+- zz_media/factions/` em Workflow\Reports\latest_vault_audit.md
+- zz_media/items/` em Workflow\Reports\latest_vault_audit.md
+- zz_media/locations/` em Workflow\Reports\latest_vault_audit.md
+- zz_media/lore/` em Workflow\Reports\latest_vault_audit.md
+- zz_media/maps/` em Workflow\Reports\latest_vault_audit.md
+- zz_media/territories/` em Workflow\Reports\latest_vault_audit.md
+- zz_media/ui/` em Workflow\Reports\latest_vault_audit.md
+- zz_media/characters/padre-oric.webp` em Workflow\Reports\latest_vault_audit.md
+- zz_media/characters/filename.webp em Workflow\Reports\latest_vault_audit.md
+- zz_media/characters/thumbnails/filename.webp em Workflow\Reports\latest_vault_audit.md
+- zz_media/items/filename.webp em Workflow\Reports\latest_vault_audit.md
+- zz_media/locations/filename.webp em Workflow\Reports\latest_vault_audit.md
+- zz_media/factions/filename.webp em Workflow\Reports\latest_vault_audit.md
+- zz_media/lore/filename.webp em Workflow\Reports\latest_vault_audit.md
+- zz_media/territories/filename.webp em Workflow\Reports\latest_vault_audit.md
+- zz_media/002.png em Workflow\Reports\latest_vault_audit.md
+- zz_media/clérigo.png em Workflow\Reports\latest_vault_audit.md
+- zz_media/mestre em Workflow\Reports\latest_vault_audit.md
+- zz_media/ladrão.png em Workflow\Reports\latest_vault_audit.md
+- zz_media/mago.png em Workflow\Reports\latest_vault_audit.md
+- zz_media/th_dukeofd.png em Workflow\Reports\latest_vault_audit.md
+- zz_media/th_elarion.PNG em Workflow\Reports\latest_vault_audit.md
+- zz_media/th_cassian.PNG em Workflow\Reports\latest_vault_audit.md
+- zz_media/th_mira.PNG em Workflow\Reports\latest_vault_audit.md
+- zz_media/th_oric.PNG em Workflow\Reports\latest_vault_audit.md
+- zz_media/th_raziel.PNG em Workflow\Reports\latest_vault_audit.md
+- zz_media/th_varkh.PNG em Workflow\Reports\latest_vault_audit.md
+- zz_media/th_vezemir.PNG em Workflow\Reports\latest_vault_audit.md
 - zz_media/lyladuke.png em Workflow\Legacy\Disgraceland\Legacy - Disgraceland Chapter 01 - Ghosts on the Waves.md
 - zz_media/002.png em Workflow\Legacy\Disgraceland\Legacy - Disgraceland OUTLINES.md
 - zz_media/clérigo.png em Workflow\Legacy\Old Dragon anterior\Legacy - Old Dragon anterior - Clérigo.md
@@ -472,40 +742,40 @@ Nenhuma
 Nenhuma
 
 ### Imagens órfãs
-- th_rott 1.png
-- zz_media\paper.png
-- zz_media\th_salem.png
-- th_shana 1.png
-- zz_media\wood.png
-- ml1.png
-- sc.png
-- geo.png
-- santopriest.png
-- zz_media\th_harp.png
-- maaap.png
-- notey.png
-- valk.png
-- zz_media\th_jail.png
-- zz_media\th_santopriest.png
-- zz_media\els.png
-- grim.png
-- zz_media\dglban.png
-- th_ta.png
-- thrban.png
-- ... e mais 870 arquivos
+- zz_media\earthropo.png
+- zz_media\casa-da-moeda-exterior.png
+- zz_media\o-fraturamento.png
+- avenor.png
+- guilda-dos-mercadores.png
+- nimalia.png
+- th_cassian.PNG
+- sound.png
+- zz_media\banner-bastardo-de-ferro.png
+- mira.PNG
+- zz_media\adagas-de-espectro-fantasma.png
+- zz_media\elf.PNG
+- guild.png
+- t7.png
+- banner-ecos-do-mundo-perdido.png
+- igreja-das-chamas.png
+- zz_media\banner-ecos-do-mundo-perdido.png
+- th_oric.PNG
+- banner-earthropo.png
+- ladrao.png
+- ... e mais 130 arquivos
 
 ---
 
 ## Riscos Críticos
 
-- Muitas notas (24) sem frontmatter
-- Muitos links quebrados (238)
-- Muitas referências de mídia quebradas em notas ativas (74)
+- Muitas notas (25) sem frontmatter
+- Muitos links quebrados (446)
+- Muitas referências de mídia quebradas em notas ativas (132)
 
 ## Riscos Médios
 
-- Notas com frontmatter inválido (81)
-- Muitas imagens órfãs (890)
+- Notas com frontmatter inválido (84)
+- Muitas imagens órfãs (150)
 
 ## Pendências
 
