@@ -9,28 +9,36 @@ banner-fade: -45
 
 ---
 
+<div style="text-align: center;">
+  <img src="omnisvera.png" width="1300px">
+</div>
+
+<br>
+
+
+> [!cards|5]
+> **NIMALIA**
+> [![[mapa-de-nimalia.png\|sban htiny ctr p+t]]](Territories/Nimalia.md)
+>
+> **CRÔNICAS**
+> [![[banner-earthropo.png\|sban htiny ctr]]](EARTHROPO/EARTHROPO.md)
+>
+> **NOTAS**
+> [![[guild.png\|sban htiny ctr]]](NOTES.md)
+> 
+> **RUMORES E DESCOBERTAS**
+> [![[guild1.png\|sban htiny ctr]]](LATEST_NEWS.md)
+> 
+> **MAPAS DE EARTHROPO**
+> [![[earthropo.png\|sban htiny ctr]]](MAPA%20DE%20EARTHROPO.md)
+>
+
+
 # 🜂 NIMALIA
 
 > *“Toda estrada parece simples antes do primeiro passo. Nas fronteiras de Nimalia, a floresta guarda nomes esquecidos, as ruínas preservam vozes antigas e cada viajante carrega uma história que ainda pode mudar Earthropo.”*
 
 Nimalia é o primeiro horizonte das **Crônicas de Earthropo**: um ponto de partida para jornadas, descobertas e histórias que serão construídas durante a campanha.
-
-> [!cards|5]
-> **NIMALIA**
-> [![[sool.png\|sban htiny ctr p+t]]](Territories/Nimalia.md)
->
-> **CRÔNICAS**
-> [![[eo.png\|sban htiny ctr]]](EARTHROPO/EARTHROPO.md)
->
-> **NOTAS**
-> [![[t2.png\|sban htiny ctr]]](NOTES.md)
-> 
-> **RUMORES E DESCOBERTAS**
-> [![[news1.png\|sban htiny ctr]]](LATEST_NEWS.md)
-> 
-> **MAPAS DE EARTHROPO**
-> [![[mapp.png\|sban htiny ctr]]](MAPA%20DE%20EARTHROPO.md)
->
 
 
 

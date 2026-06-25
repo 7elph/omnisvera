@@ -20,7 +20,7 @@ Esta nota separa fatos geográficos confirmados, posições de trabalho e nomes 
 |:--|:--|:--|:--|
 | [[MAPA DE EARTHROPO\|Earthropo]] | Continente | Continente principal da campanha; não é o mundo inteiro. | Mapa continental ativo. |
 | [[Nimalia]] | Reino | Reino dos antropos governado por [[Augustus Terra Decimus]]. | Região central provisória. |
-| [[Capital de Nimalia]] | Cidade | Capital e sede da [[Coroa de Nimalia]]; o nome próprio ainda não foi definido. | Grande cidade central. |
+| [[Nimalis]] | Cidade | Capital e sede da [[Coroa de Nimalia]]; o nome próprio ainda não foi definido. | Grande cidade central. |
 | [[Floresta de Avenor]] | Região florestal | Faz fronteira com Nimalia. | Leste ou nordeste da capital. |
 | [[Leth'valora]] | Vila destruída | Pequena vila élfica situada dentro de Avenor. | Ruínas no interior da floresta. |
 | [[Maré Baixa]] | Distrito portuário | Fica no extremo sul da capital de Nimalia. | Zona portuária sul do mapa urbano. |

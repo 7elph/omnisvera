@@ -35,16 +35,16 @@ tags:
 **Apelido:** O Espectro
 **Localização Atual:** Em aberto; sua origem está ligada à [[Fortaleza de Gharok]] e seu retorno às [[Ruínas de Valthor]]
 **Território:** Em aberto
-**Reputação Pública:** Antigo executor do Clã Sanguinallis, apagado da história durante seu aprisionamento
+**Reputação Pública:** Antigo executor do [[Clã Sanguinallis]], apagado da história durante seu aprisionamento
 **Gênero:** Masculino
 **Classe:** [[Ladrão]]; hemomante como identidade narrativa
-**Raça:** Vampiro ligado ao Clã Sanguinallis
+**Raça:** Vampiro 
 **Idade:** 340 anos; aparência de aproximadamente 30 anos
 **Altura:** 1,88 m
 **Nível:** 1
 **Alinhamento:** Caótico Neutro
 **Status:** Vivo
-**Afiliação:** Clã Sanguinallis, antes da traição
+**Afiliação:** [[Clã Sanguinallis]], antes da traição
 **Afiliações Anteriores:** Executor pessoal de Lorde Malakar
 **Associados Conhecidos:** Ancião Primordial
 **Inimigos Conhecidos:** Lorde Malakar, Kaelen e Vandor

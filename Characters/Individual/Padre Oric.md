@@ -40,7 +40,7 @@ tags:
 **Status:** Desaparecido  
 **Território:** [[Nimalia]] e regiões vizinhas  
 **Associados Conhecidos:** [[Vezemir]], [[Guardiões do Véu Cinzento]]
-**Origem:** [[Capital de Nimalia]]
+**Origem:** [[Nimalis]]
 **Ocupação:** Sacerdote e escriba
 **Símbolo:** Círculo da Verdade
 
@@ -48,7 +48,7 @@ tags:
 
 ## História
 
-Padre Oric nasceu na [[Capital de Nimalia]] e tornou-se sacerdote, escriba e guardião de registros. Mais tarde passou a viajar por reinos, ruínas e templos esquecidos em busca de conhecimento sobre antigas ordens e poderes perdidos.
+Padre Oric nasceu na [[Nimalis]] e tornou-se sacerdote, escriba e guardião de registros. Mais tarde passou a viajar por reinos, ruínas e templos esquecidos em busca de conhecimento sobre antigas ordens e poderes perdidos.
 Durante uma de suas jornadas conheceu [[Vezemir]], então um mercenário em ascensão.
 Enquanto outros enxergavam apenas um guerreiro, Oric percebeu algo diferente.
 Segundo ele, a magia de Vezemir não parecia fluir naturalmente.

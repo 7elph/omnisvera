@@ -26,7 +26,7 @@ tags:
 
 # MAPA DA CAPITAL DO REINO DE NIMALIA
 
-O nome da [[Capital de Nimalia]] ainda não foi definido. Este mapa representa a cidade capital, não todo o território do reino.
+O nome da [[Nimalis]] ainda não foi definido. Este mapa representa a cidade capital, não todo o território do reino.
 
 > [!warning] Rótulo provisório na arte
 > A palavra **Nimalia** impressa na imagem é um título antigo de trabalho. No cânone atual, Nimalia é o reino; a cidade representada ainda não possui nome próprio.

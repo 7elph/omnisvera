@@ -4,7 +4,7 @@ NoteIcon: location
 NoteStatus: Active
 status: Ativa
 territory: "[[Nimalia]]"
-location: "[[Capital de Nimalia]]"
+location: "[[Nimalis]]"
 district: Sul da capital do Reino de Nimalia
 info: Favela portuária no extremo sul da capital do Reino de Nimalia, feita de passarelas, barracos, lanternas, contrabando, pequenos ofícios e sobrevivência.
 cover: zz_media/gutt.png

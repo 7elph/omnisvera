@@ -3,7 +3,7 @@ NoteIcon: class
 NoteStatus: Draft
 status: Regra opcional
 ruleset: Old Dragon anterior - suplemento independente
-cover: zz_media/avenor.png
+cover: zz_media/alquimista.png
 tags:
   - Category/Class
   - class

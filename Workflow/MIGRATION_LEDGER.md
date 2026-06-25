@@ -78,7 +78,7 @@ Este documento controla a retirada de Disgraceland do conteúdo ativo sem perder
 
 ## Placeholders deliberados
 
-- [ ] [[Capital de Nimalia]] — falta nome próprio.
+- [ ] [[Nimalis]] — falta nome próprio.
 - [ ] [[Fortaleza de Gharok]] — falta posição definitiva.
 - [ ] [[Campos de Earthropo]] — região provisória.
 - [ ] [[Bosque Sussurrante]] — existência não confirmada.
