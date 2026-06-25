@@ -33,10 +33,10 @@ Este documento lista notas que precisam ser criadas para dar suporte à campanha
 
 | Nota | Pasta Sugerida | Categoria | Motivo da Criação | Notas Relacionadas | Status |
 |:--|:--|:--|:--|:--|:--|
-| Dragão de Colar Dourado | Characters/Individual/ | Personagem NPC | Dragão que destruiu Leth'valora, alvo de vingança de Vezemir | Vezemir, Leth'valora, Mira Valen | Peneene
-| Kaer Varyn | Locations/ | Localização | Nome anterior descartado para Leth'valora, não deve ser usado no cânone atual | Vezemir, Leth'valora | Pnne
-| Antiga Estrada Esquecida | Locations/ | Localização | Rota mencionada no contexto de Vezemir | Vezemir, Floresta de Avenor | Peneene
-| Fortaleza Abandonada de Avenor | Locations/ | Localização | Localização mencionada no contexto de Vezemir | Vezemir, Floresta de Avenor | Peneene
+| Dragão de Colar Dourado | Characters/Individual/ | Personagem NPC | Dragão que destruiu Leth'valora, alvo de vingança de Vezemir | Vezemir, Leth'valora, Mira Valen | Criado (Batch 02)
+| Kaer Varyn | Locations/ | Localização | Nome anterior descartado para Leth'valora, não deve ser usado no cânone atual | Vezemir, Leth'valora | NÃO CRIAR (nome descartado)
+| Antiga Estrada Esquecida | Locations/ | Localização | Rota mencionada no contexto de Vezemir | Vezemir, Floresta de Avenor | Criado (Batch 02)
+| Fortaleza Abandonada de Avenor | Locations/ | Localização | Localização mencionada no contexto de Vezemir | Vezemir, Floresta de Avenor | Criado (Batch 02)
 
 ### Varkh
 
@@ -89,12 +89,13 @@ As seguintes notas foram criadas no Batch 01:
 
 ## Batch 02 — Notas Criadas
 
-As seguintes notas foram crsiadas esno Ba 02 etch 02:
+As seguintes notas foram criadas no Batch 02:
 
 - Characters/Individual/Dragão de Colar Dourado.md
-- Locations/Antiga Estrada Esquecidsa.mdefas
-- Kar Varyn oi identificado como nome descrtado e não deve ser usado no cânone atual
+- Locations/Antiga Estrada Esquecida.md
 - Locations/Fortaleza Abandonada de Avenor.md
+
+`Locations/Kaer Varyn.md` não foi criado porque `Kaer Varyn` foi identificado como nome descartado no `Workflow/CANON.md`.
 
 ## Notas
 
