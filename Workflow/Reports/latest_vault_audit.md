@@ -1,25 +1,25 @@
 # Relatório de Auditoria do Vault
 
-**Data/Hora:** 2026-06-25 05:15:13
-**Branch:** devin/create-missing-vezemir-notes-batch-02
-**Commit:** 38fb1277
+**Data/Hora:** 2026-06-25 05:24:29
+**Branch:** devin/create-missing-varkh-notes-batch-03
+**Commit:** 1ab92ac7
 **Status Git:** dirty
 
 ---
 
 ## Resumo Git
 
-- **Branch atual:** devin/create-missing-vezemir-notes-batch-02
-- **Commit:** 38fb1277
+- **Branch atual:** devin/create-missing-varkh-notes-batch-03
+- **Commit:** 1ab92ac7
 - **Status:** dirty
 
 ---
 
 ## Validação de Frontmatter
 
-- **Total de notas analisadas:** 132
+- **Total de notas analisadas:** 137
 - **Notas sem frontmatter:** 25
-- **Notas com frontmatter inválido:** 84
+- **Notas com frontmatter inválido:** 89
 - **Notas com campos vazios importantes:** 0
 
 ### Notas sem frontmatter
@@ -75,11 +75,15 @@
 - Factions\Guarda Real de Nimalia.md
 - Factions\Guardiões do Véu Cinzento.md
 - Factions\Guilda dos Mercadores.md
+- Factions\Rede de Falsificadores de Maré Baixa.md
 - Factions\Sentinelas de Leth'valora.md
 - Items\Adagas de Espectro Fantasma.md
+- Items\Caderninho de Vozes.md
 - Items\Grisalma.md
 - Items\Manto Primordial do Ancião.md
 - Items\Muralha de Dorn.md
+- Items\Máscara de Médico da Peste de Varkh.md
+- Items\O Frasco Afogado.md
 - Items\O Medalhão dos Guardiões do Véu Cinzento.md
 - Locations\Antiga Estrada Esquecida.md
 - Locations\Casa da Moeda de Nimalia.md
@@ -93,6 +97,7 @@
 - Lore\Eclipse de Obsidiana.md
 - Lore\Guardiões do Véu Cinzento.md
 - Lore\O Fraturamento.md
+- Lore\Remédios Falsos de Maré Baixa.md
 - Lore\Sangue Antigo.md
 - Lore\Véu Cinzento.md
 - Races\Kenku.md
@@ -142,9 +147,9 @@ Nenhuma
 
 ## Validação de Wikilinks
 
-- **Total de wikilinks encontrados:** 1481
-- **Links resolvidos:** 619
-- **Links quebrados:** 862
+- **Total de wikilinks encontrados:** 1743
+- **Links resolvidos:** 673
+- **Links quebrados:** 1070
 
 ### Links quebrados
 - [[cash.png]] em ECONOMY.md:16
@@ -261,582 +266,790 @@ Nenhuma
 - [[cash.png]] em Workflow\Reports\latest_vault_audit.md:225
 - [[econ.png]] em Workflow\Reports\latest_vault_audit.md:226
 - [[zz_media/avenor.png]] em Workflow\Reports\latest_vault_audit.md:227
-- [[sool.png\]] em Workflow\Reports\latest_vault_audit.md:228
-- [[eo.png\]] em Workflow\Reports\latest_vault_audit.md:229
-- [[t2.png\]] em Workflow\Reports\latest_vault_audit.md:230
-- [[news1.png\]] em Workflow\Reports\latest_vault_audit.md:231
-- [[mapp.png\]] em Workflow\Reports\latest_vault_audit.md:232
-- [[Earthropo]] em Workflow\Reports\latest_vault_audit.md:233
-- [[Workflow/Legacy - Old Dragon anterior - Clérigo]] em Workflow\Reports\latest_vault_audit.md:234
-- [[Workflow/Legacy - Old Dragon anterior - Homem de Armas]] em Workflow\Reports\latest_vault_audit.md:235
+- [[mapa-de-nimalia.png\]] em Workflow\Reports\latest_vault_audit.md:228
+- [[banner-earthropo.png\]] em Workflow\Reports\latest_vault_audit.md:229
+- [[guild.png\]] em Workflow\Reports\latest_vault_audit.md:230
+- [[guild1.png\]] em Workflow\Reports\latest_vault_audit.md:231
+- [[earthropo.png\]] em Workflow\Reports\latest_vault_audit.md:232
+- [[Capital de Nimalia]] em Workflow\Reports\latest_vault_audit.md:233
+- [[Earthropo]] em Workflow\Reports\latest_vault_audit.md:234
+- [[Workflow/Legacy - Old Dragon anterior - Clérigo]] em Workflow\Reports\latest_vault_audit.md:235
 - [[Workflow/Legacy - Old Dragon anterior - Homem de Armas]] em Workflow\Reports\latest_vault_audit.md:236
-- [[Workflow/Legacy - Old Dragon anterior - Ladrão]] em Workflow\Reports\latest_vault_audit.md:237
-- [[Workflow/Legacy - Old Dragon anterior - Mago]] em Workflow\Reports\latest_vault_audit.md:238
-- [[zz_media/vezemir.png]] em Workflow\Reports\latest_vault_audit.md:239
-- [[zz_media/varkh.jpeg]] em Workflow\Reports\latest_vault_audit.md:240
-- [[zz_media/raziel.png]] em Workflow\Reports\latest_vault_audit.md:241
-- [[Vampiro Sanguinallis]] em Workflow\Reports\latest_vault_audit.md:242
-- [[Characters/Individual/Raziel.md]] em Workflow\Reports\latest_vault_audit.md:243
-- [[Characters/Individual/Lorde Malakar.md]] em Workflow\Reports\latest_vault_audit.md:244
-- [[Characters/Individual/Kaelen, o Flagelo.md]] em Workflow\Reports\latest_vault_audit.md:245
-- [[Characters/Individual/Vandor, o Senhor das Bestas.md]] em Workflow\Reports\latest_vault_audit.md:246
-- [[Locations/Fortaleza de Gharok.md]] em Workflow\Reports\latest_vault_audit.md:247
-- [[Lore/Sangue Antigo.md]] em Workflow\Reports\latest_vault_audit.md:248
-- [[t7.png]] em Workflow\Reports\latest_vault_audit.md:249
-- [[grisalma.png]] em Workflow\Reports\latest_vault_audit.md:250
-- [[muralha_dorn.png]] em Workflow\Reports\latest_vault_audit.md:251
-- [[med.png]] em Workflow\Reports\latest_vault_audit.md:252
-- [[leth'valora.png]] em Workflow\Reports\latest_vault_audit.md:253
-- [[Characters/Individual/Raziel.md]] em Workflow\Reports\latest_vault_audit.md:254
-- [[Locations/Ruínas de Valthor.md]] em Workflow\Reports\latest_vault_audit.md:255
-- [[Lore/Sangue Antigo.md]] em Workflow\Reports\latest_vault_audit.md:256
-- [[Items/Manto Primordial do Ancião.md]] em Workflow\Reports\latest_vault_audit.md:257
-- [[w.png]] em Workflow\Reports\latest_vault_audit.md:258
-- [[Criadores]] em Workflow\Reports\latest_vault_audit.md:259
-- [[w.png]] em Workflow\Reports\latest_vault_audit.md:260
-- [[Vampiro Sanguinallis]] em Workflow\Reports\latest_vault_audit.md:261
-- [[Characters/Individual/Raziel.md]] em Workflow\Reports\latest_vault_audit.md:262
-- [[Lore/Ancião Primordial.md]] em Workflow\Reports\latest_vault_audit.md:263
-- [[Locations/Ruínas de Valthor.md]] em Workflow\Reports\latest_vault_audit.md:264
-- [[Factions/Clã Sanguinallis.md]] em Workflow\Reports\latest_vault_audit.md:265
-- [[anao.PNG]] em Workflow\Reports\latest_vault_audit.md:266
-- [[prop_anao.PNG]] em Workflow\Reports\latest_vault_audit.md:267
-- [[elf.PNG]] em Workflow\Reports\latest_vault_audit.md:268
-- [[elfs.png]] em Workflow\Reports\latest_vault_audit.md:269
-- [[t8.png]] em Workflow\Reports\latest_vault_audit.md:270
-- [[avenor.png]] em Workflow\Reports\latest_vault_audit.md:271
-- [[t7.png]] em Workflow\Reports\latest_vault_audit.md:272
-- [[MAPA DE EARTHROPO\]] em Workflow\Reports\latest_vault_audit.md:273
-- [[zz_media/lyladuke.png]] em Workflow\Reports\latest_vault_audit.md:274
-- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:275
-- [[The Silo]] em Workflow\Reports\latest_vault_audit.md:276
-- [[the Black Marauder]] em Workflow\Reports\latest_vault_audit.md:277
-- [[The Duke]] em Workflow\Reports\latest_vault_audit.md:278
-- [[Unseen Widows]] em Workflow\Reports\latest_vault_audit.md:279
-- [[The Duke]] em Workflow\Reports\latest_vault_audit.md:280
-- [[The Duke]] em Workflow\Reports\latest_vault_audit.md:281
-- [[The Duke]] em Workflow\Reports\latest_vault_audit.md:282
-- [[Charspire]] em Workflow\Reports\latest_vault_audit.md:283
-- [[Gutter Row]] em Workflow\Reports\latest_vault_audit.md:284
-- [[Steeltown Wrecking Crew]] em Workflow\Reports\latest_vault_audit.md:285
-- [[Rustwater Raiders]] em Workflow\Reports\latest_vault_audit.md:286
-- [[Loyalist Guard]] em Workflow\Reports\latest_vault_audit.md:287
-- [[Charspire]] em Workflow\Reports\latest_vault_audit.md:288
-- [[Gutter Row]] em Workflow\Reports\latest_vault_audit.md:289
-- [[Rachel Gold]] em Workflow\Reports\latest_vault_audit.md:290
-- [[The Duke]] em Workflow\Reports\latest_vault_audit.md:291
-- [[Salem Quinn]] em Workflow\Reports\latest_vault_audit.md:292
-- [[Prophet Veerah]] em Workflow\Reports\latest_vault_audit.md:293
-- [[The Duke]] em Workflow\Reports\latest_vault_audit.md:294
-- [[Faith of Mirella]] em Workflow\Reports\latest_vault_audit.md:295
-- [[Bobby Cutman]] em Workflow\Reports\latest_vault_audit.md:296
-- [[Bastian Redd]] em Workflow\Reports\latest_vault_audit.md:297
-- [[Abel May Jr.]] em Workflow\Reports\latest_vault_audit.md:298
-- [[World Lucha Libre]] em Workflow\Reports\latest_vault_audit.md:299
-- [[Blacktide Cray]] em Workflow\Reports\latest_vault_audit.md:300
-- [[Bastian Redd]] em Workflow\Reports\latest_vault_audit.md:301
-- [[Morris Gable]] em Workflow\Reports\latest_vault_audit.md:302
-- [[Hella]] em Workflow\Reports\latest_vault_audit.md:303
-- [[The Grim Man]] em Workflow\Reports\latest_vault_audit.md:304
-- [[The Grim Man]] em Workflow\Reports\latest_vault_audit.md:305
-- [[Gorren Brile]] em Workflow\Reports\latest_vault_audit.md:306
-- [[Emily Burton]] em Workflow\Reports\latest_vault_audit.md:307
-- [[The Duke]] em Workflow\Reports\latest_vault_audit.md:308
-- [[Ora Razchek]] em Workflow\Reports\latest_vault_audit.md:309
-- [[Bastian Redd]] em Workflow\Reports\latest_vault_audit.md:310
-- [[Hella]] em Workflow\Reports\latest_vault_audit.md:311
+- [[Workflow/Legacy - Old Dragon anterior - Homem de Armas]] em Workflow\Reports\latest_vault_audit.md:237
+- [[Workflow/Legacy - Old Dragon anterior - Ladrão]] em Workflow\Reports\latest_vault_audit.md:238
+- [[Workflow/Legacy - Old Dragon anterior - Mago]] em Workflow\Reports\latest_vault_audit.md:239
+- [[zz_media/banner-as-cronicas-de-nevoa-de-sangue.png]] em Workflow\Reports\latest_vault_audit.md:240
+- [[zz_media/banner-bastardo-de-ferro.png]] em Workflow\Reports\latest_vault_audit.md:241
+- [[zz_media/banner-o-corvo-da-mare-baixa.png]] em Workflow\Reports\latest_vault_audit.md:242
+- [[Vampiro Sanguinallis]] em Workflow\Reports\latest_vault_audit.md:243
+- [[t7.png]] em Workflow\Reports\latest_vault_audit.md:244
+- [[grisalma.png]] em Workflow\Reports\latest_vault_audit.md:245
+- [[muralha_dorn.png]] em Workflow\Reports\latest_vault_audit.md:246
+- [[med.png]] em Workflow\Reports\latest_vault_audit.md:247
+- [[leth'valora.png]] em Workflow\Reports\latest_vault_audit.md:248
+- [[w.png]] em Workflow\Reports\latest_vault_audit.md:249
+- [[Criadores]] em Workflow\Reports\latest_vault_audit.md:250
+- [[w.png]] em Workflow\Reports\latest_vault_audit.md:251
+- [[Vampiro Sanguinallis]] em Workflow\Reports\latest_vault_audit.md:252
+- [[anao.PNG]] em Workflow\Reports\latest_vault_audit.md:253
+- [[prop_anao.PNG]] em Workflow\Reports\latest_vault_audit.md:254
+- [[elf.PNG]] em Workflow\Reports\latest_vault_audit.md:255
+- [[elfs.png]] em Workflow\Reports\latest_vault_audit.md:256
+- [[t8.png]] em Workflow\Reports\latest_vault_audit.md:257
+- [[avenor.png]] em Workflow\Reports\latest_vault_audit.md:258
+- [[mapa-de-nimalia.png]] em Workflow\Reports\latest_vault_audit.md:259
+- [[MAPA DE EARTHROPO\]] em Workflow\Reports\latest_vault_audit.md:260
+- [[cash.png]] em Workflow\Reports\latest_vault_audit.md:261
+- [[econ.png]] em Workflow\Reports\latest_vault_audit.md:262
+- [[zz_media/avenor.png]] em Workflow\Reports\latest_vault_audit.md:263
+- [[sool.png\]] em Workflow\Reports\latest_vault_audit.md:264
+- [[eo.png\]] em Workflow\Reports\latest_vault_audit.md:265
+- [[t2.png\]] em Workflow\Reports\latest_vault_audit.md:266
+- [[news1.png\]] em Workflow\Reports\latest_vault_audit.md:267
+- [[mapp.png\]] em Workflow\Reports\latest_vault_audit.md:268
+- [[Earthropo]] em Workflow\Reports\latest_vault_audit.md:269
+- [[Workflow/Legacy - Old Dragon anterior - Clérigo]] em Workflow\Reports\latest_vault_audit.md:270
+- [[Workflow/Legacy - Old Dragon anterior - Homem de Armas]] em Workflow\Reports\latest_vault_audit.md:271
+- [[Workflow/Legacy - Old Dragon anterior - Homem de Armas]] em Workflow\Reports\latest_vault_audit.md:272
+- [[Workflow/Legacy - Old Dragon anterior - Ladrão]] em Workflow\Reports\latest_vault_audit.md:273
+- [[Workflow/Legacy - Old Dragon anterior - Mago]] em Workflow\Reports\latest_vault_audit.md:274
+- [[zz_media/vezemir.png]] em Workflow\Reports\latest_vault_audit.md:275
+- [[zz_media/varkh.jpeg]] em Workflow\Reports\latest_vault_audit.md:276
+- [[zz_media/raziel.png]] em Workflow\Reports\latest_vault_audit.md:277
+- [[Vampiro Sanguinallis]] em Workflow\Reports\latest_vault_audit.md:278
+- [[Characters/Individual/Raziel.md]] em Workflow\Reports\latest_vault_audit.md:279
+- [[Characters/Individual/Lorde Malakar.md]] em Workflow\Reports\latest_vault_audit.md:280
+- [[Characters/Individual/Kaelen, o Flagelo.md]] em Workflow\Reports\latest_vault_audit.md:281
+- [[Characters/Individual/Vandor, o Senhor das Bestas.md]] em Workflow\Reports\latest_vault_audit.md:282
+- [[Locations/Fortaleza de Gharok.md]] em Workflow\Reports\latest_vault_audit.md:283
+- [[Lore/Sangue Antigo.md]] em Workflow\Reports\latest_vault_audit.md:284
+- [[t7.png]] em Workflow\Reports\latest_vault_audit.md:285
+- [[grisalma.png]] em Workflow\Reports\latest_vault_audit.md:286
+- [[muralha_dorn.png]] em Workflow\Reports\latest_vault_audit.md:287
+- [[med.png]] em Workflow\Reports\latest_vault_audit.md:288
+- [[leth'valora.png]] em Workflow\Reports\latest_vault_audit.md:289
+- [[Characters/Individual/Raziel.md]] em Workflow\Reports\latest_vault_audit.md:290
+- [[Locations/Ruínas de Valthor.md]] em Workflow\Reports\latest_vault_audit.md:291
+- [[Lore/Sangue Antigo.md]] em Workflow\Reports\latest_vault_audit.md:292
+- [[Items/Manto Primordial do Ancião.md]] em Workflow\Reports\latest_vault_audit.md:293
+- [[w.png]] em Workflow\Reports\latest_vault_audit.md:294
+- [[Criadores]] em Workflow\Reports\latest_vault_audit.md:295
+- [[w.png]] em Workflow\Reports\latest_vault_audit.md:296
+- [[Vampiro Sanguinallis]] em Workflow\Reports\latest_vault_audit.md:297
+- [[Characters/Individual/Raziel.md]] em Workflow\Reports\latest_vault_audit.md:298
+- [[Lore/Ancião Primordial.md]] em Workflow\Reports\latest_vault_audit.md:299
+- [[Locations/Ruínas de Valthor.md]] em Workflow\Reports\latest_vault_audit.md:300
+- [[Factions/Clã Sanguinallis.md]] em Workflow\Reports\latest_vault_audit.md:301
+- [[anao.PNG]] em Workflow\Reports\latest_vault_audit.md:302
+- [[prop_anao.PNG]] em Workflow\Reports\latest_vault_audit.md:303
+- [[elf.PNG]] em Workflow\Reports\latest_vault_audit.md:304
+- [[elfs.png]] em Workflow\Reports\latest_vault_audit.md:305
+- [[t8.png]] em Workflow\Reports\latest_vault_audit.md:306
+- [[avenor.png]] em Workflow\Reports\latest_vault_audit.md:307
+- [[t7.png]] em Workflow\Reports\latest_vault_audit.md:308
+- [[MAPA DE EARTHROPO\]] em Workflow\Reports\latest_vault_audit.md:309
+- [[zz_media/lyladuke.png]] em Workflow\Reports\latest_vault_audit.md:310
+- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:311
 - [[The Silo]] em Workflow\Reports\latest_vault_audit.md:312
-- [[Valkaara]] em Workflow\Reports\latest_vault_audit.md:313
-- [[Valkaara]] em Workflow\Reports\latest_vault_audit.md:314
-- [[VALKAARA]] em Workflow\Reports\latest_vault_audit.md:315
-- [[Valkaara]] em Workflow\Reports\latest_vault_audit.md:316
-- [[Valkaara]] em Workflow\Reports\latest_vault_audit.md:317
-- [[Steeltown#Gage Park]] em Workflow\Reports\latest_vault_audit.md:318
-- [[The Black Marauder]] em Workflow\Reports\latest_vault_audit.md:319
-- [[Water#Rustwater Bay]] em Workflow\Reports\latest_vault_audit.md:320
+- [[the Black Marauder]] em Workflow\Reports\latest_vault_audit.md:313
+- [[The Duke]] em Workflow\Reports\latest_vault_audit.md:314
+- [[Unseen Widows]] em Workflow\Reports\latest_vault_audit.md:315
+- [[The Duke]] em Workflow\Reports\latest_vault_audit.md:316
+- [[The Duke]] em Workflow\Reports\latest_vault_audit.md:317
+- [[The Duke]] em Workflow\Reports\latest_vault_audit.md:318
+- [[Charspire]] em Workflow\Reports\latest_vault_audit.md:319
+- [[Gutter Row]] em Workflow\Reports\latest_vault_audit.md:320
 - [[Steeltown Wrecking Crew]] em Workflow\Reports\latest_vault_audit.md:321
-- [[The Black Marauder]] em Workflow\Reports\latest_vault_audit.md:322
-- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:323
-- [[Blacktide Cray]] em Workflow\Reports\latest_vault_audit.md:324
-- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:325
-- [[Steeltown Wrecking Crew]] em Workflow\Reports\latest_vault_audit.md:326
-- [[The Black Marauder]] em Workflow\Reports\latest_vault_audit.md:327
-- [[Steeltown Wrecking Crew]] em Workflow\Reports\latest_vault_audit.md:328
-- [[Steeltown#Gage Park]] em Workflow\Reports\latest_vault_audit.md:329
-- [[Steeltown Wrecking Crew]] em Workflow\Reports\latest_vault_audit.md:330
-- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:331
-- [[Mark Jeffrey]] em Workflow\Reports\latest_vault_audit.md:332
-- [[Abel May Jr.]] em Workflow\Reports\latest_vault_audit.md:333
-- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:334
-- [[Blacktide Cray]] em Workflow\Reports\latest_vault_audit.md:335
-- [[Abel May Jr.]] em Workflow\Reports\latest_vault_audit.md:336
-- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:337
-- [[Mark Jeffrey]] em Workflow\Reports\latest_vault_audit.md:338
-- [[Flint Garritt]] em Workflow\Reports\latest_vault_audit.md:339
-- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:340
-- [[Abel May Jr.]] em Workflow\Reports\latest_vault_audit.md:341
-- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:342
-- [[Abel May Jr.]] em Workflow\Reports\latest_vault_audit.md:343
-- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:344
-- [[Blacktide Cray]] em Workflow\Reports\latest_vault_audit.md:345
-- [[Steeltown#Gage Park]] em Workflow\Reports\latest_vault_audit.md:346
-- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:347
-- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:348
-- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:349
-- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:350
-- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:351
-- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:352
-- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:353
-- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:354
-- [[Mark Jeffrey]] em Workflow\Reports\latest_vault_audit.md:355
-- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:356
-- [[Mark Jeffrey]] em Workflow\Reports\latest_vault_audit.md:357
-- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:358
-- [[Steeltown Wrecking Crew]] em Workflow\Reports\latest_vault_audit.md:359
-- [[Katie Kowalski]] em Workflow\Reports\latest_vault_audit.md:360
-- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:361
-- [[Mark Jeffrey]] em Workflow\Reports\latest_vault_audit.md:362
-- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:363
+- [[Rustwater Raiders]] em Workflow\Reports\latest_vault_audit.md:322
+- [[Loyalist Guard]] em Workflow\Reports\latest_vault_audit.md:323
+- [[Charspire]] em Workflow\Reports\latest_vault_audit.md:324
+- [[Gutter Row]] em Workflow\Reports\latest_vault_audit.md:325
+- [[Rachel Gold]] em Workflow\Reports\latest_vault_audit.md:326
+- [[The Duke]] em Workflow\Reports\latest_vault_audit.md:327
+- [[Salem Quinn]] em Workflow\Reports\latest_vault_audit.md:328
+- [[Prophet Veerah]] em Workflow\Reports\latest_vault_audit.md:329
+- [[The Duke]] em Workflow\Reports\latest_vault_audit.md:330
+- [[Faith of Mirella]] em Workflow\Reports\latest_vault_audit.md:331
+- [[Bobby Cutman]] em Workflow\Reports\latest_vault_audit.md:332
+- [[Bastian Redd]] em Workflow\Reports\latest_vault_audit.md:333
+- [[Abel May Jr.]] em Workflow\Reports\latest_vault_audit.md:334
+- [[World Lucha Libre]] em Workflow\Reports\latest_vault_audit.md:335
+- [[Blacktide Cray]] em Workflow\Reports\latest_vault_audit.md:336
+- [[Bastian Redd]] em Workflow\Reports\latest_vault_audit.md:337
+- [[Morris Gable]] em Workflow\Reports\latest_vault_audit.md:338
+- [[Hella]] em Workflow\Reports\latest_vault_audit.md:339
+- [[The Grim Man]] em Workflow\Reports\latest_vault_audit.md:340
+- [[The Grim Man]] em Workflow\Reports\latest_vault_audit.md:341
+- [[Gorren Brile]] em Workflow\Reports\latest_vault_audit.md:342
+- [[Emily Burton]] em Workflow\Reports\latest_vault_audit.md:343
+- [[The Duke]] em Workflow\Reports\latest_vault_audit.md:344
+- [[Ora Razchek]] em Workflow\Reports\latest_vault_audit.md:345
+- [[Bastian Redd]] em Workflow\Reports\latest_vault_audit.md:346
+- [[Hella]] em Workflow\Reports\latest_vault_audit.md:347
+- [[The Silo]] em Workflow\Reports\latest_vault_audit.md:348
+- [[Valkaara]] em Workflow\Reports\latest_vault_audit.md:349
+- [[Valkaara]] em Workflow\Reports\latest_vault_audit.md:350
+- [[VALKAARA]] em Workflow\Reports\latest_vault_audit.md:351
+- [[Valkaara]] em Workflow\Reports\latest_vault_audit.md:352
+- [[Valkaara]] em Workflow\Reports\latest_vault_audit.md:353
+- [[Steeltown#Gage Park]] em Workflow\Reports\latest_vault_audit.md:354
+- [[The Black Marauder]] em Workflow\Reports\latest_vault_audit.md:355
+- [[Water#Rustwater Bay]] em Workflow\Reports\latest_vault_audit.md:356
+- [[Steeltown Wrecking Crew]] em Workflow\Reports\latest_vault_audit.md:357
+- [[The Black Marauder]] em Workflow\Reports\latest_vault_audit.md:358
+- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:359
+- [[Blacktide Cray]] em Workflow\Reports\latest_vault_audit.md:360
+- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:361
+- [[Steeltown Wrecking Crew]] em Workflow\Reports\latest_vault_audit.md:362
+- [[The Black Marauder]] em Workflow\Reports\latest_vault_audit.md:363
 - [[Steeltown Wrecking Crew]] em Workflow\Reports\latest_vault_audit.md:364
-- [[Loyalist Guard]] em Workflow\Reports\latest_vault_audit.md:365
-- [[Rustwater Raiders]] em Workflow\Reports\latest_vault_audit.md:366
-- [[Steeltown Wrecking Crew]] em Workflow\Reports\latest_vault_audit.md:367
-- [[Blacktide Cray]] em Workflow\Reports\latest_vault_audit.md:368
+- [[Steeltown#Gage Park]] em Workflow\Reports\latest_vault_audit.md:365
+- [[Steeltown Wrecking Crew]] em Workflow\Reports\latest_vault_audit.md:366
+- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:367
+- [[Mark Jeffrey]] em Workflow\Reports\latest_vault_audit.md:368
 - [[Abel May Jr.]] em Workflow\Reports\latest_vault_audit.md:369
-- [[Steeltown]] em Workflow\Reports\latest_vault_audit.md:370
-- [[Threshton]] em Workflow\Reports\latest_vault_audit.md:371
-- [[Bastian Redd]] em Workflow\Reports\latest_vault_audit.md:372
-- [[Flint Garritt]] em Workflow\Reports\latest_vault_audit.md:373
-- [[Bastian Redd]] em Workflow\Reports\latest_vault_audit.md:374
-- [[Bastian Redd]] em Workflow\Reports\latest_vault_audit.md:375
-- [[Steeltown#Gage Park]] em Workflow\Reports\latest_vault_audit.md:376
-- [[The Black Marauder]] em Workflow\Reports\latest_vault_audit.md:377
-- [[Wrecking Crew]] em Workflow\Reports\latest_vault_audit.md:378
+- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:370
+- [[Blacktide Cray]] em Workflow\Reports\latest_vault_audit.md:371
+- [[Abel May Jr.]] em Workflow\Reports\latest_vault_audit.md:372
+- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:373
+- [[Mark Jeffrey]] em Workflow\Reports\latest_vault_audit.md:374
+- [[Flint Garritt]] em Workflow\Reports\latest_vault_audit.md:375
+- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:376
+- [[Abel May Jr.]] em Workflow\Reports\latest_vault_audit.md:377
+- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:378
 - [[Abel May Jr.]] em Workflow\Reports\latest_vault_audit.md:379
-- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:380
-- [[Mark Jeffrey]] em Workflow\Reports\latest_vault_audit.md:381
-- [[Flint Garritt]] em Workflow\Reports\latest_vault_audit.md:382
-- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:383
-- [[Abel May Jr.]] em Workflow\Reports\latest_vault_audit.md:384
+- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:380
+- [[Blacktide Cray]] em Workflow\Reports\latest_vault_audit.md:381
+- [[Steeltown#Gage Park]] em Workflow\Reports\latest_vault_audit.md:382
+- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:383
+- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:384
 - [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:385
-- [[Katie Kowalski]] em Workflow\Reports\latest_vault_audit.md:386
+- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:386
 - [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:387
-- [[Bastian Redd]] em Workflow\Reports\latest_vault_audit.md:388
-- [[Threshton]] em Workflow\Reports\latest_vault_audit.md:389
-- [[01 - Main Event Shadows]] em Workflow\Reports\latest_vault_audit.md:390
-- [[World Lucha Libre]] em Workflow\Reports\latest_vault_audit.md:391
-- [[Steeltown]] em Workflow\Reports\latest_vault_audit.md:392
-- [[Bobby Cutman]] em Workflow\Reports\latest_vault_audit.md:393
-- [[Steeltown Wrecking Crew]] em Workflow\Reports\latest_vault_audit.md:394
-- [[Abel May Jr.]] em Workflow\Reports\latest_vault_audit.md:395
-- [[Bobby Cutman]] em Workflow\Reports\latest_vault_audit.md:396
-- [[02 - Ghosts On The Waves]] em Workflow\Reports\latest_vault_audit.md:397
-- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:398
-- [[Rustwater Raiders]] em Workflow\Reports\latest_vault_audit.md:399
-- [[The Silo]] em Workflow\Reports\latest_vault_audit.md:400
-- [[Ashmoor]] em Workflow\Reports\latest_vault_audit.md:401
-- [[Steeltown]] em Workflow\Reports\latest_vault_audit.md:402
-- [[The Black Marauder]] em Workflow\Reports\latest_vault_audit.md:403
-- [[The Duke]] em Workflow\Reports\latest_vault_audit.md:404
-- [[Unseen Widows]] em Workflow\Reports\latest_vault_audit.md:405
-- [[03 - The Devil In The Row]] em Workflow\Reports\latest_vault_audit.md:406
-- [[Loyalist Guard]] em Workflow\Reports\latest_vault_audit.md:407
-- [[Gutter Row]] em Workflow\Reports\latest_vault_audit.md:408
-- [[Hollow House]] em Workflow\Reports\latest_vault_audit.md:409
-- [[Shana]] em Workflow\Reports\latest_vault_audit.md:410
-- [[The Grim Man]] em Workflow\Reports\latest_vault_audit.md:411
-- [[Steeltown]] em Workflow\Reports\latest_vault_audit.md:412
-- [[04 - Glowing Darkness]] em Workflow\Reports\latest_vault_audit.md:413
-- [[Lash Hawkins]] em Workflow\Reports\latest_vault_audit.md:414
-- [[Murray Boys]] em Workflow\Reports\latest_vault_audit.md:415
-- [[Luxyn]] em Workflow\Reports\latest_vault_audit.md:416
-- [[Nico Murray]] em Workflow\Reports\latest_vault_audit.md:417
-- [[Gutter Row]] em Workflow\Reports\latest_vault_audit.md:418
-- [[Marco Murray]] em Workflow\Reports\latest_vault_audit.md:419
-- [[Rosa Murray]] em Workflow\Reports\latest_vault_audit.md:420
-- [[Luxyn]] em Workflow\Reports\latest_vault_audit.md:421
-- [[Ashmoor]] em Workflow\Reports\latest_vault_audit.md:422
-- [[05 - Sight Unseen]] em Workflow\Reports\latest_vault_audit.md:423
-- [[The Drownlands]] em Workflow\Reports\latest_vault_audit.md:424
-- [[Raina & Risa]] em Workflow\Reports\latest_vault_audit.md:425
-- [[Raina & Risa]] em Workflow\Reports\latest_vault_audit.md:426
-- [[Faith of Mirella]] em Workflow\Reports\latest_vault_audit.md:427
-- [[Riley Thorne]] em Workflow\Reports\latest_vault_audit.md:428
-- [[Ava Victoria]] em Workflow\Reports\latest_vault_audit.md:429
-- [[Gutter Row]] em Workflow\Reports\latest_vault_audit.md:430
-- [[Lash Hawkins]] em Workflow\Reports\latest_vault_audit.md:431
-- [[Nico Murray]] em Workflow\Reports\latest_vault_audit.md:432
-- [[dukeofd.png]] em Workflow\Reports\latest_vault_audit.md:433
-- [[prop.png]] em Workflow\Reports\latest_vault_audit.md:434
-- [[elarion.png]] em Workflow\Reports\latest_vault_audit.md:435
-- [[cassian.png]] em Workflow\Reports\latest_vault_audit.md:436
-- [[Characters/Individual/Raziel.md]] em Workflow\Reports\latest_vault_audit.md:437
-- [[Characters/Individual/Lorde Malakar.md]] em Workflow\Reports\latest_vault_audit.md:438
-- [[Characters/Individual/Vandor, o Senhor das Bestas.md]] em Workflow\Reports\latest_vault_audit.md:439
-- [[Factions/Clã Sanguinallis.md]] em Workflow\Reports\latest_vault_audit.md:440
-- [[Locations/Ruínas de Valthor.md]] em Workflow\Reports\latest_vault_audit.md:441
-- [[Characters/Individual/Raziel.md]] em Workflow\Reports\latest_vault_audit.md:442
-- [[Characters/Individual/Kaelen, o Flagelo.md]] em Workflow\Reports\latest_vault_audit.md:443
-- [[Characters/Individual/Vandor, o Senhor das Bestas.md]] em Workflow\Reports\latest_vault_audit.md:444
-- [[Factions/Clã Sanguinallis.md]] em Workflow\Reports\latest_vault_audit.md:445
-- [[Locations/Fortaleza de Gharok.md]] em Workflow\Reports\latest_vault_audit.md:446
-- [[mira.png]] em Workflow\Reports\latest_vault_audit.md:447
-- [[oric.png]] em Workflow\Reports\latest_vault_audit.md:448
-- [[raziel.PNG]] em Workflow\Reports\latest_vault_audit.md:449
-- [[th_raziel.PNG]] em Workflow\Reports\latest_vault_audit.md:450
-- [[Characters/Individual/Raziel.md]] em Workflow\Reports\latest_vault_audit.md:451
-- [[Characters/Individual/Lorde Malakar.md]] em Workflow\Reports\latest_vault_audit.md:452
-- [[Characters/Individual/Kaelen, o Flagelo.md]] em Workflow\Reports\latest_vault_audit.md:453
-- [[Factions/Clã Sanguinallis.md]] em Workflow\Reports\latest_vault_audit.md:454
-- [[Locations/Floresta de Avenor.md]] em Workflow\Reports\latest_vault_audit.md:455
-- [[varkh.jpeg]] em Workflow\Reports\latest_vault_audit.md:456
-- [[th_varkh.PNG]] em Workflow\Reports\latest_vault_audit.md:457
-- [[vezemir.png]] em Workflow\Reports\latest_vault_audit.md:458
-- [[th_vezemir.PNG]] em Workflow\Reports\latest_vault_audit.md:459
-- [[zz_media/lyladuke.png]] em Workflow\Reports\latest_vault_audit.md:460
-- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:461
-- [[The Silo]] em Workflow\Reports\latest_vault_audit.md:462
-- [[the Black Marauder]] em Workflow\Reports\latest_vault_audit.md:463
-- [[The Duke]] em Workflow\Reports\latest_vault_audit.md:464
-- [[Unseen Widows]] em Workflow\Reports\latest_vault_audit.md:465
-- [[The Duke]] em Workflow\Reports\latest_vault_audit.md:466
-- [[The Duke]] em Workflow\Reports\latest_vault_audit.md:467
-- [[The Duke]] em Workflow\Reports\latest_vault_audit.md:468
-- [[Charspire]] em Workflow\Reports\latest_vault_audit.md:469
-- [[Gutter Row]] em Workflow\Reports\latest_vault_audit.md:470
-- [[Steeltown Wrecking Crew]] em Workflow\Reports\latest_vault_audit.md:471
-- [[Rustwater Raiders]] em Workflow\Reports\latest_vault_audit.md:472
-- [[Loyalist Guard]] em Workflow\Reports\latest_vault_audit.md:473
-- [[Charspire]] em Workflow\Reports\latest_vault_audit.md:474
-- [[Gutter Row]] em Workflow\Reports\latest_vault_audit.md:475
-- [[Rachel Gold]] em Workflow\Reports\latest_vault_audit.md:476
-- [[The Duke]] em Workflow\Reports\latest_vault_audit.md:477
-- [[Salem Quinn]] em Workflow\Reports\latest_vault_audit.md:478
-- [[Prophet Veerah]] em Workflow\Reports\latest_vault_audit.md:479
-- [[The Duke]] em Workflow\Reports\latest_vault_audit.md:480
-- [[Faith of Mirella]] em Workflow\Reports\latest_vault_audit.md:481
-- [[Bobby Cutman]] em Workflow\Reports\latest_vault_audit.md:482
-- [[Bastian Redd]] em Workflow\Reports\latest_vault_audit.md:483
-- [[Abel May Jr.]] em Workflow\Reports\latest_vault_audit.md:484
-- [[World Lucha Libre]] em Workflow\Reports\latest_vault_audit.md:485
-- [[Blacktide Cray]] em Workflow\Reports\latest_vault_audit.md:486
-- [[Bastian Redd]] em Workflow\Reports\latest_vault_audit.md:487
-- [[Morris Gable]] em Workflow\Reports\latest_vault_audit.md:488
-- [[Hella]] em Workflow\Reports\latest_vault_audit.md:489
-- [[The Grim Man]] em Workflow\Reports\latest_vault_audit.md:490
-- [[The Grim Man]] em Workflow\Reports\latest_vault_audit.md:491
-- [[Gorren Brile]] em Workflow\Reports\latest_vault_audit.md:492
-- [[Emily Burton]] em Workflow\Reports\latest_vault_audit.md:493
-- [[The Duke]] em Workflow\Reports\latest_vault_audit.md:494
-- [[Ora Razchek]] em Workflow\Reports\latest_vault_audit.md:495
-- [[Bastian Redd]] em Workflow\Reports\latest_vault_audit.md:496
-- [[Hella]] em Workflow\Reports\latest_vault_audit.md:497
+- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:388
+- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:389
+- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:390
+- [[Mark Jeffrey]] em Workflow\Reports\latest_vault_audit.md:391
+- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:392
+- [[Mark Jeffrey]] em Workflow\Reports\latest_vault_audit.md:393
+- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:394
+- [[Steeltown Wrecking Crew]] em Workflow\Reports\latest_vault_audit.md:395
+- [[Katie Kowalski]] em Workflow\Reports\latest_vault_audit.md:396
+- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:397
+- [[Mark Jeffrey]] em Workflow\Reports\latest_vault_audit.md:398
+- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:399
+- [[Steeltown Wrecking Crew]] em Workflow\Reports\latest_vault_audit.md:400
+- [[Loyalist Guard]] em Workflow\Reports\latest_vault_audit.md:401
+- [[Rustwater Raiders]] em Workflow\Reports\latest_vault_audit.md:402
+- [[Steeltown Wrecking Crew]] em Workflow\Reports\latest_vault_audit.md:403
+- [[Blacktide Cray]] em Workflow\Reports\latest_vault_audit.md:404
+- [[Abel May Jr.]] em Workflow\Reports\latest_vault_audit.md:405
+- [[Steeltown]] em Workflow\Reports\latest_vault_audit.md:406
+- [[Threshton]] em Workflow\Reports\latest_vault_audit.md:407
+- [[Bastian Redd]] em Workflow\Reports\latest_vault_audit.md:408
+- [[Flint Garritt]] em Workflow\Reports\latest_vault_audit.md:409
+- [[Bastian Redd]] em Workflow\Reports\latest_vault_audit.md:410
+- [[Bastian Redd]] em Workflow\Reports\latest_vault_audit.md:411
+- [[Steeltown#Gage Park]] em Workflow\Reports\latest_vault_audit.md:412
+- [[The Black Marauder]] em Workflow\Reports\latest_vault_audit.md:413
+- [[Wrecking Crew]] em Workflow\Reports\latest_vault_audit.md:414
+- [[Abel May Jr.]] em Workflow\Reports\latest_vault_audit.md:415
+- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:416
+- [[Mark Jeffrey]] em Workflow\Reports\latest_vault_audit.md:417
+- [[Flint Garritt]] em Workflow\Reports\latest_vault_audit.md:418
+- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:419
+- [[Abel May Jr.]] em Workflow\Reports\latest_vault_audit.md:420
+- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:421
+- [[Katie Kowalski]] em Workflow\Reports\latest_vault_audit.md:422
+- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:423
+- [[Bastian Redd]] em Workflow\Reports\latest_vault_audit.md:424
+- [[Threshton]] em Workflow\Reports\latest_vault_audit.md:425
+- [[01 - Main Event Shadows]] em Workflow\Reports\latest_vault_audit.md:426
+- [[World Lucha Libre]] em Workflow\Reports\latest_vault_audit.md:427
+- [[Steeltown]] em Workflow\Reports\latest_vault_audit.md:428
+- [[Bobby Cutman]] em Workflow\Reports\latest_vault_audit.md:429
+- [[Steeltown Wrecking Crew]] em Workflow\Reports\latest_vault_audit.md:430
+- [[Abel May Jr.]] em Workflow\Reports\latest_vault_audit.md:431
+- [[Bobby Cutman]] em Workflow\Reports\latest_vault_audit.md:432
+- [[02 - Ghosts On The Waves]] em Workflow\Reports\latest_vault_audit.md:433
+- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:434
+- [[Rustwater Raiders]] em Workflow\Reports\latest_vault_audit.md:435
+- [[The Silo]] em Workflow\Reports\latest_vault_audit.md:436
+- [[Ashmoor]] em Workflow\Reports\latest_vault_audit.md:437
+- [[Steeltown]] em Workflow\Reports\latest_vault_audit.md:438
+- [[The Black Marauder]] em Workflow\Reports\latest_vault_audit.md:439
+- [[The Duke]] em Workflow\Reports\latest_vault_audit.md:440
+- [[Unseen Widows]] em Workflow\Reports\latest_vault_audit.md:441
+- [[03 - The Devil In The Row]] em Workflow\Reports\latest_vault_audit.md:442
+- [[Loyalist Guard]] em Workflow\Reports\latest_vault_audit.md:443
+- [[Gutter Row]] em Workflow\Reports\latest_vault_audit.md:444
+- [[Hollow House]] em Workflow\Reports\latest_vault_audit.md:445
+- [[Shana]] em Workflow\Reports\latest_vault_audit.md:446
+- [[The Grim Man]] em Workflow\Reports\latest_vault_audit.md:447
+- [[Steeltown]] em Workflow\Reports\latest_vault_audit.md:448
+- [[04 - Glowing Darkness]] em Workflow\Reports\latest_vault_audit.md:449
+- [[Lash Hawkins]] em Workflow\Reports\latest_vault_audit.md:450
+- [[Murray Boys]] em Workflow\Reports\latest_vault_audit.md:451
+- [[Luxyn]] em Workflow\Reports\latest_vault_audit.md:452
+- [[Nico Murray]] em Workflow\Reports\latest_vault_audit.md:453
+- [[Gutter Row]] em Workflow\Reports\latest_vault_audit.md:454
+- [[Marco Murray]] em Workflow\Reports\latest_vault_audit.md:455
+- [[Rosa Murray]] em Workflow\Reports\latest_vault_audit.md:456
+- [[Luxyn]] em Workflow\Reports\latest_vault_audit.md:457
+- [[Ashmoor]] em Workflow\Reports\latest_vault_audit.md:458
+- [[05 - Sight Unseen]] em Workflow\Reports\latest_vault_audit.md:459
+- [[The Drownlands]] em Workflow\Reports\latest_vault_audit.md:460
+- [[Raina & Risa]] em Workflow\Reports\latest_vault_audit.md:461
+- [[Raina & Risa]] em Workflow\Reports\latest_vault_audit.md:462
+- [[Faith of Mirella]] em Workflow\Reports\latest_vault_audit.md:463
+- [[Riley Thorne]] em Workflow\Reports\latest_vault_audit.md:464
+- [[Ava Victoria]] em Workflow\Reports\latest_vault_audit.md:465
+- [[Gutter Row]] em Workflow\Reports\latest_vault_audit.md:466
+- [[Lash Hawkins]] em Workflow\Reports\latest_vault_audit.md:467
+- [[Nico Murray]] em Workflow\Reports\latest_vault_audit.md:468
+- [[dukeofd.png]] em Workflow\Reports\latest_vault_audit.md:469
+- [[prop.png]] em Workflow\Reports\latest_vault_audit.md:470
+- [[elarion.png]] em Workflow\Reports\latest_vault_audit.md:471
+- [[cassian.png]] em Workflow\Reports\latest_vault_audit.md:472
+- [[Characters/Individual/Raziel.md]] em Workflow\Reports\latest_vault_audit.md:473
+- [[Characters/Individual/Lorde Malakar.md]] em Workflow\Reports\latest_vault_audit.md:474
+- [[Characters/Individual/Vandor, o Senhor das Bestas.md]] em Workflow\Reports\latest_vault_audit.md:475
+- [[Factions/Clã Sanguinallis.md]] em Workflow\Reports\latest_vault_audit.md:476
+- [[Locations/Ruínas de Valthor.md]] em Workflow\Reports\latest_vault_audit.md:477
+- [[Characters/Individual/Raziel.md]] em Workflow\Reports\latest_vault_audit.md:478
+- [[Characters/Individual/Kaelen, o Flagelo.md]] em Workflow\Reports\latest_vault_audit.md:479
+- [[Characters/Individual/Vandor, o Senhor das Bestas.md]] em Workflow\Reports\latest_vault_audit.md:480
+- [[Factions/Clã Sanguinallis.md]] em Workflow\Reports\latest_vault_audit.md:481
+- [[Locations/Fortaleza de Gharok.md]] em Workflow\Reports\latest_vault_audit.md:482
+- [[mira.png]] em Workflow\Reports\latest_vault_audit.md:483
+- [[oric.png]] em Workflow\Reports\latest_vault_audit.md:484
+- [[raziel.PNG]] em Workflow\Reports\latest_vault_audit.md:485
+- [[th_raziel.PNG]] em Workflow\Reports\latest_vault_audit.md:486
+- [[Characters/Individual/Raziel.md]] em Workflow\Reports\latest_vault_audit.md:487
+- [[Characters/Individual/Lorde Malakar.md]] em Workflow\Reports\latest_vault_audit.md:488
+- [[Characters/Individual/Kaelen, o Flagelo.md]] em Workflow\Reports\latest_vault_audit.md:489
+- [[Factions/Clã Sanguinallis.md]] em Workflow\Reports\latest_vault_audit.md:490
+- [[Locations/Floresta de Avenor.md]] em Workflow\Reports\latest_vault_audit.md:491
+- [[varkh.jpeg]] em Workflow\Reports\latest_vault_audit.md:492
+- [[th_varkh.PNG]] em Workflow\Reports\latest_vault_audit.md:493
+- [[vezemir.png]] em Workflow\Reports\latest_vault_audit.md:494
+- [[th_vezemir.PNG]] em Workflow\Reports\latest_vault_audit.md:495
+- [[zz_media/lyladuke.png]] em Workflow\Reports\latest_vault_audit.md:496
+- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:497
 - [[The Silo]] em Workflow\Reports\latest_vault_audit.md:498
-- [[Valkaara]] em Workflow\Reports\latest_vault_audit.md:499
-- [[Valkaara]] em Workflow\Reports\latest_vault_audit.md:500
-- [[VALKAARA]] em Workflow\Reports\latest_vault_audit.md:501
-- [[Valkaara]] em Workflow\Reports\latest_vault_audit.md:502
-- [[Valkaara]] em Workflow\Reports\latest_vault_audit.md:503
-- [[Steeltown#Gage Park]] em Workflow\Reports\latest_vault_audit.md:504
-- [[The Black Marauder]] em Workflow\Reports\latest_vault_audit.md:505
-- [[Water#Rustwater Bay]] em Workflow\Reports\latest_vault_audit.md:506
+- [[the Black Marauder]] em Workflow\Reports\latest_vault_audit.md:499
+- [[The Duke]] em Workflow\Reports\latest_vault_audit.md:500
+- [[Unseen Widows]] em Workflow\Reports\latest_vault_audit.md:501
+- [[The Duke]] em Workflow\Reports\latest_vault_audit.md:502
+- [[The Duke]] em Workflow\Reports\latest_vault_audit.md:503
+- [[The Duke]] em Workflow\Reports\latest_vault_audit.md:504
+- [[Charspire]] em Workflow\Reports\latest_vault_audit.md:505
+- [[Gutter Row]] em Workflow\Reports\latest_vault_audit.md:506
 - [[Steeltown Wrecking Crew]] em Workflow\Reports\latest_vault_audit.md:507
-- [[The Black Marauder]] em Workflow\Reports\latest_vault_audit.md:508
-- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:509
-- [[Blacktide Cray]] em Workflow\Reports\latest_vault_audit.md:510
-- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:511
-- [[Steeltown Wrecking Crew]] em Workflow\Reports\latest_vault_audit.md:512
-- [[The Black Marauder]] em Workflow\Reports\latest_vault_audit.md:513
-- [[Steeltown Wrecking Crew]] em Workflow\Reports\latest_vault_audit.md:514
-- [[Steeltown#Gage Park]] em Workflow\Reports\latest_vault_audit.md:515
-- [[Steeltown Wrecking Crew]] em Workflow\Reports\latest_vault_audit.md:516
-- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:517
-- [[Mark Jeffrey]] em Workflow\Reports\latest_vault_audit.md:518
-- [[Abel May Jr.]] em Workflow\Reports\latest_vault_audit.md:519
-- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:520
-- [[Blacktide Cray]] em Workflow\Reports\latest_vault_audit.md:521
-- [[Abel May Jr.]] em Workflow\Reports\latest_vault_audit.md:522
-- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:523
-- [[Mark Jeffrey]] em Workflow\Reports\latest_vault_audit.md:524
-- [[Flint Garritt]] em Workflow\Reports\latest_vault_audit.md:525
-- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:526
-- [[Abel May Jr.]] em Workflow\Reports\latest_vault_audit.md:527
-- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:528
-- [[Abel May Jr.]] em Workflow\Reports\latest_vault_audit.md:529
-- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:530
-- [[Blacktide Cray]] em Workflow\Reports\latest_vault_audit.md:531
-- [[Steeltown#Gage Park]] em Workflow\Reports\latest_vault_audit.md:532
-- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:533
-- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:534
-- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:535
-- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:536
-- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:537
-- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:538
-- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:539
-- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:540
-- [[Mark Jeffrey]] em Workflow\Reports\latest_vault_audit.md:541
-- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:542
-- [[Mark Jeffrey]] em Workflow\Reports\latest_vault_audit.md:543
-- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:544
-- [[Steeltown Wrecking Crew]] em Workflow\Reports\latest_vault_audit.md:545
-- [[Katie Kowalski]] em Workflow\Reports\latest_vault_audit.md:546
-- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:547
-- [[Mark Jeffrey]] em Workflow\Reports\latest_vault_audit.md:548
-- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:549
+- [[Rustwater Raiders]] em Workflow\Reports\latest_vault_audit.md:508
+- [[Loyalist Guard]] em Workflow\Reports\latest_vault_audit.md:509
+- [[Charspire]] em Workflow\Reports\latest_vault_audit.md:510
+- [[Gutter Row]] em Workflow\Reports\latest_vault_audit.md:511
+- [[Rachel Gold]] em Workflow\Reports\latest_vault_audit.md:512
+- [[The Duke]] em Workflow\Reports\latest_vault_audit.md:513
+- [[Salem Quinn]] em Workflow\Reports\latest_vault_audit.md:514
+- [[Prophet Veerah]] em Workflow\Reports\latest_vault_audit.md:515
+- [[The Duke]] em Workflow\Reports\latest_vault_audit.md:516
+- [[Faith of Mirella]] em Workflow\Reports\latest_vault_audit.md:517
+- [[Bobby Cutman]] em Workflow\Reports\latest_vault_audit.md:518
+- [[Bastian Redd]] em Workflow\Reports\latest_vault_audit.md:519
+- [[Abel May Jr.]] em Workflow\Reports\latest_vault_audit.md:520
+- [[World Lucha Libre]] em Workflow\Reports\latest_vault_audit.md:521
+- [[Blacktide Cray]] em Workflow\Reports\latest_vault_audit.md:522
+- [[Bastian Redd]] em Workflow\Reports\latest_vault_audit.md:523
+- [[Morris Gable]] em Workflow\Reports\latest_vault_audit.md:524
+- [[Hella]] em Workflow\Reports\latest_vault_audit.md:525
+- [[The Grim Man]] em Workflow\Reports\latest_vault_audit.md:526
+- [[The Grim Man]] em Workflow\Reports\latest_vault_audit.md:527
+- [[Gorren Brile]] em Workflow\Reports\latest_vault_audit.md:528
+- [[Emily Burton]] em Workflow\Reports\latest_vault_audit.md:529
+- [[The Duke]] em Workflow\Reports\latest_vault_audit.md:530
+- [[Ora Razchek]] em Workflow\Reports\latest_vault_audit.md:531
+- [[Bastian Redd]] em Workflow\Reports\latest_vault_audit.md:532
+- [[Hella]] em Workflow\Reports\latest_vault_audit.md:533
+- [[The Silo]] em Workflow\Reports\latest_vault_audit.md:534
+- [[Valkaara]] em Workflow\Reports\latest_vault_audit.md:535
+- [[Valkaara]] em Workflow\Reports\latest_vault_audit.md:536
+- [[VALKAARA]] em Workflow\Reports\latest_vault_audit.md:537
+- [[Valkaara]] em Workflow\Reports\latest_vault_audit.md:538
+- [[Valkaara]] em Workflow\Reports\latest_vault_audit.md:539
+- [[Steeltown#Gage Park]] em Workflow\Reports\latest_vault_audit.md:540
+- [[The Black Marauder]] em Workflow\Reports\latest_vault_audit.md:541
+- [[Water#Rustwater Bay]] em Workflow\Reports\latest_vault_audit.md:542
+- [[Steeltown Wrecking Crew]] em Workflow\Reports\latest_vault_audit.md:543
+- [[The Black Marauder]] em Workflow\Reports\latest_vault_audit.md:544
+- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:545
+- [[Blacktide Cray]] em Workflow\Reports\latest_vault_audit.md:546
+- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:547
+- [[Steeltown Wrecking Crew]] em Workflow\Reports\latest_vault_audit.md:548
+- [[The Black Marauder]] em Workflow\Reports\latest_vault_audit.md:549
 - [[Steeltown Wrecking Crew]] em Workflow\Reports\latest_vault_audit.md:550
-- [[Loyalist Guard]] em Workflow\Reports\latest_vault_audit.md:551
-- [[Rustwater Raiders]] em Workflow\Reports\latest_vault_audit.md:552
-- [[Steeltown Wrecking Crew]] em Workflow\Reports\latest_vault_audit.md:553
-- [[Blacktide Cray]] em Workflow\Reports\latest_vault_audit.md:554
+- [[Steeltown#Gage Park]] em Workflow\Reports\latest_vault_audit.md:551
+- [[Steeltown Wrecking Crew]] em Workflow\Reports\latest_vault_audit.md:552
+- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:553
+- [[Mark Jeffrey]] em Workflow\Reports\latest_vault_audit.md:554
 - [[Abel May Jr.]] em Workflow\Reports\latest_vault_audit.md:555
-- [[Steeltown]] em Workflow\Reports\latest_vault_audit.md:556
-- [[Threshton]] em Workflow\Reports\latest_vault_audit.md:557
-- [[Bastian Redd]] em Workflow\Reports\latest_vault_audit.md:558
-- [[Flint Garritt]] em Workflow\Reports\latest_vault_audit.md:559
-- [[Bastian Redd]] em Workflow\Reports\latest_vault_audit.md:560
-- [[Bastian Redd]] em Workflow\Reports\latest_vault_audit.md:561
-- [[Steeltown#Gage Park]] em Workflow\Reports\latest_vault_audit.md:562
-- [[The Black Marauder]] em Workflow\Reports\latest_vault_audit.md:563
-- [[Wrecking Crew]] em Workflow\Reports\latest_vault_audit.md:564
+- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:556
+- [[Blacktide Cray]] em Workflow\Reports\latest_vault_audit.md:557
+- [[Abel May Jr.]] em Workflow\Reports\latest_vault_audit.md:558
+- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:559
+- [[Mark Jeffrey]] em Workflow\Reports\latest_vault_audit.md:560
+- [[Flint Garritt]] em Workflow\Reports\latest_vault_audit.md:561
+- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:562
+- [[Abel May Jr.]] em Workflow\Reports\latest_vault_audit.md:563
+- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:564
 - [[Abel May Jr.]] em Workflow\Reports\latest_vault_audit.md:565
-- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:566
-- [[Mark Jeffrey]] em Workflow\Reports\latest_vault_audit.md:567
-- [[Flint Garritt]] em Workflow\Reports\latest_vault_audit.md:568
-- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:569
-- [[Abel May Jr.]] em Workflow\Reports\latest_vault_audit.md:570
+- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:566
+- [[Blacktide Cray]] em Workflow\Reports\latest_vault_audit.md:567
+- [[Steeltown#Gage Park]] em Workflow\Reports\latest_vault_audit.md:568
+- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:569
+- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:570
 - [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:571
-- [[Katie Kowalski]] em Workflow\Reports\latest_vault_audit.md:572
+- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:572
 - [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:573
-- [[Bastian Redd]] em Workflow\Reports\latest_vault_audit.md:574
-- [[Threshton]] em Workflow\Reports\latest_vault_audit.md:575
-- [[01 - Main Event Shadows]] em Workflow\Reports\latest_vault_audit.md:576
-- [[World Lucha Libre]] em Workflow\Reports\latest_vault_audit.md:577
-- [[Steeltown]] em Workflow\Reports\latest_vault_audit.md:578
-- [[Bobby Cutman]] em Workflow\Reports\latest_vault_audit.md:579
-- [[Steeltown Wrecking Crew]] em Workflow\Reports\latest_vault_audit.md:580
-- [[Abel May Jr.]] em Workflow\Reports\latest_vault_audit.md:581
-- [[Bobby Cutman]] em Workflow\Reports\latest_vault_audit.md:582
-- [[02 - Ghosts On The Waves]] em Workflow\Reports\latest_vault_audit.md:583
-- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:584
-- [[Rustwater Raiders]] em Workflow\Reports\latest_vault_audit.md:585
-- [[The Silo]] em Workflow\Reports\latest_vault_audit.md:586
-- [[Ashmoor]] em Workflow\Reports\latest_vault_audit.md:587
-- [[Steeltown]] em Workflow\Reports\latest_vault_audit.md:588
-- [[The Black Marauder]] em Workflow\Reports\latest_vault_audit.md:589
-- [[The Duke]] em Workflow\Reports\latest_vault_audit.md:590
-- [[Unseen Widows]] em Workflow\Reports\latest_vault_audit.md:591
-- [[03 - The Devil In The Row]] em Workflow\Reports\latest_vault_audit.md:592
-- [[Loyalist Guard]] em Workflow\Reports\latest_vault_audit.md:593
-- [[Gutter Row]] em Workflow\Reports\latest_vault_audit.md:594
-- [[Hollow House]] em Workflow\Reports\latest_vault_audit.md:595
-- [[Shana]] em Workflow\Reports\latest_vault_audit.md:596
-- [[The Grim Man]] em Workflow\Reports\latest_vault_audit.md:597
-- [[Steeltown]] em Workflow\Reports\latest_vault_audit.md:598
-- [[04 - Glowing Darkness]] em Workflow\Reports\latest_vault_audit.md:599
-- [[Lash Hawkins]] em Workflow\Reports\latest_vault_audit.md:600
-- [[Murray Boys]] em Workflow\Reports\latest_vault_audit.md:601
-- [[Luxyn]] em Workflow\Reports\latest_vault_audit.md:602
-- [[Nico Murray]] em Workflow\Reports\latest_vault_audit.md:603
-- [[Gutter Row]] em Workflow\Reports\latest_vault_audit.md:604
-- [[Marco Murray]] em Workflow\Reports\latest_vault_audit.md:605
-- [[Rosa Murray]] em Workflow\Reports\latest_vault_audit.md:606
-- [[Luxyn]] em Workflow\Reports\latest_vault_audit.md:607
-- [[Ashmoor]] em Workflow\Reports\latest_vault_audit.md:608
-- [[05 - Sight Unseen]] em Workflow\Reports\latest_vault_audit.md:609
-- [[The Drownlands]] em Workflow\Reports\latest_vault_audit.md:610
-- [[Raina & Risa]] em Workflow\Reports\latest_vault_audit.md:611
-- [[Raina & Risa]] em Workflow\Reports\latest_vault_audit.md:612
-- [[Faith of Mirella]] em Workflow\Reports\latest_vault_audit.md:613
-- [[Riley Thorne]] em Workflow\Reports\latest_vault_audit.md:614
-- [[Ava Victoria]] em Workflow\Reports\latest_vault_audit.md:615
-- [[Gutter Row]] em Workflow\Reports\latest_vault_audit.md:616
-- [[Lash Hawkins]] em Workflow\Reports\latest_vault_audit.md:617
-- [[Nico Murray]] em Workflow\Reports\latest_vault_audit.md:618
-- [[dukeofd.png]] em Workflow\Reports\latest_vault_audit.md:619
-- [[prop.png]] em Workflow\Reports\latest_vault_audit.md:620
-- [[elarion.png]] em Workflow\Reports\latest_vault_audit.md:621
-- [[cassian.png]] em Workflow\Reports\latest_vault_audit.md:622
-- [[mira.png]] em Workflow\Reports\latest_vault_audit.md:623
-- [[oric.png]] em Workflow\Reports\latest_vault_audit.md:624
-- [[raziel.PNG]] em Workflow\Reports\latest_vault_audit.md:625
-- [[th_raziel.PNG]] em Workflow\Reports\latest_vault_audit.md:626
-- [[Locations/Floresta de Avenor]] em Workflow\Reports\latest_vault_audit.md:627
-- [[varkh.jpeg]] em Workflow\Reports\latest_vault_audit.md:628
-- [[th_varkh.PNG]] em Workflow\Reports\latest_vault_audit.md:629
-- [[vezemir.png]] em Workflow\Reports\latest_vault_audit.md:630
-- [[th_vezemir.PNG]] em Workflow\Reports\latest_vault_audit.md:631
-- [[zz_media/lyladuke.png]] em Workflow\Reports\latest_vault_audit.md:632
-- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:633
-- [[The Silo]] em Workflow\Reports\latest_vault_audit.md:634
-- [[the Black Marauder]] em Workflow\Reports\latest_vault_audit.md:635
-- [[The Duke]] em Workflow\Reports\latest_vault_audit.md:636
-- [[Unseen Widows]] em Workflow\Reports\latest_vault_audit.md:637
-- [[The Duke]] em Workflow\Reports\latest_vault_audit.md:638
-- [[The Duke]] em Workflow\Reports\latest_vault_audit.md:639
-- [[The Duke]] em Workflow\Reports\latest_vault_audit.md:640
-- [[Charspire]] em Workflow\Reports\latest_vault_audit.md:641
-- [[Gutter Row]] em Workflow\Reports\latest_vault_audit.md:642
-- [[Steeltown Wrecking Crew]] em Workflow\Reports\latest_vault_audit.md:643
-- [[Rustwater Raiders]] em Workflow\Reports\latest_vault_audit.md:644
-- [[Loyalist Guard]] em Workflow\Reports\latest_vault_audit.md:645
-- [[Charspire]] em Workflow\Reports\latest_vault_audit.md:646
-- [[Gutter Row]] em Workflow\Reports\latest_vault_audit.md:647
-- [[Rachel Gold]] em Workflow\Reports\latest_vault_audit.md:648
-- [[The Duke]] em Workflow\Reports\latest_vault_audit.md:649
-- [[Salem Quinn]] em Workflow\Reports\latest_vault_audit.md:650
-- [[Prophet Veerah]] em Workflow\Reports\latest_vault_audit.md:651
-- [[The Duke]] em Workflow\Reports\latest_vault_audit.md:652
-- [[Faith of Mirella]] em Workflow\Reports\latest_vault_audit.md:653
-- [[Bobby Cutman]] em Workflow\Reports\latest_vault_audit.md:654
-- [[Bastian Redd]] em Workflow\Reports\latest_vault_audit.md:655
-- [[Abel May Jr.]] em Workflow\Reports\latest_vault_audit.md:656
-- [[World Lucha Libre]] em Workflow\Reports\latest_vault_audit.md:657
-- [[Blacktide Cray]] em Workflow\Reports\latest_vault_audit.md:658
-- [[Bastian Redd]] em Workflow\Reports\latest_vault_audit.md:659
-- [[Morris Gable]] em Workflow\Reports\latest_vault_audit.md:660
-- [[Hella]] em Workflow\Reports\latest_vault_audit.md:661
-- [[The Grim Man]] em Workflow\Reports\latest_vault_audit.md:662
-- [[The Grim Man]] em Workflow\Reports\latest_vault_audit.md:663
-- [[Gorren Brile]] em Workflow\Reports\latest_vault_audit.md:664
-- [[Emily Burton]] em Workflow\Reports\latest_vault_audit.md:665
-- [[The Duke]] em Workflow\Reports\latest_vault_audit.md:666
-- [[Ora Razchek]] em Workflow\Reports\latest_vault_audit.md:667
-- [[Bastian Redd]] em Workflow\Reports\latest_vault_audit.md:668
-- [[Hella]] em Workflow\Reports\latest_vault_audit.md:669
+- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:574
+- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:575
+- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:576
+- [[Mark Jeffrey]] em Workflow\Reports\latest_vault_audit.md:577
+- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:578
+- [[Mark Jeffrey]] em Workflow\Reports\latest_vault_audit.md:579
+- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:580
+- [[Steeltown Wrecking Crew]] em Workflow\Reports\latest_vault_audit.md:581
+- [[Katie Kowalski]] em Workflow\Reports\latest_vault_audit.md:582
+- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:583
+- [[Mark Jeffrey]] em Workflow\Reports\latest_vault_audit.md:584
+- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:585
+- [[Steeltown Wrecking Crew]] em Workflow\Reports\latest_vault_audit.md:586
+- [[Loyalist Guard]] em Workflow\Reports\latest_vault_audit.md:587
+- [[Rustwater Raiders]] em Workflow\Reports\latest_vault_audit.md:588
+- [[Steeltown Wrecking Crew]] em Workflow\Reports\latest_vault_audit.md:589
+- [[Blacktide Cray]] em Workflow\Reports\latest_vault_audit.md:590
+- [[Abel May Jr.]] em Workflow\Reports\latest_vault_audit.md:591
+- [[Steeltown]] em Workflow\Reports\latest_vault_audit.md:592
+- [[Threshton]] em Workflow\Reports\latest_vault_audit.md:593
+- [[Bastian Redd]] em Workflow\Reports\latest_vault_audit.md:594
+- [[Flint Garritt]] em Workflow\Reports\latest_vault_audit.md:595
+- [[Bastian Redd]] em Workflow\Reports\latest_vault_audit.md:596
+- [[Bastian Redd]] em Workflow\Reports\latest_vault_audit.md:597
+- [[Steeltown#Gage Park]] em Workflow\Reports\latest_vault_audit.md:598
+- [[The Black Marauder]] em Workflow\Reports\latest_vault_audit.md:599
+- [[Wrecking Crew]] em Workflow\Reports\latest_vault_audit.md:600
+- [[Abel May Jr.]] em Workflow\Reports\latest_vault_audit.md:601
+- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:602
+- [[Mark Jeffrey]] em Workflow\Reports\latest_vault_audit.md:603
+- [[Flint Garritt]] em Workflow\Reports\latest_vault_audit.md:604
+- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:605
+- [[Abel May Jr.]] em Workflow\Reports\latest_vault_audit.md:606
+- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:607
+- [[Katie Kowalski]] em Workflow\Reports\latest_vault_audit.md:608
+- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:609
+- [[Bastian Redd]] em Workflow\Reports\latest_vault_audit.md:610
+- [[Threshton]] em Workflow\Reports\latest_vault_audit.md:611
+- [[01 - Main Event Shadows]] em Workflow\Reports\latest_vault_audit.md:612
+- [[World Lucha Libre]] em Workflow\Reports\latest_vault_audit.md:613
+- [[Steeltown]] em Workflow\Reports\latest_vault_audit.md:614
+- [[Bobby Cutman]] em Workflow\Reports\latest_vault_audit.md:615
+- [[Steeltown Wrecking Crew]] em Workflow\Reports\latest_vault_audit.md:616
+- [[Abel May Jr.]] em Workflow\Reports\latest_vault_audit.md:617
+- [[Bobby Cutman]] em Workflow\Reports\latest_vault_audit.md:618
+- [[02 - Ghosts On The Waves]] em Workflow\Reports\latest_vault_audit.md:619
+- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:620
+- [[Rustwater Raiders]] em Workflow\Reports\latest_vault_audit.md:621
+- [[The Silo]] em Workflow\Reports\latest_vault_audit.md:622
+- [[Ashmoor]] em Workflow\Reports\latest_vault_audit.md:623
+- [[Steeltown]] em Workflow\Reports\latest_vault_audit.md:624
+- [[The Black Marauder]] em Workflow\Reports\latest_vault_audit.md:625
+- [[The Duke]] em Workflow\Reports\latest_vault_audit.md:626
+- [[Unseen Widows]] em Workflow\Reports\latest_vault_audit.md:627
+- [[03 - The Devil In The Row]] em Workflow\Reports\latest_vault_audit.md:628
+- [[Loyalist Guard]] em Workflow\Reports\latest_vault_audit.md:629
+- [[Gutter Row]] em Workflow\Reports\latest_vault_audit.md:630
+- [[Hollow House]] em Workflow\Reports\latest_vault_audit.md:631
+- [[Shana]] em Workflow\Reports\latest_vault_audit.md:632
+- [[The Grim Man]] em Workflow\Reports\latest_vault_audit.md:633
+- [[Steeltown]] em Workflow\Reports\latest_vault_audit.md:634
+- [[04 - Glowing Darkness]] em Workflow\Reports\latest_vault_audit.md:635
+- [[Lash Hawkins]] em Workflow\Reports\latest_vault_audit.md:636
+- [[Murray Boys]] em Workflow\Reports\latest_vault_audit.md:637
+- [[Luxyn]] em Workflow\Reports\latest_vault_audit.md:638
+- [[Nico Murray]] em Workflow\Reports\latest_vault_audit.md:639
+- [[Gutter Row]] em Workflow\Reports\latest_vault_audit.md:640
+- [[Marco Murray]] em Workflow\Reports\latest_vault_audit.md:641
+- [[Rosa Murray]] em Workflow\Reports\latest_vault_audit.md:642
+- [[Luxyn]] em Workflow\Reports\latest_vault_audit.md:643
+- [[Ashmoor]] em Workflow\Reports\latest_vault_audit.md:644
+- [[05 - Sight Unseen]] em Workflow\Reports\latest_vault_audit.md:645
+- [[The Drownlands]] em Workflow\Reports\latest_vault_audit.md:646
+- [[Raina & Risa]] em Workflow\Reports\latest_vault_audit.md:647
+- [[Raina & Risa]] em Workflow\Reports\latest_vault_audit.md:648
+- [[Faith of Mirella]] em Workflow\Reports\latest_vault_audit.md:649
+- [[Riley Thorne]] em Workflow\Reports\latest_vault_audit.md:650
+- [[Ava Victoria]] em Workflow\Reports\latest_vault_audit.md:651
+- [[Gutter Row]] em Workflow\Reports\latest_vault_audit.md:652
+- [[Lash Hawkins]] em Workflow\Reports\latest_vault_audit.md:653
+- [[Nico Murray]] em Workflow\Reports\latest_vault_audit.md:654
+- [[dukeofd.png]] em Workflow\Reports\latest_vault_audit.md:655
+- [[prop.png]] em Workflow\Reports\latest_vault_audit.md:656
+- [[elarion.png]] em Workflow\Reports\latest_vault_audit.md:657
+- [[cassian.png]] em Workflow\Reports\latest_vault_audit.md:658
+- [[mira.png]] em Workflow\Reports\latest_vault_audit.md:659
+- [[oric.png]] em Workflow\Reports\latest_vault_audit.md:660
+- [[raziel.PNG]] em Workflow\Reports\latest_vault_audit.md:661
+- [[th_raziel.PNG]] em Workflow\Reports\latest_vault_audit.md:662
+- [[Locations/Floresta de Avenor]] em Workflow\Reports\latest_vault_audit.md:663
+- [[varkh.jpeg]] em Workflow\Reports\latest_vault_audit.md:664
+- [[th_varkh.PNG]] em Workflow\Reports\latest_vault_audit.md:665
+- [[vezemir.png]] em Workflow\Reports\latest_vault_audit.md:666
+- [[th_vezemir.PNG]] em Workflow\Reports\latest_vault_audit.md:667
+- [[zz_media/lyladuke.png]] em Workflow\Reports\latest_vault_audit.md:668
+- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:669
 - [[The Silo]] em Workflow\Reports\latest_vault_audit.md:670
-- [[Valkaara]] em Workflow\Reports\latest_vault_audit.md:671
-- [[Valkaara]] em Workflow\Reports\latest_vault_audit.md:672
-- [[VALKAARA]] em Workflow\Reports\latest_vault_audit.md:673
-- [[Valkaara]] em Workflow\Reports\latest_vault_audit.md:674
-- [[Valkaara]] em Workflow\Reports\latest_vault_audit.md:675
-- [[Steeltown#Gage Park]] em Workflow\Reports\latest_vault_audit.md:676
-- [[The Black Marauder]] em Workflow\Reports\latest_vault_audit.md:677
-- [[Water#Rustwater Bay]] em Workflow\Reports\latest_vault_audit.md:678
+- [[the Black Marauder]] em Workflow\Reports\latest_vault_audit.md:671
+- [[The Duke]] em Workflow\Reports\latest_vault_audit.md:672
+- [[Unseen Widows]] em Workflow\Reports\latest_vault_audit.md:673
+- [[The Duke]] em Workflow\Reports\latest_vault_audit.md:674
+- [[The Duke]] em Workflow\Reports\latest_vault_audit.md:675
+- [[The Duke]] em Workflow\Reports\latest_vault_audit.md:676
+- [[Charspire]] em Workflow\Reports\latest_vault_audit.md:677
+- [[Gutter Row]] em Workflow\Reports\latest_vault_audit.md:678
 - [[Steeltown Wrecking Crew]] em Workflow\Reports\latest_vault_audit.md:679
-- [[The Black Marauder]] em Workflow\Reports\latest_vault_audit.md:680
-- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:681
-- [[Blacktide Cray]] em Workflow\Reports\latest_vault_audit.md:682
-- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:683
-- [[Steeltown Wrecking Crew]] em Workflow\Reports\latest_vault_audit.md:684
-- [[The Black Marauder]] em Workflow\Reports\latest_vault_audit.md:685
-- [[Steeltown Wrecking Crew]] em Workflow\Reports\latest_vault_audit.md:686
-- [[Steeltown#Gage Park]] em Workflow\Reports\latest_vault_audit.md:687
-- [[Steeltown Wrecking Crew]] em Workflow\Reports\latest_vault_audit.md:688
-- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:689
-- [[Mark Jeffrey]] em Workflow\Reports\latest_vault_audit.md:690
-- [[Abel May Jr.]] em Workflow\Reports\latest_vault_audit.md:691
-- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:692
-- [[Blacktide Cray]] em Workflow\Reports\latest_vault_audit.md:693
-- [[Abel May Jr.]] em Workflow\Reports\latest_vault_audit.md:694
-- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:695
-- [[Mark Jeffrey]] em Workflow\Reports\latest_vault_audit.md:696
-- [[Flint Garritt]] em Workflow\Reports\latest_vault_audit.md:697
-- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:698
-- [[Abel May Jr.]] em Workflow\Reports\latest_vault_audit.md:699
-- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:700
-- [[Abel May Jr.]] em Workflow\Reports\latest_vault_audit.md:701
-- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:702
-- [[Blacktide Cray]] em Workflow\Reports\latest_vault_audit.md:703
-- [[Steeltown#Gage Park]] em Workflow\Reports\latest_vault_audit.md:704
-- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:705
-- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:706
-- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:707
-- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:708
-- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:709
-- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:710
-- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:711
-- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:712
-- [[Mark Jeffrey]] em Workflow\Reports\latest_vault_audit.md:713
-- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:714
-- [[Mark Jeffrey]] em Workflow\Reports\latest_vault_audit.md:715
-- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:716
-- [[Steeltown Wrecking Crew]] em Workflow\Reports\latest_vault_audit.md:717
-- [[Katie Kowalski]] em Workflow\Reports\latest_vault_audit.md:718
-- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:719
-- [[Mark Jeffrey]] em Workflow\Reports\latest_vault_audit.md:720
-- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:721
+- [[Rustwater Raiders]] em Workflow\Reports\latest_vault_audit.md:680
+- [[Loyalist Guard]] em Workflow\Reports\latest_vault_audit.md:681
+- [[Charspire]] em Workflow\Reports\latest_vault_audit.md:682
+- [[Gutter Row]] em Workflow\Reports\latest_vault_audit.md:683
+- [[Rachel Gold]] em Workflow\Reports\latest_vault_audit.md:684
+- [[The Duke]] em Workflow\Reports\latest_vault_audit.md:685
+- [[Salem Quinn]] em Workflow\Reports\latest_vault_audit.md:686
+- [[Prophet Veerah]] em Workflow\Reports\latest_vault_audit.md:687
+- [[The Duke]] em Workflow\Reports\latest_vault_audit.md:688
+- [[Faith of Mirella]] em Workflow\Reports\latest_vault_audit.md:689
+- [[Bobby Cutman]] em Workflow\Reports\latest_vault_audit.md:690
+- [[Bastian Redd]] em Workflow\Reports\latest_vault_audit.md:691
+- [[Abel May Jr.]] em Workflow\Reports\latest_vault_audit.md:692
+- [[World Lucha Libre]] em Workflow\Reports\latest_vault_audit.md:693
+- [[Blacktide Cray]] em Workflow\Reports\latest_vault_audit.md:694
+- [[Bastian Redd]] em Workflow\Reports\latest_vault_audit.md:695
+- [[Morris Gable]] em Workflow\Reports\latest_vault_audit.md:696
+- [[Hella]] em Workflow\Reports\latest_vault_audit.md:697
+- [[The Grim Man]] em Workflow\Reports\latest_vault_audit.md:698
+- [[The Grim Man]] em Workflow\Reports\latest_vault_audit.md:699
+- [[Gorren Brile]] em Workflow\Reports\latest_vault_audit.md:700
+- [[Emily Burton]] em Workflow\Reports\latest_vault_audit.md:701
+- [[The Duke]] em Workflow\Reports\latest_vault_audit.md:702
+- [[Ora Razchek]] em Workflow\Reports\latest_vault_audit.md:703
+- [[Bastian Redd]] em Workflow\Reports\latest_vault_audit.md:704
+- [[Hella]] em Workflow\Reports\latest_vault_audit.md:705
+- [[The Silo]] em Workflow\Reports\latest_vault_audit.md:706
+- [[Valkaara]] em Workflow\Reports\latest_vault_audit.md:707
+- [[Valkaara]] em Workflow\Reports\latest_vault_audit.md:708
+- [[VALKAARA]] em Workflow\Reports\latest_vault_audit.md:709
+- [[Valkaara]] em Workflow\Reports\latest_vault_audit.md:710
+- [[Valkaara]] em Workflow\Reports\latest_vault_audit.md:711
+- [[Steeltown#Gage Park]] em Workflow\Reports\latest_vault_audit.md:712
+- [[The Black Marauder]] em Workflow\Reports\latest_vault_audit.md:713
+- [[Water#Rustwater Bay]] em Workflow\Reports\latest_vault_audit.md:714
+- [[Steeltown Wrecking Crew]] em Workflow\Reports\latest_vault_audit.md:715
+- [[The Black Marauder]] em Workflow\Reports\latest_vault_audit.md:716
+- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:717
+- [[Blacktide Cray]] em Workflow\Reports\latest_vault_audit.md:718
+- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:719
+- [[Steeltown Wrecking Crew]] em Workflow\Reports\latest_vault_audit.md:720
+- [[The Black Marauder]] em Workflow\Reports\latest_vault_audit.md:721
 - [[Steeltown Wrecking Crew]] em Workflow\Reports\latest_vault_audit.md:722
-- [[Loyalist Guard]] em Workflow\Reports\latest_vault_audit.md:723
-- [[Rustwater Raiders]] em Workflow\Reports\latest_vault_audit.md:724
-- [[Steeltown Wrecking Crew]] em Workflow\Reports\latest_vault_audit.md:725
-- [[Blacktide Cray]] em Workflow\Reports\latest_vault_audit.md:726
+- [[Steeltown#Gage Park]] em Workflow\Reports\latest_vault_audit.md:723
+- [[Steeltown Wrecking Crew]] em Workflow\Reports\latest_vault_audit.md:724
+- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:725
+- [[Mark Jeffrey]] em Workflow\Reports\latest_vault_audit.md:726
 - [[Abel May Jr.]] em Workflow\Reports\latest_vault_audit.md:727
-- [[Steeltown]] em Workflow\Reports\latest_vault_audit.md:728
-- [[Threshton]] em Workflow\Reports\latest_vault_audit.md:729
-- [[Bastian Redd]] em Workflow\Reports\latest_vault_audit.md:730
-- [[Flint Garritt]] em Workflow\Reports\latest_vault_audit.md:731
-- [[Bastian Redd]] em Workflow\Reports\latest_vault_audit.md:732
-- [[Bastian Redd]] em Workflow\Reports\latest_vault_audit.md:733
-- [[Steeltown#Gage Park]] em Workflow\Reports\latest_vault_audit.md:734
-- [[The Black Marauder]] em Workflow\Reports\latest_vault_audit.md:735
-- [[Wrecking Crew]] em Workflow\Reports\latest_vault_audit.md:736
+- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:728
+- [[Blacktide Cray]] em Workflow\Reports\latest_vault_audit.md:729
+- [[Abel May Jr.]] em Workflow\Reports\latest_vault_audit.md:730
+- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:731
+- [[Mark Jeffrey]] em Workflow\Reports\latest_vault_audit.md:732
+- [[Flint Garritt]] em Workflow\Reports\latest_vault_audit.md:733
+- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:734
+- [[Abel May Jr.]] em Workflow\Reports\latest_vault_audit.md:735
+- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:736
 - [[Abel May Jr.]] em Workflow\Reports\latest_vault_audit.md:737
-- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:738
-- [[Mark Jeffrey]] em Workflow\Reports\latest_vault_audit.md:739
-- [[Flint Garritt]] em Workflow\Reports\latest_vault_audit.md:740
-- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:741
-- [[Abel May Jr.]] em Workflow\Reports\latest_vault_audit.md:742
+- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:738
+- [[Blacktide Cray]] em Workflow\Reports\latest_vault_audit.md:739
+- [[Steeltown#Gage Park]] em Workflow\Reports\latest_vault_audit.md:740
+- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:741
+- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:742
 - [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:743
-- [[Katie Kowalski]] em Workflow\Reports\latest_vault_audit.md:744
+- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:744
 - [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:745
-- [[Bastian Redd]] em Workflow\Reports\latest_vault_audit.md:746
-- [[Threshton]] em Workflow\Reports\latest_vault_audit.md:747
-- [[01 - Main Event Shadows]] em Workflow\Reports\latest_vault_audit.md:748
-- [[World Lucha Libre]] em Workflow\Reports\latest_vault_audit.md:749
-- [[Steeltown]] em Workflow\Reports\latest_vault_audit.md:750
-- [[Bobby Cutman]] em Workflow\Reports\latest_vault_audit.md:751
-- [[Steeltown Wrecking Crew]] em Workflow\Reports\latest_vault_audit.md:752
-- [[Abel May Jr.]] em Workflow\Reports\latest_vault_audit.md:753
-- [[Bobby Cutman]] em Workflow\Reports\latest_vault_audit.md:754
-- [[02 - Ghosts On The Waves]] em Workflow\Reports\latest_vault_audit.md:755
-- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:756
-- [[Rustwater Raiders]] em Workflow\Reports\latest_vault_audit.md:757
-- [[The Silo]] em Workflow\Reports\latest_vault_audit.md:758
-- [[Ashmoor]] em Workflow\Reports\latest_vault_audit.md:759
-- [[Steeltown]] em Workflow\Reports\latest_vault_audit.md:760
-- [[The Black Marauder]] em Workflow\Reports\latest_vault_audit.md:761
-- [[The Duke]] em Workflow\Reports\latest_vault_audit.md:762
-- [[Unseen Widows]] em Workflow\Reports\latest_vault_audit.md:763
-- [[03 - The Devil In The Row]] em Workflow\Reports\latest_vault_audit.md:764
-- [[Loyalist Guard]] em Workflow\Reports\latest_vault_audit.md:765
-- [[Gutter Row]] em Workflow\Reports\latest_vault_audit.md:766
-- [[Hollow House]] em Workflow\Reports\latest_vault_audit.md:767
-- [[Shana]] em Workflow\Reports\latest_vault_audit.md:768
-- [[The Grim Man]] em Workflow\Reports\latest_vault_audit.md:769
-- [[Steeltown]] em Workflow\Reports\latest_vault_audit.md:770
-- [[04 - Glowing Darkness]] em Workflow\Reports\latest_vault_audit.md:771
-- [[Lash Hawkins]] em Workflow\Reports\latest_vault_audit.md:772
-- [[Murray Boys]] em Workflow\Reports\latest_vault_audit.md:773
-- [[Luxyn]] em Workflow\Reports\latest_vault_audit.md:774
-- [[Nico Murray]] em Workflow\Reports\latest_vault_audit.md:775
-- [[Gutter Row]] em Workflow\Reports\latest_vault_audit.md:776
-- [[Marco Murray]] em Workflow\Reports\latest_vault_audit.md:777
-- [[Rosa Murray]] em Workflow\Reports\latest_vault_audit.md:778
-- [[Luxyn]] em Workflow\Reports\latest_vault_audit.md:779
-- [[Ashmoor]] em Workflow\Reports\latest_vault_audit.md:780
-- [[05 - Sight Unseen]] em Workflow\Reports\latest_vault_audit.md:781
-- [[The Drownlands]] em Workflow\Reports\latest_vault_audit.md:782
-- [[Raina & Risa]] em Workflow\Reports\latest_vault_audit.md:783
-- [[Raina & Risa]] em Workflow\Reports\latest_vault_audit.md:784
-- [[Faith of Mirella]] em Workflow\Reports\latest_vault_audit.md:785
-- [[Riley Thorne]] em Workflow\Reports\latest_vault_audit.md:786
-- [[Ava Victoria]] em Workflow\Reports\latest_vault_audit.md:787
-- [[Gutter Row]] em Workflow\Reports\latest_vault_audit.md:788
-- [[Lash Hawkins]] em Workflow\Reports\latest_vault_audit.md:789
-- [[Nico Murray]] em Workflow\Reports\latest_vault_audit.md:790
-- [[dukeofd.png]] em Workflow\Reports\latest_vault_audit.md:791
-- [[prop.png]] em Workflow\Reports\latest_vault_audit.md:792
-- [[elarion.png]] em Workflow\Reports\latest_vault_audit.md:793
-- [[cassian.png]] em Workflow\Reports\latest_vault_audit.md:794
-- [[mira.png]] em Workflow\Reports\latest_vault_audit.md:795
-- [[oric.png]] em Workflow\Reports\latest_vault_audit.md:796
-- [[raziel.PNG]] em Workflow\Reports\latest_vault_audit.md:797
-- [[th_raziel.PNG]] em Workflow\Reports\latest_vault_audit.md:798
-- [[Locations/Floresta de Avenor]] em Workflow\Reports\latest_vault_audit.md:799
-- [[varkh.jpeg]] em Workflow\Reports\latest_vault_audit.md:800
-- [[th_varkh.PNG]] em Workflow\Reports\latest_vault_audit.md:801
-- [[vezemir.png]] em Workflow\Reports\latest_vault_audit.md:802
-- [[th_vezemir.PNG]] em Workflow\Reports\latest_vault_audit.md:803
+- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:746
+- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:747
+- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:748
+- [[Mark Jeffrey]] em Workflow\Reports\latest_vault_audit.md:749
+- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:750
+- [[Mark Jeffrey]] em Workflow\Reports\latest_vault_audit.md:751
+- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:752
+- [[Steeltown Wrecking Crew]] em Workflow\Reports\latest_vault_audit.md:753
+- [[Katie Kowalski]] em Workflow\Reports\latest_vault_audit.md:754
+- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:755
+- [[Mark Jeffrey]] em Workflow\Reports\latest_vault_audit.md:756
+- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:757
+- [[Steeltown Wrecking Crew]] em Workflow\Reports\latest_vault_audit.md:758
+- [[Loyalist Guard]] em Workflow\Reports\latest_vault_audit.md:759
+- [[Rustwater Raiders]] em Workflow\Reports\latest_vault_audit.md:760
+- [[Steeltown Wrecking Crew]] em Workflow\Reports\latest_vault_audit.md:761
+- [[Blacktide Cray]] em Workflow\Reports\latest_vault_audit.md:762
+- [[Abel May Jr.]] em Workflow\Reports\latest_vault_audit.md:763
+- [[Steeltown]] em Workflow\Reports\latest_vault_audit.md:764
+- [[Threshton]] em Workflow\Reports\latest_vault_audit.md:765
+- [[Bastian Redd]] em Workflow\Reports\latest_vault_audit.md:766
+- [[Flint Garritt]] em Workflow\Reports\latest_vault_audit.md:767
+- [[Bastian Redd]] em Workflow\Reports\latest_vault_audit.md:768
+- [[Bastian Redd]] em Workflow\Reports\latest_vault_audit.md:769
+- [[Steeltown#Gage Park]] em Workflow\Reports\latest_vault_audit.md:770
+- [[The Black Marauder]] em Workflow\Reports\latest_vault_audit.md:771
+- [[Wrecking Crew]] em Workflow\Reports\latest_vault_audit.md:772
+- [[Abel May Jr.]] em Workflow\Reports\latest_vault_audit.md:773
+- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:774
+- [[Mark Jeffrey]] em Workflow\Reports\latest_vault_audit.md:775
+- [[Flint Garritt]] em Workflow\Reports\latest_vault_audit.md:776
+- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:777
+- [[Abel May Jr.]] em Workflow\Reports\latest_vault_audit.md:778
+- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:779
+- [[Katie Kowalski]] em Workflow\Reports\latest_vault_audit.md:780
+- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:781
+- [[Bastian Redd]] em Workflow\Reports\latest_vault_audit.md:782
+- [[Threshton]] em Workflow\Reports\latest_vault_audit.md:783
+- [[01 - Main Event Shadows]] em Workflow\Reports\latest_vault_audit.md:784
+- [[World Lucha Libre]] em Workflow\Reports\latest_vault_audit.md:785
+- [[Steeltown]] em Workflow\Reports\latest_vault_audit.md:786
+- [[Bobby Cutman]] em Workflow\Reports\latest_vault_audit.md:787
+- [[Steeltown Wrecking Crew]] em Workflow\Reports\latest_vault_audit.md:788
+- [[Abel May Jr.]] em Workflow\Reports\latest_vault_audit.md:789
+- [[Bobby Cutman]] em Workflow\Reports\latest_vault_audit.md:790
+- [[02 - Ghosts On The Waves]] em Workflow\Reports\latest_vault_audit.md:791
+- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:792
+- [[Rustwater Raiders]] em Workflow\Reports\latest_vault_audit.md:793
+- [[The Silo]] em Workflow\Reports\latest_vault_audit.md:794
+- [[Ashmoor]] em Workflow\Reports\latest_vault_audit.md:795
+- [[Steeltown]] em Workflow\Reports\latest_vault_audit.md:796
+- [[The Black Marauder]] em Workflow\Reports\latest_vault_audit.md:797
+- [[The Duke]] em Workflow\Reports\latest_vault_audit.md:798
+- [[Unseen Widows]] em Workflow\Reports\latest_vault_audit.md:799
+- [[03 - The Devil In The Row]] em Workflow\Reports\latest_vault_audit.md:800
+- [[Loyalist Guard]] em Workflow\Reports\latest_vault_audit.md:801
+- [[Gutter Row]] em Workflow\Reports\latest_vault_audit.md:802
+- [[Hollow House]] em Workflow\Reports\latest_vault_audit.md:803
+- [[Shana]] em Workflow\Reports\latest_vault_audit.md:804
+- [[The Grim Man]] em Workflow\Reports\latest_vault_audit.md:805
+- [[Steeltown]] em Workflow\Reports\latest_vault_audit.md:806
+- [[04 - Glowing Darkness]] em Workflow\Reports\latest_vault_audit.md:807
+- [[Lash Hawkins]] em Workflow\Reports\latest_vault_audit.md:808
+- [[Murray Boys]] em Workflow\Reports\latest_vault_audit.md:809
+- [[Luxyn]] em Workflow\Reports\latest_vault_audit.md:810
+- [[Nico Murray]] em Workflow\Reports\latest_vault_audit.md:811
+- [[Gutter Row]] em Workflow\Reports\latest_vault_audit.md:812
+- [[Marco Murray]] em Workflow\Reports\latest_vault_audit.md:813
+- [[Rosa Murray]] em Workflow\Reports\latest_vault_audit.md:814
+- [[Luxyn]] em Workflow\Reports\latest_vault_audit.md:815
+- [[Ashmoor]] em Workflow\Reports\latest_vault_audit.md:816
+- [[05 - Sight Unseen]] em Workflow\Reports\latest_vault_audit.md:817
+- [[The Drownlands]] em Workflow\Reports\latest_vault_audit.md:818
+- [[Raina & Risa]] em Workflow\Reports\latest_vault_audit.md:819
+- [[Raina & Risa]] em Workflow\Reports\latest_vault_audit.md:820
+- [[Faith of Mirella]] em Workflow\Reports\latest_vault_audit.md:821
+- [[Riley Thorne]] em Workflow\Reports\latest_vault_audit.md:822
+- [[Ava Victoria]] em Workflow\Reports\latest_vault_audit.md:823
+- [[Gutter Row]] em Workflow\Reports\latest_vault_audit.md:824
+- [[Lash Hawkins]] em Workflow\Reports\latest_vault_audit.md:825
+- [[Nico Murray]] em Workflow\Reports\latest_vault_audit.md:826
+- [[dukeofd.png]] em Workflow\Reports\latest_vault_audit.md:827
+- [[prop.png]] em Workflow\Reports\latest_vault_audit.md:828
+- [[elarion.png]] em Workflow\Reports\latest_vault_audit.md:829
+- [[cassian.png]] em Workflow\Reports\latest_vault_audit.md:830
+- [[mira.png]] em Workflow\Reports\latest_vault_audit.md:831
+- [[oric.png]] em Workflow\Reports\latest_vault_audit.md:832
+- [[raziel.PNG]] em Workflow\Reports\latest_vault_audit.md:833
+- [[th_raziel.PNG]] em Workflow\Reports\latest_vault_audit.md:834
+- [[Locations/Floresta de Avenor]] em Workflow\Reports\latest_vault_audit.md:835
+- [[varkh.jpeg]] em Workflow\Reports\latest_vault_audit.md:836
+- [[th_varkh.PNG]] em Workflow\Reports\latest_vault_audit.md:837
+- [[vezemir.png]] em Workflow\Reports\latest_vault_audit.md:838
+- [[th_vezemir.PNG]] em Workflow\Reports\latest_vault_audit.md:839
+- [[zz_media/lyladuke.png]] em Workflow\Reports\latest_vault_audit.md:840
+- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:841
+- [[The Silo]] em Workflow\Reports\latest_vault_audit.md:842
+- [[the Black Marauder]] em Workflow\Reports\latest_vault_audit.md:843
+- [[The Duke]] em Workflow\Reports\latest_vault_audit.md:844
+- [[Unseen Widows]] em Workflow\Reports\latest_vault_audit.md:845
+- [[The Duke]] em Workflow\Reports\latest_vault_audit.md:846
+- [[The Duke]] em Workflow\Reports\latest_vault_audit.md:847
+- [[The Duke]] em Workflow\Reports\latest_vault_audit.md:848
+- [[Charspire]] em Workflow\Reports\latest_vault_audit.md:849
+- [[Gutter Row]] em Workflow\Reports\latest_vault_audit.md:850
+- [[Steeltown Wrecking Crew]] em Workflow\Reports\latest_vault_audit.md:851
+- [[Rustwater Raiders]] em Workflow\Reports\latest_vault_audit.md:852
+- [[Loyalist Guard]] em Workflow\Reports\latest_vault_audit.md:853
+- [[Charspire]] em Workflow\Reports\latest_vault_audit.md:854
+- [[Gutter Row]] em Workflow\Reports\latest_vault_audit.md:855
+- [[Rachel Gold]] em Workflow\Reports\latest_vault_audit.md:856
+- [[The Duke]] em Workflow\Reports\latest_vault_audit.md:857
+- [[Salem Quinn]] em Workflow\Reports\latest_vault_audit.md:858
+- [[Prophet Veerah]] em Workflow\Reports\latest_vault_audit.md:859
+- [[The Duke]] em Workflow\Reports\latest_vault_audit.md:860
+- [[Faith of Mirella]] em Workflow\Reports\latest_vault_audit.md:861
+- [[Bobby Cutman]] em Workflow\Reports\latest_vault_audit.md:862
+- [[Bastian Redd]] em Workflow\Reports\latest_vault_audit.md:863
+- [[Abel May Jr.]] em Workflow\Reports\latest_vault_audit.md:864
+- [[World Lucha Libre]] em Workflow\Reports\latest_vault_audit.md:865
+- [[Blacktide Cray]] em Workflow\Reports\latest_vault_audit.md:866
+- [[Bastian Redd]] em Workflow\Reports\latest_vault_audit.md:867
+- [[Morris Gable]] em Workflow\Reports\latest_vault_audit.md:868
+- [[Hella]] em Workflow\Reports\latest_vault_audit.md:869
+- [[The Grim Man]] em Workflow\Reports\latest_vault_audit.md:870
+- [[The Grim Man]] em Workflow\Reports\latest_vault_audit.md:871
+- [[Gorren Brile]] em Workflow\Reports\latest_vault_audit.md:872
+- [[Emily Burton]] em Workflow\Reports\latest_vault_audit.md:873
+- [[The Duke]] em Workflow\Reports\latest_vault_audit.md:874
+- [[Ora Razchek]] em Workflow\Reports\latest_vault_audit.md:875
+- [[Bastian Redd]] em Workflow\Reports\latest_vault_audit.md:876
+- [[Hella]] em Workflow\Reports\latest_vault_audit.md:877
+- [[The Silo]] em Workflow\Reports\latest_vault_audit.md:878
+- [[Valkaara]] em Workflow\Reports\latest_vault_audit.md:879
+- [[Valkaara]] em Workflow\Reports\latest_vault_audit.md:880
+- [[VALKAARA]] em Workflow\Reports\latest_vault_audit.md:881
+- [[Valkaara]] em Workflow\Reports\latest_vault_audit.md:882
+- [[Valkaara]] em Workflow\Reports\latest_vault_audit.md:883
+- [[Steeltown#Gage Park]] em Workflow\Reports\latest_vault_audit.md:884
+- [[The Black Marauder]] em Workflow\Reports\latest_vault_audit.md:885
+- [[Water#Rustwater Bay]] em Workflow\Reports\latest_vault_audit.md:886
+- [[Steeltown Wrecking Crew]] em Workflow\Reports\latest_vault_audit.md:887
+- [[The Black Marauder]] em Workflow\Reports\latest_vault_audit.md:888
+- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:889
+- [[Blacktide Cray]] em Workflow\Reports\latest_vault_audit.md:890
+- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:891
+- [[Steeltown Wrecking Crew]] em Workflow\Reports\latest_vault_audit.md:892
+- [[The Black Marauder]] em Workflow\Reports\latest_vault_audit.md:893
+- [[Steeltown Wrecking Crew]] em Workflow\Reports\latest_vault_audit.md:894
+- [[Steeltown#Gage Park]] em Workflow\Reports\latest_vault_audit.md:895
+- [[Steeltown Wrecking Crew]] em Workflow\Reports\latest_vault_audit.md:896
+- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:897
+- [[Mark Jeffrey]] em Workflow\Reports\latest_vault_audit.md:898
+- [[Abel May Jr.]] em Workflow\Reports\latest_vault_audit.md:899
+- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:900
+- [[Blacktide Cray]] em Workflow\Reports\latest_vault_audit.md:901
+- [[Abel May Jr.]] em Workflow\Reports\latest_vault_audit.md:902
+- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:903
+- [[Mark Jeffrey]] em Workflow\Reports\latest_vault_audit.md:904
+- [[Flint Garritt]] em Workflow\Reports\latest_vault_audit.md:905
+- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:906
+- [[Abel May Jr.]] em Workflow\Reports\latest_vault_audit.md:907
+- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:908
+- [[Abel May Jr.]] em Workflow\Reports\latest_vault_audit.md:909
+- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:910
+- [[Blacktide Cray]] em Workflow\Reports\latest_vault_audit.md:911
+- [[Steeltown#Gage Park]] em Workflow\Reports\latest_vault_audit.md:912
+- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:913
+- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:914
+- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:915
+- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:916
+- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:917
+- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:918
+- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:919
+- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:920
+- [[Mark Jeffrey]] em Workflow\Reports\latest_vault_audit.md:921
+- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:922
+- [[Mark Jeffrey]] em Workflow\Reports\latest_vault_audit.md:923
+- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:924
+- [[Steeltown Wrecking Crew]] em Workflow\Reports\latest_vault_audit.md:925
+- [[Katie Kowalski]] em Workflow\Reports\latest_vault_audit.md:926
+- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:927
+- [[Mark Jeffrey]] em Workflow\Reports\latest_vault_audit.md:928
+- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:929
+- [[Steeltown Wrecking Crew]] em Workflow\Reports\latest_vault_audit.md:930
+- [[Loyalist Guard]] em Workflow\Reports\latest_vault_audit.md:931
+- [[Rustwater Raiders]] em Workflow\Reports\latest_vault_audit.md:932
+- [[Steeltown Wrecking Crew]] em Workflow\Reports\latest_vault_audit.md:933
+- [[Blacktide Cray]] em Workflow\Reports\latest_vault_audit.md:934
+- [[Abel May Jr.]] em Workflow\Reports\latest_vault_audit.md:935
+- [[Steeltown]] em Workflow\Reports\latest_vault_audit.md:936
+- [[Threshton]] em Workflow\Reports\latest_vault_audit.md:937
+- [[Bastian Redd]] em Workflow\Reports\latest_vault_audit.md:938
+- [[Flint Garritt]] em Workflow\Reports\latest_vault_audit.md:939
+- [[Bastian Redd]] em Workflow\Reports\latest_vault_audit.md:940
+- [[Bastian Redd]] em Workflow\Reports\latest_vault_audit.md:941
+- [[Steeltown#Gage Park]] em Workflow\Reports\latest_vault_audit.md:942
+- [[The Black Marauder]] em Workflow\Reports\latest_vault_audit.md:943
+- [[Wrecking Crew]] em Workflow\Reports\latest_vault_audit.md:944
+- [[Abel May Jr.]] em Workflow\Reports\latest_vault_audit.md:945
+- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:946
+- [[Mark Jeffrey]] em Workflow\Reports\latest_vault_audit.md:947
+- [[Flint Garritt]] em Workflow\Reports\latest_vault_audit.md:948
+- [[Jimmy Douglass]] em Workflow\Reports\latest_vault_audit.md:949
+- [[Abel May Jr.]] em Workflow\Reports\latest_vault_audit.md:950
+- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:951
+- [[Katie Kowalski]] em Workflow\Reports\latest_vault_audit.md:952
+- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:953
+- [[Bastian Redd]] em Workflow\Reports\latest_vault_audit.md:954
+- [[Threshton]] em Workflow\Reports\latest_vault_audit.md:955
+- [[01 - Main Event Shadows]] em Workflow\Reports\latest_vault_audit.md:956
+- [[World Lucha Libre]] em Workflow\Reports\latest_vault_audit.md:957
+- [[Steeltown]] em Workflow\Reports\latest_vault_audit.md:958
+- [[Bobby Cutman]] em Workflow\Reports\latest_vault_audit.md:959
+- [[Steeltown Wrecking Crew]] em Workflow\Reports\latest_vault_audit.md:960
+- [[Abel May Jr.]] em Workflow\Reports\latest_vault_audit.md:961
+- [[Bobby Cutman]] em Workflow\Reports\latest_vault_audit.md:962
+- [[02 - Ghosts On The Waves]] em Workflow\Reports\latest_vault_audit.md:963
+- [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:964
+- [[Rustwater Raiders]] em Workflow\Reports\latest_vault_audit.md:965
+- [[The Silo]] em Workflow\Reports\latest_vault_audit.md:966
+- [[Ashmoor]] em Workflow\Reports\latest_vault_audit.md:967
+- [[Steeltown]] em Workflow\Reports\latest_vault_audit.md:968
+- [[The Black Marauder]] em Workflow\Reports\latest_vault_audit.md:969
+- [[The Duke]] em Workflow\Reports\latest_vault_audit.md:970
+- [[Unseen Widows]] em Workflow\Reports\latest_vault_audit.md:971
+- [[03 - The Devil In The Row]] em Workflow\Reports\latest_vault_audit.md:972
+- [[Loyalist Guard]] em Workflow\Reports\latest_vault_audit.md:973
+- [[Gutter Row]] em Workflow\Reports\latest_vault_audit.md:974
+- [[Hollow House]] em Workflow\Reports\latest_vault_audit.md:975
+- [[Shana]] em Workflow\Reports\latest_vault_audit.md:976
+- [[The Grim Man]] em Workflow\Reports\latest_vault_audit.md:977
+- [[Steeltown]] em Workflow\Reports\latest_vault_audit.md:978
+- [[04 - Glowing Darkness]] em Workflow\Reports\latest_vault_audit.md:979
+- [[Lash Hawkins]] em Workflow\Reports\latest_vault_audit.md:980
+- [[Murray Boys]] em Workflow\Reports\latest_vault_audit.md:981
+- [[Luxyn]] em Workflow\Reports\latest_vault_audit.md:982
+- [[Nico Murray]] em Workflow\Reports\latest_vault_audit.md:983
+- [[Gutter Row]] em Workflow\Reports\latest_vault_audit.md:984
+- [[Marco Murray]] em Workflow\Reports\latest_vault_audit.md:985
+- [[Rosa Murray]] em Workflow\Reports\latest_vault_audit.md:986
+- [[Luxyn]] em Workflow\Reports\latest_vault_audit.md:987
+- [[Ashmoor]] em Workflow\Reports\latest_vault_audit.md:988
+- [[05 - Sight Unseen]] em Workflow\Reports\latest_vault_audit.md:989
+- [[The Drownlands]] em Workflow\Reports\latest_vault_audit.md:990
+- [[Raina & Risa]] em Workflow\Reports\latest_vault_audit.md:991
+- [[Raina & Risa]] em Workflow\Reports\latest_vault_audit.md:992
+- [[Faith of Mirella]] em Workflow\Reports\latest_vault_audit.md:993
+- [[Riley Thorne]] em Workflow\Reports\latest_vault_audit.md:994
+- [[Ava Victoria]] em Workflow\Reports\latest_vault_audit.md:995
+- [[Gutter Row]] em Workflow\Reports\latest_vault_audit.md:996
+- [[Lash Hawkins]] em Workflow\Reports\latest_vault_audit.md:997
+- [[Nico Murray]] em Workflow\Reports\latest_vault_audit.md:998
+- [[dukeofd.png]] em Workflow\Reports\latest_vault_audit.md:999
+- [[prop.png]] em Workflow\Reports\latest_vault_audit.md:1000
+- [[elarion.png]] em Workflow\Reports\latest_vault_audit.md:1001
+- [[cassian.png]] em Workflow\Reports\latest_vault_audit.md:1002
+- [[mira.png]] em Workflow\Reports\latest_vault_audit.md:1003
+- [[oric.png]] em Workflow\Reports\latest_vault_audit.md:1004
+- [[raziel.PNG]] em Workflow\Reports\latest_vault_audit.md:1005
+- [[th_raziel.PNG]] em Workflow\Reports\latest_vault_audit.md:1006
+- [[Locations/Floresta de Avenor]] em Workflow\Reports\latest_vault_audit.md:1007
+- [[varkh.jpeg]] em Workflow\Reports\latest_vault_audit.md:1008
+- [[th_varkh.PNG]] em Workflow\Reports\latest_vault_audit.md:1009
+- [[vezemir.png]] em Workflow\Reports\latest_vault_audit.md:1010
+- [[th_vezemir.PNG]] em Workflow\Reports\latest_vault_audit.md:1011
 - [[zz_media/lyladuke.png]] em Workflow\Legacy\Disgraceland\Legacy - Disgraceland Chapter 01 - Ghosts on the Waves.md:6
 - [[Lyla Bonetooth]] em Workflow\Legacy\Disgraceland\Legacy - Disgraceland Chapter 01 - Ghosts on the Waves.md:33
 - [[The Silo]] em Workflow\Legacy\Disgraceland\Legacy - Disgraceland Chapter 01 - Ghosts on the Waves.md:33
@@ -1167,26 +1380,26 @@ Nenhuma
 Nenhuma
 
 ### Imagens órfãs
-- zz_media\guerreiro.png
-- zz_media\th_dukeofd.png
-- zz_media\o-fraturamento.png
-- zz_media\caminho-dos-errantes.png
-- zz_media\os-guardioes-do-veu-cinzento.png
-- zz_media\smoke.mp3
-- elf.PNG
-- dukeofd.png
-- manto-primordial.png
-- zz_media\raziel.PNG
-- zz_media\bosque-sussurrante.png
-- zz_media\muralha_dorn.png
-- casa-da-moeda-interior.png
-- mago.png
+- zz_media\distrito-comercial.png
+- zz_media\ruinas-de-valthor.png
+- th_elf.PNG
+- campos-de-earthropo.png
 - zz_media\manto-primordial.png
+- zz_media\campos-de-earthropo.png
+- zz_media\omnisvera.PNG
+- elarion.png
+- zz_media\banner-ecos-do-mundo-perdido.png
+- zz_media\med.PNG
+- zz_media\sound.png
+- nimalia.png
 - eclipse-obsidiana.png
-- banner-ecos-do-mundo-perdido.png
-- mapa-de-nimalis.png
-- zz_media\anao.PNG
-- zz_media\prop.png
+- zz_media\varkh.jpeg
+- zz_media\bosque-sussurrante.png
+- zz_media\guild.png
+- ladrao.png
+- smoke.mp3
+- varkh.jpeg
+- fortaleza-de-gharok.png
 - ... e mais 130 arquivos
 
 ---
@@ -1194,12 +1407,12 @@ Nenhuma
 ## Riscos Críticos
 
 - Muitas notas (25) sem frontmatter
-- Muitos links quebrados (862)
+- Muitos links quebrados (1070)
 - Muitas referências de mídia quebradas em notas ativas (141)
 
 ## Riscos Médios
 
-- Notas com frontmatter inválido (84)
+- Notas com frontmatter inválido (89)
 - Muitas imagens órfãs (150)
 
 ## Pendências

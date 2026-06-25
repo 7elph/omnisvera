@@ -141,3 +141,35 @@ Criou Batch 02 de notas faltantes focado no arco de Vezemir. Todas as notas fora
 - Definição de estatísticas de jogo para o dragão
 
 **Status:** Pendente de revisão do Sage
+
+### 2026-06-25 — Sage — devin/create-missing-varkh-notes-batch-03
+
+**IA executora:** Cascade  
+**Solicitante:** Sage  
+**Branch:** devin/create-missing-varkh-notes-batch-03  
+**Commit(s):** Pendente  
+**Tipo de tarefa:** Criação de notas Draft de suporte ao arco de Varkh  
+**Arquivos alterados:**  
+- Workflow/MISSING_NOTES_BACKLOG.md (atualizado)
+- Items/O Frasco Afogado.md (novo)
+- Lore/Remédios Falsos de Maré Baixa.md (novo)
+- Factions/Rede de Falsificadores de Maré Baixa.md (novo)
+- Items/Caderninho de Vozes.md (novo)
+- Items/Máscara de Médico da Peste de Varkh.md (novo)
+
+**Mudou cânone?** Não (todas as notas são Draft/Em desenvolvimento)  
+**Mudou mídia?** Não  
+**Mudou estrutura?** Sim (notas Draft adicionadas)  
+**Resumo:**  
+Criou Batch 03 de notas faltantes focado no arco de Varkh. Todas as notas foram criadas como Draft/Em desenvolvimento com canon_status: Draft. Conteúdo baseado apenas em fontes internas existentes (Varkh Nimalis.md, EARTHROPO/00 - O Corvo da Maré Baixa.md, Territories/Nimalia.md). Incertezas foram marcadas como "Pendente de confirmação do Sage". Nenhuma regra mecânica de alquimia, efeito exato de remédios, funcionamento definitivo do Frasco Afogado, origem definitiva do Caderninho de Vozes, identidade completa da rede de falsificadores ou estatísticas de jogo foi definida.
+
+**Pendências:**  
+- Confirmação do Sage sobre identidade da rede de falsificadores
+- Confirmação do Sage sobre envolvimento de Odran com as falsificações
+- Confirmação do Sage sobre regras mecânicas de alquimia de rua
+- Confirmação do Sage sobre efeitos exatos dos remédios falsos
+- Confirmação do Sage sobre funcionamento definitivo do Frasco Afogado
+- Confirmação do Sage sobre origem do Caderninho de Vozes
+- Confirmação do Sage sobre estatísticas de jogo dos itens
+
+**Status:** Pendente de revisão do Sage

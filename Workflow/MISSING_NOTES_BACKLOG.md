@@ -42,11 +42,11 @@ Este documento lista notas que precisam ser criadas para dar suporte à campanha
 
 | Nota | Pasta Sugerida | Categoria | Motivo da Criação | Notas Relacionadas | Status |
 |:--|:--|:--|:--|:--|:--|
-| O Frasco Afogado | Locations/ | Localização | Estabelecimento onde Varkh foi treinado por Mestre Odran Veyl | Varkh, Maré Baixa, Mestre Odran Veyl | Pendente |
-| Remédios Falsos de Maré Baixa | Lore/ | Lore | Arco de investigação de Varkh sobre remédios falsos com símbolo de Odran | Varkh, Maré Baixa, O Frasco Afogado | Pendente |
-| Rede de Falsificadores de Maré Baixa | Factions/ | Facção | Organização por trás dos remédios falsos investigados por Varkh | Varkh, Maré Baixa, Remédios Falsos | Pendente |
-| Caderninho de Vozes | Items/ | Item | Item relacionado à identidade e voz de Varkh | Varkh, Kenku | Pendente |
-| Máscara de Médico da Peste de Varkh | Items/ | Item | Disfarce usado por Varkh em suas atividades | Varkh, Maré Baixa | Pendente |
+| O Frasco Afogado | Items/ | Item | Estabelecimento onde Varkh foi treinado por Mestre Odran Veyl | Varkh, Maré Baixa, Mestre Odran Veyl | Criado (Batch 03) |
+| Remédios Falsos de Maré Baixa | Lore/ | Lore | Arco de investigação de Varkh sobre remédios falsos com símbolo de Odran | Varkh, Maré Baixa, O Frasco Afogado | Criado (Batch 03) |
+| Rede de Falsificadores de Maré Baixa | Factions/ | Facção | Organização por trás dos remédios falsos investigados por Varkh | Varkh, Maré Baixa, Remédios Falsos | Criado (Batch 03) |
+| Caderninho de Vozes | Items/ | Item | Item relacionado à identidade e voz de Varkh | Varkh, Kenku | Criado (Batch 03) |
+| Máscara de Médico da Peste de Varkh | Items/ | Item | Disfarce usado por Varkh em suas atividades | Varkh, Maré Baixa | Criado (Batch 03) |
 
 ## Prioridade A — Apoio de Mundo
 
@@ -96,6 +96,16 @@ As seguintes notas foram criadas no Batch 02:
 - Locations/Fortaleza Abandonada de Avenor.md
 
 `Locations/Kaer Varyn.md` não foi criado porque `Kaer Varyn` foi identificado como nome descartado no `Workflow/CANON.md`.
+
+## Batch 03 — Notas Criadas
+
+As seguintes notas foram criadas no Batch 03:
+
+- Items/O Frasco Afogado.md
+- Lore/Remédios Falsos de Maré Baixa.md
+- Factions/Rede de Falsificadores de Maré Baixa.md
+- Items/Caderninho de Vozes.md
+- Items/Máscara de Médico da Peste de Varkh.md
 
 ## Notas
 
