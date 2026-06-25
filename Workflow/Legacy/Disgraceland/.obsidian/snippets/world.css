@@ -1,0 +1,108 @@
+/* === [!news] Custom Callout === */
+.callout[data-callout="news"] {
+  --callout-color: 45, 52, 64; /* Deep charcoal */
+  --callout-bg-color: rgba(53, 60, 69, 0.9); /* Rich dark background */
+  background-color: var(--callout-bg-color);
+  color: #dddddd;
+}
+
+.callout[data-callout="news"] .callout-title {
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #ffffff;
+}
+
+.callout[data-callout="news"] .callout-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-style: normal;
+  font-size: 16px;
+  width: 1.0em;
+  height: 1.0em;
+  color: #bbbbbb;
+}
+
+.callout[data-callout="news"] .callout-icon svg {
+  display: none;
+}
+
+.callout[data-callout="news"] .callout-icon::before {
+  content: "📰"; /* Or use ☠️ if you want a meaner vibe */
+}
+
+.callout[data-callout="world"] {
+  --callout-color: 210, 210, 210; /* Soft grey */
+  --callout-bg-color: rgba(116, 121, 130, 0.1); /* Slightly transparent for subtle highlight */
+
+  background-color: var(--callout-bg-color);
+  color: #e0e0e0;
+  border: 1px solid #747982; /* Deep red border */
+  padding: 10px; /* Optional: ensures content doesn’t touch the border */
+  border-radius: 4px; /* Optional: adds a subtle roundness */
+
+}
+
+.callout[data-callout="world"] .callout-title {
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #ffffff;
+}
+
+.callout[data-callout="world"] .callout-icon {
+  color: #ccc;
+}
+
+.callout[data-callout="world"] .callout-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ccc;
+  font-style: normal;
+  font-size: 18px;
+  width: 1.0em;
+  height: 1.0em;
+}
+
+.callout[data-callout="world"] .callout-icon svg {
+  display: none;
+}
+
+.callout[data-callout="world"] .callout-icon::before {
+  content: "💀";
+}
+
+
+
+.callout[data-callout="home"] {
+  --callout-color: 47, 58, 74; /* Deep charcoal */
+  --callout-bg-color: rgba(15, 16, 18, 0.9); /* Rich dark background */
+  background-color: var(--callout-bg-color);
+  color: #dddddd;
+}
+
+.callout[data-callout="home"] .callout-title {
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #ffffff;
+}
+
+.callout[data-callout="home"] .callout-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-style: normal;
+  font-size: 18px;
+  width: 1.0em;
+  height: 1.0em;
+  color: #bbbbbb;
+}
+
+.callout[data-callout="home"] .callout-icon svg {
+  display: none;
+}
+
+.callout[data-callout="home"] .callout-icon::before {
+  content: "☠️"; /* Or use ☠️ if you want a meaner vibe */
+}
+
