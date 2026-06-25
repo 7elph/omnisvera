@@ -1,8 +1,11 @@
 ---
-obsidianUIMode: preview
-NoteIcon: list
-NoteStatus: Active
-status: Active
+type: workflow
+subtype: standard
+work_status: Active
+canon_status: Reference
+visibility: Mestre
+created_by: IA
+requires_review: true
 tags:
   - workflow
   - standard
