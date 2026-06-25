@@ -81,3 +81,34 @@ Criou scripts Python locais para validação e auditoria do vault Obsidian. Scri
 - Nenhuma
 
 **Status:** Pendente de revisão do Sage
+
+### 2026-06-24 — Sage — devin/create-missing-raziel-notes-batch-01
+
+**IA executora:** Cascade  
+**Solicitante:** Sage  
+**Branch:** devin/create-missing-raziel-notes-batch-01  
+**Commit(s):** Pendente  
+**Tipo de tarefa:** Criação de notas Draft de suporte ao arco de Raziel  
+**Arquivos alterados:**  
+- Workflow/MISSING_NOTES_BACKLOG.md (novo)
+- Factions/Clã Sanguinallis.md (novo)
+- Characters/Individual/Lorde Malakar.md (novo)
+- Characters/Individual/Kaelen, o Flagelo.md (novo)
+- Characters/Individual/Vandor, o Senhor das Bestas.md (novo)
+- Lore/Ancião Primordial.md (novo)
+- Lore/Sangue Antigo.md (novo)
+
+**Mudou cânone?** Não (todas as notas são Draft/Em desenvolvimento)  
+**Mudou mídia?** Não  
+**Mudou estrutura?** Sim (notas Draft adicionadas)  
+**Resumo:**  
+Criou Batch 01 de notas faltantes focado no arco de Raziel. Todas as notas foram criadas como Draft/Em desenvolvimento com canon_status: Draft. Conteúdo baseado apenas em fontes internas existentes (Raziel.md, EARTHROPO/00 - O Retorno de Raziel.md, Items, Locations). Incertezas foram marcadas como "Pendente de confirmação do Sage". Nenhuma estatística de jogo, data exata, origem definitiva ou regra final foi definida.
+
+**Pendências:**  
+- Confirmação do Sage sobre origem e natureza do Ancião Primordial
+- Confirmação do Sage sobre origem e natureza do Sangue Antigo
+- Confirmação do Sage sobre detalhes do Clã Sanguinallis
+- Confirmação do Sage sobre detalhes de Lorde Malakar, Kaelen e Vandor
+- Definição de regras mecânicas para vampiro, hemomancia e regeneração
+
+**Status:** Pendente de revisão do Sage
