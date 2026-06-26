@@ -13,6 +13,15 @@ tags:
   - dataview
 ---
 
+> [!IMPORTANT]
+> Este arquivo é documentação técnica do sistema de dashboards do Omnisvera.
+> Ele não é uma Home operacional.
+> As Homes operacionais atuais são:
+> - [[Home_Mestre]]
+> - [[Home_Jogadores]]
+>
+> O arquivo [[Home]] funciona como portal neutro e entrada do plugin Homepage.
+
 # Sistema de Dashboards — Omnisvera
 
 Este documento define o sistema de dashboards e consultas Dataview para o vault Omnisvera.
