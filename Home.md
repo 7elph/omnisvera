@@ -6,174 +6,40 @@ banner-y: 34
 banner-height: 280
 content-start: 271
 banner-fade: -45
-
+visibility: Público
+spoiler_level: none
+player_known: true
+gm_secret: false
 ---
 
 <div style="text-align: center;">
-  <img src="omnisvera.png" width="1300px">
+  <img src="omnisvera.png" width="900px">
 </div>
 
-<br>
+# 🜂 Omnisvera
 
+Portal principal do vault.
 
-> [!cards|5]
-> **NIMALIA**
-> [![[mapa-de-nimalia.png\|sban htiny ctr p+t]]](Territories/Nimalia.md)
+Escolha a visualização adequada:
+
+> [!cards|2]
+> **MESTRE**
+> [[Home_Mestre|Abrir dashboard do mestre]]
 >
-> **CRÔNICAS**
-> [![[banner-earthropo.png\|sban htiny ctr]]](EARTHROPO/EARTHROPO.md)
+> **JOGADORES**
+> [[Home_Jogadores|Abrir portal dos jogadores]]
+
+> [!warning]+ CONTROLE DE SPOILER
+> A Home do Mestre pode conter preparação, segredos, auditorias e conteúdo administrativo.
 >
-> **NOTAS**
-> [![[guild.png\|sban htiny ctr]]](NOTES.md)
-> 
-> **RUMORES E DESCOBERTAS**
-> [![[guild1.png\|sban htiny ctr]]](LATEST_NEWS.md)
-> 
-> **MAPAS DE EARTHROPO**
-> [![[earthropo.png\|sban htiny ctr]]](MAPA%20DE%20EARTHROPO.md)
->
+> A Home dos Jogadores deve mostrar apenas conteúdo público, conhecido ou liberado.
 
+## Atalhos seguros
 
-# 🜂 NIMALIA
-
-> *“Toda estrada parece simples antes do primeiro passo. Nas fronteiras de Nimalia, a floresta guarda nomes esquecidos, as ruínas preservam vozes antigas e cada viajante carrega uma história que ainda pode mudar Earthropo.”*
-
-Nimalia é o primeiro horizonte das **Crônicas de Earthropo**: um ponto de partida para jornadas, descobertas e histórias que serão construídas durante a campanha.
-
-
-
-> [!world]- UM PRIMEIRO OLHAR SOBRE EARTHROPO
-> ```datacards 
-> TABLE cover FROM #home
-> SORT file.name asc
-> 
-> // Settings 
-> preset: dense 
-> columns: 6
-> imageProperty: cover
-> cardSpacing: 4
-> imageHeight: 50px
-> ```
-
-
-<div class="homepage">
-<hr>
-</div>
-
-> [!infobox]
->```calendarium
->```
-> **CRÔNICAS DISPONÍVEIS:**
->```datacards 
->TABLE cover, date, description FROM #story AND #earthropo
->SORT file.ctime desc
->limit 3
->
->// Settings 
->preset: square 
->columns: 1 
->imageProperty: cover
->imageWidth: 50px
->```
-
-
-> [!news]+ FIOS DA CAMPANHA
-> Três histórias avançam por Earthropo, ainda sem saber onde irão se encontrar:
->
-> - [[Vezemir]] percorre a [[Floresta de Avenor]] em busca do dragão de colar dourado que destruiu [[Leth'valora]].
-> - [[Varkh Nimalis]] deixa [[Maré Baixa]] para descobrir quem está usando os métodos de seu mestre na fabricação de remédios falsos.
-> - [[Raziel]] retorna a um mundo transformado depois de mais de trezentos anos de aprisionamento, carregando antigas dívidas de sangue.
->
-> A campanha começa no nível 1. O mapa não será entregue pronto: lugares, perigos e histórias ganharão forma à medida que forem descobertos.
-> #### **[[LATEST_NEWS|Leia Mais...]]**
-
-
-> [!home]+ ÚLTIMOS (5) PERSONAGENS ATUALIZADOS
-> ```dataview
-> table 
->  choice(thumbnail, "<img src='" + thumbnail + "' width='60' style='border-radius:4px;box-shadow:0 0 3px rgba(255, 255, 255, 0.4);' />", "—") as "IMAGEM",
->   status, 
->   role, 
->   district, 
->   territory, 
->   faction, 
->   religion,
->   "<span style='font-size: 0.85em; color: #bbb;'>" + date(file.mtime) + "</span>" as "DATA"
-> from "Characters"
-> where contains(tags, "character")
-> sort file.mtime desc
-> limit 5
-> ```
-
-> [!note]+ TERRITÓRIOS
-> ```datacards
-> TABLE cover, region, leader, population FROM #territory
-> WHERE NoteStatus != "Placeholder"
-> SORT name DESC
-> 
-> // Settings
-> preset: portrait
-> columns: 6
-> imageProperty: cover
-> cardSpacing: 4
-> ```
-
-> [!note]- LOCALIZAÇÕES
-> ```datacards
-> TABLE cover, territory, info FROM #location
-> WHERE NoteStatus != "Placeholder"
-> SORT rating ASC
-> 
-> // Settings
-> preset: grid
-> columns: 5
-> imageProperty: cover
-> cardSpacing: 4
-> ```
-
-> [!note]- RAÇAS
-> ```datacards
-> TABLE cover, status FROM #race
-> SORT name ASC
-> 
-> // Settings
-> preset: portrait
-> columns: 6
-> imageProperty: cover
-> cardSpacing: 4
-> ```
-
-> [!note]- CLASSES
-> ```datacards
-> TABLE cover, status FROM "Classes" AND #class
-> SORT name ASC
-> 
-> // Settings
-> preset: portrait
-> columns: 4
-> imageProperty: cover
-> cardSpacing: 4
-> ```
-
-<br>
-
-```dataview
- TABLE WITHOUT ID
-   link(file.path, file.folder + " / " + file.name) AS "Última Modificação",
-   file.mtime AS "Data"
- FROM "/"
- WHERE file.mtime >= date(today) - dur(30 days)
- AND file.name != this.file.name
-     AND !contains(file.path, "zz_media")
-     AND !contains(file.path, "z_Assets")
-    AND !contains(file.path, "Inline Scripts")
-     AND !contains(file.path, "z_Templates")
-     AND !contains(file.path, "daily notes")
-     AND !contains(file.path, "BRAT")
-     AND !contains(file.name, "Legacy -")
- SORT file.mtime DESC
- LIMIT 10
-```
+- [[Home_Mestre|Home do Mestre]]
+- [[Home_Jogadores|Home dos Jogadores]]
+- [[Calendar|Calendário de Nimalia]]
+- [[MAPA DE NIMALIA]]
 
 ---
 
