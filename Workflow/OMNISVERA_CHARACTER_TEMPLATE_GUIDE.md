@@ -1,245 +1,130 @@
+# Omnisvera — Guia de Templates de Personagem
+
+> [!IMPORTANT]
+> Este documento segue a taxonomia oficial atual do Sage.
+> Fonte da verdade: [[OMNISVERA_SYSTEM_TAXONOMY]] e [[OMNISVERA_SYSTEM_TAXONOMY_DECISIONS]].
+
+## Função
+
+Define o padrão de criação de personagens novos.
+
+Não aplicar em massa a personagens existentes sem lote piloto.
+
+## Frontmatter recomendado
+
+```yaml
 ---
-type: workflow
-subtype: standard
-work_status: Active
-canon_status: Reference
+type: character
+NoteIcon: character
+status: Rascunho
 visibility: Mestre
-created_by: IA
-requires_review: true
+spoiler_level: heavy
+gm_secret: true
+revealed_in:
+created_by: Sage
+campaign_status: Em revisao
+
+name:
+epithet:
+aliases: []
+
+race:
+class:
+role:
+
+origin:
+location:
+territory:
+faction: []
+faith: []
+
+thumbnail:
+cover:
+
+arcs: []
+chapters: []
+
+level:
+danger_level:
+hooks: []
+rumors: []
+
 tags:
-  - workflow
-  - standard
-  - template
-  - character
+  - personagem
 ---
+```
 
-# Guia de Templates de Personagem — Omnisvera
+## Imagem
 
-Este documento explica como usar os templates de personagem do vault Omnisvera.
+Usar `thumbnail` como imagem principal de card e retrato interno quando não houver decisão específica.
+
+```md
+> [!NOTE|clean no-i right]+ Retrato
+> ![[thumbnail|400]]
+```
+
+## Estrutura recomendada
+
+```md
+# Nome — Epíteto
 
 ## Visão Geral
 
-Omnisvera fornece templates prontos para cada subtipo de personagem:
+## Aparições
 
-- `Templates/Characters/Personagem Jogador.md` - Para personagens controlados por jogadores
-- `Templates/Characters/NPC Importante.md` - Para NPCs centrais na campanha
-- `Templates/Characters/NPC Menor.md` - Para NPCs de cena ou papel limitado
-- `Templates/Characters/Antagonista.md` - Para vilões principais
-- `Templates/Characters/Criatura.md` - Para monstros e criaturas
+## História
 
-## Como Usar os Templates
+## Situação Atual
 
-### Passo 1: Escolha o Template Adequado
+## Personalidade
 
-Selecione o template baseado no tipo de personagem:
+## Relações
 
-- **Personagem Jogador** - Use para PCs (Vezemir, Varkh, Raziel)
-- **NPC Importante** - Use para NPCs recorrentes (Elarion Vaelthor, Mestre Odran Veyl)
-- **NPC Menor** - Use para NPCs transitórios (comerciante, guarda)
-- **Antagonista** - Use para vilões principais (Dragão de Colar Dourado, Lorde Malakar)
-- **Criatura** - Use para monstros e bestas
+## Ganchos
 
-### Passo 2: Copie o Template
-
-Copie o conteúdo do template para uma nova nota.
-
-### Passo 3: Ajuste o Frontmatter
-
-Preencha os campos do frontmatter:
-
-```yaml
-name: Nome do Personagem
-epithet: Epíteto ou apelido
-aliases: ["Apelido 1", "Apelido 2"]
-race: Raça
-class: Classe (para PCs)
-life_status: Vivo/Morto/Desaparecido
-role: Papel na história
-origin: "[[Local de origem]]"
-location: "[[Local atual]]"
-territory: "[[Território]]"
-faction: ["[[Facção]]"]
-faith: ["[[Religião]]"]
-thumbnail: zz_media/characters/th_nome.png
-portrait: zz_media/characters/nome.png
-cover: zz_media/covers/nome_banner.png
-arcs: ["Arco narrativo 1", "Arco narrativo 2"]
-chapters: ["Capítulo 1", "Capítulo 2"]
+## Pendências
 ```
 
-### Passo 4: Preencha as Seções
+## Aparições
 
-Preencha as seções do template com informações do personagem.
+`chapters` é o campo funcional para capítulos/story/seções.
 
-### Passo 5: Ajuste o Subtipo
+```dataview
+LIST
+FROM "EARTHROPO"
+WHERE contains(this.chapters, file.name)
+SORT file.name ASC
+```
 
-Certifique-se de que o campo `subtype` está correto:
+## Personagens dos jogadores
 
-- `player_character` - Para PCs
-- `major_npc` - Para NPCs importantes
-- `minor_npc` - Para NPCs menores
-- `antagonist` - Para antagonistas
-- `creature` - Para criaturas
+Personagens dos jogadores devem usar:
 
-### Passo 6: Salve no Local Adequado
+```yaml
+visibility: Jogadores
+spoiler_level: none
+gm_secret: false
+tags:
+  - personagem
+  - jogador
+```
 
-Salve a nota na pasta apropriada:
+## NPCs e antagonistas
 
-- `Characters/Individual/` - Para personagens sem afiliação principal
-- `Characters/[Nome da Facção]/` - Para membros de facções
+NPCs com segredos ou informação de preparação devem usar:
 
-## Diferença Entre Templates
+```yaml
+visibility: Mestre
+spoiler_level: heavy
+gm_secret: true
+tags:
+  - personagem
+  - npc
+```
 
-### Personagem Jogador
+## Regras
 
-**Quando usar:** Personagens controlados por jogadores
-
-**Seções específicas:**
-- O que os jogadores sabem
-- O que só o mestre sabe
-- Equipamentos importantes
-- Capacidades narrativas
-- Mecânicas confirmadas
-- Mecânicas pendentes
-
-**Campos obrigatórios adicionais:**
-- `class` - Classe do personagem
-- `chapters` - Lista de aparições
-
-**Exemplo:** Vezemir, Varkh, Raziel
-
-### NPC Importante
-
-**Quando usar:** NPCs com papel recorrente na campanha
-
-**Seções específicas:**
-- Função narrativa
-- Segredos
-- Relações detalhadas
-
-**Campos obrigatórios adicionais:**
-- `role` - Função narrativa
-- `chapters` - Lista de aparições (se aplicável)
-
-**Exemplo:** Elarion Vaelthor, Mestre Odran Veyl
-
-### NPC Menor
-
-**Quando usar:** NPCs de cena ou papel limitado
-
-**Seções específicas:**
-- Descrição rápida
-- Função em cena
-- Informações conhecidas
-- Segredo opcional
-
-**Campos obrigatórios adicionais:**
-- `role` - Função em cena
-- `chapters` - Opcional
-
-**Exemplo:** Comerciante aleatório, guarda de porta
-
-### Antagonista
-
-**Quando usar:** Vilões principais da campanha
-
-**Seções específicas:**
-- Motivação
-- Métodos
-- Recursos
-- Aliados
-- Inimigos
-- Plano atual
-- Fraquezas
-- Segredos
-
-**Campos obrigatórios adicionais:**
-- `role` - Papel antagonista
-- `arcs` - Arcos antagonistas
-- `chapters` - Lista de aparições
-
-**Exemplo:** Dragão de Colar Dourado, Lorde Malakar
-
-### Criatura
-
-**Quando usar:** Monstros, bestas, entidades sobrenaturais
-
-**Seções específicas:**
-- Descrição
-- Origem
-- Habitat
-- Comportamento
-- Ameaça
-- Capacidades narrativas
-- Mecânicas pendentes
-
-**Campos obrigatórios adicionais:**
-- `race` - Tipo de criatura
-- `life_status` - Estado vital
-- `role` - Papel ecossistêmico ou narrativo
-
-**Exemplo:** Bestas selvagens, monstros de masmorra
-
-## Boas Práticas
-
-### 1. Não Invente Lore
-
-Templates não devem conter lore inventado. Use apenas como estrutura.
-
-### 2. Marque Incertezas
-
-Use a seção "Pendências do Sage" para marcar informações não confirmadas.
-
-### 3. Separe Lore e Mecânica
-
-Mantenha narrativa e regras de jogo em seções separadas.
-
-### 4. Use Wikilinks
-
-Sempre use wikilinks para referências a outras notas.
-
-### 5. Seja Consistente
-
-Use sempre a mesma estrutura e nomenclatura definida nos padrões.
-
-### 6. Atualize Regularmente
-
-Mantenha as notas atualizadas conforme a campanha avança.
-
-## Exemplo de Uso
-
-### Criando Vezemir
-
-1. Copie `Templates/Characters/Personagem Jogador.md`
-2. Ajuste frontmatter:
-   ```yaml
-   name: Vezemir
-   epithet: O Bastardo de Ferro
-   race: Meio-elfo
-   class: Guerreiro
-   life_status: Vivo
-   role: Bastardo de Ferro, vingador de Leth'valora
-   origin: "[[Antiga Estrada Esquecida]]"
-   location: "[[Nimalis]]"
-   territory: "[[Nimalia]]"
-   faction: ["[[Guardiões do Véu Cinzento]]"]
-   ```
-3. Preencha seções com informações de Vezemir
-4. Salve como `Characters/Individual/Vezemir.md`
-5. Adicione aparições em `chapters`
-
-## Personalização
-
-Templates podem ser personalizados conforme necessário, mas mantenha:
-
-- Estrutura básica de seções
-- Campos obrigatórios do frontmatter
-- Separação entre lore e mecânica
-- Seção de pendências do Sage
-
-## Documentos Relacionados
-
-- `Workflow/OMNISVERA_NOTE_STANDARD.md` - Padrão geral de notas
-- `Workflow/OMNISVERA_FRONTMATTER_SCHEMA.md` - Esquema de frontmatter
-- `Workflow/OMNISVERA_DASHBOARD_SYSTEM.md` - Sistema de dashboards
-- `Workflow/OMNISVERA_MEDIA_STANDARD.md` - Padrão de mídia
+- Não inventar origem, facção ou segredo sem fonte interna.
+- Não transformar nota de jogador em nota pública se houver segredo de mestre.
+- Não remover `thumbnail`, `cover`, `chapters` ou `tags`.
+- Não depender de tag antiga para cor visual quando já houver equivalente Omnisvera.

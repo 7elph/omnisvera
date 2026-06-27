@@ -1,363 +1,155 @@
----
-type: workflow
-subtype: standard
-work_status: Active
-canon_status: Reference
-visibility: Mestre
-created_by: IA
-requires_review: true
-tags:
-  - workflow
-  - standard
-  - dashboard
-  - dataview
----
+# Omnisvera — Sistema de Dashboards
 
 > [!IMPORTANT]
-> Este arquivo é documentação técnica do sistema de dashboards do Omnisvera.
-> Ele não é uma Home operacional.
-> Existem somente duas Homes operacionais:
-> - [[Home]] — Home dos Jogadores e entrada do plugin Homepage.
-> - [[Home_Mestre]]
->
-> `Home_Jogadores.md` foi arquivado e não é Home ativa.
+> Este documento segue a taxonomia oficial atual do Sage.
+> Fonte da verdade: [[OMNISVERA_SYSTEM_TAXONOMY]] e [[OMNISVERA_SYSTEM_TAXONOMY_DECISIONS]].
 
-# Sistema de Dashboards — Omnisvera
+## Função
 
-Este documento define o sistema de dashboards e consultas Dataview para o vault Omnisvera.
+Define como dashboards operacionais devem funcionar no vault Omnisvera.
 
-## Visão Geral
+Este arquivo é documentação técnica. Ele não é Home operacional.
 
-Omnisvera usa Dataview para criar dashboards interativos que facilitam a navegação e gestão do vault. O sistema é inspirado em Disgraceland, mas com schema mais limpo e adaptado ao contexto de fantasia medieval.
+## Homes oficiais
 
-## Dashboards Principais
+| arquivo | função |
+|---|---|
+| `Home.md` | Home dos Jogadores. |
+| `Home_Mestre.md` | Área/dashboard do Mestre. |
 
-### 1. Home
+`Home_Jogadores.md` não existe mais na raiz. A Home dos jogadores é `Home.md`.
 
-**Arquivo:** `Home.md`
+O plugin Homepage deve abrir `Home`.
 
-**Função:** Home dos Jogadores. Deve mostrar apenas conteúdo público, conhecido pelos jogadores ou explicitamente liberado.
+## Regra de segurança para dashboards
 
-**Elementos:**
-- Calendário e mapa liberados
-- Personagens dos jogadores
-- Locais conhecidos
-- Facções conhecidas
-- Handouts liberados
-- Sessões jogadas
-- Filtros contra `visibility: Mestre`, `gm_secret: true` e spoilers médios/pesados
+Dashboards de jogador devem ser conservadores.
 
-### Área do Mestre
-
-**Arquivo:** `Home_Mestre.md`
-
-**Função:** Home/área operacional do mestre. Pode conter preparação, spoilers, relatórios técnicos, Workflow, auditorias, camada de compatibilidade e links administrativos.
-
-**Exemplo de Dataview para últimos personagens:**
+Uma consulta pública só deve exibir notas com:
 
 ```dataview
-TABLE 
-  "<img src='" + thumbnail + "' width='60' style='border-radius:4px;' />" as "IMAGEM",
-  subtype as "TIPO",
-  role as "PAPEL",
-  life_status as "ESTADO",
-  "<span style='font-size: 0.85em;'>" + date(file.mtime) + "</span>" as "MODIFICADO"
+WHERE (visibility = "Jogadores" OR visibility = "Público")
+AND gm_secret != true
+AND spoiler_level != "medium"
+AND spoiler_level != "heavy"
+```
+
+Dashboards do mestre podem exibir conteúdo de preparação, pendências e relatórios técnicos.
+
+## Campos aceitos em dashboards
+
+Campos recomendados:
+
+- `thumbnail`;
+- `cover`;
+- `status`;
+- `visibility`;
+- `spoiler_level`;
+- `gm_secret`;
+- `revealed_in`;
+- `campaign_status`;
+- `quest_status`;
+- `handout_status`;
+- `level`;
+- `danger_level`;
+- `hooks`;
+- `rumors`;
+- `chapters`;
+- `date`;
+- `description`;
+- `location`;
+- `territory`;
+- `district`;
+- `faction`;
+- `religion`;
+- `role`;
+- `leader`;
+- `population`;
+- `region`.
+
+`type` pode ser usado como filtro auxiliar, mas não é obrigatório em todas as notas existentes.
+
+## Capítulos e crônicas
+
+`chapters` é o eixo funcional para capítulos, story e partes jogadas da campanha.
+
+Exemplo:
+
+```dataview
+TABLE date, description
+FROM #story
+WHERE (visibility = "Jogadores" OR visibility = "Público")
+AND gm_secret != true
+AND spoiler_level != "medium"
+AND spoiler_level != "heavy"
+SORT date ASC
+```
+
+## Personagens dos jogadores
+
+```dataview
+TABLE thumbnail, status, location, territory, faction
 FROM "Characters"
-WHERE type = "character"
-SORT file.mtime DESC
-LIMIT 5
-```
-
-### 2. Índice de Personagens
-
-**Arquivo:** `Characters/ÍNDICE.md`
-
-**Função:** Índice completo de todos os personagens
-
-**Elementos:**
-- Lista de personagens por subtipo
-- Filtros por localização
-- Filtros por facção
-- Filtros por status vital
-
-**Exemplo de Dataview por subtipo:**
-
-```dataview
-TABLE thumbnail, role, life_status, location
-FROM "Characters"
-WHERE type = "character" AND subtype = "player_character"
+WHERE contains(tags, "player") OR contains(tags, "jogador")
+AND (visibility = "Jogadores" OR visibility = "Público")
+AND gm_secret != true
+AND spoiler_level != "medium"
+AND spoiler_level != "heavy"
 SORT file.name ASC
 ```
 
-### 3. Índice de Facções
+## Territórios
 
-**Arquivo:** `Factions/ÍNDICE.md`
-
-**Função:** Índice de todas as facções com membros
-
-**Elementos:**
-- Lista de facções
-- Cards de membros por facção
-- Status de cada facção
-
-**Exemplo de Dataview para membros por facção:**
+A tag visual oficial para territórios é `territorio`.
 
 ```dataview
-TABLE thumbnail, role, life_status, location
-FROM "Characters"
-WHERE contains(faction, this.file.link)
+TABLE cover, region, leader, population
+FROM #territorio
+WHERE NoteStatus != "Placeholder"
 SORT file.name ASC
 ```
 
-### 4. Índice de Capítulos
+## Religiões
 
-**Arquivo:** `EARTHROPO/ÍNDICE.md`
-
-**Função:** Índice de todos os capítulos com personagens presentes
-
-**Elementos:**
-- Lista de capítulos em ordem
-- Personagens presentes em cada capítulo
-- Data de cada capítulo
-
-**Exemplo de Dataview para personagens por capítulo:**
+A tag visual oficial para religiões é `religiao`.
 
 ```dataview
-TABLE thumbnail, role, life_status, faction
-FROM "Characters"
-WHERE contains(chapters, this.file.name)
+TABLE cover, status, description
+FROM #religiao
 SORT file.name ASC
 ```
 
-### 5. Painel do Mestre
+## Classes
 
-**Arquivo:** `Workflow/PAINEL_DO_MESTRE.md`
-
-**Função:** Dashboard exclusivo para o Sage
-
-**Elementos:**
-- Notas pendentes de revisão
-- Personagens com canon_status Draft
-- NPCs sem localização definida
-- Itens pendentes de confirmação
-- Links rápidos para ferramentas
-
-**Exemplo de Dataview para notas pendentes:**
+Classes operacionais novas devem ficar em `Rules/Classes`.
 
 ```dataview
-TABLE type, subtype, work_status, canon_status
-FROM ""
-WHERE requires_review = true
-SORT file.mtime DESC
-```
-
-## Consultas Dataview Reutilizáveis
-
-### Personagens por Capítulo
-
-**Uso:** Em notas de capítulo para listar personagens presentes
-
-```dataview
-TABLE thumbnail, role, life_status, faction
-FROM "Characters"
-WHERE contains(chapters, this.file.name)
+TABLE thumbnail, status, rules_status, campaign_status
+FROM "Rules/Classes"
+WHERE type = "class"
 SORT file.name ASC
 ```
 
-**Campos exibidos:**
-- `thumbnail` - Imagem miniatura
-- `role` - Papel do personagem
-- `life_status` - Estado vital
-- `faction` - Facção principal
+## Tags visuais oficiais migradas
 
-### Membros por Facção
+| função | tag atual |
+|---|---|
+| Personagem | `personagem` |
+| Território | `territorio` |
+| Religião | `religiao` |
+| Coroa de Nimalia | `coroa-de-nimalia` |
+| Guilda dos Mercadores | `guilda-dos-mercadores` |
+| Conclave dos Errantes | `conclave-dos-errantes` |
+| Guardiões do Véu Cinzento | `guardioes-do-veu-cinzento` |
+| Mar da Neblina | `mar-da-neblina` |
+| Nimalia | `nimalia` |
 
-**Uso:** Em notas de facção para listar membros
+Tags pendentes não devem ser migradas automaticamente: `third`, `murray`, `story`.
 
-```dataview
-TABLE thumbnail, role, life_status, location
-FROM "Characters"
-WHERE contains(faction, this.file.link)
-SORT file.name ASC
-```
+## Regras de manutenção
 
-**Campos exibidos:**
-- `thumbnail` - Imagem miniatura
-- `role` - Papel do personagem
-- `life_status` - Estado vital
-- `location` - Local atual
-
-### Personagens por Local
-
-**Uso:** Em notas de localização para listar personagens presentes
-
-```dataview
-TABLE thumbnail, role, life_status
-FROM "Characters"
-WHERE location = this.file.link OR origin = this.file.link
-SORT file.name ASC
-```
-
-**Campos exibidos:**
-- `thumbnail` - Imagem miniatura
-- `role` - Papel do personagem
-- `life_status` - Estado vital
-
-### Notas Pendentes de Revisão
-
-**Uso:** No Painel do Mestre para identificar notas que precisam de atenção
-
-```dataview
-TABLE type, subtype, work_status, canon_status
-FROM ""
-WHERE requires_review = true
-SORT file.mtime DESC
-```
-
-**Campos exibidos:**
-- `type` - Tipo da nota
-- `subtype` - Subtipo (se aplicável)
-- `work_status` - Estado editorial
-- `canon_status` - Estado canônico
-
-### Personagens por Status Vital
-
-**Uso:** Para filtrar personagens por estado vital
-
-```dataview
-TABLE thumbnail, role, location
-FROM "Characters"
-WHERE type = "character" AND life_status = "Morto"
-SORT file.name ASC
-```
-
-**Campos exibidos:**
-- `thumbnail` - Imagem miniatura
-- `role` - Papel do personagem
-- `location` - Localização
-
-### Personagens por Subtipo
-
-**Uso:** Para listar personagens de um subtipo específico
-
-```dataview
-TABLE thumbnail, role, life_status, location
-FROM "Characters"
-WHERE type = "character" AND subtype = "antagonist"
-SORT file.name ASC
-```
-
-**Campos exibidos:**
-- `thumbnail` - Imagem miniatura
-- `role` - Papel do personagem
-- `life_status` - Estado vital
-- `location` - Localização
-
-## Aparições em Personagens
-
-**Uso:** Em notas de personagem para listar capítulos onde aparece
-
-```dataview
-LIST
-FROM "EARTHROPO"
-WHERE contains(this.chapters, file.name)
-SORT file.name ASC
-```
-
-**Nota:** Esta consulta deve ser incluída em todas as notas de personagem com o campo `chapters` preenchido.
-
-## Cards Visuais
-
-Omnisvera pode usar Data Cards para criar cards visuais, similar a Disgraceland. Isso requer o plugin Data Cards.
-
-### Exemplo de Cards de Territórios
-
-```dataview
-TABLE cover, leader, population
-FROM "Territories"
-WHERE type = "territory"
-SORT file.name ASC
-
-// Settings
-preset: portrait
-columns: 3
-imageProperty: cover
-cardSpacing: 4
-```
-
-### Exemplo de Cards de Facções
-
-```dataview
-TABLE thumbnail, location, status
-FROM "Factions"
-WHERE type = "faction"
-SORT file.name ASC
-
-// Settings
-preset: compact
-columns: 4
-imageProperty: thumbnail
-showImageOnHover: true
-cardSpacing: 4
-```
-
-## Implementação Futura
-
-### Fase 1: Dataview Básico
-
-- Implementar consultas Dataview em personagens
-- Implementar consultas Dataview em facções
-- Implementar consultas Dataview em capítulos
-- Criar Índice de Personagens
-- Criar Índice de Facções
-- Criar Índice de Capítulos
-
-### Fase 2: Home Dashboard
-
-- Criar Home.md com cards de territórios
-- Adicionar lista de últimos personagens modificados
-- Adicionar notícias da campanha
-- Adicionar links para dashboards específicos
-
-### Fase 3: Painel do Mestre
-
-- Criar Painel do Mestre
-- Implementar consulta de notas pendentes
-- Implementar consulta de personagens Draft
-- Adicionar links rápidos para ferramentas
-
-### Fase 4: Data Cards (Opcional)
-
-- Instalar plugin Data Cards
-- Implementar cards visuais de territórios
-- Implementar cards visuais de facções
-- Implementar cards visuais de capítulos
-
-## Boas Práticas
-
-1. **Use propriedades do frontmatter** - Dataview deve ler de propriedades, não de tags
-2. **Seja consistente com nomes de campos** - Use sempre os mesmos nomes definidos no schema
-3. **Filtre por type** - Sempre inclua `WHERE type = "character"` em consultas de personagens
-4. **Ordene resultados** - Use `SORT file.name ASC` para consistência
-5. **Limite resultados quando necessário** - Use `LIMIT` para evitar listas muito longas
-6. **Use wikilinks em propriedades** - Facilita navegação bidirecional
-7. **Documente consultas complexas** - Adicione comentários explicando consultas não triviais
-
-## Referência Disgraceland
-
-O sistema de dashboards de Disgraceland foi usado como referência para:
-
-- Estrutura de Home.md
-- Consultas Dataview para personagens por capítulo
-- Consultas Dataview para membros por facção
-- Uso de Data Cards para visualização
-- Padrão de thumbnails em tabelas
-
-Omnisvera adapta esses elementos com schema mais limpo e focado em fantasia medieval.
-
-## Documentos Relacionados
-
-- `Workflow/OMNISVERA_NOTE_STANDARD.md` - Padrão geral de notas
-- `Workflow/OMNISVERA_FRONTMATTER_SCHEMA.md` - Esquema de frontmatter
-- `Workflow/OMNISVERA_MEDIA_STANDARD.md` - Padrão de mídia
-- `Workflow/OMNISVERA_CHARACTER_TEMPLATE_GUIDE.md` - Guia de templates
+- Não exibir relatórios de legado na Home dos jogadores.
+- Não tratar documentação histórica como dashboard operacional.
+- Não depender de campos ausentes em massa.
+- Não remover `thumbnail`, `cover`, `status`, `chapters` ou `tags`.
+- Não renomear pastas sem atualizar Dataview, DataCards, links e plugins.
