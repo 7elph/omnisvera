@@ -5,8 +5,12 @@ NoteStatus: New
 leader:
 state: Ativa
 location:
+thumbnail: zz_media/conclave-dos-errantes.png
+cover: zz_media/conclave-dos-errantes.png
 tags:
   - faction
+  - faccao
+  - conclave-dos-errantes
   - adventurer
   - explorers
 ---

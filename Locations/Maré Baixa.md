@@ -7,7 +7,8 @@ territory: "[[Nimalia]]"
 location: "[[Nimalis]]"
 district: Sul da capital do Reino de Nimalia
 info: Favela portuária no extremo sul da capital do Reino de Nimalia, feita de passarelas, barracos, lanternas, contrabando, pequenos ofícios e sobrevivência.
-cover: zz_media/gutt.png
+thumbnail: zz_media/mare-baixa.png
+cover: zz_media/mare-baixa.png
 tags:
   - Category/Location
   - location

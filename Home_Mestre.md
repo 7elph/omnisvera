@@ -12,7 +12,7 @@ gm_secret: true
 ---
 
 <div style="text-align: center;">
-  <img src="omnisvera.png" width="1300px">
+  <img src="zz_media/omnisvera.PNG" width="1300px">
 </div>
 
 <br>
@@ -47,6 +47,8 @@ Nimalia é o primeiro horizonte das **Crônicas de Earthropo**: um ponto de part
 > [!world]- UM PRIMEIRO OLHAR SOBRE EARTHROPO
 > ```datacards
 > TABLE cover FROM #home
+> WHERE !contains(file.path, "Workflow/")
+> AND !contains(file.path, "Templates/")
 > SORT file.name asc
 >
 > // Settings
@@ -67,6 +69,8 @@ Nimalia é o primeiro horizonte das **Crônicas de Earthropo**: um ponto de part
 > **CRÔNICAS DISPONÍVEIS:**
 > ```datacards
 > TABLE cover, date, description FROM #story AND #earthropo
+> WHERE !contains(file.path, "Workflow/")
+> AND !contains(file.path, "Templates/")
 > SORT file.ctime desc
 > LIMIT 3
 >
@@ -109,6 +113,8 @@ Nimalia é o primeiro horizonte das **Crônicas de Earthropo**: um ponto de part
 > ```datacards
 > TABLE cover, region, leader, population FROM #territorio
 > WHERE NoteStatus != "Placeholder"
+> AND !contains(file.path, "Workflow/")
+> AND !contains(file.path, "Templates/")
 > SORT name DESC
 >
 > // Settings
@@ -122,6 +128,8 @@ Nimalia é o primeiro horizonte das **Crônicas de Earthropo**: um ponto de part
 > ```datacards
 > TABLE cover, territory, info FROM #location
 > WHERE NoteStatus != "Placeholder"
+> AND !contains(file.path, "Workflow/")
+> AND !contains(file.path, "Templates/")
 > SORT rating ASC
 >
 > // Settings
@@ -134,6 +142,8 @@ Nimalia é o primeiro horizonte das **Crônicas de Earthropo**: um ponto de part
 > [!note]- RAÇAS
 > ```datacards
 > TABLE cover, status FROM #race
+> WHERE !contains(file.path, "Workflow/")
+> AND !contains(file.path, "Templates/")
 > SORT name ASC
 >
 > // Settings
@@ -178,6 +188,8 @@ FROM "/"
 WHERE file.mtime >= date(today) - dur(30 days)
 AND file.name != this.file.name
 AND !contains(file.path, "zz_media")
+AND !contains(file.path, "Workflow/")
+AND !contains(file.path, "Templates/")
 AND !contains(file.path, "z_Assets")
 AND !contains(file.path, "Inline Scripts")
 AND !contains(file.path, "z_Templates")

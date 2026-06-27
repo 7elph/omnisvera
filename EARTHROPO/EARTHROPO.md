@@ -45,6 +45,8 @@ tags:
 > [!world]+ Capítulos
 > ```datacards
 > TABLE cover, date, description FROM #chapter
+> WHERE !contains(file.path, "Workflow/")
+> AND !contains(file.path, "Templates/")
 > SORT file.name ASC
 >
 > // Settings
@@ -67,6 +69,6 @@ tags:
 ## Notas de Cânone
 
 - O nome **Eryndor** não faz parte do cânone ativo.
-- Materiais antigos de Disgraceland/Tribucia devem ser tratados como rascunho legado até serem convertidos para Omnisvera.
+- Materiais históricos e rascunhos de template não fazem parte do cânone ativo até serem convertidos explicitamente para Omnisvera.
 - Earthropo não é o universo nem o mundo inteiro: é o continente principal da campanha.
 - Nimalia é um reino de Earthropo, não o nome de sua capital.

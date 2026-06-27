@@ -5,6 +5,8 @@ NoteIcon: religion
 NoteStatus: Draft
 status: Em desenvolvimento
 info: Fé organizada associada ao simbolismo das chamas.
+thumbnail: zz_media/igreja-das-chamas.png
+cover: zz_media/igreja-das-chamas.png
 tags:
   - religiao
   - faith

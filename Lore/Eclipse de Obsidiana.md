@@ -5,7 +5,8 @@ tags:
   - lore
   - history
   - cataclysm
-cover: zz_media/w.png
+thumbnail: zz_media/eclipse-obsidiana.png
+cover: zz_media/eclipse-obsidiana.png
 status: Historical
 info: O evento que engoliu metade do continente ha 300 anos. Marca o inicio da era atual.
 ---
@@ -15,7 +16,7 @@ info: O evento que engoliu metade do continente ha 300 anos. Marca o inicio da e
 <h2>Overview</h2>
 
 > [!NOTE|clean no-i right]+ ‎ECLIPSE DE OBSIDIANA
-> ![[w.png|400]]
+> ![[eclipse-obsidiana.png|400]]
 
 Ha trezentos anos, o sol foi engolido pela escuridao por sete dias e sete noites. Quando a luz retornou, metade do continente de Earthropo havia desaparecido, substituido pelo Veu Cinzento.
 

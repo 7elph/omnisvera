@@ -35,7 +35,7 @@ Ponto de entrada para preparação, decisões de continuidade e material ainda e
 
 ## Material legado
 
-As notas rápidas originais de Disgraceland foram preservadas em [[Legacy - Disgraceland Quick Notes]] e não fazem parte do cânone ativo.
+Materiais históricos e arquivos de template ficam fora da navegação operacional do vault.
 
 ## Modificado recentemente
 
@@ -46,6 +46,8 @@ file.mtime AS "Modificada"
 FROM "/"
 WHERE file.name != this.file.name
 AND !contains(file.path, "zz_media")
+AND !contains(file.path, "Workflow/")
+AND !contains(file.path, "Templates/")
 AND !contains(file.path, ".obsidian")
 AND !contains(file.name, "Legacy -")
 SORT file.mtime DESC

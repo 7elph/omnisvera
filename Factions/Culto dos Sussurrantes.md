@@ -5,8 +5,11 @@ NoteStatus: New
 leader: O Arauto Sombrio (desconhecido)
 state: Ativo (clandestino)
 location: Fronteira do Véu
+thumbnail: zz_media/culto-dos-sussurrantes.png
+cover: zz_media/culto-dos-sussurrantes.png
 tags:
   - faction
+  - faccao
   - cult
   - antagonist
   - veil

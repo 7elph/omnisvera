@@ -5,6 +5,8 @@ NoteIcon: religion
 NoteStatus: Draft
 status: Em desenvolvimento
 info: Tradição espiritual ligada a viagens, ciclos e reencarnação.
+thumbnail: zz_media/caminho-dos-errantes.png
+cover: zz_media/caminho-dos-errantes.png
 tags:
   - religiao
   - faith

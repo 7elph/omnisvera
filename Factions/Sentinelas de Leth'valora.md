@@ -5,6 +5,8 @@ NoteStatus: New
 leader:
 state: Situação desconhecida após a destruição da vila
 location: "[[Leth'valora]]"
+thumbnail: "zz_media/sentinelas-de-leth'valora.png"
+cover: "zz_media/sentinelas-de-leth'valora.png"
 tags:
   - faction
   - faccao

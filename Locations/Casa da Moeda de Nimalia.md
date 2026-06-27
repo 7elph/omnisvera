@@ -6,6 +6,8 @@ status: Cânone de trabalho
 territory: "[[Nimalia]]"
 district: "[[Nimalis]]"
 info: Instituição responsável pela cunhagem das moedas oficiais de Nimalia.
+thumbnail: zz_media/casa-da-moeda-exterior.png
+cover: zz_media/casa-da-moeda-exterior.png
 tags:
   - Category/Location
   - location

@@ -4,6 +4,7 @@ NoteIcon: location
 NoteStatus: Placeholder
 status: Localização em aberto
 territory: Earthropo
+thumbnail: zz_media/fortaleza-de-gharok.png
 cover: zz_media/fortaleza-de-gharok.png   
 info: Antiga sede do Clã Sanguinallis e origem de Raziel.
 tags:

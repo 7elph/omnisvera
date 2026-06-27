@@ -4,6 +4,8 @@ NoteIcon: settlement
 NoteStatus: Active
 status: Nome em aberto
 territory: "[[Nimalia]]"
+thumbnail: zz_media/mapa-de-nimalis.png
+cover: zz_media/mapa-de-nimalis.png
 tags:
   - Category/Location
   - location

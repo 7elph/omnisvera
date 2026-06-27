@@ -54,6 +54,7 @@ SORT file.name ASC
 TABLE cover, territory, info
 FROM #location
 WHERE (visibility = "Jogadores" OR visibility = "Público")
+AND !contains(file.path, "Workflow/")
 AND gm_secret != true
 AND spoiler_level != "medium"
 AND spoiler_level != "heavy"
@@ -66,6 +67,7 @@ SORT file.name ASC
 TABLE thumbnail, status, leader, territory
 FROM #faction
 WHERE (visibility = "Jogadores" OR visibility = "Público")
+AND !contains(file.path, "Workflow/")
 AND gm_secret != true
 AND spoiler_level != "medium"
 AND spoiler_level != "heavy"
@@ -76,14 +78,15 @@ SORT file.name ASC
 
 Handouts e encontros não fazem parte da estrutura operacional desta etapa.
 
-Conteúdo público deve aparecer nas seções de personagens, locais, facções e sessões jogadas quando `visibility` permitir.
+Conteúdo público deve aparecer nas seções de personagens, locais, facções e crônicas jogadas quando `visibility` permitir.
 
-## Sessões jogadas
+## Crônicas jogadas
 
 ```dataview
 TABLE date, description
 FROM #story
 WHERE (visibility = "Jogadores" OR visibility = "Público")
+AND !contains(file.path, "Workflow/")
 AND gm_secret != true
 AND spoiler_level != "medium"
 AND spoiler_level != "heavy"

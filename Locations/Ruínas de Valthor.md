@@ -5,6 +5,8 @@ NoteStatus: Draft
 status: Ruínas
 territory: Earthropo
 region: Sudeste de Earthropo
+thumbnail: zz_media/ruinas-de-valthor.png
+cover: zz_media/ruinas-de-valthor.png
 tags:
   - Category/Location
   - location

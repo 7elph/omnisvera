@@ -2,6 +2,8 @@
 obsidianUIMode: preview
 NoteIcon: items
 NoteStatus: Active
+thumbnail: zz_media/adagas-de-espectro-fantasma.png
+cover: zz_media/adagas-de-espectro-fantasma.png
 status: Ativo
 item: Relíquia
 tags:

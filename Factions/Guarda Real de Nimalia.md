@@ -8,10 +8,12 @@ location: "[[Nimalia]]"
 faction: "[[Guarda Real de Nimalia]]"
 tags:
   - faction
+  - faccao
   - military
   - legalista
   - army
-thumbnail: zz_media/t7.png
+thumbnail: zz_media/guarda-real-nimalia.png
+cover: zz_media/guarda-real-nimalia.png
 ---
 
 # GUARDA REAL DE NIMALIA
@@ -33,7 +35,7 @@ cardSpacing: 4
 ```
 
 > [!NOTE|clean no-i right]+ Guarda Real de Nimalia
-> ![[t7.png|400]]
+> ![[guarda-real-nimalia.png|400]]
 
 **Group:** [[Guarda Real de Nimalia]]  
 **Home Location:** [[Nimalia|Nimalia]]  

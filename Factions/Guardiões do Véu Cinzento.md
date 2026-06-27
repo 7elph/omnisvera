@@ -5,8 +5,12 @@ NoteStatus: Draft
 leader:
 state: Desaparecida
 location:
+thumbnail: zz_media/os-guardioes-do-veu-cinzento.png
+cover: zz_media/os-guardioes-do-veu-cinzento.png
 tags:
   - faction
+  - faccao
+  - guardioes-do-veu-cinzento
   - order
   - veil
 ---

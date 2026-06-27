@@ -12,8 +12,8 @@ leader: "[[Augustus Terra Decimus]]"
 state: Ativa
 location: Nimalia
 territory: "[[Reino de Nimalia]]"
-thumbnail:
-cover:
+thumbnail: zz_media/coroa-de-nimalia.png
+cover: zz_media/coroa-de-nimalia.png
 chapters: []
 tags:
   - faction

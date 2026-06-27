@@ -5,6 +5,8 @@ NoteIcon: religion
 NoteStatus: Draft
 status: Em desenvolvimento
 info: Conjunto de crenças anteriores ao Eclipse de Obsidiana.
+thumbnail: zz_media/fe-dos-antigos.png
+cover: zz_media/fe-dos-antigos.png
 tags:
   - religiao
   - faith

@@ -14,7 +14,7 @@ tags:
 # O Medalhão dos Guardiões do Véu Cinzento
 
 > [!NOTE|clean no-i right]+ O Medalhão
-> ![[med.png|300]]
+> ![[med.PNG|300]]
 
 *"Nem tudo que é verdade deve ser dito. Nem tudo que é oculto é mentira."*
 

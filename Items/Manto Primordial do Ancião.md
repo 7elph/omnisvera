@@ -2,6 +2,8 @@
 obsidianUIMode: preview
 NoteIcon: items
 NoteStatus: Active
+thumbnail: zz_media/manto-primordial.png
+cover: zz_media/manto-primordial.png
 status: Ativo
 item: Relíquia
 tags:

@@ -3,7 +3,8 @@ NoteIcon: religion
 tags:
   - home
   - religiao
-cover: zz_media/t8.png
+thumbnail: zz_media/fe-dos-antigos.png
+cover: zz_media/fe-dos-antigos.png
 ---
 
 # RELIGIÕES DE EARTHROPO
@@ -11,7 +12,7 @@ cover: zz_media/t8.png
 <h2>Visão Geral</h2>
 
 > [!NOTE|clean no-i right]+ ‎RELIGIOES
-> ![[t8.png|400]]
+> ![[fe-dos-antigos.png|400]]
 
 As religiões de Earthropo ainda estão em desenvolvimento. As notas abaixo organizam conceitos existentes sem tratá-los como doutrinas completamente confirmadas.
 
