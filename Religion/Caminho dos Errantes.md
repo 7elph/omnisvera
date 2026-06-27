@@ -1,12 +1,12 @@
 ---
 cssclasses:
-  - religion
+  - religiao
 NoteIcon: religion
 NoteStatus: Draft
 status: Em desenvolvimento
 info: Tradição espiritual ligada a viagens, ciclos e reencarnação.
 tags:
-  - religion
+  - religiao
   - faith
   - travelers
   - earthropo

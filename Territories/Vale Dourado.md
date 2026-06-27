@@ -4,7 +4,7 @@ NoteStatus: Placeholder
 status: Sem cânone definido
 tags:
   - Category/Settlement
-  - territory
+  - territorio
   - placeholder
 ---
 

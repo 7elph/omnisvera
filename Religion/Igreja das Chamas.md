@@ -1,12 +1,12 @@
 ---
 cssclasses:
-  - religion
+  - religiao
 NoteIcon: religion
 NoteStatus: Draft
 status: Em desenvolvimento
 info: Fé organizada associada ao simbolismo das chamas.
 tags:
-  - religion
+  - religiao
   - faith
   - earthropo
   - draft

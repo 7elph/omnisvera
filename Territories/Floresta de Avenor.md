@@ -2,7 +2,7 @@
 NoteIcon: settlement  
 tags:
   - Category/Settlement
-  - territory
+  - territorio
   - earthropo
   - forest  
 cover: zz_media/avenor.png  

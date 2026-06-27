@@ -3,7 +3,7 @@ NoteIcon: settlement
 NoteStatus: Placeholder
 status: Em desenvolvimento
 tags:
-  - territory
+  - territorio
   - earthropo
   - plains
 ---

@@ -1,12 +1,12 @@
 ---
 cssclasses:
-  - religion
+  - religiao
 NoteIcon: religion
 NoteStatus: Draft
 status: Em desenvolvimento
 info: Conjunto de crenças anteriores ao Eclipse de Obsidiana.
 tags:
-  - religion
+  - religiao
   - faith
   - creators
   - earthropo

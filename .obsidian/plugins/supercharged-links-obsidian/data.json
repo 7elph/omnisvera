@@ -13,7 +13,7 @@
     {
       "type": "tag",
       "name": "",
-      "value": "steeltown",
+      "value": "nimalia",
       "matchCaseSensitive": false,
       "match": "exact",
       "uid": "ce91-5784",
@@ -25,7 +25,7 @@
     {
       "type": "tag",
       "name": "",
-      "value": "individual",
+      "value": "personagem",
       "matchCaseSensitive": false,
       "match": "exact",
       "uid": "f884-7b00",
@@ -49,7 +49,7 @@
     {
       "type": "tag",
       "name": "",
-      "value": "religion",
+      "value": "religiao",
       "matchCaseSensitive": false,
       "match": "exact",
       "uid": "7e5f-283b",
@@ -61,7 +61,7 @@
     {
       "type": "tag",
       "name": "",
-      "value": "territory",
+      "value": "territorio",
       "matchCaseSensitive": false,
       "match": "exact",
       "uid": "3623-52e1",
@@ -73,7 +73,7 @@
     {
       "type": "tag",
       "name": "",
-      "value": "loyalist",
+      "value": "coroa-de-nimalia",
       "matchCaseSensitive": false,
       "match": "exact",
       "uid": "4740-17da",
@@ -85,7 +85,7 @@
     {
       "type": "tag",
       "name": "",
-      "value": "widow",
+      "value": "guardioes-do-veu-cinzento",
       "matchCaseSensitive": false,
       "match": "exact",
       "uid": "7457-fe20",
@@ -97,7 +97,7 @@
     {
       "type": "tag",
       "name": "",
-      "value": "pirate",
+      "value": "conclave-dos-errantes",
       "matchCaseSensitive": false,
       "match": "exact",
       "uid": "15ae-9b1f",
@@ -109,7 +109,7 @@
     {
       "type": "tag",
       "name": "",
-      "value": "rancher",
+      "value": "guilda-dos-mercadores",
       "matchCaseSensitive": false,
       "match": "exact",
       "uid": "7eac-9a5f",
@@ -145,7 +145,7 @@
     {
       "type": "tag",
       "name": "",
-      "value": "water",
+      "value": "mar-da-neblina",
       "matchCaseSensitive": false,
       "match": "exact",
       "uid": "287d-312f",

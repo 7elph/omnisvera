@@ -2,7 +2,7 @@
 NoteIcon: religion
 tags:
   - home
-  - religion
+  - religiao
 cover: zz_media/t8.png
 ---
 
