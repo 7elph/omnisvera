@@ -90,7 +90,7 @@ SORT file.name ASC
 
 ```dataview
 TABLE date, description
-FROM #session OR #story
+FROM #story
 WHERE (visibility = "Jogadores" OR visibility = "Público" OR player_known = true)
 AND gm_secret != true
 AND spoiler_level != "medium"

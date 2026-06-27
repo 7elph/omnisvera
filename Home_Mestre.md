@@ -108,7 +108,7 @@ Nimalia é o primeiro horizonte das **Crônicas de Earthropo**: um ponto de part
 
 > [!note]+ TERRITÓRIOS
 > ```datacards
-> TABLE cover, region, leader, population FROM #territory
+> TABLE cover, region, leader, population FROM #territorio
 > WHERE NoteStatus != "Placeholder"
 > SORT name DESC
 >
@@ -159,11 +159,12 @@ Nimalia é o primeiro horizonte das **Crônicas de Earthropo**: um ponto de part
 ## Ferramentas e relatórios do mestre
 
 > [!note]+ SISTEMA E MIGRAÇÃO
+> - [[Workflow/OMNISVERA_SYSTEM_TAXONOMY|Taxonomia Técnica do Omnisvera]]
+> - [[Workflow/_audit/Disgraceland_Removal/DISGRACELAND_OPERATIONAL_REMOVAL_PLAN|Plano de Remoção Operacional do Legado]]
+> - [[Workflow/_audit/Plugin_Migration/PLUGIN_TAG_MIGRATION_AUDIT|Auditoria de Migração de Tags]]
 > - [[Workflow/COMPATIBILITY_LAYER/COMPATIBILITY_LAYER_INDEX|Camada de Compatibilidade]]
 > - [[Workflow/_audit/Decision_Packet/SAGE_DECISION_PACKET|Pacote de Decisões do Sage]]
-> - [[Workflow/_audit/Comparison/TRIPLE_COMPARISON_INDEX|Comparação Disgraceland / RPG / Omnisvera]]
 > - [[Workflow/_audit/Omnisvera/OMNISVERA_OBSIDIAN_DEPENDENCY_MAP|Auditoria Técnica do Omnisvera]]
-> - [[Workflow/Legacy/Disgraceland/_audit/DISGRACELAND_OBSIDIAN_DEPENDENCY_MAP|Auditoria Técnica do Disgraceland]]
 
 <br>
 
