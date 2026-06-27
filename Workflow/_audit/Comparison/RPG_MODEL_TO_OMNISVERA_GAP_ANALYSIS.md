@@ -1,3 +1,7 @@
+﻿> [!WARNING]
+> Documento histórico/anterior à taxonomia oficial atual do Sage.
+> Não usar como fonte principal para novas migrações.
+> Fonte atual: [[OMNISVERA_SYSTEM_TAXONOMY]] e [[OMNISVERA_SYSTEM_TAXONOMY_DECISIONS]].
 # RPG Model to Omnisvera Gap Analysis
 
 Comparação entre o modelo operacional RPG desejado e o Omnisvera atual. Esta análise verifica capacidade técnica, não conteúdo narrativo.

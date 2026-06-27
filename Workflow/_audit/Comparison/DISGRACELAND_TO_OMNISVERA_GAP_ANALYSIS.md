@@ -1,3 +1,7 @@
+﻿> [!WARNING]
+> Documento histórico/anterior à taxonomia oficial atual do Sage.
+> Não usar como fonte principal para novas migrações.
+> Fonte atual: [[OMNISVERA_SYSTEM_TAXONOMY]] e [[OMNISVERA_SYSTEM_TAXONOMY_DECISIONS]].
 # Disgraceland to Omnisvera Gap Analysis
 
 Comparação técnica entre o vault original de Disgraceland e o estado atual do Omnisvera. Esta análise não julga lore e não aplica correções.

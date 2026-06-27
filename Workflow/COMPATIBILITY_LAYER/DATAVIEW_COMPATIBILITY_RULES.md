@@ -1,3 +1,7 @@
+﻿> [!WARNING]
+> Documento histórico/anterior à taxonomia oficial atual do Sage.
+> Não usar como fonte principal para novas migrações.
+> Fonte atual: [[OMNISVERA_SYSTEM_TAXONOMY]] e [[OMNISVERA_SYSTEM_TAXONOMY_DECISIONS]].
 # Dataview Compatibility Rules
 
 Estas regras definem como criar ou alterar consultas Dataview sem quebrar compatibilidade com Disgraceland e com o Omnisvera atual.

@@ -1,3 +1,7 @@
+﻿> [!WARNING]
+> Documento histórico/anterior à taxonomia oficial atual do Sage.
+> Não usar como fonte principal para novas migrações.
+> Fonte atual: [[OMNISVERA_SYSTEM_TAXONOMY]] e [[OMNISVERA_SYSTEM_TAXONOMY_DECISIONS]].
 # Tag Compatibility Map
 
 Tags antigas devem ser preservadas como ponte técnica. Elas podem alimentar Supercharged Links, cor de links, DataCards, Dataview e agrupamento visual.

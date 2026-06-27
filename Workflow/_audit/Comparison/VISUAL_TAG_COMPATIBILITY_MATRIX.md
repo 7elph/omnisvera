@@ -1,3 +1,7 @@
+﻿> [!WARNING]
+> Documento histórico/anterior à taxonomia oficial atual do Sage.
+> Não usar como fonte principal para novas migrações.
+> Fonte atual: [[OMNISVERA_SYSTEM_TAXONOMY]] e [[OMNISVERA_SYSTEM_TAXONOMY_DECISIONS]].
 # Visual Tag Compatibility Matrix
 
 Comparação das tags visuais herdadas de Disgraceland, possíveis tags RPG futuras e estado observado no Omnisvera atual.
