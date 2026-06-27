@@ -159,7 +159,6 @@ Nimalia é o primeiro horizonte das **Crônicas de Earthropo**: um ponto de part
 
 > [!note]+ SISTEMA E MIGRAÇÃO
 > - [[Workflow/OMNISVERA_SYSTEM_TAXONOMY|Taxonomia Técnica do Omnisvera]]
-> - [[Workflow/_audit/Disgraceland_Removal/DISGRACELAND_OPERATIONAL_REMOVAL_PLAN|Plano de Remoção Operacional do Legado]]
 > - [[Workflow/_audit/Plugin_Migration/PLUGIN_TAG_MIGRATION_AUDIT|Auditoria de Migração de Tags]]
 > - [[Workflow/COMPATIBILITY_LAYER/COMPATIBILITY_LAYER_INDEX|Camada de Compatibilidade]]
 > - [[Workflow/_audit/Decision_Packet/SAGE_DECISION_PACKET|Pacote de Decisões do Sage]]
