@@ -23,6 +23,7 @@ Todas as imagens devem ser organizadas em `zz_media/` com subpastas por categori
 ```
 zz_media/
 ├── characters/      # Imagens de personagens
+├── classes/         # Imagens de classes
 ├── locations/       # Imagens de locais
 ├── factions/        # Imagens de facções
 ├── items/           # Imagens de itens
@@ -30,6 +31,47 @@ zz_media/
 ├── maps/            # Mapas
 └── misc/            # Imagens diversas (logos, símbolos, etc.)
 ```
+
+## Imagens de Classe
+
+### Padrão de Nomes
+
+Para classes, use este padrão:
+
+```
+zz_media/classes/nome.png
+zz_media/classes/th_nome.png
+zz_media/covers/nome_banner.png
+```
+
+**Exemplos:**
+
+- `zz_media/classes/guerreiro.png` - Imagem principal
+- `zz_media/classes/th_guerreiro.png` - Thumbnail
+- `zz_media/covers/guerreiro_banner.png` - Banner
+
+### Tipos de Imagem
+
+#### Thumbnail
+
+- **Propósito:** Imagem miniatura para cards e dashboards
+- **Tamanho:** Recomendado 60-100px de largura
+- **Uso:** Campo `thumbnail` no frontmatter
+- **Exemplo:** `thumbnail: zz_media/classes/th_guerreiro.png`
+
+#### Portrait
+
+- **Propósito:** Imagem principal da classe para corpo da nota
+- **Tamanho:** Recomendado 400px de largura
+- **Uso:** Campo `portrait` no frontmatter e callout no corpo
+- **Exemplo:** `portrait: zz_media/classes/guerreiro.png`
+
+#### Cover
+
+- **Propósito:** Imagem de banner ou capa
+- **Tamanho:** Variável, dependendo do design
+- **Uso:** Campo `cover` no frontmatter
+- **Exemplo:** `cover: zz_media/covers/guerreiro_banner.png`
 
 ## Imagens de Personagem
 
