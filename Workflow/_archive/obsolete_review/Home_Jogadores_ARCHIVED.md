@@ -1,7 +1,3 @@
-> [!IMPORTANT]
-> Este arquivo foi arquivado porque a Home dos Jogadores agora é `[[Home]]`.
-> Mantido apenas para histórico da migração.
-
 ---
 obsidianUIMode: preview
 banner: "[[zz_media/avenor.png]]"
@@ -14,7 +10,13 @@ visibility: Público
 spoiler_level: none
 player_known: true
 gm_secret: false
+archived: true
+archive_reason: "Home dos Jogadores consolidada em Home.md"
 ---
+
+> [!IMPORTANT]
+> Este arquivo foi arquivado porque a Home dos Jogadores agora é [[Home]].
+> Mantido apenas para histórico da migração.
 
 # 🜂 Omnisvera — Portal dos Jogadores
 

@@ -12,7 +12,7 @@ player_known: true
 gm_secret: false
 ---
 
-# 🜂 Omnisvera — Home dos Jogadores
+# Omnisvera — Home dos Jogadores
 
 > [!info]+ CONTEÚDO LIBERADO
 > Esta Home mostra apenas conteúdo público, conhecido pelos jogadores ou explicitamente liberado.
