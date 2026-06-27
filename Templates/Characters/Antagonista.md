@@ -1,12 +1,13 @@
 ---
 type: character
-subtype: antagonist
 NoteIcon: character
-work_status: Em desenvolvimento
-canon_status: Draft
+status: Rascunho
 visibility: Mestre
+spoiler_level: heavy
+gm_secret: true
+revealed_in:
 created_by: Sage
-requires_review: true
+campaign_status: Em revisao
 
 name:
 epithet:
@@ -14,7 +15,6 @@ aliases: []
 
 race:
 class:
-life_status:
 role:
 
 origin:
@@ -24,20 +24,20 @@ faction: []
 faith: []
 
 thumbnail:
-portrait:
 cover:
 
 arcs: []
 chapters: []
 
 tags:
-  - character
+  - personagem
+  - antagonista
 ---
 
 # Nome — Epíteto
 
 > [!NOTE|clean no-i right]+ Retrato
-> ![[portrait|400]]
+> ![[thumbnail|400]]
 
 > [!WARNING] Estado canônico
 > Esta nota está em desenvolvimento e depende de confirmação do Sage.

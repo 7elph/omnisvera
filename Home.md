@@ -8,7 +8,6 @@ content-start: 271
 banner-fade: -45
 visibility: Público
 spoiler_level: none
-player_known: true
 gm_secret: false
 ---
 
@@ -37,13 +36,12 @@ gm_secret: false
 TABLE
   thumbnail AS "Imagem",
   status,
-  life_status,
   location,
   territory,
   faction
 FROM "Characters"
 WHERE contains(tags, "player")
-AND (visibility = "Jogadores" OR visibility = "Público" OR player_known = true)
+AND (visibility = "Jogadores" OR visibility = "Público")
 AND gm_secret != true
 AND spoiler_level != "medium"
 AND spoiler_level != "heavy"
@@ -55,7 +53,7 @@ SORT file.name ASC
 ```dataview
 TABLE cover, territory, info
 FROM #location
-WHERE (visibility = "Jogadores" OR visibility = "Público" OR player_known = true)
+WHERE (visibility = "Jogadores" OR visibility = "Público")
 AND gm_secret != true
 AND spoiler_level != "medium"
 AND spoiler_level != "heavy"
@@ -67,31 +65,25 @@ SORT file.name ASC
 ```dataview
 TABLE thumbnail, status, leader, territory
 FROM #faction
-WHERE (visibility = "Jogadores" OR visibility = "Público" OR player_known = true)
+WHERE (visibility = "Jogadores" OR visibility = "Público")
 AND gm_secret != true
 AND spoiler_level != "medium"
 AND spoiler_level != "heavy"
 SORT file.name ASC
 ```
 
-## Handouts liberados
+## Conteúdos liberados
 
-```dataview
-TABLE thumbnail, handout_image, description, revealed_in
-FROM #handout
-WHERE (visibility = "Jogadores" OR visibility = "Público" OR player_known = true)
-AND gm_secret != true
-AND spoiler_level != "medium"
-AND spoiler_level != "heavy"
-SORT file.name ASC
-```
+Handouts e encontros não fazem parte da estrutura operacional desta etapa.
+
+Conteúdo público deve aparecer nas seções de personagens, locais, facções e sessões jogadas quando `visibility` permitir.
 
 ## Sessões jogadas
 
 ```dataview
 TABLE date, description
 FROM #story
-WHERE (visibility = "Jogadores" OR visibility = "Público" OR player_known = true)
+WHERE (visibility = "Jogadores" OR visibility = "Público")
 AND gm_secret != true
 AND spoiler_level != "medium"
 AND spoiler_level != "heavy"
@@ -104,7 +96,7 @@ Este painel é conservador por padrão. Se algo que os jogadores já conhecem n�
 
 ```yaml
 visibility: Jogadores
-player_known: true
+visibility: Público
 gm_secret: false
 spoiler_level: none
 ```

@@ -1,21 +1,18 @@
 ---
 type: class
-subtype: base_class
-work_status: Em desenvolvimento
+status: Rascunho
 rules_status: Official
-campaign_status: Pending
-canon_status: Draft
+campaign_status: Em revisao
 visibility: Mestre
+spoiler_level: medium
+gm_secret: true
+revealed_in:
 created_by: Sage
-requires_review: true
 
 name:
 aliases: []
 
 system: Old Dragon 2E
-source:
-source_type: official
-
 class_group:
 primary_attribute:
 hit_die:
@@ -25,6 +22,7 @@ magic_type:
 
 role_in_party:
 narrative_role:
+danger_level:
 
 related_characters: []
 related_factions: []
@@ -33,11 +31,12 @@ related_lore: []
 related_races: []
 
 thumbnail:
-icon:
 cover:
+chapters: []
 
 tags:
-  - class
+  - classe
+  - old-dragon
 ---
 
 # Nome da Classe
@@ -49,13 +48,11 @@ tags:
 
 <!-- Resumo da classe em 2-3 parágrafos -->
 
-## Fonte e Estado da Regra
+## Estado da Regra
 
 | Campo | Informação |
 |---|---|
 | Sistema |  |
-| Fonte |  |
-| Tipo de fonte |  |
 | Estado da regra |  |
 | Disponibilidade na campanha |  |
 | Integração com cânone |  |
@@ -115,7 +112,7 @@ tags:
 ## Personagens desta Classe
 
 ```dataview
-TABLE thumbnail, race, life_status, location, faction
+TABLE thumbnail, race, status, location, faction
 FROM "Characters"
 WHERE class = this.file.link OR contains(classes, this.file.link)
 SORT file.name ASC
@@ -126,8 +123,8 @@ SORT file.name ASC
 <!-- Subclasses ou variantes (se existirem) -->
 
 ```dataview
-TABLE work_status, rules_status, campaign_status, canon_status
-FROM "Classes"
+TABLE rules_status, campaign_status, visibility, danger_level
+FROM "Rules/Classes"
 WHERE parent_class = this.file.link
 SORT file.name ASC
 ```

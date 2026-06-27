@@ -8,7 +8,6 @@ content-start: 271
 banner-fade: -45
 visibility: Mestre
 spoiler_level: heavy
-player_known: false
 gm_secret: true
 ---
 
@@ -146,7 +145,7 @@ Nimalia é o primeiro horizonte das **Crônicas de Earthropo**: um ponto de part
 
 > [!note]- CLASSES
 > ```datacards
-> TABLE cover, status FROM "Classes" AND #class
+> TABLE cover, status FROM "Rules/Classes" AND #classe
 > SORT name ASC
 >
 > // Settings

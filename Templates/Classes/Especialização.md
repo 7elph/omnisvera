@@ -1,13 +1,13 @@
 ---
 type: class
-subtype: specialization
-work_status: Em desenvolvimento
+status: Rascunho
 rules_status: Official
-campaign_status: Pending
-canon_status: Draft
+campaign_status: Em revisao
 visibility: Mestre
+spoiler_level: medium
+gm_secret: true
+revealed_in:
 created_by: Sage
-requires_review: true
 
 parent_class:
 
@@ -15,9 +15,6 @@ name:
 aliases: []
 
 system: Old Dragon 2E
-source:
-source_type: official
-
 class_group:
 primary_attribute:
 hit_die:
@@ -27,6 +24,7 @@ magic_type:
 
 role_in_party:
 narrative_role:
+danger_level:
 
 related_characters: []
 related_factions: []
@@ -35,12 +33,13 @@ related_lore: []
 related_races: []
 
 thumbnail:
-icon:
 cover:
+chapters: []
 
 tags:
-  - class
-  - specialization
+  - classe
+  - especializacao
+  - old-dragon
 ---
 
 # Nome da Especialização
@@ -56,13 +55,11 @@ tags:
 
 <!-- Classe-base da qual esta especialização deriva -->
 
-## Fonte e Estado da Regra
+## Estado da Regra
 
 | Campo | Informação |
 |---|---|
 | Sistema |  |
-| Fonte |  |
-| Tipo de fonte |  |
 | Estado da regra |  |
 | Disponibilidade na campanha |  |
 | Integração com cânone |  |
@@ -118,7 +115,7 @@ tags:
 ## Personagens Conhecidos
 
 ```dataview
-TABLE thumbnail, race, life_status, location, faction
+TABLE thumbnail, race, status, location, faction
 FROM "Characters"
 WHERE class = this.file.link OR contains(classes, this.file.link)
 SORT file.name ASC
