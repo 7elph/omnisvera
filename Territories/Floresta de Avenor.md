@@ -1,11 +1,19 @@
 ---
+obsidianUIMode: preview
 NoteIcon: settlement  
+type: territory
+visibility: Público
+spoiler_level: light
+gm_secret: false
+status: Ativa
+campaign_status: Em jogo
 tags:
   - Category/Settlement
   - territorio
   - earthropo
   - forest  
 cover: zz_media/avenor.png  
+thumbnail: zz_media/avenor.png
 Alignment: Neutral  
 Government: Nenhum  
 reputation: misteriosa  
@@ -24,6 +32,7 @@ exports:
 imports:
   - Ferramentas 
   - Suprimentos
+chapters: []
 
 ---
 

@@ -2,11 +2,18 @@
 obsidianUIMode: preview
 NoteIcon: items
 NoteStatus: Active
+type: item
+visibility: Jogadores
+spoiler_level: light
+gm_secret: false
+campaign_status: Em jogo
 thumbnail: zz_media/grisalma.png
 status: Ativo
 item: Artefato
+chapters: []
 tags:
   - item
+  - artefato
   - artifact
   - vezemir
 ---

@@ -2,6 +2,11 @@
 obsidianUIMode: preview
 NoteIcon: magicitem
 NoteStatus: Active
+type: character
+visibility: Jogadores
+spoiler_level: none
+gm_secret: false
+campaign_status: Ativo
 thumbnail: zz_media/th_vezemir.PNG
 status: Vivo
 location: "[[Floresta de Avenor]]"
@@ -14,15 +19,21 @@ alignment: Neutro
 role: player
 chapter:
   - 00 - O Bastardo de Ferro
+chapters:
+  - 00 - O Bastardo de Ferro
 tags:
   - Category/Character
   - player
+  - jogador
   - character
+  - personagem
   - chapter00
   - warrior
   - human
   - elf
   - guild
+  - conclave-dos-errantes
+  - sentinelas-de-lethvalora
 ---
 
 # VEZEMIR — O BASTARDO DE FERRO

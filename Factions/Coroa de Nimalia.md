@@ -2,11 +2,23 @@
 obsidianUIMode: preview
 NoteIcon: faction 
 NoteStatus: New
+type: faction
+visibility: Mestre
+spoiler_level: light
+gm_secret: false
+status: Ativa
+campaign_status: Ativa
 leader: "[[Augustus Terra Decimus]]"
 state: Ativa
 location: Nimalia
+territory: "[[Reino de Nimalia]]"
+thumbnail:
+cover:
+chapters: []
 tags:
   - faction
+  - faccao
+  - coroa-de-nimalia
   - monarchy
   - nobility
 ---
