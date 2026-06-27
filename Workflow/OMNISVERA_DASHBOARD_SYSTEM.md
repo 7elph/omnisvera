@@ -16,11 +16,11 @@ tags:
 > [!IMPORTANT]
 > Este arquivo é documentação técnica do sistema de dashboards do Omnisvera.
 > Ele não é uma Home operacional.
-> As Homes operacionais atuais são:
+> Existem somente duas Homes operacionais:
+> - [[Home]] — Home dos Jogadores e entrada do plugin Homepage.
 > - [[Home_Mestre]]
-> - [[Home_Jogadores]]
 >
-> O arquivo [[Home]] funciona como portal neutro e entrada do plugin Homepage.
+> `Home_Jogadores.md` foi arquivado e não é Home ativa.
 
 # Sistema de Dashboards — Omnisvera
 
@@ -36,14 +36,22 @@ Omnisvera usa Dataview para criar dashboards interativos que facilitam a navega�
 
 **Arquivo:** `Home.md`
 
-**Função:** Dashboard principal com visão geral do vault
+**Função:** Home dos Jogadores. Deve mostrar apenas conteúdo público, conhecido pelos jogadores ou explicitamente liberado.
 
 **Elementos:**
-- Cards de territórios
-- Cards de locais importantes
-- Últimos personagens modificados
-- Notícias ou atualizações da campanha
-- Links para dashboards específicos
+- Calendário e mapa liberados
+- Personagens dos jogadores
+- Locais conhecidos
+- Facções conhecidas
+- Handouts liberados
+- Sessões jogadas
+- Filtros contra `visibility: Mestre`, `gm_secret: true` e spoilers médios/pesados
+
+### Área do Mestre
+
+**Arquivo:** `Home_Mestre.md`
+
+**Função:** Home/área operacional do mestre. Pode conter preparação, spoilers, relatórios técnicos, Workflow, auditorias, camada de compatibilidade e links administrativos.
 
 **Exemplo de Dataview para últimos personagens:**
 

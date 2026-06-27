@@ -21,7 +21,7 @@ gm_secret: true
 > [!important]+ DASHBOARD DO MESTRE
 > Esta página pode conter preparação, spoilers, pendências, relatórios técnicos, NPCs secretos e links administrativos.
 >
-> Para uma visão conservadora e segura para jogadores, use [[Home_Jogadores]].
+> Para uma visão conservadora e segura para jogadores, use [[Home]].
 
 > [!cards|5]
 > **NIMALIA**

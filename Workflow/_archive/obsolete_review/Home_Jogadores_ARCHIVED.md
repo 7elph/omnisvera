@@ -1,3 +1,7 @@
+> [!IMPORTANT]
+> Este arquivo foi arquivado porque a Home dos Jogadores agora é `[[Home]]`.
+> Mantido apenas para histórico da migração.
+
 ---
 obsidianUIMode: preview
 banner: "[[zz_media/avenor.png]]"
