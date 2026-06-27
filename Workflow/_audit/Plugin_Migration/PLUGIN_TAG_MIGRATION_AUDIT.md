@@ -23,7 +23,7 @@ rg -n "#(loyalist|rancher|pirate|widow|third|murray|steeltown|water|individual|r
 
 | arquivo | classificação | tags/termos | ação |
 |---|---|---|---|
-| `.obsidian/plugins/supercharged-links-obsidian/data.json` | PLUGIN_CONFIG | `steeltown`, `individual`, `religion`, `territory`, `loyalist`, `widow`, `pirate`, `rancher`, `third`, `murray`, `water`, `story` | Migrar apenas tags aprovadas, preservar `third`, `murray`, `story`. |
+| `.obsidian/plugins/supercharged-links-obsidian/data.json` | PLUGIN_CONFIG | `steeltown`, `individual`, `religion`, `territory`, `loyalist`, `widow`, `pirate`, `rancher`, `third`, `murray`, `water`, `story` | Migrar tags aprovadas; `third` agora vira `sentinelas-de-lethvalora`, `murray` vira `nobreza-de-nimalia`, `story` permanece como `story`. |
 | `.obsidian/plugins/obsidian-style-settings/data.json` | PLUGIN_CONFIG | UIDs de Supercharged Links, não nomes de tags | Não alterar; cores/pesos seguem os UIDs. |
 | `.obsidian/snippets/supercharged-links-gen.css` | GENERATED_CSS | seletores por tags antigas | Atualizar controladamente se a config fonte for migrada. |
 | `.obsidian/snippets/omnisvera-profile.css` | CSS_SNIPPET | `region-steeltown` | Não alterar nesta etapa; precisa decisão CSS/regional. |
@@ -48,9 +48,9 @@ rg -n "#(loyalist|rancher|pirate|widow|third|murray|steeltown|water|individual|r
 | `religion` | `religiao` | sim | Decisão aprovada. |
 | `territory` | `territorio` | sim | Decisão aprovada. |
 | `lore` | `lore` | não precisa | Já compatível. |
-| `third` | pendente | não | Não aplicar `terceira-fileira`; precisa decisão Sage. |
-| `murray` | pendente | não | Precisa decisão entre `nobreza-de-nimalia` e `nobreza-de-nimalis`. |
-| `story` | pendente controlado | não | Não virar `sessions`; manter por enquanto. |
+| `third` | `sentinelas-de-lethvalora` | sim | Decisão Sage aprovada; reaproveita a facção existente. |
+| `murray` | `nobreza-de-nimalia` | sim | Decisão Sage aprovada; usar como ponte técnica para a nobreza do reino. |
+| `story` | `story` | sim, manter | Não virar `sessions`; manter como eixo de história/capítulo/campanha. |
 
 ## Risco por plugin/configuração
 
@@ -77,8 +77,6 @@ Pode executar nesta etapa:
 
 Não executar nesta etapa:
 
-- migrar `third`;
-- migrar `murray`;
 - renomear `story`;
 - alterar `omnisvera-profile.css`;
 - renomear pastas operacionais.

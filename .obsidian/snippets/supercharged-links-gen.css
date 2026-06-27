@@ -308,13 +308,13 @@ div[data-id="7eac-9a5f"] div.setting-item-description::after,
 }
 
 div[data-id="6e9a-b654"] div.setting-item-description,
-[data-link-tags*="third" i] {
+[data-link-tags*="sentinelas-de-lethvalora" i] {
     color: var(--6e9a-b654-color) !important;
     font-weight: var(--6e9a-b654-weight);
 }
 
 .c-6e9a-b654-use-background div[data-id="6e9a-b654"] div.setting-item-description,
-.c-6e9a-b654-use-background .data-link-text[data-link-tags*="third" i] {
+.c-6e9a-b654-use-background .data-link-text[data-link-tags*="sentinelas-de-lethvalora" i] {
     background-color: var(--6e9a-b654-background-color) !important;
     border-radius: 5px;
     padding-left: 2px;
@@ -323,23 +323,23 @@ div[data-id="6e9a-b654"] div.setting-item-description,
 }
 
 div[data-id="6e9a-b654"] div.setting-item-description::before,
-.data-link-icon[data-link-tags*="third" i]::before {
+.data-link-icon[data-link-tags*="sentinelas-de-lethvalora" i]::before {
     content: var(--6e9a-b654-before);
 }
 
 div[data-id="6e9a-b654"] div.setting-item-description::after,
-.data-link-icon-after[data-link-tags*="third" i]::after {
+.data-link-icon-after[data-link-tags*="sentinelas-de-lethvalora" i]::after {
     content: var(--6e9a-b654-after);
 }
 
 div[data-id="e2c5-b197"] div.setting-item-description,
-[data-link-tags*="murray" i] {
+[data-link-tags*="nobreza-de-nimalia" i] {
     color: var(--e2c5-b197-color) !important;
     font-weight: var(--e2c5-b197-weight);
 }
 
 .c-e2c5-b197-use-background div[data-id="e2c5-b197"] div.setting-item-description,
-.c-e2c5-b197-use-background .data-link-text[data-link-tags*="murray" i] {
+.c-e2c5-b197-use-background .data-link-text[data-link-tags*="nobreza-de-nimalia" i] {
     background-color: var(--e2c5-b197-background-color) !important;
     border-radius: 5px;
     padding-left: 2px;
@@ -348,12 +348,12 @@ div[data-id="e2c5-b197"] div.setting-item-description,
 }
 
 div[data-id="e2c5-b197"] div.setting-item-description::before,
-.data-link-icon[data-link-tags*="murray" i]::before {
+.data-link-icon[data-link-tags*="nobreza-de-nimalia" i]::before {
     content: var(--e2c5-b197-before);
 }
 
 div[data-id="e2c5-b197"] div.setting-item-description::after,
-.data-link-icon-after[data-link-tags*="murray" i]::after {
+.data-link-icon-after[data-link-tags*="nobreza-de-nimalia" i]::after {
     content: var(--e2c5-b197-after);
 }
 
@@ -943,7 +943,7 @@ settings:
         default: '#ffffff'
     - 
         id: 6e9a-b654
-        title: tag is third
+        title: tag is sentinelas-de-lethvalora
         description: Example note
         type: heading
         collapsed: true
@@ -1002,7 +1002,7 @@ settings:
         default: '#ffffff'
     - 
         id: e2c5-b197
-        title: tag is murray
+        title: tag is nobreza-de-nimalia
         description: Example note
         type: heading
         collapsed: true

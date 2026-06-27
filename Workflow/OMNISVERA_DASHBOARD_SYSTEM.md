@@ -141,10 +141,12 @@ SORT file.name ASC
 | Guilda dos Mercadores | `guilda-dos-mercadores` |
 | Conclave dos Errantes | `conclave-dos-errantes` |
 | Guardiões do Véu Cinzento | `guardioes-do-veu-cinzento` |
+| Sentinelas de Leth'valora | `sentinelas-de-lethvalora` |
+| Nobreza de Nimalia | `nobreza-de-nimalia` |
 | Mar da Neblina | `mar-da-neblina` |
 | Nimalia | `nimalia` |
 
-Tags pendentes não devem ser migradas automaticamente: `third`, `murray`, `story`.
+`story` permanece como tag operacional temporária para história/capítulo/campanha. Não converter para `sessions`.
 
 ## Regras de manutenção
 

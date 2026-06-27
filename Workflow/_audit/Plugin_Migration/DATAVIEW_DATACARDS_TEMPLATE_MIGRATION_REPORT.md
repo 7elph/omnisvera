@@ -121,8 +121,8 @@ Campos a preservar/adicionar:
 
 | item | decisão |
 |---|---|
-| `third` | Não migrar automaticamente. |
-| `murray` | Não migrar automaticamente. |
-| `story` | Manter até decisão entre `story` e `capitulo`. |
+| `third` | Resolvido como `sentinelas-de-lethvalora`; migrar em configs e uso operacional. |
+| `murray` | Resolvido como `nobreza-de-nimalia`; migrar em configs e uso operacional. |
+| `story` | Manter como `story`; não converter para `sessions`. |
 | `region-steeltown` | CSS manual; revisar em etapa visual. |
 | Pastas PT-BR | Planejar, não renomear agora. |

@@ -7,6 +7,8 @@ state: Situação desconhecida após a destruição da vila
 location: "[[Leth'valora]]"
 tags:
   - faction
+  - faccao
+  - sentinelas-de-lethvalora
   - military
   - elf
   - village-guard

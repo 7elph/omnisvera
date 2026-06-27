@@ -20,6 +20,8 @@ Fonte principal: `Workflow/OMNISVERA_SYSTEM_TAXONOMY.md`.
   - `individual` → `personagem`;
   - `religion` → `religiao`;
   - `territory` → `territorio`;
+  - `third` → `sentinelas-de-lethvalora`;
+  - `murray` → `nobreza-de-nimalia`;
   - `lore` → `lore`.
 - Criar categorias RPG:
   - raças;
@@ -35,7 +37,9 @@ Fonte principal: `Workflow/OMNISVERA_SYSTEM_TAXONOMY.md`.
 | proposta original | decisão alterada |
 |---|---|
 | `sessions` como eixo RPG | Rejeitado. Usar `chapters`. |
-| `story` virar sessão | Rejeitado. Manter como `story`/capítulo até decisão final. |
+| `story` virar sessão | Rejeitado. Manter como `story` por enquanto. |
+| `third` pendente | Resolvido como `sentinelas-de-lethvalora`, reaproveitando a facção existente. |
+| `murray` pendente | Resolvido como `nobreza-de-nimalia`. |
 | Tags antigas preservadas indefinidamente | Devem ser migradas para taxonomia Omnisvera depois de auditoria de plugins. |
 | `nimalia` como tag genérica ampla | Permitida com ressalva; precisa revisão por causa de `nimalis` como capital. |
 | Pastas em português BR imediatamente | Planejar primeiro; renomear só quando links/consultas/configurações puderem ser atualizados. |
@@ -79,9 +83,7 @@ Fonte principal: `Workflow/OMNISVERA_SYSTEM_TAXONOMY.md`.
 
 | decisão | motivo |
 |---|---|
-| `third` | Não aplicar `terceira-fileira`; precisa decidir entre `guardioes-de-lethvalora` ou remoção. |
-| `murray` | Precisa decidir entre `nobreza-de-nimalia` e `nobreza-de-nimalis`. |
-| `story` | Manter por enquanto; decidir depois se vira `capitulo`. |
+| `story` | Manter como `story` por enquanto; não converter para `sessions`. |
 | `nimalia` vs `nimalis` | Separar claramente reino/contexto e capital/localização. |
 | `porto-de-zevran` | Revisar se deve virar `porto-de-nimalis`. |
 | `region` vs `location` | Definir semântica antes de padronizar templates. |

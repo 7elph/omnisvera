@@ -33,15 +33,15 @@
 | `rancher` | `guilda-dos-mercadores` | aprovado | Migração segura para agrupamento mercantil. |
 | `pirate` | `conclave-dos-errantes` | aprovado | Migração segura para agrupamento errante/aventureiro. |
 | `widow` | `guardioes-do-veu-cinzento` | aprovado | Migração segura para facção/culto do Véu Cinzento. |
-| `third` | não usar `terceira-fileira` | pendente | Propor `guardioes-de-lethvalora` ou excluir. Não aplicar automaticamente. |
-| `murray` | `nobreza-de-nimalia` ou `nobreza-de-nimalis` | pendente | Precisa decisão entre reino e capital. |
+| `third` | `sentinelas-de-lethvalora` | aprovado | Usar a facção existente `[[Factions/Sentinelas de Leth'valora|Sentinelas de Leth'valora]]`; não usar `terceira-fileira`. |
+| `murray` | `nobreza-de-nimalia` | aprovado | Usar como ponte técnica para a nobreza do Reino de Nimalia. |
 | `steeltown` | `nimalia` | aprovado com ressalva | `nimalia` não deve representar tudo se `nimalis` for capital; revisar contexto. |
 | `water` | `mar-da-neblina` | aprovado | Migração segura para território/tema marítimo. |
 | `individual` | `personagem` | aprovado | Migração segura para categoria visual de personagens. |
 | `lore` | `lore` | aprovado | Manter. |
 | `religion` | `religiao` | aprovado | Migrar para português técnico sem acento. |
 | `territory` | `territorio` | aprovado | Migrar para português técnico sem acento. |
-| `story` | `story` ou `capitulo` | pendente controlado | Não virar `sessao`; preservar até decisão de nomenclatura final. |
+| `story` | `story` | aprovado temporariamente | Manter como eixo de história/capítulo/campanha; não virar `sessao` e não criar `sessions`. |
 
 ## Facções fora da migração oficial
 

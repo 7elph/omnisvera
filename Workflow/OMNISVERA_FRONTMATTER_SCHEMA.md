@@ -101,13 +101,13 @@ Tags visuais migradas:
 - `guilda-dos-mercadores`;
 - `conclave-dos-errantes`;
 - `guardioes-do-veu-cinzento`;
+- `sentinelas-de-lethvalora`;
+- `nobreza-de-nimalia`;
 - `mar-da-neblina`;
 - `nimalia`.
 
 Tags pendentes:
 
-- `third`;
-- `murray`;
 - `story`.
 
 ## Compatibilidade
