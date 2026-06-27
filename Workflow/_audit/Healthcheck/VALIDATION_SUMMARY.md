@@ -26,8 +26,8 @@ Comandos equivalentes executados no PowerShell/rg:
 ```text
 ls raiz filtrando Home*.md
 busca por *home*.md e *dashboard*.md
-rg para [[Home_Jogadores]]
-rg para portal neutro / Home_Jogadores / Home_Mestre / Home dos Jogadores / dashboard do mestre
+rg para links antigos de Home_Jogadores
+rg para a expressão antiga de Home intermediária / Home_Jogadores / Home_Mestre / Home dos Jogadores / dashboard do mestre
 leitura de .obsidian/plugins/homepage/data.json
 ```
 
@@ -37,7 +37,7 @@ Resultado:
 - `Home_Mestre.md` existe na raiz.
 - `Home_Jogadores.md` não existe na raiz.
 - `Workflow/_archive/obsolete_review/Home_Jogadores_ARCHIVED.md` existe.
-- Não há wikilinks operacionais para `[[Home_Jogadores]]`.
+- Não há wikilinks operacionais para `Home_Jogadores`.
 - O plugin Homepage aponta para `Home`.
 - `Home.md` é a Home dos Jogadores.
 
