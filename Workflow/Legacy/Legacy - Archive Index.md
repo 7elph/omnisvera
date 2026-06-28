@@ -15,13 +15,16 @@ Este diretório guarda conteúdo que não faz parte do cânone ativo de Omnisver
 
 ## Disgraceland
 
-- [[Legacy - Disgraceland Chapter 01 - Ghosts on the Waves]]
-- [[Legacy - Disgraceland OUTLINES]]
-- [[Legacy - Disgraceland Quick Notes]]
-- [[Legacy - Disgraceland Scratch Notes]]
-- [[Legacy - Disgraceland Vault Report]]
+O diretório físico `Workflow/Legacy/Disgraceland/` foi removido da camada local do vault após a migração do motor técnico para Omnisvera.
 
-Essas notas preservam conteúdo narrativo antigo para consulta. Estruturas, layouts e ideias só entram em Omnisvera depois de uma adaptação consciente.
+O histórico técnico permanece preservado no Git e nos relatórios de auditoria já commitados:
+
+- `e348885` — auditoria técnica bruta do sistema Obsidian do Disgraceland;
+- `cb0de8d` — contratos técnicos do Disgraceland;
+- `bbebdda` — contratos de templates do Disgraceland;
+- `Workflow/_archive/legacy_removal/DISGRACELAND_REMOVAL_SUMMARY.md`.
+
+Disgraceland não é mais conteúdo operacional do Omnisvera. Estruturas, layouts e ideias só entram em Omnisvera depois de adaptação consciente pela taxonomia atual.
 
 ## Old Dragon anterior
 
