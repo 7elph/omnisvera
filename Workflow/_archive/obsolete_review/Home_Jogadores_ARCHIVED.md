@@ -29,7 +29,7 @@ archive_reason: "Home dos Jogadores consolidada em Home.md"
 
 - [[Home|Portal]]
 - [[Calendar|Calendário de Nimalia]]
-- [[MAPA DE NIMALIA]]
+- [[MAPA DE NIMALIS]]
 
 ## Personagens dos jogadores
 

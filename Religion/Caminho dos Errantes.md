@@ -17,6 +17,9 @@ tags:
 
 # Caminho dos Errantes
 
+> [!NOTE|clean no-i right]+ Retrato
+> ![[caminho-dos-errantes.png|400]]
+
 Tradição espiritual difundida entre viajantes, mercadores e pessoas que passam longos períodos longe de sua terra natal.
 
 ## Cânone de trabalho

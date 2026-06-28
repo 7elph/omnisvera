@@ -10,6 +10,9 @@ tags:
 
 # Campos de Earthropo
 
+> [!NOTE|clean no-i right]+ Retrato
+> ![[campos-de-earthropo.png|400]]
+
 Nome provisório para uma região de campos do continente.
 
 Suas fronteiras, posição exata e relação com as [[Ruínas de Valthor]] ainda precisam ser definidas após a revisão completa da história de [[Raziel]].

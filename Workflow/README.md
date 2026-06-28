@@ -26,10 +26,10 @@ Esta pasta concentra documentos técnicos, guias de operação, auditorias e his
 
 ## Auditorias Recentes
 
-- [[_audit/Post_Pilot_Fixes/POST_PILOT_FIXES_VALIDATION|Validação Pós-Piloto]]
-- [[_audit/Post_Pilot_Fixes/NEXT_BATCH_PLAN|Plano do Lote 2]]
-- [[_audit/Pilot_Migration/PILOT_MIGRATION_REPORT|Relatório do Micro-Piloto]]
-- [[_audit/Operational_Cleanup/OPERATIONAL_CLEANUP_VALIDATION|Validação da Faxina Operacional]]
+- [[Workflow/_audit/Post_Pilot_Fixes/POST_PILOT_FIXES_VALIDATION|Validação Pós-Piloto]]
+- [[Workflow/_audit/Post_Pilot_Fixes/NEXT_BATCH_PLAN|Plano do Lote 2]]
+- [[Workflow/_audit/Pilot_Migration/PILOT_MIGRATION_REPORT|Relatório do Micro-Piloto]]
+- [[Workflow/_audit/Operational_Cleanup/OPERATIONAL_CLEANUP_VALIDATION|Validação da Faxina Operacional]]
 
 ## Histórico / Legado
 

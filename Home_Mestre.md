@@ -17,14 +17,9 @@ gm_secret: true
 
 <br>
 
-> [!important]+ DASHBOARD DO MESTRE
-> Esta página pode conter preparação, spoilers, pendências, relatórios técnicos, NPCs secretos e links administrativos.
->
-> Para uma visão conservadora e segura para jogadores, use [[Home]].
-
 > [!cards|5]
 > **NIMALIA**
-> [![[mapa-de-nimalia.png|sban htiny ctr p+t]]](Territories/Nimalia.md)
+> [![[mapa-de-nimalia.png|sban htiny ctr p+t]]](MAPA%20DE%20NIMALIA.md)
 >
 > **CRÔNICAS**
 > [![[banner-earthropo.png|sban htiny ctr]]](EARTHROPO/EARTHROPO.md)
@@ -155,7 +150,7 @@ Nimalia é o primeiro horizonte das **Crônicas de Earthropo**: um ponto de part
 
 > [!note]- CLASSES
 > ```datacards
-> TABLE cover, status FROM "Rules/Classes" AND #classe
+> TABLE cover, status FROM "Classes" AND #classe
 > SORT name ASC
 >
 > // Settings

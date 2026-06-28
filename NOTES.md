@@ -16,11 +16,11 @@ Ponto de entrada para preparação, decisões de continuidade e material ainda e
 
 ## Estado da campanha
 
-- [[CANON|Cânone de Omnisvera]]
-- [[ASSISTANT_HANDOFF|Handoff dos Assistentes]]
-- [[MIGRATION_LEDGER|Registro da Migração]]
-- [[OUTLINES|Estrutura da Campanha]]
-- [[Scratch Notes|Notas de Trabalho]]
+- [[Workflow/CANON|Cânone de Omnisvera]]
+- [[Workflow/ASSISTANT_HANDOFF|Handoff dos Assistentes]]
+- [[Workflow/MIGRATION_LEDGER|Registro da Migração]]
+- [[Workflow/OUTLINES|Estrutura da Campanha]]
+- [[Workflow/Scratch Notes|Notas de Trabalho]]
 
 ## Consulta rápida
 

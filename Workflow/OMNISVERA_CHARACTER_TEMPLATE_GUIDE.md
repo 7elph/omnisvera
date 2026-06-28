@@ -60,7 +60,7 @@ Usar `thumbnail` como imagem principal de card e retrato interno quando não hou
 
 ```md
 > [!NOTE|clean no-i right]+ Retrato
-> ![[thumbnail|400]]
+> ![[arquivo-da-imagem.png|400]]
 ```
 
 ## Estrutura recomendada

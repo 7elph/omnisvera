@@ -17,8 +17,31 @@ from typing import Dict, List, Tuple
 
 def is_ignored_dir(path: Path) -> bool:
     """Verifica se o diretório deve ser ignorado."""
-    ignored = {'.git', '.obsidian', '.trash', 'node_modules', '.venv', '.local-tools'}
+    ignored = {
+        '.git',
+        '.obsidian',
+        '.trash',
+        'node_modules',
+        '.venv',
+        '.local-tools',
+        '.omnisvera-tools',
+        '.codex-tools',
+    }
     return any(part in ignored for part in path.parts)
+
+
+def is_ignored_when_operational(path: Path) -> bool:
+    """Ignora relatórios e planejamento histórico no modo --ignore-legacy."""
+    parts = set(path.parts)
+    if 'Workflow' in parts:
+        return True
+    return False
+
+
+MEDIA_EXTENSIONS = {
+    '.png', '.jpg', '.jpeg', '.webp', '.gif', '.svg',
+    '.mp3', '.wav', '.ogg', '.flac', '.mp4', '.webm'
+}
 
 
 def extract_wikilinks(content: str, file_path: Path) -> List[Tuple[str, int, str]]:
@@ -39,7 +62,11 @@ def extract_wikilinks(content: str, file_path: Path) -> List[Tuple[str, int, str
         for match in matches:
             full_match = match.group(1)
             # Extrair o link real (antes do | se houver alias)
-            link = full_match.split('|')[0].strip()
+            link = full_match.split('|')[0].split('#')[0].strip()
+            if not link:
+                continue
+            if Path(link).suffix.lower() in MEDIA_EXTENSIONS:
+                continue
             links.append((link, line_num, str(file_path)))
     
     return links
@@ -53,12 +80,14 @@ def get_all_md_files(vault_path: Path, ignore_legacy: bool = False) -> set:
         if is_ignored_dir(md_file):
             continue
         
-        if ignore_legacy and 'Workflow/Legacy' in str(md_file):
+        if ignore_legacy and is_ignored_when_operational(md_file):
             continue
         
         # Nome do arquivo sem extensão
         md_files.add(md_file.stem)
-        md_files.add(str(md_file.relative_to(vault_path).with_suffix('')))
+        rel = str(md_file.relative_to(vault_path).with_suffix('')).replace('\\', '/')
+        md_files.add(rel)
+        md_files.add(rel.lower())
     
     return md_files
 
@@ -72,11 +101,12 @@ def resolve_link(link: str, md_files: set, vault_path: Path) -> bool:
     - Caminho relativo
     """
     # Tentar match exato
-    if link in md_files:
+    normalized = link.replace('\\', '/').removesuffix('.md')
+    if normalized in md_files or normalized.lower() in md_files:
         return True
     
     # Tentar como caminho relativo
-    link_path = vault_path / (link + '.md')
+    link_path = vault_path / (normalized + '.md')
     if link_path.exists():
         return True
     
@@ -113,7 +143,7 @@ def validate_links(vault_path: str, ignore_legacy: bool = False) -> Dict:
         if is_ignored_dir(md_file):
             continue
         
-        if ignore_legacy and 'Workflow/Legacy' in str(md_file):
+        if ignore_legacy and is_ignored_when_operational(md_file):
             continue
         
         try:

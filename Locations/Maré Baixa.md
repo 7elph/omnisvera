@@ -18,6 +18,9 @@ tags:
 
 # Maré Baixa
 
+> [!NOTE|clean no-i right]+ Retrato
+> ![[mare-baixa.png|400]]
+
 Maré Baixa fica no extremo sul da capital do Reino de [[Nimalia]], espremida entre os muros da cidade e o cheiro salgado do porto. E um amontoado de passarelas de madeira, telhados remendados, cordas penduradas, barracos tortos e lanternas que nunca apagam por completo.
 
 Enquanto o centro da capital e feito de pedra, brasões e casas altas, Maré Baixa e feita de vozes, fumaça, peixe seco, ferrugem, música ruim e negócios que ninguém registra em papel.

@@ -6,17 +6,20 @@ ruleset: Old Dragon anterior - suplemento independente
 cover: zz_media/alquimista.png
 tags:
   - Category/Class
-  - class
+  - classe
   - alchemist
   - optional-rule
 ---
 
 # Alquimista
 
+> [!NOTE|clean no-i right]+ Retrato
+> ![[alquimista.png|400]]
+
 Classe opcional apresentada no suplemento independente **Expansão de Classes**, de Caio Mouriz.
 
 > [!warning] Compatibilidade
-> O suplemento declara compatibilidade com Old Dragon, mas usa a estrutura da edição anterior e não é material oficial de Old Dragon 2ª Edição. A classe não foi adotada e não deve ser aplicada automaticamente a [[Varkh Nimalis]]. Consulte [[Workflow/RULES_SOURCES|Fontes de Regras da Campanha]].
+> O suplemento declara compatibilidade com Old Dragon, mas usa a estrutura da edição anterior e não é material oficial de Old Dragon 2ª Edição. No Omnisvera, [[Varkh Nimalis]] usa **Alquimista** como classe operacional aprovada pelo Sage. Consulte [[Workflow/RULES_SOURCES|Fontes de Regras da Campanha]].
 
 ## Conceito
 
@@ -59,4 +62,4 @@ A partir do 5º nível:
 
 ## Uso em Omnisvera
 
-A alquimia de rua de Varkh pode usar partes desta classe como inspiração, mesmo que sua classe mecânica definitiva continue sendo [[Ladrão]]. É possível adotar apenas receitas, poções e técnicas sem importar toda a progressão do suplemento.
+A alquimia de rua de [[Varkh Nimalis]] usa esta classe como referência operacional. Ajustes finos de progressão, pontos alquímicos e limites em mesa devem ser decididos pelo mestre para manter compatibilidade com Old Dragon 2E e com o tom da campanha.

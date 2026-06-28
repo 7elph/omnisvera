@@ -50,7 +50,7 @@ Essas consultas pertencem a notas em desenvolvimento. Avisos foram adicionados �
 - As capas inexistentes de classes e raças foram substituídas por imagens válidas de Omnisvera.
 - A Home agora usa `zz_media/avenor.png`; o banner de Disgraceland deixou de aparecer na página ativa.
 - A tabela de personagens trata `thumbnail` ausente sem produzir imagem quebrada.
-- [[Mestre Odran Veyl]] e [[Theron Elensar]] continuam sem thumbnail por decisão editorial pendente.
+- [[Mestre Odran Veyl]] continua sem thumbnail por decisão editorial pendente. Theron Elensar não está mais na pasta ativa de personagens.
 - Campos vazios de facção e classe permanecem preservados quando ainda dependem de decisões do mestre ou dos jogadores.
 
 ## Leaflet
@@ -60,7 +60,7 @@ Essas consultas pertencem a notas em desenvolvimento. Avisos foram adicionados �
 | Mapa | ID | Imagem | Marcadores no Markdown |
 |:--|:--|:--|--:|
 | [[MAPA DE EARTHROPO]] | `earthropo-map` | `zz_media/earthropo.png` | 5 |
-| [[MAPA DE NIMALIA]] | `nimalia-capital-map` | `zz_media/nimalia.png` | 1 |
+| [[MAPA DE NIMALIS]] | `nimalia-capital-map` | `zz_media/mapa-de-nimalis.png` | 1 |
 
 Todos os seis marcadores declarados no Markdown apontam para notas existentes.
 

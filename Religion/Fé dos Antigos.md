@@ -17,6 +17,9 @@ tags:
 
 # Fé dos Antigos
 
+> [!NOTE|clean no-i right]+ Retrato
+> ![[fe-dos-antigos.png|400]]
+
 Nome provisório para tradições religiosas anteriores ao [[Eclipse de Obsidiana]].
 
 ## Cânone de trabalho

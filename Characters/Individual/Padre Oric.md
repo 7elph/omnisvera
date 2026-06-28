@@ -1,36 +1,43 @@
 ---
-
-obsidianUIMode: preview  
-NoteIcon: character  
-NoteStatus: Complete  
-thumbnail: zz_media/th_oric.PNG  
-status: Desaparecido  
-location: Desconhecida  
-territory: "[[Nimalia]]"  
+obsidianUIMode: preview
+NoteIcon: magicitem
+NoteStatus: Complete
+type: character
+visibility: Mestre
+spoiler_level: heavy
+gm_secret: true
+campaign_status: Ativo
+thumbnail: zz_media/th_oric.PNG
+status: Desaparecido
+location: Desconhecida
+territory: "[[Nimalia]]"
 faction: Nenhum
 class: Clérigo
-race: Humano  
-role: npc  
+race: Humano
+role: npc
+chapter: []
+chapters: []
 tags:
-- npc
-- character  
-- human  
-- priest   
-- missing   
-- mystery 
-- chapter00
-
+  - npc
+  - character
+  - human
+  - priest
+  - missing
+  - mystery
+  - chapter00
+  - Category/Character
+  - personagem
 ---
 
 # PADRE ORIC
 
-> [!NOTE|clean no-i right]+ Padre Oric  
+> [!NOTE|clean no-i right]+ Padre Oric
 > ![[oric.png|400]]
 
 ## Visão Geral
 
 **Nome:** Padre Oric  
-**Títulos:** O Guardião dos Registros; O Peregrino
+**Títulos:** O Peregrino
 **Reputação Pública:** Sacerdote errante e estudioso de antigas lendas  
 **Raça:** Humano  
 **Classe:** [[Clérigo]]
@@ -39,12 +46,21 @@ tags:
 **Alinhamento:** Neutro Bom
 **Status:** Desaparecido  
 **Território:** [[Nimalia]] e regiões vizinhas  
-**Associados Conhecidos:** [[Vezemir]], [[Guardiões do Véu Cinzento]]
+**Associados Conhecidos:** [[Vezemir]]
 **Origem:** [[Nimalis]]
 **Ocupação:** Sacerdote e escriba
 **Símbolo:** Círculo da Verdade
 
 ---
+
+## Aparições
+
+```dataview
+LIST
+FROM "EARTHROPO"
+WHERE contains(this.chapters, file.name)
+SORT file.name ASC
+```
 
 ## História
 
@@ -53,8 +69,8 @@ Durante uma de suas jornadas conheceu [[Vezemir]], então um mercenário em asce
 Enquanto outros enxergavam apenas um guerreiro, Oric percebeu algo diferente.
 Segundo ele, a magia de Vezemir não parecia fluir naturalmente.
 Parecia estar sendo contida.
-Desde então, passou anos investigando a origem do medalhão dos [[Guardiões do Véu Cinzento]] e as estranhas manifestações mágicas do Bastardo de Ferro.
-Suas pesquisas o levaram a descobrir fragmentos de registros sobre uma antiga ordem desaparecida e possíveis conexões com um misterioso dragão verde portador de um colar dourado.
+Desde então, passou anos investigando a origem do [[O Medalhão|medalhão]] e as estranhas manifestações mágicas do Bastardo de Ferro.
+Suas pesquisas o levaram a descobrir fragmentos de registros sobre uma antiga ordem desaparecida e possíveis conexões com um misterioso dragão verde.
 Pouco tempo depois, Oric desapareceu sem deixar rastros.
 Nenhum corpo foi encontrado.
 Nenhum relato confiável surgiu desde então.
@@ -105,3 +121,44 @@ As palavras de Oric continuam assombrando Vezemir:
 > _"Você não rejeita a magia... você está acorrentando alguma coisa."_
 
 Até hoje, ninguém sabe se Padre Oric morreu, foi capturado ou encontrou uma verdade perigosa demais para retornar.
+
+## Atualidade
+
+_Pendente de consolidação pelo Sage._
+
+## Relações
+
+_Pendente de consolidação pelo Sage._
+
+## Segredos
+
+_Pendente de revisão do Mestre._
+
+## Equipamentos
+
+_Pendente de consolidação pelo Sage._
+
+## Aparência
+
+_Pendente de consolidação pelo Sage._
+
+## Papel na Campanha
+
+_Pendente de consolidação pelo Sage._
+
+## Uso em Mesa
+
+- Como apresentar:
+- O que os jogadores sabem:
+- O que apenas o mestre sabe:
+- Como entra em cena:
+- Ganchos:
+- Consequências possíveis:
+
+## Pendências do Sage
+
+- Revisar e completar campos em aberto.
+
+## Links relevantes
+
+_Pendente de consolidação pelo Sage._

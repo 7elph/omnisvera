@@ -3,50 +3,89 @@ obsidianUIMode: preview
 NoteIcon: lore
 NoteStatus: Active
 cover: zz_media/earthropo.png
+cssclasses:
+  - b-sides-script
+type: lore
+status: Ativo
+campaign_status: Ativo
+visibility: Mestre
+spoiler_level: light
+gm_secret: false
 tags:
   - title
   - home
   - earthropo
   - omnisvera
+  - lore
 ---
 
 <div style="text-align: center;">
-  <h1>OMNISVERA</h1>
-  <h3><em>Crônicas de Earthropo - Old Dragon 2E</em></h3>
+  <img src="zz_media/earthropo.png">
+</div>
+<br>
+
+> [!world]- SINOPSE
+> **Earthropo** é o continente em foco das Crônicas de Omnisvera: uma terra de reinos jovens sobre ruínas antigas, florestas vivas, portos inquietos, montanhas esquecidas e fronteiras que ainda não foram totalmente nomeadas.
+>
+> Ao sul e ao centro do mapa, o [[Nimalia|Reino de Nimalia]] reúne os antropos sob a autoridade de [[Augustus Terra Decimus]], tendo [[Nimalis]] como capital. Nas bordas de suas rotas, a [[Floresta de Avenor]] guarda vilas, fortalezas abandonadas, trilhas élficas e memórias que a Coroa ainda não controla por completo.
+>
+> Em [[Leth'valora]], uma pequena vila de Avenor, a vida de [[Vezemir]] foi marcada por rejeição, amor, perda e pelo ataque do [[Dragão de Colar Dourado]]. Em [[Nimalis]], [[Varkh Nimalis]] aprendeu que uma voz emprestada pode abrir portas, vender mentiras ou revelar crimes. Nas ruínas ligadas a [[Ruínas de Valthor|Valthor]] e à [[Fortaleza de Gharok|Gharok]], [[Raziel]] desperta de mais de trezentos anos de tormento com uma dívida de sangue antiga demais para morrer.
+>
+> Agora, as histórias desses personagens começam a se aproximar. Relíquias, remédios falsos, juramentos esquecidos, sangue antigo e o [[Véu Cinzento]] apontam para algo maior que qualquer vingança individual.
+>
+> Em Earthropo, o mundo não precisa estar pronto para ser explorado. Ele precisa apenas deixar rastros suficientes para que os jogadores descubram onde pisaram.
+
+<div class="homepage">
+<hr>
 </div>
 
-> [!world]- Premissa
-> **Omnisvera** é o universo. **Earthropo** é o continente onde a campanha acontece. O **Reino de Nimalia** é o principal reino dos antropos apresentado até agora.
->
-> Ha trezentos anos, o **Eclipse de Obsidiana** engoliu o sol por sete dias e sete noites. Quando a luz voltou, uma parte do mundo havia sido tomada pelo **Véu Cinzento**, uma fronteira de névoa, ruina e memoria quebrada. Agora o Véu esta encolhendo, fragmentos de mundos perdidos começam a surgir, e os **Criadores** voltam a ser mais que mito.
->
-> Os personagens vivem no ponto em que mito, politica e sobrevivência se encontram.
-
----
-
-## Estrutura do Mundo
-
-- **Universo:** [[OMNISVERA|Omnisvera]]
-- **Continente Principal:** [[MAPA DE EARTHROPO|Earthropo]]
-- **Reino dos Antropos:** [[Nimalia]]
-- **Capital de Nimalia:** [[Nimalis|nome em aberto]]
-- **Registro Geográfico:** [[Workflow/GEOGRAPHY|Geografia de Earthropo]]
-- **Campanha Atual:** Crônicas de Earthropo
-- **Sistema:** Old Dragon 2E
-
-## Eixos Ativos
-
-- O avanço do [[Véu Cinzento]] e seus fragmentos impossíveis.
-- A memória dos [[Guardiões do Véu Cinzento]].
-- A influência da [[Coroa de Nimalia]] sobre Earthropo.
-- A pressão religiosa da [[Igreja das Chamas]].
-- O surgimento de personagens marcados por relíquias, sangue antigo e dívidas mal enterradas.
-
-> [!world]+ Capítulos
+> [!infobox]
+> **CRÔNICAS DE ORIGEM**
+> ---
 > ```datacards
-> TABLE cover, date, description FROM #chapter
+> TABLE cover, status, description FROM #origin-vezemir
 > WHERE !contains(file.path, "Workflow/")
-> AND !contains(file.path, "Templates/")
+> SORT file.name ASC
+> LIMIT 1
+>
+> // Settings
+> preset: square
+> columns: 1
+> imageProperty: cover
+> fontSize: small
+> ```
+> ---
+> ```datacards
+> TABLE cover, status, description FROM #origin-varkh
+> WHERE !contains(file.path, "Workflow/")
+> SORT file.name ASC
+> LIMIT 1
+>
+> // Settings
+> preset: square
+> columns: 1
+> imageProperty: cover
+> fontSize: small
+> ```
+> ---
+> ```datacards
+> TABLE cover, status, description FROM #origin-raziel
+> WHERE !contains(file.path, "Workflow/")
+> SORT file.name ASC
+> LIMIT 1
+>
+> // Settings
+> preset: square
+> columns: 1
+> imageProperty: cover
+> fontSize: small
+> ```
+
+> [!world]+ CAPÍTULOS
+> ```datacards
+> TABLE cover, status, campaign_status, description
+> FROM "EARTHROPO"
+> WHERE contains(tags, "chapter")
 > SORT file.name ASC
 >
 > // Settings
@@ -54,21 +93,74 @@ tags:
 > columns: 4
 > cardSpacing: 4
 > imageProperty: cover
+> showImageOnHover: true
 > ```
 
-## Arcos da Campanha
+---
 
-| # | Níveis | Título | Função |
-|:--|:--|:--|:--|
-| 1 | 1-4 | Ecos do Mundo Perdido | Os personagens encontram os primeiros sinais dos Criadores e do Véu. |
-| 2 | 5-8 | O Despertar das Cinzas | Fragmentos perdidos colidem com Earthropo e tornam o impossível visível. |
-| 3 | 9-12 | Os Deuses Mentiram | A Igreja das Chamas e outras fés revelam contradições antigas. |
-| 4 | 13-16 | O Arquivo dos Criadores | A verdade sobre a construção do mundo começa a aparecer. |
-| 5 | 17-20 | A Reconstrução | O grupo decide o que Omnisvera ainda pode se tornar. |
+## Personagens em Foco
 
-## Notas de Cânone
+```datacards
+TABLE thumbnail, status, location, faction
+FROM "Characters/Individual"
+WHERE contains(tags, "player") OR contains(tags, "jogador")
+SORT file.name ASC
 
-- O nome **Eryndor** não faz parte do cânone ativo.
+// Settings
+preset: compact
+columns: 3
+imageProperty: thumbnail
+showImageOnHover: true
+cardSpacing: 4
+```
+
+## Estrutura do Mundo Conhecido
+
+| Elemento | Definição operacional |
+|---|---|
+| Universo de campanha | Omnisvera |
+| Continente em foco | Earthropo |
+| Reino em foco | [[Nimalia]] |
+| Capital de Nimalia | [[Nimalis]] |
+| Região florestal em foco | [[Floresta de Avenor]] |
+| Vila destruída ligada a Vezemir | [[Leth'valora]] |
+| Sistema | Old Dragon 2E |
+
+## Eixos Ativos
+
+- O avanço do [[Véu Cinzento]] e seus fragmentos impossíveis.
+- A memória dos [[Guardiões do Véu Cinzento]].
+- A influência da [[Coroa de Nimalia]] sobre o reino e suas rotas.
+- O peso da [[Igreja das Chamas]] e de outras crenças ainda em revisão.
+- A aproximação gradual entre as histórias de [[Vezemir]], [[Varkh Nimalis]] e [[Raziel]].
+- A descoberta progressiva dos reinos, povos, fronteiras e segredos de Earthropo.
+
+## Arcos Planejados
+
+| # | Níveis | Título | Função | Status |
+|:--|:--|:--|:--|:--|
+| 0 | 1 | Crônicas de Origem | Registrar histórias pré-campanha dos personagens. | Em consolidação |
+| 1 | 1-4 | Ecos do Mundo Perdido | Reunir os personagens e revelar os primeiros sinais do Véu, das relíquias e das ruínas antigas. | Planejado |
+| 2 | 5-8 | O Despertar das Cinzas | Fragmentos perdidos colidem com Earthropo e tornam o impossível visível. | Rascunho |
+| 3 | 9-12 | Os Deuses Mentiram | Fés, pactos e versões oficiais entram em conflito. | Rascunho |
+| 4 | 13-16 | O Arquivo dos Criadores | A verdade sobre a construção do mundo começa a aparecer. | Rascunho |
+| 5 | 17-20 | A Reconstrução | O grupo decide o que Omnisvera ainda pode se tornar. | Rascunho |
+
+## Regras de Cânone desta Pasta
+
+- Earthropo é continente, não mundo inteiro.
+- Nimalia é reino dos antropos, não cidade.
+- Nimalis é a capital de Nimalia.
+- A [[Floresta de Avenor]] faz fronteira com Nimalia.
+- [[Leth'valora]] é uma vila pequena na região de Avenor, não um reino élfico.
+- A vila de Leth'valora foi destruída pelo [[Dragão de Colar Dourado]].
+- `story` continua sendo a tag funcional de crônicas/capítulos por enquanto.
+- `chapters` continua sendo o campo funcional de capítulos, partes ou story da campanha.
 - Materiais históricos e rascunhos de template não fazem parte do cânone ativo até serem convertidos explicitamente para Omnisvera.
-- Earthropo não é o universo nem o mundo inteiro: é o continente principal da campanha.
-- Nimalia é um reino de Earthropo, não o nome de sua capital.
+
+## Pendências do Sage
+
+- Definir bordas exatas de Nimalia no mapa.
+- Posicionar com precisão [[Fortaleza de Gharok|Gharok]], [[Ruínas de Valthor|Valthor]] e os domínios antigos do [[Clã Sanguinallis]].
+- Decidir o quanto da história dos Criadores será revelada no primeiro arco.
+- Definir como Vezemir, Varkh e Raziel se encontram em mesa.

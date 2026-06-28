@@ -7,7 +7,7 @@ tags:
   - economy
   - currency
   - earthropo
-cover: zz_media/cash.png
+cover: zz_media/casa-da-moeda-interior.png
 ---
 
 # ECONOMIA DE EARTHROPO
@@ -84,7 +84,7 @@ Extremamente rara. Utilizada para grandes negócios, tesouros, propriedades e co
 
 > [!infobox]
 > 
-> ![[econ.png|260]]
+> ![[casa-da-moeda-exterior.png|260]]
 
 ## Cunhagem
 

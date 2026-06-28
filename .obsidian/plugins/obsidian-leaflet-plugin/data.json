@@ -1476,7 +1476,7 @@
     {
       "id": "nimalia-capital-map",
       "locked": false,
-      "lastAccessed": 1781918829634,
+      "lastAccessed": 1782679036958,
       "markers": [
         {
           "id": "ID_2908bac8d9fa",
@@ -1485,7 +1485,7 @@
             152.59364418927643,
             139.38842424139818
           ],
-          "layer": "zz_media%2Fnimalia.png",
+          "layer": "zz_media%2Fmapa-de-nimalis.png",
           "mutable": true,
           "command": false,
           "percent": null,
@@ -1501,7 +1501,7 @@
             155.06851792342934,
             138.85809415550827
           ],
-          "layer": "zz_media%2Fnimalia.png",
+          "layer": "zz_media%2Fmapa-de-nimalis.png",
           "mutable": true,
           "command": false,
           "percent": null,
@@ -1514,7 +1514,7 @@
       "overlays": [],
       "shapes": [],
       "files": [
-        "MAPA DE NIMALIA.md"
+        "MAPA DE NIMALIS.md"
       ]
     }
   ],

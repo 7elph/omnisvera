@@ -2,6 +2,8 @@
 obsidianUIMode: preview
 NoteIcon: lore
 NoteStatus: Active
+thumbnail: zz_media/os-guardioes-do-veu-cinzento.png
+cover: zz_media/os-guardioes-do-veu-cinzento.png
 status: Mistério
 info: Ordem ancestral de protetores ligados ao Véu Cinzento. Sua verdadeira natureza e paradeiro são desconhecidos.
 tags:
@@ -13,6 +15,9 @@ tags:
 ---
 
 # Guardiões do Véu Cinzento
+
+> [!NOTE|clean no-i right]+ Retrato
+> ![[os-guardioes-do-veu-cinzento.png|400]]
 
 Os Guardiões do Véu Cinzento são uma ordem ancestral de protetores cuja existência foi apagada dos registros oficiais de Earthropo. Pouco se sabe sobre eles — e a maioria das pessoas que investiga seu passado desaparece ou é silenciada.
 

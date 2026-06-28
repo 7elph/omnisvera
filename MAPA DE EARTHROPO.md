@@ -6,7 +6,7 @@ distance: 2746
 NoteIcon: none
 cover: zz_media/earthropo.png
 Community-Size: Continental
-Alignment: 
+Alignment:
 Government: Diversos
 type: Continent
 politics: Diversos reinos
@@ -17,14 +17,17 @@ population:
 religion:
 exports:
 imports:
+visibility: Mestre
+spoiler_level: light
+gm_secret: false
 tags:
   - title
   - map
   - earthropo
+  - territorio
 ---
 
 # MAPA DE EARTHROPO
-
 
 ```leaflet
 id: earthropo-map
@@ -45,34 +48,46 @@ unit: miles
 scale: 1
 darkMode: false
 marker: Territory, 105, 128, [[Nimalia]]
-marker: Territory, 91, 137, [[Capital de Nimalia]]
+marker: Location, 91, 137, [[Nimalis]]
 marker: Territory, 108, 169, [[Floresta de Avenor]]
 marker: Location, 99, 182, [[Leth'valora]]
 marker: Location, 78, 199, [[Ruínas de Valthor]]
+marker: Location, 63, 132, [[Fortaleza de Gharok]]
 ```
 
 ## Marcadores
 
 Esta camada fixa apenas lugares com existência e região aproximada sustentadas pelo cânone:
 
-- [[Nimalia]] ocupa provisoriamente a região central do continente;
-- a [[Nimalis]] corresponde à grande cidade central;
-- a [[Floresta de Avenor]] fica a leste/nordeste da capital e faz fronteira com o reino;
-- as ruínas de [[Leth'valora]] ficam dentro de Avenor;
-- as [[Ruínas de Valthor]] ficam no sudeste de Earthropo.
+- [[Nimalia]] ocupa provisoriamente a região central do continente.
+- [[Nimalis]] corresponde à capital do Reino de Nimalia.
+- A [[Floresta de Avenor]] fica a leste/nordeste da capital e faz fronteira com o reino.
+- As ruínas de [[Leth'valora]] ficam dentro de Avenor.
+- As [[Ruínas de Valthor]] ficam no sudeste de Earthropo.
+- A [[Fortaleza de Gharok]] fica ao norte de Nimalia, na região associada ao futuro reino anão.
 
 ## Estado cartográfico
 
 | Elemento | Estado |
 |:--|:--|
 | Posição geral de Nimalia | Provisória |
-| Capital na grande cidade central | Provisória, mas funcional |
+| Nimalis como capital | Confirmado |
 | Fronteira Nimalia–Avenor | Confirmada; traçado exato em aberto |
 | Leth'valora dentro de Avenor | Confirmado; coordenada aproximada |
 | Valthor no sudeste | Confirmado; coordenada aproximada |
-| Gharok, reinos racializados e demais fronteiras | Não posicionados |
+| Gharok | Norte de Nimalia; coordenada aproximada |
+| Reino élfico | Sudoeste; nome e fronteira em aberto |
+| Reino anão | Nordeste; nome e fronteira em aberto |
+| Reino dos dragonborns | Noroeste; nome e fronteira em aberto |
+| Demais fronteiras | Não posicionadas |
 
-As coordenadas podem ser refinadas sem alterar o cânone. Consulte [[Workflow/GEOGRAPHY|Registro Geográfico de Earthropo]] antes de criar outros marcadores. Os marcadores deste mapa são independentes dos mapas legados.
+As coordenadas podem ser refinadas sem alterar o cânone. Consulte [[Workflow/GEOGRAPHY|Registro Geográfico de Earthropo]] antes de criar outros marcadores.
+
+## Mapas relacionados
+
+- [[MAPA DE NIMALIS]] representa a capital.
+- [[MAPA DE NIMALIA]] representa a camada do reino.
 
 ## HELP:
+
 Hold ALT + click & drag to measure the distance between one area and the next.

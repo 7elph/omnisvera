@@ -1,4 +1,13 @@
 ---
+obsidianUIMode: preview
+NoteIcon: story
+NoteStatus: Active
+type: story
+status: Cânone de personagem
+campaign_status: Ativo
+visibility: Mestre
+spoiler_level: medium
+gm_secret: true
 cssclasses:
   - b-sides-script
   - chapter
@@ -10,8 +19,25 @@ cssclasses:
 tags:
   - chapter
   - story
-  - chapter0
+  - chapter00
+  - origin-story
+  - origin-vezemir
   - earthropo
+  - vezemir
+chapter: 00 - O Bastardo de Ferro
+chapters:
+  - 00 - O Bastardo de Ferro
+characters:
+  - "[[Vezemir]]"
+  - "[[Elarion Vaelthor]]"
+  - "[[Mira Valen]]"
+  - "[[Padre Oric]]"
+  - "[[General Cassian Valerius]]"
+location: "[[Leth'valora]]"
+territory: "[[Floresta de Avenor]]"
+faction:
+  - "[[Sentinelas de Leth'valora]]"
+  - "[[Conclave dos Errantes]]"
 cover: "[[zz_media/banner-bastardo-de-ferro.png]]"
 description: A história de Vezemir, o Bastardo de Ferro, desde sua infância entre os elfos de Leth'valora até sua busca implacável pelo dragão que destruiu tudo o que ele amava.
 ---
@@ -27,7 +53,9 @@ Sua história atravessa mais de um século de batalhas, perdas e segredos antigo
 
 ## Personagens Importantes
 ```datacards
-TABLE thumbnail, location, status FROM #chapter00
+TABLE thumbnail, location, status
+FROM "Characters/Individual"
+WHERE contains(tags, "chapter00") OR contains(tags, "vezemir")
 SORT name ASC
 
 // Settings
@@ -39,7 +67,7 @@ cardSpacing: 4
 ```
 
 > [!world]- RESUMO
-> Meio-elfo criado pelo veterano [[Elarion Vaelthor]], Vezemir cresceu enfrentando o preconceito da sociedade élfica de [[Leth'valora]]. Após ser exilado por seu mentor, tornou-se mercenário, soldado e herói de inúmeras guerras humanas. Durante seus anos de isolamento encontrou [[Mira Valen]], a mulher que lhe deu um lar. Tudo foi destruído quando um misterioso dragão verde usando um colar dourado massacrou sua vila. Desde então, Vezemir dedica sua vida a encontrar a criatura, enquanto investiga os mistérios dos [[Guardiões do Véu Cinzento]], sua própria origem e a estranha magia que habita dentro dele.
+> Meio-elfo criado pelo veterano [[Elarion Vaelthor]], Vezemir cresceu enfrentando o preconceito de parte dos elfos de [[Leth'valora]]. Depois que Elarion o afastou da vila para salvá-lo de uma escalada fatal, tornou-se mercenário, soldado e herói de inúmeras guerras. Durante seus anos de isolamento encontrou [[Mira Valen]], filha do chefe humano de Leth'valora, a mulher que lhe deu um lar. Tudo foi destruído quando um misterioso dragão verde usando um colar dourado massacrou a vila. Desde então, Vezemir dedica sua vida a encontrar a criatura, enquanto investiga os mistérios dos [[Guardiões do Véu Cinzento]], sua própria origem e a estranha magia que habita dentro dele.
 
 ---
 
@@ -97,20 +125,20 @@ Com violência.
 
 ---
 
-# O EXÍLIO
+# A PARTIDA
 
 O estopim ocorreu durante uma cerimônia em [[Leth'valora]].
 Diante de guardas e nobres, insultaram sua origem.
 Vezemir respondeu esmagando o braço do jovem nobre.
 Naquela noite, Elarion tomou uma decisão.
-Se permanecesse entre os elfos, Vezemir acabaria morto.
+Se permanecesse em Leth'valora, Vezemir acabaria morto.
 Ou pior.
 Se tornaria exatamente aquilo que todos acreditavam que ele era.
 Antes da despedida, Elarion entregou três relíquias:
 
 - [[Grisalma]]
 - [[Muralha de Dorn]]
-- [[O Medalhão dos Guardiões do Véu Cinzento]]
+- [[O Medalhão]]
 
 E apenas uma frase.
 
@@ -155,7 +183,7 @@ Sobrevivendo.
 Ocupando cavernas de monstros que derrotava.
 Até encontrar alguém que mudaria sua vida.
 
-[[Mira Valen]], filha do chefe de Leth'valora.
+[[Mira Valen]], filha do chefe humano de Leth'valora.
 
 Ela foi a primeira pessoa a enxergá-lo como homem.
 Não como arma.
@@ -189,10 +217,10 @@ Vingança.
 
 # O DRAGÃO DE COLAR DOURADO
 
-Durante mais de trinta anos, Vezemir perseguiu pistas.
+Durante anos, Vezemir perseguiu pistas.
 Caçou monstros.
 Explorou ruínas.
-Trabalhou para o [[Conclave dos Errantes]].
+Trabalha para o [[Conclave dos Errantes]].
 Buscou qualquer informação capaz de levá-lo até o dragão.
 Mas quanto mais investigava, mais perguntas surgiam.
 Por que o dragão parecia reconhecê-lo?

@@ -1,4 +1,13 @@
 ---
+obsidianUIMode: preview
+NoteIcon: story
+NoteStatus: Active
+type: story
+status: Cânone de personagem
+campaign_status: Ativo
+visibility: Mestre
+spoiler_level: heavy
+gm_secret: true
 cssclasses:
   - b-sides-script
   - chapter
@@ -8,8 +17,23 @@ tags:
   - chapter
   - story
   - chapter00
+  - origin-story
+  - origin-raziel
   - earthropo
-cover: [[zz_media/banner-as-cronicas-de-nevoa-de-sangue.png]]
+  - raziel
+chapter: 00 - As Crônicas de Névoa de Sangue
+chapters:
+  - 00 - As Crônicas de Névoa de Sangue
+characters:
+  - "[[Raziel]]"
+  - "[[Kaelen, o Flagelo]]"
+  - "[[Lorde Malakar]]"
+  - "[[Vandor, o Senhor das Bestas]]"
+location: "[[Ruínas de Valthor]]"
+territory: Earthropo
+faction:
+  - "[[Clã Sanguinallis]]"
+cover: "[[zz_media/banner-as-cronicas-de-nevoa-de-sangue.png]]"
 description: A história de Raziel, o Espectro da Névoa de Sangue — desde seu auge como executor do Clã Sanguinallis na Fortaleza de Gharok até a traição que o aprisionou por trezentos anos e seu renascimento nas cavernas abissais sob as Ruínas de Valthor.
 ---
 
@@ -19,11 +43,16 @@ description: A história de Raziel, o Espectro da Névoa de Sangue — desde seu
 
 ## O Retorno de Raziel
 
-Ápice do Clã Sanguinallis, executor pessoal de [[Lorde Malakar]] e mestre das [[Adagas de Espectro Fantasma]], [[Raziel]] movia-se onde a luz não ousava tocar. Traído por seus próprios irmãos e por seu senhor, foi condenado ao tormento eterno em um poço de prata nos picos congelados ao norte de Nimalia. Trezentos anos depois, uma entidade primordial nas profundezas das [[Ruínas de Valthor]] o reconstruiu. Agora ele volta — não como assassino, mas como calamidade.
+Ápice do Clã Sanguinallis, executor pessoal de [[Lorde Malakar]] e mestre das [[Adagas de Espectro Fantasma]], [[Raziel]] movia-se onde a luz não ousava tocar. Traído por seus próprios irmãos e por seu senhor, foi condenado ao tormento eterno em um poço de prata nos picos congelados do norte de Earthropo. Trezentos anos depois, uma entidade primordial nas profundezas das [[Ruínas de Valthor]] o reconstruiu. Agora ele volta — não como assassino, mas como calamidade.
 
 ## Personagens Importantes
 ```datacards
-TABLE thumbnail, location, status FROM #chapter00_raziel
+TABLE thumbnail, location, status
+FROM "Characters/Individual"
+WHERE contains(tags, "chapter00_raziel")
+OR file.name = "Kaelen, o Flagelo"
+OR file.name = "Lorde Malakar"
+OR file.name = "Vandor, o Senhor das Bestas"
 SORT name ASC
 
 // Settings
@@ -35,7 +64,7 @@ cardSpacing: 4
 ```
 
 > [!world]- RESUMO
-> Raziel serviu como braço direito de Lorde Malakar na Fortaleza de Gharok. Seus irmãos Kaelen e Vandor, movidos por inveja e medo, tramaram sua queda com a conivência do próprio Malakar. Atraído por um pretexto falso, Raziel foi subjugado por feitiçarias ancestrais e condenado a um suplício imortal: pregos de prata atravessaram seus ombros, correntes do mesmo metal foram cravadas em sua carne, e ele foi arremessado em um poço vertical nos picos congelados ao norte. A prata impedia sua cura; sua natureza vampírica o impedia de morrer. Por trezentos anos ele queimou. Com o tempo, seu próprio sangue corrosivo enfraqueceu o fundo do poço, e ele despencou através de fendas vulcânicas extintas até as cavernas abissais sob as Ruínas de Valthor. Lá, o Ancião Primordial — um deus esquecido — despedaçou as correntes e o alimentou com o Sangue Antigo. Raziel renasceu mais forte, mais selvagem e movido por um único propósito: vingança.
+> Raziel serviu como braço direito de Lorde Malakar na Fortaleza de Gharok. Seus irmãos Kaelen e Vandor, movidos por inveja e medo, tramaram sua queda com a conivência do próprio Malakar. Atraído por um pretexto falso, Raziel foi subjugado por feitiçarias ancestrais e condenado a um suplício imortal: pregos de prata atravessaram seus ombros, correntes do mesmo metal foram cravadas em sua carne, e ele foi arremessado em um poço vertical nos picos congelados do norte de Earthropo. A prata impedia sua cura; sua natureza vampírica o impedia de morrer. Por trezentos anos ele queimou. Com o tempo, seu próprio sangue corrosivo enfraqueceu o fundo do poço, e ele despencou através de fendas vulcânicas extintas até as cavernas abissais sob as Ruínas de Valthor. Lá, o Ancião Primordial — um deus esquecido — despedaçou as correntes e o alimentou com o Sangue Antigo. Raziel renasceu mais forte, mais selvagem e movido por um único propósito: vingança.
 
 ---
 
@@ -63,7 +92,7 @@ Sob o pretexto de conter uma heresia rúnica perto da Passagem de Korr, Raziel f
 
 A sentença não foi a estaca, que traria a paz do esquecimento. Foi o tormento eterno.
 
-Despido de sua armadura, Raziel foi arrastado até os picos congelados ao norte. Pregos de prata pura perfuraram seus ombros, e pesadas correntes do mesmo metal maldito foram cravadas em sua carne imortal. Jogado no fundo de um poço vertical e escuro, foi deixado para queimar.
+Despido de sua armadura, Raziel foi arrastado até os picos congelados do norte de Earthropo. Pregos de prata pura perfuraram seus ombros, e pesadas correntes do mesmo metal maldito foram cravadas em sua carne imortal. Jogado no fundo de um poço vertical e escuro, foi deixado para queimar.
 
 A prata impedia que ele se curasse. Sua natureza vampírica o impedia de morrer.
 

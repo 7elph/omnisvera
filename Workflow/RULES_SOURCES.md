@@ -61,7 +61,7 @@ O PDF oficial do Livro I não foi localizado entre os arquivos de `Downloads`. A
 ### Classes
 
 - [[Guerreiro]], [[Ladrão]], [[Clérigo]] e [[Mago]] possuem notas ativas resumidas a partir do Livro I e do SRD oficial.
-- [[Homem de Armas]] permanece como ponte para a denominação da edição anterior usada na ficha de Vezemir.
+- `Homem de Armas` é apenas uma denominação antiga encontrada em fichas legadas. A classe operacional de Omnisvera é [[Guerreiro]].
 - As quatro notas mecânicas antigas foram arquivadas em `Workflow/Legacy/Old Dragon anterior/Legacy - Old Dragon anterior - *.md`.
 - [[Alquimista]] vem de suplemento independente e não foi adotado como classe mecânica.
 
@@ -73,7 +73,7 @@ Isso não remove os poderes de [[Vezemir]]. A origem, o acesso no nível 1 e a v
 
 ### Varkh
 
-A história atual define [[Varkh Nimalis]] como ladrão e alquimista de rua. A ficha sem nome registra Homem de Armas e usa o modelo antigo. Nenhuma das duas informações deve apagar a outra automaticamente:
+A história atual define [[Varkh Nimalis]] como alquimista de rua ligado ao [[Conclave dos Errantes]]. A classe operacional aprovada para ele é [[Alquimista]]. A ficha sem nome usa modelo antigo e deve ser tratada apenas como referência parcial. Nenhuma dessas informações deve apagar a outra automaticamente:
 
 - a história permanece como cânone narrativo;
 - a ficha permanece como registro recebido;
@@ -82,7 +82,7 @@ A história atual define [[Varkh Nimalis]] como ladrão e alquimista de rua. A f
 
 ### Raziel
 
-[[Raziel]] pode usar **Ladrão** como classe-base de OD2. **Assassino** é uma opção oficial do Livro II, mas ainda precisa ser adotada para o personagem. Vampiro, Hemomante, Reserva de Sangue e seus poderes atuais são elementos autorais da campanha até receberem regras próprias.
+[[Raziel]] usa **Vampiro** como classe operacional, baseada em material de complemento consultado pelo mestre. Hemomancia, [[Sangue Antigo]], Reserva de Sangue e poderes específicos de Raziel são camadas autorais da campanha até receberem regras próprias completamente fechadas.
 
 ### Kenku
 

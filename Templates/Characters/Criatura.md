@@ -38,7 +38,7 @@ tags:
 # Nome
 
 > [!NOTE|clean no-i right]+ Retrato
-> ![[thumbnail|400]]
+> Substituir por um embed de imagem do Obsidian quando houver imagem.
 
 > [!WARNING] Estado canônico
 > Esta nota está em desenvolvimento e depende de confirmação do Sage.

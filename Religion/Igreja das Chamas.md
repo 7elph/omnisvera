@@ -16,6 +16,9 @@ tags:
 
 # Igreja das Chamas
 
+> [!NOTE|clean no-i right]+ Retrato
+> ![[igreja-das-chamas.png|400]]
+
 Fé organizada presente em Nimalia e em outras regiões de Earthropo. Seus ensinamentos utilizam chamas como símbolos de virtudes, memória, purificação e orientação.
 
 ## Cânone de trabalho
@@ -33,4 +36,4 @@ Fé organizada presente em Nimalia e em outras regiões de Earthropo. Seus ensin
 - Relação com outras crenças e com o Véu Cinzento.
 
 > [!warning] Estado do conteúdo
-> Esta nota organiza conceitos já existentes no vault, mas não resolve as decisões religiosas ainda abertas no [[CANON]].
+> Esta nota organiza conceitos já existentes no vault, mas não resolve as decisões religiosas ainda abertas no [[Workflow/CANON|Cânone de Omnisvera]].

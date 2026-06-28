@@ -26,7 +26,7 @@ Para personagens de jogador, a referência estrutural é [[Workflow/Templates/Pl
 
 | Personagem | Arquivo | Classificação atual | Ponto a revisar |
 |:--|:--|:--|:--|
-| Vezemir | [[Vezemir]] | `role: player`, tags `player` e `character` | Consistência técnica auditada; [[Muralha de Dorn]] foi corrigida e [[Theron Elensar]] recebeu uma nota provisória. A identidade e a história de Theron continuam pendentes. |
+| Vezemir | [[Vezemir]] | `role: player`, tags `player` e `character` | Consistência técnica auditada; [[Muralha de Dorn]] foi corrigida. Theron Elensar não está mais na pasta ativa e deve ser tratado como pendência, não como personagem existente. |
 | Varkh Nimalis | [[Varkh Nimalis]] | `role: player`, tags `player` e `character` | Idade e afiliação permanecem abertas; a ficha do jogador João precisa ser identificada e reconciliada com a classe. |
 | Raziel | [[Raziel]] | `role: player`, tags `player` e `character` | Referência visual consolidada; personalidade e conexão com o grupo aguardam decisões do jogador. |
 

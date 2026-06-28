@@ -3,6 +3,7 @@ obsidianUIMode: preview
 NoteIcon: lore
 NoteStatus: Draft
 status: Em desenvolvimento
+cover: zz_media/remedios-falsos.png
 canon_status: Draft
 visibility: Mestre
 created_by: IA
@@ -14,6 +15,9 @@ tags:
 ---
 
 # Remédios Falsos de Maré Baixa
+
+> [!NOTE|clean no-i right]+ Retrato
+> ![[remedios-falsos.png|400]]
 
 > [!WARNING] Estado canônico
 > Esta nota está em desenvolvimento e depende de confirmação do Sage.

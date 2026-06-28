@@ -1,14 +1,14 @@
 ---
 obsidianUIMode: preview
 NoteIcon: faction 
-NoteStatus: New
+NoteStatus: Active
 visibility: Mestre
 spoiler_level: light
 gm_secret: false
-status: Em revisão
-campaign_status: Em desenvolvimento
+status: Destruída
+campaign_status: Cânone de trabalho
 leader:
-state: Situação desconhecida após a destruição da vila
+state: Mortos no incidente do dragão
 location: "[[Leth'valora]]"
 thumbnail: "zz_media/sentinelas-de-leth'valora.png"
 cover: "zz_media/sentinelas-de-leth'valora.png"
@@ -24,10 +24,14 @@ tags:
 
 # Sentinelas de Leth'valora
 
-Pequena força que era responsável pela proteção da vila de [[Leth'valora]], das trilhas próximas e dos acessos da [[Floresta de Avenor]].
+> [!NOTE|clean no-i right]+ Retrato
+> ![[sentinelas-de-leth'valora.png|400]]
+
+Pequena força que era responsável pela proteção da vila de [[Leth'valora]], das trilhas próximas e dos acessos da [[Floresta de Avenor]]. Os Sentinelas foram destruídos junto com a vila durante o incidente do dragão de colar dourado.
 
 ## Estrutura
 
-- Seu destino após a destruição da vila ainda não foi definido.
+- Foram mortos durante a destruição de Leth'valora.
 - [[Elarion Vaelthor]] foi um de seus capitães mais respeitados.
-- A quantidade de sentinelas e sua relação com o futuro reino élfico permanecem em aberto.
+- Eram guardas locais da vila, não uma grande ordem continental.
+- A quantidade exata de sentinelas permanece em aberto.

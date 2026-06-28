@@ -18,9 +18,15 @@ tags:
 
 # Casa da Moeda de Nimalia
 
+> [!NOTE|clean no-i right]+ Retrato
+> ![[casa-da-moeda-exterior.png|400]]
+
 Instituição localizada na [[Nimalis]] e responsável pela produção das moedas oficiais do reino.
 
 ## Funções atribuídas
+
+> [!NOTE|clean no-i right]+ Retrato
+> ![[casa-da-moeda-interior.png|300]]
 
 - Padronizar peso e composição das moedas.
 - Aplicar o brasão de Nimalia e o ano de cunhagem.

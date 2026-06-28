@@ -8,6 +8,7 @@ spoiler_level: none
 gm_secret: false
 campaign_status: Ativo
 thumbnail: zz_media/th_vezemir.PNG
+cover: zz_media/th_vezemir.PNG
 status: Vivo
 location: "[[Floresta de Avenor]]"
 territory: "[[Floresta de Avenor]]"
@@ -41,8 +42,7 @@ tags:
 > [!NOTE|clean no-i right]+ Vezemir
 > ![[vezemir.png|400]]
 
-
-## Visão geral
+## Visão Geral
 **Títulos:** O Bastardo de Ferro
 **Apelido:** O Urso da [[Floresta de Avenor]], Guardião de [[Leth'valora]]
 **Localização Atual:** [[Floresta de Avenor]], próximo a [[Nimalia]]
@@ -58,20 +58,29 @@ tags:
 **Status:** Vivo  
 **Afiliação:** [[Conclave dos Errantes]]  
 **Afiliações Anteriores:** [[Sentinelas de Leth'valora]]
-**Associados Conhecidos:** [[Elarion Vaelthor]], [[Mira Valen]], [[Padre Oric]]  
-**Inimigos Conhecidos:** [[Theron Elensar]]  
+**Associados Conhecidos:** [[Elarion Vaelthor]], [[Mira Valen]], [[Padre Oric]], [[General Cassian Valerius]]
+**Inimigos Conhecidos:** [[Dragão de Colar Dourado]]  
 **Origem:** [[Leth'valora]]  
-**Posses:** [[Grisalma]], [[Muralha de Dorn]], [[O Medalhão dos Guardiões do Véu Cinzento]]
+**Posses:** [[Grisalma]], [[Muralha de Dorn]], [[O Medalhão]]
 
 
 ---
+
+## Aparições
+
+```dataview
+LIST
+FROM "EARTHROPO"
+WHERE contains(this.chapters, file.name)
+SORT file.name ASC
+```
 
 ## História
 
 > <h4>"A honra não se herda. Se conquista."</h5>
 
 
-Vezemir foi encontrado ainda bebê nas ruínas de uma antiga estrada esquecida próxima à vila élfica de [[Leth'valora]]. Rejeitado por parte dos elfos devido à sua ascendência mestiça, foi adotado pelo veterano [[Elarion Vaelthor]], antigo capitão das Sentinelas de Leth'valora.
+Vezemir foi encontrado ainda bebê nas ruínas de uma [[Antiga Estrada Esquecida]] próxima à uma vila élfica de [[Leth'valora]]. Rejeitado por parte dos elfos devido à sua ascendência mestiça, foi adotado pelo veterano [[Elarion Vaelthor]], antigo capitão das [[Sentinelas de Leth'valora]].
 
 Nos limites de [[Leth'valora]], Elarion o criou em uma fortaleza abandonada nas elevações de Avenor. Ali Vezemir recebeu treinamento rigoroso em combate, sobrevivência, estratégia, história e magia.
 
@@ -93,7 +102,7 @@ Entregou-lhe três relíquias ancestrais:
     
 - [[Muralha de Dorn]]
     
-- O medalhão dos [[Guardiões do Véu Cinzento]]
+- [[O Medalhão]]
     
 
 Na manhã seguinte, Vezemir deixou [[Leth'valora]].
@@ -104,8 +113,8 @@ E nunca mais voltou.
 
 ## O Bastardo de Ferro
 
-Durante décadas, Vezemir serviu como mercenário nos reinos humanos.
-Participou de guerras, cercos e batalhas que hoje são lembradas apenas em canções e registros esquecidos.
+Durante décadas, Vezemir serviu como mercenário nos reinos proximos, através do [[General Cassian Valerius]].
+Participou de guerras, cercos e batalhas que hoje são lembradas apenas em canções e registros antigos.
 Sua reputação cresceu rapidamente.
 Diziam que atravessava muralhas de escudos sozinho.
 Que derrotou um ogro usando apenas o próprio escudo.
@@ -154,8 +163,8 @@ Desde aquele dia, sua vida passou a ser guiada por um único propósito:
 
 ## Atualidade
 
-Durante cerca de trinta anos, Vezemir percorreu o continente perseguindo pistas sobre o dragão.
-Trabalhou ao lado do [[Conclave dos Errantes]], enfrentando monstros, explorando ruínas e investigando rumores.
+Durante anos, Vezemir perseguiu pistas sobre o dragão.
+Trabalha ao lado do [[Conclave dos Errantes]], enfrentando monstros, explorando ruínas e investigando rumores.
 Com o passar dos anos compreendeu que sua busca era quase impossível.
 Dragões atravessam continentes em poucos dias.
 As pistas desaparecem.
@@ -210,7 +219,7 @@ Embora rejeite sua herança arcana, ocasionalmente manifesta explosões involunt
 
 ## Segredos
 
-- O medalhão dos [[Guardiões do Véu Cinzento]] pode estar ligado à verdadeira origem de Vezemir.
+- [[O Medalhão]]  pode estar ligado à verdadeira origem de Vezemir.
     
 - [[Padre Oric]] desapareceu investigando conexões entre os Guardiões e o dragão de colar dourado.
     
@@ -218,7 +227,7 @@ Embora rejeite sua herança arcana, ocasionalmente manifesta explosões involunt
     
 - [[Elarion Vaelthor]] pode ter ocultado informações sobre seus pais biológicos.
     
-- Existe a possibilidade de Vezemir descender da última linhagem dos Guardiões do Véu Cinzento.
+- Existe a possibilidade de Vezemir descender de alguma linhagem élfica.
     
 
 ---
@@ -233,7 +242,7 @@ Machado lendário entregue por Elarion Vaelthor.
 
 Escudo ancestral entregue por Elarion Vaelthor.
 
-### Medalhão dos Guardiões do Véu Cinzento
+### [[O Medalhão]]
 
 Artefato misterioso cuja verdadeira função permanece desconhecida.
 
@@ -285,7 +294,7 @@ cardSpacing: 4
 - **Adaga oculta na bota:** dano de 1d4.
 - **Armadura pesada:** peso registrado de 20 kg.
 - **[[Muralha de Dorn]]:** bônus de +2 na CA.
-- **[[O Medalhão dos Guardiões do Véu Cinzento|Amuleto do Véu]]**.
+- **[[O Medalhão]]**.
 - Kit básico.
 
 ### Idiomas
@@ -296,7 +305,29 @@ cardSpacing: 4
 ### Poderes registrados na ficha
 
 - **Força Arcana:** toque; duração de 1d6 + nível; concede 1 ponto adicional para cada 5 pontos de Força já possuídos.
-- **Velocidade:** toque; duração de 1d4 + nível; dobra a movimentação, concede +2 na CA e um ataque adicional. A descrição corresponde à versão antiga de `Velocidade Arcana` encontrada em `odlb.pdf`, com a diferença de que o livro também registra envelhecimento biológico de um ano.
+- **Velocidade:** toque; duração de 1d4 + nível; dobra a movimentação, concede +2 na CA e um ataque adicional.
 
-> [!warning] Validação de regras
-> A ficha digital usa o modelo da edição anterior e exibe `JP final: +3` e acesso a poderes de 2º e 3º círculos para um Homem de Armas de nível 1. `Força Arcana` e `Velocidade` foram localizadas no livro de 2017; os nomes também existem em OD2, mas com redação e duração revisadas. Os valores foram preservados como recebidos. A origem e a versão desses poderes ainda precisam ser definidas em mesa. Consulte [[Workflow/RULES_SOURCES|Fontes de Regras da Campanha]].
+## Relações
+
+_Pendente de consolidação pelo Sage._
+
+## Papel na Campanha
+
+_Pendente de consolidação pelo Sage._
+
+## Uso em Mesa
+
+- Como apresentar:
+- O que os jogadores sabem:
+- O que apenas o mestre sabe:
+- Como entra em cena:
+- Ganchos:
+- Consequências possíveis:
+
+## Pendências do Sage
+
+- Revisar e completar campos em aberto.
+
+## Links relevantes
+
+_Pendente de consolidação pelo Sage._

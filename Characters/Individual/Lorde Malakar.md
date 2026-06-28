@@ -1,34 +1,60 @@
 ---
 obsidianUIMode: preview
-NoteIcon: character
+NoteIcon: magicitem
 NoteStatus: Draft
-status: Em desenvolvimento
-canon_status: Draft
+type: character
 visibility: Mestre
+spoiler_level: heavy
+gm_secret: true
 created_by: IA
-requires_review: true
+campaign_status: Em revisão
+thumbnail:
+status: Em desenvolvimento
+location:
+territory:
+faction:
+class:
+race:
+role: npc
+chapter: []
+chapters: []
 tags:
   - Category/Character
   - character
   - npc
   - draft
+  - personagem
 ---
 
 # Lorde Malakar
 
+> [!NOTE|clean no-i right]+ Lorde Malakar
+> Imagem pendente.
+
 > [!WARNING] Estado canônico
 > Esta nota está em desenvolvimento e depende de confirmação do Sage.
 
-## Resumo
+> [!WARNING] Estado canônico
+> Esta nota está em desenvolvimento e depende de confirmação do Sage.
+
+## Visão Geral
 
 Lorde do [[Clã Sanguinallis]] e traidor de [[Raziel]]. Ocupava o trono na [[Fortaleza de Gharok]] e ordenou a condenação de seu executor pessoal sob pretexto de heresia rúnica.
+
+## Aparições
+
+```dataview
+LIST
+FROM "EARTHROPO"
+WHERE contains(this.chapters, file.name)
+SORT file.name ASC
+```
 
 ## Função narrativa
 
 Malakar é o alvo final da vingança de Raziel. Como lorde do clã, ele representa a autoridade que traiu Raziel e o terceiro alvo na rota de vingança ("A Queda do Trono — Fortaleza de Gharok").
 
-## Relações conhecidas
-
+## Relações
 - [[Raziel]] - Executor pessoal que traiu e condenou
 - [[Kaelen, o Flagelo]] - General do clã, cúmplice na traição
 - [[Vandor, o Senhor das Bestas]] - General do clã, cúmplice na traição
@@ -64,3 +90,48 @@ Malakar é o alvo final da vingança de Raziel. Como lorde do clã, ele represen
 - [[Characters/Individual/Vandor, o Senhor das Bestas]]
 - [[Factions/Clã Sanguinallis]]
 - [[Locations/Fortaleza de Gharok]]
+
+## História
+
+_Pendente de consolidação pelo Sage._
+
+## Atualidade
+
+_Pendente de consolidação pelo Sage._
+
+## Personalidade
+
+_Pendente de consolidação pelo Sage._
+
+## Habilidades
+
+_Pendente de consolidação pelo Sage._
+
+## Segredos
+
+_Pendente de revisão do Mestre._
+
+## Equipamentos
+
+_Pendente de consolidação pelo Sage._
+
+## Aparência
+
+_Pendente de consolidação pelo Sage._
+
+## Papel na Campanha
+
+_Pendente de consolidação pelo Sage._
+
+## Uso em Mesa
+
+- Como apresentar:
+- O que os jogadores sabem:
+- O que apenas o mestre sabe:
+- Como entra em cena:
+- Ganchos:
+- Consequências possíveis:
+
+## Pendências do Sage
+
+- Revisar e completar campos em aberto.

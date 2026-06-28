@@ -1,4 +1,13 @@
 ---
+obsidianUIMode: preview
+NoteIcon: story
+NoteStatus: Active
+type: story
+status: Cânone de personagem
+campaign_status: Ativo
+visibility: Mestre
+spoiler_level: medium
+gm_secret: true
 cssclasses:
   - b-sides-script
   - chapter
@@ -8,9 +17,22 @@ tags:
   - chapter
   - story
   - chapter00
+  - origin-story
+  - origin-varkh
   - earthropo
+  - varkh
+chapter: 00 - O Corvo da Maré Baixa
+chapters:
+  - 00 - O Corvo da Maré Baixa
+characters:
+  - "[[Varkh Nimalis]]"
+  - "[[Mestre Odran Veyl]]"
+location: "[[Maré Baixa]]"
+territory: "[[Nimalia|Reino de Nimalia]]"
+faction:
+  - "[[Nobreza de Nimalia]]"
 cover: "[[zz_media/banner-o-corvo-da-mare-baixa.png]]"
-description: A história de Varkh Nimalis, o Corvo da Maré Baixa, desde sua infância nos becos portuários da capital do Reino de Nimalia até seu aprendizado como alquimista de rua e a descoberta de que alguém está usando o nome de seu mestre para espalhar remédios falsos pelo reino.
+description: A história de Varkh Nimalis, o Corvo da Maré Baixa, desde sua infância nos becos portuários de Nimalis até seu aprendizado como alquimista de rua e a descoberta de que alguém está usando o nome de seu mestre para espalhar remédios falsos pelo reino.
 ---
 
 # Capítulo 00
@@ -19,11 +41,13 @@ description: A história de Varkh Nimalis, o Corvo da Maré Baixa, desde sua inf
 
 ## O Corvo da Maré Baixa
 
-Nascido no extremo sul da capital do Reino de Nimalia, em uma favela espremida entre muros antigos e o cheiro salgado do porto, [[Varkh Nimalis]] aprendeu cedo que tudo tinha valor — até aquilo que os outros jogavam fora. Kenku, ladrão, alquimista e, ocasionalmente, assassino, sua história é feita de vozes roubadas, frascos quebrados e uma dívida de honra com o velho abutre que lhe ensinou a transformar problema em saída.
+Nascido no extremo sul de [[Nimalis]], em uma favela espremida entre muros antigos e o cheiro salgado do porto, [[Varkh Nimalis]] aprendeu cedo que tudo tinha valor — até aquilo que os outros jogavam fora. Kenku, ladrão, alquimista e, ocasionalmente, assassino, sua história é feita de vozes roubadas, frascos quebrados e uma dívida de honra com o velho abutre que lhe ensinou a transformar problema em saída.
 
 ## Personagens Importantes
 ```datacards
-TABLE thumbnail, location, status FROM #chapter00_varkh
+TABLE thumbnail, location, status
+FROM "Characters/Individual"
+WHERE contains(tags, "chapter00_varkh") OR contains(tags, "varkh")
 SORT name ASC
 
 // Settings
@@ -35,13 +59,13 @@ cardSpacing: 4
 ```
 
 > [!world]- RESUMO
-> Varkh cresceu em Maré Baixa, um amontoado de passarelas de madeira, telhados remendados e negócios que ninguém registrava em papel. Por ser Kenku, sua voz nunca era totalmente sua — mas ele aprendeu que uma voz emprestada, usada na hora certa, podia abrir mais portas que uma chave. Sua vida mudou quando tentou roubar a loja do velho alquimista [[Mestre Odran Veyl]], um demi-humano abutre dono d'O Frasco Afogado. Em vez de chamar a guarda, Odran o fez aprender algo útil cada vez que era pego. Com o tempo, Varkh dominou alquimia de rua: ervas do cais, álcool roubado, fungos de porão, pó de carvão. Também aprendeu a usar adagas, espada curta e arco curto — não por brutalidade, mas por precisão. Agora viaja porque alguém está usando o símbolo de Odran para vender remédios falsos em Nimalia. Não busca glória. Busca respostas, ingredientes, moedas no bolso — e talvez uma voz que um dia pareça sua.
+> Varkh cresceu em Maré Baixa, um amontoado de passarelas de madeira, telhados remendados e negócios que ninguém registrava em papel. Por ser Kenku, sua voz nunca era totalmente sua — mas ele aprendeu que uma voz emprestada, usada na hora certa, podia abrir mais portas que uma chave. Sua vida mudou quando tentou roubar a loja do velho alquimista [[Mestre Odran Veyl|Odran]], um antropo abutre dono d'O Frasco Afogado. Em vez de chamar a guarda, Odran o fez aprender algo útil cada vez que era pego. Com o tempo, Varkh dominou alquimia de rua: ervas do cais, álcool roubado, fungos de porão, pó de carvão. Também aprendeu a usar adagas, espada curta e arco curto — não por brutalidade, mas por precisão. Agora viaja porque alguém está usando o símbolo de Odran para vender remédios falsos em toda Nimalia. Não busca glória. Busca respostas, ingredientes, moedas no bolso — e talvez uma voz que um dia pareça sua.
 
 ---
 
 # O CORVO QUE NÃO SABIA VOAR
 
-O lugar era conhecido como **Maré Baixa**.
+O lugar era conhecido como **[[Maré Baixa]]**.
 
 Um amontoado de passarelas de madeira, telhados remendados, cordas penduradas, barracos tortos e lanternas que nunca apagavam por completo. Ali, a cidade parecia respirar diferente. Enquanto o centro da capital era feito de pedra, brasões e casas altas, Maré Baixa era feita de vozes, fumaça, peixe seco, ferrugem, música ruim e negócios que ninguém registrava em papel.
 
@@ -57,9 +81,9 @@ Por ser Kenku, sua voz nunca era totalmente sua.
 
 Mas isso nunca o impediu de falar. Ele apenas aprendeu que uma voz emprestada, quando usada na hora certa, podia abrir mais portas que uma chave.
 
-Em Earthropo, os humanos são maioria. Em Maré Baixa, porém, Varkh não era desprezado simplesmente por ser uma criatura animal. O problema era ser corvo.
+Em Nimalia, os antropos são maioria; em Earthropo como um todo, outros povos também são comuns. Em Maré Baixa, porém, Varkh não era desprezado simplesmente por ser quem era. O problema era ser corvo.
 
-Corvos lembravam mau presságio. Lembravam carniça, doença, segredo e morte. Em Maré Baixa, isso não era exatamente ruim. Às vezes, ser temido evitava confusão. Mas em outras partes de Nimalia, Varkh percebia os olhares: alguns respeitosos, outros desconfiados.
+Corvos lembravam mau presságio. Lembravam carniça, doença, segredo e morte. Em Maré Baixa, isso não era exatamente ruim. Às vezes, ser temido evitava confusão. Mas em outras partes de Nimalis, Varkh percebia os olhares: alguns respeitosos, outros desconfiados.
 
 Ele aprendeu a gostar disso. Se as pessoas já esperavam que ele fosse estranho, então ele seria estranho do jeito mais útil possível.
 
@@ -67,9 +91,9 @@ Ele aprendeu a gostar disso. Se as pessoas já esperavam que ele fosse estranho,
 
 # O FRASCO AFOGADO
 
-A vida de Varkh mudou quando ele tentou roubar uma caixa pequena de um velho alquimista chamado **Mestre Odran Veyl**.
+A vida de Varkh mudou quando ele tentou roubar uma caixa pequena de um velho alquimista chamado **Odran Veyl**.
 
-Odran era um demi-humano abutre — alto, curvado, sempre vestido com um casaco escuro e uma máscara de médico da peste pendurada no pescoço. Tinha uma loja pequena perto do porto, chamada **O Frasco Afogado**, onde vendia tônicos, pomadas, antídotos, calmantes, venenos fracos para ratos e remédios de gosto horrível.
+Odran era um antropo abutre — alto, curvado, sempre vestido com um casaco escuro e uma máscara de médico da peste pendurada no pescoço. Tinha uma loja pequena perto do porto, chamada **O Frasco Afogado**, onde vendia tônicos, pomadas, antídotos, calmantes, venenos fracos para ratos e remédios de gosto horrível.
 
 Varkh entrou pela janela, abriu a caixa e encontrou apenas um bilhete:
 
@@ -137,7 +161,7 @@ Varkh fazia serviços.
 
 A roupa de Varkh veio de Odran.
 
-A máscara, o capuz, os frascos no cinto, o couro escuro e o visual de médico da peste não eram fantasia. Eram ferramenta. Em Nimalia, poucas pessoas paravam um médico da peste durante um surto, uma quarentena ou uma noite ruim. A figura causava medo suficiente para abrir caminho.
+A máscara, o capuz, os frascos no cinto, o couro escuro e o visual de médico da peste não eram fantasia. Eram ferramenta. Em Nimalis, poucas pessoas paravam um médico da peste durante um surto, uma quarentena ou uma noite ruim. A figura causava medo suficiente para abrir caminho.
 
 Mas Varkh adaptou tudo ao próprio corpo de Kenku.
 
@@ -157,11 +181,11 @@ Varkh poderia ter ficado em Maré Baixa para sempre. Teria virado dono de loja, 
 
 Mas algo começou a incomodar.
 
-Nos últimos meses, remédios falsos começaram a circular em Nimalia usando o símbolo antigo de Odran. Pessoas estavam comprando cura e recebendo veneno. Documentos falsificados surgiam com assinaturas perfeitas demais. Guardas começaram a procurar por "um corvo alquimista" antes mesmo de saberem seu nome.
+Nos últimos meses, remédios falsos começaram a circular em toda Nimalia usando o símbolo antigo de Odran. Pessoas estavam comprando cura e recebendo veneno. Documentos falsificados surgiam com assinaturas perfeitas demais. Guardas começaram a procurar por "um corvo alquimista" antes mesmo de saberem seu nome.
 
 Alguém estava usando os métodos de seu mestre.
 
-Talvez um antigo aluno. Talvez uma guilda. Talvez alguém de dentro da nobreza demi-humana de Earthropo. Talvez o próprio Odran tenha escondido mais segredos do que ensinamentos.
+Talvez um antigo aluno. Talvez uma guilda. Talvez alguém de dentro da nobreza dos antropos de Nimalia. Talvez o próprio Odran tenha escondido mais segredos do que ensinamentos.
 
 Varkh não saiu de Maré Baixa por vingança dramática ou destino sagrado. Saiu porque alguém estava sujando seu nome, o nome de seu mestre e a pouca honra que existe entre ladrões, médicos e mentirosos.
 

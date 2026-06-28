@@ -15,6 +15,9 @@ tags:
 
 # Manto Primordial do Ancião
 
+> [!NOTE|clean no-i right]+ Retrato
+> ![[manto-primordial.png|400]]
+
 Armadura de couro batido extraplanar concedida a [[Raziel]] após seu encontro com o Ancião Primordial nas cavernas sob as [[Ruínas de Valthor]].
 
 ## Propriedades conhecidas

@@ -23,7 +23,6 @@
 ### Classes oficiais (Old Dragon 2E)
 - Clérigo
 - Guerreiro
-- Homem de Armas (legado)
 - Ladrão
 - Mago
 
@@ -42,7 +41,7 @@
 
 ## Locais
 
-- Capital de Nimalia
+- Nimalis
 - Casa da Moeda de Nimalia
 - Fortaleza de Gharok
 - Leth'valora (vila élfica destruída)
@@ -72,7 +71,7 @@
 ## Raças
 
 - Humanos (população majoritária)
-- Antropos (beastfolks de Nimalia)
+- Antropos (raça predominante em Nimalia)
 - Elfos
 - Kenku
 - Anões (futuro reino)

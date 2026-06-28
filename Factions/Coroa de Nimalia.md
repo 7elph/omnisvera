@@ -10,8 +10,8 @@ status: Ativa
 campaign_status: Ativa
 leader: "[[Augustus Terra Decimus]]"
 state: Ativa
-location: Nimalia
-territory: "[[Reino de Nimalia]]"
+location: "[[Nimalis]]"
+territory: "[[Nimalia|Reino de Nimalia]]"
 thumbnail: zz_media/coroa-de-nimalia.png
 cover: zz_media/coroa-de-nimalia.png
 chapters: []
@@ -25,11 +25,14 @@ tags:
 
 # Coroa de Nimalia
 
-A nobreza e monarquia do Reino de Nimalia, o principal reino dos antropos em Earthropo. Controlam as terras e o exército do reino.
+> [!NOTE|clean no-i right]+ Retrato
+> ![[coroa-de-nimalia.png|400]]
+
+A nobreza e monarquia do [[Nimalia|Reino de Nimalia]], o principal reino dos antropos em Earthropo. Controlam as terras e o exército do reino.
 
 ## Liderança
 - **Rei soberano:** [[Augustus Terra Decimus]]
-- **Corte Real:** Nobres e conselheiros em Nimalia
+- **Corte Real:** Nobres e conselheiros em [[Nimalis]]
 
 ## Objetivos
 - Manter a estabilidade do reino

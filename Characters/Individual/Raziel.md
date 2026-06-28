@@ -2,26 +2,37 @@
 obsidianUIMode: preview
 NoteIcon: magicitem
 NoteStatus: Active
+type: character
+visibility: Jogadores
+spoiler_level: none
+gm_secret: false
+campaign_status: Ativo
 thumbnail: zz_media/th_raziel.PNG
 status: Vivo
-location: Em aberto
+location: "[[Ruínas de Valthor]]"
 territory: Earthropo
 faction: Clã Sanguinallis
-class: Ladrão
+class: Vampiro
 race: Vampiro (Sanguinallis)
 level: 1
 alignment: Caótico Neutro
 role: player
+chapter:
+  - 00 - O Retorno de Raziel
 chapters:
   - 00 - O Retorno de Raziel
 tags:
   - player
   - character
   - chapter00_raziel
-  - rogue
   - vampire
+  - vampiro
   - hemomancer
+  - sangue-antigo
   - earthropo
+  - Category/Character
+  - personagem
+  - jogador
 ---
 
 # RAZIEL — O ESPECTRO DA NÉVOA DE SANGUE
@@ -29,15 +40,14 @@ tags:
 > [!NOTE|clean no-i right]+ Raziel
 > ![[raziel.PNG|400]]
 
-
 ## Visão Geral
 **Títulos:** O Espectro da Névoa de Sangue
 **Apelido:** O Espectro
-**Localização Atual:** Em aberto; sua origem está ligada à [[Fortaleza de Gharok]] e seu retorno às [[Ruínas de Valthor]]
-**Território:** Em aberto
+**Localização Atual:** [[Ruínas de Valthor]]; sua origem está ligada à [[Fortaleza de Gharok]]
+**Território:** Earthropo
 **Reputação Pública:** Antigo executor do [[Clã Sanguinallis]], apagado da história durante seu aprisionamento
 **Gênero:** Masculino
-**Classe:** [[Ladrão]]; hemomante como identidade narrativa
+**Classe:** [[Vampiro]]; hemomante como identidade narrativa
 **Raça:** Vampiro 
 **Idade:** 340 anos; aparência de aproximadamente 30 anos
 **Altura:** 1,88 m
@@ -53,6 +63,15 @@ tags:
 
 
 ---
+
+## Aparições
+
+```dataview
+LIST
+FROM "EARTHROPO"
+WHERE contains(this.chapters, file.name)
+SORT file.name ASC
+```
 
 ## História
 
@@ -143,7 +162,7 @@ A definir com o jogador.
 ## Habilidades
 
 **Furto e Infiltração:**
-Treinamento compatível com sua classe atual de ladrão e com sua antiga atuação como executor.
+Treinamento compatível com sua classe atual de vampiro e com sua antiga atuação como executor.
 
 **Hemomancia:**
 Manipula sangue para atacar, defender-se, curar-se e enfraquecer inimigos.
@@ -223,3 +242,28 @@ cardSpacing: 4
 ### Habilidades especiais
 
 - Hemomancia, Reserva de Sangue, regeneração vampírica, Névoa de Sangue e Asas Escarlates permanecem como elementos autorais até aprovação mecânica.
+
+## Relações
+
+_Pendente de consolidação pelo Sage._
+
+## Papel na Campanha
+
+_Pendente de consolidação pelo Sage._
+
+## Uso em Mesa
+
+- Como apresentar:
+- O que os jogadores sabem:
+- O que apenas o mestre sabe:
+- Como entra em cena:
+- Ganchos:
+- Consequências possíveis:
+
+## Pendências do Sage
+
+- Revisar e completar campos em aberto.
+
+## Links relevantes
+
+_Pendente de consolidação pelo Sage._

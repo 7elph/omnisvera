@@ -1,50 +1,66 @@
 ---
-
-obsidianUIMode: preview  
-NoteIcon: character  
-NoteStatus: Complete  
-thumbnail: zz_media/th_elarion.PNG  
-status: Desaparecido  
-location: "[[Leth'valora]]"  
+obsidianUIMode: preview
+NoteIcon: magicitem
+NoteStatus: Complete
+type: character
+visibility: Mestre
+spoiler_level: heavy
+gm_secret: true
+campaign_status: Ativo
+thumbnail: zz_media/th_elarion.PNG
+status: Desaparecido
+location: "[[Leth'valora]]"
 territory: "[[Floresta de Avenor]]"
-faction: "[[Sentinelas de Leth'valora]]"  
-class: Capitão 
-race: Elfo  
-role: npc  
+faction: "[[Sentinelas de Leth'valora]]"
+class: Capitão
+race: Elfo
+role: npc
+chapter: []
+chapters: []
 tags:
-- npc  
-- character   
-- elf    
-- mentor  
-- missing  
-- mystery  
-- chapter00
-
+  - npc
+  - character
+  - elf
+  - mentor
+  - missing
+  - mystery
+  - chapter00
+  - Category/Character
+  - personagem
 ---
 
 # ELARION VAELTHOR
 
-> [!NOTE|clean no-i right]+ Elarion Vaelthor  
+> [!NOTE|clean no-i right]+ Elarion Vaelthor
 > ![[elarion.png|400]]
 
 ## Visão Geral
 
 **Nome:** Elarion Vaelthor  
-**Títulos:** Capitão das Sentinelas, Guardião de [[Leth'valora]]
+**Títulos:** Capitão, Guardião de [[Leth'valora]]
 **Reputação Pública:** Herói de guerra e veterano respeitado  
-**Raça:** Elfo  
+**Raça:** Meio-Elfo  
 **Classe:** Capitão
 **Idade:** Desconhecida   
 **Status:** Desaparecido  
-**Território:** [[Leth'valora]]  
+**Território:** [[Floresta de Avenor]]  
 **Afiliação:** [[Sentinelas de Leth'valora]]  
 **Associados Conhecidos:** [[Vezemir]], [[General Cassian Valerius]]
 
 ---
 
+## Aparições
+
+```dataview
+LIST
+FROM "EARTHROPO"
+WHERE contains(this.chapters, file.name)
+SORT file.name ASC
+```
+
 ## História
 
-Elarion Vaelthor foi um dos mais respeitados capitães das [[Sentinelas de Leth'valora]], veterano de guerras antigas e defensor das fronteiras élficas durante décadas.
+Elarion Vaelthor foi um dos mais respeitados capitães das [[Sentinelas de Leth'valora]], veterano de guerras antigas e defensor do reino élfico durante décadas.
 
 Conhecido por sua disciplina rigorosa, serenidade inabalável e senso de dever, era considerado um exemplo do ideal élfico.
 
@@ -68,12 +84,6 @@ Foi Elarion quem ensinou a Vezemir tudo o que sabia sobre combate, sobrevivênci
 
 Também foi o primeiro a perceber que a magia do garoto era diferente.
 
-Poderosa demais.
-
-Instável demais.
-
-Perigosa demais.
-
 Com o passar dos anos, Elarion passou a ensinar controle e contenção em vez de desenvolvimento.
 
 Parecia menos interessado em fortalecer aquele poder do que em mantê-lo adormecido.
@@ -82,7 +92,7 @@ Parecia menos interessado em fortalecer aquele poder do que em mantê-lo adormec
 
 ## A Partida de Vezemir
 
-Após o incidente envolvendo [[Theron Elensar]], Elarion compreendeu que Vezemir jamais seria aceito entre os elfos.
+Após um incidente, Elarion compreendeu que Vezemir jamais seria aceito entre os elfos.
 
 Mas havia algo pior.
 
@@ -94,7 +104,7 @@ Na manhã da despedida, entregou ao jovem três relíquias:
     
 - [[Muralha de Dorn]]
     
-- Um medalhão dos [[Guardiões do Véu Cinzento]]
+- [[O Medalhão]]
     
 
 Sem explicações.
@@ -167,3 +177,40 @@ Para [[Vezemir]], porém, ele foi algo muito mais raro.
 Foi o único homem que escolheu ficar.
 
 E talvez o único que conheça a verdade sobre quem o Bastardo de Ferro realmente é.
+
+## Atualidade
+
+_Pendente de consolidação pelo Sage._
+
+## Relações
+
+_Pendente de consolidação pelo Sage._
+
+## Equipamentos
+
+_Pendente de consolidação pelo Sage._
+
+## Aparência
+
+_Pendente de consolidação pelo Sage._
+
+## Papel na Campanha
+
+_Pendente de consolidação pelo Sage._
+
+## Uso em Mesa
+
+- Como apresentar:
+- O que os jogadores sabem:
+- O que apenas o mestre sabe:
+- Como entra em cena:
+- Ganchos:
+- Consequências possíveis:
+
+## Pendências do Sage
+
+- Revisar e completar campos em aberto.
+
+## Links relevantes
+
+_Pendente de consolidação pelo Sage._

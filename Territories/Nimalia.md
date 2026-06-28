@@ -5,7 +5,6 @@ tags:
   - territorio
   - earthropo
   - kingdom
-  - beastfolk
   - antropo
 cover: zz_media/mapa-de-nimalia.png
 Alignment: Lawful Good
@@ -32,81 +31,28 @@ imports:
 > [!NOTE|clean no-i right]+ ‎REINO DE NIMALIA
 > ![[mapa-de-nimalia.png|400]]
 
-Nimalia é o reino dos antropos apresentado até agora em Earthropo. Reúne diferentes povos beastfolks sob a autoridade de [[Augustus Terra Decimus]] e da [[Coroa de Nimalia]].
+Nimalia é o reino dos antropos apresentado até agora em Earthropo. Reúne diferentes povos antropo sob a autoridade de [[Augustus Terra Decimus]] e da [[Coroa de Nimalia]].
 
-A [[Nimalis]] ainda não possui nome definitivo. É uma grande cidade de torres de pedra e mercados movimentados, onde antropos convivem com comunidades humanas, élficas, anãs e estrangeiras.
+[[Nimalis]] é a capital do reino: uma grande cidade de torres de pedra, bairros densos e mercados movimentados, onde antropos convivem com comunidades humanas, élficas, anãs, dragonborns e estrangeiras.
 
-Como referência inicial de cartografia, o reino ocupa as terras centrais ao redor da capital. Sua fronteira oriental ou nordeste encontra a [[Floresta de Avenor]]. As demais bordas ainda não foram traçadas.
+Como referência inicial de cartografia, o reino ocupa as terras centrais ao redor da capital. Sua fronteira com a [[Floresta de Avenor]] está confirmada em conceito. Ao sudeste ficam as [[Ruínas de Valthor]], ao norte fica a [[Fortaleza de Gharok]] e [[Vale Dourado]] permanece como localização menor associada ao interior do reino.
 
 ---
 
 <h2>Capital do Reino</h2>
 
-Os distritos abaixo pertencem à [[Nimalis]], cujo nome ainda está em aberto.
-
-> [!warning] Estrutura urbana em revisão
-> Os nomes e funções dos distritos abaixo vieram de rascunhos anteriores. Eles servem como material de preparação, mas ainda não foram confirmados individualmente como cânone.
-
-#### Bairro dos Humanos
-
-Lugar onde os humanos se estabeleceram na cidade.
-
----
-
-#### Bairro dos Elfos
-
-Lugar onde os elfos se estabeleceram na cidade.
-
----
-
-#### Bairro dos Anões
-
-Lugar onde os anões se estabeleceram na cidade.
-
----
-
-#### Bairro dos Dragonbourns
-
-Lugar onde os Dragonbourns se estabeleceram na cidade.
-
----
-
-#### Bairro Nobre
-
-Área de alto padrão da cidade, onde estão os nobres.
-
----
-
-#### Mercado Central
-
-Área comercial da cidade, onde estão localizados todos os produtos que se pode encontrar.
-
----
-
-#### Distrito Comercial
-
-Área com lojas especializadas onde pode se encontrar desde poções até escravos.
-
----
-
-#### Bairro dos Forasteiros
-
-Lugar onde qualquer um com pouca renda pode se estabelecer por um curto tempo. Local das favelas da cidade.
-
----
-
-#### Porto Real
-
-Lugar da cidade onde os barcos fazem sua movimentação, carga e descarga.
+Os distritos da capital estão documentados em [[Nimalis]]. Esta nota mantém a visão de reino: fronteiras, governo, economia, povos e relações territoriais.
 
 ---
 
 <h2>Dados do Reino</h2>
 
 - **Governante:** [[Augustus Terra Decimus]]
-- **Capital:** nome em aberto
-- **População da capital:** ainda não definida
+- **Capital:** [[Nimalis]]
+- **População da capital:** aproximadamente 450.000 habitantes
 - **Características da capital:** Biblioteca Real, Grande Templo das Chamas, Arena Divina
+- **Mapa do reino:** [[MAPA DE NIMALIA]]
+- **Mapa da capital:** [[MAPA DE NIMALIS]]
 
 ---
 

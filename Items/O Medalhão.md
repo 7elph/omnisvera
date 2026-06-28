@@ -11,7 +11,7 @@ tags:
   - vezemir
 ---
 
-# O Medalhão dos Guardiões do Véu Cinzento
+# O Medalhão
 
 > [!NOTE|clean no-i right]+ O Medalhão
 > ![[med.PNG|300]]

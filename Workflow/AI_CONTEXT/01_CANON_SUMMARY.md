@@ -7,7 +7,7 @@ Resumo curto do cânone confirmado de Omnisvera, baseado em `Workflow/CANON.md`.
 - **Omnisvera** é o universo
 - **Earthropo** é o continente principal onde a campanha acontece
 - O nome do mundo onde fica Earthropo existe, mas não será revelado ainda
-- **Nimalia** é o reino dos beastfolks (antropos)
+- **Nimalia** é o reino dos antropos
 - A capital de Nimalia existe, mas seu nome ainda não foi definido
 - **Floresta de Avenor** é uma grande região florestal de Earthropo
 - A Floresta de Avenor faz fronteira com o Reino de Nimalia

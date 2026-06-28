@@ -15,6 +15,9 @@ tags:
 
 # Adagas de Espectro Fantasma
 
+> [!NOTE|clean no-i right]+ Retrato
+> ![[adagas-de-espectro-fantasma.png|400]]
+
 Par de lâminas de arremesso etéreas pertencentes a [[Raziel]] desde o período em que servia como executor do Clã Sanguinallis.
 
 ## Propriedades conhecidas

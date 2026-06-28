@@ -17,6 +17,9 @@ tags:
 
 # Culto dos Sussurrantes
 
+> [!NOTE|clean no-i right]+ Retrato
+> ![[culto-dos-sussurrantes.png|400]]
+
 > *"O Véu não é uma barreira. É uma porta."*
 
 Culto apocalíptico que venera o Véu Cinzento. Acreditam que abrir o Véu trará deuses verdadeiros.

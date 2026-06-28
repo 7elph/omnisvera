@@ -17,32 +17,48 @@ from typing import Dict, List, Tuple
 
 def is_ignored_dir(path: Path) -> bool:
     """Verifica se o diretório deve ser ignorado."""
-    ignored = {'.git', '.obsidian', '.trash', 'node_modules', '.venv', '.local-tools'}
+    ignored = {
+        '.git',
+        '.obsidian',
+        '.trash',
+        'node_modules',
+        '.venv',
+        '.local-tools',
+        '.omnisvera-tools',
+        '.codex-tools',
+    }
     return any(part in ignored for part in path.parts)
+
+
+def is_ignored_when_operational(path: Path) -> bool:
+    """Ignora documentação interna no modo --ignore-legacy."""
+    return 'Workflow' in path.parts
 
 
 def has_frontmatter(content: str) -> bool:
     """Verifica se o conteúdo começa com frontmatter YAML."""
-    return content.startswith('---')
+    return content.lstrip('\ufeff').startswith('---')
 
 
 def is_frontmatter_well_formed(content: str) -> bool:
     """Verifica se o frontmatter está bem formado (aberto e fechado)."""
+    content = content.lstrip('\ufeff')
     if not has_frontmatter(content):
         return False
     
     lines = content.split('\n')
-    count = 0
-    for line in lines[:10]:  # Verifica apenas as primeiras 10 linhas
+    if not lines or lines[0].strip() != '---':
+        return False
+
+    for line in lines[1:300]:
         if line.strip() == '---':
-            count += 1
-        if count == 2:
             return True
     return False
 
 
 def extract_frontmatter(content: str) -> str:
     """Extrai o conteúdo do frontmatter YAML."""
+    content = content.lstrip('\ufeff')
     if not is_frontmatter_well_formed(content):
         return ""
     
@@ -50,7 +66,7 @@ def extract_frontmatter(content: str) -> str:
     start = 1  # Após o primeiro ---
     end = 0
     
-    for i in range(1, min(20, len(lines))):
+    for i in range(1, min(300, len(lines))):
         if lines[i].strip() == '---':
             end = i
             break
@@ -109,7 +125,7 @@ def validate_frontmatter(vault_path: str, ignore_legacy: bool = False) -> Dict:
         if is_ignored_dir(md_file):
             continue
         
-        if ignore_legacy and 'Workflow/Legacy' in str(md_file):
+        if ignore_legacy and is_ignored_when_operational(md_file):
             continue
         
         results['total_notes'] += 1
@@ -134,7 +150,7 @@ def validate_frontmatter(vault_path: str, ignore_legacy: bool = False) -> Dict:
         # Extrair e verificar campos vazios
         fm = extract_frontmatter(content)
         fm_dict = parse_yaml_like(fm)
-        empty = check_empty_important_fields(fm_dict)
+        empty = [] if 'Templates' in md_file.parts else check_empty_important_fields(fm_dict)
         
         if empty:
             results['notes_empty_fields'].append({

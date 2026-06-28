@@ -24,7 +24,7 @@ Antiga fortaleza esquecida nas elevações de Avenor, onde [[Elarion Vaelthor]] 
 
 ## Função narrativa
 
-A fortaleza abandonada representa a formação de Vezemir e a preparação para sua jornada. É o local onde ele recebeu as três relíquias ancestrais ([[Grisalma]], [[Muralha de Dorn]] e o [[O Medalhão dos Guardiões do Véu Cinzento]]) antes de deixar Leth'valora para sempre.
+A fortaleza abandonada representa a formação de Vezemir e a preparação para sua jornada. É o local onde ele recebeu as três relíquias ancestrais ([[Grisalma]], [[Muralha de Dorn]] e o [[O Medalhão]]) antes de deixar Leth'valora para sempre.
 
 ## Relações conhecidas
 
@@ -34,7 +34,7 @@ A fortaleza abandonada representa a formação de Vezemir e a preparação para 
 - [[Floresta de Avenor]] - Região onde a fortaleza está situada
 - [[Grisalma]] - Relíquia entregue a Vezemir na fortaleza
 - [[Muralha de Dorn]] - Relíquia entregue a Vezemir na fortaleza
-- [[O Medalhão dos Guardiões do Véu Cinzento]] - Relíquia entregue a Vezemir na fortaleza
+- [[O Medalhão]] - Relíquia entregue a Vezemir na fortaleza
 
 ## O que está confirmado
 
@@ -66,4 +66,4 @@ A fortaleza abandonada representa a formação de Vezemir e a preparação para 
 - [[Territories/Floresta de Avenor]]
 - [[Items/Grisalma]]
 - [[Items/Muralha de Dorn]]
-- [[Items/O Medalhão dos Guardiões do Véu Cinzento]]
+- [[O Medalhão]]

@@ -6,8 +6,8 @@ status: Destruída
 territory: "[[Floresta de Avenor]]"
 district:
 info: Antiga vila élfica da Floresta de Avenor, destruída pelo dragão de colar dourado.
-thumbnail: "zz_media/sentinelas-de-leth'valora.png"
-cover: "zz_media/sentinelas-de-leth'valora.png"
+thumbnail: "zz_media/vila-de-leth'valora.png"
+cover: "zz_media/vila-de-leth'valora.png"
 tags:
 - lore
 - location
@@ -18,7 +18,7 @@ tags:
 # VILA DE LETH'VALORA
 
 > [!NOTE|clean no-i right]+ ‎LETH'VALORA
-> ![[sentinelas-de-leth'valora.png|400]]
+> ![[vila-de-leth'valora.png|400]]
 
 Leth'valora foi uma pequena vila élfica situada no interior da [[Floresta de Avenor]].
 

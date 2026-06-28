@@ -13,7 +13,7 @@ tags:
 
 Este arquivo acompanha o contexto ativo da campanha: **Omnisvera** como universo, **Earthropo** como continente e **Nimalia** como reino dos antropos.
 
-O material antigo de Disgraceland foi preservado em [[Legacy - Disgraceland OUTLINES]] para consulta e possível conversão futura.
+O material antigo de Disgraceland permanece apenas como legado técnico em `Workflow/Legacy/Disgraceland` para consulta e possível conversão futura.
 
 ## Premissa Ativa
 

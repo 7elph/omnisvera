@@ -9,7 +9,7 @@ gm_secret: false
 status: Ativa
 leader:
 location: "[[Nimalis]]"
-territory: "[[Reino de Nimalia]]"
+territory: "[[Nimalia|Reino de Nimalia]]"
 faction:
 thumbnail:
 cover:
@@ -22,11 +22,15 @@ tags:
 # Nobreza de Nimalia
 
 > [!NOTE]
-> Estrutura política e social ligada às casas nobres do Reino de Nimalia.
+> Estrutura política e social ligada às casas nobres do [[Nimalia|Reino de Nimalia]].
 
 ## Função no mundo
 
+A Nobreza de Nimalia cobre as casas nobres ativas do reino, especialmente aquelas ligadas à corte de [[Nimalis]], ao [[Bairro Nobre]], ao exército, à cobrança de impostos e aos pactos políticos da [[Coroa de Nimalia]].
+
 ## Relação com a Coroa
+
+A nobreza sustenta e disputa influência junto ao rei soberano [[Augustus Terra Decimus]]. Algumas casas servem diretamente à Coroa; outras podem agir por ambição, medo ou interesse próprio.
 
 ## Casas conhecidas
 

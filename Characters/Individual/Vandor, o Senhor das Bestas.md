@@ -1,34 +1,60 @@
 ---
 obsidianUIMode: preview
-NoteIcon: character
+NoteIcon: magicitem
 NoteStatus: Draft
-status: Em desenvolvimento
-canon_status: Draft
+type: character
 visibility: Mestre
+spoiler_level: heavy
+gm_secret: true
 created_by: IA
-requires_review: true
+campaign_status: Em revisão
+thumbnail:
+status: Em desenvolvimento
+location:
+territory:
+faction:
+class:
+race:
+role: npc
+chapter: []
+chapters: []
 tags:
   - Category/Character
   - character
   - npc
   - draft
+  - personagem
 ---
 
 # Vandor, o Senhor das Bestas
 
+> [!NOTE|clean no-i right]+ Vandor, o Senhor das Bestas
+> Imagem pendente.
+
 > [!WARNING] Estado canônico
 > Esta nota está em desenvolvimento e depende de confirmação do Sage.
 
-## Resumo
+> [!WARNING] Estado canônico
+> Esta nota está em desenvolvimento e depende de confirmação do Sage.
+
+## Visão Geral
 
 General do [[Clã Sanguinallis]] e irmão de linhagem de [[Raziel]]. Temia o silêncio que Raziel impunha às suas feras e foi cúmplice em sua traição. Permanece ligado às feras da [[Floresta de Avenor]].
+
+## Aparições
+
+```dataview
+LIST
+FROM "EARTHROPO"
+WHERE contains(this.chapters, file.name)
+SORT file.name ASC
+```
 
 ## Função narrativa
 
 Vandor é o segundo alvo na rota de vingança de Raziel ("O Senhor das Feras — Floresta de Avenor"). Representa o medo e a brutalidade que contribuíram para a queda de Raziel.
 
-## Relações conhecidas
-
+## Relações
 - [[Raziel]] - Irmão de linhagem, alvo de seu medo, cúmplice em sua traição
 - [[Lorde Malakar]] - Lorde do clã, cúmplice na traição
 - [[Kaelen, o Flagelo]] - General do clã, cúmplice na traição
@@ -65,4 +91,49 @@ Vandor é o segundo alvo na rota de vingança de Raziel ("O Senhor das Feras —
 - [[Characters/Individual/Lorde Malakar]]
 - [[Characters/Individual/Kaelen, o Flagelo]]
 - [[Factions/Clã Sanguinallis]]
-- [[Locations/Floresta de Avenor]]
+- [[Floresta de Avenor]]
+
+## História
+
+_Pendente de consolidação pelo Sage._
+
+## Atualidade
+
+_Pendente de consolidação pelo Sage._
+
+## Personalidade
+
+_Pendente de consolidação pelo Sage._
+
+## Habilidades
+
+_Pendente de consolidação pelo Sage._
+
+## Segredos
+
+_Pendente de revisão do Mestre._
+
+## Equipamentos
+
+_Pendente de consolidação pelo Sage._
+
+## Aparência
+
+_Pendente de consolidação pelo Sage._
+
+## Papel na Campanha
+
+_Pendente de consolidação pelo Sage._
+
+## Uso em Mesa
+
+- Como apresentar:
+- O que os jogadores sabem:
+- O que apenas o mestre sabe:
+- Como entra em cena:
+- Ganchos:
+- Consequências possíveis:
+
+## Pendências do Sage
+
+- Revisar e completar campos em aberto.

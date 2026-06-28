@@ -6,7 +6,7 @@ Lista de decisões pendentes detectadas no vault Omnisvera.
 
 - Nome do mundo onde fica Earthropo (existe, mas não será revelado ainda)
 - Fronteiras exatas do Reino de Nimalia
-- Nome próprio da capital de Nimalia
+- Detalhes urbanos de Nimalis, capital de Nimalia
 - Nomes e fronteiras do futuro reino élfico
 - Nomes e fronteiras do futuro reino anão
 - Localização definitiva da Fortaleza de Gharok
@@ -14,7 +14,6 @@ Lista de decisões pendentes detectadas no vault Omnisvera.
 
 ## Capital e reino
 
-- Nome oficial da capital de Nimalia
 - Detalhes da estrutura urbana da capital
 - Relações políticas internas de Nimalia
 
@@ -26,7 +25,7 @@ Lista de decisões pendentes detectadas no vault Omnisvera.
 
 ## Regras mecânicas
 
-- Classe definitiva de Varkh Nimalis (Ladrão vs Alquimista vs Homem de Armas)
+- Classe definitiva de Varkh Nimalis (Ladrão vs Alquimista)
 - Regras autorais para Vampiro, Hemomante e Reserva de Sangue
 - Regras autorais para Força Arcana e Velocidade
 - Regras autorais para Kenku (se adotadas)

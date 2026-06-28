@@ -11,14 +11,14 @@ tags:
 
 # Scratch Notes - Omnisvera
 
-Notas rápidas do cânone ativo. O material antigo foi preservado em [[Legacy - Disgraceland Scratch Notes]].
+Notas rápidas do cânone ativo. O material antigo de Disgraceland permanece apenas como legado técnico em `Workflow/Legacy/Disgraceland`.
 
 ## Regra de Cânone
 
 - Omnisvera = universo.
 - Earthropo = continente principal da campanha.
-- Nimalia = reino dos antropos/beastfolks.
-- A capital do Reino de Nimalia ainda não tem nome definido.
+- Nimalia = reino dos antropos.
+- Nimalis = capital do Reino de Nimalia.
 - Avenor faz fronteira com Nimalia.
 - Eryndor não existe mais no cânone ativo.
 - Disgraceland/Tribucia ficam como legado até conversão.

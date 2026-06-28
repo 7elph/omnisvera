@@ -3,7 +3,7 @@ NoteIcon: class
 NoteStatus: Active
 tags:
   - Category/Class
-  - class
+  - classe
   - warrior
   - old-dragon-2
 cover: zz_media/guerreiro.png
@@ -13,6 +13,9 @@ source: https://olddragon.com.br/classes/guerreiro
 ---
 
 # Guerreiro
+
+> [!NOTE|clean no-i right]+ Retrato
+> ![[guerreiro.png|400]]
 
 O Guerreiro é a classe-base marcial de Old Dragon 2. Esta nota é um resumo de consulta para a campanha; a redação completa e a progressão de todos os níveis permanecem na [página oficial](https://olddragon.com.br/classes/guerreiro).
 
@@ -64,8 +67,8 @@ Passa a ser reconhecido por seus feitos. Começa com Reputação 1 em 1d6 e prog
 
 ## Uso em Omnisvera
 
-[[Vezemir]] foi recebido com a classe escrita como **Homem de Armas**, denominação da edição anterior. A equivalência com Guerreiro é a referência de trabalho, mas sua ficha não deve ser recalculada sem confirmação do jogador e do mestre.
+[[Vezemir]] foi recebido em uma ficha antiga que usava a denominação **Homem de Armas**. Para Omnisvera, a classe operacional equivalente é **Guerreiro**.
 
-## Fonte legada
+## Regra de mesa
 
-O texto antigo foi preservado em [[Workflow/Legacy - Old Dragon anterior - Homem de Armas|Legacy — Homem de Armas]].
+Não manter `Homem de Armas` como classe ativa separada. Quando esse termo aparecer em material antigo, interpretar como referência histórica ao Guerreiro clássico, sem recalcular ficha automaticamente.

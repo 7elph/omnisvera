@@ -3,7 +3,7 @@ obsidianUIMode: preview
 NoteIcon: news
 NoteStatus: Active
 tags: home
-cover: zz_media/news1.png
+cover: zz_media/banner-earthropo.png
 ---
 
 # Rumores e Descobertas

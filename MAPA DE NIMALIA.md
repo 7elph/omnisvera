@@ -4,39 +4,39 @@ height: 2879
 scale: 500
 distance: 2746
 NoteIcon: none
-cover: zz_media/nimalia.png
-Community-Size: Capital
-Alignment: 
+cover: zz_media/mapa-de-nimalia.png
+Community-Size: Kingdom
+Alignment:
 Government: Monarquia de Nimalia
-type: City Map
+type: Kingdom Map
 politics: Coroa de Nimalia
 region:
   - Reino de Nimalia
-size: Capital
+size: Reino
 population:
 religion:
 exports:
 imports:
+visibility: Mestre
+spoiler_level: light
+gm_secret: false
 tags:
   - title
   - map
   - nimalia
-  - capital
+  - territorio
 ---
 
-# MAPA DA CAPITAL DO REINO DE NIMALIA
+# MAPA DE NIMALIA
 
-O nome da [[Nimalis]] ainda não foi definido. Este mapa representa a cidade capital, não todo o território do reino.
-
-> [!warning] Rótulo provisório na arte
-> A palavra **Nimalia** impressa na imagem é um título antigo de trabalho. No cânone atual, Nimalia é o reino; a cidade representada ainda não possui nome próprio.
+Este mapa representa a camada de reino de [[Nimalia]], não o continente inteiro e não apenas a cidade capital.
 
 ```leaflet
-id: nimalia-capital-map
+id: nimalia-kingdom-map
 lock: true
 recenter: false
 noScrollZoom: false
-image: zz_media/nimalia.png
+image: zz_media/mapa-de-nimalia.png
 bounds: [[0, 0], [185.7, 274.6]]
 height: 1000px
 width: 95%
@@ -49,14 +49,34 @@ zoomDelta: 0.5
 unit: miles
 scale: 1
 darkMode: false
-marker: Location, 42, 99, [[Maré Baixa]]
+marker: Capital, 91, 137, [[Nimalis]]
+marker: Territory, 107, 169, [[Floresta de Avenor]]
+marker: Location, 99, 182, [[Leth'valora]]
+marker: Location, 78, 199, [[Ruínas de Valthor]]
+marker: Location, 63, 132, [[Fortaleza de Gharok]]
+marker: Location, 116, 119, [[Vale Dourado]]
 ```
 
 ## Marcadores
 
-[[Maré Baixa]] foi posicionada provisoriamente na zona portuária ao sul da capital. Clique com o botão direito no mapa para criar outros marcadores e vinculá-los às notas correspondentes.
+- [[Nimalis]] é a capital do Reino de Nimalia.
+- A [[Floresta de Avenor]] faz fronteira com Nimalia e abriga as ruínas de [[Leth'valora]].
+- As [[Ruínas de Valthor]] ficam a sudeste de Nimalia e pertenciam a um reino antigo e próspero.
+- A [[Fortaleza de Gharok]] fica ao norte de Nimalia, na região ligada ao futuro reino anão.
+- [[Vale Dourado]] é tratado como localização menor/região local, não como grande território independente.
 
-Os dois marcadores manuais sem link preservados pelo plugin continuam sem identificação e não constituem cânone.
+## Estado cartográfico
 
-## HELP:
-Hold ALT + click & drag to measure the distance between one area and the next.
+| Elemento | Estado |
+|:--|:--|
+| Fronteira com Avenor | Confirmada em conceito; traçado exato em aberto |
+| Valthor a sudeste | Confirmado |
+| Gharok ao norte | Confirmado em conceito; coordenada aproximada |
+| Vale Dourado | Localização menor; detalhes em aberto |
+| Bordas completas do reino | Em aberto |
+
+## Mapas relacionados
+
+- [[MAPA DE EARTHROPO]] mostra o continente.
+- [[MAPA DE NIMALIS]] mostra a capital.
+

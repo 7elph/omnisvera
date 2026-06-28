@@ -78,12 +78,12 @@ Este documento controla a retirada de Disgraceland do conteúdo ativo sem perder
 
 ## Placeholders deliberados
 
-- [ ] [[Nimalis]] — falta nome próprio.
+- [x] [[Nimalis]] — capital do Reino de Nimalia confirmada; detalhes urbanos em desenvolvimento.
 - [ ] [[Fortaleza de Gharok]] — falta posição definitiva.
 - [ ] [[Campos de Earthropo]] — região provisória.
 - [ ] [[Bosque Sussurrante]] — existência não confirmada.
 - [ ] [[Vale Dourado]] — existência não confirmada.
-- [ ] [[Theron Elensar]] — identidade e história incompletas.
+- [ ] Theron Elensar — removido da pasta ativa; identidade e história seguem pendentes caso o Sage decida reaproveitar o nome.
 
 ## Links essenciais ausentes
 

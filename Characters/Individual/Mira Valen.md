@@ -1,37 +1,44 @@
 ---
-obsidianUIMode: preview  
-NoteIcon: magicitem 
+obsidianUIMode: preview
+NoteIcon: magicitem
 NoteStatus: Active
-thumbnail: zz_media/th_mira.PNG  
-status: Falecida  
+type: character
+visibility: Mestre
+spoiler_level: heavy
+gm_secret: true
+campaign_status: Ativo
+thumbnail: zz_media/th_mira.PNG
+status: Falecida
 location: "[[Leth'valora]]"
-territory: "[[Floresta de Avenor]]"  
+territory: "[[Floresta de Avenor]]"
 faction: Nenhum
 class: Caçadora / Aventureira
-race: Humana  
-role: npc  
+race: Humana
+role: npc
+chapter: []
+chapters: []
 tags:
-- npc
-- character  
-- human   
-- comum
-- deceased
-- chapter00
-
+  - npc
+  - character
+  - human
+  - comum
+  - deceased
+  - chapter00
+  - Category/Character
+  - personagem
 ---
 
 # MIRA VALEN
 
-> [!NOTE|clean no-i right]+ Mira Valen  
+> [!NOTE|clean no-i right]+ Mira Valen
 > ![[mira.png|400]]
-
 
 ## Visão Geral
 **Nome:** Mira Valen  
-**Títulos:** A Caçadora de Avenor; A Filha da Vila
-**Reputação Pública:** A Heroína da Vila Perdida  
+**Títulos:** A Caçadora; A Filha da Vila
+**Reputação Pública:** A Heroína da Vila
 **Raça:** Humana  
-**Classe:** Caçadora / Aventureira
+**Classe:** Caçadora
 **Idade:** 22 anos (ao falecer)
 **Altura:** 1,72 m
 **Alinhamento:** Caótico Bom
@@ -45,6 +52,15 @@ tags:
 
 ---
 
+## Aparições
+
+```dataview
+LIST
+FROM "EARTHROPO"
+WHERE contains(this.chapters, file.name)
+SORT file.name ASC
+```
+
 ## História
 
 Mira Valen era uma caçadora e rastreadora de [[Leth'valora]], uma pequena vila élfica da [[Floresta de Avenor]]. Era filha do chefe humano da vila, e o sobrenome Valen identificava sua família dentro da comunidade. Seu pai também morreu durante a destruição de Leth'valora.
@@ -54,7 +70,7 @@ Ao contrário de muitos, Mira nunca enxergou Vezemir como um monstro ou uma amea
 Com o tempo, tornou-se sua amiga, companheira e a pessoa mais importante de sua vida.
 Foi graças a ela que Vezemir encontrou um lar entre os habitantes de Leth'valora.
 Durante alguns anos viveram em paz.
-Tudo mudou quando um misterioso dragão verde portando um colar dourado atacou a vila.
+Tudo mudou quando um misterioso dragão verde atacou a vila.
 Durante o combate, Mira sacrificou a própria vida para salvar Vezemir de um golpe mortal.
 Sua morte tornou-se o principal motivo que impulsiona a jornada de vingança do Bastardo de Ferro.
 
@@ -96,8 +112,49 @@ Percorria trilhas entre a vila e regiões vizinhas, transportando notícias, enc
 
 Mesmo após sua morte, Mira continua presente na vida de [[Vezemir]].
 
-Seu nome é lembrado pelos poucos sobreviventes da região e sua memória é a única razão pela qual o Bastardo de Ferro ainda luta para não se tornar consumido pelo ódio.
+Seu nome e sua memória é a única razão pela qual o Bastardo de Ferro ainda luta para não se tornar consumido pelo ódio.
 
 Para muitos, Mira foi apenas uma caçadora.
 
 Para Vezemir, ela foi seu lar.
+
+## Atualidade
+
+_Pendente de consolidação pelo Sage._
+
+## Relações
+
+_Pendente de consolidação pelo Sage._
+
+## Segredos
+
+_Pendente de revisão do Mestre._
+
+## Equipamentos
+
+_Pendente de consolidação pelo Sage._
+
+## Aparência
+
+_Pendente de consolidação pelo Sage._
+
+## Papel na Campanha
+
+_Pendente de consolidação pelo Sage._
+
+## Uso em Mesa
+
+- Como apresentar:
+- O que os jogadores sabem:
+- O que apenas o mestre sabe:
+- Como entra em cena:
+- Ganchos:
+- Consequências possíveis:
+
+## Pendências do Sage
+
+- Revisar e completar campos em aberto.
+
+## Links relevantes
+
+_Pendente de consolidação pelo Sage._

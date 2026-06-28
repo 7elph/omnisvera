@@ -6,8 +6,8 @@ status: Cânone de trabalho
 visibility: Mestre
 spoiler_level: light
 gm_secret: false
-thumbnail: zz_media/earthropo.png
-cover: zz_media/earthropo.png
+thumbnail: zz_media/culture.png
+cover: zz_media/culture.png
 tags:
   - home
   - lore
@@ -16,6 +16,9 @@ tags:
 ---
 
 # Cultura de Earthropo
+
+> [!NOTE|clean no-i right]+ Retrato
+> ![[culture.png|400]]
 
 ## Status
 

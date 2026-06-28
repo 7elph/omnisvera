@@ -2,33 +2,43 @@
 obsidianUIMode: preview
 NoteIcon: magicitem
 NoteStatus: Active
+type: character
+visibility: Jogadores
+spoiler_level: none
+gm_secret: false
+campaign_status: Ativo
 thumbnail: zz_media/th_varkh.PNG
 status: Vivo
-location: "[[Nimalia]]"
+location: "[[Nimalis]]"
 territory: "[[Nimalia]]"
-faction: Nenhuma
-class: Ladrão / Alquimista
+faction: "[[Conclave dos Errantes]]"
+class: Alquimista
 race: Kenku
 level: 1
+age: 30
 alignment: Em aberto
 role: player
+chapter:
+  - 00 - O Corvo da Maré Baixa
 chapters:
   - 00 - O Corvo da Maré Baixa
 tags:
   - player
   - character
   - chapter00_varkh
-  - rogue
   - alchemist
+  - alquimista
   - kenku
   - earthropo
+  - Category/Character
+  - personagem
+  - jogador
 ---
 
 # VARKH NIMALIS — O CORVO DA MARÉ BAIXA
 
 > [!NOTE|clean no-i right]+ Varkh Nimalis
 > ![[varkh.jpeg|400]]
-
 
 ## Visão Geral
 **Títulos:** O Corvo da Maré Baixa
@@ -37,22 +47,31 @@ tags:
 **Território:** [[Nimalia]]
 **Reputação Pública:** Alquimista de rua, ladrão, falsificador e possível assassino
 **Gênero:** Masculino
-**Classe:** [[Ladrão]] / [[Alquimista]]
+**Classe:** [[Alquimista]]
 **Raça:** [[Kenku]]
-**Idade:** Em aberto
+**Idade:** 30 anos
 **Altura:** Em aberto
 **Nível:** 1
 **Alinhamento:** Em aberto
 **Status:** Vivo
-**Afiliação:** Nenhuma confirmada
+**Afiliação:** [[Conclave dos Errantes]]
 **Afiliações Anteriores:** Nenhuma confirmada
 **Associados Conhecidos:** [[Mestre Odran Veyl]]
 **Inimigos Conhecidos:** Responsáveis ainda não identificados pelos remédios falsos
-**Origem:** [[Maré Baixa]]
+**Origem:** [[Nimalis]], especialmente a região de [[Maré Baixa]]
 **Posses:** Espada curta, duas adagas, arco curto, máscara de médico da peste e utensílios alquímicos
 
 
 ---
+
+## Aparições
+
+```dataview
+LIST
+FROM "EARTHROPO"
+WHERE contains(this.chapters, file.name)
+SORT file.name ASC
+```
 
 ## História
 
@@ -69,7 +88,7 @@ Curioso e atento a tudo que os outros descartavam, Varkh colecionava frascos rac
 
 ## O Corvo que Não Sabia Voar
 
-Em Earthropo, os humanos são maioria. Em Maré Baixa, Varkh não era desprezado simplesmente por ser uma criatura animal. O problema era ser corvo.
+Em [[Nimalia]], os antropos são maioria. Em Maré Baixa, Varkh não era desprezado simplesmente por ser quem é. O problema era ser corvo.
 
 Corvos lembravam mau presságio, carniça, doença, segredo e morte. Às vezes, ser temido evitava confusão. Em outras partes de Nimalia, porém, Varkh percebia olhares desconfiados.
 
@@ -218,7 +237,7 @@ Os equipamentos de Varkh ainda não possuem notas individuais no vault. Quando f
 ## Ficha Mecânica — Nível 1
 
 > [!warning] Reconciliação pendente
-> A ficha sem nome atribuída provisoriamente a Varkh registra Homem de Armas, enquanto sua história o define como ladrão e alquimista de rua. Nenhum valor mecânico será substituído até confirmação com o jogador.
+> A ficha sem nome atribuída provisoriamente a Varkh usa um modelo antigo, enquanto sua história o define como ladrão e alquimista de rua. Nenhum valor mecânico será substituído até confirmação com o jogador.
 
 ### Armas e carga
 
@@ -237,3 +256,28 @@ Os equipamentos de Varkh ainda não possuem notas individuais no vault. Quando f
 ### Habilidades especiais
 
 - Alquimia de rua, Kenku e seus demais traços mecânicos permanecem como regras autorais pendentes.
+
+## Relações
+
+_Pendente de consolidação pelo Sage._
+
+## Papel na Campanha
+
+_Pendente de consolidação pelo Sage._
+
+## Uso em Mesa
+
+- Como apresentar:
+- O que os jogadores sabem:
+- O que apenas o mestre sabe:
+- Como entra em cena:
+- Ganchos:
+- Consequências possíveis:
+
+## Pendências do Sage
+
+- Revisar e completar campos em aberto.
+
+## Links relevantes
+
+_Pendente de consolidação pelo Sage._

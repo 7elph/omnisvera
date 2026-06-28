@@ -17,8 +17,41 @@ from typing import Dict, List, Set
 
 def is_ignored_dir(path: Path) -> bool:
     """Verifica se o diretório deve ser ignorado."""
-    ignored = {'.git', '.obsidian', '.trash', 'node_modules', '.venv', '.local-tools'}
+    ignored = {
+        '.git',
+        '.obsidian',
+        '.trash',
+        'node_modules',
+        '.venv',
+        '.local-tools',
+        '.omnisvera-tools',
+        '.codex-tools',
+    }
     return any(part in ignored for part in path.parts)
+
+
+def is_ignored_when_operational(path: Path) -> bool:
+    """Ignora relatórios e planejamento histórico no modo --ignore-legacy."""
+    parts = set(path.parts)
+    if 'Workflow' in parts:
+        return True
+    return False
+
+
+MEDIA_EXTENSIONS = {
+    '.png', '.jpg', '.jpeg', '.webp', '.gif', '.svg',
+    '.mp3', '.wav', '.ogg', '.flac', '.mp4', '.webm'
+}
+
+
+def clean_media_reference(ref: str) -> str:
+    """Normaliza referências extraídas de Markdown, YAML e HTML."""
+    ref = ref.split('|')[0].split('#')[0].strip()
+    ref = ref.strip(' "\'`')
+    ref = ref.rstrip('.,;:)')
+    ref = ref.replace('\\', '/')
+    ref = ref.replace('[[', '').replace(']]', '')
+    return ref
 
 
 def extract_media_references(content: str, file_path: Path) -> List[str]:
@@ -35,26 +68,35 @@ def extract_media_references(content: str, file_path: Path) -> List[str]:
     # Padrão para embeds Obsidian: ![[...]]
     embed_pattern = r'!\[\[([^\]]+)\]\]'
     for match in re.finditer(embed_pattern, content):
-        ref = match.group(1)
-        if 'zz_media' in ref or ref.startswith('zz_media/'):
+        ref = clean_media_reference(match.group(1))
+        if Path(ref).suffix.lower() in MEDIA_EXTENSIONS:
             references.append(ref)
     
     # Padrão para markdown links: [](zz_media/...)
     md_link_pattern = r'\]\(([^)]*zz_media[^)]*)\)'
     for match in re.finditer(md_link_pattern, content):
-        references.append(match.group(1))
+        references.append(clean_media_reference(match.group(1)))
     
-    # Padrão para HTML: src="zz_media/..."
-    html_pattern = r'src="([^"]*zz_media[^"]*)"'
+    # Padrão para HTML: src="..." ou src='...'
+    html_pattern = r"""src=["']([^"']+)["']"""
     for match in re.finditer(html_pattern, content):
-        references.append(match.group(1))
+        ref = clean_media_reference(match.group(1))
+        if Path(ref).suffix.lower() in MEDIA_EXTENSIONS:
+            references.append(ref)
+
+    # Campos comuns de frontmatter/YAML.
+    yaml_pattern = r'(?m)^\s*(thumbnail|cover|banner|map_image|handout_image|token_image)\s*:\s*(.+?)\s*$'
+    for match in re.finditer(yaml_pattern, content):
+        ref = clean_media_reference(match.group(2))
+        if Path(ref).suffix.lower() in MEDIA_EXTENSIONS:
+            references.append(ref)
     
     # Padrão simples para zz_media/... no texto
     simple_pattern = r'zz_media/[^\s\)\]]+'
     for match in re.finditer(simple_pattern, content):
-        ref = match.group(0)
+        ref = clean_media_reference(match.group(0))
         # Evitar duplicatas
-        if ref not in references:
+        if Path(ref).suffix.lower() in MEDIA_EXTENSIONS and ref not in references:
             references.append(ref)
     
     return references
@@ -71,17 +113,20 @@ def get_all_media_files(vault_path: Path) -> Set[str]:
     for media_file in media_dir.rglob('*'):
         if media_file.is_file():
             # Caminho relativo a partir do vault
-            rel_path = str(media_file.relative_to(vault_path))
+            rel_path = str(media_file.relative_to(vault_path)).replace('\\', '/')
             media_files.add(rel_path)
+            media_files.add(rel_path.lower())
             # Também adicionar sem prefixo zz_media/ para compatibilidade
-            media_files.add(str(media_file.relative_to(media_dir)))
+            short_path = str(media_file.relative_to(media_dir)).replace('\\', '/')
+            media_files.add(short_path)
+            media_files.add(short_path.lower())
     
     return media_files
 
 
 def is_in_legacy(file_path: str) -> bool:
     """Verifica se o arquivo está em Workflow/Legacy."""
-    return 'Workflow/Legacy' in file_path
+    return file_path.replace('\\', '/').startswith('Workflow/Legacy/')
 
 
 def validate_media(vault_path: str, ignore_legacy: bool = False) -> Dict:
@@ -115,6 +160,9 @@ def validate_media(vault_path: str, ignore_legacy: bool = False) -> Dict:
     for md_file in vault.rglob('*.md'):
         if is_ignored_dir(md_file):
             continue
+
+        if ignore_legacy and is_ignored_when_operational(md_file):
+            continue
         
         try:
             with open(md_file, 'r', encoding='utf-8') as f:
@@ -137,7 +185,7 @@ def validate_media(vault_path: str, ignore_legacy: bool = False) -> Dict:
     
     # Verificar cada referência
     for ref_item in all_references:
-        ref = ref_item['reference']
+        ref = clean_media_reference(ref_item['reference'])
         file_path = ref_item['file']
         is_legacy = ref_item['is_legacy']
         
@@ -147,7 +195,12 @@ def validate_media(vault_path: str, ignore_legacy: bool = False) -> Dict:
             ref_normalized = f'zz_media/{ref}'
         
         # Verificar se o arquivo existe
-        exists = ref_normalized in media_files or ref in media_files
+        exists = (
+            ref_normalized in media_files
+            or ref in media_files
+            or ref_normalized.lower() in media_files
+            or ref.lower() in media_files
+        )
         
         if exists:
             results['valid_references'] += 1

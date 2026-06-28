@@ -3,7 +3,7 @@ NoteIcon: class
 NoteStatus: Active
 tags:
   - Category/Class
-  - class
+  - classe
   - wizard
   - old-dragon-2
 cover: zz_media/mago.png
@@ -13,6 +13,9 @@ source: https://olddragon.com.br/classes/mago
 ---
 
 # Mago
+
+> [!NOTE|clean no-i right]+ Retrato
+> ![[mago.png|400]]
 
 O Mago é a classe-base de magia arcana de Old Dragon 2. Esta nota oferece uma referência curta; a progressão completa está na [página oficial](https://olddragon.com.br/classes/mago).
 
@@ -66,7 +69,3 @@ Começa com Reputação 1 em 1d6 e progride até 1–5 em 1d6 no 15º nível.
 ## Magia opcional
 
 Os arquivos `Tomo de Magia Arcana - OD2.pdf` e `Tomo de Magia Divina - OD2.pdf` são adaptações de fã e não integram automaticamente esta classe. Consulte [[Workflow/RULES_SOURCES|Fontes de Regras da Campanha]].
-
-## Fonte legada
-
-O texto da edição anterior foi preservado em [[Workflow/Legacy - Old Dragon anterior - Mago|Legacy — Mago]].

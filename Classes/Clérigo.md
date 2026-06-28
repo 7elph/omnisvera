@@ -3,7 +3,7 @@ NoteIcon: class
 NoteStatus: Active
 tags:
   - Category/Class
-  - class
+  - classe
   - cleric
   - old-dragon-2
 cover: zz_media/clerigo.png
@@ -13,6 +13,9 @@ source: https://olddragon.com.br/classes/clerigo
 ---
 
 # Clérigo
+
+> [!NOTE|clean no-i right]+ Retrato
+> ![[clerigo.png|400]]
 
 O Clérigo é a classe-base de magia divina e proteção religiosa de Old Dragon 2. Esta nota resume a classe para consulta; a progressão completa está na [página oficial](https://olddragon.com.br/classes/clerigo).
 
@@ -71,7 +74,3 @@ Começa com Reputação 1 em 1d6 e progride até 1–5 em 1d6 no 15º nível.
 ## Uso em Omnisvera
 
 [[Padre Oric]] está associado a esta classe. Sua religião e seus detalhes mecânicos ainda devem respeitar as decisões futuras sobre o panteão de Omnisvera.
-
-## Fonte legada
-
-O texto da edição anterior foi preservado em [[Workflow/Legacy - Old Dragon anterior - Clérigo|Legacy — Clérigo]].

@@ -3,7 +3,7 @@ NoteIcon: class
 NoteStatus: Active
 tags:
   - Category/Class
-  - class
+  - classe
   - thief
   - old-dragon-2
 cover: zz_media/ladrao.png
@@ -13,6 +13,9 @@ source: https://olddragon.com.br/classes/ladrao
 ---
 
 # Ladrão
+
+> [!NOTE|clean no-i right]+ Retrato
+> ![[ladrao.png|400]]
 
 O Ladrão é a classe-base de exploração, infiltração e ataques oportunistas de Old Dragon 2. Esta nota resume o necessário para consulta; a progressão completa está na [página oficial](https://olddragon.com.br/classes/ladrao).
 
@@ -76,8 +79,4 @@ Começa com Reputação 1 em 1d6 e progride até 1–5 em 1d6 no 15º nível.
 ## Uso em Omnisvera
 
 - [[Varkh Nimalis]] possui Ladrão como identidade narrativa, mas sua ficha mecânica definitiva ainda precisa ser confirmada.
-- [[Raziel]] usa Ladrão como classe-base; Assassino e Hemomante são camadas adicionais tratadas separadamente.
-
-## Fonte legada
-
-O texto da edição anterior foi preservado em [[Workflow/Legacy - Old Dragon anterior - Ladrão|Legacy — Ladrão]].
+- [[Raziel]] não usa mais Ladrão como classe operacional; sua classe atual é [[Vampiro]]. Ladrão permanece apenas como referência de versão anterior do personagem.

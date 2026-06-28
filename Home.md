@@ -24,7 +24,9 @@ gm_secret: false
 ## Entrada rápida
 
 - [[Calendar|Calendário de Nimalia]]
-- [[MAPA DE NIMALIA]]
+- [[MAPA DE EARTHROPO|Mapa de Earthropo]]
+- [[MAPA DE NIMALIA|Mapa de Nimalia]]
+- [[MAPA DE NIMALIS|Mapa de Nimalis]]
 
 > [!infobox]- Calendário
 > ```calendarium
@@ -34,7 +36,7 @@ gm_secret: false
 
 ```dataview
 TABLE
-  thumbnail AS "Imagem",
+  ("<img src='" + thumbnail + "' width='60' style='border-radius:4px;box-shadow:0 0 3px rgba(255, 255, 255, 0.4);' />") AS "Imagem",
   status,
   location,
   territory,

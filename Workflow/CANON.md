@@ -32,8 +32,8 @@ Quando uma nota entrar em conflito com este arquivo, o conflito deve ser apontad
 - **Omnisvera** é o universo.
 - **Earthropo** é o continente principal onde a campanha acontece. Não é o mundo inteiro.
 - O nome do mundo onde fica Earthropo existe, mas não será revelado ainda.
-- **Nimalia** é o reino dos beastfolks, conhecidos em Earthropo como **antropos**.
-- A [[Nimalis]] existe, mas seu nome ainda não foi definido. Esse título é apenas uma identificação provisória para a nota e para o marcador do mapa.
+- **Nimalia** é o reino dos **antropos**, raça que substitui o termo beastfolk no vocabulário de Omnisvera.
+- [[Nimalis]] é a capital do Reino de Nimalia.
 - A [[Floresta de Avenor]] é uma grande região florestal de Earthropo.
 - A Floresta de Avenor faz fronteira com o Reino de Nimalia.
 - [[Leth'valora]] é uma pequena vila élfica situada dentro da Floresta de Avenor.
@@ -41,7 +41,7 @@ Quando uma nota entrar em conflito com este arquivo, o conflito deve ser apontad
 - Leth'valora foi destruída pelo dragão de colar dourado.
 - O chefe de Leth'valora era humano, pai de [[Mira Valen]], e morreu durante a destruição da vila. Seu nome não precisa ser definido agora.
 - O sistema utilizado é **Old Dragon 2E**.
-- Os **humanos são a população majoritária** de Earthropo.
+- Humanos são maioria em Old Dragon como referência de sistema, mas **não são necessariamente maioria em Omnisvera**. Em Nimalia, os antropos predominam.
 - Os personagens de jogador iniciarão a campanha no **nível 1**.
 - [[Augustus Terra Decimus]] é o rei soberano de Nimalia.
 
@@ -99,11 +99,13 @@ Earthropo vive uma estabilidade aparente. Coroa, religião, comércio e forças 
 - A Floresta de Avenor foi posicionada provisoriamente na região florestal a leste ou nordeste da capital, formando fronteira com Nimalia.
 - As ruínas de Leth'valora ficam dentro de Avenor.
 - [[Maré Baixa]] fica na zona portuária ao sul da capital.
-- O futuro reino élfico ficará na região de maior concentração florestal do continente.
-- O futuro reino anão ficará próximo às montanhas e áreas vulcânicas do norte ou nordeste.
+- O futuro reino élfico ficará no sudoeste, em região florestal ligada ou próxima a Avenor.
+- O futuro reino anão ficará no nordeste, próximo às montanhas e áreas vulcânicas.
+- O futuro reino dos dragonborns ficará no noroeste.
 - As [[Ruínas de Valthor]] ficam no sudeste de Earthropo.
-- A localização definitiva da Fortaleza de Gharok e da região de origem de Raziel permanece em aberto.
-- Gharok pode ocupar a faixa montanhosa do norte ou nordeste e relacionar-se ao futuro reino anão, mas isso ainda não está confirmado.
+- As [[Ruínas de Valthor]] ficam a sudeste de Nimalia e foram um reino antigo e próspero.
+- A [[Fortaleza de Gharok]] é uma antiga fortaleza anã ao norte de Nimalia, em região ligada ao futuro reino anão.
+- A região de origem completa de Raziel deve ser consolidada a partir da lore já existente, usando Gharok e Valthor antes de criar novos lugares.
 
 ### Vezemir
 
@@ -113,7 +115,7 @@ Earthropo vive uma estabilidade aparente. Coroa, religião, comércio e forças 
 - Foi criado por [[Elarion Vaelthor]] na vila de [[Leth'valora]].
 - `Kaer Varyn` foi um nome anterior descartado para esse lugar e não deve ser usado no cânone atual.
 - A antiga referência à Guilda de Aventureiros foi substituída pelo [[Conclave dos Errantes]], conforme decisão dos jogadores.
-- Carrega [[Grisalma]], [[Muralha de Dorn]] e [[O Medalhão dos Guardiões do Véu Cinzento]].
+- Carrega [[Grisalma]], [[Muralha de Dorn]] e [[O Medalhão]].
 - Busca o dragão de colar dourado ligado à morte de [[Mira Valen]].
 - [[Mira Valen]] era filha do chefe de Leth'valora; Valen é o sobrenome da família da chefia local.
 - A referência visual de Mira registra 22 anos, 1,72 m, alinhamento Caótico Bom e atuação como caçadora, exploradora e mensageira.
@@ -124,27 +126,31 @@ Earthropo vive uma estabilidade aparente. Coroa, religião, comércio e forças 
 ### Varkh Nimalis
 
 - Conhecido como **O Corvo da Maré Baixa**.
-- É um kenku, ladrão e alquimista de rua.
+- É um kenku e alquimista de rua.
+- Sua classe operacional é [[Alquimista]].
+- Tem 30 anos.
+- Sua origem é [[Nimalis]], especialmente a região de [[Maré Baixa]].
+- Faz parte do [[Conclave dos Errantes]].
 - Foi treinado por Mestre Odran Veyl no Frasco Afogado.
 - Investiga remédios falsos produzidos com o símbolo ou os métodos de Odran.
 - Seu arco envolve identidade, voz, reputação e honra entre pessoas marginalizadas.
-- Sua idade ainda não foi revisada e permanece em aberto.
 - Nenhuma afiliação com a Guilda dos Mercadores foi confirmada.
-- `Ficha do Jão.pdf` descreve um kenku de nível 1 compatível com Varkh, mas não contém nome e registra a classe Homem de Armas. A associação e a classe permanecem em aberto; não substituir Ladrão / Alquimista automaticamente.
+- `Ficha do Jão.pdf` descreve um kenku de nível 1 compatível com Varkh, mas não contém nome e usa um modelo antigo. A associação permanece em aberto; não substituir Ladrão / Alquimista automaticamente.
 
 ### Raziel
 
 - Conhecido como **O Espectro da Névoa de Sangue**.
 - É um personagem de jogador e um dos três protagonistas da campanha.
 - É um vampiro ligado ao Clã Sanguinallis.
-- Sua classe atual é ladrão; a hemomancia permanece como parte de sua identidade e de seus poderes narrativos.
+- Sua classe atual é [[Vampiro]], usando material de complemento consultado pelo mestre; a hemomancia permanece como parte de sua identidade e de seus poderes narrativos.
 - A referência visual mais recente registra 340 anos, aparência de 30 anos, 1,88 m de altura e alinhamento Caótico Neutro.
 - Utiliza hemomancia e as Adagas de Espectro Fantasma.
 - Também porta o [[Manto Primordial do Ancião]].
 - Foi traído e permaneceu aprisionado por mais de trezentos anos.
 - Sua trajetória atual é movida por vingança contra Kaelen, Vandor e Lorde Malakar.
+- O [[Sangue Antigo]] deve funcionar como mecânica própria de Omnisvera, próxima à classe Vampiro, sem substituir automaticamente a regra-base.
 - A forma como sua história se encontra com Vezemir e Varkh ainda precisa ser definida.
-- A versão anterior chamada **Malakor Thorne**, concebida quando o personagem seria mago, foi substituída. A versão atual de Raziel como ladrão é a válida.
+- A versão anterior chamada **Malakor Thorne**, concebida quando o personagem seria mago, foi substituída. A versão atual de Raziel como vampiro é a válida.
 
 ### Ponto de encontro sugerido
 
@@ -166,11 +172,11 @@ Estas questões não devem ser resolvidas por inferência:
 | Tema | Conflito atual |
 |:--|:--|
 | Mundo de Earthropo | O nome existe, mas permanece deliberadamente não revelado. |
-| Fronteiras de Nimalia | O Reino de Nimalia está confirmado, mas suas bordas e sua capital ainda precisam ser definidas. |
-| Capital de Nimalia | O mapa urbano atual pode representar a capital, mas ela ainda não possui nome próprio. |
-| Reinos raciais | Reino élfico na maior região florestal; reino anão no norte/nordeste montanhoso e vulcânico. Nomes e fronteiras permanecem em aberto. |
-| Região de Raziel | Valthor está no sudeste; Gharok e os demais pontos de sua trajetória ainda precisam ser posicionados após revisão da lore. |
-| Ficha do kenku de João | A ficha provavelmente pertence a Varkh, mas está sem nome e registra Homem de Armas em vez de Ladrão / Alquimista. |
+| Fronteiras de Nimalia | O Reino de Nimalia está confirmado, mas suas bordas completas ainda precisam ser desenhadas. A fronteira com Avenor, Valthor a sudeste, Vale Dourado e Gharok ao norte já existem como referências. |
+| Capital de Nimalia | Nimalis é a capital; população aproximada 450.000; bairros e marcos principais foram definidos em [[Nimalis]]. |
+| Reinos raciais | Reino élfico no sudoeste; reino anão no nordeste; reino dos dragonborns no noroeste. Nomes e fronteiras permanecem em aberto. |
+| Região de Raziel | Usar primeiro a lore existente: Gharok ao norte de Nimalia e Valthor a sudeste. Criar novos lugares apenas se a história exigir. |
+| Ficha do kenku de João | A ficha pertence a Varkh como base de referência, mas a classe operacional confirmada é Alquimista. |
 | Data atual | A linha do tempo usa o ano 2100; o dia e o mês exatos ainda não foram definidos. |
 | Calendário | O Calendarium espelha o rascunho de `CALENDAR.md`, mas nomes, feriados e significados ainda precisam de aprovação como cânone. |
 | Religião dominante | Igreja das Chamas e Igreja das Sete Chamas aparecem como nomes concorrentes. |

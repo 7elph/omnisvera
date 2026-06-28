@@ -27,7 +27,8 @@ Este documento lista notas que precisam ser criadas para dar suporte à campanha
 | Sangue Antigo | Lore/ | Lore | Fluido que transformou a hemomancia de Raziel, concedido pelo Ancião Primordial | Raziel, Ancião Primordial, Vampiro Sanguinallis | Criado (Batch 01) |
 | Poço nos Picos Congelados | Locations/ | Localização | Prisão de prata onde Raziel foi condenado por trezentos anos | Raziel, Fortaleza de Gharok, Nimalia | Pendente |
 | Cavernas Abissais sob Valthor | Locations/ | Localização | Local onde Raziel encontrou o Ancião Primordial e recebeu o Sangue Antigo | Raziel, Ruínas de Valthor, Ancião Primordial | Pendente |
-| Vampiro Sanguinallis | Lore/ | Lore | Tipo de vampiro ao qual Raziel pertence, ligado ao Clã Sanguinallis | Raziel, Clã Sanguinallis, Sangue Antigo | Pendente |
+| Vampiro Sanguinallis | Lore/ | Lore | Tipo de vampiro ao qual Raziel pertence, ligado ao Clã Sanguinallis | Raziel, Clã Sanguinallis, Sangue Antigo | Criado (Pente fino) |
+| Vampiro | Classes/ | Classe | Classe operacional de Raziel baseada em complemento consultado pelo mestre | Raziel, Sangue Antigo, Vampiro Sanguinallis | Criado (Pente fino) |
 
 ### Vezemir
 
@@ -52,24 +53,27 @@ Este documento lista notas que precisam ser criadas para dar suporte à campanha
 
 | Nota | Pasta Sugerida | Categoria | Motivo da Criação | Notas Relacionadas | Status |
 |:--|:--|:--|:--|:--|:--|
-| Nimalis | Locations/ | Localização | Capital do Reino de Nimalia, onde a campanha começa | Nimalia, Augustus Terra Decimus | Pendente |
+| Nimalis | Locations/ | Localização | Capital do Reino de Nimalia, onde a campanha começa | Nimalia, Augustus Terra Decimus | Criado |
 | Biblioteca Real de Nimalis | Locations/ | Localização | Instituição mencionada no contexto de Nimalis | Nimalis, Nimalia | Pendente |
 | Arena Divina | Locations/ | Localização | Local mencionado no contexto de Nimalis | Nimalis, Nimalia | Pendente |
 | Grande Templo das Chamas | Locations/ | Localização | Templo religioso em Nimalis | Nimalis, Nimalia, Religião | Pendente |
-| Bairro dos Forasteiros | Locations/ | Localização | Distrito em Nimalis | Nimalis, Nimalia | Pendente |
-| Bairro dos Anões | Locations/ | Localização | Distrito em Nimalis | Nimalis, Nimalia | Pendente |
-| Bairro dos Elfos | Locations/ | Localização | Distrito em Nimalis | Nimalis, Nimalia | Pendente |
-| Bairro dos Humanos | Locations/ | Localização | Distrito em Nimalis | Nimalis, Nimalia | Pendente |
-| Porto Real | Locations/ | Localização | Porto em Nimalis | Nimalis, Nimalia | Pendente |
-| Distrito Nobre | Locations/ | Localização | Distrito em Nimalis | Nimalis, Nimalia | Pendente |
+| Bairro dos Forasteiros | Locations/ | Localização | Distrito em Nimalis | Nimalis, Nimalia | Criado (Pente fino) |
+| Bairro dos Anões | Locations/ | Localização | Distrito em Nimalis | Nimalis, Nimalia | Criado (Pente fino) |
+| Bairro dos Elfos | Locations/ | Localização | Distrito em Nimalis | Nimalis, Nimalia | Criado (Pente fino) |
+| Bairro dos Humanos | Locations/ | Localização | Distrito em Nimalis | Nimalis, Nimalia | Criado (Pente fino) |
+| Bairro dos Dragonborns | Locations/ | Localização | Distrito em Nimalis | Nimalis, Nimalia | Criado (Pente fino) |
+| Bairro Nobre | Locations/ | Localização | Distrito em Nimalis | Nimalis, Nimalia | Criado (Pente fino) |
+| Mercado Central | Locations/ | Localização | Área comercial em Nimalis | Nimalis, Guilda dos Mercadores | Criado (Pente fino) |
+| Distrito Comercial | Locations/ | Localização | Área de lojas especializadas em Nimalis | Nimalis, Guilda dos Mercadores | Criado (Pente fino) |
+| Porto de Nimalia | Locations/ | Localização | Porto em Nimalis | Nimalis, Nimalia | Criado (Pente fino) |
 
 ## Prioridade B — Sistema/Campanha
 
 | Nota | Pasta Sugerida | Categoria | Motivo da Criação | Notas Relacionadas | Status |
 |:--|:--|:--|:--|:--|:--|
 | Regras Autorais da Campanha | Workflow/ | Sistema | Documentação de regras autorais adotadas para personagens | Raziel, Vezemir, Varkh, Classes | Pendente |
-| Hemomancia | Lore/ | Sistema | Sistema de magia de sangue usado por Raziel | Raziel, Sangue Antigo, Vampiro Sanguinallis | Pendente |
-| Reserva de Sangue | Lore/ | Sistema | Mecânica de vampiresmo de Raziel | Raziel, Vampiro Sanguinallis, Hemomancia | Pendente |
+| Hemomancia | Lore/ | Sistema | Sistema de magia de sangue usado por Raziel | Raziel, Sangue Antigo, Vampiro Sanguinallis | Parcial em Sangue Antigo |
+| Reserva de Sangue | Lore/ | Sistema | Mecânica de vampirismo de Raziel | Raziel, Vampiro Sanguinallis, Hemomancia | Parcial em Sangue Antigo |
 | Alquimia de Rua | Lore/ | Sistema | Sistema alquímico usado por Varkh | Varkh, Maré Baixa, O Frasco Afogado | Pendente |
 | Conhecimento Público de Nimalia | Lore/ | Sistema | O que é conhecido publicamente sobre Nimalia | Nimalia, Nimalis, Earthropo | Pendente |
 | Segredos do Mestre | Workflow/ | Sistema | Revelações planejadas pelo mestre | Todos os personagens | Pendente |
@@ -86,6 +90,24 @@ As seguintes notas foram criadas no Batch 01:
 - Characters/Individual/Vandor, o Senhor das Bestas.md
 - Lore/Ancião Primordial.md
 - Lore/Sangue Antigo.md
+- Lore/Vampiro Sanguinallis.md
+
+## Pente fino — Notas Criadas
+
+As seguintes notas foram criadas durante o pente fino operacional:
+
+- Lore/Criadores.md
+- Lore/Vampiro Sanguinallis.md
+- Classes/Vampiro.md
+- Locations/Bairro dos Humanos.md
+- Locations/Bairro dos Elfos.md
+- Locations/Bairro dos Anões.md
+- Locations/Bairro dos Dragonborns.md
+- Locations/Bairro Nobre.md
+- Locations/Mercado Central.md
+- Locations/Distrito Comercial.md
+- Locations/Bairro dos Forasteiros.md
+- Locations/Porto de Nimalia.md
 
 ## Batch 02 — Notas Criadas
 

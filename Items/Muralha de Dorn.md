@@ -4,7 +4,7 @@ NoteIcon: items
 NoteStatus: Active
 thumbnail: zz_media/muralha_dorn.png
 status: Ativo
-item: Artefato
+item: Escudo
 tags:
   - item
   - artifact
