@@ -7,7 +7,7 @@ tags:
   - home
   - timeline
   - earthropo
-cover: zz_media/t1.png
+cover: zz_media/banner-earthropo.png
 ---
 
 # Linha do Tempo de Omnisvera
@@ -67,3 +67,9 @@ Em 2100, Earthropo parece estável na superfície. Nimalia exerce influência, a
 - [[Elarion Vaelthor]]: mentor desaparecido de Vezemir.
 - [[Mira Valen]]: memória central da queda pessoal de Vezemir.
 - [[General Cassian Valerius]]: autoridade militar de Nimalia e antigo aliado de Vezemir.
+
+## Sincronização com Calendário
+
+- Ano atual: 2100.
+- Calendário em revisão: [[CALENDAR]].
+- Eventos que conflitam com o calendário devem ser registrados como pendência antes de virar cânone.

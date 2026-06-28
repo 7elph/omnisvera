@@ -3,188 +3,98 @@ obsidianUIMode: preview
 NoteIcon: lore
 NoteStatus: Draft
 status: Cânone de trabalho
-tags: home
-cover: zz_media/t6.png
----
-# CULTURA DE EARTHROPO
-
-Earthropo é um continente moldado por diversas raças, reinos e tradições. Embora cada território possua seus próprios costumes, algumas práticas se tornaram universais ao longo dos séculos, criando uma identidade compartilhada entre seus habitantes.
-
-> [!note] Estrutura em preparação
-> Os cartões de entretenimento, música, esportes e notícias permanecerão vazios até que notas canônicas dessas categorias sejam criadas. As consultas já estão preparadas e não representam erro de plugin.
-
----
-## Entretenimento
-<br>
-
-```datacards
-TABLE cover, info, status FROM #entertainment
-SORT name ASC
-
-// Settings
-preset: square 
-columns: 6
-imageProperty: cover
-showImageOnHover: true
-cardSpacing: 4
-```
-
-### Formas populares de entretenimento
-
-- Contadores de histórias
-- Teatros itinerantes
-- Companhias de bardos
-- Festivais sazonais
-- Feiras comerciais
-- Competições de magia
-- Torneios de combate
-- Jogos de taverna
-- Caçadas comunitárias
-
+visibility: Mestre
+spoiler_level: light
+gm_secret: false
+thumbnail: zz_media/earthropo.png
+cover: zz_media/earthropo.png
+tags:
+  - home
+  - lore
+  - culture
+  - earthropo
 ---
 
-## Música
-<br>
+# Cultura de Earthropo
 
-```datacards
-TABLE cover, info, status FROM #music
-SORT name ASC
+## Status
 
-// Settings
-preset: portrait 
-columns: 5
-imageProperty: cover
-showImageOnHover: true
-cardSpacing: 4
-```
+> [!warning]
+> Documento em revisão. Cânone parcial.
 
-### Instrumentos comuns
+Este arquivo organiza a cultura geral de Earthropo como ferramenta de mesa. Detalhes específicos de povos, reinos e cidades devem ser confirmados em notas próprias antes de virarem cânone definitivo.
 
-- Alaúde
-- Harpa Élfica
-- Flauta de Carvalho
-- Tambor de Guerra Anão
-- Trompa Dracônica
+## Função em Mesa
 
-### Estilos populares
+- Dar tom para cenas sociais.
+- Ajudar improviso de tavernas, estradas, feiras, templos e festivais.
+- Registrar costumes recorrentes sem transformar cada ideia em nota separada.
+- Separar o que já é utilizável do que ainda precisa decisão do Sage.
 
-- Canções heroicas
-- Baladas românticas
-- Cantos religiosos
-- Música de guerra
-- Danças folclóricas
+## Visão Geral
 
----
+Earthropo é um continente moldado por diversas raças, reinos e tradições. Embora cada território possua seus próprios costumes, algumas práticas se tornaram amplamente reconhecidas: feiras, festivais sazonais, histórias de estrada, cultos locais e respeito ambíguo por aventureiros.
 
-## Esportes e Competições
-<br>
+## Povos e Convivência
 
-```datacards
-TABLE cover, info, status FROM #sport
-SORT name ASC
+Humanos, elfos, anões, antropos e outros povos convivem nos grandes centros, mas isso não significa ausência de tensão. A convivência é mais prática que idealizada: comércio, sobrevivência e ameaças antigas forçam cooperação.
 
-// Settings
-preset: grid 
-columns: 6
-imageProperty: cover
-showImageOnHover: true
-cardSpacing: 4
-```
+## Aventureiros na Sociedade
 
-### Competições populares
+Aventureiros são vistos como úteis, perigosos e imprevisíveis. Em regiões próximas a ruínas, fronteiras e rotas perigosas, sua presença é tolerada ou até desejada. Em cortes, templos e bairros nobres, costumam ser tratados com cautela.
 
-- Torneios de Cavalaria
-- Arquearia
-- Duelo Arcano
-- Lutas de Arena
-- Corridas de Montaria
-- Desafios de Sobrevivência
+O [[Conclave dos Errantes]] pode servir como ponto de entrada social para aventureiros, mas sua estrutura ainda precisa ser desenvolvida.
 
----
-
-## Notícias e Informação
-<br>
-
-```datacards
-TABLE cover, info, status FROM #news
-SORT name ASC
-
-// Settings
-preset: grid 
-columns: 5
-imageProperty: cover
-showImageOnHover: true
-cardSpacing: 4
-```
-
-### Como as notícias se espalham
-
-- Mensageiros Reais
-- Arautos
-- Guildas Mercantis
-- Bardos viajantes
-- Templos
-- Quadros de avisos do [[Conclave dos Errantes]]
-
----
-
-## Tradições Comuns
+## Festivais e Costumes
 
 ### Festival da Colheita
 
-Celebrado em praticamente todos os reinos.
-
-Marca o fim da estação agrícola e o início das grandes feiras comerciais.
-
----
+Celebra o fim da estação agrícola e a chegada de grandes feiras comerciais.
 
 ### Dia dos Heróis
 
-Uma celebração dedicada aos aventureiros e figuras históricas que protegeram Earthropo.
-
-Muitas cidades realizam torneios e apresentações públicas.
-
----
+Data dedicada a figuras históricas, protetores locais e aventureiros que defenderam comunidades.
 
 ### Festival das Chamas
 
-Comum entre seguidores da [[Igreja das Chamas]].
+Comum entre seguidores da [[Igreja das Chamas]]. Fogueiras, vigílias e ritos de memória são elementos prováveis, mas a doutrina ainda está em revisão.
 
-Fogueiras são acesas durante toda a noite em homenagem aos ancestrais.
+## Notícias e Informação
 
----
+Notícias circulam por:
 
-## A Visão Sobre Aventureiros
+- mensageiros reais;
+- arautos;
+- guildas mercantis;
+- bardos e viajantes;
+- templos;
+- quadros de aviso;
+- contatos do [[Conclave dos Errantes]].
 
-Poucas figuras são tão admiradas em Earthropo quanto os aventureiros.
+## Categorias Futuras
 
-Enquanto nobres governam e exércitos defendem fronteiras, são os aventureiros que exploram ruínas, enfrentam monstros e descobrem os segredos esquecidos do mundo.
+As categorias abaixo não possuem estrutura operacional suficiente para dashboard ativo:
 
-Muitas crianças sonham em um dia ingressar no [[Conclave dos Errantes]].
+- entretenimento;
+- música;
+- esportes;
+- notícias.
 
----
+Não usar `#entertainment`, `#music`, `#sport` ou `#news` como consulta operacional até existirem notas reais suficientes.
 
-## Relações Entre Raças
+## Pontos Pendentes
 
-Apesar de conflitos históricos, humanos, elfos, anões, dragonborns e antropomorfos convivem relativamente bem dentro dos grandes centros urbanos.
+- Diferenças culturais entre Nimalia, futuros reinos élficos, anões e outras regiões.
+- Papel social dos antropos no Reino de Nimalia.
+- Costumes de Leth'valora antes de sua destruição.
+- Festivais realmente canônicos da [[Igreja das Chamas]].
+- Como o [[Véu Cinzento]] afetou tradições, luto e memória.
 
-Preconceitos ainda existem, especialmente em regiões mais isoladas, mas a cooperação tornou-se necessária para a sobrevivência dos reinos.
+## Uso em Mesa
 
----
-
-## Valores de Earthropo
-
-- Honra
-- Coragem
-- Conhecimento
-- Liberdade
-- Comunidade
-- Exploração
-
-A maioria dos povos de Earthropo acredita que o destino não é herdado.
-
-Ele é construído.
-
-Por isso o continente ficou conhecido como:
-
-> **A Terra dos Destinos e das Possibilidades.**
+- Como apresentar: usar costumes locais como textura curta, não como palestra.
+- O que os jogadores sabem: costumes públicos, festivais e reputação de aventureiros.
+- O que apenas o mestre sabe: tensões históricas, contradições religiosas e tradições ligadas aos Criadores.
+- Como entra em cena: feiras, tavernas, anúncios, ritos, funerais, boatos e contratos.
+- Ganchos: festival interrompido, arauto mentindo, bardos espalhando versão falsa de um evento.
+- Consequências possíveis: reputação pública, acesso a contatos, apoio popular ou hostilidade local.
