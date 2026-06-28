@@ -136,3 +136,12 @@ SORT file.name ASC
 ## Links relevantes
 
 <!-- Wikilinks para notas relacionadas -->
+
+## Uso em Mesa
+
+- Como apresentar:
+- O que os jogadores sabem:
+- O que apenas o mestre sabe:
+- Como entra em cena:
+- Ganchos:
+- Consequ?ncias poss?veis:

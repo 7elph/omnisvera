@@ -50,3 +50,12 @@ FROM "CAMPANHA/Quests"
 WHERE contains(rumors, this.file.link) OR contains(hooks, this.file.link)
 SORT file.mtime DESC
 ```
+
+## Uso em Mesa
+
+- Como apresentar:
+- O que os jogadores sabem:
+- O que apenas o mestre sabe:
+- Como entra em cena:
+- Ganchos:
+- Consequ?ncias poss?veis:

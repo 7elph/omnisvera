@@ -33,3 +33,11 @@ tags:
 ## Quem sabe
 
 ## Como revelar
+
+## Uso em Mesa
+
+- Quem pode contar:
+- Onde pode ser ouvido:
+- Parte verdadeira:
+- Parte falsa ou distorcida:
+- Como investigar:

@@ -39,3 +39,11 @@ tags:
 ## Mecânica resumida
 
 Resumo próprio, sem reprodução literal de estatísticas protegidas.
+
+## Uso em Mesa
+
+- Como apresentar:
+- Sinais antes do encontro:
+- Comportamento:
+- Fraqueza conhecida:
+- Consequ?ncia narrativa:

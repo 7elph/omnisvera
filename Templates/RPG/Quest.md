@@ -38,3 +38,11 @@ tags:
 ## Consequências
 
 ## Estado
+
+## Uso em Mesa
+
+- Como os jogadores descobrem:
+- Objetivo claro:
+- Complica??o:
+- Recompensa:
+- Consequ?ncia se ignorada:
