@@ -2,11 +2,17 @@
 obsidianUIMode: preview
 NoteIcon: faction 
 NoteStatus: New
+visibility: Mestre
+spoiler_level: light
+gm_secret: false
+status: Em revisão
+campaign_status: Em desenvolvimento
 leader:
 state: Situação desconhecida após a destruição da vila
 location: "[[Leth'valora]]"
 thumbnail: "zz_media/sentinelas-de-leth'valora.png"
 cover: "zz_media/sentinelas-de-leth'valora.png"
+chapters: []
 tags:
   - faction
   - faccao
