@@ -23,17 +23,14 @@ chapter:
 chapters:
   - 00 - As Crônicas de Névoa de Sangue
 tags:
-  - player
-  - character
   - personagem
   - jogador
   - chapter00_raziel
   - bside
-  - origin-story
-  - origin-raziel
-  - vampire
+  - origem
+  - origem-raziel
   - vampiro
-  - hemomancer
+  - hemomante
   - sangue-antigo
   - sanguinallis
   - earthropo

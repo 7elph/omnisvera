@@ -19,12 +19,12 @@ cssclasses:
 tags:
   - story
   - bside
-  - origin-story
-  - origin-vezemir
+  - origem
+  - origem-vezemir
   - earthropo
   - vezemir
 chapter: 00 - O Bastardo de Ferro
-origin_tag: origin-vezemir
+origin_tag: origem-vezemir
 chapters:
   - 00 - O Bastardo de Ferro
 characters:

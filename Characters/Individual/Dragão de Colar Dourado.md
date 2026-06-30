@@ -23,16 +23,14 @@ chapter:
 chapters:
   - 00 - O Bastardo de Ferro
 tags:
-  - character
   - personagem
   - npc
-  - creature
   - criatura
-  - dragon
+  - dragao
   - dragao-de-colar-dourado
   - bside
-  - origin-story
-  - origin-vezemir
+  - origem
+  - origem-vezemir
   - earthropo
 ---
 

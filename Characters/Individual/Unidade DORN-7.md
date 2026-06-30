@@ -22,10 +22,8 @@ chapter:
 chapters:
   - 01 - Ecos do Mundo Perdido
 tags:
-  - character
   - personagem
   - npc
-  - creature
   - criatura
   - constructo
   - chapter01

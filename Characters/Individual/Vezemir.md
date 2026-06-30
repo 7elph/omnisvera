@@ -23,19 +23,14 @@ chapter:
 chapters:
   - 00 - O Bastardo de Ferro
 tags:
-  - player
   - jogador
-  - character
   - personagem
   - bside
-  - origin-story
-  - origin-vezemir
-  - warrior
+  - origem
+  - origem-vezemir
   - guerreiro
-  - human
-  - elf
   - meio-elfo
-  - guild
+  - guilda
   - conclave-dos-errantes
   - sentinelas-de-lethvalora
   - earthropo

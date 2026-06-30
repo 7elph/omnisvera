@@ -23,15 +23,14 @@ chapters:
   - 00 - O Bastardo de Ferro
 tags:
   - npc
-  - character
   - personagem
-  - human
+  - humano
   - humana
   - comum
-  - deceased
+  - falecido
   - bside
-  - origin-story
-  - origin-vezemir
+  - origem
+  - origem-vezemir
   - lethvalora
   - earthropo
   - npc-importante

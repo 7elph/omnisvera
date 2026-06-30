@@ -45,9 +45,9 @@ tags:
 > ```datacards
 > TABLE cover, status, description
 > FROM "EARTHROPO"
-> WHERE contains(tags, "origin-vezemir")
+> WHERE contains(tags, "origem-vezemir")
 > AND contains(tags, "bside")
-> AND contains(tags, "origin-story")
+> AND contains(tags, "origem")
 > SORT file.name ASC
 > LIMIT 1
 >
@@ -61,9 +61,9 @@ tags:
 > ```datacards
 > TABLE cover, status, description
 > FROM "EARTHROPO"
-> WHERE contains(tags, "origin-varkh")
+> WHERE contains(tags, "origem-varkh")
 > AND contains(tags, "bside")
-> AND contains(tags, "origin-story")
+> AND contains(tags, "origem")
 > SORT file.name ASC
 > LIMIT 1
 >
@@ -77,9 +77,9 @@ tags:
 > ```datacards
 > TABLE cover, status, description
 > FROM "EARTHROPO"
-> WHERE contains(tags, "origin-raziel")
+> WHERE contains(tags, "origem-raziel")
 > AND contains(tags, "bside")
-> AND contains(tags, "origin-story")
+> AND contains(tags, "origem")
 > SORT file.name ASC
 > LIMIT 1
 >
@@ -95,7 +95,7 @@ tags:
 > TABLE cover, status, campaign_status, description
 > FROM "EARTHROPO"
 > WHERE contains(tags, "chapter")
-> AND !contains(tags, "origin-story")
+> AND !contains(tags, "origem")
 > AND !contains(tags, "bside")
 > AND (visibility = "Jogadores" OR visibility = "Público")
 > AND gm_secret != true
@@ -116,7 +116,7 @@ tags:
 ```datacards
 TABLE thumbnail, status, location, faction
 FROM "Characters/Individual"
-WHERE (contains(tags, "player") OR contains(tags, "jogador"))
+WHERE contains(tags, "jogador")
 AND (visibility = "Jogadores" OR visibility = "Público")
 AND gm_secret != true
 SORT file.name ASC

@@ -26,17 +26,16 @@ chapters:
   - 01 - Ecos do Mundo Perdido
 tags:
   - coroa
-  - character
   - personagem
   - npc
-  - paladin
+  - paladino
   - antropo
-  - military
+  - militar
   - nimalia
   - earthropo
   - bside
-  - origin-story
-  - origin-vezemir
+  - origem
+  - origem-vezemir
   - chapter01
   - coroa-de-nimalia
   - npc-importante

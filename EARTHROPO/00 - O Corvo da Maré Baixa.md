@@ -16,12 +16,12 @@ cssclasses:
 tags:
   - story
   - bside
-  - origin-story
-  - origin-varkh
+  - origem
+  - origem-varkh
   - earthropo
   - varkh
 chapter: 00 - O Corvo da Maré Baixa
-origin_tag: origin-varkh
+origin_tag: origem-varkh
 chapters:
   - 00 - O Corvo da Maré Baixa
 characters:

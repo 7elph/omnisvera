@@ -24,10 +24,9 @@ chapters:
   - 01 - Ecos do Mundo Perdido
 tags:
   - coroa
-  - character
   - personagem
   - npc
-  - paladin
+  - paladino
   - antropo
   - chapter01
   - nimalia

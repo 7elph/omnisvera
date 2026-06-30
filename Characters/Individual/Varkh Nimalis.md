@@ -24,15 +24,12 @@ chapter:
 chapters:
   - 00 - O Corvo da Maré Baixa
 tags:
-  - player
-  - character
   - personagem
   - jogador
   - chapter00_varkh
   - bside
-  - origin-story
-  - origin-varkh
-  - alchemist
+  - origem
+  - origem-varkh
   - alquimista
   - kenku
   - conclave-dos-errantes

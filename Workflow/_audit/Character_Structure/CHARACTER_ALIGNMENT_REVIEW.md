@@ -46,13 +46,18 @@ Nenhuma nota ativa foi classificada como `NPC Menor` nesta leva.
 - Adicionada tag `criatura` às notas que seguem o template de criatura.
 - Adicionado `cover: zz_media/varkh.jpeg` em `Varkh Nimalis.md`.
 - Removido aviso duplicado de estado canônico em `Kaelen, o Flagelo.md`.
+- Removidas tags inglesas narrativas dos personagens.
+- Convertidas tags de origem `origin-*` para `origem-*`.
+- Atualizado o grupo visual do grafo de `#character` para `#personagem`.
+- Ajustado `Vezemir.md` para manter apenas `meio-elfo` como tag racial.
 
 ## O que foi preservado
 
 - Biografias, histórias e conteúdo narrativo foram preservados.
 - `chapters` foi preservado como eixo funcional de aparições.
 - `thumbnail` foi preservado para DataCards.
-- Tags-ponte como `character`, `player`, `npc`, `creature` e `antagonist` foram preservadas por compatibilidade.
+- Tags PT-BR como `personagem`, `jogador`, `npc`, `criatura`, `antagonista` e `npc-importante` foram usadas como padrão operacional.
+- Tags estruturais de capítulo ainda não migradas, como `bside` e `chapter01`, foram preservadas para uma etapa própria de padronização de capítulos.
 - `NoteIcon: magicitem` foi preservado conforme decisão anterior do Sage.
 
 ## Pendências editoriais
@@ -60,8 +65,6 @@ Nenhuma nota ativa foi classificada como `NPC Menor` nesta leva.
 | pendência | notas afetadas | recomendação |
 |---|---|---|
 | Imagem pendente | `Dragão de Colar Dourado`, `Kaelen`, `Lorde Malakar`, `Unidade DORN-7`, `Vandor` | Criar/associar `thumbnail` e `cover` quando houver arte aprovada. |
-| Tags inglesas de valor narrativo | `human`, `elf`, `missing`, `mystery`, `alchemist`, `vampire`, `warrior`, `guild` etc. | Revisar em lote próprio; não foram removidas agora para evitar quebrar filtros antigos. |
-| Vezemir com `human` e `elf` além de `meio-elfo` | `Vezemir.md` | Decidir depois se as tags raciais antigas ficam como ponte ou se apenas `meio-elfo` deve permanecer. |
 | Classes e raças como tags | várias notas | Definir se classe/raça devem continuar em tags ou apenas em campos YAML e links internos. |
 | NPC menor | nenhuma nota atual | Criar/usar somente quando houver personagem secundário de cena. |
 
@@ -70,13 +73,14 @@ Nenhuma nota ativa foi classificada como `NPC Menor` nesta leva.
 - Todas as 14 notas possuem frontmatter com abertura e fechamento em linhas próprias.
 - Não restaram ocorrências de `Category/Character` em `Characters/Individual`.
 - Não restaram tags `draft` em `Characters/Individual`.
+- Não restaram tags inglesas narrativas como `human`, `elf`, `missing`, `mystery`, `warrior`, `guild`, `paladin`, `alchemist`, `vampire`, `hemomancer`, `military`, `priest`, `deceased`, `creature`, `dragon`, `player`, `character` ou `antagonist` nas tags de `Characters/Individual`.
 - As notas continuam compatíveis com as consultas atuais que dependem de `thumbnail`, `tags`, `status`, `location`, `territory` e `faction`.
 
 ## Próximo passo recomendado
 
-Depois desta leva, o próximo ajuste seguro é revisar as tags inglesas de classe, raça e estado narrativo, separando:
+Depois desta leva, o próximo ajuste seguro é revisar tags estruturais de capítulo e origem, separando:
 
-1. tags que ainda servem como ponte técnica;
-2. tags que podem virar português BR;
-3. tags que devem desaparecer porque duplicam YAML;
-4. tags que podem causar falso positivo em DataCards.
+1. `bside`, que pode continuar como formato de capítulo de origem;
+2. `chapter01`, que pode virar `capitulo01` em lote próprio;
+3. `chapter00_*`, que pode virar `capitulo00-*` em lote próprio;
+4. tags de classe/raça que talvez devam ficar apenas nos campos YAML.

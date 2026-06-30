@@ -22,7 +22,7 @@
       }
     },
     {
-      "query": "tag: #character",
+      "query": "tag: #personagem",
       "color": {
         "a": 1,
         "rgb": 6790770

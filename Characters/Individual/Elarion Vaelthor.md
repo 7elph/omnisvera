@@ -23,16 +23,14 @@ chapters:
   - 00 - O Bastardo de Ferro
 tags:
   - npc
-  - character
   - personagem
-  - elf
   - elfo
   - mentor
-  - missing
-  - mystery
+  - desaparecido
+  - misterio
   - bside
-  - origin-story
-  - origin-vezemir
+  - origem
+  - origem-vezemir
   - sentinelas-de-lethvalora
   - earthropo
   - npc-importante

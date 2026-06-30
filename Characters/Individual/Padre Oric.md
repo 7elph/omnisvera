@@ -23,16 +23,14 @@ chapters:
   - 00 - O Bastardo de Ferro
 tags:
   - npc
-  - character
   - personagem
-  - human
   - humano
-  - priest
-  - missing
-  - mystery
+  - sacerdote
+  - desaparecido
+  - misterio
   - bside
-  - origin-story
-  - origin-vezemir
+  - origem
+  - origem-vezemir
   - igreja-das-chamas
   - earthropo
   - npc-importante

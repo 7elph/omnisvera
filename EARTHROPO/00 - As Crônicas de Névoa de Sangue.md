@@ -16,12 +16,12 @@ cssclasses:
 tags:
   - story
   - bside
-  - origin-story
-  - origin-raziel
+  - origem
+  - origem-raziel
   - earthropo
   - raziel
 chapter: 00 - As Crônicas de Névoa de Sangue
-origin_tag: origin-raziel
+origin_tag: origem-raziel
 chapters:
   - 00 - As Crônicas de Névoa de Sangue
 characters:
