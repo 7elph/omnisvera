@@ -23,7 +23,6 @@ tags:
   - culto
   - antagonista
   - veu-cinzento
-  - draft
 ---
 
 # Culto dos Sussurrantes

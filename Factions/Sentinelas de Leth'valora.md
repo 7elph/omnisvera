@@ -13,6 +13,8 @@ location: "[[Leth'valora]]"
 territory: "[[Floresta de Avenor]]"
 thumbnail: "zz_media/sentinelas-de-leth'valora.png"
 cover: "zz_media/sentinelas-de-leth'valora.png"
+info: Guarda local destruída de Leth'valora.
+description: Pequena força de defesa da vila de Leth'valora, destruída junto com a vila durante o ataque do dragão de colar dourado.
 chapters: []
 tags:
   - faction
@@ -28,6 +30,9 @@ tags:
 > [!NOTE|clean no-i right]+ Retrato
 > ![[sentinelas-de-leth'valora.png|400]]
 
+> [!world]- SINOPSE PÚBLICA
+> Os Sentinelas de Leth'valora eram a guarda local da vila, responsáveis por trilhas, acessos e proteção comunitária. Foram destruídos junto com a vila no ataque do [[Dragão de Colar Dourado]].
+
 ## Visão Geral
 
 Pequena força que era responsável pela proteção da vila de [[Leth'valora]], das trilhas próximas e dos acessos da [[Floresta de Avenor]]. Os Sentinelas foram destruídos junto com a vila durante o incidente do dragão de colar dourado.
@@ -38,6 +43,13 @@ Pequena força que era responsável pela proteção da vila de [[Leth'valora]], 
 - [[Elarion Vaelthor]] foi um de seus capitães mais respeitados.
 - Eram guardas locais da vila, não uma grande ordem continental.
 - A quantidade exata de sentinelas permanece em aberto.
+
+## Separação Importante
+
+- Os Sentinelas eram guardas de vila.
+- Não são os [[Guardiões do Véu Cinzento]].
+- Não representam o reino élfico inteiro.
+- Funcionam como memória local da queda de [[Leth'valora]].
 
 ## Relações
 

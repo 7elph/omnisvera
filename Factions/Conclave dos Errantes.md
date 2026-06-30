@@ -13,6 +13,8 @@ location: "[[Nimalis]]"
 territory: "[[Nimalia|Reino de Nimalia]]"
 thumbnail: zz_media/conclave-dos-errantes.png
 cover: zz_media/conclave-dos-errantes.png
+info: Rede de aventureiros, investigadores e errantes de Earthropo.
+description: Organização flexível que reúne aventureiros, escoltas, exploradores e pessoas sem bandeira fixa.
 chapters: []
 tags:
   - faction
@@ -28,6 +30,9 @@ tags:
 > [!NOTE|clean no-i right]+ Retrato
 > ![[conclave-dos-errantes.png|400]]
 
+> [!world]- SINOPSE PÚBLICA
+> O Conclave dos Errantes é uma rede de aventureiros, investigadores, escoltas e viajantes sem bandeira fixa. Onde a Coroa, guildas ou nobres não conseguem agir diretamente, os Errantes podem aceitar contratos e atravessar fronteiras.
+
 ## Visão Geral
 
 Organização que reúne aventureiros e errantes de Earthropo. O nome substitui a antiga denominação provisória “Guilda de Aventureiros”.
@@ -37,6 +42,16 @@ Organização que reúne aventureiros e errantes de Earthropo. O nome substitui 
 ## Função no Mundo
 
 O Conclave funciona como rede de aventureiros, investigadores, escoltas, exploradores e pessoas sem bandeira fixa. Ele pode aceitar contratos, investigar ameaças, cruzar fronteiras e agir onde a Coroa, guildas ou nobres não conseguem agir diretamente.
+
+## Tipo de Atuação
+
+| atuação | uso em mesa |
+|---|---|
+| Contratos | Entrada simples para missões e ganchos. |
+| Investigação | Pistas fora do alcance da Coroa. |
+| Escolta | Viagens, rotas perigosas e caravanas. |
+| Exploração | Ruínas, Avenor, fronteiras e locais esquecidos. |
+| Mediação informal | Problemas que instituições oficiais preferem terceirizar. |
 
 ## Relações
 

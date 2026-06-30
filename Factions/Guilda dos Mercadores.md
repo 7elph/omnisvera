@@ -13,6 +13,8 @@ location: "[[Nimalis]]"
 territory: "[[EARTHROPO/EARTHROPO|Earthropo]]"
 thumbnail: zz_media/guilda-dos-mercadores.png
 cover: zz_media/guilda-dos-mercadores.png
+info: Guilda econômica que organiza comércio, rotas, vendas e contratos em Earthropo.
+description: Rede mercantil de alcance amplo, com influência em mercados, portos, caravanas e disputas econômicas.
 chapters: []
 tags:
   - faction
@@ -29,6 +31,9 @@ tags:
 > [!NOTE|clean no-i right]+ Retrato
 > ![[guilda-dos-mercadores.png|400]]
 
+> [!world]- SINOPSE PÚBLICA
+> A Guilda dos Mercadores organiza comércio, contratos, rotas e parte da economia formal de Earthropo. Sua influência atravessa mercados, portos, caravanas e acordos que nem sempre passam pela Coroa.
+
 ## Visão Geral
 
 Guilda responsável por organizar comércio, vendas, rotas, contratos e parte da economia formal em Earthropo.
@@ -38,6 +43,16 @@ Guilda responsável por organizar comércio, vendas, rotas, contratos e parte da
 A Guilda dos Mercadores atua como uma rede de controle econômico: licencia caravanas, regula vendas formais, cobra taxas, intermedeia contratos e mantém influência sobre mercados urbanos, portos e rotas comerciais.
 
 Ela não pertence apenas a Nimalia. Sua atuação se estende por Earthropo, ainda que sua relação com a [[Coroa de Nimalia]] seja especialmente importante por causa da força política e econômica do reino.
+
+## Tipo de Atuação
+
+| atuação | uso em mesa |
+|---|---|
+| Contratos | Ganchos de escolta, entrega e cobrança. |
+| Rotas | Viagens, pedágios, mapas e riscos comerciais. |
+| Armazéns | Pistas, contrabando, cargas e documentos. |
+| Crédito | Dívidas, favores, cartas e influência política. |
+| Informação | Rumores, preços anormais e notícias vindas de longe. |
 
 ## Relações
 

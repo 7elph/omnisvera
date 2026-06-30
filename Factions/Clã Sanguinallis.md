@@ -14,6 +14,8 @@ created_by: IA
 leader: "[[Lorde Malakar]]"
 location: "[[Fortaleza de Gharok]]"
 territory: "[[EARTHROPO/EARTHROPO|Earthropo]]"
+info: Clã vampírico ligado à origem de Raziel, Lorde Malakar e Gharok.
+description: Organização vampírica antiga em revisão, associada à traição de Raziel, à Fortaleza de Gharok e à linhagem Sanguinallis.
 chapters:
   - 00 - As Crônicas de Névoa de Sangue
 tags:
@@ -31,6 +33,9 @@ tags:
 
 > [!warning] Nota sensível
 > Esta nota contém informações de bastidor ligadas à origem de [[Raziel]]. Para uma versão pública, criar resumo separado sem entregar traições, hierarquia interna ou alvos finais.
+
+> [!world]- SINOPSE DO MESTRE
+> O Clã Sanguinallis é a facção vampírica ligada ao passado de [[Raziel]], ao domínio de [[Lorde Malakar]] e à [[Fortaleza de Gharok]]. Sua situação atual após trezentos anos permanece em revisão.
 
 ## Visão Geral
 
@@ -61,6 +66,12 @@ Na lore atual, Gharok foi uma antiga fortaleza anã ao norte de Nimalia antes de
 - A Fortaleza de Gharok era um dos principais domínios do clã
 - Raziel foi traído por Malakar, Kaelen e Vandor
 - A traição foi motivada por inveja, medo e suspeita de que Raziel desejava o trono
+
+## Segredos do Mestre
+
+- Não revelar cedo se o clã ainda existe, mudou de forma ou entrou em decadência.
+- Separar a linhagem Sanguinallis do [[Sangue Antigo]].
+- Usar o clã como eixo de vingança de Raziel sem resolver toda a hierarquia antes da hora.
 
 ## Membros e Associados
 

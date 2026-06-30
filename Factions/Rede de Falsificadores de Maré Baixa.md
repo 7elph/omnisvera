@@ -12,8 +12,10 @@ created_by: IA
 leader:
 location: "[[Maré Baixa]]"
 territory: "[[Nimalia|Reino de Nimalia]]"
-thumbnail:
-cover:
+thumbnail: zz_media/remedios-falsos.png
+cover: zz_media/remedios-falsos.png
+info: Rede criminosa em revisão ligada aos remédios falsos de Maré Baixa.
+description: Organização por trás de falsificações alquímicas associadas ao símbolo de Mestre Odran Veyl e ao arco de Varkh.
 chapters:
   - 00 - O Corvo da Maré Baixa
 tags:
@@ -23,13 +25,18 @@ tags:
   - mare-baixa
   - varkh
   - remedios-falsos
-  - draft
 ---
 
 # Rede de Falsificadores de Maré Baixa
 
+> [!NOTE|clean no-i right]+ Remédios Falsos
+> ![[remedios-falsos.png|400]]
+
 > [!WARNING] Estado canônico
 > Esta nota está em desenvolvimento e depende de confirmação do Sage.
+
+> [!world]- SINOPSE DO MESTRE
+> A Rede de Falsificadores de Maré Baixa é a organização em revisão por trás dos remédios falsificados ligados ao símbolo de [[Mestre Odran Veyl]] e à investigação de [[Varkh Nimalis]].
 
 ## Resumo
 
@@ -57,6 +64,12 @@ A rede de falsificadores representa o antagonismo central do arco de Varkh. Ela 
 - Guardas procuram por "um corvo alquimista" relacionado à rede
 - Varkh investiga a rede para proteger o nome de Odran
 - Possíveis responsáveis: antigo aluno de Odran, guilda, nobreza demi-humana, ou o próprio Odran
+
+## Segredos do Mestre
+
+- Não decidir ainda se a rede age sozinha ou serve a uma facção maior.
+- Não confirmar cedo se Odran é culpado, vítima ou isca.
+- Manter a rede como investigação aberta até Varkh encontrar pistas em mesa.
 
 ## Uso em Mesa
 

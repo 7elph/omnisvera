@@ -13,6 +13,8 @@ location:
 territory: "[[EARTHROPO/EARTHROPO|Earthropo]]"
 thumbnail: zz_media/os-guardioes-do-veu-cinzento.png
 cover: zz_media/os-guardioes-do-veu-cinzento.png
+info: Ordem antiga associada ao Véu Cinzento, relíquias e registros perdidos.
+description: Facção antiga/desaparecida ligada ao Véu Cinzento, aos Criadores e ao mistério de Vezemir.
 chapters: []
 tags:
   - faction
@@ -27,6 +29,9 @@ tags:
 
 > [!NOTE|clean no-i right]+ Retrato
 > ![[os-guardioes-do-veu-cinzento.png|400]]
+
+> [!world]- SINOPSE PÚBLICA
+> Os Guardiões do Véu Cinzento são lembrados como uma ordem antiga demais para existir com clareza na memória atual de Earthropo. Seus registros são fragmentados, contraditórios e cercados de silêncio.
 
 ## Visão Geral
 
@@ -51,6 +56,14 @@ Seus símbolos recorrentes são:
 - Silêncio diante de conhecimentos perigosos.
 - Proteção do equilíbrio entre luz e sombra.
 - Destruição daquilo que ameaça romper esse equilíbrio.
+
+## Separação Importante
+
+| nota | função |
+|---|---|
+| `Factions/Guardiões do Véu Cinzento` | Facção/ordem antiga em termos operacionais. |
+| `Lore/Guardiões do Véu Cinzento` | Registro de lore, rumores e interpretações históricas. |
+| [[O Medalhão]] | Relíquia ligada ao mistério, não explicação completa da ordem. |
 
 ## Relações
 

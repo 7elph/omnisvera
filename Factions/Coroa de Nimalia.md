@@ -13,6 +13,8 @@ location: "[[Nimalis]]"
 territory: "[[Nimalia|Reino de Nimalia]]"
 thumbnail: zz_media/coroa-de-nimalia.png
 cover: zz_media/coroa-de-nimalia.png
+info: Autoridade monárquica do Reino de Nimalia.
+description: Poder político central de Nimalia, liderado por Augustus Terra Decimus e apoiado por nobreza, guarda e burocracia real.
 chapters: []
 tags:
   - faction
@@ -28,6 +30,9 @@ tags:
 > [!NOTE|clean no-i right]+ Retrato
 > ![[coroa-de-nimalia.png|400]]
 
+> [!world]- SINOPSE PÚBLICA
+> A Coroa de Nimalia representa a autoridade formal do reino dos antropos: leis, impostos, fronteiras, exército, diplomacia e estabilidade sob o rei soberano [[Augustus Terra Decimus]].
+
 ## Visão Geral
 
 A nobreza e monarquia do [[Nimalia|Reino de Nimalia]], o principal reino dos antropos em Earthropo. Controlam as terras e o exército do reino.
@@ -42,6 +47,16 @@ A nobreza e monarquia do [[Nimalia|Reino de Nimalia]], o principal reino dos ant
 ## Função no Mundo
 
 A Coroa representa a autoridade formal de Nimalia. Ela mantém leis, impostos, fronteiras, rotas, exército e diplomacia do reino.
+
+## Relações de Poder
+
+| braço | função |
+|---|---|
+| [[Augustus Terra Decimus]] | Rei soberano. |
+| [[Nobreza de Nimalia]] | Base social, política e disputas de influência. |
+| [[Guarda Real de Nimalia]] | Braço militar e ordem pública. |
+| [[Casa da Moeda de Nimalia]] | Controle monetário e possíveis investigações econômicas. |
+| [[Guilda dos Mercadores]] | Parceira econômica e possível fonte de tensão. |
 
 ## Objetivos Públicos
 
