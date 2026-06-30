@@ -26,6 +26,7 @@ tags:
 - Capítulos numerados continuam com tags `chapter`, `story`, `chapterXX`.
 - Origens passam a usar `story`, `bside`, `origin-story` e tags específicas como `origin-vezemir`.
 - `Home_Mestre.md` continua como navegação visual e aponta para o Estado da Campanha como painel central.
+- `CAMPANHA/ESTADO_DA_CAMPANHA.md` é o caderno operacional do mestre: preparação, bastidores, segredos, consequências e decisões de sessão.
 
 ## Estrutura Atual por Pasta
 
@@ -275,9 +276,28 @@ Ajustes aplicados:
 
 Relatório: [[STORY_AND_BSIDE_STANDARDIZATION_REPORT]]
 
+### Lote 11 — Home do Mestre e Estado da Campanha
+
+Status: aplicado.
+
+Padronizados:
+
+- `Home_Mestre.md` como navegação visual do mestre;
+- `CAMPANHA/ESTADO_DA_CAMPANHA.md` como painel operacional real;
+- `Workflow/OMNISVERA_DASHBOARD_SYSTEM.md` como documentação da separação;
+- consultas amplas em dashboards substituídas por pastas operacionais quando possível.
+
+Ajustes aplicados:
+
+- Home do Mestre aponta para seções específicas do Estado da Campanha.
+- Conteúdo de preparação e segredos continuam no Estado da Campanha.
+- Relatórios técnicos ficaram recolhidos/organizados como documentação, não como fluxo principal da mesa.
+- Consultas de raças, facções, itens e personagens foram reduzidas para pastas operacionais.
+
+Relatório: [[MASTER_HOME_AND_CAMPAIGN_STATE_ALIGNMENT_REPORT]]
+
 ## Pendências de Decisão do Sage
 
-- Se `Home_Mestre.md` deve continuar como Home visual separada ou virar apenas uma versão visual do `Estado da Campanha`.
 - Se `Mar da Neblina` será território marítimo, fenômeno ou ambos.
 - Se a Unidade DORN-7 deve ficar em `Characters/Individual` ou migrar futuramente para uma pasta de criaturas/entidades.
 - Se os B-Sides devem manter nomes `00 - ...` ou ganhar prefixo novo como `B-Side - ...`.

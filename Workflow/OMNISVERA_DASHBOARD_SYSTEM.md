@@ -15,7 +15,8 @@ Este arquivo é documentação técnica. Ele não é Home operacional.
 | arquivo | função |
 |---|---|
 | `Home.md` | Home dos Jogadores. |
-| `Home_Mestre.md` | Área/dashboard do Mestre. |
+| `Home_Mestre.md` | Navegação visual do Mestre: mapas, índices, cards e atalhos. |
+| `CAMPANHA/ESTADO_DA_CAMPANHA.md` | Painel operacional do Mestre: preparação, segredos, consequências e controle de sessão. |
 
 `Home_Jogadores.md` não existe mais na raiz. A Home dos jogadores é `Home.md`.
 
@@ -34,7 +35,11 @@ AND spoiler_level != "medium"
 AND spoiler_level != "heavy"
 ```
 
-Dashboards do mestre podem exibir conteúdo de preparação, pendências e relatórios técnicos.
+Dashboards do mestre podem exibir conteúdo de preparação, pendências e relatórios técnicos, mas a regra operacional atual é:
+
+- `Home_Mestre.md` deve funcionar como mesa visual e navegação rápida;
+- `CAMPANHA/ESTADO_DA_CAMPANHA.md` deve concentrar segredos, bastidores e decisões de sessão;
+- relatórios técnicos devem ficar recolhidos ou linkados por índice, não misturados ao fluxo de mesa.
 
 ## Campos aceitos em dashboards
 
@@ -77,7 +82,7 @@ Exemplo:
 
 ```dataview
 TABLE date, description
-FROM #story
+FROM "EARTHROPO"
 WHERE (visibility = "Jogadores" OR visibility = "Público")
 AND gm_secret != true
 AND spoiler_level != "medium"
@@ -90,7 +95,7 @@ SORT date ASC
 ```dataview
 TABLE thumbnail, status, location, territory, faction
 FROM "Characters"
-WHERE contains(tags, "player") OR contains(tags, "jogador")
+WHERE (contains(tags, "player") OR contains(tags, "jogador"))
 AND (visibility = "Jogadores" OR visibility = "Público")
 AND gm_secret != true
 AND spoiler_level != "medium"

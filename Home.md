@@ -67,7 +67,7 @@ SORT file.name ASC
 
 ```dataview
 TABLE thumbnail, status, leader, territory
-FROM #faction
+FROM "Factions"
 WHERE (visibility = "Jogadores" OR visibility = "Público")
 AND !contains(file.path, "Workflow/")
 AND gm_secret != true
@@ -86,9 +86,10 @@ Conteúdo público deve aparecer nas seções de personagens, locais, facções 
 
 ```dataview
 TABLE date, description
-FROM #story
+FROM "EARTHROPO"
 WHERE (visibility = "Jogadores" OR visibility = "Público")
 AND !contains(file.path, "Workflow/")
+AND !contains(file.path, "Templates/")
 AND gm_secret != true
 AND spoiler_level != "medium"
 AND spoiler_level != "heavy"

@@ -33,9 +33,13 @@ gm_secret: true
 > **MAPAS DE EARTHROPO**
 > [![[earthropo.png|sban htiny ctr]]](MAPA%20DE%20EARTHROPO.md)
 
-> [!home]+ PAINEL DO MESTRE
-> - [[CAMPANHA/ESTADO_DA_CAMPANHA|Estado da Campanha]]
-> - [[01 - Ecos do Mundo Perdido|Capítulo 01: Ecos do Mundo Perdido]]
+> [!home]+ NAVEGAÇÃO DO MESTRE
+> Esta Home é a mesa visual do mestre: mapas, índices e acesso rápido. A preparação completa, segredos e decisões de sessão ficam em [[CAMPANHA/ESTADO_DA_CAMPANHA|Estado da Campanha]].
+>
+> - [[CAMPANHA/ESTADO_DA_CAMPANHA|Estado da Campanha — painel operacional]]
+> - [[CAMPANHA/ESTADO_DA_CAMPANHA#Próxima Sessão|Próxima Sessão]]
+> - [[CAMPANHA/ESTADO_DA_CAMPANHA#Dossiê do Mestre — Capítulo 01: Ecos do Mundo Perdido|Dossiê do Mestre — Capítulo 01]]
+> - [[01 - Ecos do Mundo Perdido|Capítulo 01 — versão pública]]
 > - [[EARTHROPO/EARTHROPO|Crônicas de Earthropo]]
 > - [[CAMPANHA/Quests/INDICE_DE_QUESTS|Índice de Quests]]
 > - [[CAMPANHA/Rumors/INDICE_DE_RUMORES|Índice de Rumores]]
@@ -84,15 +88,14 @@ Nimalia é o primeiro horizonte das **Crônicas de Earthropo**: um ponto de part
 > ```
 
 > [!news]+ FIOS DA CAMPANHA
-> Três histórias avançam por Earthropo, ainda sem saber onde irão se encontrar:
+> A Home do Mestre mostra a visão rápida: personagens, territórios, locais, raças, classes e crônicas disponíveis.
 >
-> - [[Vezemir]] percorre a [[Floresta de Avenor]] em busca do dragão de colar dourado que destruiu [[Leth'valora]].
-> - [[Varkh Nimalis]] deixa [[Maré Baixa]] para descobrir quem está usando os métodos de seu mestre na fabricação de remédios falsos.
-> - [[Raziel]] retorna a um mundo transformado depois de mais de trezentos anos de aprisionamento, carregando antigas dívidas de sangue.
+> A preparação real de sessão fica centralizada em [[CAMPANHA/ESTADO_DA_CAMPANHA|Estado da Campanha]], incluindo segredos, pistas escolhidas, consequências, bastidores e pendências antes da mesa.
 >
-> A campanha começa no nível 1. O mapa não será entregue pronto: lugares, perigos e histórias ganharão forma à medida que forem descobertos.
->
-> #### **[[LATEST_NEWS|Leia Mais...]]**
+> - Capítulo público atual: [[01 - Ecos do Mundo Perdido]]
+> - Painel de preparação: [[CAMPANHA/ESTADO_DA_CAMPANHA#Próxima Sessão|Próxima Sessão]]
+> - Quests: [[CAMPANHA/Quests/INDICE_DE_QUESTS]]
+> - Rumores: [[CAMPANHA/Rumors/INDICE_DE_RUMORES]]
 
 > [!home]+ ÚLTIMOS (5) PERSONAGENS ATUALIZADOS
 > ```dataview
@@ -143,9 +146,8 @@ Nimalia é o primeiro horizonte das **Crônicas de Earthropo**: um ponto de part
 
 > [!note]- RAÇAS
 > ```datacards
-> TABLE cover, status FROM #race
-> WHERE !contains(file.path, "Workflow/")
-> AND !contains(file.path, "Templates/")
+> TABLE cover, status FROM "Races"
+> WHERE NoteStatus != "Placeholder"
 > SORT name ASC
 >
 > // Settings
@@ -167,40 +169,41 @@ Nimalia é o primeiro horizonte das **Crônicas de Earthropo**: um ponto de part
 > cardSpacing: 4
 > ```
 
-## Ferramentas e relatórios do mestre
+## Ferramentas do Mestre
 
-> [!note]+ SISTEMA E MIGRAÇÃO
-> - [[Workflow/OMNISVERA_SYSTEM_TAXONOMY|Taxonomia Técnica do Omnisvera]]
-> - [[Workflow/_audit/Plugin_Migration/PLUGIN_TAG_MIGRATION_AUDIT|Auditoria de Migração de Tags]]
-> - [[Workflow/_audit/Taxonomy_Alignment/TAXONOMY_ALIGNMENT_VALIDATION|Validação da Taxonomia]]
-> - [[Workflow/_audit/Omnisvera/OMNISVERA_OBSIDIAN_DEPENDENCY_MAP|Auditoria Técnica do Omnisvera]]
+> [!note]+ OPERAÇÃO DE MESA
+> - [[CAMPANHA/ESTADO_DA_CAMPANHA|Estado da Campanha]]
+> - [[Workflow/_audit/Pending_Review/VAULT_STANDARDIZATION_BACKLOG|Fila de Padronização]]
+> - [[Workflow/_audit/Pending_Review/VAULT_PENDING_REVIEW|Pendências do Vault]]
 >
-> [!warning]- Arquivo histórico / legado
-> Estes documentos são anteriores à taxonomia oficial atual e não devem orientar novas migrações.
-> - [[Workflow/COMPATIBILITY_LAYER/COMPATIBILITY_LAYER_INDEX|Camada de Compatibilidade Histórica]]
-> - [[Workflow/_audit/Decision_Packet/SAGE_DECISION_PACKET|Pacote de Decisões Histórico]]
+> [!warning]- DOCUMENTAÇÃO TÉCNICA
+> Abrir apenas quando estiver organizando o vault, não durante sessão.
+> - [[Workflow/OMNISVERA_SYSTEM_TAXONOMY|Taxonomia Técnica do Omnisvera]]
+> - [[Workflow/OMNISVERA_DASHBOARD_SYSTEM|Sistema de Dashboards]]
+> - [[Workflow/README|Índice do Workflow]]
 
 <br>
 
-```dataview
-TABLE WITHOUT ID
-  link(file.path, file.folder + " / " + file.name) AS "Última Modificação",
-  file.mtime AS "Data"
-FROM "/"
-WHERE file.mtime >= date(today) - dur(30 days)
-AND file.name != this.file.name
-AND !contains(file.path, "zz_media")
-AND !contains(file.path, "Workflow/")
-AND !contains(file.path, "Templates/")
-AND !contains(file.path, "z_Assets")
-AND !contains(file.path, "Inline Scripts")
-AND !contains(file.path, "z_Templates")
-AND !contains(file.path, "daily notes")
-AND !contains(file.path, "BRAT")
-AND !contains(file.name, "Legacy -")
-SORT file.mtime DESC
-LIMIT 10
-```
+> [!note]- MODIFICADOS RECENTEMENTE
+> ```dataview
+> TABLE WITHOUT ID
+>   link(file.path, file.folder + " / " + file.name) AS "Última Modificação",
+>   file.mtime AS "Data"
+> FROM "/"
+> WHERE file.mtime >= date(today) - dur(30 days)
+> AND file.name != this.file.name
+> AND !contains(file.path, "zz_media")
+> AND !contains(file.path, "Workflow/")
+> AND !contains(file.path, "Templates/")
+> AND !contains(file.path, "z_Assets")
+> AND !contains(file.path, "Inline Scripts")
+> AND !contains(file.path, "z_Templates")
+> AND !contains(file.path, "daily notes")
+> AND !contains(file.path, "BRAT")
+> AND !contains(file.name, "Legacy -")
+> SORT file.mtime DESC
+> LIMIT 10
+> ```
 
 ---
 

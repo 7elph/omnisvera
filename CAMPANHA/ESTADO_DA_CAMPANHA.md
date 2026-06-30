@@ -18,6 +18,8 @@ tags:
 
 > [!NOTE]
 > Painel manual do Mestre para acompanhar a situação atual da campanha. A nota pública do capítulo fica em [[01 - Ecos do Mundo Perdido]]. A versão completa de mestre fica nesta página.
+>
+> [[Home_Mestre]] é a navegação visual. Esta nota é o caderno operacional: preparação, bastidores, segredos, consequências e decisões antes/depois da mesa.
 
 ## Capítulo Atual
 
@@ -46,7 +48,7 @@ tags:
 
 ```dataview
 TABLE status, location, faction
-FROM #personagem
+FROM "Characters/Individual"
 WHERE visibility = "Mestre" OR visibility = "Jogadores" OR visibility = "Público"
 SORT file.name ASC
 LIMIT 12
@@ -73,7 +75,7 @@ SORT file.name ASC
 
 ```dataview
 TABLE status, location, territory
-FROM #faccao OR #faction
+FROM "Factions"
 SORT file.name ASC
 ```
 
@@ -90,7 +92,8 @@ LIMIT 12
 
 ```dataview
 TABLE status, location
-FROM #item OR #artefato
+FROM "Items"
+WHERE contains(tags, "item") OR contains(tags, "artefato")
 SORT file.name ASC
 ```
 
@@ -123,11 +126,13 @@ SORT file.name ASC
 ```datacards
 TABLE thumbnail, status, location, faction
 FROM "Characters/Individual"
-WHERE contains(chapters, "01 - Ecos do Mundo Perdido")
-OR contains(tags, "chapter01")
-OR file.name = "Vezemir"
-OR file.name = "Varkh Nimalis"
-OR file.name = "Raziel"
+WHERE (
+  contains(chapters, "01 - Ecos do Mundo Perdido")
+  OR contains(tags, "chapter01")
+  OR file.name = "Vezemir"
+  OR file.name = "Varkh Nimalis"
+  OR file.name = "Raziel"
+)
 SORT file.name ASC
 
 // Settings
@@ -711,7 +716,7 @@ E a última frase antes do silêncio é:
 ## Segredos de Personagens Centralizados
 
 > [!WARNING]
-> Conte?do movido das notas de personagem para manter o vault operacionalmente p?blico. Revisar e consolidar depois.
+> Conteúdo movido das notas de personagem para manter o vault operacionalmente público. Revisar e consolidar depois.
 
 ### Elarion Vaelthor
 
