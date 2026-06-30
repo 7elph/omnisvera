@@ -2,18 +2,31 @@
 obsidianUIMode: preview
 NoteIcon: lore
 NoteStatus: In progress
+type: lore
 status: Em revisão
+campaign_status: Em revisão
 visibility: Mestre
 spoiler_level: light
 gm_secret: false
+thumbnail: zz_media/banner-earthropo.png
 cover: zz_media/banner-earthropo.png
+info: Calendário operacional de Omnisvera para viagens, datas, festivais e consequências.
+description: Estrutura de dias, meses, estações e feriados da campanha, ainda em revisão.
+chapters: []
 tags:
   - world
   - calendar
+  - lore
   - omnisvera
 ---
 
 # Calendário de Omnisvera
+
+> [!NOTE|clean no-i right]+ Calendário de Omnisvera
+> ![[banner-earthropo.png|400]]
+
+> [!world]- SINOPSE
+> O calendário organiza o tempo de jogo: viagens, prazos, festivais, presságios, feriados e consequências. Ele está ligado à [[TIMELINE]], mas não precisa revelar toda a história antiga de Omnisvera.
 
 ```calendarium
 ```
@@ -34,6 +47,17 @@ O ano 2100 é o presente operacional da campanha e deve permanecer alinhado com 
 - A [[TIMELINE]] define a escala histórica.
 - Este calendário define a estrutura de jogo para dias, meses, estações e feriados.
 - Se houver conflito, registrar em pendências e não resolver inventando lore nova.
+- Eventos secretos ou revelações históricas devem ficar no [[CAMPANHA/ESTADO_DA_CAMPANHA|Estado da Campanha]] até serem usados.
+
+## Estrutura do Ano
+
+| elemento | estado | observação |
+|---|---|---|
+| Ano atual | Ativo | 2100. |
+| Dias da semana | Rascunho | Nomes úteis, mas ainda não definitivos. |
+| Meses | Rascunho | Funcionam como ferramenta de mesa. |
+| Estações | Rascunho | Podem ajudar viagens, clima e festivais. |
+| Feriados | Rascunho | Não tratar como cânone rígido sem necessidade de sessão. |
 
 ## Dias da Semana
 
@@ -102,10 +126,11 @@ Possíveis eventos secretos:
 - Confirmar se dias da semana são diegéticos ou apenas ferramenta de mesa.
 - Validar feriados ligados à [[Igreja das Chamas]].
 - Definir primeira data em jogo da campanha.
-- Sincronizar eventos futuros com `CAMPANHA/ESTADO_DA_CAMPANHA.md`.
+- Sincronizar eventos futuros com [[CAMPANHA/ESTADO_DA_CAMPANHA]].
 
 ## Uso em Mesa
 
 - Usar o calendário para marcar viagem, prazos, festivais e consequências.
 - Não transformar feriados em lore obrigatória sem necessidade de sessão.
 - Registrar datas reveladas aos jogadores como parte de capítulos `story`.
+- Se uma data revelar segredo de campanha, registrar o bastidor no [[CAMPANHA/ESTADO_DA_CAMPANHA|Estado da Campanha]].

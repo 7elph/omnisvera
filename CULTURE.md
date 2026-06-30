@@ -2,30 +2,39 @@
 obsidianUIMode: preview
 NoteIcon: lore
 NoteStatus: Draft
+type: lore
 status: Cânone de trabalho
-visibility: Mestre
+campaign_status: Ativo
+visibility: Jogadores
 spoiler_level: light
 gm_secret: false
 thumbnail: zz_media/culture.png
 cover: zz_media/culture.png
+info: Cultura geral de Earthropo como ferramenta de mesa.
+description: Costumes, convivência, festivais, informação e textura social do continente de Earthropo.
+chapters: []
 tags:
   - home
   - lore
   - culture
+  - cultura
   - earthropo
 ---
 
 # Cultura de Earthropo
 
-> [!NOTE|clean no-i right]+ Retrato
+> [!NOTE|clean no-i right]+ Cultura de Earthropo
 > ![[culture.png|400]]
+
+> [!world]- SINOPSE
+> Earthropo é um continente moldado por diversas raças, reinos e tradições. Embora cada território possua costumes próprios, algumas práticas são reconhecidas em muitas regiões: feiras sazonais, histórias de estrada, cultos locais, notícias carregadas por arautos e um respeito ambíguo por aventureiros.
 
 ## Status
 
 > [!warning]
 > Documento em revisão. Cânone parcial.
 
-Este arquivo organiza a cultura geral de Earthropo como ferramenta de mesa. Detalhes específicos de povos, reinos e cidades devem ser confirmados em notas próprias antes de virarem cânone definitivo.
+Este arquivo organiza a cultura geral de Earthropo como ferramenta de mesa. Detalhes específicos de povos, reinos, cidades e religiões devem ser confirmados em notas próprias antes de virarem cânone definitivo.
 
 ## Função em Mesa
 
@@ -34,13 +43,37 @@ Este arquivo organiza a cultura geral de Earthropo como ferramenta de mesa. Deta
 - Registrar costumes recorrentes sem transformar cada ideia em nota separada.
 - Separar o que já é utilizável do que ainda precisa decisão do Sage.
 
-## Visão Geral
+## Painel Cultural
 
-Earthropo é um continente moldado por diversas raças, reinos e tradições. Embora cada território possua seus próprios costumes, algumas práticas se tornaram amplamente reconhecidas: feiras, festivais sazonais, histórias de estrada, cultos locais e respeito ambíguo por aventureiros.
+| área | estado | uso em jogo |
+|---|---|---|
+| Povos e convivência | Cânone de trabalho | Ajuda a interpretar cidades mistas, preconceitos, alianças e tensões sociais. |
+| Aventureiros | Cânone de trabalho | Define como contratos, guildas, nobres e vilas reagem ao grupo. |
+| Festivais e costumes | Rascunho utilizável | Dá cor a cenas de cidade, estrada, templo e mercado. |
+| Notícias e informação | Cânone de trabalho | Define como boatos, ordens reais e rumores chegam aos jogadores. |
+| Cultura regional | Em desenvolvimento | Deve ser expandida em notas de Nimalia, Avenor, Gharok, Valthor e futuros reinos. |
+
+## Índice de Notas Culturais
+
+> [!infobox]
+> ```datacards
+> TABLE thumbnail, status, territory, description
+> FROM #cultura OR #culture
+> WHERE file.name != this.file.name
+> SORT file.name ASC
+>
+> // Settings
+> preset: compact
+> columns: 4
+> imageProperty: thumbnail
+> cardSpacing: 4
+> ```
 
 ## Povos e Convivência
 
 Humanos, elfos, anões, antropos e outros povos convivem nos grandes centros, mas isso não significa ausência de tensão. A convivência é mais prática que idealizada: comércio, sobrevivência e ameaças antigas forçam cooperação.
+
+Em Nimalia, os antropos são predominantes no universo de Omnisvera, ainda que humanos sejam a maioria no Old Dragon clássico. Essa diferença deve ser tratada como decisão de cenário, não como erro mecânico.
 
 ## Aventureiros na Sociedade
 
@@ -97,7 +130,7 @@ Não usar `#entertainment`, `#music`, `#sport` ou `#news` como consulta operacio
 
 - Como apresentar: usar costumes locais como textura curta, não como palestra.
 - O que os jogadores sabem: costumes públicos, festivais e reputação de aventureiros.
-- O que apenas o mestre sabe: tensões históricas, contradições religiosas e tradições ligadas aos Criadores.
+- O que apenas o mestre sabe: tensões históricas, contradições religiosas e tradições ligadas aos Criadores devem ficar no [[CAMPANHA/ESTADO_DA_CAMPANHA|Estado da Campanha]] até revelação.
 - Como entra em cena: feiras, tavernas, anúncios, ritos, funerais, boatos e contratos.
 - Ganchos: festival interrompido, arauto mentindo, bardos espalhando versão falsa de um evento.
 - Consequências possíveis: reputação pública, acesso a contatos, apoio popular ou hostilidade local.

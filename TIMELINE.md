@@ -2,17 +2,48 @@
 obsidianUIMode: preview
 NoteIcon: timeline
 NoteStatus: Active
+type: story
 status: Active
+campaign_status: Ativo
+visibility: Mestre
+spoiler_level: medium
+gm_secret: true
+thumbnail: zz_media/banner-earthropo.png
+cover: zz_media/banner-earthropo.png
+info: Linha do tempo operacional de Omnisvera e Earthropo.
+description: Estrutura histórica da campanha, incluindo eras antigas, Eclipse de Obsidiana, reconstrução e campanha atual.
+chapters: []
 tags:
   - home
   - timeline
+  - story
   - earthropo
-cover: zz_media/banner-earthropo.png
 ---
 
 # Linha do Tempo de Omnisvera
 
-Esta linha do tempo registra o cânone ativo da campanha: **Omnisvera** como universo, **Earthropo** como continente principal e **Nimalia** como reino dos antropos.
+> [!NOTE|clean no-i right]+ Linha do Tempo
+> ![[banner-earthropo.png|400]]
+
+> [!world]- SINOPSE
+> A linha do tempo registra o cânone ativo da campanha: **Omnisvera** como universo, **Earthropo** como continente principal e **Nimalia** como reino dos antropos. Ela existe para manter eras, eventos antigos e campanha atual alinhados sem transformar toda pista em exposição direta para os jogadores.
+
+## Status
+
+> [!warning]
+> Linha do tempo operacional do mestre. Trechos podem ser revelados aos jogadores aos poucos, mas a versão completa contém estrutura de bastidor.
+
+## Leitura Rápida
+
+| era | função narrativa | estado |
+|---|---|---|
+| Era dos Criadores | Mito de criação, estruturas impossíveis, magia antiga e ruínas anteriores às civilizações atuais. | Segredo estrutural |
+| Eclipse de Obsidiana | Trauma histórico que separa o antes e o depois de Earthropo. | Cânone de trabalho |
+| Reconstrução de Earthropo | Formação de reinos, rotas, instituições e novas versões da história. | Cânone de trabalho |
+| Era de Vezemir | Longa trajetória pessoal ligada a Leth'valora, Guardiões e dragão de colar dourado. | Cânone de personagem |
+| Campanha Atual | Ano 2100, retorno de sinais antigos, rumores e primeira movimentação dos personagens. | Ativo |
+
+## Cronologia Visual
 
 ```chronos
 > DEFAULTVIEW  1750|2110
@@ -46,21 +77,21 @@ Esta linha do tempo registra o cânone ativo da campanha: **Omnisvera** como uni
 - [2100] #cyan CURRENT DAY
 ```
 
-## Leitura Rápida
-
-### O Passado Distante
+## O Passado Distante
 
 Os Criadores são a camada mais antiga conhecida. Eles não são apenas uma civilização perdida: são a suspeita de que Earthropo talvez tenha sido construído, copiado ou remendado.
 
-### O Trauma Central
+Essa informação deve ser usada com cuidado. Para os jogadores, os Criadores podem aparecer primeiro como mito, símbolo, ruína, frase incompleta ou interpretação religiosa.
 
-O [[Eclipse de Obsidiana]] e o Véu Cinzento dividem a história entre antes e depois. O mundo sobreviveu, mas não voltou inteiro.
+## O Trauma Central
 
-### O Presente
+O [[Eclipse de Obsidiana]] e o [[Véu Cinzento]] dividem a história entre antes e depois. O mundo sobreviveu, mas não voltou inteiro.
+
+## O Presente
 
 Em 2100, Earthropo parece estável na superfície. Nimalia exerce influência, a Igreja observa, guildas negociam e aventureiros procuram trabalho. Por baixo disso, relíquias antigas reaparecem, nomes apagados retornam e o Véu começa a se mover.
 
-### Personagens-Chave
+## Personagens-Chave
 
 - [[Vezemir]]: o Bastardo de Ferro, ligado aos Guardiões do Véu Cinzento.
 - [[Varkh Nimalis]]: alquimista e ladrão de Maré Baixa, envolvido em falsificações perigosas.
@@ -73,3 +104,18 @@ Em 2100, Earthropo parece estável na superfície. Nimalia exerce influência, a
 - Ano atual: 2100.
 - Calendário em revisão: [[CALENDAR]].
 - Eventos que conflitam com o calendário devem ser registrados como pendência antes de virar cânone.
+
+## Uso em Mesa
+
+- Como apresentar: por documentos, ruínas, datas contraditórias, memórias de NPCs e registros incompletos.
+- O que os jogadores sabem: o mundo tem eras antigas, um trauma histórico chamado Eclipse de Obsidiana e um presente instável.
+- O que apenas o mestre sabe: a relação real entre Criadores, Véu Cinzento, Fraturamento e mundos-cópia.
+- Como entra em cena: pistas, mapas antigos, inscrições, relatos religiosos, sonhos e objetos impossíveis.
+- Ganchos: data apagada, registro que contradiz o calendário oficial, testemunha que lembra de um ano que não deveria existir.
+
+## Pendências do Sage
+
+- Definir quais partes da Era dos Criadores podem virar informação pública.
+- Confirmar se os anos da Era de Vezemir estão definitivos.
+- Alinhar primeira data de jogo com [[CALENDAR]] e [[CAMPANHA/ESTADO_DA_CAMPANHA]].
+- Separar versão pública futura da timeline, se os jogadores forem acessar esta nota diretamente.
