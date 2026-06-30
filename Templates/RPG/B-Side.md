@@ -31,6 +31,9 @@ tags:
 
 #### _Crônicas de [[EARTHROPO/EARTHROPO|Earthropo]] — origem de personagem_
 
+> [!warning]
+> B-Sides servem para origens, cenas paralelas e histórias pessoais. Ajuste `visibility`, `spoiler_level` e `gm_secret` antes de mostrar a nota aos jogadores.
+
 > [!NOTE|clean no-i right]+ Nome da Origem
 > ![[zz_media/banner-earthropo.png|400]]
 

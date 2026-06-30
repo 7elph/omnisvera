@@ -34,6 +34,9 @@ tags:
 
 #### _Crônicas de [[EARTHROPO/EARTHROPO|Earthropo]] — capítulo em preparação_
 
+> [!important]
+> Esta nota representa a versão pública/operacional do capítulo. Bastidores completos, spoilers pesados e decisões internas do mestre devem ficar em [[CAMPANHA/ESTADO_DA_CAMPANHA|Estado da Campanha]].
+
 > [!NOTE|clean no-i right]+ Nome do Capítulo
 > ![[zz_media/banner-earthropo.png|400]]
 
