@@ -3,36 +3,48 @@ obsidianUIMode: preview
 NoteIcon: magicitem
 NoteStatus: Complete
 type: character
+status: Desaparecido
+campaign_status: Ativo
 visibility: Mestre
 spoiler_level: heavy
 gm_secret: true
-campaign_status: Ativo
 thumbnail: zz_media/th_elarion.PNG
-status: Desaparecido
+cover: zz_media/elarion.png
 location: "[[Leth'valora]]"
 territory: "[[Floresta de Avenor]]"
 faction: "[[Sentinelas de Leth'valora]]"
 class: Capitão
 race: Elfo
 role: npc
-chapter: []
-chapters: []
+function: "Mentor de [[Vezemir]]"
+chapter:
+  - 00 - O Bastardo de Ferro
+chapters:
+  - 00 - O Bastardo de Ferro
 tags:
   - npc
   - character
+  - personagem
   - elf
+  - elfo
   - mentor
   - missing
   - mystery
-  - chapter00
+  - bside
+  - origin-story
+  - origin-vezemir
+  - sentinelas-de-lethvalora
+  - earthropo
   - Category/Character
-  - personagem
 ---
 
 # ELARION VAELTHOR
 
 > [!NOTE|clean no-i right]+ Elarion Vaelthor
 > ![[elarion.png|400]]
+
+> [!NOTE]- Template aplicado
+> Esta nota segue o formato **NPC Importante**. Informações confidenciais devem ficar no [[CAMPANHA/ESTADO_DA_CAMPANHA|Estado da Campanha]].
 
 ## Visão Geral
 
@@ -90,8 +102,7 @@ Parecia menos interessado em fortalecer aquele poder do que em mantê-lo adormec
 
 ---
 
-## A Partida de Vezemir
-
+### A Partida de Vezemir
 Após um incidente, Elarion compreendeu que Vezemir jamais seria aceito entre os elfos.
 
 Mas havia algo pior.
@@ -119,6 +130,10 @@ Foi a última vez que Vezemir o viu.
 
 ---
 
+## Situação Atual
+
+_Pendente de consolidação pelo Sage._
+
 ## Personalidade
 
 **Temperamento:**  
@@ -135,7 +150,59 @@ A verdadeira força não está no poder, mas no controle dele.
 
 ---
 
-## Habilidades
+## Relações
+
+_Pendente de consolidação pelo Sage._
+
+## Função Narrativa
+
+- Em desenvolvimento.
+
+## Segredos
+
+- Informações confidenciais ficam centralizadas em [[CAMPANHA/ESTADO_DA_CAMPANHA|Estado da Campanha]].
+
+## Aparência
+
+_Pendente de consolidação pelo Sage._
+
+## Papel na Campanha
+
+_Pendente de consolidação pelo Sage._
+
+## Pendências do Sage
+
+- Revisar e completar campos em aberto.
+
+## Links relevantes
+
+_Pendente de consolidação pelo Sage._
+
+## Uso em Mesa
+
+- Como apresentar:
+- O que os jogadores sabem:
+- O que apenas o mestre sabe:
+- Como entra em cena:
+- Ganchos:
+- Consequências possíveis:
+
+
+## Legado
+Para os elfos, Elarion é lembrado como um capitão lendário.
+
+Para os poucos que serviram sob seu comando, foi um líder exemplar.
+
+Para [[Vezemir]], porém, ele foi algo muito mais raro.
+
+Foi o único homem que escolheu ficar.
+
+E talvez o único que conheça a verdade sobre quem o Bastardo de Ferro realmente é.
+
+## Equipamentos
+_Pendente de consolidação pelo Sage._
+
+## Capacidades narrativas
 
 **Mestre Espadachim:**  
 Reconhecido como um dos maiores guerreiros de sua geração.
@@ -150,67 +217,3 @@ Especialista em magia defensiva, selamentos e contenção arcana.
 Responsável pela formação de diversos capitães e sentinelas.
 
 ---
-
-## Segredos
-
-- Sabia muito mais sobre a origem de [[Vezemir]] do que jamais revelou.
-    
-- Possivelmente possuía ligações com os [[Guardiões do Véu Cinzento]].
-    
-- Demonstrava preocupação incomum com a magia que habitava o jovem meio-elfo.
-    
-- Pode ter escondido documentos, artefatos ou registros em [[Leth'valora]].
-    
-- Seu desaparecimento ocorreu pouco tempo após a partida de Vezemir.
-    
-
----
-
-## Legado
-
-Para os elfos, Elarion é lembrado como um capitão lendário.
-
-Para os poucos que serviram sob seu comando, foi um líder exemplar.
-
-Para [[Vezemir]], porém, ele foi algo muito mais raro.
-
-Foi o único homem que escolheu ficar.
-
-E talvez o único que conheça a verdade sobre quem o Bastardo de Ferro realmente é.
-
-## Atualidade
-
-_Pendente de consolidação pelo Sage._
-
-## Relações
-
-_Pendente de consolidação pelo Sage._
-
-## Equipamentos
-
-_Pendente de consolidação pelo Sage._
-
-## Aparência
-
-_Pendente de consolidação pelo Sage._
-
-## Papel na Campanha
-
-_Pendente de consolidação pelo Sage._
-
-## Uso em Mesa
-
-- Como apresentar:
-- O que os jogadores sabem:
-- O que apenas o mestre sabe:
-- Como entra em cena:
-- Ganchos:
-- Consequências possíveis:
-
-## Pendências do Sage
-
-- Revisar e completar campos em aberto.
-
-## Links relevantes
-
-_Pendente de consolidação pelo Sage._

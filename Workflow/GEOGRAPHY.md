@@ -29,12 +29,14 @@ Esta nota separa fatos geográficos confirmados, posições de trabalho e nomes 
 
 ## Posições de trabalho
 
+- Os mapas oficiais são [[MAPA DE EARTHROPO]], [[MAPA DE NIMALIA]] e [[MAPA DE NIMALIS]].
 - Nimalia ocupa a região central ao redor da capital, mas suas fronteiras ainda não foram desenhadas.
 - Avenor foi posicionada a leste ou nordeste da capital para representar sua fronteira com Nimalia.
 - As coordenadas de Leth'valora indicam apenas uma área aproximada dentro de Avenor.
 - O marcador de Valthor indica o sudeste confirmado, não fronteiras ou domínio político.
 - Gharok foi posicionada ao norte de Nimalia como antiga fortaleza anã.
 - O reino élfico fica no sudoeste, o reino anão no nordeste e o reino dos dragonborns no noroeste, ainda sem nomes ou fronteiras.
+- O mapa continental ativo é [[MAPA DE EARTHROPO]].
 - O mapa urbano ativo é [[MAPA DE NIMALIS]].
 - O mapa de reino ativo é [[MAPA DE NIMALIA]].
 
@@ -53,12 +55,15 @@ O nome substitui a antiga referência a Campos de Eryndor. A história de Raziel
 
 Essas indicações não autorizam nomes, capitais, fronteiras ou marcadores.
 
-## Nomes sem existência confirmada
+## Locais menores em revisão
 
-- [[Bosque Sussurrante]]
-- [[Vale Dourado]]
+### [[Vale Dourado]]
 
-Esses nomes permanecem como placeholders e não devem aparecer no mapa ativo.
+Localização menor no interior do Reino de Nimalia. Pode representar vila remota, vale agrícola ou ponto rural. Possui marcador provisório no [[MAPA DE NIMALIA]], mas não é território independente.
+
+### [[Bosque Sussurrante]]
+
+Placeholder de local florestal. Pode ficar em Avenor, mas sua existência ainda não está confirmada. Não deve receber marcador até decisão do Sage.
 
 ## Regra para novos marcadores
 

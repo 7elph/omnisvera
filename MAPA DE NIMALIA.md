@@ -4,11 +4,16 @@ height: 2879
 scale: 500
 distance: 2746
 NoteIcon: none
+NoteStatus: Active
+obsidianUIMode: preview
 cover: zz_media/mapa-de-nimalia.png
 Community-Size: Kingdom
 Alignment:
 Government: Monarquia de Nimalia
-type: Kingdom Map
+type: map
+map_scope: kingdom
+status: Ativo
+campaign_status: Ativo
 politics: Coroa de Nimalia
 region:
   - Reino de Nimalia
@@ -17,7 +22,7 @@ population:
 religion:
 exports:
 imports:
-visibility: Mestre
+visibility: Jogadores
 spoiler_level: light
 gm_secret: false
 tags:
@@ -29,7 +34,9 @@ tags:
 
 # MAPA DE NIMALIA
 
-Este mapa representa a camada de reino de [[Nimalia]], não o continente inteiro e não apenas a cidade capital.
+Mapa oficial do [[Nimalia|Reino de Nimalia]].
+
+Este mapa representa a camada de reino, não o continente inteiro e não apenas a cidade capital.
 
 ```leaflet
 id: nimalia-kingdom-map
@@ -78,5 +85,5 @@ marker: Location, 116, 119, [[Vale Dourado]]
 ## Mapas relacionados
 
 - [[MAPA DE EARTHROPO]] mostra o continente.
+- [[MAPA DE NIMALIA]] mostra o reino.
 - [[MAPA DE NIMALIS]] mostra a capital.
-

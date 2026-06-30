@@ -2,24 +2,37 @@
 obsidianUIMode: preview
 NoteIcon: settlement
 NoteStatus: Active
+type: location
 status: Ativa
+campaign_status: Ativo
+visibility: Jogadores
+spoiler_level: light
+gm_secret: false
 territory: "[[Nimalia]]"
 thumbnail: zz_media/mapa-de-nimalis.png
 cover: zz_media/mapa-de-nimalis.png
+location:
+region: Capital do Reino de Nimalia
 leader: "[[Augustus Terra Decimus]]"
 population: "~450.000"
 info: Capital do Reino de Nimalia.
+description: Capital do Reino de Nimalia, centro político, comercial e cultural dos antropos.
 tags:
-  - Category/Location
   - location
+  - local
   - capital
+  - cidade
+  - nimalis
   - nimalia
+  - earthropo
 ---
 
 # Nimalis
 
 > [!NOTE|clean no-i right]+ Retrato
 > ![[mapa-de-nimalis.png|400]]
+
+## Visão Geral
 
 Capital do [[Nimalia|Reino de Nimalia]] e sede da [[Coroa de Nimalia]], governada pelo rei soberano [[Augustus Terra Decimus]].
 
@@ -74,3 +87,28 @@ Lugar onde qualquer um com pouca renda pode se estabelecer por um curto tempo. L
 ### [[Porto de Nimalia]]
 
 Lugar da cidade onde os barcos fazem movimentação, carga e descarga.
+
+## Função no Mapa
+
+Nimalis é o principal ponto urbano conhecido da campanha. A cidade funciona como centro político do reino, ponto de partida para rotas comerciais e conexão entre bairros, facções e personagens.
+
+## Relações
+
+- [[Nimalia]] — reino do qual é capital.
+- [[Coroa de Nimalia]] — poder central sediado na cidade.
+- [[Nobreza de Nimalia]] — casas e interesses nobres concentrados especialmente no [[Bairro Nobre]].
+- [[Guilda dos Mercadores]] — presença importante no comércio urbano.
+- [[Maré Baixa]] — região pobre e portuária ligada à origem de [[Varkh Nimalis]].
+
+## Uso em Mesa
+
+- Como apresentar: uma capital grande, viva e desigual, cheia de bairros com identidades próprias.
+- O que os jogadores sabem: Nimalis é a capital de Nimalia e o centro de poder da Coroa.
+- Como entra em cena: compras, rumores, investigações, política, comércio, contratos e retorno entre viagens.
+- Ganchos: remédios falsos, disputas nobres, escravidão no Distrito Comercial, contrabando no porto e tensão entre bairros.
+
+## Pendências do Sage
+
+- Definir se o nome popular da capital é sempre Nimalis ou se “Nimalia” ainda aparece como uso comum antigo.
+- Revisar o tom do Distrito Comercial e a presença de escravidão para calibrar com a mesa.
+- Definir se cada bairro terá mapa/pin próprio.

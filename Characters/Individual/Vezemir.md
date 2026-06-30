@@ -28,13 +28,18 @@ tags:
   - jogador
   - character
   - personagem
-  - chapter00
+  - bside
+  - origin-story
+  - origin-vezemir
   - warrior
+  - guerreiro
   - human
   - elf
+  - meio-elfo
   - guild
   - conclave-dos-errantes
   - sentinelas-de-lethvalora
+  - earthropo
 ---
 
 # VEZEMIR — O BASTARDO DE FERRO
@@ -42,7 +47,11 @@ tags:
 > [!NOTE|clean no-i right]+ Vezemir
 > ![[vezemir.png|400]]
 
+> [!NOTE]- Template aplicado
+> Esta nota segue o formato **Personagem Jogador**. Informações confidenciais devem ficar no [[CAMPANHA/ESTADO_DA_CAMPANHA|Estado da Campanha]].
+
 ## Visão Geral
+
 **Títulos:** O Bastardo de Ferro
 **Apelido:** O Urso da [[Floresta de Avenor]], Guardião de [[Leth'valora]]
 **Localização Atual:** [[Floresta de Avenor]], próximo a [[Nimalia]]
@@ -74,6 +83,14 @@ FROM "EARTHROPO"
 WHERE contains(this.chapters, file.name)
 SORT file.name ASC
 ```
+
+## O que os jogadores sabem
+
+- Ver a Visão Geral, História e Situação Atual desta nota.
+
+## O que só o mestre sabe
+
+- Informações confidenciais ficam centralizadas em [[CAMPANHA/ESTADO_DA_CAMPANHA|Estado da Campanha]].
 
 ## História
 
@@ -111,8 +128,7 @@ E nunca mais voltou.
 
 ---
 
-## O Bastardo de Ferro
-
+### O Bastardo de Ferro
 Durante décadas, Vezemir serviu como mercenário nos reinos proximos, através do [[General Cassian Valerius]].
 Participou de guerras, cercos e batalhas que hoje são lembradas apenas em canções e registros antigos.
 Sua reputação cresceu rapidamente.
@@ -129,8 +145,7 @@ Foi assim que surgiu o título que o acompanha até hoje:
 
 ---
 
-## [[Mira Valen]]
-
+### [[Mira Valen]]
 Após abandonar a vida de mercenário, Vezemir viveu anos isolado nas florestas.
 Durante esse período conheceu [[Mira Valen]], uma caçadora humana e filha do chefe de Leth'valora.
 Inicialmente ela acreditou estar observando um urso vivendo entre as árvores.
@@ -143,8 +158,7 @@ E durante alguns breves anos, Vezemir conheceu a paz.
 
 ---
 
-## O Dragão de Colar Dourado
-
+### O Dragão de Colar Dourado
 Essa paz terminou quando um enorme dragão verde atacou a vila.
 A criatura usava um misterioso colar dourado.
 Casas foram queimadas.
@@ -161,7 +175,7 @@ Desde aquele dia, sua vida passou a ser guiada por um único propósito:
 
 ---
 
-## Atualidade
+## Situação Atual
 
 Durante anos, Vezemir perseguiu pistas sobre o dragão.
 Trabalha ao lado do [[Conclave dos Errantes]], enfrentando monstros, explorando ruínas e investigando rumores.
@@ -201,38 +215,11 @@ O valor de uma pessoa é definido por suas escolhas, não por seu sangue.
 
 ---
 
-## Habilidades
+## Relações
 
-**Combate Marcial:**  
-Especialista em machados de guerra, escudos pesados e combate de linha de frente.
+_Pendente de consolidação pelo Sage._
 
-**Resistência Sobre-Humana:**  
-Capaz de continuar lutando mesmo após ferimentos que incapacitam guerreiros comuns.
-
-**Estratégia Militar:**  
-Décadas de experiência em campanhas e conflitos.
-
-**Magia Instável:**  
-Embora rejeite sua herança arcana, ocasionalmente manifesta explosões involuntárias de poder mágico.
-
----
-
-## Segredos
-
-- [[O Medalhão]]  pode estar ligado à verdadeira origem de Vezemir.
-    
-- [[Padre Oric]] desapareceu investigando conexões entre os Guardiões e o dragão de colar dourado.
-    
-- O dragão demonstrou reconhecer Vezemir durante o ataque à vila.
-    
-- [[Elarion Vaelthor]] pode ter ocultado informações sobre seus pais biológicos.
-    
-- Existe a possibilidade de Vezemir descender de alguma linhagem élfica.
-    
-
----
-
-## Equipamentos
+## Equipamentos importantes
 
 ### [[Grisalma]]
 
@@ -248,14 +235,6 @@ Artefato misterioso cuja verdadeira função permanece desconhecida.
 
 ---
 
-## Aparência
-
-Com 2,02 m de altura, Vezemir é alto e musculoso. Possui cabelos e pele muito claros, olhos verdes e uma cicatriz vertical que cruza o rosto da testa ao queixo. Usa armadura pesada escura, reforçada por placas de ferro.
-
----
-
-## Armas e Equipamento
-
 ```datacards
 TABLE thumbnail, item, status FROM #vezemir
 SORT name ASC
@@ -269,7 +248,23 @@ showImageOnHover: true
 cardSpacing: 4
 ```
 
-## Ficha Mecânica — Nível 1
+## Capacidades narrativas
+
+**Combate Marcial:**  
+Especialista em machados de guerra, escudos pesados e combate de linha de frente.
+
+**Resistência Sobre-Humana:**  
+Capaz de continuar lutando mesmo após ferimentos que incapacitam guerreiros comuns.
+
+**Estratégia Militar:**  
+Décadas de experiência em campanhas e conflitos.
+
+**Magia Instável:**  
+Embora rejeite sua herança arcana, ocasionalmente manifesta explosões involuntárias de poder mágico.
+
+---
+
+## Mecânicas confirmadas
 
 | Status           | Valor |
 |------------------|-------|
@@ -288,7 +283,7 @@ cardSpacing: 4
 | Movimento | 9 m |
 | Ouro inicial | 90 PO |
 
-### Armas e carga
+#### Armas e carga
 
 - **[[Grisalma]]:** dano registrado de 2d8.
 - **Adaga oculta na bota:** dano de 1d4.
@@ -297,21 +292,35 @@ cardSpacing: 4
 - **[[O Medalhão]]**.
 - Kit básico.
 
-### Idiomas
+#### Idiomas
 
 - Comum: escrita.
 - Élfico: fala.
 
-### Poderes registrados na ficha
+#### Poderes registrados na ficha
 
 - **Força Arcana:** toque; duração de 1d6 + nível; concede 1 ponto adicional para cada 5 pontos de Força já possuídos.
 - **Velocidade:** toque; duração de 1d4 + nível; dobra a movimentação, concede +2 na CA e um ataque adicional.
 
-## Relações
+## Mecânicas pendentes
+
+- Nenhuma mecânica pendente registrada nesta nota.
+
+## Aparência
+
+Com 2,02 m de altura, Vezemir é alto e musculoso. Possui cabelos e pele muito claros, olhos verdes e uma cicatriz vertical que cruza o rosto da testa ao queixo. Usa armadura pesada escura, reforçada por placas de ferro.
+
+---
+
+## Papel na Campanha
 
 _Pendente de consolidação pelo Sage._
 
-## Papel na Campanha
+## Pendências do Sage
+
+- Revisar e completar campos em aberto.
+
+## Links relevantes
 
 _Pendente de consolidação pelo Sage._
 
@@ -323,11 +332,3 @@ _Pendente de consolidação pelo Sage._
 - Como entra em cena:
 - Ganchos:
 - Consequências possíveis:
-
-## Pendências do Sage
-
-- Revisar e completar campos em aberto.
-
-## Links relevantes
-
-_Pendente de consolidação pelo Sage._

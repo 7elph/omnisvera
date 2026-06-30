@@ -1,16 +1,37 @@
 ---
 obsidianUIMode: preview
-NoteIcon: item
+NoteIcon: items
 NoteStatus: Draft
+type: item
 status: Em desenvolvimento
-canon_status: Draft
-visibility: Mestre
+campaign_status: Em revisão
+visibility: Jogadores
+spoiler_level: light
+gm_secret: false
 created_by: IA
-requires_review: true
+item_type: Estabelecimento / símbolo alquímico
+owner: "[[Mestre Odran Veyl]]"
+location: "[[Maré Baixa]]"
+territory: "[[Nimalia|Reino de Nimalia]]"
+faction:
+level:
+danger_level: Médio
+thumbnail:
+cover:
+chapters:
+  - 00 - O Corvo da Maré Baixa
+hooks:
+  - Varkh
+  - remédios falsos
+  - Odran
+  - Maré Baixa
+rumors: []
 tags:
-  - Category/Item
   - item
-  - draft
+  - estabelecimento
+  - alquimia
+  - varkh
+  - mare-baixa
 ---
 
 # O Frasco Afogado
@@ -18,48 +39,62 @@ tags:
 > [!WARNING] Estado canônico
 > Esta nota está em desenvolvimento e depende de confirmação do Sage.
 
-## Resumo
+## Visão Geral
 
-Pequena loja de alquimia situada em [[Maré Baixa]], propriedade de [[Mestre Odran Veyl]]. É o local onde [[Varkh Nimalis]] foi treinado em alquimia de rua após ser pego tentando roubar uma caixa. O estabelecimento vende tônicos, pomadas, antídotos, calmantes, venenos fracos e remédios de gosto horrível.
+Pequena loja de alquimia situada em [[Maré Baixa]], propriedade de [[Mestre Odran Veyl]]. É o local onde [[Varkh Nimalis]] foi treinado em alquimia de rua após ser pego tentando roubar uma caixa.
 
-## Função narrativa
+O estabelecimento vende tônicos, pomadas, antídotos, calmantes, venenos fracos e remédios de gosto horrível.
 
-O Frasco Afogado representa a formação de Varkh e a origem de suas habilidades alquímicas. É também o ponto de partida do arco de investigação de Varkh, pois alguém está usando o símbolo de Odran para vender remédios falsos em Nimalia.
+## Aparência
 
-## Relações conhecidas
+A aparência exata da loja ainda precisa ser definida. Por enquanto, funciona como estabelecimento pequeno, pobre, prático e cheio de cheiros fortes, vidros reaproveitados e ingredientes improvisados.
 
-- [[Varkh Nimalis]] - Foi treinado neste estabelecimento
-- [[Mestre Odran Veyl]] - Proprietário e mestre de Varkh
-- [[Maré Baixa]] - Região portuária onde a loja está situada
-- [[Remédios Falsos de Maré Baixa]] - Arco investigativo ligado ao símbolo da loja
-- [[Rede de Falsificadores de Maré Baixa]] - Organização que pode estar usando o símbolo
+## Função Narrativa
 
-## O que está confirmado
+O Frasco Afogado representa a formação de Varkh e a origem de suas habilidades alquímicas.
 
-- É uma pequena loja de alquimia perto do porto em Maré Baixa
-- Pertence a Mestre Odran Veyl, um demi-humano abutre
-- Vende tônicos, pomadas, antídotos, calmantes, venenos fracos e remédios de gosto horrível
-- Varkh foi treinado ali após tentar roubar uma caixa
-- Odran ensinou alquimia de rua a Varkh (ervas do cais, álcool roubado, fungos de porão, pó de carvão, óleo de peixe, ferrugem, vidro reaproveitado)
-- Odran tinha um código moral: não aceitava covardia, não permitia veneno em comida de criança, não entregava moradores de Maré Baixa à nobreza
-- O símbolo da loja está sendo usado em remédios falsos que circulam em Nimalia
+Também é o ponto de partida do arco de investigação de Varkh, pois alguém está usando o símbolo de Odran para vender remédios falsos em Nimalia.
 
-## Pendente de confirmação do Sage
+## O que Está Confirmado
 
-- Localização exata em Maré Baixa
-- Estado atual da loja (aberta, fechada, abandonada)
-- Situação atual de Mestre Odran Veyl
-- Descrição visual do símbolo da loja
-- Se Odran está envolvido com as falsificações
-- Outros alunos ou funcionários da loja
-- Regras mecânicas de alquimia de rua
-- Efeitos exatos dos produtos vendidos
+- É uma pequena loja de alquimia perto do porto em [[Maré Baixa]].
+- Pertence a [[Mestre Odran Veyl]].
+- Vende tônicos, pomadas, antídotos, calmantes, venenos fracos e remédios de gosto horrível.
+- Varkh foi treinado ali após tentar roubar uma caixa.
+- Odran ensinou alquimia de rua a Varkh.
+- O símbolo da loja está sendo usado em remédios falsos que circulam em Nimalia.
 
-## Links relevantes
+## Relações
+
+- [[Varkh Nimalis]]
+- [[Mestre Odran Veyl]]
+- [[Maré Baixa]]
+- [[Remédios Falsos de Maré Baixa]]
+- [[Rede de Falsificadores de Maré Baixa]]
+
+## Uso em Mesa
+
+- Como apresentar: loja estreita, cheia de frascos, cheiro de ervas ruins, peixe, álcool barato e remédios de gosto horrível.
+- O que os jogadores sabem: foi onde Varkh aprendeu com Odran.
+- O que apenas o mestre sabe: envolvimento real de Odran, se existir, e origem da falsificação.
+- Como entra em cena: lembrança, investigação, retorno a Maré Baixa, símbolo em frasco falsificado ou contato antigo.
+- Ganchos: símbolo roubado, remédios falsos, antigos alunos, estoque escondido e reputação de Odran.
+
+## Pendências do Sage
+
+- Localização exata em Maré Baixa.
+- Estado atual da loja: aberta, fechada, abandonada ou tomada.
+- Situação atual de [[Mestre Odran Veyl]].
+- Descrição visual do símbolo da loja.
+- Se Odran está envolvido com as falsificações.
+- Outros alunos ou funcionários.
+- Regras mecânicas de alquimia de rua.
+- Efeitos exatos dos produtos vendidos.
+
+## Links Relevantes
 
 - [[Characters/Individual/Varkh Nimalis]]
 - [[Characters/Individual/Mestre Odran Veyl]]
-- [[Territories/Nimalia]]
 - [[Locations/Maré Baixa]]
 - [[Lore/Remédios Falsos de Maré Baixa]]
 - [[Factions/Rede de Falsificadores de Maré Baixa]]

@@ -3,36 +3,48 @@ obsidianUIMode: preview
 NoteIcon: magicitem
 NoteStatus: Complete
 type: character
+status: Desaparecido
+campaign_status: Ativo
 visibility: Mestre
 spoiler_level: heavy
 gm_secret: true
-campaign_status: Ativo
 thumbnail: zz_media/th_oric.PNG
-status: Desaparecido
+cover: zz_media/oric.PNG
 location: Desconhecida
 territory: "[[Nimalia]]"
 faction: Nenhum
 class: Clérigo
 race: Humano
 role: npc
-chapter: []
-chapters: []
+function: "Investigador dos [[Guardiões do Véu Cinzento]]"
+chapter:
+  - 00 - O Bastardo de Ferro
+chapters:
+  - 00 - O Bastardo de Ferro
 tags:
   - npc
   - character
+  - personagem
   - human
+  - humano
   - priest
   - missing
   - mystery
-  - chapter00
+  - bside
+  - origin-story
+  - origin-vezemir
+  - igreja-das-chamas
+  - earthropo
   - Category/Character
-  - personagem
 ---
 
 # PADRE ORIC
 
 > [!NOTE|clean no-i right]+ Padre Oric
 > ![[oric.png|400]]
+
+> [!NOTE]- Template aplicado
+> Esta nota segue o formato **NPC Importante**. Informações confidenciais devem ficar no [[CAMPANHA/ESTADO_DA_CAMPANHA|Estado da Campanha]].
 
 ## Visão Geral
 
@@ -78,6 +90,10 @@ Apenas suas anotações incompletas permaneceram.
 
 ---
 
+## Situação Atual
+
+_Pendente de consolidação pelo Sage._
+
 ## Personalidade
 
 **Temperamento:**  
@@ -94,7 +110,55 @@ Todo mistério existe para ser compreendido, independentemente do preço.
 
 ---
 
-## Habilidades
+## Relações
+
+_Pendente de consolidação pelo Sage._
+
+## Função Narrativa
+
+- Em desenvolvimento.
+
+## Segredos
+
+- Informações confidenciais ficam centralizadas em [[CAMPANHA/ESTADO_DA_CAMPANHA|Estado da Campanha]].
+
+## Aparência
+
+_Pendente de consolidação pelo Sage._
+
+## Papel na Campanha
+
+_Pendente de consolidação pelo Sage._
+
+## Pendências do Sage
+
+- Revisar e completar campos em aberto.
+
+## Links relevantes
+
+_Pendente de consolidação pelo Sage._
+
+## Uso em Mesa
+
+- Como apresentar:
+- O que os jogadores sabem:
+- O que apenas o mestre sabe:
+- Como entra em cena:
+- Ganchos:
+- Consequências possíveis:
+
+
+## Legado
+As palavras de Oric continuam assombrando Vezemir:
+
+> _"Você não rejeita a magia... você está acorrentando alguma coisa."_
+
+Até hoje, ninguém sabe se Padre Oric morreu, foi capturado ou encontrou uma verdade perigosa demais para retornar.
+
+## Equipamentos
+_Pendente de consolidação pelo Sage._
+
+## Capacidades narrativas
 
 **Conhecimento Religioso:**  
 Especialista em cultos, divindades e tradições antigas.
@@ -113,52 +177,3 @@ Reconhecido por desvendar segredos considerados impossíveis.
 
 
 ---
-
-## Legado
-
-As palavras de Oric continuam assombrando Vezemir:
-
-> _"Você não rejeita a magia... você está acorrentando alguma coisa."_
-
-Até hoje, ninguém sabe se Padre Oric morreu, foi capturado ou encontrou uma verdade perigosa demais para retornar.
-
-## Atualidade
-
-_Pendente de consolidação pelo Sage._
-
-## Relações
-
-_Pendente de consolidação pelo Sage._
-
-## Segredos
-
-_Pendente de revisão do Mestre._
-
-## Equipamentos
-
-_Pendente de consolidação pelo Sage._
-
-## Aparência
-
-_Pendente de consolidação pelo Sage._
-
-## Papel na Campanha
-
-_Pendente de consolidação pelo Sage._
-
-## Uso em Mesa
-
-- Como apresentar:
-- O que os jogadores sabem:
-- O que apenas o mestre sabe:
-- Como entra em cena:
-- Ganchos:
-- Consequências possíveis:
-
-## Pendências do Sage
-
-- Revisar e completar campos em aberto.
-
-## Links relevantes
-
-_Pendente de consolidação pelo Sage._

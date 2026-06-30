@@ -1,72 +1,77 @@
 ---
+obsidianUIMode: preview
 NoteIcon: race
-tags:
-  - Category/Race
-  - race
-  - human
+NoteStatus: Active
+type: race
+status: Ativa
+campaign_status: Ativa
+visibility: Jogadores
+spoiler_level: none
+gm_secret: false
+name: Humano
+aliases:
+  - Humanos
+origin: Earthropo
+territory:
+region:
+faction:
+religion:
+level:
+danger_level:
+hooks:
+  - Povos humanos espalhados por Earthropo
+  - Presença importante, mas não majoritária em Nimalia
+rumors: []
+thumbnail: zz_media/earthropo.png
 cover: zz_media/earthropo.png
-status: Active
+chapters: []
+tags:
+  - raca
+  - race
+  - humano
 ---
 
 # Humano
 
-Os humanos são a raça mais comum do mundo. São conhecidos por sua enorme capacidade de adaptação, podendo prosperar em praticamente qualquer clima ou região. Por isso, apresentam uma grande variedade de culturas, aparências, costumes e comportamentos.
+## Visão Geral
 
-<h2>Aparência</h2>
+Humanos existem em Omnisvera como uma das raças centrais de Earthropo, mas não são automaticamente a maioria em todos os reinos.
 
-- Altura: entre **1,60 m e 1,90 m**
-- Peso: entre **55 kg e 90 kg**
+Em [[Nimalia]], os antropos são predominantes. Humanos aparecem como comunidades estabelecidas, viajantes, nobres, aventureiros, mercadores, religiosos e povos de fronteira.
 
-<h2>Expectativa de vida</h2>
+## Presença em Omnisvera
 
-- Maturidade: aproximadamente **15 anos**
-- Vida média: cerca de **70 anos**
+- [[Nimalis]] possui um Bairro dos Humanos.
+- Humanos podem estar ligados a vilas, rotas comerciais, templos e regiões de fronteira.
+- [[Mira Valen]] e o antigo chefe de [[Leth'valora]] são exemplos importantes de presença humana em comunidades não exclusivamente humanas.
 
-<h2>Alinhamento</h2>
+## Cultura e Relações
 
-Humanos não possuem tendência natural para nenhum alinhamento. É comum encontrar humanos:
+Humanos são versáteis e politicamente adaptáveis. Em alguns lugares, são maioria local; em outros, uma comunidade entre muitas.
 
-- Ordeiros
-- Neutros
-- Caóticos
+## Mecânica Resumida
 
-<h2>Idiomas</h2>
+Usar a base mecânica de humano do sistema adotado, com ajustes narrativos próprios quando necessário. Não reproduzir texto integral de regras no vault.
 
-- Começam falando o idioma **Comum**.
-- Inteligência alta pode conceder idiomas adicionais.
-- Normalmente aprendem idiomas de povos aliados.
+## Personagens Relacionados
 
-<h2>Atributos Raciais</h2>
+```dataview
+TABLE status, role, location, faction
+FROM "Characters"
+WHERE race = "Humano" OR race = "Humana" OR contains(string(race), "Humano") OR contains(string(race), "Humana")
+SORT file.name ASC
+```
 
-A principal característica dos humanos é a versatilidade.
+## Uso em Mesa
 
-Ao criar um personagem humano:
+- Como apresentar: raça comum, mas não dominante em todos os contextos.
+- O que os jogadores sabem: humanos vivem em Nimalia e em muitas regiões de Earthropo.
+- O que apenas o mestre sabe: antigas linhagens humanas podem ter laços com ruínas, guerras ou pactos esquecidos.
+- Como entra em cena: vilas, templos, guardas, nobres, mercadores e aventureiros.
+- Ganchos: fronteira cultural, famílias antigas, disputa por posição em reinos não humanos.
+- Consequências possíveis: conflitos humanos locais podem afetar relações raciais e políticas.
 
-- Escolha **um atributo para receber +2**
-- Escolha **um atributo para receber -2**
+## Pendências do Sage
 
-Os atributos possíveis são:
-
-- Força
-- Destreza
-- Constituição
-- Inteligência
-- Sabedoria
-- Carisma
-
-<h2>Movimentação</h2>
-
-- Movimentação base: **9 metros** por rodada.
-
----
-
-# Humanos em Jogo (Resumo Oficial)
-
-- Sem tendência de alinhamento.
-- Altura entre 1,60 m e 1,90 m.
-- Peso entre 55 kg e 90 kg.
-- Maturidade aos 15 anos.
-- Expectativa de vida de aproximadamente 70 anos.
-- Falam Comum e idiomas adicionais conforme Inteligência.
-- Recebem **+2 em um atributo** e **−2 em outro atributo** à escolha.
-- Movimentação base de **9 metros**.
+- Definir regiões onde humanos são maioria.
+- Definir se há reinos humanos específicos fora de Nimalia.

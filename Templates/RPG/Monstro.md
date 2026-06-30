@@ -1,7 +1,10 @@
 ---
+obsidianUIMode: preview
+NoteIcon: monster
+NoteStatus: Draft
 type: monster
 status: Rascunho
-campaign_status: Em revisao
+campaign_status: Em revisão
 visibility: Mestre
 spoiler_level: heavy
 gm_secret: true
@@ -36,7 +39,7 @@ tags:
 
 ## Presença em Omnisvera
 
-## Mecânica resumida
+## Mecânica Resumida
 
 Resumo próprio, sem reprodução literal de estatísticas protegidas.
 
@@ -46,4 +49,6 @@ Resumo próprio, sem reprodução literal de estatísticas protegidas.
 - Sinais antes do encontro:
 - Comportamento:
 - Fraqueza conhecida:
-- Consequ?ncia narrativa:
+- Consequência narrativa:
+
+## Pendências do Sage

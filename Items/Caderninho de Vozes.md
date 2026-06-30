@@ -1,16 +1,33 @@
 ---
 obsidianUIMode: preview
-NoteIcon: item
+NoteIcon: items
 NoteStatus: Draft
+type: item
 status: Em desenvolvimento
-canon_status: Draft
-visibility: Mestre
+campaign_status: Em revisão
+visibility: Jogadores
+spoiler_level: light
+gm_secret: false
 created_by: IA
-requires_review: true
+item_type: Caderno pessoal / ferramenta de mimetismo
+owner: "[[Varkh Nimalis]]"
+location: "[[Varkh Nimalis]]"
+faction: "[[Conclave dos Errantes]]"
+level: 1
+danger_level: Baixo
+thumbnail:
+cover:
+chapters:
+  - 00 - O Corvo da Maré Baixa
+hooks:
+  - identidade de Varkh
+  - mimetismo kenku
+rumors: []
 tags:
-  - Category/Item
   - item
-  - draft
+  - caderno
+  - varkh
+  - kenku
 ---
 
 # Caderninho de Vozes
@@ -18,40 +35,48 @@ tags:
 > [!WARNING] Estado canônico
 > Esta nota está em desenvolvimento e depende de confirmação do Sage.
 
-## Resumo
+## Visão Geral
 
-Coleção de frases, timbres e sons que [[Varkh Nimalis]] considera úteis ou interessantes. Como kenku, Varkh não possui uma voz inteiramente sua e usa vozes emprestadas para comunicar-se, distrair e enganar. O caderninho representa sua busca por identidade e sua habilidade de mimetismo.
+Coleção de frases, timbres e sons que [[Varkh Nimalis]] considera úteis ou interessantes. Como kenku, Varkh não possui uma voz inteiramente sua e usa vozes emprestadas para comunicar-se, distrair e enganar.
 
-## Função narrativa
+## Aparência
 
-O caderninho de vozes simboliza a luta de Varkh com identidade e comunicação. Como kenku, sua voz nunca é inteiramente sua, e o caderninho representa sua coleção de vozes emprestadas que ele usa para navegar pelo mundo. O item também reflete a personalidade peculiar de Varkh, que coleciona frases absurdas e objetos inúteis porque os considera interessantes.
+Caderninho pessoal ainda sem descrição visual definitiva. Pode conter anotações, símbolos, descrições de vozes, desenhos, marcas de memória ou códigos próprios de Varkh.
 
-## Relações conhecidas
+## Função Narrativa
 
-- [[Varkh Nimalis]] - Proprietário e usuário do caderninho
-- [[Kenku]] - Raça de Varkh, caracterizada pelo mimetismo
+O caderninho simboliza a luta de Varkh com identidade e comunicação. Ele representa sua coleção de vozes emprestadas e sua tentativa de navegar pelo mundo sem uma voz própria estável.
 
-## O que está confirmado
+Também reflete sua personalidade peculiar: Varkh coleciona frases absurdas, sons úteis e pequenos registros porque os considera interessantes.
 
-- É uma coleção de frases, timbres e sons
-- Varkh considera as vozes úteis ou interessantes
-- Varkh usa vozes emprestadas para comunicar-se, distrair e enganar
-- Como kenku, a voz de Varkh nunca é inteiramente sua
-- Varkh coleciona frases absurdas que ouve no porto
-- Às vezes responde usando a voz de um peixeiro bravo, de uma criança rindo ou de um guarda bêbado
-- O item está listado entre os equipamentos de Varkh
+## O que Está Confirmado
 
-## Pendente de confirmação do Sage
+- É uma coleção de frases, timbres e sons.
+- Varkh considera as vozes úteis ou interessantes.
+- Varkh usa vozes emprestadas para comunicar-se, distrair e enganar.
+- Como kenku, a voz de Varkh nunca é inteiramente sua.
+- O item está listado entre os equipamentos de Varkh.
 
-- Origem do caderninho
-- Formato físico do caderninho
-- Como as vozes são registradas (escrito, desenhado, outro método)
-- Número de vozes no caderninho
-- Se o caderninho tem alguma função mágica
-- Regras mecânicas de mimetismo kenku
-- Se o caderninho evolui durante o arco de Varkh
-- Conexão com a busca por identidade de Varkh
+## Relações
 
-## Links relevantes
+- [[Varkh Nimalis]]
+- [[Kenku]]
+- [[Conclave dos Errantes]]
 
-- [[Characters/Individual/Varkh Nimalis]]
+## Uso em Mesa
+
+- Como apresentar: Varkh folheia, consulta, rabisca ou imita vozes em momentos sociais.
+- O que os jogadores sabem: é uma ferramenta pessoal de Varkh.
+- O que apenas o mestre sabe: nenhuma informação secreta confirmada por enquanto.
+- Como entra em cena: blefes, distrações, memória de frases, investigação social e cenas de identidade.
+- Ganchos: encontrar uma voz significativa, perder o caderno, registrar uma frase impossível.
+
+## Pendências do Sage
+
+- Definir origem do caderninho.
+- Definir formato físico.
+- Definir como as vozes são registradas.
+- Definir número de vozes.
+- Definir se tem função mágica ou apenas narrativa.
+- Definir regras mecânicas de mimetismo kenku.
+- Definir se o caderninho evolui durante o arco de Varkh.

@@ -1,70 +1,81 @@
 ---
+obsidianUIMode: preview
 NoteIcon: race
-tags:
-  - Category/Race
-  - race
-  - anthropomorph
+NoteStatus: Active
+type: race
+status: Ativa
+campaign_status: Ativa
+visibility: Jogadores
+spoiler_level: none
+gm_secret: false
+name: Antropo
+aliases:
+  - Antropos
+  - Demi-humanos
+  - Beastfolk
+origin: Earthropo
+territory: "[[Nimalia]]"
+region:
+faction:
+religion:
+level:
+danger_level:
+hooks:
+  - Predominância cultural em Nimalia
+  - Relação política com humanos, elfos, anões e dragonborns
+rumors: []
+thumbnail: zz_media/earthropo.png
 cover: zz_media/earthropo.png
-status: Active
+chapters: []
+tags:
+  - raca
+  - race
+  - antropo
 ---
 
 # Antropo
 
-Os antropos são humanoides com características animais, combinando traços humanos e bestiais em uma só criatura. Podem ter origens variadas, desde linhagens antigas até transformações mágicas ou bênçãos de divindades da natureza.
+## Visão Geral
 
-<h2>Personalidade e Cultura</h2>
+Antropos são povos humanoides de traços animais. Em Omnisvera, esse é o termo oficial para substituir “beastfolk”.
 
-Os antropo geralmente carregam traços de personalidade associados ao animal de sua linhagem.
+Em [[Nimalia]], eles formam a raça predominante e ocupam todos os níveis da sociedade: nobreza, guarda, comércio, artesanato, religião e vida comum.
 
-Características marcantes:
+## Presença em Omnisvera
 
-- Instintos aguçados.
-- Forte conexão com a natureza.
-- Tendência a agir por emoção e instinto.
-- Lealdade feroz ao seu bando.
+- São especialmente importantes no [[Nimalia|Reino de Nimalia]].
+- A capital [[Nimalis]] possui bairros e estruturas sociais onde antropos convivem com outras raças.
+- A Coroa de Nimalia é governada por [[Augustus Terra Decimus]], um antropo.
 
-<h2>Aparência</h2>
+## Cultura e Relações
 
-- Altura: entre **1,60 m e 2,00 m**
-- Peso: variável conforme a linhagem
+Antropos não devem ser tratados como exceção monstruosa em Omnisvera. Eles são parte central da civilização conhecida.
 
-<h2>Expectativa de Vida</h2>
+As linhagens animais podem influenciar aparência, costumes, preconceitos locais e leitura social, mas ainda não foram transformadas em sub-raças mecânicas.
 
-- Maturidade: aproximadamente **15 anos**
-- Vida média: cerca de **60 anos**
+## Mecânica Resumida
 
-<h2>Idiomas</h2>
+Usar como raça jogável ou NPC quando fizer sentido para a campanha. Regras específicas devem ser resumidas de forma própria pelo mestre, sem copiar texto de livros.
 
-Os antropo começam falando:
+## Personagens Relacionados
 
-- Comum
+```dataview
+TABLE status, role, location, faction
+FROM "Characters"
+WHERE race = "Antropo" OR contains(string(race), "Antropo")
+SORT file.name ASC
+```
 
-Com Inteligência elevada podem aprender idiomas adicionais.
+## Uso em Mesa
 
-<h2>Atributos Raciais</h2>
+- Como apresentar: povo comum e dominante em Nimalia, não uma raridade.
+- O que os jogadores sabem: antropos são parte essencial do reino.
+- O que apenas o mestre sabe: linhagens específicas podem esconder tradições, pactos ou rivalidades locais.
+- Como entra em cena: corte, ruas, guarda real, guildas, templos e regiões rurais.
+- Ganchos: tensões entre linhagens, nobreza, sucessão, pertencimento social.
+- Consequências possíveis: decisões políticas envolvendo antropos afetam diretamente Nimalia.
 
-- **+2 Destreza**
-- **−2 Inteligência**
+## Pendências do Sage
 
-São ágeis e rápidos como seus parentes animais, mas tendem a agir mais por instinto que por razão.
-
-<h2>Sentidos Aguçados</h2>
-
-- Recebem **+1 em testes de Percepção** envolvendo visão, audição ou olfato.
-
-<h2>Movimentação</h2>
-
-- Movimentação base: **9 metros**.
-
----
-
-# Antropo em Jogo (Resumo Oficial)
-
-- Tendem ao Caos.
-- Medem entre 1,60 m e 2,00 m.
-- Maturidade aos 15 anos.
-- Vivem cerca de 60 anos.
-- Falam Comum.
-- Recebem **+2 Destreza** e **−2 Inteligência**.
-- Sentidos Aguçados: +1 em Percepção.
-- Movimentação base de **9 metros**.
+- Definir se haverá sublinhagens mecânicas ou apenas variação estética/social.
+- Definir quais linhagens são mais comuns na capital.

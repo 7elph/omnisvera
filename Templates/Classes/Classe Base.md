@@ -124,7 +124,7 @@ SORT file.name ASC
 
 ```dataview
 TABLE rules_status, campaign_status, visibility, danger_level
-FROM "Rules/Classes"
+FROM "Classes"
 WHERE parent_class = this.file.link
 SORT file.name ASC
 ```
@@ -152,4 +152,4 @@ SORT file.name ASC
 - O que apenas o mestre sabe:
 - Como entra em cena:
 - Ganchos:
-- Consequ?ncias poss?veis:
+- Consequências possíveis:

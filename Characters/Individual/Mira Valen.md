@@ -3,29 +3,38 @@ obsidianUIMode: preview
 NoteIcon: magicitem
 NoteStatus: Active
 type: character
+status: Falecida
+campaign_status: Ativo
 visibility: Mestre
 spoiler_level: heavy
 gm_secret: true
-campaign_status: Ativo
 thumbnail: zz_media/th_mira.PNG
-status: Falecida
+cover: zz_media/mira.PNG
 location: "[[Leth'valora]]"
 territory: "[[Floresta de Avenor]]"
 faction: Nenhum
-class: Caçadora / Aventureira
+class: Caçadora
 race: Humana
 role: npc
-chapter: []
-chapters: []
+function: "Amor perdido de [[Vezemir]]"
+chapter:
+  - 00 - O Bastardo de Ferro
+chapters:
+  - 00 - O Bastardo de Ferro
 tags:
   - npc
   - character
+  - personagem
   - human
+  - humana
   - comum
   - deceased
-  - chapter00
+  - bside
+  - origin-story
+  - origin-vezemir
+  - lethvalora
+  - earthropo
   - Category/Character
-  - personagem
 ---
 
 # MIRA VALEN
@@ -33,7 +42,11 @@ tags:
 > [!NOTE|clean no-i right]+ Mira Valen
 > ![[mira.png|400]]
 
+> [!NOTE]- Template aplicado
+> Esta nota segue o formato **NPC Importante**. Informações confidenciais devem ficar no [[CAMPANHA/ESTADO_DA_CAMPANHA|Estado da Campanha]].
+
 ## Visão Geral
+
 **Nome:** Mira Valen  
 **Títulos:** A Caçadora; A Filha da Vila
 **Reputação Pública:** A Heroína da Vila
@@ -76,6 +89,10 @@ Sua morte tornou-se o principal motivo que impulsiona a jornada de vingança do 
 
 ---
 
+## Situação Atual
+
+_Pendente de consolidação pelo Sage._
+
 ## Personalidade
 
 **Temperamento:**  
@@ -92,7 +109,57 @@ Toda pessoa merece ser julgada por suas ações, não por sua origem.
 
 ---
 
-## Habilidades
+## Relações
+
+_Pendente de consolidação pelo Sage._
+
+## Função Narrativa
+
+- Em desenvolvimento.
+
+## Segredos
+
+- Informações confidenciais ficam centralizadas em [[CAMPANHA/ESTADO_DA_CAMPANHA|Estado da Campanha]].
+
+## Aparência
+
+_Pendente de consolidação pelo Sage._
+
+## Papel na Campanha
+
+_Pendente de consolidação pelo Sage._
+
+## Pendências do Sage
+
+- Revisar e completar campos em aberto.
+
+## Links relevantes
+
+_Pendente de consolidação pelo Sage._
+
+## Uso em Mesa
+
+- Como apresentar:
+- O que os jogadores sabem:
+- O que apenas o mestre sabe:
+- Como entra em cena:
+- Ganchos:
+- Consequências possíveis:
+
+
+## Legado
+Mesmo após sua morte, Mira continua presente na vida de [[Vezemir]].
+
+Seu nome e sua memória é a única razão pela qual o Bastardo de Ferro ainda luta para não se tornar consumido pelo ódio.
+
+Para muitos, Mira foi apenas uma caçadora.
+
+Para Vezemir, ela foi seu lar.
+
+## Equipamentos
+_Pendente de consolidação pelo Sage._
+
+## Capacidades narrativas
 
 **Rastreamento:**  
 Especialista em seguir trilhas e localizar criaturas.
@@ -107,54 +174,3 @@ Conhecia os bosques da região como ninguém.
 Percorria trilhas entre a vila e regiões vizinhas, transportando notícias, encontrando rotas seguras e observando mudanças na floresta.
 
 ---
-
-## Legado
-
-Mesmo após sua morte, Mira continua presente na vida de [[Vezemir]].
-
-Seu nome e sua memória é a única razão pela qual o Bastardo de Ferro ainda luta para não se tornar consumido pelo ódio.
-
-Para muitos, Mira foi apenas uma caçadora.
-
-Para Vezemir, ela foi seu lar.
-
-## Atualidade
-
-_Pendente de consolidação pelo Sage._
-
-## Relações
-
-_Pendente de consolidação pelo Sage._
-
-## Segredos
-
-_Pendente de revisão do Mestre._
-
-## Equipamentos
-
-_Pendente de consolidação pelo Sage._
-
-## Aparência
-
-_Pendente de consolidação pelo Sage._
-
-## Papel na Campanha
-
-_Pendente de consolidação pelo Sage._
-
-## Uso em Mesa
-
-- Como apresentar:
-- O que os jogadores sabem:
-- O que apenas o mestre sabe:
-- Como entra em cena:
-- Ganchos:
-- Consequências possíveis:
-
-## Pendências do Sage
-
-- Revisar e completar campos em aberto.
-
-## Links relevantes
-
-_Pendente de consolidação pelo Sage._

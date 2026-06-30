@@ -1,13 +1,13 @@
 ---
 obsidianUIMode: preview
 NoteIcon: story
-NoteStatus: Draft
+NoteStatus: Active
 type: story
-status: Planejado
-campaign_status: Planejado
-visibility: Mestre
-spoiler_level: heavy
-gm_secret: true
+status: Em Preparação
+campaign_status: Em Andamento
+visibility: Jogadores
+spoiler_level: light
+gm_secret: false
 cssclasses:
   - b-sides-script
   - chapter
@@ -15,15 +15,17 @@ chapter: 01 - Ecos do Mundo Perdido
 chapters:
   - 01 - Ecos do Mundo Perdido
 date:
-location:
-territory: Earthropo
+location: "Rota entre [[Nimalis]] e [[Floresta de Avenor]]"
+territory: "[[EARTHROPO/EARTHROPO|Earthropo]]"
 faction:
+  - "[[Guarda Real de Nimalia]]"
+  - "[[Conclave dos Errantes]]"
 characters:
   - "[[Vezemir]]"
   - "[[Varkh Nimalis]]"
   - "[[Raziel]]"
 cover: "[[zz_media/banner-ecos-do-mundo-perdido.png]]"
-description: Primeiro arco coletivo planejado para reunir Vezemir, Varkh e Raziel diante dos primeiros sinais do Véu, das relíquias antigas e dos segredos perdidos de Earthropo.
+description: Primeiro capítulo coletivo da campanha, reunindo Vezemir, Varkh e Raziel diante dos primeiros sinais de ruínas antigas, remédios falsos e mistérios esquecidos sob Earthropo.
 tags:
   - chapter
   - story
@@ -31,42 +33,52 @@ tags:
   - earthropo
 ---
 
-# Capítulo 01
+# Capítulo 01: Ecos do Mundo Perdido
 
-#### _Crônicas de Earthropo_
+#### _Crônicas de [[EARTHROPO/EARTHROPO|Earthropo]] — capítulo em preparação_
 
-## Ecos do Mundo Perdido
+> [!NOTE|clean no-i right]+ 01 - Ecos do Mundo Perdido
+> ![[banner-ecos-do-mundo-perdido.png|400]]
 
-> [!warning] Capítulo ainda não jogado
-> Esta nota reserva o lugar do primeiro arco coletivo. As ideias abaixo são estrutura de preparação, não acontecimentos confirmados em mesa.
+> [!world]- SINOPSE
+> O primeiro capítulo aproxima [[Vezemir]], [[Varkh Nimalis]] e [[Raziel]] por meio de um incidente em uma estrada secundária entre [[Nimalis]] e a [[Floresta de Avenor]]. Uma caravana sofre um acidente depois de um tremor localizado, frascos de remédios falsificados se quebram e uma passagem artificial surge sob a terra. O que parecia contrabando comum revela sinais de algo antigo sob Earthropo. Cada personagem encontra ali uma pista íntima: o dragão e os Guardiões para Vezemir, os remédios falsos de Odran para Varkh, e marcas de um passado que Raziel reconhece sem compreender totalmente.
+
+## Elenco Principal
+
+```datacards
+TABLE thumbnail, status, location, faction
+FROM "Characters/Individual"
+WHERE contains(chapters, "01 - Ecos do Mundo Perdido")
+OR contains(tags, "chapter01")
+OR file.name = "Vezemir"
+OR file.name = "Varkh Nimalis"
+OR file.name = "Raziel"
+SORT file.name ASC
+
+// Settings
+preset: compact
+columns: 5
+imageProperty: thumbnail
+showImageOnHover: true
+cardSpacing: 4
+```
+
+---
 
 ## Função do Capítulo
 
-Este capítulo deve servir como o primeiro ponto de convergência entre as histórias de [[Vezemir]], [[Varkh Nimalis]] e [[Raziel]].
+Este capítulo serve como o primeiro ponto de convergência entre as histórias de [[Vezemir]], [[Varkh Nimalis]] e [[Raziel]].
 
-A função dele não é revelar todo o mundo, e sim colocar os jogadores diante de sinais concretos de que suas buscas individuais tocam o mesmo problema maior:
+A função dele não é revelar todo o mundo. É colocar os jogadores diante de sinais concretos de que suas buscas individuais tocam o mesmo problema maior:
 
 - relíquias antigas;
 - falsificações alquímicas;
 - ruínas esquecidas;
 - marcas do [[Véu Cinzento]];
-- histórias que sobreviveram como rumor, medo ou superstição.
+- histórias que sobreviveram como rumor, medo ou superstição;
+- estruturas antigas que ainda funcionam parcialmente sob [[EARTHROPO/EARTHROPO|Earthropo]].
 
-## Personagens em Foco
-
-```datacards
-TABLE thumbnail, status, location, faction
-FROM "Characters/Individual"
-WHERE contains(tags, "player") OR contains(tags, "jogador")
-SORT file.name ASC
-
-// Settings
-preset: compact
-columns: 3
-imageProperty: thumbnail
-showImageOnHover: true
-cardSpacing: 4
-```
+---
 
 ## Pontos Sustentados pelo Vault
 
@@ -76,17 +88,24 @@ cardSpacing: 4
 - [[Nimalia]] é o reino dos antropos, com [[Nimalis]] como capital.
 - A [[Floresta de Avenor]] faz fronteira com Nimalia.
 - [[Leth'valora]] foi destruída pelo [[Dragão de Colar Dourado]].
-- A forma exata como os três personagens se encontram permanece em aberto.
 
-## Premissa de Trabalho
+---
 
-Um mesmo rastro começa a aparecer em lugares diferentes: um símbolo antigo em um frasco falso, uma inscrição apagada em uma ruína, uma história sobre névoa cinzenta contada por gente que jura não acreditar em lendas.
+## Premissa Pública
+
+Rumores recentes falam de tremores na rota entre [[Nimalis]] e a [[Floresta de Avenor]]. Parte do caminho cedeu, uma caravana foi atingida e algo antigo apareceu sob a estrada.
+
+Os relatos ainda são confusos:
+
+- alguns viajantes falam de luz azulada saindo de rachaduras na pedra;
+- outros mencionam frascos de remédio falso espalhados entre a carga;
+- há quem jure ter ouvido sons metálicos vindos do subterrâneo;
+- a [[Guarda Real de Nimalia]] começou a afastar curiosos;
+- o [[Conclave dos Errantes]] pode ter interesse no caso.
 
 Cada personagem tem uma razão própria para seguir esse rastro.
 
-- Vezemir vê uma possível ligação com o dragão e com os Guardiões do Véu Cinzento.
-- Varkh vê uma pista sobre quem está usando os métodos de Odran.
-- Raziel vê ecos de poderes antigos ligados às [[Ruínas de Valthor]], à [[Fortaleza de Gharok]] e ao sangue que o reconstruiu.
+---
 
 ## Possíveis Pontos de Encontro
 
@@ -97,14 +116,18 @@ Cada personagem tem uma razão própria para seguir esse rastro.
 - Uma investigação sobre remédios falsos que chega perto de território ligado ao Véu.
 - Uma ruína menor conectada indiretamente às [[Ruínas de Valthor]].
 - Um pedido do [[Conclave dos Errantes]] envolvendo uma relíquia ou escolta.
-- Um rumor vindo do Mar da Neblina que cruza com documentos da Coroa.
+- Um rumor vindo do [[Mar da Neblina]] que cruza com documentos da Coroa.
+
+---
 
 ## Quests Ativas
 
 ```dataview
 TABLE quest_status, location, faction
-FROM #quest
+FROM "CAMPANHA/Quests"
 WHERE quest_status != "Concluída" AND quest_status != "Falhou"
+AND (visibility = "Jogadores" OR visibility = "Público")
+AND gm_secret != true
 SORT file.name ASC
 ```
 
@@ -112,30 +135,29 @@ SORT file.name ASC
 
 ```dataview
 TABLE status, visibility, spoiler_level
-FROM #rumor
+FROM "CAMPANHA/Rumors"
+WHERE visibility = "Jogadores" OR visibility = "Público"
+AND gm_secret != true
 SORT file.name ASC
 ```
 
-## Segredos do Mestre
-
-- A conexão real entre o [[Véu Cinzento]], os Guardiões e os Criadores ainda não deve ser revelada de uma vez.
-- A relação entre o dragão de colar dourado e os eventos antigos deve ser mostrada por pistas, não por exposição direta.
-- As pistas de Varkh devem parecer mundanas antes de apontarem para algo maior.
-- Raziel deve entrar com peso, mas sem resolver o mistério inteiro sozinho.
-
-## Pendências Antes de Jogar
-
-- Definir ponto inicial da mesa.
-- Definir o primeiro incidente visível.
-- Separar informação pública de segredo do mestre.
-- Confirmar quais imagens serão usadas como capa, retrato ou handout.
-- Definir quais pistas aparecem no primeiro encontro.
+---
 
 ## Uso em Mesa
 
 - **Como apresentar:** começar por uma consequência concreta, não por explicação de lore.
-- **O que os jogadores sabem:** cada personagem sabe sua própria motivação inicial.
-- **O que apenas o mestre sabe:** as conexões entre Véu, dragão, sangue antigo e falsificações.
-- **Como entra em cena:** por rastro, contrato, rumor, perseguição ou descoberta.
-- **Ganchos:** frasco falso, símbolo antigo, sobrevivente assustado, ruína interditada, mapa incompleto.
+- **O que os jogadores sabem:** há um acidente, uma carga suspeita, uma passagem antiga e interesses conflitantes na estrada.
+- **O que fica no [[CAMPANHA/ESTADO_DA_CAMPANHA|Estado da Campanha]]:** a verdade completa sobre a estrutura, a entidade subterrânea e as conexões maiores da campanha.
+- **Como entra em cena:** por acidente, investigação, contrato, perseguição ou descoberta durante a rota entre Nimalis e a Floresta de Avenor.
+- **Ganchos:** frasco falso, símbolo antigo, sobrevivente assustado, ruína interditada, mapa incompleto, carga adulterada.
 - **Consequências possíveis:** os personagens se unem por conveniência, dívida, suspeita ou ameaça compartilhada.
+
+---
+
+## Pós-Sessão
+
+- O que aconteceu:
+- O que mudou:
+- NPCs afetados:
+- Locais afetados:
+- Ganchos criados:

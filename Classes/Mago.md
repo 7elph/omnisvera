@@ -1,15 +1,29 @@
 ---
+obsidianUIMode: preview
 NoteIcon: class
 NoteStatus: Active
-tags:
-  - Category/Class
-  - classe
-  - wizard
-  - old-dragon-2
+type: class
+status: Ativa
+rules_status: Oficial / consulta externa
+campaign_status: Ativa
+visibility: Jogadores
+spoiler_level: none
+gm_secret: false
+created_by: Sage
+name: Mago
+aliases: []
+system: Old Dragon 2E
+class_group: Arcano
+primary_attribute: Inteligência
+level:
+danger_level: Baixo
+thumbnail: zz_media/mago.png
 cover: zz_media/mago.png
-status: Active
-ruleset: Old Dragon 2E
-source: https://olddragon.com.br/classes/mago
+chapters: []
+tags:
+  - classe
+  - mago
+  - old-dragon
 ---
 
 # Mago
@@ -17,55 +31,48 @@ source: https://olddragon.com.br/classes/mago
 > [!NOTE|clean no-i right]+ Retrato
 > ![[mago.png|400]]
 
-O Mago é a classe-base de magia arcana de Old Dragon 2. Esta nota oferece uma referência curta; a progressão completa está na [página oficial](https://olddragon.com.br/classes/mago).
+## Visão Geral
 
-> [!info] Fonte
-> **Livro I: Regras Básicas**, página 42, e **SRD oficial**. Consulte também [[Workflow/RULES_SOURCES|Fontes de Regras da Campanha]].
+Mago é a classe arcana clássica, ligada a estudo, grimórios, fórmulas, rituais e manipulação consciente da magia.
 
-## Referência de nível 1
+Esta nota é um resumo próprio de campanha. Para regra completa, progressão e detalhes oficiais, consultar o material original de Old Dragon 2E usado pelo mestre.
 
-| Campo | Valor |
-|:--|--:|
-| Pontos de Vida | 4 |
-| Base de Ataque | 0 |
-| Jogada de Proteção | 5 |
+## Papel no Grupo
 
-## Restrições
+- Resolver problemas com magia.
+- Interpretar fenômenos arcanos.
+- Registrar, estudar e preparar efeitos mágicos.
+- Transformar conhecimento em vantagem.
 
-- **Armas:** apenas pequenas; armas médias ou Grandes geram ataques difíceis.
-- **Armaduras:** nenhuma.
-- Escudos ou armaduras impedem a conjuração e fornecem somente metade da CA normal.
-- **Itens mágicos:** todos.
+## Papel no Mundo
 
-## Habilidades
+Magos podem ser estudiosos, conselheiros, escribas, ocultistas, eremitas, membros de academias ou perigosos investigadores de ruínas.
 
-### Magias Arcanas — 1º nível
+## Notas de Mecânica
 
-O Mago memoriza diariamente magias registradas em seu grimório.
+- Usar as regras oficiais de Mago do sistema escolhido pelo mestre.
+- Não copiar listas completas de magias para o vault.
+- Magias devem ser tratadas por índice, resumo próprio e referência externa quando necessário.
+- A magia antiga dos [[Criadores]] pode ser diferente da magia moderna; isso é lore, não regra automática.
 
-- Começa com três magias de 1º círculo escolhidas pelo jogador e uma determinada aleatoriamente.
-- Pode copiar novas magias de pergaminhos ou outros grimórios.
-- Pode registrar magias de círculos superiores, mas só pode memorizá-las quando alcançar o nível necessário.
-- Sem o grimório, não consegue memorizar novas magias.
+## Personagens Relacionados
 
-### Ler Magias — 1º nível
+```dataview
+TABLE thumbnail, race, status, location, faction
+FROM "Characters"
+WHERE class = "Mago" OR class = this.file.link
+SORT file.name ASC
+```
 
-Pode decifrar inscrições mágicas uma vez ao dia por nível. Isso identifica a magia escrita, mas não revela automaticamente as propriedades de itens mágicos.
+## Uso em Mesa
 
-### Detectar Magias — 1º nível
+- Como apresentar: estudo, símbolos, grimório, cálculo, ritual e custo intelectual.
+- O que os jogadores sabem: Magos lidam com magia arcana por estudo.
+- O que apenas o mestre sabe: segredos sobre magia antiga e ruínas.
+- Como entra em cena: investigação, ruína, biblioteca, artefato, ritual ou duelo mágico.
+- Ganchos: grimórios perdidos, linguagem antiga, magia corrompida e ecos dos Criadores.
 
-Pode procurar a presença de magia uma vez ao dia por nível em uma área de 9 metros mais 3 metros por nível.
+## Pendências do Sage
 
-- Exige concentração ativa.
-- Revela a presença de aura, não sua magia, efeito ou poder.
-- O exame leva 1d8 rodadas.
-- No 6º nível, leva 1d4 rodadas.
-- No 10º nível, leva 1 rodada.
-
-### Reputação — 11º nível
-
-Começa com Reputação 1 em 1d6 e progride até 1–5 em 1d6 no 15º nível.
-
-## Magia opcional
-
-Os arquivos `Tomo de Magia Arcana - OD2.pdf` e `Tomo de Magia Divina - OD2.pdf` são adaptações de fã e não integram automaticamente esta classe. Consulte [[Workflow/RULES_SOURCES|Fontes de Regras da Campanha]].
+- Definir como magia moderna difere da magia antiga.
+- Definir escolas, academias ou tradições mágicas de Omnisvera.

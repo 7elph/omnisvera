@@ -3,27 +3,38 @@ obsidianUIMode: preview
 NoteIcon: magicitem
 NoteStatus: Draft
 type: character
+status: Em desenvolvimento
+campaign_status: Em revisão
 visibility: Mestre
 spoiler_level: heavy
 gm_secret: true
 created_by: IA
-campaign_status: Em revisão
 thumbnail:
-status: Em desenvolvimento
-location:
-territory:
-faction:
-class:
-race:
+cover:
+location: "[[Fortaleza de Gharok]]"
+territory: "[[EARTHROPO/EARTHROPO|Earthropo]]"
+faction: "[[Clã Sanguinallis]]"
+class: Lorde Vampiro
+race: Vampiro
 role: npc
-chapter: []
-chapters: []
+function: "Alvo final da vingança de [[Raziel]]"
+chapter:
+  - 00 - As Crônicas de Névoa de Sangue
+chapters:
+  - 00 - As Crônicas de Névoa de Sangue
 tags:
   - Category/Character
   - character
-  - npc
-  - draft
   - personagem
+  - npc
+  - antagonist
+  - vampiro
+  - sanguinallis
+  - draft
+  - bside
+  - origin-story
+  - origin-raziel
+  - earthropo
 ---
 
 # Lorde Malakar
@@ -36,6 +47,9 @@ tags:
 
 > [!WARNING] Estado canônico
 > Esta nota está em desenvolvimento e depende de confirmação do Sage.
+
+> [!NOTE]- Template aplicado
+> Esta nota segue o formato **Antagonista**. Informações confidenciais devem ficar no [[CAMPANHA/ESTADO_DA_CAMPANHA|Estado da Campanha]].
 
 ## Visão Geral
 
@@ -50,19 +64,11 @@ WHERE contains(this.chapters, file.name)
 SORT file.name ASC
 ```
 
-## Função narrativa
+## História
 
-Malakar é o alvo final da vingança de Raziel. Como lorde do clã, ele representa a autoridade que traiu Raziel e o terceiro alvo na rota de vingança ("A Queda do Trono — Fortaleza de Gharok").
+_Pendente de consolidação pelo Sage._
 
-## Relações
-- [[Raziel]] - Executor pessoal que traiu e condenou
-- [[Kaelen, o Flagelo]] - General do clã, cúmplice na traição
-- [[Vandor, o Senhor das Bestas]] - General do clã, cúmplice na traição
-- [[Clã Sanguinallis]] - Facção que lidera
-- [[Fortaleza de Gharok]] - Domínio onde ocupa o trono
-
-## O que está confirmado
-
+### O que está confirmado
 - É o lorde do Clã Sanguinallis
 - Ocupa um trono na Fortaleza de Gharok
 - Traiu Raziel junto com Kaelen e Vandor
@@ -71,8 +77,7 @@ Malakar é o alvo final da vingança de Raziel. Como lorde do clã, ele represen
 - Ainda ocupa o domínio onde a traição começou
 - É o terceiro alvo na rota de vingança de Raziel
 
-## Pendente de confirmação do Sage
-
+### Pendente de confirmação do Sage
 - Idade e aparência
 - Origem e como se tornou lorde do clã
 - Poderes e habilidades específicas
@@ -83,19 +88,7 @@ Malakar é o alvo final da vingança de Raziel. Como lorde do clã, ele represen
 - Relação com o Sangue Antigo
 - Destino final no arco de Raziel
 
-## Links relevantes
-
-- [[Characters/Individual/Raziel]]
-- [[Characters/Individual/Kaelen, o Flagelo]]
-- [[Characters/Individual/Vandor, o Senhor das Bestas]]
-- [[Factions/Clã Sanguinallis]]
-- [[Locations/Fortaleza de Gharok]]
-
-## História
-
-_Pendente de consolidação pelo Sage._
-
-## Atualidade
+## Situação Atual
 
 _Pendente de consolidação pelo Sage._
 
@@ -103,17 +96,45 @@ _Pendente de consolidação pelo Sage._
 
 _Pendente de consolidação pelo Sage._
 
-## Habilidades
+## Motivação
 
-_Pendente de consolidação pelo Sage._
+- Motivação a consolidar a partir da lore existente.
+
+## Métodos
+
+- M?todos ainda n?o detalhados em mesa.
+
+## Recursos
+
+- Recursos ainda n?o detalhados em mesa.
+
+## Aliados
+
+- Ver Relações.
+
+## Inimigos
+
+- Ver Relações e Papel na Campanha.
+
+## Plano Atual
+
+- Plano atual a definir conforme avan?o da campanha.
+
+## Fraquezas
+
+- Fraquezas ainda n?o reveladas.
 
 ## Segredos
 
-_Pendente de revisão do Mestre._
+- Informações confidenciais ficam centralizadas em [[CAMPANHA/ESTADO_DA_CAMPANHA|Estado da Campanha]].
 
-## Equipamentos
+## Relações
 
-_Pendente de consolidação pelo Sage._
+- [[Raziel]] - Executor pessoal que traiu e condenou
+- [[Kaelen, o Flagelo]] - General do clã, cúmplice na traição
+- [[Vandor, o Senhor das Bestas]] - General do clã, cúmplice na traição
+- [[Clã Sanguinallis]] - Facção que lidera
+- [[Fortaleza de Gharok]] - Domínio onde ocupa o trono
 
 ## Aparência
 
@@ -122,6 +143,18 @@ _Pendente de consolidação pelo Sage._
 ## Papel na Campanha
 
 _Pendente de consolidação pelo Sage._
+
+## Pendências do Sage
+
+- Revisar e completar campos em aberto.
+
+## Links relevantes
+
+- [[Characters/Individual/Raziel]]
+- [[Characters/Individual/Kaelen, o Flagelo]]
+- [[Characters/Individual/Vandor, o Senhor das Bestas]]
+- [[Factions/Clã Sanguinallis]]
+- [[Locations/Fortaleza de Gharok]]
 
 ## Uso em Mesa
 
@@ -132,6 +165,10 @@ _Pendente de consolidação pelo Sage._
 - Ganchos:
 - Consequências possíveis:
 
-## Pendências do Sage
 
-- Revisar e completar campos em aberto.
+## Equipamentos
+_Pendente de consolidação pelo Sage._
+
+## Capacidades narrativas
+
+_Pendente de consolidação pelo Sage._

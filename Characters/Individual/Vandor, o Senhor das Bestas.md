@@ -3,27 +3,38 @@ obsidianUIMode: preview
 NoteIcon: magicitem
 NoteStatus: Draft
 type: character
+status: Em desenvolvimento
+campaign_status: Em revisão
 visibility: Mestre
 spoiler_level: heavy
 gm_secret: true
 created_by: IA
-campaign_status: Em revisão
 thumbnail:
-status: Em desenvolvimento
-location:
-territory:
-faction:
-class:
-race:
+cover:
+location: "[[Floresta de Avenor]]"
+territory: "[[Floresta de Avenor]]"
+faction: "[[Clã Sanguinallis]]"
+class: Senhor das Bestas
+race: Vampiro
 role: npc
-chapter: []
-chapters: []
+function: "Segundo alvo da vingança de [[Raziel]]"
+chapter:
+  - 00 - As Crônicas de Névoa de Sangue
+chapters:
+  - 00 - As Crônicas de Névoa de Sangue
 tags:
   - Category/Character
   - character
-  - npc
-  - draft
   - personagem
+  - npc
+  - antagonist
+  - vampiro
+  - sanguinallis
+  - draft
+  - bside
+  - origin-story
+  - origin-raziel
+  - earthropo
 ---
 
 # Vandor, o Senhor das Bestas
@@ -36,6 +47,9 @@ tags:
 
 > [!WARNING] Estado canônico
 > Esta nota está em desenvolvimento e depende de confirmação do Sage.
+
+> [!NOTE]- Template aplicado
+> Esta nota segue o formato **Antagonista**. Informações confidenciais devem ficar no [[CAMPANHA/ESTADO_DA_CAMPANHA|Estado da Campanha]].
 
 ## Visão Geral
 
@@ -50,19 +64,11 @@ WHERE contains(this.chapters, file.name)
 SORT file.name ASC
 ```
 
-## Função narrativa
+## História
 
-Vandor é o segundo alvo na rota de vingança de Raziel ("O Senhor das Feras — Floresta de Avenor"). Representa o medo e a brutalidade que contribuíram para a queda de Raziel.
+_Pendente de consolidação pelo Sage._
 
-## Relações
-- [[Raziel]] - Irmão de linhagem, alvo de seu medo, cúmplice em sua traição
-- [[Lorde Malakar]] - Lorde do clã, cúmplice na traição
-- [[Kaelen, o Flagelo]] - General do clã, cúmplice na traição
-- [[Clã Sanguinallis]] - Facção onde serve como general
-- [[Floresta de Avenor]] - Local onde permanece ligado às feras
-
-## O que está confirmado
-
+### O que está confirmado
 - É um general do Clã Sanguinallis
 - É irmão de linhagem de Raziel
 - Temia o silêncio que Raziel impunha às suas feras
@@ -73,8 +79,7 @@ Vandor é o segundo alvo na rota de vingança de Raziel ("O Senhor das Feras —
 - É o segundo alvo na rota de vingança de Raziel
 - Aprenderá que nenhuma criatura selvagem pode obedecer a um mestre cujo sangue está prestes a ser fervido
 
-## Pendente de confirmação do Sage
-
+### Pendente de confirmação do Sage
 - Idade e aparência
 - Origem e como se tornou general do clã
 - Poderes e habilidades específicas
@@ -85,19 +90,7 @@ Vandor é o segundo alvo na rota de vingança de Raziel ("O Senhor das Feras —
 - Relação com o Sangue Antigo
 - Destino final no arco de Raziel
 
-## Links relevantes
-
-- [[Characters/Individual/Raziel]]
-- [[Characters/Individual/Lorde Malakar]]
-- [[Characters/Individual/Kaelen, o Flagelo]]
-- [[Factions/Clã Sanguinallis]]
-- [[Floresta de Avenor]]
-
-## História
-
-_Pendente de consolidação pelo Sage._
-
-## Atualidade
+## Situação Atual
 
 _Pendente de consolidação pelo Sage._
 
@@ -105,17 +98,45 @@ _Pendente de consolidação pelo Sage._
 
 _Pendente de consolidação pelo Sage._
 
-## Habilidades
+## Motivação
 
-_Pendente de consolidação pelo Sage._
+- Motivação a consolidar a partir da lore existente.
+
+## Métodos
+
+- M?todos ainda n?o detalhados em mesa.
+
+## Recursos
+
+- Recursos ainda n?o detalhados em mesa.
+
+## Aliados
+
+- Ver Relações.
+
+## Inimigos
+
+- Ver Relações e Papel na Campanha.
+
+## Plano Atual
+
+- Plano atual a definir conforme avan?o da campanha.
+
+## Fraquezas
+
+- Fraquezas ainda n?o reveladas.
 
 ## Segredos
 
-_Pendente de revisão do Mestre._
+- Informações confidenciais ficam centralizadas em [[CAMPANHA/ESTADO_DA_CAMPANHA|Estado da Campanha]].
 
-## Equipamentos
+## Relações
 
-_Pendente de consolidação pelo Sage._
+- [[Raziel]] - Irmão de linhagem, alvo de seu medo, cúmplice em sua traição
+- [[Lorde Malakar]] - Lorde do clã, cúmplice na traição
+- [[Kaelen, o Flagelo]] - General do clã, cúmplice na traição
+- [[Clã Sanguinallis]] - Facção onde serve como general
+- [[Floresta de Avenor]] - Local onde permanece ligado às feras
 
 ## Aparência
 
@@ -124,6 +145,18 @@ _Pendente de consolidação pelo Sage._
 ## Papel na Campanha
 
 _Pendente de consolidação pelo Sage._
+
+## Pendências do Sage
+
+- Revisar e completar campos em aberto.
+
+## Links relevantes
+
+- [[Characters/Individual/Raziel]]
+- [[Characters/Individual/Lorde Malakar]]
+- [[Characters/Individual/Kaelen, o Flagelo]]
+- [[Factions/Clã Sanguinallis]]
+- [[Floresta de Avenor]]
 
 ## Uso em Mesa
 
@@ -134,6 +167,10 @@ _Pendente de consolidação pelo Sage._
 - Ganchos:
 - Consequências possíveis:
 
-## Pendências do Sage
 
-- Revisar e completar campos em aberto.
+## Equipamentos
+_Pendente de consolidação pelo Sage._
+
+## Capacidades narrativas
+
+_Pendente de consolidação pelo Sage._

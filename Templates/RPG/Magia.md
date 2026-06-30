@@ -1,8 +1,11 @@
 ---
+obsidianUIMode: preview
+NoteIcon: spell
+NoteStatus: Draft
 type: spell
 status: Rascunho
 rules_status:
-campaign_status: Em revisao
+campaign_status: Em revisão
 visibility: Mestre
 spoiler_level: medium
 gm_secret: true
@@ -26,15 +29,17 @@ tags:
 
 # Nome da Magia
 
-## Resumo
+## Visão Geral
 
 Resumo próprio e curto. Não copiar texto integral de livro.
 
-## Uso na campanha
+## Uso na Campanha
 
-## Consequências narrativas
+## Consequências Narrativas
 
-## Pendências
+## Notas de Mecânica
+
+Registrar apenas decisões de mesa, custo narrativo, restrições próprias e referência ao material original quando necessário.
 
 ## Uso em Mesa
 
@@ -43,4 +48,6 @@ Resumo próprio e curto. Não copiar texto integral de livro.
 - O que apenas o mestre sabe:
 - Como entra em cena:
 - Ganchos:
-- Consequ?ncias poss?veis:
+- Consequências possíveis:
+
+## Pendências do Sage

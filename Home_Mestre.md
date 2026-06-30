@@ -33,6 +33,13 @@ gm_secret: true
 > **MAPAS DE EARTHROPO**
 > [![[earthropo.png|sban htiny ctr]]](MAPA%20DE%20EARTHROPO.md)
 
+> [!home]+ PAINEL DO MESTRE
+> - [[CAMPANHA/ESTADO_DA_CAMPANHA|Estado da Campanha]]
+> - [[01 - Ecos do Mundo Perdido|Capítulo 01: Ecos do Mundo Perdido]]
+> - [[EARTHROPO/EARTHROPO|Crônicas de Earthropo]]
+> - [[CAMPANHA/Quests/INDICE_DE_QUESTS|Índice de Quests]]
+> - [[CAMPANHA/Rumors/INDICE_DE_RUMORES|Índice de Rumores]]
+
 # 🜂 NIMALIA
 
 > *“Toda estrada parece simples antes do primeiro passo. Nas fronteiras de Nimalia, a floresta guarda nomes esquecidos, as ruínas preservam vozes antigas e cada viajante carrega uma história que ainda pode mudar Earthropo.”*
@@ -106,7 +113,7 @@ Nimalia é o primeiro horizonte das **Crônicas de Earthropo**: um ponto de part
 
 > [!note]+ TERRITÓRIOS
 > ```datacards
-> TABLE cover, region, leader, population FROM #territorio
+> TABLE cover, region, leader, population FROM "Territories"
 > WHERE NoteStatus != "Placeholder"
 > AND !contains(file.path, "Workflow/")
 > AND !contains(file.path, "Templates/")
@@ -121,7 +128,7 @@ Nimalia é o primeiro horizonte das **Crônicas de Earthropo**: um ponto de part
 
 > [!note]- LOCALIZAÇÕES
 > ```datacards
-> TABLE cover, territory, info FROM #location
+> TABLE cover, territory, info FROM "Locations"
 > WHERE NoteStatus != "Placeholder"
 > AND !contains(file.path, "Workflow/")
 > AND !contains(file.path, "Templates/")

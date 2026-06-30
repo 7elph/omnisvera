@@ -8,9 +8,9 @@
 
 Define o padrão operacional para classes de RPG em Omnisvera.
 
-Classes novas devem usar `Rules/Classes`.
+Classes novas devem usar `Classes/`.
 
-A pasta `Classes/` antiga pode existir como material anterior, mas não é o padrão novo.
+`Classes/` é a pasta operacional oficial. A pasta `Rules/Classes` foi removida para evitar duplicação.
 
 ## Frontmatter recomendado
 
@@ -93,7 +93,7 @@ SORT file.name ASC
 
 ```dataview
 TABLE thumbnail, status, rules_status, campaign_status
-FROM "Rules/Classes"
+FROM "Classes"
 WHERE type = "class"
 SORT file.name ASC
 ```
@@ -111,5 +111,5 @@ Notas de classe devem conter:
 
 ## Pendências
 
-- Consolidar se as notas antigas em `Classes/` serão migradas para `Rules/Classes`.
-- Decidir se a pasta final ficará em português BR numa etapa própria.
+- Manter `Classes/` como pasta oficial até uma eventual migração futura para português BR.
+- Não recriar `Rules/Classes`.

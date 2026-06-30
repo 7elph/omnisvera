@@ -23,3 +23,10 @@ FROM "Rules/Spells"
 WHERE type = "spell"
 SORT level ASC, file.name ASC
 ```
+
+## Regra de Uso
+
+- Criar notas de magia apenas quando forem usadas em mesa ou relevantes para a lore.
+- Magias podem ter função mecânica, narrativa ou ritualística.
+- Quando vierem de livros, registrar apenas referência interna de uso e resumo próprio.
+- Não copiar descrições completas, tabelas extensas ou texto protegido.

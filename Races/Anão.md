@@ -1,145 +1,82 @@
 ---
+obsidianUIMode: preview
 NoteIcon: race
+NoteStatus: Active
+type: race
+status: Ativa
+campaign_status: Em revisão
+visibility: Jogadores
+spoiler_level: light
+gm_secret: false
+name: Anão
+aliases:
+  - Anões
+origin: Earthropo
+territory: "[[Fortaleza de Gharok]]"
+region: Norte/Nordeste de Nimalia
+faction:
+religion:
+level:
+danger_level:
+hooks:
+  - Reinos anões ao norte e nordeste
+  - Fortalezas antigas e ruínas subterrâneas
+rumors: []
+thumbnail: zz_media/th_anao.PNG
+cover: zz_media/anao.PNG
+chapters: []
 tags:
-  - Category/Race
+  - raca
   - race
-  - dwarf
-cover: zz_media/th_anao.PNG
-status: Active
+  - anao
 ---
 
-# Os Anões
+# Anão
 
-> [!NOTE|clean no-i right]+ ‎Retrato
-> ![[anao.PNG|400]]  
+> [!NOTE|clean no-i right]+ Retrato
+> ![[anao.PNG|400]]
 
-Os anões são humanoides baixos, robustos e atarracados, famosos por sua teimosia, resistência e honra. Suas longas barbas são símbolos de orgulho, poder e identidade racial. Quase nunca são vistos sem elas.
+## Visão Geral
 
-<h2>Personalidade e Cultura</h2>
+Anões são povos ligados a montanhas, fortalezas, metalurgia, memória de clãs e construções antigas.
 
-Os anões valorizam acima de tudo:
+Em Omnisvera, o reino anão ainda será revelado aos poucos e deve ficar ao norte ou nordeste do mapa, próximo a regiões montanhosas e vulcânicas.
 
-- Honra
-- Palavra dada
-- Lealdade
-- Tradição
-- Família e clã
+## Presença em Omnisvera
 
-Características marcantes:
+- [[Fortaleza de Gharok]] é uma antiga fortaleza anã.
+- O reino anão futuro deve se conectar a montanhas e estruturas antigas.
+- [[Nimalis]] possui um Bairro dos Anões.
 
-- São conhecidos por serem rabugentos e obstinados.
-- Consideram a palavra de um anão mais valiosa que qualquer contrato.
-- Amizades são difíceis de conquistar, mas duram a vida toda.
-- Inimizades também podem durar gerações.
+## Cultura e Relações
 
-<h2>Rivalidade com os Elfos</h2>
+Anões podem ser tratados como povo de tradição, técnica, juramentos e memória arquitetônica. Nem todo anão precisa estar ligado diretamente a minas ou guerra.
 
-Os anões mantêm uma rivalidade ancestral com os elfos.
+A rivalidade com elfos pode ser usada como tensão cultural antiga, mas não precisa definir todos os personagens.
 
-Mesmo que as grandes guerras do passado tenham acabado, ainda existe uma competição cultural:
+## Mecânica Resumida
 
-- Anões consideram os elfos arrogantes.
-- Elfos consideram os anões grosseiros.
-- Um anão frequentemente tenta exaltar suas próprias realizações em comparação às dos elfos.
+Usar regras de anão do sistema adotado apenas como referência de mesa. O vault deve manter resumo próprio, sem reprodução extensa de regras.
 
-<h2>Aparência</h2>
+## Personagens Relacionados
 
-> [!NOTE|clean no-i right]+ ‎Os Clãs
-> ![[prop_anao.PNG|300]]  
+```dataview
+TABLE status, role, location, faction
+FROM "Characters"
+WHERE race = "Anão" OR contains(string(race), "Anão") OR contains(string(race), "Anões")
+SORT file.name ASC
+```
 
-- Altura: entre **1,30 m e 1,50 m**
-- Peso: entre **50 kg e 70 kg**
+## Uso em Mesa
 
-<h2>Expectativa de Vida</h2>
+- Como apresentar: povo de fortalezas, clãs e obras antigas.
+- O que os jogadores sabem: Gharok tem origem anã.
+- O que apenas o mestre sabe: antigas obras anãs podem guardar segredos de eras anteriores.
+- Como entra em cena: ruínas, escudos, artesãos, guardas, fortalezas.
+- Ganchos: Gharok, Muralha de Dorn, rotas do norte.
+- Consequências possíveis: mexer em ruínas anãs pode envolver clãs ou reinos ainda não apresentados.
 
-- Maturidade: aproximadamente **70 anos**
-- Vida média: cerca de **350 anos**
+## Pendências do Sage
 
-<h2>Terras Anãs</h2>
-
-Os anões vivem principalmente no subterrâneo.
-
-Suas cidades são compostas por:
-
-- Túneis gigantescos
-- Salões escavados na pedra
-- Minas profundas
-- Fortalezas subterrâneas
-
-Eles costumam dizer que:
-
-> "Nada paga a sensação de ter uma montanha sobre a cabeça."
-
-<h2>Idiomas</h2>
-
-Os anões começam falando:
-
-- Anão
-- Comum
-
-Com Inteligência elevada podem aprender:
-
-- Idiomas de povos aliados
-- Orc
-- Gigante
-- Goblin
-
-O idioma anão é considerado secreto e normalmente não é ensinado a outras raças.
-
-<h2>Atributos Raciais</h2>
-
-- **+2 Constituição**
-- **−2 Carisma**
-
-Os anões possuem resistência física excepcional, mas tendem a ser reservados, rudes e pouco sociáveis.
-
-<h2>Visão no Escuro</h2>
-
-Adaptados à vida subterrânea:
-
-- Conseguem enxergar no escuro completo.
-- Alcance de **15 metros**.
-
-<h2>Mineradores</h2>
-
-Por viverem em minas e cavernas desde a infância:
-
-- Detectam desníveis.
-- Percebem fossos escondidos.
-- Encontram armadilhas de pedra.
-
-Chance de sucesso:
-
-- **1–2 em 1d6**.
-
-<h2>Movimentação</h2>
-
-Devido às pernas curtas:
-
-- Movimentação base de **6 metros**.
-
----
-
-# Anões em Jogo (Resumo Oficial)
-
-- Tendem ao alinhamento **Ordeiro**.
-- Medem entre 1,30 m e 1,50 m.
-- Pesam entre 50 kg e 70 kg.
-- Atingem a maturidade aos 70 anos.
-- Vivem cerca de 350 anos.
-- Falam Anão, Comum e idiomas de aliados ou inimigos.
-- Recebem **+2 Constituição** e **−2 Carisma**.
-- Possuem **Visão no Escuro** de 15 metros.
-- Detectam fossos, desníveis e armadilhas de pedra com **1–2 em 1d6**.
-- Possuem movimentação base de **6 metros**.
-
-### Arquétipo do Anão no Old Dragon
-
-O anão do Old Dragon é praticamente o arquétipo clássico de fantasia:
-
-⚒️ Ferreiro lendário  
-⛏️ Mineiro experiente  
-🏰 Habitante de fortalezas subterrâneas  
-🛡️ Extremamente resistente  
-📜 Obcecado por honra e tradição  
-🍺 Teimoso até níveis sobrenaturais
+- Definir nome do reino anão.
+- Definir relação entre Gharok e o reino anão atual.

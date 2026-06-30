@@ -1,12 +1,15 @@
 ---
+obsidianUIMode: preview
+NoteIcon: race
+NoteStatus: Draft
 type: race
 status: Rascunho
+campaign_status: Em revisão
 visibility: Mestre
 spoiler_level: medium
 gm_secret: true
 revealed_in:
 created_by: Sage
-campaign_status: Em revisao
 
 name:
 aliases: []
@@ -38,9 +41,20 @@ Resumo próprio, sem reprodução literal de livro.
 
 Onde esta raça aparece, como é vista e quais vínculos culturais existem.
 
-## Mecânica resumida
+## Cultura e Relações
+
+## Mecânica Resumida
 
 Anotações próprias e curtas para uso na campanha.
+
+## Personagens Relacionados
+
+```dataview
+TABLE thumbnail, class, status, location, faction
+FROM "Characters"
+WHERE race = this.file.link OR race = this.file.name
+SORT file.name ASC
+```
 
 ## Ganchos
 
@@ -58,4 +72,6 @@ SORT file.mtime DESC
 - O que apenas o mestre sabe:
 - Como entra em cena:
 - Ganchos:
-- Consequ?ncias poss?veis:
+- Consequências possíveis:
+
+## Pendências do Sage

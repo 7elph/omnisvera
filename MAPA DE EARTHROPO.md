@@ -4,11 +4,16 @@ height: 2879
 scale: 500
 distance: 2746
 NoteIcon: none
+NoteStatus: Active
+obsidianUIMode: preview
 cover: zz_media/earthropo.png
 Community-Size: Continental
 Alignment:
 Government: Diversos
-type: Continent
+type: map
+map_scope: continent
+status: Ativo
+campaign_status: Ativo
 politics: Diversos reinos
 region:
   - Earthropo
@@ -17,7 +22,7 @@ population:
 religion:
 exports:
 imports:
-visibility: Mestre
+visibility: Jogadores
 spoiler_level: light
 gm_secret: false
 tags:
@@ -28,6 +33,10 @@ tags:
 ---
 
 # MAPA DE EARTHROPO
+
+Mapa oficial do continente de [[EARTHROPO/EARTHROPO|Earthropo]].
+
+Esta camada mostra a escala continental. Fronteiras finas, reinos futuros e coordenadas exatas ainda podem ser refinados.
 
 ```leaflet
 id: earthropo-map
@@ -85,8 +94,9 @@ As coordenadas podem ser refinadas sem alterar o cânone. Consulte [[Workflow/GE
 
 ## Mapas relacionados
 
+- [[MAPA DE EARTHROPO]] representa o continente.
+- [[MAPA DE NIMALIA]] representa o reino em foco.
 - [[MAPA DE NIMALIS]] representa a capital.
-- [[MAPA DE NIMALIA]] representa a camada do reino.
 
 ## HELP:
 

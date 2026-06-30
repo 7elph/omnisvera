@@ -14,9 +14,8 @@ cssclasses:
   - character/Varkh Nimalis
   - character/Mestre Odran Veyl
 tags:
-  - chapter
   - story
-  - chapter00
+  - bside
   - origin-story
   - origin-varkh
   - earthropo
@@ -35,7 +34,7 @@ cover: "[[zz_media/banner-o-corvo-da-mare-baixa.png]]"
 description: A história de Varkh Nimalis, o Corvo da Maré Baixa, desde sua infância nos becos portuários de Nimalis até seu aprendizado como alquimista de rua e a descoberta de que alguém está usando o nome de seu mestre para espalhar remédios falsos pelo reino.
 ---
 
-# Capítulo 00
+# B-Side: O Corvo da Maré Baixa
 
 #### _Crônicas de Earthropo_
 

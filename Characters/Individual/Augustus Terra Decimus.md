@@ -3,19 +3,21 @@ obsidianUIMode: preview
 NoteIcon: magicitem
 NoteStatus: New
 type: character
+status: Vivo
+campaign_status: Ativo
 visibility: Mestre
 spoiler_level: heavy
 gm_secret: true
-campaign_status: Ativo
 thumbnail: zz_media/th_dukeofd.png
+cover: zz_media/dukeofd.png
 religion: "[[Igreja das Chamas]]"
-status: Vivo
-location: "[[Nimalia]]"
+location: "[[Nimalis]]"
 territory: "[[Nimalia]]"
 faction: "[[Coroa de Nimalia]]"
 class: Paladino
 race: Antropo
-role: "Rei soberano de [[Nimalia]]"
+role: npc
+function: "Rei soberano de [[Nimalia]]"
 chapter:
   - 01 - Ecos do Mundo Perdido
 chapters:
@@ -23,15 +25,16 @@ chapters:
 tags:
   - coroa
   - character
+  - personagem
+  - npc
   - paladin
   - antropo
-  - antagonist
   - chapter01
   - nimalia
   - earthropo
+  - coroa-de-nimalia
+  - nobreza-de-nimalia
   - Category/Character
-  - personagem
-  - npc
 ---
 
 # AUGUSTUS TERRA DECIMUS
@@ -39,7 +42,11 @@ tags:
 > [!NOTE|clean no-i right]+ Augustus Terra Decimus
 > ![[dukeofd.png|400]]
 
+> [!NOTE]- Template aplicado
+> Esta nota segue o formato **NPC Importante**. Informações confidenciais devem ficar no [[CAMPANHA/ESTADO_DA_CAMPANHA|Estado da Campanha]].
+
 ## Visão Geral
+
 **Títulos:** Rei soberano de Nimalia
 **Apelido:**
 **Reputação:** Monarca com pulso de ferro
@@ -70,7 +77,12 @@ SORT file.name ASC
 
 ---
 
+## Situação Atual
+
+_Pendente de consolidação pelo Sage._
+
 ## Personalidade
+
 **Temperamento:**  
 
 
@@ -86,30 +98,31 @@ SORT file.name ASC
 
  **Beliefs:**  
 
-
-## Papel na Campanha
-
-## Atualidade
-
-_Pendente de consolidação pelo Sage._
-
 ## Relações
 
 _Pendente de consolidação pelo Sage._
 
-## Habilidades
+## Função Narrativa
 
-_Pendente de consolidação pelo Sage._
+- Em desenvolvimento.
 
 ## Segredos
 
-_Pendente de revisão do Mestre._
+- Informações confidenciais ficam centralizadas em [[CAMPANHA/ESTADO_DA_CAMPANHA|Estado da Campanha]].
 
-## Equipamentos
+## Aparência
 
 _Pendente de consolidação pelo Sage._
 
-## Aparência
+## Papel na Campanha
+
+- Em desenvolvimento.
+
+## Pendências do Sage
+
+- Revisar e completar campos em aberto.
+
+## Links relevantes
 
 _Pendente de consolidação pelo Sage._
 
@@ -122,10 +135,10 @@ _Pendente de consolidação pelo Sage._
 - Ganchos:
 - Consequências possíveis:
 
-## Pendências do Sage
 
-- Revisar e completar campos em aberto.
+## Equipamentos
+_Pendente de consolidação pelo Sage._
 
-## Links relevantes
+## Capacidades narrativas
 
 _Pendente de consolidação pelo Sage._

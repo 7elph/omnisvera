@@ -25,14 +25,19 @@ chapters:
 tags:
   - player
   - character
+  - personagem
+  - jogador
   - chapter00_varkh
+  - bside
+  - origin-story
+  - origin-varkh
   - alchemist
   - alquimista
   - kenku
+  - conclave-dos-errantes
+  - nimalia
   - earthropo
   - Category/Character
-  - personagem
-  - jogador
 ---
 
 # VARKH NIMALIS — O CORVO DA MARÉ BAIXA
@@ -40,7 +45,11 @@ tags:
 > [!NOTE|clean no-i right]+ Varkh Nimalis
 > ![[varkh.jpeg|400]]
 
+> [!NOTE]- Template aplicado
+> Esta nota segue o formato **Personagem Jogador**. Informações confidenciais devem ficar no [[CAMPANHA/ESTADO_DA_CAMPANHA|Estado da Campanha]].
+
 ## Visão Geral
+
 **Títulos:** O Corvo da Maré Baixa
 **Apelido:** O Corvo
 **Localização Atual:** Em viagem pelo Reino de [[Nimalia]]
@@ -73,6 +82,14 @@ WHERE contains(this.chapters, file.name)
 SORT file.name ASC
 ```
 
+## O que os jogadores sabem
+
+- Ver a Visão Geral, História e Situação Atual desta nota.
+
+## O que só o mestre sabe
+
+- Informações confidenciais ficam centralizadas em [[CAMPANHA/ESTADO_DA_CAMPANHA|Estado da Campanha]].
+
 ## História
 
 > <h4>"Alquimia não é transformar chumbo em ouro. É transformar problema em saída."</h4>
@@ -86,8 +103,7 @@ Curioso e atento a tudo que os outros descartavam, Varkh colecionava frascos rac
 
 ---
 
-## O Corvo que Não Sabia Voar
-
+### O Corvo que Não Sabia Voar
 Em [[Nimalia]], os antropos são maioria. Em Maré Baixa, Varkh não era desprezado simplesmente por ser quem é. O problema era ser corvo.
 
 Corvos lembravam mau presságio, carniça, doença, segredo e morte. Às vezes, ser temido evitava confusão. Em outras partes de Nimalia, porém, Varkh percebia olhares desconfiados.
@@ -96,8 +112,7 @@ Ele transformou essa reputação em ferramenta. Se as pessoas esperavam que foss
 
 ---
 
-## O Frasco Afogado
-
+### O Frasco Afogado
 Sua vida mudou quando tentou roubar uma caixa de [[Mestre Odran Veyl]], um velho antropo abutre proprietário d'O Frasco Afogado.
 
 Em vez de chamar a guarda, Odran propôs que Varkh aprendesse algo útil toda vez que fosse pego. O roubo se transformou em aprendizado.
@@ -108,8 +123,7 @@ Odran também transmitiu parte de seu código moral. Não aceitava covardia, nã
 
 ---
 
-## O Lado Assassino
-
+### O Lado Assassino
 Odran percebeu que Varkh era leve, rápido, preciso e atento às rotas de fuga. Não o treinou para a crueldade, mas para sobreviver.
 
 Varkh aprendeu a usar adagas, espada curta e arco curto. Também transformou sua alquimia em ferramenta de combate, infiltração, falsificação e fuga.
@@ -120,8 +134,7 @@ A verdade permanece menos simples: Varkh aceita serviços. Às vezes rouba docum
 
 ---
 
-## A Máscara de Médico da Peste
-
+### A Máscara de Médico da Peste
 A máscara, o capuz, os frascos no cinto e o couro escuro vieram dos equipamentos de Odran. Varkh adaptou tudo ao próprio corpo.
 
 Seu bico natural se mistura ao formato da máscara e suas penas negras se confundem com o manto. A figura causa medo suficiente para abrir caminho durante surtos, quarentenas e noites perigosas.
@@ -130,7 +143,7 @@ Para quem o conhece, porém, a máscara não esconde tudo. Varkh possui um humor
 
 ---
 
-## Atualidade
+## Situação Atual
 
 Remédios falsos começaram a circular em Nimalia usando o símbolo e os métodos de Odran. Pessoas compram cura e recebem veneno. Documentos surgem com assinaturas perfeitas demais, e guardas passaram a procurar por “um corvo alquimista”.
 
@@ -163,38 +176,11 @@ Tudo possui algum valor. Problemas podem ser transformados em saídas, e ainda e
 
 ---
 
-## Habilidades
+## Relações
 
-**Alquimia de Rua:**
-Prepara poções, venenos, fumos e ácidos com ingredientes improvisados.
+_Pendente de consolidação pelo Sage._
 
-**Mimetismo:**
-Reproduz vozes e sons, usando falas emprestadas para comunicar-se, distrair e enganar.
-
-**Furtividade:**
-Move-se silenciosamente por telhados, becos e ambientes urbanos.
-
-**Falsificação:**
-Altera documentos e reproduz marcas usando tintas, solventes e ácidos.
-
-**Conhecimento das Ruas:**
-Conhece o porto, Maré Baixa e parte do submundo da capital de Nimalia.
-
----
-
-## Segredos
-
-- A identidade de quem está usando os métodos de Odran ainda é desconhecida.
-
-- O envolvimento de Odran com as falsificações, caso exista, ainda não foi definido.
-
-- A extensão real da fama de Varkh como assassino pode ser maior ou menor do que os rumores indicam.
-
-- A classe mecânica definitiva de Varkh ainda precisa ser reconciliada com a ficha sem nome recebida do jogador.
-
----
-
-## Equipamentos
+## Equipamentos importantes
 
 ### Espada Curta
 
@@ -222,24 +208,33 @@ Coleção de frases, timbres e sons que Varkh considera úteis ou interessantes.
 
 ---
 
-## Aparência
+Os equipamentos de Varkh ainda não possuem notas individuais no vault. Quando forem transformados em itens próprios, esta seção poderá receber a mesma consulta de cartões usada na ficha de Vezemir.
 
-Varkh é um kenku corvo de porte médio, com penas negras de reflexos azulados e olhos escuros e atentos. Usa manto escuro de médico da peste, máscara de bico, frascos presos ao cinto e um cachecol vermelho desbotado.
+## Capacidades narrativas
 
-De longe, parece uma sombra com olhos. De perto, parece alguém que sabe exatamente onde cortar para não precisar cortar duas vezes.
+**Alquimia de Rua:**
+Prepara poções, venenos, fumos e ácidos com ingredientes improvisados.
+
+**Mimetismo:**
+Reproduz vozes e sons, usando falas emprestadas para comunicar-se, distrair e enganar.
+
+**Furtividade:**
+Move-se silenciosamente por telhados, becos e ambientes urbanos.
+
+**Falsificação:**
+Altera documentos e reproduz marcas usando tintas, solventes e ácidos.
+
+**Conhecimento das Ruas:**
+Conhece o porto, Maré Baixa e parte do submundo da capital de Nimalia.
 
 ---
 
-## Armas e Equipamento
-
-Os equipamentos de Varkh ainda não possuem notas individuais no vault. Quando forem transformados em itens próprios, esta seção poderá receber a mesma consulta de cartões usada na ficha de Vezemir.
-
-## Ficha Mecânica — Nível 1
+## Mecânicas confirmadas
 
 > [!warning] Reconciliação pendente
 > A ficha sem nome atribuída provisoriamente a Varkh usa um modelo antigo, enquanto sua história o define como ladrão e alquimista de rua. Nenhum valor mecânico será substituído até confirmação com o jogador.
 
-### Armas e carga
+#### Armas e carga
 
 - Espada curta.
 - Duas adagas.
@@ -248,20 +243,36 @@ Os equipamentos de Varkh ainda não possuem notas individuais no vault. Quando f
 - Cinto de frascos e utensílios alquímicos.
 - Caderninho de vozes.
 
-### Idiomas
+#### Idiomas
 
 - A definir com o jogador.
 - O mimetismo kenku permanece uma característica narrativa até receber uma regra aprovada.
 
-### Habilidades especiais
+#### Habilidades especiais
 
 - Alquimia de rua, Kenku e seus demais traços mecânicos permanecem como regras autorais pendentes.
 
-## Relações
+## Mecânicas pendentes
+
+- Nenhuma mecânica pendente registrada nesta nota.
+
+## Aparência
+
+Varkh é um kenku corvo de porte médio, com penas negras de reflexos azulados e olhos escuros e atentos. Usa manto escuro de médico da peste, máscara de bico, frascos presos ao cinto e um cachecol vermelho desbotado.
+
+De longe, parece uma sombra com olhos. De perto, parece alguém que sabe exatamente onde cortar para não precisar cortar duas vezes.
+
+---
+
+## Papel na Campanha
 
 _Pendente de consolidação pelo Sage._
 
-## Papel na Campanha
+## Pendências do Sage
+
+- Revisar e completar campos em aberto.
+
+## Links relevantes
 
 _Pendente de consolidação pelo Sage._
 
@@ -273,11 +284,3 @@ _Pendente de consolidação pelo Sage._
 - Como entra em cena:
 - Ganchos:
 - Consequências possíveis:
-
-## Pendências do Sage
-
-- Revisar e completar campos em aberto.
-
-## Links relevantes
-
-_Pendente de consolidação pelo Sage._

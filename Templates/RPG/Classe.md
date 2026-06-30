@@ -1,8 +1,11 @@
 ---
+obsidianUIMode: preview
+NoteIcon: class
+NoteStatus: Draft
 type: class
 status: Rascunho
 rules_status:
-campaign_status: Em revisao
+campaign_status: Em revisão
 visibility: Mestre
 spoiler_level: medium
 gm_secret: true
@@ -38,12 +41,14 @@ Resumo próprio para campanha, sem reprodução literal de regras.
 
 ## Notas de Mecânica
 
-## Personagens relacionados
+Não copiar progressões, poderes completos ou textos longos de livro. Registrar apenas decisões de mesa e resumo próprio.
+
+## Personagens Relacionados
 
 ```dataview
 TABLE thumbnail, race, status, location, faction
 FROM "Characters"
-WHERE class = this.file.link
+WHERE class = this.file.link OR class = this.file.name
 SORT file.name ASC
 ```
 
@@ -54,4 +59,6 @@ SORT file.name ASC
 - O que apenas o mestre sabe:
 - Como entra em cena:
 - Ganchos:
-- Consequ?ncias poss?veis:
+- Consequências possíveis:
+
+## Pendências do Sage

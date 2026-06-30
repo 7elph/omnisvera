@@ -159,8 +159,8 @@ Classificações permitidas para notas atuais com esses nomes:
 
 | categoria | criar agora? | pasta operacional inicial |
 |---|---:|---|
-| Raças | sim | `Rules/Races` |
-| Classes | sim | `Rules/Classes` |
+| Raças | sim | `Races` |
+| Classes | sim | `Classes` |
 | Magias | sim | `Rules/Spells` |
 | Itens | sim | `Items` |
 | Monstros | sim | `Bestiary` |

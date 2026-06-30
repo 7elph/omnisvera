@@ -1,14 +1,16 @@
 ---
+obsidianUIMode: preview
+NoteIcon: quest
+NoteStatus: Draft
 type: quest
 status: Rascunho
 quest_status: Aberta
-campaign_status: Em revisao
-visibility: Mestre
-spoiler_level: heavy
-gm_secret: true
+campaign_status: Em revisão
+visibility: Jogadores
+spoiler_level: light
+gm_secret: false
 revealed_in:
 created_by: Sage
-
 name:
 location:
 territory:
@@ -17,25 +19,36 @@ danger_level:
 hooks: []
 rumors: []
 chapters: []
-
 thumbnail:
 cover:
-
 tags:
   - quest
 ---
 
 # Nome da Quest
 
-## Gancho
+## Gancho Público
 
-## Objetivo
+O que os personagens ouvem, veem ou recebem como chamado inicial.
 
-## Envolvidos
+## Objetivo Conhecido
 
-## Pistas
+O que parece ser o objetivo da quest do ponto de vista dos jogadores.
 
-## Consequências
+## Locais Relacionados
+
+## Envolvidos Conhecidos
+
+## Pistas Públicas
+
+## Rumores Relacionados
+
+```dataview
+TABLE status, visibility, location
+FROM "CAMPANHA/Rumors"
+WHERE contains(hooks, this.file.link) OR contains(rumors, this.file.link)
+SORT file.name ASC
+```
 
 ## Estado
 
@@ -43,6 +56,11 @@ tags:
 
 - Como os jogadores descobrem:
 - Objetivo claro:
-- Complica??o:
+- Complicação:
 - Recompensa:
-- Consequ?ncia se ignorada:
+- Consequência se ignorada:
+
+## Pendências do Sage
+
+- Completar apenas com informações que podem aparecer para jogadores.
+- Bastidores, verdades secretas e consequências ocultas devem ficar em [[ESTADO_DA_CAMPANHA]].

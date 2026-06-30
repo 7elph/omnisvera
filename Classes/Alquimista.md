@@ -1,14 +1,31 @@
 ---
+obsidianUIMode: preview
 NoteIcon: class
 NoteStatus: Draft
+type: class
 status: Regra opcional
-ruleset: Old Dragon anterior - suplemento independente
+rules_status: Suplemento / adaptação de mesa
+campaign_status: Em revisão
+visibility: Jogadores
+spoiler_level: light
+gm_secret: false
+created_by: Sage
+name: Alquimista
+aliases: []
+system: Old Dragon / adaptação de mesa
+class_group: Especialista
+primary_attribute: Inteligência
+level:
+danger_level: Médio
+thumbnail: zz_media/alquimista.png
 cover: zz_media/alquimista.png
+chapters:
+  - 00 - O Corvo da Maré Baixa
 tags:
-  - Category/Class
   - classe
-  - alchemist
-  - optional-rule
+  - alquimista
+  - regra-opcional
+  - varkh
 ---
 
 # Alquimista
@@ -16,50 +33,52 @@ tags:
 > [!NOTE|clean no-i right]+ Retrato
 > ![[alquimista.png|400]]
 
-Classe opcional apresentada no suplemento independente **Expansão de Classes**, de Caio Mouriz.
+## Visão Geral
 
-> [!warning] Compatibilidade
-> O suplemento declara compatibilidade com Old Dragon, mas usa a estrutura da edição anterior e não é material oficial de Old Dragon 2ª Edição. No Omnisvera, [[Varkh Nimalis]] usa **Alquimista** como classe operacional aprovada pelo Sage. Consulte [[Workflow/RULES_SOURCES|Fontes de Regras da Campanha]].
+Alquimista é a classe usada como referência operacional para [[Varkh Nimalis]], focada em preparo, experimentação, remédios, venenos, reagentes, improviso e conhecimento prático.
 
-## Conceito
+Esta nota é um resumo próprio de campanha. A base exata vem de material complementar consultado pelo mestre e deve ser adaptada com cuidado para Omnisvera.
 
-O alquimista combina estudo, preparação de poções e círculos de transmutação. Inteligência, planejamento e acesso a ingredientes são mais importantes que combate direto.
+## Papel no Grupo
 
-## Estrutura básica
+- Preparar soluções antes da cena.
+- Improvisar recursos químicos.
+- Investigar substâncias, remédios e venenos.
+- Criar ferramentas narrativas com ingredientes, frascos e conhecimento de rua.
 
-- **Dado de Vida:** d6.
-- **Armaduras:** couro e escudo pequeno; proteções mais pesadas impedem o uso da alquimia.
-- **Armas:** pequenas e de ataque à distância.
-- **Itens mágicos:** pode identificá-los, mas seu uso depende das restrições da mesa.
-- **Recurso principal:** Pontos Alquímicos.
-- **Nível 1 no suplemento:** 5 Pontos Alquímicos e acesso a um círculo pequeno de 1º nível.
+## Papel no Mundo
 
-## Recursos de classe
+Alquimistas podem ser curandeiros, falsificadores, boticários, estudiosos, criminosos, artesãos de bombas, médicos de rua ou pesquisadores de substâncias raras.
 
-### Tomo Alquímico
+Em Omnisvera, a alquimia de Varkh é mais de rua do que acadêmica.
 
-Registra receitas, experiências, círculos e descobertas. Um alquimista pode aprender com o tomo de outro praticante.
+## Notas de Mecânica
 
-### Preparação de poções
+- Não copiar regras integrais do suplemento para o vault.
+- Usar apenas decisões de mesa, resumo próprio e limites definidos pelo mestre.
+- Diferenciar alquimia de rua de magia arcana.
+- Remédios falsos, venenos e filtros devem ser tratados como ganchos de campanha, não como lista livre de efeitos.
 
-Poções são preparadas antecipadamente a partir de receitas ou pela análise de exemplares existentes. Ingredientes, tempo e testes dependem da complexidade.
+## Personagens Relacionados
 
-### Círculos de Transmutação
+```dataview
+TABLE thumbnail, race, status, location, faction
+FROM "Characters"
+WHERE class = "Alquimista" OR class = this.file.link
+SORT file.name ASC
+```
 
-Permitem criar, reparar, transformar ou destruir matéria mediante gasto de Pontos Alquímicos. Círculos pequenos, médios e grandes possuem custos e efeitos progressivamente maiores.
+## Uso em Mesa
 
-### Homúnculo
+- Como apresentar: frascos, cheiros fortes, improviso, risco, ingredientes ruins e soluções inesperadas.
+- O que os jogadores sabem: Varkh usa alquimia como ferramenta prática.
+- O que apenas o mestre sabe: limites, fórmulas raras e consequências de uso perigoso.
+- Como entra em cena: investigação de remédios, preparo antes da missão, explosões pequenas, antídotos e truques.
+- Ganchos: [[O Frasco Afogado]], [[Remédios Falsos de Maré Baixa]], ingredientes raros e reputação de Odran.
 
-A partir do 4º nível, o suplemento permite criar um homúnculo ligado ao alquimista.
+## Pendências do Sage
 
-## Especializações
-
-A partir do 5º nível:
-
-- **Doutor:** medicina, cura e tratamento de doenças.
-- **Mestre de Poções:** poções, bombas, fumaças e resistência a venenos.
-- **Especialista em Transmutação:** manipulação direta da matéria e ampliação dos círculos.
-
-## Uso em Omnisvera
-
-A alquimia de rua de [[Varkh Nimalis]] usa esta classe como referência operacional. Ajustes finos de progressão, pontos alquímicos e limites em mesa devem ser decididos pelo mestre para manter compatibilidade com Old Dragon 2E e com o tom da campanha.
+- Confirmar progressão mecânica da classe.
+- Definir recursos por nível.
+- Definir limites de preparo durante sessão.
+- Definir como alquimia interage com magia, veneno e medicina.

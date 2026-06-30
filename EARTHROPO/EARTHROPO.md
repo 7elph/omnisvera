@@ -40,7 +40,7 @@ tags:
 </div>
 
 > [!infobox]
-> **CRÔNICAS DE ORIGEM**
+> **CRÔNICAS DE ORIGEM / B-SIDES**
 > ---
 > ```datacards
 > TABLE cover, status, description FROM #origin-vezemir
@@ -86,6 +86,8 @@ tags:
 > TABLE cover, status, campaign_status, description
 > FROM "EARTHROPO"
 > WHERE contains(tags, "chapter")
+> AND !contains(tags, "origin-story")
+> AND !contains(tags, "bside")
 > SORT file.name ASC
 >
 > // Settings

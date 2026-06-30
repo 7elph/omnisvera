@@ -53,7 +53,7 @@ Busca por campos rejeitados nos templates ativos não encontrou recomendações 
 | grupo | status | observação |
 |---|---|---|
 | `Templates/Characters` | alinhado | Usa `thumbnail`, `cover`, `chapters`, `visibility`, `spoiler_level`, `gm_secret`, `campaign_status`. |
-| `Templates/Classes` | alinhado | Usa `Rules/Classes` como destino operacional novo. |
+| `Templates/Classes` | alinhado | Usa `Classes` como destino operacional oficial. |
 | `Templates/RPG` | alinhado | Templates de raça, classe, magia, item, monstro, quest e rumor seguem a taxonomia atual. |
 
 ## Pendências

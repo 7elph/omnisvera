@@ -3,53 +3,57 @@ obsidianUIMode: preview
 NoteIcon: lore
 NoteStatus: Draft
 type: lore
-cover: zz_media/sangue.png
 status: Em desenvolvimento
+campaign_status: Rascunho
 visibility: Mestre
 spoiler_level: heavy
 gm_secret: true
 created_by: IA
+thumbnail: zz_media/sangue.png
+cover: zz_media/sangue.png
+chapters:
+  - 00 - As Crônicas de Névoa de Sangue
 tags:
-  - Category/Lore
   - lore
   - sangue-antigo
   - raziel
   - vampiro
+  - sanguinallis
 ---
 
 # Sangue Antigo
 
 > [!WARNING] Estado canônico
-> Esta nota está em desenvolvimento e depende de confirmação do Sage.
+> Esta nota está em desenvolvimento e depende de confirmação do Sage. Ela contém spoilers fortes da origem de [[Raziel]].
 
-## Resumo
+> [!NOTE|clean no-i right]+ Retrato
+> ![[sangue.png|400]]
 
-Fluido espesso concedido pelo [[Ancião Primordial]] a [[Raziel]] nas cavernas abissais sob as [[Ruínas de Valthor]]. Transformou a hemomancia de Raziel e restaurou seu corpo após trezentos anos de tormento.
+## Visão Geral
 
-## Função narrativa
+O Sangue Antigo é uma substância misteriosa ligada ao [[Ancião Primordial]] e ao renascimento de [[Raziel]] nas cavernas abissais sob as [[Ruínas de Valthor]].
 
-O Sangue Antigo é o elemento que permitiu o renascimento de Raziel. É uma substância misteriosa ligada ao Ancião Primordial que amplificou os poderes de Raziel e lhe concedeu novas capacidades como as Asas Escarlates.
+Na versão atual da lore, ele transforma a hemomancia de Raziel e justifica manifestações como regeneração dramática, plasma sólido e asas escarlates.
 
-## Relações conhecidas
+## Função Narrativa
 
-- [[Raziel]] - Vampiro que foi alimentado e transformado pelo Sangue Antigo
-- [[Ancião Primordial]] - Entidade que concedeu o Sangue Antigo
-- [[Ruínas de Valthor]] - Local das cavernas abissais onde o Sangue Antigo foi concedido
-- [[Clã Sanguinallis]] - Facção ligada ao tipo de vampiro que Raziel é
-- [[Vampiro Sanguinallis]] - Tipo de vampiro ligado ao Sangue Antigo
+O Sangue Antigo é o elemento que permitiu o retorno de Raziel após séculos de tormento. Ele também separa o vampirismo comum daquilo que Raziel se tornou depois do encontro com o Ancião.
 
-## O que está confirmado
+## Relações Conhecidas
 
-- É um fluido espesso
-- Foi concedido pelo Ancião Primordial a Raziel
-- Ferveu nas veias secas de Raziel
-- Causou uma regeneração violenta
-- Transformou a hemomancia de Raziel
-- Permitiu que Raziel tratasse o sangue como extensão da própria alma
-- Permitiu que Raziel solidificasse o plasma em armas
-- Permitiu que Raziel criasse Asas Escarlates
-- É descrito como "sangue da nova era é fraco e diluído, mas o teu foi refinado pelo ódio perfeito"
-- Está ligado ao poder do Ancião Primordial
+- [[Raziel]] — vampiro transformado pelo Sangue Antigo.
+- [[Ancião Primordial]] — entidade associada à concessão do Sangue Antigo.
+- [[Ruínas de Valthor]] — local das cavernas abissais ligadas ao renascimento.
+- [[Clã Sanguinallis]] — facção vampírica de origem de Raziel.
+- [[Vampiro Sanguinallis]] — referência de linhagem vampírica ligada ao tema.
+
+## O que Está Confirmado
+
+- É tratado como fluido espesso e ancestral.
+- Está ligado ao renascimento de Raziel.
+- Alterou ou amplificou a hemomancia de Raziel.
+- Permite justificar efeitos narrativos de sangue, plasma e regeneração.
+- Não deve substituir automaticamente a classe [[Vampiro]].
 
 ## Mecânica de Mesa — Rascunho
 
@@ -65,7 +69,7 @@ O Sangue Antigo representa uma reserva instável de poder vampírico ancestral. 
 - **Não é magia comum:** interage com magia, mas não deve ser tratado como simples magia arcana.
 - **Não é ilimitado:** o mestre decide quando o sangue responde, falha ou exige algo em troca.
 
-### Usos possíveis
+### Usos Possíveis
 
 | Uso | Efeito narrativo | Custo sugerido |
 |---|---|---|
@@ -75,29 +79,37 @@ O Sangue Antigo representa uma reserva instável de poder vampírico ancestral. 
 | Asas escarlates | Deslocamento dramático, queda controlada ou cena de revelação | Uso raro, sempre com consequência |
 | Eco ancestral | Sentir vestígios de sangue, morte ou linhagem | Visões fragmentadas e risco de confundir memória com verdade |
 
-### Limites iniciais
+### Limites Iniciais
 
 - No nível 1, usar como recurso narrativo controlado pelo mestre, não como lista livre de poderes.
 - Não permitir solução automática para todo combate, obstáculo ou investigação.
 - Separar habilidades da classe [[Vampiro]] daquilo que vem especificamente do [[Sangue Antigo]].
 - Consequências devem aumentar quando Raziel usa o poder em público.
 
-## Pendente de confirmação do Sage
+## Uso em Mesa
 
-- Origem e natureza verdadeira do Sangue Antigo
-- Relação com o Ancião Primordial
-- Se o Sangue Antigo é exclusivo do Ancião ou existe em outros lugares
-- Relação com o Véu Cinzento e os Criadores
-- Se o Sangue Antigo é o mesmo sangue do Clã Sanguinallis ou algo diferente
-- Efeitos de longo prazo em Raziel
-- Custo ou consequências de usar o Sangue Antigo
-- Se o Sangue Antigo pode ser usado por outros
-- Relação com a regeneração vampírica normal
-- Se o Sangue Antigo tem propriedades além da transformação de hemomancia
+- Como apresentar: marcas físicas, fome, instabilidade, sonhos, reações a sangue e manifestações visuais.
+- O que os jogadores sabem: deve depender do quanto Raziel revelar em jogo.
+- O que apenas o mestre sabe: origem, custo real e consequências de longo prazo.
+- Como entra em cena: momentos de risco extremo, tentação, trauma ou contato com ruínas/entidades antigas.
 
-## Links relevantes
+## Pendências do Sage
+
+- Origem e natureza verdadeira do Sangue Antigo.
+- Relação com o [[Ancião Primordial]].
+- Se o Sangue Antigo é exclusivo do Ancião ou existe em outros lugares.
+- Relação com o [[Véu Cinzento]] e os [[Criadores]].
+- Se o Sangue Antigo é o mesmo sangue do [[Clã Sanguinallis]] ou algo diferente.
+- Efeitos de longo prazo em Raziel.
+- Custo ou consequências de usar o Sangue Antigo.
+- Se o Sangue Antigo pode ser usado por outros.
+- Relação com a regeneração vampírica normal.
+- Se o Sangue Antigo tem propriedades além da transformação de hemomancia.
+
+## Links Relevantes
 
 - [[Characters/Individual/Raziel]]
-- [[Lore/Ancião Primordial]]
+- [[Ancião Primordial]]
 - [[Locations/Ruínas de Valthor]]
 - [[Factions/Clã Sanguinallis]]
+- [[Vampiro Sanguinallis]]

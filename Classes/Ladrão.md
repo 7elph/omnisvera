@@ -1,15 +1,30 @@
 ---
+obsidianUIMode: preview
 NoteIcon: class
 NoteStatus: Active
-tags:
-  - Category/Class
-  - classe
-  - thief
-  - old-dragon-2
+type: class
+status: Ativa
+rules_status: Oficial / consulta externa
+campaign_status: Ativa
+visibility: Jogadores
+spoiler_level: none
+gm_secret: false
+created_by: Sage
+name: Ladrão
+aliases:
+  - Ladino
+system: Old Dragon 2E
+class_group: Especialista
+primary_attribute: Destreza
+level:
+danger_level: Baixo
+thumbnail: zz_media/ladrao.png
 cover: zz_media/ladrao.png
-status: Active
-ruleset: Old Dragon 2E
-source: https://olddragon.com.br/classes/ladrao
+chapters: []
+tags:
+  - classe
+  - ladrao
+  - old-dragon
 ---
 
 # Ladrão
@@ -17,66 +32,47 @@ source: https://olddragon.com.br/classes/ladrao
 > [!NOTE|clean no-i right]+ Retrato
 > ![[ladrao.png|400]]
 
-O Ladrão é a classe-base de exploração, infiltração e ataques oportunistas de Old Dragon 2. Esta nota resume o necessário para consulta; a progressão completa está na [página oficial](https://olddragon.com.br/classes/ladrao).
+## Visão Geral
 
-> [!info] Fonte
-> **Livro I: Regras Básicas**, página 36, e **SRD oficial**. Consulte também [[Workflow/RULES_SOURCES|Fontes de Regras da Campanha]].
+Ladrão é a classe de exploração, furtividade, arrombamento, percepção de risco, infiltração e ataques oportunistas.
 
-## Referência de nível 1
+Esta nota é um resumo próprio de campanha. Para regra completa, progressão e detalhes oficiais, consultar o material original de Old Dragon 2E usado pelo mestre.
 
-| Campo | Valor |
-|:--|--:|
-| Pontos de Vida | 6 |
-| Base de Ataque | 1 |
-| Jogada de Proteção | 5 |
+## Papel no Grupo
 
-## Restrições
+- Explorar lugares perigosos.
+- Lidar com armadilhas, fechaduras e infiltração.
+- Obter vantagem por astúcia, posicionamento e oportunismo.
+- Resolver problemas sem confronto direto.
 
-- **Armas:** pequenas e médias; armas Grandes geram ataques difíceis.
-- **Armaduras:** apenas leves.
-- Escudos e armaduras médias ou pesadas impedem os talentos da classe e fornecem somente metade da CA normal.
-- **Itens mágicos:** não usa cajados, varinhas ou pergaminhos mágicos, exceto pergaminhos de proteção.
+## Papel no Mundo
 
-## Habilidades
+Ladrões podem ser criminosos, espiões, batedores, caçadores de tesouro, sobreviventes urbanos, contrabandistas ou agentes de guildas.
 
-### Ataque Furtivo
+## Notas de Mecânica
 
-Quando ataca após aproximar-se furtivamente, o Ladrão realiza um ataque muito fácil e multiplica o dano:
+- Usar as regras oficiais de Ladrão do sistema escolhido pelo mestre.
+- [[Varkh Nimalis]] possui identidade narrativa próxima de ladrão, mas sua classe operacional atual é [[Alquimista]].
+- [[Raziel]] não usa mais Ladrão como classe operacional; sua classe atual é [[Vampiro]].
 
-| Nível | Multiplicador |
-|:--|--:|
-| 1º | ×2 |
-| 6º | ×3 |
-| 10º | ×4 |
+## Personagens Relacionados
 
-### Ouvir Ruídos
+```dataview
+TABLE thumbnail, race, status, location, faction
+FROM "Characters"
+WHERE class = "Ladrão" OR class = "Ladrao" OR class = this.file.link
+SORT file.name ASC
+```
 
-Fora de combate e em ambiente silencioso, pode detectar conversas, aproximações e outros sons discretos.
+## Uso em Mesa
 
-| Nível | Chance |
-|:--|:--|
-| 1º | 1–2 em 1d6 |
-| 3º | 1–3 em 1d6 |
-| 6º | 1–4 em 1d6 |
-| 10º | 1–5 em 1d6 |
+- Como apresentar: mão rápida, ouvido atento, sombra, tranca aberta ou plano improvisado.
+- O que os jogadores sabem: Ladrões resolvem riscos de exploração e infiltração.
+- O que apenas o mestre sabe: vínculos criminais e contatos ocultos.
+- Como entra em cena: dungeons, cidades, infiltração, fuga, golpe e investigação.
+- Ganchos: guildas, dívida, segredo, item roubado, máscara social.
 
-### Talentos de Ladrão
+## Pendências do Sage
 
-Começa com 2 pontos em cada talento e mais 2 pontos para distribuir. Recebe outros 2 pontos nos níveis 3, 6 e 10.
-
-- **Armadilha:** detectar e desarmar armadilhas.
-- **Arrombar:** abrir fechaduras e trancas sem destruí-las.
-- **Escalar:** vencer superfícies difíceis sem cordas.
-- **Furtividade:** esconder-se imóvel nas sombras.
-- **Punga:** furtar objetos pequenos e executar prestidigitação.
-
-A resolução completa dos testes deve seguir o Livro I ou o SRD.
-
-### Reputação — 11º nível
-
-Começa com Reputação 1 em 1d6 e progride até 1–5 em 1d6 no 15º nível.
-
-## Uso em Omnisvera
-
-- [[Varkh Nimalis]] possui Ladrão como identidade narrativa, mas sua ficha mecânica definitiva ainda precisa ser confirmada.
-- [[Raziel]] não usa mais Ladrão como classe operacional; sua classe atual é [[Vampiro]]. Ladrão permanece apenas como referência de versão anterior do personagem.
+- Definir se algum personagem atual usará Ladrão mecanicamente.
+- Separar o que é identidade narrativa de Varkh da sua classe Alquimista.

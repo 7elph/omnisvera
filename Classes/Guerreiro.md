@@ -1,15 +1,30 @@
 ---
+obsidianUIMode: preview
 NoteIcon: class
 NoteStatus: Active
-tags:
-  - Category/Class
-  - classe
-  - warrior
-  - old-dragon-2
+type: class
+status: Ativa
+rules_status: Oficial / consulta externa
+campaign_status: Ativa
+visibility: Jogadores
+spoiler_level: none
+gm_secret: false
+created_by: Sage
+name: Guerreiro
+aliases:
+  - Homem de Armas
+system: Old Dragon 2E
+class_group: Marcial
+primary_attribute: Força
+level:
+danger_level: Baixo
+thumbnail: zz_media/guerreiro.png
 cover: zz_media/guerreiro.png
-status: Active
-ruleset: Old Dragon 2E
-source: https://olddragon.com.br/classes/guerreiro
+chapters: []
+tags:
+  - classe
+  - guerreiro
+  - old-dragon
 ---
 
 # Guerreiro
@@ -17,58 +32,50 @@ source: https://olddragon.com.br/classes/guerreiro
 > [!NOTE|clean no-i right]+ Retrato
 > ![[guerreiro.png|400]]
 
-O Guerreiro é a classe-base marcial de Old Dragon 2. Esta nota é um resumo de consulta para a campanha; a redação completa e a progressão de todos os níveis permanecem na [página oficial](https://olddragon.com.br/classes/guerreiro).
+## Visão Geral
 
-> [!info] Fonte
-> **Livro I: Regras Básicas**, página 28, e **SRD oficial**. Consulte também [[Workflow/RULES_SOURCES|Fontes de Regras da Campanha]].
+Guerreiro é a classe marcial clássica usada em Omnisvera para personagens focados em combate, armas, armaduras, resistência e presença de linha de frente.
 
-## Referência de nível 1
+Esta nota é um resumo próprio de campanha. Para regra completa, progressão e detalhes oficiais, consultar o material original de Old Dragon 2E usado pelo mestre.
 
-| Campo | Valor |
-|:--|--:|
-| Pontos de Vida | 10 |
-| Base de Ataque | 1 |
-| Jogada de Proteção | 5 |
+## Papel no Grupo
 
-## Restrições
+- Proteger aliados.
+- Sustentar a linha de frente.
+- Usar armas e armaduras com consistência.
+- Resolver ameaças físicas quando negociação, magia ou furtividade falham.
 
-- **Armas:** todas.
-- **Armaduras:** todas.
-- **Itens mágicos:** não usa cajados, varinhas ou pergaminhos mágicos, exceto pergaminhos de proteção.
+## Papel no Mundo
 
-## Habilidades
+Guerreiros podem ser soldados, mercenários, guardas, cavaleiros, campeões, duelistas, caçadores de monstros ou sobreviventes treinados pela estrada.
 
-### Aparar — 1º nível
+Em Omnisvera, [[Vezemir]] usa Guerreiro como classe operacional.
 
-Depois de ser atingido por um ataque físico e antes da rolagem de dano, o Guerreiro pode inutilizar uma arma ou escudo que esteja portando para absorver todo o dano daquele ataque.
+## Notas de Mecânica
 
-- Só funciona contra atacantes Grandes ou menores.
-- Um item mágico tem chance de 1–2 em 1d6 de ser danificado.
-- Quando danificado, o bônus mágico do item cai em 1.
-- Um item que perde seu último bônus é destruído.
+- Usar as regras oficiais de Guerreiro do sistema escolhido pelo mestre.
+- Não manter `Homem de Armas` como classe ativa separada.
+- Quando `Homem de Armas` aparecer em material antigo, interpretar como referência histórica ao Guerreiro clássico.
+- Não recalcular ficha automaticamente sem decisão do mestre.
 
-### Maestria em Arma
+## Personagens Relacionados
 
-| Nível | Evolução |
-|:--|:--|
-| 1º | Escolhe uma arma e recebe +1 no dano com ela. |
-| 3º | Escolhe uma segunda arma; o bônus das duas passa a +2. |
-| 10º | A maestria se amplia aos grupos das armas escolhidas; o bônus passa a +3. |
+```dataview
+TABLE thumbnail, race, status, location, faction
+FROM "Characters"
+WHERE class = "Guerreiro" OR class = this.file.link
+SORT file.name ASC
+```
 
-Os grupos oficiais são cortantes, perfurantes, impactantes, disparos, hastes e arremesso.
+## Uso em Mesa
 
-### Ataque Extra — 6º nível
+- Como apresentar: presença marcial, treinamento, força, disciplina ou brutalidade controlada.
+- O que os jogadores sabem: Guerreiro é a classe clássica de combate.
+- O que apenas o mestre sabe: ajustes específicos de Vezemir e relíquias.
+- Como entra em cena: combate, defesa, liderança tática e cenas de resistência física.
+- Ganchos: maestria em arma, reputação, rivalidade marcial e legado de guerra.
 
-Realiza um segundo ataque consecutivo, corpo a corpo ou à distância, usando a mesma arma na qual possua maestria e a mesma Base de Ataque do primeiro ataque.
+## Pendências do Sage
 
-### Reputação — 11º nível
-
-Passa a ser reconhecido por seus feitos. Começa com Reputação 1 em 1d6 e progride até 1–5 em 1d6 no 15º nível.
-
-## Uso em Omnisvera
-
-[[Vezemir]] foi recebido em uma ficha antiga que usava a denominação **Homem de Armas**. Para Omnisvera, a classe operacional equivalente é **Guerreiro**.
-
-## Regra de mesa
-
-Não manter `Homem de Armas` como classe ativa separada. Quando esse termo aparecer em material antigo, interpretar como referência histórica ao Guerreiro clássico, sem recalcular ficha automaticamente.
+- Confirmar todos os ajustes da ficha de [[Vezemir]].
+- Definir se relíquias como [[Grisalma]] e [[Muralha de Dorn]] alteram regras de combate.

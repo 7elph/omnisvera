@@ -1,15 +1,29 @@
 ---
+obsidianUIMode: preview
 NoteIcon: class
 NoteStatus: Active
-tags:
-  - Category/Class
-  - classe
-  - cleric
-  - old-dragon-2
+type: class
+status: Ativa
+rules_status: Oficial / consulta externa
+campaign_status: Ativa
+visibility: Jogadores
+spoiler_level: none
+gm_secret: false
+created_by: Sage
+name: Clérigo
+aliases: []
+system: Old Dragon 2E
+class_group: Divino
+primary_attribute: Sabedoria
+level:
+danger_level: Baixo
+thumbnail: zz_media/clerigo.png
 cover: zz_media/clerigo.png
-status: Active
-ruleset: Old Dragon 2E
-source: https://olddragon.com.br/classes/clerigo
+chapters: []
+tags:
+  - classe
+  - clerigo
+  - old-dragon
 ---
 
 # Clérigo
@@ -17,60 +31,49 @@ source: https://olddragon.com.br/classes/clerigo
 > [!NOTE|clean no-i right]+ Retrato
 > ![[clerigo.png|400]]
 
-O Clérigo é a classe-base de magia divina e proteção religiosa de Old Dragon 2. Esta nota resume a classe para consulta; a progressão completa está na [página oficial](https://olddragon.com.br/classes/clerigo).
+## Visão Geral
 
-> [!info] Fonte
-> **Livro I: Regras Básicas**, página 32, e **SRD oficial**. Consulte também [[Workflow/RULES_SOURCES|Fontes de Regras da Campanha]].
+Clérigo é a classe ligada à fé, proteção religiosa, cura, autoridade espiritual e combate contra forças profanas.
 
-## Referência de nível 1
+Esta nota é um resumo próprio de campanha. Para regra completa, progressão e detalhes oficiais, consultar o material original de Old Dragon 2E usado pelo mestre.
 
-| Campo | Valor |
-|:--|--:|
-| Pontos de Vida | 8 |
-| Base de Ataque | 1 |
-| Jogada de Proteção | 5 |
+## Papel no Grupo
 
-## Restrições
+- Sustentar aliados.
+- Proteger o grupo contra ameaças espirituais.
+- Usar fé, ritos e presença moral como ferramentas de cena.
+- Conectar aventura a religião, templo, doutrina e mistério.
 
-- **Armas:** apenas impactantes.
-- Usar armas cortantes ou perfurantes suspende as magias até a realização de penitência.
-- **Armaduras:** todas.
-- **Itens mágicos:** todos os itens ordeiros.
+## Papel no Mundo
 
-## Habilidades
+Clérigos podem ser sacerdotes, exorcistas, curandeiros, inquisidores, peregrinos, guardiões de templo ou estudiosos de tradições antigas.
 
-### Magias Divinas — 1º nível
+Em Omnisvera, [[Padre Oric]] está associado a esta classe.
 
-Prepara diariamente suas magias por meio de oração, respeitando os limites de nível e Sabedoria.
+## Notas de Mecânica
 
-### Afastar Mortos-Vivos
+- Usar as regras oficiais de Clérigo do sistema escolhido pelo mestre.
+- Religião, divindades e tradição espiritual dependem da consolidação de Omnisvera.
+- Não copiar magias, progressões ou textos longos de livro para o vault.
 
-Ao brandir seu símbolo sagrado, força todos os mortos-vivos em até 18 metros a realizarem um teste de moral ao final da rodada.
+## Personagens Relacionados
 
-- Uma falha faz o morto-vivo fugir do Clérigo.
-- Se os dois dados do teste mostrarem o mesmo valor, o morto-vivo é destruído.
-- Um alvo que resiste fica imune às novas tentativas daquele Clérigo até que ele adquira outro nível.
+```dataview
+TABLE thumbnail, race, status, location, faction
+FROM "Characters"
+WHERE class = "Clérigo" OR class = "Clerigo" OR class = this.file.link
+SORT file.name ASC
+```
 
-| Nível | Uso e bônus |
-|:--|:--|
-| 1º | Uma tentativa por dia. |
-| 3º | Duas tentativas por dia e +1 nos testes. |
-| 10º | Três tentativas por dia e +2 nos testes. |
+## Uso em Mesa
 
-### Cura Milagrosa
+- Como apresentar: símbolo sagrado, ritual, cura, oração, exorcismo ou autoridade moral.
+- O que os jogadores sabem: Clérigos lidam com fé, cura e proteção.
+- O que apenas o mestre sabe: segredos religiosos ainda não consolidados.
+- Como entra em cena: templo, doença, maldição, investigação espiritual ou memória de Padre Oric.
+- Ganchos: Igreja das Chamas, cultos, ruínas sagradas e tradições antigas.
 
-Pode trocar uma magia memorizada por uma magia de cura:
+## Pendências do Sage
 
-| Nível | Conversão |
-|:--|:--|
-| 1º | Curar Ferimentos de 1º círculo. |
-| 6º | Curar Ferimentos de 3º círculo, curando até 2d8 PV. |
-| 10º | Curar Ferimentos de 5º círculo, curando até 3d8 PV. |
-
-### Reputação — 11º nível
-
-Começa com Reputação 1 em 1d6 e progride até 1–5 em 1d6 no 15º nível.
-
-## Uso em Omnisvera
-
-[[Padre Oric]] está associado a esta classe. Sua religião e seus detalhes mecânicos ainda devem respeitar as decisões futuras sobre o panteão de Omnisvera.
+- Definir panteão/religiões de Omnisvera.
+- Definir relação de Padre Oric com a Igreja das Chamas e outras tradições.

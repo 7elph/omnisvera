@@ -1,19 +1,19 @@
 ---
 obsidianUIMode: preview
-NoteIcon: settlement  
+NoteIcon: territory
+NoteStatus: Active
 type: territory
-visibility: Público
+visibility: Jogadores
 spoiler_level: light
 gm_secret: false
 status: Ativa
 campaign_status: Em jogo
-tags:
-  - Category/Settlement
-  - territorio
-  - earthropo
-  - forest  
-cover: zz_media/avenor.png  
 thumbnail: zz_media/avenor.png
+cover: zz_media/avenor.png
+location:
+territory: "[[EARTHROPO/EARTHROPO|Earthropo]]"
+info: Região florestal próxima ao Reino de Nimalia, ligada a Leth'valora e à história de Vezemir.
+description: Floresta regional na fronteira de Nimalia, marcada por trilhas antigas, ruínas e segredos ainda em revisão.
 Alignment: Neutral  
 Government: Nenhum  
 reputation: misteriosa  
@@ -33,14 +33,19 @@ imports:
   - Ferramentas 
   - Suprimentos
 chapters: []
+tags:
+  - territorio
+  - floresta
+  - avenor
+  - earthropo
 
 ---
 
 # FLORESTA DE AVENOR
 
-<h2>Visão Geral</h2>
+## Visão Geral
 
-> [!NOTE|clean no-i right]+ ‎FLORESTA DE AVENOR  
+> [!NOTE|clean no-i right]+ Floresta de Avenor
 > ![[avenor.png|400]]
 
 Uma grande floresta das terras centrais de Earthropo. No mapa de trabalho, ocupa a região florestal a leste ou nordeste da [[Nimalis]], estendendo-se ao longo da fronteira do Reino de [[Nimalia]].
@@ -53,7 +58,21 @@ Foi nas estradas abandonadas de Avenor que o meio-elfo [[Vezemir]] foi encontrad
 
 ---
 
-<h2>Rascunhos de Regiões Internas</h2>
+## Relações Territoriais
+
+- Faz fronteira com o [[Nimalia|Reino de Nimalia]].
+- Contém ou abriga caminhos para [[Leth'valora]].
+- Pode servir como região de contato futuro com povos élficos.
+- É uma das regiões em foco para histórias ligadas a [[Vezemir]], [[Mira Valen]] e ao [[Dragão de Colar Dourado]].
+
+## Locais Relacionados
+
+- [[Leth'valora]]
+- [[Antiga Estrada Esquecida]]
+- [[Fortaleza Abandonada de Avenor]]
+- [[Bosque Sussurrante]]
+
+## Rascunhos de Regiões Internas
 
 > [!warning] Nomes não confirmados
 > Os lugares abaixo foram preservados de rascunhos anteriores. Nenhum deles deve receber nota própria, marcador ou peso de cânone até aprovação explícita.
@@ -95,7 +114,20 @@ Exploradores afirmam que túneis subterrâneos ainda existem sob as ruínas.
 
 ---
 
-<h2>Residentes Notáveis</h2>
+## Uso em Mesa
+
+- Como apresentar: floresta de fronteira, viva e perigosa, mas ainda próxima o suficiente de Nimalia para afetar a campanha inicial.
+- O que os jogadores sabem: Avenor contém trilhas antigas, ruínas e histórias ligadas à queda de [[Leth'valora]].
+- Como entra em cena: por viagem, investigação, rastreamento, perseguição, encontros com criaturas e pistas sobre o passado.
+- Ganchos: ruínas cobertas pela mata, fronteira com Nimalia, presença de sentinelas antigas e rumores élficos.
+
+## Pendências do Sage
+
+- Confirmar posição final de Avenor no mapa.
+- Definir se o futuro reino élfico ficará dentro, próximo ou além de Avenor.
+- Revisar quais rascunhos internos viram locais reais.
+
+## Residentes Notáveis
 
 ```dataview
 table location, status, faction

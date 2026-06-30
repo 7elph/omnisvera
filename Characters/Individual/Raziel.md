@@ -8,31 +8,36 @@ spoiler_level: none
 gm_secret: false
 campaign_status: Ativo
 thumbnail: zz_media/th_raziel.PNG
+cover: zz_media/raziel.PNG
 status: Vivo
 location: "[[Ruínas de Valthor]]"
-territory: Earthropo
-faction: Clã Sanguinallis
+territory: "[[EARTHROPO/EARTHROPO|Earthropo]]"
+faction: "[[Clã Sanguinallis]]"
 class: Vampiro
 race: Vampiro (Sanguinallis)
 level: 1
 alignment: Caótico Neutro
 role: player
 chapter:
-  - 00 - O Retorno de Raziel
+  - 00 - As Crônicas de Névoa de Sangue
 chapters:
-  - 00 - O Retorno de Raziel
+  - 00 - As Crônicas de Névoa de Sangue
 tags:
   - player
   - character
+  - personagem
+  - jogador
   - chapter00_raziel
+  - bside
+  - origin-story
+  - origin-raziel
   - vampire
   - vampiro
   - hemomancer
   - sangue-antigo
+  - sanguinallis
   - earthropo
   - Category/Character
-  - personagem
-  - jogador
 ---
 
 # RAZIEL — O ESPECTRO DA NÉVOA DE SANGUE
@@ -40,7 +45,11 @@ tags:
 > [!NOTE|clean no-i right]+ Raziel
 > ![[raziel.PNG|400]]
 
+> [!NOTE]- Template aplicado
+> Esta nota segue o formato **Personagem Jogador**. Informações confidenciais devem ficar no [[CAMPANHA/ESTADO_DA_CAMPANHA|Estado da Campanha]].
+
 ## Visão Geral
+
 **Títulos:** O Espectro da Névoa de Sangue
 **Apelido:** O Espectro
 **Localização Atual:** [[Ruínas de Valthor]]; sua origem está ligada à [[Fortaleza de Gharok]]
@@ -73,6 +82,14 @@ WHERE contains(this.chapters, file.name)
 SORT file.name ASC
 ```
 
+## O que os jogadores sabem
+
+- Ver a Visão Geral, História e Situação Atual desta nota.
+
+## O que só o mestre sabe
+
+- Informações confidenciais ficam centralizadas em [[CAMPANHA/ESTADO_DA_CAMPANHA|Estado da Campanha]].
+
 ## História
 
 > <h4>"O sangue da nova era é fraco e diluído. Mas o teu foi refinado pelo ódio perfeito."</h4>
@@ -84,16 +101,14 @@ Sua perícia com as [[Adagas de Espectro Fantasma]] desafiava a fronteira entre 
 
 ---
 
-## O Executor de Gharok
-
+### O Executor de Gharok
 O nome de Raziel era sussurrado com reverência e temor nos salões da Fortaleza de Gharok.
 
 Ele servia como braço direito de Malakar e dominava uma forma de hemomancia capaz de transformar o sangue de suas vítimas em névoa carmesim. Sua posição, poder e silêncio despertaram inveja e medo dentro do próprio clã.
 
 ---
 
-## A Tríade Partida
-
+### A Tríade Partida
 Kaelen invejava o controle de Raziel sobre a hemomancia. Vandor temia o silêncio que ele impunha às suas feras. Malakar acreditava que seu executor acabaria desejando o trono.
 
 Sob o pretexto de conter uma heresia rúnica, Raziel foi atraído ao salão principal e subjugado por feitiçarias ancestrais.
@@ -104,8 +119,7 @@ A prata impedia sua cura. Sua natureza vampírica o impedia de morrer. O torment
 
 ---
 
-## O Acordo no Abismo
-
+### O Acordo no Abismo
 O sangue corrosivo de Raziel enfraqueceu o fundo da prisão ao longo dos séculos. Quando o solo ruiu, ele despencou através de fendas vulcânicas extintas até as cavernas abissais sob as [[Ruínas de Valthor]].
 
 Lá encontrou o Ancião Primordial, uma entidade esquecida que despedaçou as correntes de prata e o alimentou com o Sangue Antigo.
@@ -116,8 +130,7 @@ Ele entrou no poço como um assassino traído. Emergiu como a própria calamidad
 
 ---
 
-## A Rota da Vingança
-
+### A Rota da Vingança
 1. **O Primeiro Sangue — [[Campos de Earthropo]]:** Kaelen lidera patrulhas e escava as [[Ruínas de Valthor]] em busca de relíquias.
 2. **O Senhor das Feras — [[Floresta de Avenor]]:** Vandor permanece ligado às feras que um dia marcharam sob seu comando.
 3. **A Queda do Trono — [[Fortaleza de Gharok]]:** Lorde Malakar ainda ocupa o domínio onde a traição começou.
@@ -126,7 +139,7 @@ A ordem e a posição exata desses confrontos permanecem como estrutura narrativ
 
 ---
 
-## Atualidade
+## Situação Atual
 
 Raziel escapou do tormento que deveria aprisioná-lo para sempre. O Sangue Antigo restaurou seu corpo e transformou a hemomancia que já dominava.
 
@@ -159,7 +172,36 @@ A definir com o jogador.
 
 ---
 
-## Habilidades
+## Relações
+
+_Pendente de consolidação pelo Sage._
+
+## Equipamentos importantes
+
+### [[Adagas de Espectro Fantasma]]
+
+Lâminas etéreas praticamente invisíveis quando empunhadas. Ao perfurar uma criatura, drenam energia vital para Raziel.
+
+### [[Manto Primordial do Ancião]]
+
+Armadura extraplanar concedida após o encontro com o Ancião Primordial. Abafa os movimentos de Raziel e reforça sua capacidade de desaparecer nas sombras.
+
+---
+
+```datacards
+TABLE thumbnail, item, status FROM #raziel
+SORT name ASC
+
+// Settings
+preset: grid
+columns: 6
+imageProperty: thumbnail
+imageHeight: 30px
+showImageOnHover: true
+cardSpacing: 4
+```
+
+## Capacidades narrativas
 
 **Furto e Infiltração:**
 Treinamento compatível com sua classe atual de vampiro e com sua antiga atuação como executor.
@@ -178,29 +220,27 @@ Manifestação de sangue solidificado associada ao poder recebido do Ancião Pri
 
 ---
 
-## Segredos
+## Mecânicas confirmadas
 
-- O verdadeiro motivo pelo qual o Ancião Primordial libertou Raziel permanece desconhecido.
+> [!warning] Regras autorais pendentes
+> Ladrão pertence às regras-base de OD2. Assassino depende de adoção do Livro II. Vampiro, Hemomante, Reserva de Sangue e os poderes atuais ainda precisam de regras próprias.
 
-- A heresia rúnica usada como pretexto para sua captura ainda não foi definida.
+#### Armas e carga
 
-- A forma como as Adagas de Espectro Fantasma permaneceram ligadas a Raziel durante o aprisionamento continua em aberto.
+- [[Adagas de Espectro Fantasma]].
+- [[Manto Primordial do Ancião]].
 
-- Sua relação com o Véu Cinzento e com os Criadores ainda não foi confirmada.
+#### Idiomas
 
----
+- A definir com o jogador.
 
-## Equipamentos
+#### Habilidades especiais
 
-### [[Adagas de Espectro Fantasma]]
+- Hemomancia, Reserva de Sangue, regeneração vampírica, Névoa de Sangue e Asas Escarlates permanecem como elementos autorais até aprovação mecânica.
 
-Lâminas etéreas praticamente invisíveis quando empunhadas. Ao perfurar uma criatura, drenam energia vital para Raziel.
+## Mecânicas pendentes
 
-### [[Manto Primordial do Ancião]]
-
-Armadura extraplanar concedida após o encontro com o Ancião Primordial. Abafa os movimentos de Raziel e reforça sua capacidade de desaparecer nas sombras.
-
----
+- Nenhuma mecânica pendente registrada nesta nota.
 
 ## Aparência
 
@@ -210,44 +250,15 @@ Usa couro e placas negras, um manto escuro e as Adagas de Espectro Fantasma. Qua
 
 ---
 
-## Armas e Equipamento
-
-```datacards
-TABLE thumbnail, item, status FROM #raziel
-SORT name ASC
-
-// Settings
-preset: grid
-columns: 6
-imageProperty: thumbnail
-imageHeight: 30px
-showImageOnHover: true
-cardSpacing: 4
-```
-
-## Ficha Mecânica — Nível 1
-
-> [!warning] Regras autorais pendentes
-> Ladrão pertence às regras-base de OD2. Assassino depende de adoção do Livro II. Vampiro, Hemomante, Reserva de Sangue e os poderes atuais ainda precisam de regras próprias.
-
-### Armas e carga
-
-- [[Adagas de Espectro Fantasma]].
-- [[Manto Primordial do Ancião]].
-
-### Idiomas
-
-- A definir com o jogador.
-
-### Habilidades especiais
-
-- Hemomancia, Reserva de Sangue, regeneração vampírica, Névoa de Sangue e Asas Escarlates permanecem como elementos autorais até aprovação mecânica.
-
-## Relações
+## Papel na Campanha
 
 _Pendente de consolidação pelo Sage._
 
-## Papel na Campanha
+## Pendências do Sage
+
+- Revisar e completar campos em aberto.
+
+## Links relevantes
 
 _Pendente de consolidação pelo Sage._
 
@@ -259,11 +270,3 @@ _Pendente de consolidação pelo Sage._
 - Como entra em cena:
 - Ganchos:
 - Consequências possíveis:
-
-## Pendências do Sage
-
-- Revisar e completar campos em aberto.
-
-## Links relevantes
-
-_Pendente de consolidação pelo Sage._

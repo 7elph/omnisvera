@@ -14,9 +14,8 @@ cssclasses:
   - character/Raziel
   - character/Ancião Primordial
 tags:
-  - chapter
   - story
-  - chapter00
+  - bside
   - origin-story
   - origin-raziel
   - earthropo
@@ -37,7 +36,7 @@ cover: "[[zz_media/banner-as-cronicas-de-nevoa-de-sangue.png]]"
 description: A história de Raziel, o Espectro da Névoa de Sangue — desde seu auge como executor do Clã Sanguinallis na Fortaleza de Gharok até a traição que o aprisionou por trezentos anos e seu renascimento nas cavernas abissais sob as Ruínas de Valthor.
 ---
 
-# Capítulo 00
+# B-Side: As Crônicas de Névoa de Sangue
 
 #### _Crônicas de Earthropo_
 

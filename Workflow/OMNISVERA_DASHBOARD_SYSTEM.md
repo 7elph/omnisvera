@@ -104,7 +104,7 @@ A tag visual oficial para territórios é `territorio`.
 
 ```dataview
 TABLE cover, region, leader, population
-FROM #territorio
+FROM "Territories"
 WHERE NoteStatus != "Placeholder"
 SORT file.name ASC
 ```
@@ -121,12 +121,23 @@ SORT file.name ASC
 
 ## Classes
 
-Classes operacionais novas devem ficar em `Rules/Classes`.
+Classes operacionais devem ficar em `Classes`.
 
 ```dataview
 TABLE thumbnail, status, rules_status, campaign_status
-FROM "Rules/Classes"
+FROM "Classes"
 WHERE type = "class"
+SORT file.name ASC
+```
+
+## Raças
+
+Raças operacionais devem ficar em `Races`.
+
+```dataview
+TABLE thumbnail, status, campaign_status, visibility
+FROM "Races"
+WHERE type = "race"
 SORT file.name ASC
 ```
 

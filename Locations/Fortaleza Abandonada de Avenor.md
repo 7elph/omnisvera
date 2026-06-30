@@ -2,68 +2,81 @@
 obsidianUIMode: preview
 NoteIcon: location
 NoteStatus: Draft
-status: Em desenvolvimento
-canon_status: Draft
+type: location
+status: Em revisão
+campaign_status: Em revisão
 visibility: Mestre
+spoiler_level: medium
+gm_secret: true
 created_by: IA
-requires_review: true
+location:
+territory: "[[Floresta de Avenor]]"
+region: Elevações próximas a [[Leth'valora]]
+district:
+danger_level: Médio
+thumbnail:
+cover:
+info: Fortaleza antiga nas elevações de Avenor, ligada à formação de Vezemir.
+description: Local sensível da história de Vezemir, ainda em revisão pelo Sage.
+chapters:
+  - 00 - O Bastardo de Ferro
 tags:
-  - Category/Location
   - location
-  - draft
+  - local
+  - fortaleza
+  - avenor
+  - origem-vezemir
+  - bside
 ---
 
 # Fortaleza Abandonada de Avenor
 
-> [!WARNING] Estado canônico
-> Esta nota está em desenvolvimento e depende de confirmação do Sage.
+## Visão Geral
 
-## Resumo
+Antiga fortaleza esquecida nas elevações de Avenor, próxima a [[Leth'valora]].
 
-Antiga fortaleza esquecida nas elevações de Avenor, onde [[Elarion Vaelthor]] criou e treinou [[Vezemir]]. Foi o local onde Vezemir recebeu treinamento rigoroso em combate, sobrevivência, estratégia, história e magia antes de ser exilado de [[Leth'valora]].
+Esta nota está ligada à formação de [[Vezemir]] e deve permanecer como informação de mestre até o Sage decidir o quanto pode ser revelado.
 
-## Função narrativa
+## Função Narrativa
 
-A fortaleza abandonada representa a formação de Vezemir e a preparação para sua jornada. É o local onde ele recebeu as três relíquias ancestrais ([[Grisalma]], [[Muralha de Dorn]] e o [[O Medalhão]]) antes de deixar Leth'valora para sempre.
+A fortaleza representa treinamento, isolamento, herança marcial e preparação para a jornada.
 
-## Relações conhecidas
+Foi o local onde Vezemir recebeu formação em combate, sobrevivência, estratégia, história e magia antes de deixar Leth'valora.
 
-- [[Vezemir]] - Foi criado e treinado nesta fortaleza
-- [[Elarion Vaelthor]] - Veterano que criou Vezemir na fortaleza
-- [[Leth'valora]] - Vila élfica próxima à fortaleza
-- [[Floresta de Avenor]] - Região onde a fortaleza está situada
-- [[Grisalma]] - Relíquia entregue a Vezemir na fortaleza
-- [[Muralha de Dorn]] - Relíquia entregue a Vezemir na fortaleza
-- [[O Medalhão]] - Relíquia entregue a Vezemir na fortaleza
+## Relações Conhecidas
 
-## O que está confirmado
+- [[Vezemir]] — foi criado e treinado nesta fortaleza.
+- [[Elarion Vaelthor]] — veterano que criou Vezemir.
+- [[Leth'valora]] — vila próxima.
+- [[Floresta de Avenor]] — região onde a fortaleza está situada.
+- [[Grisalma]] — relíquia entregue a Vezemir.
+- [[Muralha de Dorn]] — relíquia entregue a Vezemir.
+- [[O Medalhão]] — relíquia entregue a Vezemir.
 
-- É uma antiga fortaleza esquecida
-- Está situada nas elevações de Avenor
-- Fica nos limites de Leth'valora
-- Elarion Vaelthor criou Vezemir na fortaleza
-- Vezemir recebeu treinamento em combate, sobrevivência, estratégia, história e magia
-- Foi o local onde Vezemir recebeu as três relíquias ancestrais
-- Vezemir deixou a fortaleza após ser exilado de Leth'valora
+## Informações Confirmadas
 
-## Pendente de confirmação do Sage
+- É uma antiga fortaleza esquecida.
+- Está situada nas elevações de Avenor.
+- Fica nos limites de Leth'valora.
+- Elarion Vaelthor criou Vezemir na fortaleza.
+- Vezemir recebeu treinamento marcial e histórico no local.
+- A fortaleza está ligada à entrega das relíquias de Vezemir.
 
-- Origem e história da fortaleza
-- Civilização que construiu a fortaleza
-- Motivo pelo qual a fortaleza foi abandonada
-- Localização exata no mapa
-- Estado atual da fortaleza
-- Se a fortaleza ainda existe ou está em ruínas
-- Se há outros artefatos ou segredos na fortaleza
-- Conexão com os Guardiões do Véu Cinzento
-- Mapa interno da fortaleza
+## Uso em Mesa
 
-## Links relevantes
+- Como apresentar: pedra fria, torres quebradas, vista da floresta e marcas de treino antigo.
+- O que os jogadores sabem: depende da história compartilhada por Vezemir.
+- O que apenas o mestre sabe: relação completa com relíquias, Elarion e possíveis segredos antigos.
+- Como entra em cena: retorno emocional, busca por respostas, abrigo ou ruína explorável.
+- Ganchos: relíquias, Elarion, Guardiões do Véu Cinzento, passado de Avenor.
+- Consequências possíveis: pode revelar peças importantes da origem e dos poderes de Vezemir.
 
-- [[Characters/Individual/Vezemir]]
-- [[Characters/Individual/Elarion Vaelthor]]
-- [[Locations/Leth'valora]]
-- [[Territories/Floresta de Avenor]]
-- [[Items/Grisalma]]
-- [[Items/Muralha de Dorn]]
-- [[O Medalhão]]
+## Pendências do Sage
+
+- Definir origem e história da fortaleza.
+- Definir civilização que a construiu.
+- Definir por que foi abandonada.
+- Definir localização exata no mapa.
+- Definir estado atual da fortaleza.
+- Definir se há mapa interno, artefatos ou segredos preservados.
+- Decidir conexão com os [[Guardiões do Véu Cinzento]].

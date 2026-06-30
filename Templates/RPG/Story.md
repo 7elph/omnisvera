@@ -3,12 +3,16 @@ obsidianUIMode: preview
 NoteIcon: story
 NoteStatus: New
 type: story
-visibility: Mestre
-spoiler_level: heavy
-gm_secret: true
+visibility: Jogadores
+spoiler_level: light
+gm_secret: false
 status: Planejado
 campaign_status: Planejado
+cssclasses:
+  - b-sides-script
+  - chapter
 chapter:
+chapters:
 date:
 location:
 territory:
@@ -17,12 +21,40 @@ characters:
 items:
 quests:
 rumors:
+cover:
+description:
 created_by:
 tags:
   - story
+  - chapter
 ---
 
-# Capítulo XX — Nome
+# Capítulo XX: Nome
+
+#### _Crônicas de [[EARTHROPO/EARTHROPO|Earthropo]] — capítulo em preparação_
+
+> [!NOTE|clean no-i right]+ Nome do Capítulo
+> ![[zz_media/banner-earthropo.png|400]]
+
+> [!world]- SINOPSE
+> Escreva aqui a sinopse curta do capítulo, com foco no que a nota precisa comunicar em consulta rápida.
+
+## Elenco Principal
+
+```datacards
+TABLE thumbnail, status, location, faction
+FROM "Characters/Individual"
+WHERE contains(chapters, this.chapter)
+OR contains(tags, "chapter")
+SORT file.name ASC
+
+// Settings
+preset: compact
+columns: 5
+imageProperty: thumbnail
+showImageOnHover: true
+cardSpacing: 4
+```
 
 ## Estado do Capítulo
 
@@ -31,6 +63,10 @@ tags:
 - Local principal:
 - Personagens em foco:
 - Facções em movimento:
+
+## Função do Capítulo
+
+Explique o papel deste capítulo na campanha.
 
 ## Recapitulação
 
@@ -44,9 +80,20 @@ tags:
 
 ## Quests Ativas
 
+```dataview
+TABLE quest_status, location, faction
+FROM "CAMPANHA/Quests"
+WHERE quest_status != "Concluída" AND quest_status != "Falhou"
+SORT file.name ASC
+```
+
 ## Rumores Ativos
 
-## Segredos do Mestre
+```dataview
+TABLE status, visibility, spoiler_level
+FROM "CAMPANHA/Rumors"
+SORT file.name ASC
+```
 
 ## Possíveis Consequências
 
@@ -62,7 +109,7 @@ tags:
 
 - Como apresentar:
 - O que os jogadores sabem:
-- O que apenas o mestre sabe:
+- O que fica no [[CAMPANHA/ESTADO_DA_CAMPANHA|Estado da Campanha]]:
 - Como entra em cena:
 - Ganchos:
 - Consequências possíveis:

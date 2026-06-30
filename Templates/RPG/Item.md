@@ -1,7 +1,10 @@
 ---
+obsidianUIMode: preview
+NoteIcon: items
+NoteStatus: Draft
 type: item
 status: Rascunho
-campaign_status: Em revisao
+campaign_status: Em revisão
 visibility: Mestre
 spoiler_level: medium
 gm_secret: true
@@ -10,7 +13,9 @@ created_by: Sage
 
 name:
 item_type:
+owner:
 location:
+territory:
 faction:
 level:
 danger_level:
@@ -31,11 +36,20 @@ tags:
 
 ## Aparência
 
-## Uso em jogo
+## Identificação
 
-## História conhecida
+- **Tipo:**
+- **Portador/Dono:**
+- **Origem:**
+- **Função conhecida:**
 
-## Segredo do mestre
+## Regra em Uso
+
+## Propriedades Narrativas
+
+## História Conhecida
+
+## Relações
 
 ## Uso em Mesa
 
@@ -44,4 +58,6 @@ tags:
 - O que apenas o mestre sabe:
 - Como entra em cena:
 - Ganchos:
-- Consequ?ncias poss?veis:
+- Consequências possíveis:
+
+## Pendências do Sage

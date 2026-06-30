@@ -54,7 +54,7 @@ SORT file.name ASC
 
 ```dataview
 TABLE cover, territory, info
-FROM #location
+FROM "Locations"
 WHERE (visibility = "Jogadores" OR visibility = "Público")
 AND !contains(file.path, "Workflow/")
 AND gm_secret != true

@@ -1,44 +1,78 @@
 ---
+obsidianUIMode: preview
 NoteIcon: race
-NoteStatus: Draft
+NoteStatus: Active
+type: race
+status: Ativa
+campaign_status: Ativa
+visibility: Jogadores
+spoiler_level: light
+gm_secret: false
+name: Kenku
+aliases:
+  - Kenkus
+origin: Earthropo
+territory: "[[Nimalia]]"
+region:
+faction:
+religion:
+level:
+danger_level:
+hooks:
+  - Vozes imitadas
+  - Alquimia de rua
+  - Presságios urbanos
+rumors: []
+thumbnail: zz_media/th_varkh.PNG
+cover: zz_media/varkh.jpeg
+chapters: []
 tags:
-  - Category/Race
+  - raca
   - race
   - kenku
-  - anthropomorph
-cover: zz_media/earthropo.png
-status: Active
-ruleset: Raça autoral - mecânica pendente
 ---
 
 # Kenku
 
-Kenkus são humanoides de linhagem corvídea, conhecidos por sua memória sonora, imitação vocal e presença associada a presságios. Em Earthropo, onde demi-humanos ocupam todos os níveis da sociedade, kenkus não são estranhos por serem animalescos, mas carregam o peso simbólico dos corvos: segredo, morte, carniça, doença e má sorte.
+## Visão Geral
 
-> [!warning] Estado mecânico
-> A cultura dos kenkus faz parte de Omnisvera, mas os traços mecânicos abaixo vieram da ficha recebida e ainda são uma regra autoral pendente. Consulte [[Workflow/RULES_SOURCES|Fontes de Regras da Campanha]].
+Kenkus são humanoides de traços corvídeos, ligados a memória sonora, imitação vocal, segredo, rumor e sobrevivência urbana.
 
-## Traços Culturais
+[[Varkh Nimalis]] é o exemplo central de kenku no início da campanha.
 
-- Memória auditiva excepcional.
-- Comunicação marcada por vozes, frases e sons aprendidos.
-- Forte adaptação a cidades, portos, telhados e becos.
-- Reputação ambígua: úteis como mensageiros, espiões, falsificadores e informantes, mas raramente considerados confiáveis.
+## Presença em Omnisvera
 
-## No Reino de Nimalia
+- Varkh nasceu em [[Nimalis]].
+- Kenkus podem aparecer em mercados, becos, guildas, oficinas, laboratórios improvisados e redes de informação.
+- A leitura simbólica de corvos pode variar entre mau presságio, esperteza, roubo, memória e sobrevivência.
 
-Na capital do Reino de [[Nimalia]], kenkus costumam circular em bairros portuários, mercados, guildas menores e redes de informação informal. Em lugares como [[Maré Baixa]], a fama sombria de um corvo pode ser tanto proteção quanto ameaça.
+## Cultura e Relações
 
-## Traços registrados na ficha de personagem
+Kenkus funcionam muito bem em histórias de voz, testemunho, falsificação, segredo e alquimia. Nem todo kenku precisa ser criminoso ou místico.
 
-- **Mimetismo:** reproduzir sons e vozes que o kenku já tenha ouvido.
-- **Falsificação:** copiar ou alterar escrita, assinaturas e documentos.
-- **Movimentação base:** 9 metros.
+## Mecânica Resumida
 
-Esses traços aparecem na ficha recebida do jogador João. A redação mecânica definitiva da raça ainda deve ser confrontada com a regra adotada pela mesa.
+Usar a identidade sonora e social dos kenkus como base. Regras específicas de imitação, comunicação ou traços raciais devem ser resumidas pelo mestre.
 
-## Ganchos
+## Personagens Relacionados
 
-- Vozes copiadas podem incriminar, salvar ou assombrar.
-- Um kenku pode carregar memórias sonoras de pessoas mortas.
-- Em rituais antigos, corvos podem ser tratados como mensageiros entre mundo, ruína e presságio.
+```dataview
+TABLE status, role, location, faction
+FROM "Characters"
+WHERE race = "Kenku" OR contains(string(race), "Kenku")
+SORT file.name ASC
+```
+
+## Uso em Mesa
+
+- Como apresentar: voz roubada, memória de frases e presença urbana inquieta.
+- O que os jogadores sabem: Varkh é kenku e alquimista.
+- O que apenas o mestre sabe: vozes imitadas podem virar pista ou arma social.
+- Como entra em cena: mercado, laboratório, taverna, viela, guilda, rumor.
+- Ganchos: máscara de médico da peste, frascos, falsificações, Conclave dos Errantes.
+- Consequências possíveis: uma frase repetida por um kenku pode incriminar, salvar ou revelar alguém.
+
+## Pendências do Sage
+
+- Definir se kenku é raça comum ou rara em Nimalia.
+- Definir limite mecânico da imitação vocal.

@@ -1,16 +1,34 @@
 ---
 obsidianUIMode: preview
-NoteIcon: item
+NoteIcon: items
 NoteStatus: Draft
+type: item
 status: Em desenvolvimento
-canon_status: Draft
-visibility: Mestre
+campaign_status: Em revisão
+visibility: Jogadores
+spoiler_level: light
+gm_secret: false
 created_by: IA
-requires_review: true
+item_type: Máscara / equipamento pessoal
+owner: "[[Varkh Nimalis]]"
+location: "[[Varkh Nimalis]]"
+faction:
+level: 1
+danger_level: Baixo
+thumbnail:
+cover:
+chapters:
+  - 00 - O Corvo da Maré Baixa
+hooks:
+  - identidade pública de Varkh
+  - Odran
+  - Maré Baixa
+rumors: []
 tags:
-  - Category/Item
   - item
-  - draft
+  - mascara
+  - varkh
+  - kenku
 ---
 
 # Máscara de Médico da Peste de Varkh
@@ -18,47 +36,53 @@ tags:
 > [!WARNING] Estado canônico
 > Esta nota está em desenvolvimento e depende de confirmação do Sage.
 
-## Resumo
+## Visão Geral
 
-Máscara de médico da peste adaptada ao bico de [[Varkh Nimalis]] e equipada com filtro de ervas. A máscara, o capuz, os frascos no cinto e o couro escuro vieram dos equipamentos de [[Mestre Odran Veyl]]. Varkh adaptou tudo ao próprio corpo. A figura causa medo suficiente para abrir caminho durante surtos, quarentenas e noites perigosas.
+Máscara de médico da peste adaptada ao bico de [[Varkh Nimalis]] e equipada com filtro de ervas. A máscara, o capuz, os frascos no cinto e o couro escuro vieram dos equipamentos de [[Mestre Odran Veyl]].
 
-## Função narrativa
+Varkh adaptou tudo ao próprio corpo. A figura causa medo suficiente para abrir caminho durante surtos, quarentenas e noites perigosas.
 
-A máscara representa a identidade pública de Varkh como "O Corvo da Maré Baixa". Ela é uma ferramenta de intimidação e proteção, permitindo que Varkh navegue por ambientes perigosos sem ser questionado. A máscara também simboliza a herança de Odran e a adaptação de Varkh ao seu próprio corpo de kenku.
+## Aparência
 
-## Relações conhecidas
+Máscara escura adaptada ao formato de Varkh, misturando o bico natural de kenku ao visual de médico da peste. De longe, a silhueta pode parecer uma sombra com olhos.
 
-- [[Varkh Nimalis]] - Usuário e adaptador da máscara
-- [[Mestre Odran Veyl]] - Proprietário original dos equipamentos
-- [[Maré Baixa]] - Região onde a máscara é usada
-- [[Kenku]] - Raça de Varkh, cujo bico se mistura ao formato da máscara
+## Função Narrativa
 
-## O que está confirmado
+A máscara representa a identidade pública de Varkh como "O Corvo da Maré Baixa". Ela é ferramenta de intimidação, proteção e presença social, permitindo que Varkh atravesse ambientes perigosos sem ser questionado de imediato.
 
-- É uma máscara de médico da peste adaptada ao bico de Varkh
-- Está equipada com filtro de ervas
-- Veio dos equipamentos de Odran
-- Varkh adaptou a máscara ao próprio corpo de kenku
-- O bico natural de Varkh se mistura ao formato da máscara
-- As penas negras de Varkh se confundem com o manto
-- A figura causa medo suficiente para abrir caminho durante surtos, quarentenas e noites perigosas
-- Em Nimalia, poucas pessoas param um médico da peste durante situações perigosas
-- De longe, Varkh parece uma sombra com olhos
-- De perto, parece alguém que sabe exatamente onde cortar para não precisar cortar duas vezes
+Também simboliza a herança de Odran e a adaptação de Varkh ao próprio corpo.
 
-## Pendente de confirmação do Sage
+## O que Está Confirmado
 
-- Descrição visual detalhada da máscara
-- Materiais de construção
-- Funcionamento do filtro de ervas
-- Se a máscara tem alguma função mágica
-- Se a máscara evolui durante o arco de Varkh
-- Regras mecânicas associadas à máscara
-- Conexão com a reputação de Varkh como assassino
-- Origem dos equipamentos de Odran
+- É uma máscara de médico da peste adaptada ao bico de Varkh.
+- Está equipada com filtro de ervas.
+- Veio dos equipamentos de Odran.
+- Varkh adaptou a máscara ao próprio corpo de kenku.
+- O bico natural de Varkh se mistura ao formato da máscara.
+- A figura causa medo suficiente para abrir caminho durante surtos, quarentenas e noites perigosas.
 
-## Links relevantes
+## Relações
 
-- [[Characters/Individual/Varkh Nimalis]]
-- [[Characters/Individual/Mestre Odran Veyl]]
-- [[Territories/Nimalia]]
+- [[Varkh Nimalis]]
+- [[Mestre Odran Veyl]]
+- [[Maré Baixa]]
+- [[Kenku]]
+
+## Uso em Mesa
+
+- Como apresentar: máscara escura, cheiro de ervas, presença estranha e respeito desconfortável em ruas pobres.
+- O que os jogadores sabem: é parte do visual e da identidade de Varkh.
+- O que apenas o mestre sabe: nenhuma função oculta confirmada por enquanto.
+- Como entra em cena: intimidação, infiltração em zonas doentes, investigação, disfarce social e lembranças de Odran.
+- Ganchos: filtro especial, símbolos de Odran, reputação de assassino e reação de moradores de Maré Baixa.
+
+## Pendências do Sage
+
+- Descrição visual detalhada da máscara.
+- Materiais de construção.
+- Funcionamento do filtro de ervas.
+- Se a máscara tem alguma função mágica.
+- Se a máscara evolui durante o arco de Varkh.
+- Regras mecânicas associadas à máscara.
+- Conexão com a reputação de Varkh como assassino.
+- Origem dos equipamentos de Odran.

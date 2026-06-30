@@ -2,60 +2,82 @@
 obsidianUIMode: preview
 NoteIcon: location
 NoteStatus: Draft
-status: Em desenvolvimento
-canon_status: Draft
+type: location
+status: Em revisão
+campaign_status: Em revisão
 visibility: Mestre
+spoiler_level: medium
+gm_secret: true
 created_by: IA
-requires_review: true
+location:
+territory: "[[Floresta de Avenor]]"
+region: Arredores de [[Leth'valora]]
+district:
+danger_level: Baixo
+thumbnail:
+cover:
+info: Estrada antiga em ruínas nos arredores de Leth'valora, ligada à origem conhecida de Vezemir.
+description: Local sensível da história de Vezemir, ainda em revisão pelo Sage.
+chapters:
+  - 00 - O Bastardo de Ferro
 tags:
-  - Category/Location
   - location
-  - draft
+  - local
+  - avenor
+  - origem-vezemir
+  - bside
 ---
 
 # Antiga Estrada Esquecida
 
-> [!WARNING] Estado canônico
-> Esta nota está em desenvolvimento e depende de confirmação do Sage.
+## Visão Geral
 
-## Resumo
+Ruínas de uma antiga estrada comercial nos arredores de [[Leth'valora]], na região da [[Floresta de Avenor]].
 
-Ruínas de uma antiga estrada comercial nos arredores de [[Leth'valora]], onde [[Vezemir]] foi encontrado ainda bebê. É o local de origem conhecido de Vezemir antes de ser adotado por [[Elarion Vaelthor]].
+Esta nota está ligada à origem conhecida de [[Vezemir]] e deve permanecer como informação de mestre até o Sage decidir o quanto pode ser revelado aos jogadores.
 
-## Função narrativa
+## Função Narrativa
 
-A antiga estrada esquecida representa o mistério das origens de Vezemir. É o primeiro local associado à sua história, antes mesmo de sua chegada a Leth'valora, e pode conter pistas sobre seus pais biológicos e sobre sua verdadeira origem.
+A estrada representa o mistério das origens de Vezemir antes de sua chegada definitiva a Leth'valora.
 
-## Relações conhecidas
+Ela pode funcionar como:
 
-- [[Vezemir]] - Foi encontrado ainda bebê nas ruínas desta estrada
-- [[Leth'valora]] - Vila élfica próxima à estrada
-- [[Elarion Vaelthor]] - Veterano que encontrou e adotou Vezemir nas ruínas
-- [[Floresta de Avenor]] - Região onde a estrada está situada
+- local de memória;
+- pista sobre pais biológicos;
+- rota esquecida em Avenor;
+- conexão com ruínas, guardiões ou magia antiga;
+- ponto de retorno em uma futura cena de origem.
 
-## O que está confirmado
+## Relações Conhecidas
 
-- É uma antiga estrada comercial
-- Possui ruínas nos arredores de Leth'valora
-- Vezemir foi encontrado ainda bebê nas ruínas
-- Os elfos de Leth'valora não queriam a criança devido à sua ascendência mestiça
-- Elarion Vaelthor recusou-se a abandonar a criança e a adotou
-- A estrada está situada na região da Floresta de Avenor
+- [[Vezemir]] — foi encontrado ainda bebê nas ruínas desta estrada.
+- [[Elarion Vaelthor]] — encontrou e adotou Vezemir.
+- [[Leth'valora]] — vila próxima.
+- [[Floresta de Avenor]] — região onde a estrada está situada.
 
-## Pendente de confirmação do Sage
+## Informações Confirmadas
 
-- Origem e história da estrada comercial
-- Civilização que construiu a estrada
-- Motivo pelo qual a estrada caiu em ruínas
-- Localização exata no mapa
-- Se há outras pistas sobre os pais biológicos de Vezemir
-- Se a estrada tem relação com os Guardiões do Véu Cinzento
-- Se a estrada ainda é usada ou está completamente abandonada
-- Conexão com a magia instável de Vezemir
+- É uma antiga estrada comercial.
+- Possui ruínas nos arredores de Leth'valora.
+- Vezemir foi encontrado ainda bebê nas ruínas.
+- Elarion Vaelthor recusou-se a abandonar a criança.
+- A estrada fica na região da Floresta de Avenor.
 
-## Links relevantes
+## Uso em Mesa
 
-- [[Characters/Individual/Vezemir]]
-- [[Characters/Individual/Elarion Vaelthor]]
-- [[Locations/Leth'valora]]
-- [[Territories/Floresta de Avenor]]
+- Como apresentar: ruínas cobertas por vegetação, pedras antigas e silêncio de estrada abandonada.
+- O que os jogadores sabem: depende do quanto Vezemir compartilhou.
+- O que apenas o mestre sabe: possíveis pistas sobre a origem de Vezemir e conexões antigas.
+- Como entra em cena: lembrança, retorno a Avenor, investigação ou sonho.
+- Ganchos: pais biológicos, Guardiões do Véu Cinzento, magia instável, ruínas antigas.
+- Consequências possíveis: revelar a estrada cedo demais pode antecipar mistérios da origem de Vezemir.
+
+## Pendências do Sage
+
+- Definir origem e história da estrada.
+- Definir civilização que a construiu.
+- Definir por que caiu em ruínas.
+- Definir localização exata no mapa.
+- Decidir se há pistas sobre os pais biológicos de Vezemir.
+- Decidir se há relação com os [[Guardiões do Véu Cinzento]].
+- Decidir se a estrada ainda é usada ou está completamente abandonada.

@@ -17,9 +17,8 @@ cssclasses:
   - character/Padre Oric
   - character/General Cassian Valerius
 tags:
-  - chapter
   - story
-  - chapter00
+  - bside
   - origin-story
   - origin-vezemir
   - earthropo
@@ -42,7 +41,7 @@ cover: "[[zz_media/banner-bastardo-de-ferro.png]]"
 description: A história de Vezemir, o Bastardo de Ferro, desde sua infância entre os elfos de Leth'valora até sua busca implacável pelo dragão que destruiu tudo o que ele amava.
 ---
 
-# Capítulo 00
+# B-Side: O Bastardo de Ferro
 
 #### _Crônicas de Earthropo_
 

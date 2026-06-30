@@ -81,7 +81,7 @@ Dashboards de capa podem usar:
 
 ```dataview
 TABLE cover, status, description
-FROM #territorio
+FROM "Territories"
 SORT file.name ASC
 ```
 
