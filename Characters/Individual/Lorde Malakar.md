@@ -23,14 +23,13 @@ chapter:
 chapters:
   - 00 - As Crônicas de Névoa de Sangue
 tags:
-  - Category/Character
   - character
   - personagem
   - npc
   - antagonist
+  - antagonista
   - vampiro
   - sanguinallis
-  - draft
   - bside
   - origin-story
   - origin-raziel

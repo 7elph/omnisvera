@@ -39,7 +39,7 @@ tags:
   - origin-vezemir
   - chapter01
   - coroa-de-nimalia
-  - Category/Character
+  - npc-importante
 ---
 
 # GENERAL CASSIAN VALERIUS

@@ -8,6 +8,7 @@ spoiler_level: none
 gm_secret: false
 campaign_status: Ativo
 thumbnail: zz_media/th_varkh.PNG
+cover: zz_media/varkh.jpeg
 status: Vivo
 location: "[[Nimalis]]"
 territory: "[[Nimalia]]"
@@ -37,7 +38,6 @@ tags:
   - conclave-dos-errantes
   - nimalia
   - earthropo
-  - Category/Character
 ---
 
 # VARKH NIMALIS — O CORVO DA MARÉ BAIXA

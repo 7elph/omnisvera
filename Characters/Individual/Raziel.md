@@ -37,7 +37,6 @@ tags:
   - sangue-antigo
   - sanguinallis
   - earthropo
-  - Category/Character
 ---
 
 # RAZIEL — O ESPECTRO DA NÉVOA DE SANGUE

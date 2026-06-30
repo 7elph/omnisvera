@@ -23,14 +23,13 @@ chapter:
 chapters:
   - 00 - As Crônicas de Névoa de Sangue
 tags:
-  - Category/Character
   - character
   - personagem
   - npc
   - antagonist
+  - antagonista
   - vampiro
   - sanguinallis
-  - draft
   - bside
   - origin-story
   - origin-raziel
@@ -41,9 +40,6 @@ tags:
 
 > [!NOTE|clean no-i right]+ Kaelen, o Flagelo
 > Imagem pendente.
-
-> [!WARNING] Estado canônico
-> Esta nota está em desenvolvimento e depende de confirmação do Sage.
 
 > [!WARNING] Estado canônico
 > Esta nota está em desenvolvimento e depende de confirmação do Sage.

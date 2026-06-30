@@ -35,7 +35,7 @@ tags:
   - origin-vezemir
   - igreja-das-chamas
   - earthropo
-  - Category/Character
+  - npc-importante
 ---
 
 # PADRE ORIC

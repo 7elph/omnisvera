@@ -26,6 +26,7 @@ tags:
   - personagem
   - npc
   - creature
+  - criatura
   - constructo
   - chapter01
   - dorn-7

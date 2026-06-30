@@ -34,7 +34,7 @@ tags:
   - origin-vezemir
   - lethvalora
   - earthropo
-  - Category/Character
+  - npc-importante
 ---
 
 # MIRA VALEN

@@ -23,7 +23,6 @@ chapter:
 chapters:
   - 00 - O Bastardo de Ferro
 tags:
-  - Category/Character
   - player
   - jogador
   - character

@@ -23,11 +23,11 @@ chapter:
 chapters:
   - 00 - O Bastardo de Ferro
 tags:
-  - Category/Character
   - character
   - personagem
   - npc
   - creature
+  - criatura
   - dragon
   - dragao-de-colar-dourado
   - bside

@@ -22,14 +22,13 @@ chapter:
 chapters:
   - 00 - O Corvo da Maré Baixa
 tags:
-  - Category/Character
   - character
   - personagem
   - npc
+  - npc-importante
   - alchemist
   - alquimista
   - varkh
-  - draft
   - bside
   - origin-story
   - origin-varkh

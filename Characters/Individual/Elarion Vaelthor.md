@@ -35,7 +35,7 @@ tags:
   - origin-vezemir
   - sentinelas-de-lethvalora
   - earthropo
-  - Category/Character
+  - npc-importante
 ---
 
 # ELARION VAELTHOR

@@ -34,7 +34,7 @@ tags:
   - earthropo
   - coroa-de-nimalia
   - nobreza-de-nimalia
-  - Category/Character
+  - npc-importante
 ---
 
 # AUGUSTUS TERRA DECIMUS
