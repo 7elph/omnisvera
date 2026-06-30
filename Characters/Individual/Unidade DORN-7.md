@@ -26,7 +26,7 @@ tags:
   - npc
   - criatura
   - constructo
-  - chapter01
+  - capitulo01
   - dorn-7
   - earthropo
 ---

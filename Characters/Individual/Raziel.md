@@ -25,7 +25,7 @@ chapters:
 tags:
   - personagem
   - jogador
-  - chapter00_raziel
+  - capitulo00-raziel
   - bside
   - origem
   - origem-raziel

@@ -10,7 +10,7 @@ status: Cânone de personagem
 campaign_status: Ativo
 cssclasses:
   - b-sides-script
-  - chapter
+  - capitulo
 chapter:
 origin_tag:
 chapters:
@@ -24,7 +24,7 @@ created_by:
 tags:
   - story
   - bside
-  - origin-story
+  - origem
 ---
 
 # B-Side: Nome da Origem

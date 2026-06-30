@@ -10,9 +10,9 @@ spoiler_level: light
 gm_secret: false
 cssclasses:
   - b-sides-script
-  - chapter
+  - capitulo
 chapter: 01 - Ecos do Mundo Perdido
-chapter_tag: chapter01
+chapter_tag: capitulo01
 chapters:
   - 01 - Ecos do Mundo Perdido
 date:
@@ -28,9 +28,9 @@ characters:
 cover: "[[zz_media/banner-ecos-do-mundo-perdido.png]]"
 description: Primeiro capítulo coletivo da campanha, reunindo Vezemir, Varkh e Raziel diante dos primeiros sinais de ruínas antigas, remédios falsos e mistérios esquecidos sob Earthropo.
 tags:
-  - chapter
+  - capitulo
   - story
-  - chapter01
+  - capitulo01
   - earthropo
 ---
 

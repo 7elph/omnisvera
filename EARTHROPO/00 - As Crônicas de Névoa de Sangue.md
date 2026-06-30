@@ -10,7 +10,7 @@ spoiler_level: heavy
 gm_secret: true
 cssclasses:
   - b-sides-script
-  - chapter
+  - capitulo
   - character/Raziel
   - character/Ancião Primordial
 tags:

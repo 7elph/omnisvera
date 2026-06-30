@@ -26,7 +26,7 @@ cover:
 tags:
   - rumor
   - story
-  - chapter01
+  - capitulo01
   - conclave-dos-errantes
 ---
 

@@ -10,7 +10,7 @@ status: Planejado
 campaign_status: Planejado
 cssclasses:
   - b-sides-script
-  - chapter
+  - capitulo
 chapter:
 chapter_tag:
 chapters:
@@ -27,7 +27,7 @@ description:
 created_by:
 tags:
   - story
-  - chapter
+  - capitulo
 ---
 
 # Capítulo XX: Nome

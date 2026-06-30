@@ -27,7 +27,7 @@ tags:
 > ```datacards
 > TABLE cover, status, campaign_status, description
 > FROM "EARTHROPO"
-> WHERE contains(tags, "chapter01")
+> WHERE contains(tags, "capitulo01")
 > SORT file.name ASC
 >
 > // Settings
@@ -128,7 +128,7 @@ TABLE thumbnail, status, location, faction
 FROM "Characters/Individual"
 WHERE (
   contains(chapters, "01 - Ecos do Mundo Perdido")
-  OR contains(tags, "chapter01")
+  OR contains(tags, "capitulo01")
   OR file.name = "Vezemir"
   OR file.name = "Varkh Nimalis"
   OR file.name = "Raziel"

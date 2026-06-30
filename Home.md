@@ -44,9 +44,9 @@ gm_secret: false
 > ```datacards
 > TABLE cover, status, campaign_status, description
 > FROM "EARTHROPO"
-> WHERE contains(tags, "chapter")
+> WHERE contains(tags, "capitulo")
 > AND !contains(tags, "bside")
-> AND !contains(tags, "origin-story")
+> AND !contains(tags, "origem")
 > AND (visibility = "Jogadores" OR visibility = "Público")
 > AND gm_secret != true
 > AND spoiler_level != "medium"

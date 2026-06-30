@@ -28,7 +28,7 @@ cover:
 tags:
   - quest
   - story
-  - chapter01
+  - capitulo01
   - conclave-dos-errantes
 ---
 

@@ -26,7 +26,7 @@ chapters:
 tags:
   - personagem
   - jogador
-  - chapter00_varkh
+  - capitulo00-varkh
   - bside
   - origem
   - origem-varkh

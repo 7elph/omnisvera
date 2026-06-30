@@ -10,7 +10,7 @@ spoiler_level: medium
 gm_secret: true
 cssclasses:
   - b-sides-script
-  - chapter
+  - capitulo
   - character/Vezemir
   - character/Elarion Vaelthor
   - character/Mira Valen

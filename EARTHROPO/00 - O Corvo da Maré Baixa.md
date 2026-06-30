@@ -10,7 +10,7 @@ spoiler_level: medium
 gm_secret: true
 cssclasses:
   - b-sides-script
-  - chapter
+  - capitulo
   - character/Varkh Nimalis
   - character/Mestre Odran Veyl
 tags:

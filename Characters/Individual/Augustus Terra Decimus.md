@@ -28,7 +28,7 @@ tags:
   - npc
   - paladino
   - antropo
-  - chapter01
+  - capitulo01
   - nimalia
   - earthropo
   - coroa-de-nimalia

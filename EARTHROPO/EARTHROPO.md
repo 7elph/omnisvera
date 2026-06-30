@@ -94,7 +94,7 @@ tags:
 > ```datacards
 > TABLE cover, status, campaign_status, description
 > FROM "EARTHROPO"
-> WHERE contains(tags, "chapter")
+> WHERE contains(tags, "capitulo")
 > AND !contains(tags, "origem")
 > AND !contains(tags, "bside")
 > AND (visibility = "Jogadores" OR visibility = "Público")

@@ -36,7 +36,7 @@ tags:
   - bside
   - origem
   - origem-vezemir
-  - chapter01
+  - capitulo01
   - coroa-de-nimalia
   - npc-importante
 ---
