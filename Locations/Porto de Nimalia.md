@@ -29,6 +29,12 @@ tags:
 
 # Porto de Nimalia
 
+> [!NOTE|clean no-i right]+ Porto de Nimalia
+> ![[mapa-de-nimalis.png|400]]
+
+> [!world]- SINOPSE PÚBLICA
+> O Porto de Nimalia conecta a capital a cargas, marinheiros, passageiros, contrabando e rumores vindos de regiões distantes como o [[Mar da Neblina]].
+
 ## Visão Geral
 
 Lugar de [[Nimalis]] onde barcos fazem movimentação, carga e descarga.

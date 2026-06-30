@@ -23,10 +23,17 @@ tags:
   - local
   - nimalis
   - distrito
+  - bairro
   - anao
 ---
 
 # Bairro dos Anões
+
+> [!NOTE|clean no-i right]+ Bairro dos Anões
+> ![[mapa-de-nimalis.png|400]]
+
+> [!world]- SINOPSE PÚBLICA
+> O Bairro dos Anões reúne ofícios, metal, rotas do norte e histórias sobre fortalezas antigas. É uma ponte urbana para temas ligados a [[Fortaleza de Gharok]] e ao futuro reino anão.
 
 ## Visão Geral
 

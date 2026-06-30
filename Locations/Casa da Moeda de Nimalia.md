@@ -33,6 +33,9 @@ tags:
 > [!NOTE|clean no-i right]+ Exterior
 > ![[casa-da-moeda-exterior.png|400]]
 
+> [!world]- SINOPSE PÚBLICA
+> A Casa da Moeda de Nimalia é a instituição responsável pela cunhagem oficial do reino. Ela pode transformar economia, impostos, falsificações e interesses da Coroa em gancho de investigação.
+
 ## Visão Geral
 
 Instituição localizada em [[Nimalis]] e responsável pela produção das moedas oficiais do reino.

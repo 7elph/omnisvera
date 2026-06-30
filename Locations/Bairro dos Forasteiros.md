@@ -23,10 +23,17 @@ tags:
   - local
   - nimalis
   - distrito
+  - bairro
   - forasteiros
 ---
 
 # Bairro dos Forasteiros
+
+> [!NOTE|clean no-i right]+ Bairro dos Forasteiros
+> ![[mapa-de-nimalis.png|400]]
+
+> [!world]- SINOPSE PÚBLICA
+> O Bairro dos Forasteiros acolhe quem chega a [[Nimalis]] sem renda, proteção ou lugar fixo. É abrigo temporário, favela, rumor e sobrevivência difícil no mesmo espaço.
 
 ## Visão Geral
 

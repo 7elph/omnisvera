@@ -28,6 +28,12 @@ tags:
 
 # Mercado Central
 
+> [!NOTE|clean no-i right]+ Mercado Central
+> ![[mapa-de-nimalis.png|400]]
+
+> [!world]- SINOPSE PÚBLICA
+> O Mercado Central é o coração comercial cotidiano de [[Nimalis]], cheio de barracas, moedas, rumores, feirantes, viajantes e produtos comuns.
+
 ## Visão Geral
 
 Área comercial de [[Nimalis]], onde estão produtos comuns, vendedores, feirantes e mercadorias de circulação ampla.

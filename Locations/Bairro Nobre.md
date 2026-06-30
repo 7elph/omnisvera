@@ -23,10 +23,17 @@ tags:
   - local
   - nimalis
   - distrito
+  - bairro
   - nobreza-de-nimalia
 ---
 
 # Bairro Nobre
+
+> [!NOTE|clean no-i right]+ Bairro Nobre
+> ![[mapa-de-nimalis.png|400]]
+
+> [!world]- SINOPSE PÚBLICA
+> O Bairro Nobre concentra casas influentes, salões, brasões e interesses da [[Nobreza de Nimalia]]. É onde prestígio, intriga e poder político se encontram.
 
 ## Visão Geral
 

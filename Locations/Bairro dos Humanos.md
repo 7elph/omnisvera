@@ -23,10 +23,17 @@ tags:
   - local
   - nimalis
   - distrito
+  - bairro
   - humano
 ---
 
 # Bairro dos Humanos
+
+> [!NOTE|clean no-i right]+ Bairro dos Humanos
+> ![[mapa-de-nimalis.png|400]]
+
+> [!world]- SINOPSE PÚBLICA
+> O Bairro dos Humanos é a comunidade humana estabelecida em [[Nimalis]], dentro de um reino onde os antropos predominam. É um ponto útil para contatos, hospedagem, pequenos negócios e tensões culturais.
 
 ## Visão Geral
 

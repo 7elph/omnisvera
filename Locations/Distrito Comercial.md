@@ -28,6 +28,12 @@ tags:
 
 # Distrito Comercial
 
+> [!NOTE|clean no-i right]+ Distrito Comercial
+> ![[mapa-de-nimalis.png|400]]
+
+> [!world]- SINOPSE PÚBLICA
+> O Distrito Comercial reúne lojas especializadas, serviços raros, contratos caros e negócios moralmente perigosos. É onde o comércio legal e o submundo podem se tocar.
+
 ## Visão Geral
 
 Área com lojas especializadas de [[Nimalis]], onde se pode encontrar desde poções e serviços raros até mercadorias moralmente perigosas.
