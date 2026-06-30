@@ -22,6 +22,7 @@ tags:
 TABLE status, rules_status, campaign_status, visibility, thumbnail
 FROM "Classes"
 WHERE type = "class"
+AND NoteStatus != "Placeholder"
 SORT file.name ASC
 ```
 

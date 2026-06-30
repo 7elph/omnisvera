@@ -22,6 +22,7 @@ tags:
 TABLE status, campaign_status, visibility, territory, region
 FROM "Races"
 WHERE type = "race"
+AND NoteStatus != "Placeholder"
 SORT file.name ASC
 ```
 

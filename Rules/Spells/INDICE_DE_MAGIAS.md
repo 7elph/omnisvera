@@ -1,4 +1,7 @@
 ---
+obsidianUIMode: preview
+NoteIcon: spell
+NoteStatus: Draft
 type: index
 status: Rascunho
 visibility: Mestre
@@ -16,6 +19,21 @@ tags:
 Este índice organiza magias por uso de campanha.
 
 Não reproduzir texto integral de livros ou materiais protegidos. Cada nota de magia deve conter apenas estrutura própria, resumo original e campos de controle.
+
+## Magias Liberadas
+
+```dataview
+TABLE level, status, campaign_status, danger_level
+FROM "Rules/Spells"
+WHERE type = "spell"
+AND (visibility = "Jogadores" OR visibility = "Público")
+AND gm_secret != true
+AND spoiler_level != "medium"
+AND spoiler_level != "heavy"
+SORT level ASC, file.name ASC
+```
+
+## Magias do Mestre
 
 ```dataview
 TABLE level, status, campaign_status, danger_level

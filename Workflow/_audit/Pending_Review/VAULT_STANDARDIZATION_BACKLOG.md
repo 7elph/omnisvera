@@ -318,12 +318,40 @@ Ajustes aplicados:
 
 Relatório: [[PLAYER_HOME_OPERATIONAL_REVIEW]]
 
+### Lote 13 — Índices Operacionais e Candidatos de Limpeza
+
+Status: aplicado.
+
+Padronizados:
+
+- `Bestiary/INDICE_DE_MONSTROS.md`;
+- `CAMPANHA/Quests/INDICE_DE_QUESTS.md`;
+- `CAMPANHA/Rumors/INDICE_DE_RUMORES.md`;
+- `Classes/INDICE_DE_CLASSES.md`;
+- `Items/INDICE_DE_ITENS.md`;
+- `Races/INDICE_DE_RACAS.md`;
+- `Rules/Spells/INDICE_DE_MAGIAS.md`.
+
+Ajustes aplicados:
+
+- Índices de quests, rumores, monstros e magias agora separam conteúdo liberado e conteúdo do mestre.
+- Índices públicos usam filtros de `visibility`, `gm_secret` e `spoiler_level`.
+- Índices consultam pastas operacionais e não `Workflow`, `Templates` ou legado.
+- Criada revisão atual de candidatos a exclusão/arquivamento.
+- Confirmado que `Workflow/Legacy/Disgraceland` ainda existe localmente, mas não está rastreado pelo Git e não é operacional.
+
+Relatórios:
+
+- [[OPERATIONAL_INDEX_REVIEW]]
+- [[DELETION_CANDIDATES_CURRENT_REVIEW]]
+
 ## Pendências de Decisão do Sage
 
 - Se `Mar da Neblina` será território marítimo, fenômeno ou ambos.
 - Se a Unidade DORN-7 deve ficar em `Characters/Individual` ou migrar futuramente para uma pasta de criaturas/entidades.
 - Se os B-Sides devem manter nomes `00 - ...` ou ganhar prefixo novo como `B-Side - ...`.
 - Se a Home dos Jogadores deve listar capítulos em preparação ou apenas capítulos já jogados.
+- Confirmar se a próxima limpeza pode excluir arquivos ignorados locais como `DisgracelandOnline.zip`, `.tmp_refs`, `.smtcmp_*` e `Workflow/Legacy/Disgraceland`.
 
 ## Critério de Prontidão
 

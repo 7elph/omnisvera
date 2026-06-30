@@ -35,6 +35,8 @@ FROM "Items"
 WHERE type = "item"
 AND (visibility = "Jogadores" OR visibility = "Público")
 AND gm_secret != true
+AND spoiler_level != "medium"
+AND spoiler_level != "heavy"
 SORT owner ASC, file.name ASC
 ```
 
