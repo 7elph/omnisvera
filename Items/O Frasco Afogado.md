@@ -18,6 +18,8 @@ level:
 danger_level: Médio
 thumbnail:
 cover:
+info: Pequena loja de alquimia de Mestre Odran Veyl em Maré Baixa.
+description: Estabelecimento narrativo ligado à formação de Varkh, a Odran e ao arco dos remédios falsos.
 chapters:
   - 00 - O Corvo da Maré Baixa
 hooks:
@@ -39,6 +41,12 @@ tags:
 > [!WARNING] Estado canônico
 > Esta nota está em desenvolvimento e depende de confirmação do Sage.
 
+> [!NOTE]
+> Este estabelecimento ainda não possui imagem específica em `zz_media`.
+
+> [!world]- SINOPSE PÚBLICA
+> O Frasco Afogado é uma pequena loja de alquimia em [[Maré Baixa]], pertencente a [[Mestre Odran Veyl]]. Foi ali que [[Varkh Nimalis]] aprendeu alquimia de rua.
+
 ## Visão Geral
 
 Pequena loja de alquimia situada em [[Maré Baixa]], propriedade de [[Mestre Odran Veyl]]. É o local onde [[Varkh Nimalis]] foi treinado em alquimia de rua após ser pego tentando roubar uma caixa.
@@ -54,6 +62,16 @@ A aparência exata da loja ainda precisa ser definida. Por enquanto, funciona co
 O Frasco Afogado representa a formação de Varkh e a origem de suas habilidades alquímicas.
 
 Também é o ponto de partida do arco de investigação de Varkh, pois alguém está usando o símbolo de Odran para vender remédios falsos em Nimalia.
+
+## Classificação no Vault
+
+| aspecto | decisão atual |
+|---|---|
+| Tipo técnico | `item`, por enquanto |
+| Função narrativa | Estabelecimento / símbolo alquímico |
+| Localização | [[Maré Baixa]] |
+| Dono | [[Mestre Odran Veyl]] |
+| Revisão futura | Pode virar `Location` se ganhar mapa, cenas recorrentes ou pin próprio |
 
 ## O que Está Confirmado
 
@@ -71,6 +89,12 @@ Também é o ponto de partida do arco de investigação de Varkh, pois alguém e
 - [[Maré Baixa]]
 - [[Remédios Falsos de Maré Baixa]]
 - [[Rede de Falsificadores de Maré Baixa]]
+
+## Segredos do Mestre
+
+- Não confirmar se Odran está envolvido nas falsificações.
+- Não decidir ainda se a loja está aberta, fechada, abandonada ou tomada.
+- Se virar local jogável recorrente, migrar cuidadosamente para `Locations/` em etapa própria.
 
 ## Uso em Mesa
 

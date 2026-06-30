@@ -17,6 +17,8 @@ level: 1
 danger_level: Baixo
 thumbnail:
 cover:
+info: Caderno pessoal de Varkh para registrar vozes, frases e sons úteis.
+description: Objeto narrativo ligado à identidade de Varkh, ao mimetismo kenku e à comunicação por vozes emprestadas.
 chapters:
   - 00 - O Corvo da Maré Baixa
 hooks:
@@ -34,6 +36,12 @@ tags:
 
 > [!WARNING] Estado canônico
 > Esta nota está em desenvolvimento e depende de confirmação do Sage.
+
+> [!NOTE]
+> Este item ainda não possui imagem específica em `zz_media`.
+
+> [!world]- SINOPSE PÚBLICA
+> O Caderninho de Vozes é a coleção pessoal de [[Varkh Nimalis]]: frases, timbres, sons e registros que ele considera úteis, interessantes ou necessários para se comunicar em um mundo onde sua voz nunca é inteiramente sua.
 
 ## Visão Geral
 
@@ -62,6 +70,12 @@ Também reflete sua personalidade peculiar: Varkh coleciona frases absurdas, son
 - [[Varkh Nimalis]]
 - [[Kenku]]
 - [[Conclave dos Errantes]]
+
+## Segredos do Mestre
+
+- Nenhuma função secreta está confirmada.
+- Se virar item mágico ou mecânico, isso deve ser decisão futura.
+- A força atual do item é narrativa: identidade, memória, disfarce social e improviso.
 
 ## Uso em Mesa
 

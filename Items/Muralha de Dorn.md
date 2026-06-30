@@ -37,6 +37,9 @@ tags:
 
 > _"Entre o aço e a lenda, há uma muralha. Entre o guerreiro e o fim, há um escudo."_
 
+> [!world]- SINOPSE PÚBLICA
+> A Muralha de Dorn é o escudo grande de [[Vezemir]], uma relíquia marcial que transforma sua presença em campo de batalha numa linha de defesa viva.
+
 ## Visão Geral
 
 A Muralha de Dorn é o escudo grande de [[Vezemir]], uma relíquia marcial entregue por [[Elarion Vaelthor]] em [[Leth'valora]].
@@ -67,6 +70,12 @@ A ficha atual de Vezemir registra a Muralha de Dorn como o bônus de **+2 na Cla
 - **Fortaleza de Dorn:** proteção adicional contra medo, intimidação e abalo.
 - **Guardião de Leth'valora:** golpe de escudo capaz de causar dano e empurrar o alvo.
 - **Inabalável:** o escudo não pode ser destruído por meios comuns.
+
+## Segredos do Mestre
+
+- Não ativar propriedades narrativas como mecânica completa sem decisão.
+- Definir se “Dorn” é pessoa, lugar, tradição, título ou nome simbólico.
+- Tratar possíveis reações ao Véu, dragão ou Guardiões como revelações graduais.
 
 ## Relações
 

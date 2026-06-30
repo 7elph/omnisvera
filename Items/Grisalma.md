@@ -38,6 +38,9 @@ tags:
 
 > _"Não é o machado que faz o guerreiro. É o guerreiro que dá propósito ao machado."_
 
+> [!world]- SINOPSE PÚBLICA
+> Grisalma é o machado de batalha de [[Vezemir]], uma relíquia marcial pesada, antiga e simbólica entregue por [[Elarion Vaelthor]] em [[Leth'valora]].
+
 ## Visão Geral
 
 Grisalma é o machado de batalha de [[Vezemir]], uma relíquia marcial entregue por [[Elarion Vaelthor]] em [[Leth'valora]].
@@ -69,6 +72,12 @@ A ficha atual de Vezemir registra **2d8 de dano** para Grisalma.
 - **Golpes Devastadores:** impactos críticos podem derrubar e afastar o alvo.
 - **Armamento Imortal:** não pode ser quebrada, destruída ou enferrujada por meios comuns.
 - **Vontade do Lobo:** sua presença reforça a capacidade de intimidação de Vezemir.
+
+## Segredos do Mestre
+
+- Não ativar todas as propriedades narrativas como mecânica livre no nível 1.
+- Tratar possíveis reações ao [[Véu Cinzento]], ao dragão ou aos Guardiões como revelações graduais.
+- Confirmar dano e propriedades finais antes de transformar em regra permanente.
 
 ## Relações
 

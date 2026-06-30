@@ -17,6 +17,8 @@ level: 1
 danger_level: Baixo
 thumbnail:
 cover:
+info: Máscara adaptada ao bico de Varkh, ligada à sua identidade pública como Corvo da Maré Baixa.
+description: Equipamento pessoal de Varkh, herdado/adaptado dos materiais de Odran e usado como proteção, intimidação e identidade visual.
 chapters:
   - 00 - O Corvo da Maré Baixa
 hooks:
@@ -35,6 +37,12 @@ tags:
 
 > [!WARNING] Estado canônico
 > Esta nota está em desenvolvimento e depende de confirmação do Sage.
+
+> [!NOTE]
+> Este item ainda não possui imagem específica em `zz_media`.
+
+> [!world]- SINOPSE PÚBLICA
+> A máscara de médico da peste de [[Varkh Nimalis]] mistura proteção, intimidação e identidade. Adaptada ao corpo kenku, ela ajuda a compor a figura conhecida nas ruas como o Corvo da Maré Baixa.
 
 ## Visão Geral
 
@@ -67,6 +75,12 @@ Também simboliza a herança de Odran e a adaptação de Varkh ao próprio corpo
 - [[Mestre Odran Veyl]]
 - [[Maré Baixa]]
 - [[Kenku]]
+
+## Segredos do Mestre
+
+- Nenhuma função mágica está confirmada.
+- A máscara deve funcionar primeiro como símbolo de presença e reputação.
+- Se ganhar regra própria, ela deve reforçar investigação, proteção ou intimidação sem virar solução automática.
 
 ## Uso em Mesa
 

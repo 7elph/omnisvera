@@ -38,6 +38,9 @@ tags:
 
 > _"Nem tudo que é verdade deve ser dito. Nem tudo que é oculto é mentira."_
 
+> [!world]- SINOPSE PÚBLICA
+> O Medalhão é uma relíquia carregada por [[Vezemir]], entregue por [[Elarion Vaelthor]] e associada aos [[Guardiões do Véu Cinzento]]. Sua função real ainda não foi revelada.
+
 ## Visão Geral
 
 O Medalhão é uma relíquia circular carregada por [[Vezemir]], entregue por [[Elarion Vaelthor]] e associada aos [[Guardiões do Véu Cinzento]].
@@ -61,6 +64,12 @@ O verso carrega inscrições em uma língua ancestral e fragmentos do juramento 
 O medalhão representa dever, silêncio e a responsabilidade de guardar conhecimentos capazes de ameaçar o equilíbrio entre luz e sombra.
 
 Sua reação à magia de Vezemir, ao dragão de colar dourado e ao [[Véu Cinzento]] permanece em aberto.
+
+## Segredos do Mestre
+
+- Não definir publicamente se é chave, selo, símbolo de linhagem ou relíquia reativa.
+- Usar reações do medalhão como pista, não como explicação completa.
+- Preservar o nome simples: **O Medalhão**.
 
 ## Relações
 

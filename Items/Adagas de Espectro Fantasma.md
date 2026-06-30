@@ -37,6 +37,9 @@ tags:
 > [!NOTE|clean no-i right]+ Retrato
 > ![[adagas-de-espectro-fantasma.png|400]]
 
+> [!world]- SINOPSE PÚBLICA
+> As Adagas de Espectro Fantasma são lâminas etéreas de [[Raziel]], ligadas ao seu passado como executor do [[Clã Sanguinallis]]. Em movimento, parecem desaparecer parcialmente do mundo.
+
 ## Visão Geral
 
 Par de lâminas de arremesso etéreas pertencentes a [[Raziel]] desde o período em que servia como executor do [[Clã Sanguinallis]].
@@ -55,6 +58,12 @@ As adagas parecem quase apagadas quando empunhadas, como se parte de sua lâmina
 ## História Conhecida
 
 Sua origem, o método de forja e a forma como permaneceram ligadas a Raziel durante seu aprisionamento ainda precisam ser definidos.
+
+## Segredos do Mestre
+
+- Não definir ainda se as adagas foram forjadas pelo clã, por Raziel ou por outro poder.
+- Não revelar cedo se drenam energia vital por magia vampírica, Sangue Antigo ou técnica Sanguinallis.
+- Separar as propriedades das adagas das propriedades pessoais de Raziel.
 
 ## Relações
 

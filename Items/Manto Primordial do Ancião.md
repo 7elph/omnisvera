@@ -39,6 +39,9 @@ tags:
 > [!warning] Nota sensível
 > Esta nota cita o [[Ancião Primordial]] e deve permanecer como informação de mestre até o arco de [[Raziel]] revelar mais detalhes.
 
+> [!world]- SINOPSE DO MESTRE
+> O Manto Primordial do Ancião é uma relíquia ligada ao renascimento de [[Raziel]], às cavernas sob as [[Ruínas de Valthor]] e ao preço ainda desconhecido da dádiva do [[Ancião Primordial]].
+
 ## Visão Geral
 
 Armadura de couro batido extraplanar concedida a [[Raziel]] após seu encontro com o [[Ancião Primordial]] nas cavernas sob as [[Ruínas de Valthor]].
@@ -57,6 +60,12 @@ Manto escuro e silencioso, com textura de couro batido e sombra compactada. A pe
 ## História Conhecida
 
 O custo da dádiva e o vínculo entre o manto e o [[Ancião Primordial]] permanecem desconhecidos.
+
+## Segredos do Mestre
+
+- Não revelar o Ancião Primordial por meio do item antes do arco de Raziel pedir.
+- Manter o custo da dádiva em aberto.
+- Separar o manto da classe [[Vampiro]]; ele é uma relíquia de campanha, não regra básica da classe.
 
 ## Relações
 
