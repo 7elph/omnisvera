@@ -23,14 +23,27 @@ tags:
 
 # Eclipse de Obsidiana
 
-> [!NOTE|clean no-i right]+ Retrato
+> [!NOTE|clean no-i right]+ Eclipse de Obsidiana
 > ![[eclipse-obsidiana.png|400]]
 
-## Visão Geral
+> [!world]- SINOPSE PÚBLICA
+> O Eclipse de Obsidiana é lembrado como o trauma que dividiu a história recente de Earthropo. Por sete dias e sete noites, o sol teria desaparecido. Quando a luz voltou, o [[Véu Cinzento]] marcava parte do mundo conhecido.
 
-Há trezentos anos, o sol teria sido engolido pela escuridão por sete dias e sete noites. Quando a luz retornou, parte de Earthropo havia sido marcada pelo [[Véu Cinzento]].
+## Classificação
 
-Nenhuma explicação natural foi encontrada. Nenhum deus respondeu. Relatos antigos dizem que exploradores que cruzaram o Véu não retornaram.
+| aspecto | estado |
+|---|---|
+| Tipo | Evento histórico / cataclisma |
+| Escala | Continental ou maior |
+| Informação pública | Parcial |
+| Status | Cânone de trabalho |
+| Ano na timeline | 1800, sujeito a ajuste fino |
+
+## Origem
+
+Nenhuma explicação natural foi encontrada. Nenhum deus respondeu de forma inequívoca. Relatos antigos dizem que exploradores que cruzaram o Véu não retornaram ou voltaram incompletos, enlouquecidos ou marcados por memórias que não pertenciam a eles.
+
+A versão popular diz que o evento ocorreu há cerca de trezentos anos. Essa data funciona para mesa, mas ainda pode ser refinada se a cronologia da campanha exigir.
 
 ## Consequências Conhecidas
 
@@ -38,6 +51,18 @@ Nenhuma explicação natural foi encontrada. Nenhum deus respondeu. Relatos anti
 - Perda de regiões inteiras de Earthropo.
 - Ruptura de registros históricos.
 - Medo persistente de fronteiras nebulosas e ruínas impossíveis.
+- Crescimento de interpretações religiosas, políticas e supersticiosas sobre o que aconteceu.
+
+## Conexão com o Presente
+
+O Eclipse não é apenas passado distante. Ele ainda afeta:
+
+- fronteiras evitadas;
+- ruínas que não deveriam existir;
+- religiões e cultos;
+- registros contraditórios;
+- investigações sobre os [[Criadores]];
+- histórias ligadas aos [[Guardiões do Véu Cinzento]].
 
 ## Relações
 
@@ -45,11 +70,20 @@ Nenhuma explicação natural foi encontrada. Nenhum deus respondeu. Relatos anti
 - [[Criadores]]
 - [[O Fraturamento]]
 - [[Guardiões do Véu Cinzento]]
+- [[TIMELINE]]
+- [[CALENDAR]]
+
+## Segredos do Mestre
+
+- Não confirmar cedo se o Eclipse causou o Véu, revelou algo que já existia ou coincidiu com outro evento.
+- A relação com [[O Fraturamento]] deve permanecer em revisão.
+- A versão pública pode estar incompleta, distorcida por religião, política ou perda de registros.
 
 ## Uso em Mesa
 
 - Como apresentar: data histórica, superstição, trauma coletivo, registro antigo ou marco de calendário.
 - O que os jogadores sabem: o Eclipse foi um evento antigo e devastador ligado ao Véu.
+- O que apenas o mestre sabe: causa real, escala verdadeira e relação com Criadores/Fraturamento ainda estão em definição.
 - Como entra em cena: ruínas, profecias, documentos antigos, histórias de bardos, cultos ou investigações.
 - Ganchos: datas repetidas, lugares apagados, nomes esquecidos e fronteiras que ninguém atravessa.
 

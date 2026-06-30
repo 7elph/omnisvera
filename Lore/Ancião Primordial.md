@@ -9,8 +9,10 @@ visibility: Mestre
 spoiler_level: heavy
 gm_secret: true
 created_by: IA
-thumbnail:
-cover:
+thumbnail: zz_media/ruinas-de-valthor.png
+cover: zz_media/ruinas-de-valthor.png
+info: Entidade esquecida associada ao renascimento de Raziel sob as Ruínas de Valthor.
+description: Presença misteriosa ligada às cavernas abissais, ao Sangue Antigo e à origem atual de Raziel.
 chapters:
   - 00 - As Crônicas de Névoa de Sangue
 tags:
@@ -26,20 +28,17 @@ tags:
 > [!WARNING] Estado canônico
 > Esta nota está em desenvolvimento e depende de confirmação do Sage. Ela contém spoilers fortes da origem de [[Raziel]].
 
-## Visão Geral
+> [!NOTE|clean no-i right]+ Ruínas de Valthor
+> ![[ruinas-de-valthor.png|400]]
 
-Entidade esquecida associada às cavernas abissais sob as [[Ruínas de Valthor]]. Na versão atual da lore de Raziel, foi essa entidade que libertou Raziel das correntes de prata e o alimentou com o [[Sangue Antigo]].
+> [!world]- SINOPSE DO MESTRE
+> O Ancião Primordial é uma entidade esquecida associada às cavernas abissais sob as [[Ruínas de Valthor]]. Na versão atual da lore de Raziel, foi essa entidade que libertou Raziel das correntes de prata e o alimentou com o [[Sangue Antigo]].
 
-## Função Narrativa
+## Fundamento
 
-O Ancião Primordial é o catalisador do renascimento de Raziel. É uma presença misteriosa, possivelmente divina ou anterior às estruturas conhecidas de Earthropo. O verdadeiro motivo pelo qual libertou Raziel permanece desconhecido.
+O Ancião Primordial é o catalisador do renascimento de Raziel. É uma presença misteriosa, possivelmente divina, anterior às estruturas conhecidas de Earthropo ou ligada a uma camada ainda não explicada da cosmologia.
 
-## Relações Conhecidas
-
-- [[Raziel]] — vampiro libertado e transformado pelo Sangue Antigo.
-- [[Ruínas de Valthor]] — local das cavernas abissais associadas ao encontro.
-- [[Sangue Antigo]] — fluido concedido a Raziel.
-- [[Manto Primordial do Ancião]] — item ligado ao encontro.
+O verdadeiro motivo pelo qual libertou Raziel permanece desconhecido.
 
 ## O que Está Confirmado
 
@@ -48,6 +47,28 @@ O Ancião Primordial é o catalisador do renascimento de Raziel. É uma presenç
 - Libertou Raziel das correntes de prata.
 - Alimentou Raziel com o [[Sangue Antigo]].
 - Sua natureza verdadeira ainda não está definida.
+
+## Relações Conhecidas
+
+- [[Raziel]] — vampiro libertado e transformado pelo Sangue Antigo.
+- [[Ruínas de Valthor]] — local das cavernas abissais associadas ao encontro.
+- [[Sangue Antigo]] — fluido concedido a Raziel.
+- [[Manto Primordial do Ancião]] — item ligado ao encontro.
+
+## Hipóteses em Revisão
+
+| hipótese | cuidado |
+|---|---|
+| Entidade divina antiga | Pode conflitar com religiões se for revelado cedo. |
+| Sobrevivente ou eco dos Criadores | Exige decidir a natureza dos Criadores. |
+| Manifestação ligada ao Fraturamento | Pode entregar cosmologia antes da hora. |
+| Entidade vampírica primordial | Pode amarrar demais o Sangue Antigo a uma única origem. |
+
+## Segredos do Mestre
+
+- Não definir publicamente se o Ancião é divindade, criatura, memória, entidade antiga ou algo além disso.
+- A motivação real precisa permanecer aberta até o arco de Raziel pedir.
+- A dádiva pode ter custo, dívida, marca ou consequência futura.
 
 ## Uso em Mesa
 
@@ -71,7 +92,7 @@ O Ancião Primordial é o catalisador do renascimento de Raziel. É uma presenç
 
 ## Links Relevantes
 
-- [[Characters/Individual/Raziel]]
-- [[Locations/Ruínas de Valthor]]
+- [[Raziel]]
+- [[Ruínas de Valthor]]
 - [[Sangue Antigo]]
 - [[Manto Primordial do Ancião]]

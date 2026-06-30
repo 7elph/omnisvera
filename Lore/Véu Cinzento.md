@@ -23,10 +23,23 @@ tags:
 
 # Véu Cinzento
 
-> [!NOTE|clean no-i right]+ Retrato
+> [!NOTE|clean no-i right]+ Véu Cinzento
 > ![[veu-cinzento.png|400]]
 
-## Visão Geral
+> [!world]- SINOPSE PÚBLICA
+> O Véu Cinzento é uma névoa branca, espessa e antinatural ligada a ruínas, memórias fragmentadas e regiões que não voltaram inteiras depois do [[Eclipse de Obsidiana]].
+
+## Classificação
+
+| aspecto | estado |
+|---|---|
+| Tipo | Fenômeno / mistério / possível ruptura |
+| Escala | Regional ou maior, ainda indefinida |
+| Perigo | Alto, mas variável |
+| Status | Cânone de trabalho |
+| Informação pública | Parcial |
+
+## Manifestação
 
 Nome usado para um fenômeno de névoa extremamente espessa, branca e antinatural, surgido ou revelado após o [[Eclipse de Obsidiana]].
 
@@ -39,6 +52,16 @@ Como referência visual de tom, o Véu Cinzento lembra uma neblina de horror psi
 - Os [[Guardiões do Véu Cinzento]] são lembrados por registros posteriores que tentam entender quem eram e o que protegiam.
 - Sua natureza, extensão e comportamento ainda não foram definidos completamente.
 
+## Efeitos Observáveis
+
+| aspecto | efeito possível |
+|---|---|
+| Pessoas | Desaparecimento, medo, memórias quebradas, relatos contraditórios. |
+| Lugares | Ruínas engolidas, fronteiras incertas, paisagens que parecem deslocadas. |
+| Magia | Reações anormais, falhas, ecos antigos ou sinais que não seguem magia comum. |
+| Memória | Lembranças fragmentadas, registros conflitantes, nomes apagados. |
+| Religião | Superstições, tabus e interpretações conflitantes. |
+
 ## Relações
 
 - [[Eclipse de Obsidiana]]
@@ -47,10 +70,17 @@ Como referência visual de tom, o Véu Cinzento lembra uma neblina de horror psi
 - [[O Fraturamento]]
 - [[Culto dos Sussurrantes]]
 
+## Segredos do Mestre
+
+- Ainda não definir publicamente se é região física, barreira, ruptura, névoa viva ou mais de uma dessas coisas.
+- A relação exata com [[O Fraturamento]] deve permanecer como mistério até existir pista em jogo.
+- Evitar explicar o Véu como simples “magia” ou fenômeno climático.
+
 ## Uso em Mesa
 
 - Como apresentar: névoa branca espessa, silêncio, paisagem engolida, sons distantes e sensação de memória quebrada.
 - O que os jogadores sabem: o Véu é um fenômeno perigoso e pouco compreendido.
+- O que apenas o mestre sabe: a natureza verdadeira do Véu ainda está em construção.
 - Como entra em cena: rumor, fronteira, ruína, visão, registro antigo ou sinal de distorção.
 - Ganchos: pessoas desaparecidas, lugares que mudam, símbolos antigos e registros dos Guardiões.
 

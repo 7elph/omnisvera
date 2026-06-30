@@ -18,25 +18,41 @@ tags:
   - historia
   - criadores
   - fraturamento
+  - cosmologia
   - earthropo
 ---
 
 # O Fraturamento
 
-> [!NOTE|clean no-i right]+ Retrato
+> [!NOTE|clean no-i right]+ O Fraturamento
 > ![[o-fraturamento.png|400]]
 
-## Visão Geral
+> [!warning]+ Classificação
+> **Tipo:** hipótese cosmológica / mito de bastidor / possível cataclisma antigo  
+> **Escala:** desconhecida  
+> **Uso atual:** segredo do mestre  
+> **Status:** rascunho preservado
+
+## Sinopse do Mestre
 
 O Fraturamento é um rascunho de lore cosmológica ligado aos [[Criadores]], à ideia de mundos-fragmento e à possibilidade de que Earthropo seja apenas uma parte de uma realidade maior e danificada.
 
 Esta nota não deve ser tratada como verdade pública até validação do Sage.
 
-## Cânone de Trabalho
+## Fundamento
 
 Antes do [[Eclipse de Obsidiana]], existiam os [[Criadores]] — uma civilização, força ou conjunto de entidades capazes de moldar mundos.
 
 Registros fragmentados sugerem a existência de mundos-cópia, refúgios ou fragmentos criados após um cataclisma cosmológico. A verdade ainda está em revisão.
+
+## Hipóteses em Revisão
+
+| hipótese | risco |
+|---|---|
+| O mundo atual é um fragmento de algo maior. | Pode redefinir toda a cosmologia cedo demais. |
+| O Véu Cinzento é uma cicatriz do Fraturamento. | Pode entregar a origem do Véu antes da hora. |
+| Os Criadores causaram ou tentaram impedir o Fraturamento. | Exige decidir a natureza real dos Criadores. |
+| Artefatos antigos são pedaços de sistemas anteriores. | Pode afetar itens e dungeons futuras. |
 
 ## Fragmentos em Revisão
 
@@ -56,6 +72,13 @@ Registros fragmentados sugerem a existência de mundos-cópia, refúgios ou frag
 - [[Eclipse de Obsidiana]]
 - [[Véu Cinzento]]
 - [[Unidade DORN-7]]
+- [[Sangue Antigo]]
+
+## Segredos do Mestre
+
+- O Fraturamento pode ser fato, mito, teoria religiosa ou interpretação errada.
+- Não usar como explicação universal antes da campanha precisar.
+- Se for real, ele deve aparecer por pistas materiais: ruínas, falhas, objetos, memórias e contradições.
 
 ## Uso em Mesa
 

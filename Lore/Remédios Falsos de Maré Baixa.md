@@ -11,6 +11,8 @@ gm_secret: true
 created_by: IA
 thumbnail: zz_media/remedios-falsos.png
 cover: zz_media/remedios-falsos.png
+info: Arco de investigação de Varkh sobre remédios falsos em Maré Baixa e Nimalia.
+description: Investigação sobre falsificações alquímicas usando o símbolo e os métodos de Mestre Odran Veyl.
 chapters:
   - 00 - O Corvo da Maré Baixa
 tags:
@@ -23,21 +25,30 @@ tags:
 
 # Remédios Falsos de Maré Baixa
 
-> [!NOTE|clean no-i right]+ Retrato
+> [!NOTE|clean no-i right]+ Remédios Falsos
 > ![[remedios-falsos.png|400]]
 
 > [!WARNING] Estado canônico
 > Esta nota está em desenvolvimento e depende de confirmação do Sage. Ela contém suspeitas do arco de [[Varkh Nimalis]].
 
-## Visão Geral
-
-Arco de investigação de [[Varkh Nimalis]] sobre remédios falsos que circulam em Nimalia usando o símbolo e os métodos de [[Mestre Odran Veyl]]. Pessoas compram cura e recebem veneno. Documentos falsificados surgem com assinaturas perfeitas demais. Guardas procuram por "um corvo alquimista".
+> [!world]- SINOPSE DO MESTRE
+> Remédios falsos circulam em Nimalia usando o símbolo e os métodos de [[Mestre Odran Veyl]]. Pessoas compram cura e recebem veneno. Documentos falsificados surgem com assinaturas perfeitas demais. Guardas procuram por “um corvo alquimista”.
 
 ## Função Narrativa
 
-Os remédios falsos representam o conflito central do arco de Varkh. Eles forçam Varkh a deixar [[Maré Baixa]] para proteger o nome de seu mestre, investigar a origem das falsificações e descobrir o que Odran pode ter escondido.
+Os remédios falsos representam o conflito central do arco de Varkh. Eles forçam [[Varkh Nimalis]] a deixar [[Maré Baixa]] para proteger o nome de seu mestre, investigar a origem das falsificações e descobrir o que Odran pode ter escondido.
 
 O arco explora identidade, reputação, honra entre marginalizados e a responsabilidade de quem detém conhecimento perigoso.
+
+## O que Está Confirmado
+
+- Remédios falsos começaram a circular em Nimalia nos últimos meses.
+- Os remédios falsos usam o símbolo antigo de Odran.
+- Pessoas compram cura e recebem veneno.
+- Documentos falsificados surgem com assinaturas perfeitas demais.
+- Guardas passaram a procurar por “um corvo alquimista”.
+- Alguém está usando os métodos de Odran.
+- Varkh deixou Maré Baixa para investigar a origem das falsificações.
 
 ## Relações Conhecidas
 
@@ -48,15 +59,21 @@ O arco explora identidade, reputação, honra entre marginalizados e a responsab
 - [[Rede de Falsificadores de Maré Baixa]] — organização por trás dos remédios falsos.
 - [[Nimalia]] — reino onde os remédios falsos estão circulando.
 
-## O que Está Confirmado
+## Pistas de Mesa
 
-- Remédios falsos começaram a circular em Nimalia nos últimos meses.
-- Os remédios falsos usam o símbolo antigo de Odran.
-- Pessoas compram cura e recebem veneno.
-- Documentos falsificados surgem com assinaturas perfeitas demais.
-- Guardas passaram a procurar por "um corvo alquimista".
-- Alguém está usando os métodos de Odran.
-- Varkh deixou Maré Baixa para investigar a origem das falsificações.
+| pista | uso |
+|---|---|
+| Frasco com símbolo de Odran | Conecta o caso ao passado de Varkh. |
+| Vítima envenenada | Mostra consequência imediata. |
+| Assinatura perfeita demais | Indica falsificação especializada. |
+| Guarda procurando “corvo alquimista” | Coloca pressão social e legal sobre Varkh. |
+| Carga desviada | Pode conectar a investigação à [[Guilda dos Mercadores]] ou à [[Nobreza de Nimalia]]. |
+
+## Segredos do Mestre
+
+- Identidade dos responsáveis, escala da operação e possível ligação com facções maiores ainda estão em aberto.
+- Não confirmar se Odran é culpado, vítima ou peça de um plano maior sem decisão posterior.
+- O arco deve funcionar como gancho de investigação, não como sentença pronta.
 
 ## Uso em Mesa
 
@@ -80,8 +97,8 @@ O arco explora identidade, reputação, honra entre marginalizados e a responsab
 
 ## Links Relevantes
 
-- [[Characters/Individual/Varkh Nimalis]]
-- [[Characters/Individual/Mestre Odran Veyl]]
+- [[Varkh Nimalis]]
+- [[Mestre Odran Veyl]]
 - [[O Frasco Afogado]]
-- [[Territories/Nimalia]]
-- [[Factions/Rede de Falsificadores de Maré Baixa]]
+- [[Nimalia]]
+- [[Rede de Falsificadores de Maré Baixa]]
