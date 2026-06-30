@@ -296,6 +296,28 @@ Ajustes aplicados:
 
 Relatório: [[MASTER_HOME_AND_CAMPAIGN_STATE_ALIGNMENT_REPORT]]
 
+### Lote 12 — Home dos Jogadores
+
+Status: aplicado.
+
+Padronizada:
+
+- `Home.md` como Home pública dos jogadores;
+- navegação visual por mapas, crônicas, calendário e cards;
+- capítulo em foco filtrado por `visibility`, `gm_secret` e `spoiler_level`;
+- personagens dos jogadores por `Characters/Individual`;
+- quests e rumores liberados por `CAMPANHA/Quests` e `CAMPANHA/Rumors`;
+- territórios, locais e facções conhecidos por pastas operacionais.
+
+Ajustes aplicados:
+
+- Removido link direto para `Home_Mestre.md`.
+- Home dos jogadores não aponta para `Workflow`, relatórios técnicos ou legado.
+- B-Sides, origens privadas e bastidores ficam fora da Home pública.
+- Consultas públicas deixaram de depender de tags amplas quando existe pasta operacional.
+
+Relatório: [[PLAYER_HOME_OPERATIONAL_REVIEW]]
+
 ## Pendências de Decisão do Sage
 
 - Se `Mar da Neblina` será território marítimo, fenômeno ou ambos.

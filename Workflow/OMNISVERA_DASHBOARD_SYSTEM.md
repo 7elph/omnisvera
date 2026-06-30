@@ -22,6 +22,30 @@ Este arquivo é documentação técnica. Ele não é Home operacional.
 
 O plugin Homepage deve abrir `Home`.
 
+## Home dos Jogadores
+
+`Home.md` deve ser segura por padrão.
+
+Regras:
+
+- não linkar diretamente relatórios técnicos;
+- não linkar `Workflow/`;
+- não linkar legado;
+- não exibir B-Sides, origens privadas ou bastidores;
+- não depender de tags amplas quando uma pasta operacional existir;
+- usar filtros explícitos de `visibility`, `gm_secret` e `spoiler_level`;
+- mostrar pouco antes de mostrar segredo.
+
+Consultas públicas devem preferir pastas operacionais como:
+
+- `Characters/Individual`;
+- `EARTHROPO`;
+- `Factions`;
+- `Locations`;
+- `Territories`;
+- `CAMPANHA/Quests`;
+- `CAMPANHA/Rumors`.
+
 ## Regra de segurança para dashboards
 
 Dashboards de jogador devem ser conservadores.
