@@ -12,6 +12,7 @@ cssclasses:
   - b-sides-script
   - chapter
 chapter:
+origin_tag:
 chapters:
 characters:
 location:
@@ -42,7 +43,7 @@ tags:
 TABLE thumbnail, location, status
 FROM "Characters/Individual"
 WHERE contains(chapters, this.chapter)
-OR contains(tags, "personagem")
+OR contains(tags, this.origin_tag)
 SORT file.name ASC
 
 // Settings

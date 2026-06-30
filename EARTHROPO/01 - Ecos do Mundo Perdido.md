@@ -12,6 +12,7 @@ cssclasses:
   - b-sides-script
   - chapter
 chapter: 01 - Ecos do Mundo Perdido
+chapter_tag: chapter01
 chapters:
   - 01 - Ecos do Mundo Perdido
 date:
@@ -48,11 +49,15 @@ tags:
 ```datacards
 TABLE thumbnail, status, location, faction
 FROM "Characters/Individual"
-WHERE contains(chapters, "01 - Ecos do Mundo Perdido")
-OR contains(tags, "chapter01")
-OR file.name = "Vezemir"
-OR file.name = "Varkh Nimalis"
-OR file.name = "Raziel"
+WHERE (
+  contains(chapters, this.chapter)
+  OR contains(tags, this.chapter_tag)
+  OR file.name = "Vezemir"
+  OR file.name = "Varkh Nimalis"
+  OR file.name = "Raziel"
+)
+AND (visibility = "Jogadores" OR visibility = "Público")
+AND gm_secret != true
 SORT file.name ASC
 
 // Settings
@@ -136,7 +141,7 @@ SORT file.name ASC
 ```dataview
 TABLE status, visibility, spoiler_level
 FROM "CAMPANHA/Rumors"
-WHERE visibility = "Jogadores" OR visibility = "Público"
+WHERE (visibility = "Jogadores" OR visibility = "Público")
 AND gm_secret != true
 SORT file.name ASC
 ```

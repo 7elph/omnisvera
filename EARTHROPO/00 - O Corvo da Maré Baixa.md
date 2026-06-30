@@ -21,6 +21,7 @@ tags:
   - earthropo
   - varkh
 chapter: 00 - O Corvo da Maré Baixa
+origin_tag: origin-varkh
 chapters:
   - 00 - O Corvo da Maré Baixa
 characters:
@@ -46,7 +47,8 @@ Nascido no extremo sul de [[Nimalis]], em uma favela espremida entre muros antig
 ```datacards
 TABLE thumbnail, location, status
 FROM "Characters/Individual"
-WHERE contains(tags, "chapter00_varkh") OR contains(tags, "varkh")
+WHERE contains(chapters, this.chapter)
+OR contains(tags, this.origin_tag)
 SORT name ASC
 
 // Settings

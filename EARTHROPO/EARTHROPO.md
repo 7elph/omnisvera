@@ -43,8 +43,11 @@ tags:
 > **CRÔNICAS DE ORIGEM / B-SIDES**
 > ---
 > ```datacards
-> TABLE cover, status, description FROM #origin-vezemir
-> WHERE !contains(file.path, "Workflow/")
+> TABLE cover, status, description
+> FROM "EARTHROPO"
+> WHERE contains(tags, "origin-vezemir")
+> AND contains(tags, "bside")
+> AND contains(tags, "origin-story")
 > SORT file.name ASC
 > LIMIT 1
 >
@@ -56,8 +59,11 @@ tags:
 > ```
 > ---
 > ```datacards
-> TABLE cover, status, description FROM #origin-varkh
-> WHERE !contains(file.path, "Workflow/")
+> TABLE cover, status, description
+> FROM "EARTHROPO"
+> WHERE contains(tags, "origin-varkh")
+> AND contains(tags, "bside")
+> AND contains(tags, "origin-story")
 > SORT file.name ASC
 > LIMIT 1
 >
@@ -69,8 +75,11 @@ tags:
 > ```
 > ---
 > ```datacards
-> TABLE cover, status, description FROM #origin-raziel
-> WHERE !contains(file.path, "Workflow/")
+> TABLE cover, status, description
+> FROM "EARTHROPO"
+> WHERE contains(tags, "origin-raziel")
+> AND contains(tags, "bside")
+> AND contains(tags, "origin-story")
 > SORT file.name ASC
 > LIMIT 1
 >
@@ -88,6 +97,8 @@ tags:
 > WHERE contains(tags, "chapter")
 > AND !contains(tags, "origin-story")
 > AND !contains(tags, "bside")
+> AND (visibility = "Jogadores" OR visibility = "Público")
+> AND gm_secret != true
 > SORT file.name ASC
 >
 > // Settings
@@ -105,7 +116,9 @@ tags:
 ```datacards
 TABLE thumbnail, status, location, faction
 FROM "Characters/Individual"
-WHERE contains(tags, "player") OR contains(tags, "jogador")
+WHERE (contains(tags, "player") OR contains(tags, "jogador"))
+AND (visibility = "Jogadores" OR visibility = "Público")
+AND gm_secret != true
 SORT file.name ASC
 
 // Settings

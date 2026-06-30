@@ -251,6 +251,30 @@ Mapas oficiais confirmados:
 
 Relatório: [[TERRITORIES_AND_MAPS_STANDARDIZATION_REPORT]]
 
+### Lote 10 — Earthropo, Story e B-Sides
+
+Status: aplicado.
+
+Padronizados:
+
+- `EARTHROPO/EARTHROPO.md` como índice narrativo de Earthropo;
+- `EARTHROPO/01 - Ecos do Mundo Perdido.md` como capítulo público/jogável;
+- `EARTHROPO/00 - O Bastardo de Ferro.md` como B-Side de Vezemir;
+- `EARTHROPO/00 - O Corvo da Maré Baixa.md` como B-Side de Varkh;
+- `EARTHROPO/00 - As Crônicas de Névoa de Sangue.md` como B-Side de Raziel;
+- `Templates/RPG/Story.md`;
+- `Templates/RPG/B-Side.md`.
+
+Ajustes aplicados:
+
+- B-Sides continuam privados do mestre, com `visibility: Mestre`, `gm_secret: true`, `bside` e `origin-story`.
+- Capítulo numerado continua público, com `visibility: Jogadores`, `gm_secret: false`, `chapter`, `story` e `chapter01`.
+- Consultas de capítulos e B-Sides passaram a usar campos/tags específicos (`chapter_tag` e `origin_tag`) em vez de tags amplas como `personagem`, `vezemir` ou `varkh`.
+- `EARTHROPO.md` filtra capítulos públicos e não deixa B-Sides aparecerem como capítulos numerados.
+- `Home_Mestre.md` consulta crônicas diretamente na pasta `EARTHROPO`, evitando puxar Workflow ou relatórios por tag.
+
+Relatório: [[STORY_AND_BSIDE_STANDARDIZATION_REPORT]]
+
 ## Pendências de Decisão do Sage
 
 - Se `Home_Mestre.md` deve continuar como Home visual separada ou virar apenas uma versão visual do `Estado da Campanha`.

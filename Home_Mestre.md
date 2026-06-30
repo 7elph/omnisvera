@@ -70,10 +70,10 @@ Nimalia é o primeiro horizonte das **Crônicas de Earthropo**: um ponto de part
 > ```
 > **CRÔNICAS DISPONÍVEIS:**
 > ```datacards
-> TABLE cover, date, description FROM #story AND #earthropo
-> WHERE !contains(file.path, "Workflow/")
-> AND !contains(file.path, "Templates/")
-> SORT file.ctime desc
+> TABLE cover, status, campaign_status, description
+> FROM "EARTHROPO"
+> WHERE contains(tags, "story")
+> SORT file.name asc
 > LIMIT 3
 >
 > // Settings

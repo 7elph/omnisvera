@@ -21,6 +21,7 @@ tags:
   - earthropo
   - raziel
 chapter: 00 - As Crônicas de Névoa de Sangue
+origin_tag: origin-raziel
 chapters:
   - 00 - As Crônicas de Névoa de Sangue
 characters:
@@ -48,10 +49,8 @@ description: A história de Raziel, o Espectro da Névoa de Sangue — desde seu
 ```datacards
 TABLE thumbnail, location, status
 FROM "Characters/Individual"
-WHERE contains(tags, "chapter00_raziel")
-OR file.name = "Kaelen, o Flagelo"
-OR file.name = "Lorde Malakar"
-OR file.name = "Vandor, o Senhor das Bestas"
+WHERE contains(chapters, this.chapter)
+OR contains(tags, this.origin_tag)
 SORT name ASC
 
 // Settings

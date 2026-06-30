@@ -24,6 +24,7 @@ tags:
   - earthropo
   - vezemir
 chapter: 00 - O Bastardo de Ferro
+origin_tag: origin-vezemir
 chapters:
   - 00 - O Bastardo de Ferro
 characters:
@@ -54,7 +55,8 @@ Sua história atravessa mais de um século de batalhas, perdas e segredos antigo
 ```datacards
 TABLE thumbnail, location, status
 FROM "Characters/Individual"
-WHERE contains(tags, "chapter00") OR contains(tags, "vezemir")
+WHERE contains(chapters, this.chapter)
+OR contains(tags, this.origin_tag)
 SORT name ASC
 
 // Settings
