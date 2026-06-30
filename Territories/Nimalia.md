@@ -42,7 +42,10 @@ tags:
   - earthropo
 ---
 
-# REINO DE NIMALIA
+# Reino de Nimalia
+
+> [!world]- SINOPSE PÚBLICA
+> Nimalia é o reino dos antropos em Earthropo: um centro de comércio, coroa, rotas e tensões de fronteira. Sua capital é [[Nimalis]], uma cidade enorme e desigual governada pelo rei soberano [[Augustus Terra Decimus]].
 
 ## Visão Geral
 
@@ -54,6 +57,20 @@ Nimalia é o reino dos antropos apresentado até agora em Earthropo. Reúne dife
 [[Nimalis]] é a capital do reino: uma grande cidade de torres de pedra, bairros densos e mercados movimentados, onde antropos convivem com comunidades humanas, élficas, anãs, dragonborns e estrangeiras.
 
 Como referência inicial de cartografia, o reino ocupa as terras centrais ao redor da capital. Sua fronteira com a [[Floresta de Avenor]] está confirmada em conceito. Ao sudeste ficam as [[Ruínas de Valthor]], ao norte fica a [[Fortaleza de Gharok]] e [[Vale Dourado]] permanece como localização menor associada ao interior do reino.
+
+---
+
+## Regra Geográfica
+
+| elemento | classificação |
+|---|---|
+| [[EARTHROPO/EARTHROPO|Earthropo]] | continente |
+| Reino de Nimalia | território / reino |
+| [[Nimalis]] | local / capital |
+| [[Floresta de Avenor]] | território / região florestal fronteiriça |
+| [[Ruínas de Valthor]] | local / ruínas de antigo reino ao sudeste |
+| [[Fortaleza de Gharok]] | local / fortaleza anã antiga ao norte |
+| [[Vale Dourado]] | local / vale, vila ou região menor |
 
 ---
 
@@ -81,6 +98,14 @@ Os distritos da capital estão documentados em [[Nimalis]]. Esta nota mantém a 
 - [[Ruínas de Valthor]] — ruínas antigas ao sudeste.
 - [[Fortaleza de Gharok]] — antiga fortaleza anã ao norte, associada à região do futuro reino anão.
 - [[Vale Dourado]] — localização menor do interior, ainda em revisão.
+
+## Relações Políticas e Territoriais
+
+- [[Coroa de Nimalia]] — poder central do reino.
+- [[Nobreza de Nimalia]] — casas nobres, privilégios e interesses políticos.
+- [[Guilda dos Mercadores]] — força econômica relevante em Nimalia e em Earthropo.
+- [[Guarda Real de Nimalia]] — braço de segurança e ordem ligado à Coroa.
+- [[Igreja das Chamas]] — religião pública importante, ainda em revisão política.
 
 ## Uso em Mesa
 

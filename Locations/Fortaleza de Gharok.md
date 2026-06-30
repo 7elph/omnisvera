@@ -26,8 +26,11 @@ tags:
 
 # Fortaleza de Gharok
 
-> [!NOTE|clean no-i right]+ Retrato
+> [!NOTE|clean no-i right]+ Fortaleza de Gharok
 > ![[fortaleza-de-gharok.png|400]]
+
+> [!world]- SINOPSE PÚBLICA
+> Gharok é uma antiga fortaleza anã ao norte de [[Nimalia]], próxima da região onde futuramente será apresentado o reino dos anões. Seu estado atual ainda está em revisão.
 
 ## Visão Geral
 
@@ -59,11 +62,19 @@ Gharok possui marcador aproximado no [[MAPA DE EARTHROPO]] e no [[MAPA DE NIMALI
 - [[Raziel]] — possui ligação de origem e vingança, a ser revelada com cuidado.
 - [[Clã Sanguinallis]] — relação provável, ainda em revisão operacional.
 - Futuro reino anão — Gharok pode servir como ponte para apresentar o norte, montanhas e territórios anões.
+- [[Ruínas de Valthor]] — possível eixo antigo ligado à história de Raziel, ainda em revisão.
+
+## Segredos do Mestre
+
+- Não definir publicamente se Gharok está abandonada, ocupada ou parcialmente ativa.
+- A relação exata com vampiros, Sanguinallis ou eventos de Raziel deve permanecer como bastidor.
+- Evitar transformar Gharok no reino anão inteiro; ela é uma fortaleza antiga dentro de uma região maior.
 
 ## Uso em Mesa
 
 - Como apresentar: fortaleza antiga no norte, com pedra anã, silêncio pesado e reputação perigosa.
 - O que os jogadores sabem: Gharok é uma antiga fortaleza anã ao norte de Nimalia.
+- O que apenas o mestre sabe: sua relação exata com Raziel, Sanguinallis e o futuro reino anão ainda está em revisão.
 - Como entra em cena: rumor, mapa, perseguição, busca por respostas de Raziel ou exploração de ruínas.
 - Ganchos: registros anões, passagens subterrâneas, tronos abandonados, marcas de sangue e ecos de domínio antigo.
 

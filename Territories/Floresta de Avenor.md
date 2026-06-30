@@ -41,14 +41,17 @@ tags:
 
 ---
 
-# FLORESTA DE AVENOR
+# Floresta de Avenor
+
+> [!world]- SINOPSE PÚBLICA
+> Avenor é uma região florestal fronteiriça ao [[Nimalia|Reino de Nimalia]], cheia de trilhas antigas, ruínas cobertas pela mata e memórias ligadas à queda de [[Leth'valora]].
 
 ## Visão Geral
 
 > [!NOTE|clean no-i right]+ Floresta de Avenor
 > ![[avenor.png|400]]
 
-Uma grande floresta das terras centrais de Earthropo. No mapa de trabalho, ocupa a região florestal a leste ou nordeste da [[Nimalis]], estendendo-se ao longo da fronteira do Reino de [[Nimalia]].
+Uma grande floresta das terras centrais de Earthropo. No mapa de trabalho, ocupa a região florestal próxima à [[Nimalis]], estendendo-se ao longo da fronteira do Reino de [[Nimalia]].
 
 Avenor é conhecida por suas trilhas esquecidas, ruínas cobertas pela vegetação e pela enorme quantidade de criaturas selvagens que habitam suas profundezas. Caçadores, aventureiros e eremitas frequentemente atravessam a floresta, mas poucos conhecem seus verdadeiros segredos.
 
@@ -64,6 +67,13 @@ Foi nas estradas abandonadas de Avenor que o meio-elfo [[Vezemir]] foi encontrad
 - Contém ou abriga caminhos para [[Leth'valora]].
 - Pode servir como região de contato futuro com povos élficos.
 - É uma das regiões em foco para histórias ligadas a [[Vezemir]], [[Mira Valen]] e ao [[Dragão de Colar Dourado]].
+
+## Regra de Cânone
+
+- Avenor não é o reino élfico.
+- [[Leth'valora]] era uma vila pequena dentro da região de Avenor.
+- O futuro reino élfico pode ficar em Avenor, além dela ou conectado a ela, mas isso ainda não está decidido.
+- Avenor faz fronteira com Nimalia, mas não deve ser tratada automaticamente como parte do reino.
 
 ## Locais Relacionados
 

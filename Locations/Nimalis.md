@@ -29,8 +29,11 @@ tags:
 
 # Nimalis
 
-> [!NOTE|clean no-i right]+ Retrato
+> [!NOTE|clean no-i right]+ Nimalis
 > ![[mapa-de-nimalis.png|400]]
+
+> [!world]- SINOPSE PÚBLICA
+> Nimalis é a capital do [[Nimalia|Reino de Nimalia]]: uma cidade grande, viva e desigual, onde bairros raciais, mercado, nobreza, porto e submundo se cruzam sob a sombra da Coroa.
 
 ## Visão Geral
 
@@ -48,6 +51,19 @@ Esta nota é o destino do marcador da capital no [[MAPA DE EARTHROPO]] e no [[MA
 - **Mapa urbano:** [[MAPA DE NIMALIS]]
 
 ## Regiões e bairros
+
+| bairro/região | função |
+|---|---|
+| [[Bairro dos Humanos]] | Comunidade humana estabelecida na capital. |
+| [[Bairro dos Elfos]] | Comunidade élfica urbana. |
+| [[Bairro dos Anões]] | Comunidade anã urbana. |
+| [[Bairro dos Dragonborns]] | Comunidade dragonborn urbana. |
+| [[Bairro Nobre]] | Área de casas nobres e alto padrão. |
+| [[Mercado Central]] | Comércio amplo, produtos comuns e circulação pública. |
+| [[Distrito Comercial]] | Lojas especializadas, negócios sensíveis e comércio sombrio. |
+| [[Bairro dos Forasteiros]] | Região pobre, temporária e instável. |
+| [[Porto de Nimalia]] | Carga, descarga, rotas fluviais/marítimas e contato com o exterior. |
+| [[Maré Baixa]] | Zona pobre e portuária ligada ao submundo local. |
 
 ### [[Bairro dos Humanos]]
 
@@ -91,6 +107,14 @@ Lugar da cidade onde os barcos fazem movimentação, carga e descarga.
 ## Função no Mapa
 
 Nimalis é o principal ponto urbano conhecido da campanha. A cidade funciona como centro político do reino, ponto de partida para rotas comerciais e conexão entre bairros, facções e personagens.
+
+## Pontos de Interesse
+
+- Biblioteca Real.
+- Grande Templo das Chamas.
+- Arena Divina.
+- [[Casa da Moeda de Nimalia]].
+- [[O Frasco Afogado]], em [[Maré Baixa]].
 
 ## Relações
 

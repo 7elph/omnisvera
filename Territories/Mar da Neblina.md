@@ -27,7 +27,10 @@ tags:
 # Mar da Neblina
 
 > [!NOTE]
-> Nota-base criada para centralizar menções ao Mar da Neblina. A lore ainda está em revisão.
+> Nota-base criada para centralizar menções ao Mar da Neblina. A lore ainda está em revisão e ainda não possui imagem específica em `zz_media`.
+
+> [!world]- SINOPSE PÚBLICA
+> O Mar da Neblina é uma região marítima de rotas incertas, névoas persistentes e histórias contraditórias. Rumores vindos dele chegam a portos, guildas e viajantes antes que qualquer mapa consiga confirmar sua verdade.
 
 ## Visão Geral
 
@@ -52,6 +55,20 @@ Rumores vindos do Mar da Neblina podem cruzar documentos da Coroa, rotas de merc
 - Pode se conectar ao [[Porto de Nimalia]] por rotas comerciais.
 - Pode trazer rumores para [[Nimalis]] e para a [[Guilda dos Mercadores]].
 - Ainda não possui posição exata definida no mapa de Earthropo.
+
+## Relações
+
+- [[Porto de Nimalia]]
+- [[Nimalis]]
+- [[Guilda dos Mercadores]]
+- [[Conclave dos Errantes]]
+- [[Véu Cinzento]], apenas como comparação temática; não confirmar origem comum sem decisão.
+
+## Segredos do Mestre
+
+- Não definir ainda se a névoa do mar é natural, mágica ou ligada a fenômenos antigos.
+- Não fundir automaticamente o Mar da Neblina com o [[Véu Cinzento]].
+- Usar como fonte de rumores e pistas antes de virar região totalmente mapeada.
 
 ## Aparições e Menções
 

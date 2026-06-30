@@ -141,6 +141,32 @@ cardSpacing: 4
 | Vila destruída ligada a Vezemir | [[Leth'valora]] |
 | Sistema | Old Dragon 2E |
 
+## Geografia Operacional
+
+| lugar | classificação | decisão atual |
+|---|---|---|
+| [[EARTHROPO/EARTHROPO|Earthropo]] | Continente | Continente em foco da campanha, não o mundo inteiro. |
+| [[Nimalia]] | Reino | Reino dos antropos, governado por [[Augustus Terra Decimus]]. |
+| [[Nimalis]] | Capital / cidade | Capital de Nimalia e principal centro urbano conhecido. |
+| [[Floresta de Avenor]] | Região florestal / território | Região de fronteira próxima a Nimalia; pode se conectar ao futuro reino élfico. |
+| [[Leth'valora]] | Vila destruída | Pequena vila élfica em Avenor, destruída pelo dragão de colar dourado. |
+| [[Ruínas de Valthor]] | Local / ruínas | Antigo reino próspero ao sudeste de Nimalia. |
+| [[Fortaleza de Gharok]] | Local / fortaleza | Antiga fortaleza anã ao norte de Nimalia. |
+| [[Mar da Neblina]] | Região marítima | Mar de névoas e rumores, ainda sem posição final. |
+| [[Vale Dourado]] | Local menor | Vila, vale agrícola ou região rural pequena dentro de Nimalia. |
+
+## Reinos e Povos Ainda em Apresentação
+
+| povo/reino | posição de trabalho | status |
+|---|---|---|
+| Reino élfico | Sudoeste, possivelmente ligado a Avenor ou além dela | Futuro |
+| Reino anão | Nordeste/norte, próximo de montanhas e Gharok | Futuro |
+| Reino dragonborn | Noroeste | Futuro |
+| Outros povos | A definir conforme campanha | Futuro |
+
+> [!warning]
+> As posições acima são bússola de criação, não fronteira final de mapa. Não criar fronteiras rígidas antes dos mapas e pinos estarem consolidados.
+
 ## Eixos Ativos
 
 - O avanço do [[Véu Cinzento]] e seus fragmentos impossíveis.
@@ -177,5 +203,6 @@ cardSpacing: 4
 
 - Definir bordas exatas de Nimalia no mapa.
 - Posicionar com precisão [[Fortaleza de Gharok|Gharok]], [[Ruínas de Valthor|Valthor]] e os domínios antigos do [[Clã Sanguinallis]].
+- Definir posição final dos futuros reinos élfico, anão e dragonborn.
 - Decidir o quanto da história dos Criadores será revelada no primeiro arco.
 - Definir como Vezemir, Varkh e Raziel se encontram em mesa.

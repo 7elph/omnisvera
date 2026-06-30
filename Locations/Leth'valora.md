@@ -36,6 +36,9 @@ tags:
 > [!NOTE|clean no-i right]+ Leth'valora
 > ![[vila-de-leth'valora.png|400]]
 
+> [!world]- SINOPSE PÚBLICA
+> Leth'valora foi uma pequena vila élfica no interior da [[Floresta de Avenor]]. Ela foi destruída pelo [[Dragão de Colar Dourado]] e permanece como uma das feridas centrais da história de [[Vezemir]].
+
 ## Visão Geral
 
 Leth'valora foi uma pequena vila élfica situada no interior da [[Floresta de Avenor]].
@@ -87,6 +90,14 @@ A vila era liderada por um chefe humano cujo nome permanece não definido.
 Ele morreu durante o ataque do dragão.
 
 [[Mira Valen]] era filha desse chefe. O sobrenome Valen identifica sua família dentro da comunidade.
+
+## Regra de Cânone
+
+- Leth'valora era vila, não reino.
+- A vila ficava em Avenor.
+- Ela foi destruída pelo dragão de colar dourado.
+- Os [[Sentinelas de Leth'valora]] eram guardas da vila e morreram no incidente.
+- A existência de um grande reino élfico fica para apresentação futura.
 
 ## Residentes e Relações
 

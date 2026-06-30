@@ -28,8 +28,11 @@ tags:
 
 # Vale Dourado
 
-> [!NOTE|clean no-i right]+ Retrato
+> [!NOTE|clean no-i right]+ Vale Dourado
 > ![[vale-dourado.png|400]]
+
+> [!world]- SINOPSE PÚBLICA
+> Vale Dourado é uma localização menor do interior de [[Nimalia]], melhor tratada como vila remota, vale agrícola ou ponto rural de estrada, não como grande território independente.
 
 ## Visão Geral
 
@@ -48,6 +51,16 @@ Esse marcador confirma apenas que o nome está associado ao interior do reino. N
 - [[Nimalia]] — reino onde o Vale Dourado está situado.
 - [[Nimalis]] — capital do reino.
 - [[Floresta de Avenor]] — região fronteiriça próxima ao reino, ainda sem relação direta confirmada com o vale.
+
+## Estado Operacional
+
+| campo | decisão atual |
+|---|---|
+| Tipo | Local menor |
+| Escala | Vila, vale agrícola ou região rural pequena |
+| Território | [[Nimalia]] |
+| Uso atual | Ponto de estrada, rumor rural ou local de apoio |
+| Cânone | Em revisão |
 
 ## Uso em Mesa
 

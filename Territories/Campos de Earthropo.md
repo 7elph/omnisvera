@@ -32,6 +32,9 @@ tags:
 > [!NOTE|clean no-i right]+ Retrato
 > ![[campos-de-earthropo.png|400]]
 
+> [!warning]+ Nota de Mestre
+> Esta região ainda existe principalmente para preservar e organizar rascunhos ligados à história de [[Raziel]]. Não apresentar como região pública definida antes da consolidação de Valthor, Gharok e Sanguinallis.
+
 ## Visão Geral
 
 Campos de Earthropo é o nome operacional para uma região ampla de campos do continente.
@@ -48,6 +51,7 @@ Por isso, permanece como nota de mestre e não recebe marcador em mapa nesta eta
 
 - [[EARTHROPO/EARTHROPO|Earthropo]] — continente onde a região existe.
 - [[Ruínas de Valthor]] — possível relação histórica.
+- [[Fortaleza de Gharok]] — possível relação geográfica ou histórica, ainda em revisão.
 - [[Raziel]] — história pessoal ainda em revisão.
 - [[Kaelen, o Flagelo]] — menção em crônica de origem.
 - [[Clã Sanguinallis]] — possível influência ou domínio antigo.
