@@ -41,12 +41,15 @@ Este mapa representa a cidade capital, não todo o território do reino.
 ```leaflet
 id: nimalis-city-map
 image: zz_media/mapa-de-nimalis.png
-height: 700px
-lat: 50
-long: 50
-minZoom: 1
-maxZoom: 10
-defaultZoom: 5
+height: 1000px
+width: 100%
+bounds: [[0, 0], [185.7, 274.6]]
+lat: 92.85
+long: 137.3
+minZoom: -1.5
+maxZoom: 8
+defaultZoom: 3
+zoomDelta: 0.5
 unit: meters
 scale: 1
 ```
