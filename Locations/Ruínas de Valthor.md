@@ -15,6 +15,11 @@ thumbnail: zz_media/ruinas-de-valthor.png
 cover: zz_media/ruinas-de-valthor.png
 info: Ruínas de um antigo reino próspero ao sudeste de Nimalia.
 description: Ruínas antigas ao sudeste de Nimalia, ligadas a histórias esquecidas e ao passado profundo de Earthropo.
+subtype: ruin
+work_status: Em desenvolvimento
+canon_status: Working Canon
+created_by: Sage
+requires_review: true
 tags:
   - location
   - local

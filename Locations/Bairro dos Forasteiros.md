@@ -18,6 +18,11 @@ cover: zz_media/mapa-de-nimalis.png
 info: Região pobre e instável de Nimalis.
 description: Bairro de abrigo temporário, favelas, trabalhadores sem renda estável e recém-chegados.
 chapters: []
+subtype: district
+work_status: Em desenvolvimento
+canon_status: Working Canon
+created_by: Sage
+requires_review: true
 tags:
   - location
   - local

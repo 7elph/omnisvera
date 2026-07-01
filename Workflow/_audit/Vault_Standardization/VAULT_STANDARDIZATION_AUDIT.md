@@ -1,6 +1,6 @@
 # Auditoria Global de Padronização do Vault
 
-Gerado em: 2026-07-01 05:30
+Gerado em: 2026-07-01 14:58
 
 Fonte de padrão: [[Workflow/OMNISVERA_VAULT_STANDARD|OMNISVERA_VAULT_STANDARD]]
 
@@ -12,28 +12,28 @@ Fonte de padrão: [[Workflow/OMNISVERA_VAULT_STANDARD|OMNISVERA_VAULT_STANDARD]]
 
 | métrica | valor |
 |---|---:|
-| notas Markdown auditadas | 321 |
+| notas Markdown auditadas | 322 |
 | notas com frontmatter | 184 |
-| notas sem frontmatter | 137 |
+| notas sem frontmatter | 138 |
 | YAML/frontmatter parseável | 184 |
 | YAML/frontmatter com problema | 0 |
 | campos YAML distintos | 104 |
 | tags distintas | 207 |
 | tipos detectados | 18 |
-| subtipos detectados | 9 |
-| referências de mídia distintas | 177 |
+| subtipos detectados | 14 |
+| referências de mídia distintas | 182 |
 | mídias em `zz_media` | 103 |
 | imagens/mídias quebradas | 26 |
 | imagens/mídias quebradas fora de histórico/auditoria | 0 |
 | possíveis problemas de case-sensitive | 0 |
 | possíveis problemas de case-sensitive fora de histórico/auditoria | 0 |
-| mídias possivelmente órfãs | 12 |
+| mídias possivelmente órfãs | 7 |
 
 Modo de validação YAML:
 
 | item | ocorrências |
 |---|---:|
-| `simple` | 321 |
+| `simple` | 322 |
 
 
 ## Campos YAML encontrados
@@ -55,7 +55,7 @@ Modo de validação YAML:
 | `chapters` | 116 |
 | `territory` | 87 |
 | `location` | 84 |
-| `created_by` | 81 |
+| `created_by` | 83 |
 | `description` | 62 |
 | `faction` | 62 |
 | `info` | 55 |
@@ -68,16 +68,16 @@ Modo de validação YAML:
 | `hooks` | 25 |
 | `origin` | 23 |
 | `chapter` | 20 |
+| `subtype` | 20 |
+| `work_status` | 20 |
+| `canon_status` | 20 |
+| `requires_review` | 20 |
 | `class` | 19 |
 | `race` | 19 |
 | `role` | 19 |
 | `religion` | 18 |
 | `revealed_in` | 17 |
 | `district` | 16 |
-| `subtype` | 15 |
-| `work_status` | 15 |
-| `canon_status` | 15 |
-| `requires_review` | 15 |
 | `leader` | 15 |
 | `cssclasses` | 14 |
 | `faith` | 13 |
@@ -372,6 +372,11 @@ Modo de validação YAML:
 |---|---:|
 | `major_npc` | 6 |
 | `player_character` | 2 |
+| `district` | 1 |
+| `wilderness` | 1 |
+| `settlement` | 1 |
+| `port` | 1 |
+| `ruin` | 1 |
 | `controlled_npc` | 1 |
 | `submitted_scene` | 1 |
 | `guild` | 1 |
@@ -463,6 +468,7 @@ Modo de validação YAML:
 - `Workflow\_audit\Taxonomy_Alignment\TEMPLATE_ALIGNMENT_REPORT.md`
 - `Workflow\_audit\Urban_Structure\NIMALIS_URBAN_STANDARDIZATION_REVIEW.md`
 - `Workflow\_audit\Vault_Standardization\FRONTMATTER_MINIMUM_APPLIED_C1A.md`
+- `Workflow\_audit\Vault_Standardization\FRONTMATTER_MINIMUM_APPLIED_C1B_LOCATIONS.md`
 - `Workflow\_audit\Vault_Standardization\FRONTMATTER_MINIMUM_PLAN.md`
 - `Workflow\_audit\Vault_Standardization\TAG_NORMALIZATION_APPLIED.md`
 - `Workflow\_audit\Vault_Standardization\TAG_NORMALIZATION_IMPACT.md`
@@ -482,8 +488,7 @@ Modo de validação YAML:
 - `Workflow\AI_CONTEXT\09_SESSION_STATE.md`
 - `Workflow\AI_REVIEW_CHECKLIST.md`
 - `Workflow\AI_TASK_TEMPLATE.md`
-- `Workflow\ASSISTANT_HANDOFF.md`
-- ... mais 70 itens.
+- ... mais 71 itens.
 
 
 ## Notas sem frontmatter
@@ -563,6 +568,7 @@ Modo de validação YAML:
 - `Workflow\_audit\Taxonomy_Alignment\TEMPLATE_ALIGNMENT_REPORT.md`
 - `Workflow\_audit\Urban_Structure\NIMALIS_URBAN_STANDARDIZATION_REVIEW.md`
 - `Workflow\_audit\Vault_Standardization\FRONTMATTER_MINIMUM_APPLIED_C1A.md`
+- `Workflow\_audit\Vault_Standardization\FRONTMATTER_MINIMUM_APPLIED_C1B_LOCATIONS.md`
 - `Workflow\_audit\Vault_Standardization\FRONTMATTER_MINIMUM_PLAN.md`
 - `Workflow\_audit\Vault_Standardization\TAG_NORMALIZATION_APPLIED.md`
 - `Workflow\_audit\Vault_Standardization\TAG_NORMALIZATION_IMPACT.md`
@@ -610,8 +616,7 @@ Modo de validação YAML:
 - `Workflow\OMNISVERA_MEDIA_STANDARD.md`
 - `Workflow\OMNISVERA_NOTE_STANDARD.md`
 - `Workflow\OMNISVERA_SYSTEM_TAXONOMY.md`
-- `Workflow\OMNISVERA_SYSTEM_TAXONOMY_DECISIONS.md`
-- ... mais 17 itens.
+- ... mais 18 itens.
 
 
 ## Notas sem `subtype`
@@ -672,21 +677,16 @@ Modo de validação YAML:
 - `Locations\Bairro dos Anões.md`
 - `Locations\Bairro dos Dragonborns.md`
 - `Locations\Bairro dos Elfos.md`
-- `Locations\Bairro dos Forasteiros.md`
 - `Locations\Bairro dos Humanos.md`
 - `Locations\Bairro Nobre.md`
-- `Locations\Bosque Sussurrante.md`
 - `Locations\Casa da Moeda de Nimalia.md`
 - `Locations\Distrito Comercial.md`
 - `Locations\Fortaleza Abandonada de Avenor.md`
 - `Locations\Fortaleza de Gharok.md`
 - `Locations\INDICE_DE_LOCAIS.md`
-- `Locations\Leth'valora.md`
-- `Locations\Maré Baixa.md`
 - `Locations\Mercado Central.md`
 - `Locations\Nimalis.md`
 - `Locations\Porto de Nimalia.md`
-- `Locations\Ruínas de Valthor.md`
 - `Locations\Vale Dourado.md`
 - `Lore\Ancião Primordial.md`
 - `Lore\Criadores.md`
@@ -718,7 +718,12 @@ Modo de validação YAML:
 - `Religion\Igreja das Chamas.md`
 - `Religion\RELIGION.md`
 - `Rules\Spells\INDICE_DE_MAGIAS.md`
-- ... mais 206 itens.
+- `Templates\Characters\Antagonista.md`
+- `Templates\Characters\Criatura.md`
+- `Templates\Characters\NPC Importante.md`
+- `Templates\Characters\NPC Menor.md`
+- `Templates\Characters\Personagem Jogador.md`
+- ... mais 202 itens.
 
 
 ## Notas faltando campos Omnisvera mínimos
@@ -779,21 +784,16 @@ Campos mínimos auditados: `type`, `subtype`, `work_status`, `canon_status`, `vi
 - `Locations\Bairro dos Anões.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
 - `Locations\Bairro dos Dragonborns.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
 - `Locations\Bairro dos Elfos.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
-- `Locations\Bairro dos Forasteiros.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
 - `Locations\Bairro dos Humanos.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
 - `Locations\Bairro Nobre.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
-- `Locations\Bosque Sussurrante.md — faltando: canon_status, requires_review, subtype, work_status`
 - `Locations\Casa da Moeda de Nimalia.md — faltando: canon_status, requires_review, subtype, work_status`
 - `Locations\Distrito Comercial.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
 - `Locations\Fortaleza Abandonada de Avenor.md — faltando: canon_status, requires_review, subtype, work_status`
 - `Locations\Fortaleza de Gharok.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
 - `Locations\INDICE_DE_LOCAIS.md — faltando: canon_status, requires_review, subtype, work_status`
-- `Locations\Leth'valora.md — faltando: canon_status, requires_review, subtype, work_status`
-- `Locations\Maré Baixa.md — faltando: canon_status, requires_review, subtype, work_status`
 - `Locations\Mercado Central.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
 - `Locations\Nimalis.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
 - `Locations\Porto de Nimalia.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
-- `Locations\Ruínas de Valthor.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
 - `Locations\Vale Dourado.md — faltando: canon_status, requires_review, subtype, work_status`
 - `Lore\Ancião Primordial.md — faltando: canon_status, requires_review, subtype, work_status`
 - `Lore\Criadores.md — faltando: canon_status, requires_review, subtype, work_status`
@@ -825,7 +825,12 @@ Campos mínimos auditados: `type`, `subtype`, `work_status`, `canon_status`, `vi
 - `Religion\Igreja das Chamas.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
 - `Religion\RELIGION.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
 - `Rules\Spells\INDICE_DE_MAGIAS.md — faltando: canon_status, requires_review, subtype, work_status`
-- ... mais 69 itens.
+- `Templates\Characters\Antagonista.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Templates\Characters\Criatura.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Templates\Characters\NPC Importante.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Templates\Characters\NPC Menor.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Templates\Characters\Personagem Jogador.md — faltando: canon_status, requires_review, subtype, work_status`
+- ... mais 64 itens.
 
 
 ## YAML/frontmatter com problema
@@ -961,13 +966,8 @@ Critério: tag com espaço, maiúscula inesperada ou formato arriscado. Tags `Ca
 > Não apagar automaticamente. Uma mídia pode ser usada por CSS, plugin, mapa, canvas, nota futura ou referência manual ainda não capturada.
 
 - `anciao.png`
-- `antropos.png`
 - `area-comercial-1.png`
 - `area-comercial-2.png`
-- `dragonborn.png`
-- `halfling.png`
-- `humano.png`
-- `kenku.png`
 - `loja-odran.png`
 - `porto-real.png`
 - `smoke.mp3`

@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 """Aplica frontmatter mínimo Omnisvera em lote seguro.
 
-Fase C1a: foco em `Characters/Individual/`.
-
 Por padrão roda em dry-run. Use `--apply` para gravar alterações.
 O script é conservador: não remove campos, não altera tags, não altera corpo e
 pula qualquer arquivo que já esteja modificado no `git status`.
@@ -40,6 +38,23 @@ CHARACTER_SUBTYPES = {
     "minor_npc",
     "antagonist",
     "creature",
+}
+
+LOCATION_SUBTYPES = {
+    "city",
+    "district",
+    "shop",
+    "port",
+    "ruin",
+    "temple",
+    "wilderness",
+    "dungeon",
+    "settlement",
+}
+
+ALLOWED_SUBTYPES_BY_TYPE = {
+    "character": CHARACTER_SUBTYPES,
+    "location": LOCATION_SUBTYPES,
 }
 
 
@@ -203,11 +218,11 @@ def note_status_value(fields: dict[str, Any]) -> str:
 def field_value(field: str, row: PlanRow, fields: dict[str, Any]) -> str | None:
     status = note_status_value(fields)
     if field == "type":
-        if row.suggested_type == "character":
-            return "character"
+        if row.suggested_type in ALLOWED_SUBTYPES_BY_TYPE:
+            return row.suggested_type
         return None
     if field == "subtype":
-        if row.suggested_subtype in CHARACTER_SUBTYPES:
+        if row.suggested_subtype in ALLOWED_SUBTYPES_BY_TYPE.get(row.suggested_type, set()):
             return row.suggested_subtype
         return None
     if field == "work_status":
@@ -264,17 +279,21 @@ def apply_row(root: Path, row: PlanRow, do_apply: bool, dirty: set[str]) -> Appl
         result.skipped = True
         result.skip_reason = f"ação `{row.action}` não é aplicação segura"
         return result
-    if row.suggested_type != "character":
+    if row.suggested_type not in ALLOWED_SUBTYPES_BY_TYPE:
         result.skipped = True
-        result.skip_reason = "type sugerido não é character"
+        result.skip_reason = f"type sugerido `{row.suggested_type}` não é suportado por este aplicador"
         return result
-    if row.current_type and row.current_type != "character":
+    if row.current_type and row.current_type != row.suggested_type:
         result.skipped = True
-        result.skip_reason = "type atual conflita com character"
+        result.skip_reason = f"type atual conflita com `{row.suggested_type}`"
         return result
-    if not row.suggested_subtype or row.suggested_subtype not in CHARACTER_SUBTYPES:
+    if row.path == "Locations/Nimalis.md" and row.suggested_subtype == "settlement":
         result.skipped = True
-        result.skip_reason = "subtype ausente ou ambíguo"
+        result.skip_reason = "Nimalis é capital; sugestão `settlement` precisa revisão antes de aplicar"
+        return result
+    if not row.suggested_subtype or row.suggested_subtype not in ALLOWED_SUBTYPES_BY_TYPE.get(row.suggested_type, set()):
+        result.skipped = True
+        result.skip_reason = "subtype ausente, ambíguo ou fora da lista permitida"
         return result
 
     text = path.read_text(encoding="utf-8-sig", errors="replace")
@@ -380,7 +399,7 @@ def render_report(
             if field == "subtype":
                 subtype_counter[value] = subtype_counter.get(value, 0) + 1
     lines = [
-        "# Omnisvera — Frontmatter Mínimo Aplicado C1a",
+        "# Omnisvera — Frontmatter Mínimo Aplicado",
         "",
         f"Gerado em: {datetime.now().strftime('%Y-%m-%d %H:%M')}",
         "",
@@ -388,7 +407,7 @@ def render_report(
         f"Filtro: `{folder}` / risco `{risk}`",
         "",
         "> [!IMPORTANT]",
-        "> Esta etapa só adiciona campos Omnisvera mínimos em notas limpas de Characters/Individual.",
+        "> Esta etapa só adiciona campos Omnisvera mínimos em notas limpas do filtro informado.",
         "> Campos legacy, tags e corpo das notas devem permanecer preservados.",
         "",
         "## Resumo",

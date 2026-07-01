@@ -1,6 +1,6 @@
 # Omnisvera — Plano C0 de Frontmatter Mínimo
 
-Gerado em: 2026-07-01 05:29
+Gerado em: 2026-07-01 14:58
 
 > [!IMPORTANT]
 > Este relatório é dry-run. Nenhuma nota foi alterada.
@@ -10,29 +10,29 @@ Gerado em: 2026-07-01 05:29
 
 | métrica | valor |
 |---|---:|
-| notas Markdown analisadas | 321 |
+| notas Markdown analisadas | 322 |
 | notas com frontmatter | 184 |
-| notas sem frontmatter | 137 |
+| notas sem frontmatter | 138 |
 | YAML/frontmatter válido | 184 |
 | YAML/frontmatter inválido | 0 |
 | notas com type | 151 |
 | notas sem type | 33 |
-| notas com subtype | 15 |
-| notas sem subtype | 169 |
-| candidatos low | 42 |
+| notas com subtype | 20 |
+| notas sem subtype | 164 |
+| candidatos low | 37 |
 | candidatos medium | 64 |
 | candidatos high | 22 |
-| pulados/skip | 193 |
+| pulados/skip | 199 |
 
 ## Campos mínimos ausentes
 
 | campo | ocorrências |
 |---|---:|
-| `subtype` | 169 |
-| `work_status` | 169 |
-| `canon_status` | 169 |
-| `requires_review` | 169 |
-| `created_by` | 103 |
+| `subtype` | 164 |
+| `work_status` | 164 |
+| `canon_status` | 164 |
+| `requires_review` | 164 |
+| `created_by` | 101 |
 | `type` | 33 |
 | `visibility` | 30 |
 
@@ -65,6 +65,11 @@ Gerado em: 2026-07-01 05:29
 |---|---:|
 | `major_npc` | 6 |
 | `player_character` | 2 |
+| `district` | 1 |
+| `wilderness` | 1 |
+| `settlement` | 1 |
+| `port` | 1 |
+| `ruin` | 1 |
 | `controlled_npc` | 1 |
 | `submitted_scene` | 1 |
 | `guild` | 1 |
@@ -138,21 +143,21 @@ Gerado em: 2026-07-01 05:29
 | `Locations/Bairro dos Anões.md` | `location` | `location` |  | `district` | `subtype`, `work_status`, `canon_status`, `created_by`, `requires_review` | low | plan_add_missing_fields | inferido pela pasta Locations. bairro/distrito detectado. campos mínimos ausentes podem ser adicionados em lote futuro. |
 | `Locations/Bairro dos Dragonborns.md` | `location` | `location` |  | `district` | `subtype`, `work_status`, `canon_status`, `created_by`, `requires_review` | low | plan_add_missing_fields | inferido pela pasta Locations. bairro/distrito detectado. campos mínimos ausentes podem ser adicionados em lote futuro. |
 | `Locations/Bairro dos Elfos.md` | `location` | `location` |  | `district` | `subtype`, `work_status`, `canon_status`, `created_by`, `requires_review` | low | plan_add_missing_fields | inferido pela pasta Locations. bairro/distrito detectado. campos mínimos ausentes podem ser adicionados em lote futuro. |
-| `Locations/Bairro dos Forasteiros.md` | `location` | `location` |  | `district` | `subtype`, `work_status`, `canon_status`, `created_by`, `requires_review` | low | plan_add_missing_fields | inferido pela pasta Locations. bairro/distrito detectado. campos mínimos ausentes podem ser adicionados em lote futuro. |
+| `Locations/Bairro dos Forasteiros.md` | `location` | `location` | `district` | `district` |  | skip | no_action | inferido pela pasta Locations. bairro/distrito detectado. frontmatter já contém campos mínimos auditados. |
 | `Locations/Bairro dos Humanos.md` | `location` | `location` |  | `district` | `subtype`, `work_status`, `canon_status`, `created_by`, `requires_review` | low | plan_add_missing_fields | inferido pela pasta Locations. bairro/distrito detectado. campos mínimos ausentes podem ser adicionados em lote futuro. |
 | `Locations/Bairro Nobre.md` | `location` | `location` |  | `district` | `subtype`, `work_status`, `canon_status`, `created_by`, `requires_review` | low | plan_add_missing_fields | inferido pela pasta Locations. bairro/distrito detectado. campos mínimos ausentes podem ser adicionados em lote futuro. |
-| `Locations/Bosque Sussurrante.md` | `location` | `location` |  | `wilderness` | `subtype`, `work_status`, `canon_status`, `requires_review` | low | plan_add_missing_fields | inferido pela pasta Locations. área selvagem detectada. campos mínimos ausentes podem ser adicionados em lote futuro. |
+| `Locations/Bosque Sussurrante.md` | `location` | `location` | `wilderness` | `wilderness` |  | skip | no_action | inferido pela pasta Locations. área selvagem detectada. frontmatter já contém campos mínimos auditados. |
 | `Locations/Casa da Moeda de Nimalia.md` | `location` | `location` |  |  | `subtype`, `work_status`, `canon_status`, `requires_review` | medium | review_before_apply | inferido pela pasta Locations. subtype de local precisa revisão. subtype ausente sem inferência de baixo risco. |
 | `Locations/Distrito Comercial.md` | `location` | `location` |  | `shop` | `subtype`, `work_status`, `canon_status`, `created_by`, `requires_review` | low | plan_add_missing_fields | inferido pela pasta Locations. loja/comércio detectado. campos mínimos ausentes podem ser adicionados em lote futuro. |
 | `Locations/Fortaleza Abandonada de Avenor.md` | `location` | `location` |  |  | `subtype`, `work_status`, `canon_status`, `requires_review` | medium | review_before_apply | inferido pela pasta Locations. subtype de local precisa revisão. subtype ausente sem inferência de baixo risco. |
 | `Locations/Fortaleza de Gharok.md` | `location` | `location` |  |  | `subtype`, `work_status`, `canon_status`, `created_by`, `requires_review` | medium | review_before_apply | inferido pela pasta Locations. subtype de local precisa revisão. subtype ausente sem inferência de baixo risco. |
 | `Locations/INDICE_DE_LOCAIS.md` | `index` | `location` |  |  | `subtype`, `work_status`, `canon_status`, `requires_review` | high | review_before_apply | inferido pela pasta Locations. subtype de local precisa revisão. type atual conflita com sugestão; precisa revisão humana. |
-| `Locations/Leth'valora.md` | `location` | `location` |  | `settlement` | `subtype`, `work_status`, `canon_status`, `requires_review` | low | plan_add_missing_fields | inferido pela pasta Locations. assentamento detectado. campos mínimos ausentes podem ser adicionados em lote futuro. |
-| `Locations/Maré Baixa.md` | `location` | `location` |  | `port` | `subtype`, `work_status`, `canon_status`, `requires_review` | low | plan_add_missing_fields | inferido pela pasta Locations. porto detectado. campos mínimos ausentes podem ser adicionados em lote futuro. |
+| `Locations/Leth'valora.md` | `location` | `location` | `settlement` | `settlement` |  | skip | no_action | inferido pela pasta Locations. assentamento detectado. frontmatter já contém campos mínimos auditados. |
+| `Locations/Maré Baixa.md` | `location` | `location` | `port` | `port` |  | skip | no_action | inferido pela pasta Locations. porto detectado. frontmatter já contém campos mínimos auditados. |
 | `Locations/Mercado Central.md` | `location` | `location` |  | `shop` | `subtype`, `work_status`, `canon_status`, `created_by`, `requires_review` | low | plan_add_missing_fields | inferido pela pasta Locations. loja/comércio detectado. campos mínimos ausentes podem ser adicionados em lote futuro. |
 | `Locations/Nimalis.md` | `location` | `location` |  | `settlement` | `subtype`, `work_status`, `canon_status`, `created_by`, `requires_review` | low | plan_add_missing_fields | inferido pela pasta Locations. assentamento detectado. campos mínimos ausentes podem ser adicionados em lote futuro. |
 | `Locations/Porto de Nimalia.md` | `location` | `location` |  | `port` | `subtype`, `work_status`, `canon_status`, `created_by`, `requires_review` | low | plan_add_missing_fields | inferido pela pasta Locations. porto detectado. campos mínimos ausentes podem ser adicionados em lote futuro. |
-| `Locations/Ruínas de Valthor.md` | `location` | `location` |  | `ruin` | `subtype`, `work_status`, `canon_status`, `created_by`, `requires_review` | low | plan_add_missing_fields | inferido pela pasta Locations. ruína detectada. campos mínimos ausentes podem ser adicionados em lote futuro. |
+| `Locations/Ruínas de Valthor.md` | `location` | `location` | `ruin` | `ruin` |  | skip | no_action | inferido pela pasta Locations. ruína detectada. frontmatter já contém campos mínimos auditados. |
 | `Locations/Vale Dourado.md` | `location` | `location` |  |  | `subtype`, `work_status`, `canon_status`, `requires_review` | medium | review_before_apply | inferido pela pasta Locations. subtype de local precisa revisão. subtype ausente sem inferência de baixo risco. |
 | `Lore/Ancião Primordial.md` | `lore` | `lore` |  |  | `subtype`, `work_status`, `canon_status`, `requires_review` | medium | review_before_apply | inferido pela pasta Lore. subtype de lore precisa revisão. subtype ausente sem inferência de baixo risco. |
 | `Lore/Criadores.md` | `lore` | `lore` |  | `cosmology` | `subtype`, `work_status`, `canon_status`, `requires_review` | low | plan_add_missing_fields | inferido pela pasta Lore. cosmologia detectada. campos mínimos ausentes podem ser adicionados em lote futuro. |
@@ -308,6 +313,7 @@ Gerado em: 2026-07-01 05:29
 | `Workflow/_audit/Territory_Map_Standardization/TERRITORIES_AND_MAPS_STANDARDIZATION_REPORT.md` | `audit` | `workflow` |  |  | `subtype`, `work_status`, `canon_status`, `requires_review` | skip | no_action | inferido pela pasta Workflow/documentação. subtype para `workflow` não tem regra de baixo risco. histórico/auditoria/legacy; não migrar automaticamente. |
 | `Workflow/_audit/Urban_Structure/NIMALIS_URBAN_STANDARDIZATION_REVIEW.md` |  |  |  |  |  | skip | no_action | frontmatter ausente |
 | `Workflow/_audit/Vault_Standardization/FRONTMATTER_MINIMUM_APPLIED_C1A.md` |  |  |  |  |  | skip | no_action | frontmatter ausente |
+| `Workflow/_audit/Vault_Standardization/FRONTMATTER_MINIMUM_APPLIED_C1B_LOCATIONS.md` |  |  |  |  |  | skip | no_action | frontmatter ausente |
 | `Workflow/_audit/Vault_Standardization/FRONTMATTER_MINIMUM_PLAN.md` |  |  |  |  |  | skip | no_action | frontmatter ausente |
 | `Workflow/_audit/Vault_Standardization/TAG_NORMALIZATION_APPLIED.md` |  |  |  |  |  | skip | no_action | frontmatter ausente |
 | `Workflow/_audit/Vault_Standardization/TAG_NORMALIZATION_IMPACT.md` |  |  |  |  |  | skip | no_action | frontmatter ausente |

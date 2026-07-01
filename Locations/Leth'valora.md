@@ -20,6 +20,10 @@ info: Antiga vila élfica da Floresta de Avenor, destruída pelo dragão de cola
 description: Vila élfica menor em Avenor, ligada à origem de Vezemir, Mira e aos Sentinelas de Leth'valora.
 chapters:
   - 00 - O Bastardo de Ferro
+subtype: settlement
+work_status: Em desenvolvimento
+canon_status: Working Canon
+requires_review: true
 tags:
   - location
   - local

@@ -19,6 +19,10 @@ cover: zz_media/bosque-sussurrante.png
 info: Nome preservado como placeholder; existência e função ainda não confirmadas.
 description: Possível bosque ou local florestal em Avenor, sem cânone confirmado.
 chapters: []
+subtype: wilderness
+work_status: Em desenvolvimento
+canon_status: Draft
+requires_review: true
 tags:
   - location
   - local

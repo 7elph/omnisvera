@@ -20,6 +20,10 @@ info: Favela portuária no extremo sul da capital do Reino de Nimalia.
 description: Região pobre, portuária e informal de Nimalis, ligada à origem de Varkh e ao submundo urbano.
 chapters:
   - 00 - O Corvo da Maré Baixa
+subtype: port
+work_status: Em desenvolvimento
+canon_status: Working Canon
+requires_review: true
 tags:
   - location
   - local
