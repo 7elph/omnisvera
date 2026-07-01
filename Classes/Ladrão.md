@@ -25,6 +25,7 @@ tags:
   - classe
   - ladrao
   - old-dragon
+  - class
 ---
 
 # Ladrão

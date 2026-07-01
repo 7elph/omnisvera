@@ -32,6 +32,7 @@ tags:
   - origem
   - origem-vezemir
   - earthropo
+  - character
 ---
 
 # Dragão de Colar Dourado

@@ -25,6 +25,7 @@ tags:
   - classe
   - guerreiro
   - old-dragon
+  - class
 ---
 
 # Guerreiro

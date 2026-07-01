@@ -32,6 +32,7 @@ tags:
   - origem
   - origem-raziel
   - earthropo
+  - character
 ---
 
 # Vandor, o Senhor das Bestas

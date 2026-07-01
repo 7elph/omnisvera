@@ -38,6 +38,7 @@ tags:
   - classe
   - arquetipo-narrativo
   - old-dragon
+  - class
 ---
 
 # Nome do Arquétipo

@@ -32,6 +32,7 @@ chapters: []
 tags:
   - personagem
   - antagonista
+  - character
 ---
 
 # Nome — Epíteto

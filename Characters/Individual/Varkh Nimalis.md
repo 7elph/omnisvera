@@ -35,6 +35,7 @@ tags:
   - conclave-dos-errantes
   - nimalia
   - earthropo
+  - character
 ---
 
 # VARKH NIMALIS — O CORVO DA MARÉ BAIXA

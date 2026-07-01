@@ -29,6 +29,7 @@ chapters: []
 
 tags:
   - raca
+  - race
 ---
 
 # Nome da Raça

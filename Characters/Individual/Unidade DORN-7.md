@@ -29,6 +29,7 @@ tags:
   - capitulo01
   - dorn-7
   - earthropo
+  - character
 ---
 
 # Unidade DORN-7

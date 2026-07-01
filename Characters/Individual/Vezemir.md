@@ -34,6 +34,7 @@ tags:
   - conclave-dos-errantes
   - sentinelas-de-lethvalora
   - earthropo
+  - character
 ---
 
 # VEZEMIR — O BASTARDO DE FERRO

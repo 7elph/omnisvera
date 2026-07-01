@@ -30,6 +30,7 @@ tags:
   - map
   - earthropo
   - territorio
+  - territory
 ---
 
 # MAPA DE EARTHROPO

@@ -25,6 +25,7 @@ tags:
   - earthropo
   - campos-de-earthropo
   - raziel
+  - territory
 ---
 
 # Campos de Earthropo

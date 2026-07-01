@@ -34,6 +34,7 @@ tags:
   - lethvalora
   - earthropo
   - npc-importante
+  - character
 ---
 
 # MIRA VALEN

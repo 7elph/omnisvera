@@ -32,6 +32,7 @@ tags:
   - origem-varkh
   - nimalia
   - earthropo
+  - character
 ---
 
 # Mestre Odran Veyl

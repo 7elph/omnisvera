@@ -32,6 +32,7 @@ tags:
   - origem
   - origem-raziel
   - earthropo
+  - character
 ---
 
 # Lorde Malakar

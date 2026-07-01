@@ -18,6 +18,7 @@ tags:
   - lore
   - religiao
   - earthropo
+  - religion
 ---
 
 # Religiões de Earthropo

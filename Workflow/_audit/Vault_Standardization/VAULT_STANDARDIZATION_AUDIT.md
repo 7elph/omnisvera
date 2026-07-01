@@ -1,6 +1,6 @@
 # Auditoria Global de Padronização do Vault
 
-Gerado em: 2026-07-01 03:18
+Gerado em: 2026-07-01 04:36
 
 Fonte de padrão: [[Workflow/OMNISVERA_VAULT_STANDARD|OMNISVERA_VAULT_STANDARD]]
 
@@ -12,13 +12,13 @@ Fonte de padrão: [[Workflow/OMNISVERA_VAULT_STANDARD|OMNISVERA_VAULT_STANDARD]]
 
 | métrica | valor |
 |---|---:|
-| notas Markdown auditadas | 326 |
+| notas Markdown auditadas | 330 |
 | notas com frontmatter | 185 |
-| notas sem frontmatter | 141 |
+| notas sem frontmatter | 145 |
 | YAML/frontmatter parseável | 185 |
 | YAML/frontmatter com problema | 0 |
 | campos YAML distintos | 104 |
-| tags distintas | 205 |
+| tags distintas | 207 |
 | tipos detectados | 18 |
 | subtipos detectados | 8 |
 | referências de mídia distintas | 157 |
@@ -33,7 +33,7 @@ Modo de validação YAML:
 
 | item | ocorrências |
 |---|---:|
-| `simple` | 326 |
+| `simple` | 330 |
 
 
 ## Campos YAML encontrados
@@ -129,6 +129,7 @@ Modo de validação YAML:
 | `earthropo` | 44 |
 | `workflow` | 28 |
 | `lore` | 24 |
+| `character` | 21 |
 | `location` | 21 |
 | `local` | 20 |
 | `personagem` | 19 |
@@ -144,16 +145,18 @@ Modo de validação YAML:
 | `omnisvera` | 11 |
 | `story` | 11 |
 | `classe` | 11 |
+| `class` | 11 |
 | `raziel` | 11 |
 | `faction` | 11 |
 | `item` | 11 |
+| `race` | 11 |
 | `indice` | 10 |
 | `faccao` | 10 |
 | `origem-vezemir` | 9 |
 | `vampiro` | 9 |
 | `varkh` | 9 |
-| `race` | 9 |
 | `home` | 8 |
+| `territory` | 8 |
 | `npc-importante` | 7 |
 | `sanguinallis` | 7 |
 | `territorio` | 7 |
@@ -167,6 +170,7 @@ Modo de validação YAML:
 | `origem-raziel` | 5 |
 | `artefato` | 5 |
 | `religiao` | 5 |
+| `religion` | 5 |
 | `quest` | 4 |
 | `rumor` | 4 |
 | `antropo` | 4 |
@@ -224,7 +228,6 @@ Modo de validação YAML:
 | `fenomeno` | 2 |
 | `notes` | 2 |
 | `magia` | 2 |
-| `character` | 2 |
 | `classes` | 2 |
 | `regras` | 2 |
 | `dashboard` | 2 |
@@ -243,10 +246,101 @@ Modo de validação YAML:
 | `capitulo00-raziel` | 1 |
 | `hemomante` | 1 |
 | `constructo` | 1 |
-| `dorn-7` | 1 |
-| `capitulo00-varkh` | 1 |
-| `clerigo` | 1 |
 
+
+## Auditoria detalhada de tags
+
+### Tags por categoria
+
+| item | ocorrências |
+|---|---:|
+| `campaign_specific` | 436 |
+| `official` | 153 |
+| `hybrid` | 109 |
+| `legacy_allowed` | 61 |
+| `unknown` | 50 |
+
+
+### Tags oficiais Omnisvera já usadas
+
+- `ai_npc` — 1 nota(s). Exemplos: `Templates\TEMPLATE - AI NPC.md`
+- `async_scene` — 1 nota(s). Exemplos: `Templates\TEMPLATE - Async Scene.md`
+- `character` — 21 nota(s). Exemplos: `Characters\Individual\Augustus Terra Decimus.md`, `Characters\Individual\Dragão de Colar Dourado.md`, `Characters\Individual\Elarion Vaelthor.md`
+- `class` — 11 nota(s). Exemplos: `Classes\Alquimista.md`, `Classes\Clérigo.md`, `Classes\Guerreiro.md`
+- `faction` — 11 nota(s). Exemplos: `Factions\Clã Sanguinallis.md`, `Factions\Conclave dos Errantes.md`, `Factions\Coroa de Nimalia.md`
+- `item` — 11 nota(s). Exemplos: `Items\Adagas de Espectro Fantasma.md`, `Items\Caderninho de Vozes.md`, `Items\Grisalma.md`
+- `location` — 21 nota(s). Exemplos: `Locations\Antiga Estrada Esquecida.md`, `Locations\Bairro dos Anões.md`, `Locations\Bairro dos Dragonborns.md`
+- `lore` — 24 nota(s). Exemplos: `CALENDAR.md`, `CULTURE.md`, `EARTHROPO\EARTHROPO.md`
+- `race` — 11 nota(s). Exemplos: `Races\Antropo.md`, `Races\Anão.md`, `Races\Dragonborn.md`
+- `religion` — 5 nota(s). Exemplos: `Religion\Caminho dos Errantes.md`, `Religion\Fé dos Antigos.md`, `Religion\Igreja das Chamas.md`
+- `territory` — 8 nota(s). Exemplos: `MAPA DE EARTHROPO.md`, `MAPA DE NIMALIA.md`, `Templates\TEMPLATE - Territory.md`
+- `workflow` — 28 nota(s). Exemplos: `NOTES.md`, `Workflow\_audit\Character_Standardization\CHARACTERS_INDIVIDUAL_STANDARDIZATION_REPORT.md`, `Workflow\_audit\Cleanup\DELETION_CANDIDATES_CURRENT_REVIEW.md`
+
+### Tags legacy ou `Category/*` detectadas
+
+> Preservar nesta fase. Elas podem alimentar Dataview, DataCards, Supercharged Links ou dashboards antigos.
+
+- `bside` — 19 nota(s). Exemplos: `Characters\Individual\Dragão de Colar Dourado.md`, `Characters\Individual\Elarion Vaelthor.md`, `Characters\Individual\General Cassian Valerius.md`
+- `capitulo` — 2 nota(s). Exemplos: `EARTHROPO\01 - Ecos do Mundo Perdido.md`, `Templates\RPG\Story.md`
+- `old-dragon` — 13 nota(s). Exemplos: `Classes\Clérigo.md`, `Classes\Guerreiro.md`, `Classes\Ladrão.md`
+- `origem` — 16 nota(s). Exemplos: `Characters\Individual\Dragão de Colar Dourado.md`, `Characters\Individual\Elarion Vaelthor.md`, `Characters\Individual\General Cassian Valerius.md`
+- `story` — 11 nota(s). Exemplos: `CAMPANHA\ESTADO_DA_CAMPANHA.md`, `CAMPANHA\Quests\Quest 01 - Investigar Avistamentos de Dragões.md`, `CAMPANHA\Rumors\Rumor 01 - Dragões ao Sul de Nimalia.md`
+
+### Tags híbridas com equivalente oficial provável
+
+> A ação futura segura é adicionar a tag oficial e preservar a tag existente.
+
+- `antagonista` → `character` — 5 nota(s). Exemplos: `Characters\Individual\Kaelen, o Flagelo.md`, `Characters\Individual\Lorde Malakar.md`, `Characters\Individual\Vandor, o Senhor das Bestas.md`
+- `classe` → `class` — 11 nota(s). Exemplos: `Classes\Alquimista.md`, `Classes\Clérigo.md`, `Classes\Guerreiro.md`
+- `criatura` → `character` — 3 nota(s). Exemplos: `Characters\Individual\Dragão de Colar Dourado.md`, `Characters\Individual\Unidade DORN-7.md`, `Templates\Characters\Criatura.md`
+- `faccao` → `faction` — 10 nota(s). Exemplos: `Factions\Clã Sanguinallis.md`, `Factions\Conclave dos Errantes.md`, `Factions\Coroa de Nimalia.md`
+- `jogador` → `character` — 4 nota(s). Exemplos: `Characters\Individual\Raziel.md`, `Characters\Individual\Varkh Nimalis.md`, `Characters\Individual\Vezemir.md`
+- `local` → `location` — 20 nota(s). Exemplos: `Locations\Antiga Estrada Esquecida.md`, `Locations\Bairro dos Anões.md`, `Locations\Bairro dos Dragonborns.md`
+- `npc` → `character` — 13 nota(s). Exemplos: `Characters\Individual\Augustus Terra Decimus.md`, `Characters\Individual\Dragão de Colar Dourado.md`, `Characters\Individual\Elarion Vaelthor.md`
+- `personagem` → `character` — 19 nota(s). Exemplos: `Characters\Individual\Augustus Terra Decimus.md`, `Characters\Individual\Dragão de Colar Dourado.md`, `Characters\Individual\Elarion Vaelthor.md`
+- `raca` → `race` — 12 nota(s). Exemplos: `Races\Antropo.md`, `Races\Anão.md`, `Races\Dragonborn.md`
+- `religiao` → `religion` — 5 nota(s). Exemplos: `Religion\Caminho dos Errantes.md`, `Religion\Fé dos Antigos.md`, `Religion\Igreja das Chamas.md`
+- `territorio` → `territory` — 7 nota(s). Exemplos: `MAPA DE EARTHROPO.md`, `MAPA DE NIMALIA.md`, `Territories\Campos de Earthropo.md`
+
+### Tags fora do padrão oficial ou desconhecidas
+
+> Isto não autoriza remoção. Tags de lore/campanha podem ser válidas mesmo fora do vocabulário técnico.
+
+- `adagas` — 1 nota(s). Exemplos: `Items\Adagas de Espectro Fantasma.md`
+- `audit` — 18 nota(s). Exemplos: `Workflow\_audit\Character_Standardization\CHARACTERS_INDIVIDUAL_STANDARDIZATION_REPORT.md`, `Workflow\_audit\Class_Rules_Standardization\CLASSES_AND_RULES_STANDARDIZATION_REPORT.md`, `Workflow\_audit\Class_Rules_Standardization\RULES_FOLDER_CONSOLIDATION_REPORT.md`
+- `backlog` — 1 nota(s). Exemplos: `Workflow\MISSING_NOTES_BACKLOG.md`
+- `caderno` — 1 nota(s). Exemplos: `Items\Caderninho de Vozes.md`
+- `comum` — 1 nota(s). Exemplos: `Characters\Individual\Mira Valen.md`
+- `constructo` — 1 nota(s). Exemplos: `Characters\Individual\Unidade DORN-7.md`
+- `currency` — 1 nota(s). Exemplos: `ECONOMY.md`
+- `dataview` — 1 nota(s). Exemplos: `Workflow\Runtime Audit Report.md`
+- `disgraceland` — 1 nota(s). Exemplos: `Workflow\MIGRATION_LEDGER.md`
+- `dragao` — 1 nota(s). Exemplos: `Characters\Individual\Dragão de Colar Dourado.md`
+- `economy` — 1 nota(s). Exemplos: `ECONOMY.md`
+- `especializacao` — 1 nota(s). Exemplos: `Templates\Classes\Especialização.md`
+- `falecido` — 1 nota(s). Exemplos: `Characters\Individual\Mira Valen.md`
+- `force` — 1 nota(s). Exemplos: `Workflow\Legacy\Disgraceland\.trash\City Forces\Blueforce.md`
+- `halfling` — 1 nota(s). Exemplos: `Races\Halfling.md`
+- `hemomante` — 1 nota(s). Exemplos: `Characters\Individual\Raziel.md`
+- `leaflet` — 1 nota(s). Exemplos: `Workflow\Runtime Audit Report.md`
+- `machado` — 1 nota(s). Exemplos: `Items\Grisalma.md`
+- `manto` — 1 nota(s). Exemplos: `Items\Manto Primordial do Ancião.md`
+- `mascara` — 1 nota(s). Exemplos: `Items\Máscara de Médico da Peste de Varkh.md`
+- `mentor` — 1 nota(s). Exemplos: `Characters\Individual\Elarion Vaelthor.md`
+- `military` — 1 nota(s). Exemplos: `Workflow\Legacy\Disgraceland\.trash\City Forces\Blueforce.md`
+- `outline` — 1 nota(s). Exemplos: `Workflow\OUTLINES.md`
+- `report` — 4 nota(s). Exemplos: `Workflow\Charts.md`, `Workflow\Format Audit Report.md`, `Workflow\Property Key Dashboard.md`
+- `rules` — 1 nota(s). Exemplos: `Workflow\RULES_SOURCES.md`
+- `sacerdote` — 1 nota(s). Exemplos: `Characters\Individual\Padre Oric.md`
+- `sources` — 1 nota(s). Exemplos: `Workflow\RULES_SOURCES.md`
+- `template` — 1 nota(s). Exemplos: `Workflow\Property Key Dashboard.md`
+- `timeline` — 1 nota(s). Exemplos: `TIMELINE.md`
+- `universe` — 1 nota(s). Exemplos: `OMNISVERA.md`
+
+### Notas candidatas a receber tag oficial adicional
+
+- `Factions\Culto dos Sussurrantes.md` — `antagonista` → `character`; ação: adicionar tag oficial e preservar tag existente.
+- `Workflow\_audit\Class_Rules_Standardization\RULES_FOLDER_CONSOLIDATION_REPORT.md` — `raca` → `race`; ação: adicionar tag oficial e preservar tag existente.
 
 ## Notas por `type`
 
@@ -378,17 +472,17 @@ Modo de validação YAML:
 - `Workflow\_audit\Taxonomy_Alignment\TAXONOMY_ALIGNMENT_VALIDATION.md`
 - `Workflow\_audit\Taxonomy_Alignment\TEMPLATE_ALIGNMENT_REPORT.md`
 - `Workflow\_audit\Urban_Structure\NIMALIS_URBAN_STANDARDIZATION_REVIEW.md`
+- `Workflow\_audit\Vault_Standardization\TAG_NORMALIZATION_APPLIED.md`
+- `Workflow\_audit\Vault_Standardization\TAG_NORMALIZATION_IMPACT.md`
+- `Workflow\_audit\Vault_Standardization\TAG_NORMALIZATION_MAP.md`
+- `Workflow\_audit\Vault_Standardization\TAG_NORMALIZATION_PLAN.md`
 - `Workflow\_audit\Vault_Standardization\VAULT_STANDARDIZATION_AUDIT.md`
 - `Workflow\AI_CHANGELOG.md`
 - `Workflow\AI_CONTEXT\00_README_FOR_AI.md`
 - `Workflow\AI_CONTEXT\01_CANON_SUMMARY.md`
 - `Workflow\AI_CONTEXT\02_ENTITY_INDEX.md`
 - `Workflow\AI_CONTEXT\03_OPEN_DECISIONS.md`
-- `Workflow\AI_CONTEXT\04_MEDIA_RULES.md`
-- `Workflow\AI_CONTEXT\05_FRONTMATTER_SCHEMA.md`
-- `Workflow\AI_CONTEXT\06_TASK_TEMPLATES.md`
-- `Workflow\AI_CONTEXT\07_VALIDATION_CHECKLIST.md`
-- ... mais 75 itens.
+- ... mais 79 itens.
 
 
 ## Notas sem frontmatter
@@ -477,6 +571,10 @@ Modo de validação YAML:
 - `Workflow\_audit\Taxonomy_Alignment\TAXONOMY_ALIGNMENT_VALIDATION.md`
 - `Workflow\_audit\Taxonomy_Alignment\TEMPLATE_ALIGNMENT_REPORT.md`
 - `Workflow\_audit\Urban_Structure\NIMALIS_URBAN_STANDARDIZATION_REVIEW.md`
+- `Workflow\_audit\Vault_Standardization\TAG_NORMALIZATION_APPLIED.md`
+- `Workflow\_audit\Vault_Standardization\TAG_NORMALIZATION_IMPACT.md`
+- `Workflow\_audit\Vault_Standardization\TAG_NORMALIZATION_MAP.md`
+- `Workflow\_audit\Vault_Standardization\TAG_NORMALIZATION_PLAN.md`
 - `Workflow\_audit\Vault_Standardization\VAULT_STANDARDIZATION_AUDIT.md`
 - `Workflow\AI_CHANGELOG.md`
 - `Workflow\AI_CONTEXT\00_README_FOR_AI.md`
@@ -512,11 +610,7 @@ Modo de validação YAML:
 - `Workflow\Legacy\Disgraceland\.trash\Call Out Boxes\Call Out - Right Section.md`
 - `Workflow\LOCAL_ENVIRONMENT_CHECKLIST.md`
 - `Workflow\OMNISVERA_CHARACTER_TEMPLATE_GUIDE.md`
-- `Workflow\OMNISVERA_CLASS_STANDARD.md`
-- `Workflow\OMNISVERA_DASHBOARD_SYSTEM.md`
-- `Workflow\OMNISVERA_FRONTMATTER_SCHEMA.md`
-- `Workflow\OMNISVERA_LOCATION_TERRITORY_GUIDE.md`
-- ... mais 21 itens.
+- ... mais 25 itens.
 
 
 ## Notas sem `subtype`
@@ -623,7 +717,7 @@ Modo de validação YAML:
 - `LORE.md`
 - `MAPA DE EARTHROPO.md`
 - `MAPA DE NIMALIA.md`
-- ... mais 218 itens.
+- ... mais 222 itens.
 
 
 ## Notas faltando campos Omnisvera mínimos
@@ -673,6 +767,28 @@ Campos mínimos auditados: `type`, `visibility`.
 
 ## Tags híbridas encontradas
 
+- `character/personagem` em 19 nota(s). Exemplos:
+  - `Characters\Individual\Augustus Terra Decimus.md`
+  - `Characters\Individual\Dragão de Colar Dourado.md`
+  - `Characters\Individual\Elarion Vaelthor.md`
+  - `Characters\Individual\General Cassian Valerius.md`
+  - `Characters\Individual\Kaelen, o Flagelo.md`
+  - `Characters\Individual\Lorde Malakar.md`
+  - `Characters\Individual\Mestre Odran Veyl.md`
+  - `Characters\Individual\Mira Valen.md`
+  - `Characters\Individual\Padre Oric.md`
+  - `Characters\Individual\Raziel.md`
+- `class/classe` em 11 nota(s). Exemplos:
+  - `Classes\Alquimista.md`
+  - `Classes\Clérigo.md`
+  - `Classes\Guerreiro.md`
+  - `Classes\INDICE_DE_CLASSES.md`
+  - `Classes\Ladrão.md`
+  - `Classes\Mago.md`
+  - `Classes\Vampiro.md`
+  - `Templates\Classes\Arquétipo Narrativo.md`
+  - `Templates\Classes\Classe Base.md`
+  - `Templates\Classes\Especialização.md`
 - `faction/faccao` em 10 nota(s). Exemplos:
   - `Factions\Clã Sanguinallis.md`
   - `Factions\Conclave dos Errantes.md`
@@ -695,16 +811,31 @@ Campos mínimos auditados: `type`, `visibility`.
   - `Locations\Bosque Sussurrante.md`
   - `Locations\Casa da Moeda de Nimalia.md`
   - `Locations\Distrito Comercial.md`
-- `race/raca` em 9 nota(s). Exemplos:
+- `race/raca` em 11 nota(s). Exemplos:
   - `Races\Antropo.md`
   - `Races\Anão.md`
   - `Races\Dragonborn.md`
   - `Races\Elfo.md`
   - `Races\Halfling.md`
   - `Races\Humano.md`
+  - `Races\INDICE_DE_RACAS.md`
   - `Races\Kenku.md`
   - `Races\Meio-Elfo.md`
   - `Races\Vampiro.md`
+- `religion/religiao` em 5 nota(s). Exemplos:
+  - `Religion\Caminho dos Errantes.md`
+  - `Religion\Fé dos Antigos.md`
+  - `Religion\Igreja das Chamas.md`
+  - `Religion\RELIGION.md`
+  - `Templates\RPG\Religião.md`
+- `territory/territorio` em 7 nota(s). Exemplos:
+  - `MAPA DE EARTHROPO.md`
+  - `MAPA DE NIMALIA.md`
+  - `Territories\Campos de Earthropo.md`
+  - `Territories\Floresta de Avenor.md`
+  - `Territories\INDICE_DE_TERRITORIOS.md`
+  - `Territories\Mar da Neblina.md`
+  - `Territories\Nimalia.md`
 
 ## Tags possivelmente fora do padrão de formato
 

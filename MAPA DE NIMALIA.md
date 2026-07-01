@@ -30,6 +30,7 @@ tags:
   - map
   - nimalia
   - territorio
+  - territory
 ---
 
 # MAPA DE NIMALIA

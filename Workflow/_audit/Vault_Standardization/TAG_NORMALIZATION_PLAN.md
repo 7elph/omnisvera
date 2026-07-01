@@ -1,6 +1,6 @@
 # Omnisvera — Plano Dry-Run de Normalizacao de Tags
 
-Gerado em: 2026-07-01 04:07
+Gerado em: 2026-07-01 04:36
 
 > [!IMPORTANT]
 > Este plano nao alterou nenhuma nota.
@@ -10,9 +10,9 @@ Gerado em: 2026-07-01 04:07
 
 | metrica | valor |
 |---|---:|
-| notas analisadas | 329 |
-| notas candidatas | 46 |
-| baixo risco | 46 |
+| notas analisadas | 330 |
+| notas candidatas | 2 |
+| baixo risco | 2 |
 | medio risco | 0 |
 | alto risco | 0 |
 
@@ -22,51 +22,7 @@ Casos simples como `local` -> adicionar `location`, `faccao` -> adicionar `facti
 
 | Arquivo | Tags atuais relevantes | Tags oficiais a adicionar | Tags preservadas | Risco | Observacao |
 |---|---|---|---|---|---|
-| `Characters/Individual/Augustus Terra Decimus.md` | `npc`, `personagem` | `character` | `npc`, `personagem` | low | Adicionar `character` preservando `npc`. Adicionar `character` preservando `personagem`. |
-| `Characters/Individual/Dragão de Colar Dourado.md` | `criatura`, `npc`, `personagem` | `character` | `criatura`, `npc`, `personagem` | low | Adicionar `character` preservando `criatura`. Adicionar `character` preservando `npc`. Adicionar `character` preservando `personagem`. |
-| `Characters/Individual/Elarion Vaelthor.md` | `npc`, `personagem` | `character` | `npc`, `personagem` | low | Adicionar `character` preservando `npc`. Adicionar `character` preservando `personagem`. |
-| `Characters/Individual/General Cassian Valerius.md` | `npc`, `personagem` | `character` | `npc`, `personagem` | low | Adicionar `character` preservando `npc`. Adicionar `character` preservando `personagem`. |
-| `Characters/Individual/Kaelen, o Flagelo.md` | `antagonista`, `npc`, `personagem` | `character` | `antagonista`, `npc`, `personagem` | low | Adicionar `character` preservando `antagonista`. Adicionar `character` preservando `npc`. Adicionar `character` preservando `personagem`. |
-| `Characters/Individual/Lorde Malakar.md` | `antagonista`, `npc`, `personagem` | `character` | `antagonista`, `npc`, `personagem` | low | Adicionar `character` preservando `antagonista`. Adicionar `character` preservando `npc`. Adicionar `character` preservando `personagem`. |
-| `Characters/Individual/Mestre Odran Veyl.md` | `npc`, `personagem` | `character` | `npc`, `personagem` | low | Adicionar `character` preservando `npc`. Adicionar `character` preservando `personagem`. |
-| `Characters/Individual/Mira Valen.md` | `npc`, `personagem` | `character` | `npc`, `personagem` | low | Adicionar `character` preservando `npc`. Adicionar `character` preservando `personagem`. |
-| `Characters/Individual/Padre Oric.md` | `npc`, `personagem` | `character` | `npc`, `personagem` | low | Adicionar `character` preservando `npc`. Adicionar `character` preservando `personagem`. |
-| `Characters/Individual/Raziel.md` | `jogador`, `personagem` | `character` | `jogador`, `personagem` | low | Adicionar `character` preservando `jogador`. Adicionar `character` preservando `personagem`. |
-| `Characters/Individual/Unidade DORN-7.md` | `criatura`, `npc`, `personagem` | `character` | `criatura`, `npc`, `personagem` | low | Adicionar `character` preservando `criatura`. Adicionar `character` preservando `npc`. Adicionar `character` preservando `personagem`. |
-| `Characters/Individual/Vandor, o Senhor das Bestas.md` | `antagonista`, `npc`, `personagem` | `character` | `antagonista`, `npc`, `personagem` | low | Adicionar `character` preservando `antagonista`. Adicionar `character` preservando `npc`. Adicionar `character` preservando `personagem`. |
-| `Characters/Individual/Varkh Nimalis.md` | `jogador`, `personagem` | `character` | `jogador`, `personagem` | low | Adicionar `character` preservando `jogador`. Adicionar `character` preservando `personagem`. |
-| `Characters/Individual/Vezemir.md` | `jogador`, `personagem` | `character` | `jogador`, `personagem` | low | Adicionar `character` preservando `jogador`. Adicionar `character` preservando `personagem`. |
-| `Classes/Alquimista.md` | `classe` | `class` | `classe` | low | Adicionar `class` preservando `classe`. |
-| `Classes/Clérigo.md` | `classe` | `class` | `classe` | low | Adicionar `class` preservando `classe`. |
-| `Classes/Guerreiro.md` | `classe` | `class` | `classe` | low | Adicionar `class` preservando `classe`. |
-| `Classes/INDICE_DE_CLASSES.md` | `classe` | `class` | `classe` | low | Adicionar `class` preservando `classe`. |
-| `Classes/Ladrão.md` | `classe` | `class` | `classe` | low | Adicionar `class` preservando `classe`. |
-| `Classes/Mago.md` | `classe` | `class` | `classe` | low | Adicionar `class` preservando `classe`. |
-| `Classes/Vampiro.md` | `classe` | `class` | `classe` | low | Adicionar `class` preservando `classe`. |
 | `Factions/Culto dos Sussurrantes.md` | `antagonista` | `character` | `antagonista` | low | Adicionar `character` preservando `antagonista`. |
-| `MAPA DE EARTHROPO.md` | `territorio` | `territory` | `territorio` | low | Adicionar `territory` preservando `territorio`. |
-| `MAPA DE NIMALIA.md` | `territorio` | `territory` | `territorio` | low | Adicionar `territory` preservando `territorio`. |
-| `Races/INDICE_DE_RACAS.md` | `raca` | `race` | `raca` | low | Adicionar `race` preservando `raca`. |
-| `Religion/Caminho dos Errantes.md` | `religiao` | `religion` | `religiao` | low | Adicionar `religion` preservando `religiao`. |
-| `Religion/Fé dos Antigos.md` | `religiao` | `religion` | `religiao` | low | Adicionar `religion` preservando `religiao`. |
-| `Religion/Igreja das Chamas.md` | `religiao` | `religion` | `religiao` | low | Adicionar `religion` preservando `religiao`. |
-| `Religion/RELIGION.md` | `religiao` | `religion` | `religiao` | low | Adicionar `religion` preservando `religiao`. |
-| `Templates/Characters/Antagonista.md` | `antagonista`, `personagem` | `character` | `antagonista`, `personagem` | low | Adicionar `character` preservando `antagonista`. Adicionar `character` preservando `personagem`. |
-| `Templates/Characters/Criatura.md` | `criatura`, `personagem` | `character` | `criatura`, `personagem` | low | Adicionar `character` preservando `criatura`. Adicionar `character` preservando `personagem`. |
-| `Templates/Characters/NPC Importante.md` | `npc`, `personagem` | `character` | `npc`, `personagem` | low | Adicionar `character` preservando `npc`. Adicionar `character` preservando `personagem`. |
-| `Templates/Characters/NPC Menor.md` | `npc`, `personagem` | `character` | `npc`, `personagem` | low | Adicionar `character` preservando `npc`. Adicionar `character` preservando `personagem`. |
-| `Templates/Characters/Personagem Jogador.md` | `jogador`, `personagem` | `character` | `jogador`, `personagem` | low | Adicionar `character` preservando `jogador`. Adicionar `character` preservando `personagem`. |
-| `Templates/Classes/Arquétipo Narrativo.md` | `classe` | `class` | `classe` | low | Adicionar `class` preservando `classe`. |
-| `Templates/Classes/Classe Base.md` | `classe` | `class` | `classe` | low | Adicionar `class` preservando `classe`. |
-| `Templates/Classes/Especialização.md` | `classe` | `class` | `classe` | low | Adicionar `class` preservando `classe`. |
-| `Templates/RPG/Classe.md` | `classe` | `class` | `classe` | low | Adicionar `class` preservando `classe`. |
-| `Templates/RPG/Raça.md` | `raca` | `race` | `raca` | low | Adicionar `race` preservando `raca`. |
-| `Templates/RPG/Religião.md` | `religiao` | `religion` | `religiao` | low | Adicionar `religion` preservando `religiao`. |
-| `Territories/Campos de Earthropo.md` | `territorio` | `territory` | `territorio` | low | Adicionar `territory` preservando `territorio`. |
-| `Territories/Floresta de Avenor.md` | `territorio` | `territory` | `territorio` | low | Adicionar `territory` preservando `territorio`. |
-| `Territories/INDICE_DE_TERRITORIOS.md` | `territorio` | `territory` | `territorio` | low | Adicionar `territory` preservando `territorio`. |
-| `Territories/Mar da Neblina.md` | `territorio` | `territory` | `territorio` | low | Adicionar `territory` preservando `territorio`. |
-| `Territories/Nimalia.md` | `territorio` | `territory` | `territorio` | low | Adicionar `territory` preservando `territorio`. |
 | `Workflow/_audit/Class_Rules_Standardization/RULES_FOLDER_CONSOLIDATION_REPORT.md` | `raca` | `race` | `raca` | low | Adicionar `race` preservando `raca`. |
 
 ## Medio risco

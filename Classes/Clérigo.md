@@ -24,6 +24,7 @@ tags:
   - classe
   - clerigo
   - old-dragon
+  - class
 ---
 
 # Clérigo

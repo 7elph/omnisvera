@@ -24,6 +24,7 @@ tags:
   - classe
   - mago
   - old-dragon
+  - class
 ---
 
 # Mago

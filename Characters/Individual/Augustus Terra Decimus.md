@@ -34,6 +34,7 @@ tags:
   - coroa-de-nimalia
   - nobreza-de-nimalia
   - npc-importante
+  - character
 ---
 
 # AUGUSTUS TERRA DECIMUS

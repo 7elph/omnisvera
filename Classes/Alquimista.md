@@ -26,6 +26,7 @@ tags:
   - alquimista
   - regra-opcional
   - varkh
+  - class
 ---
 
 # Alquimista

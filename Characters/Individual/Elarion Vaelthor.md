@@ -34,6 +34,7 @@ tags:
   - sentinelas-de-lethvalora
   - earthropo
   - npc-importante
+  - character
 ---
 
 # ELARION VAELTHOR

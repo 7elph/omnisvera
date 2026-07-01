@@ -21,6 +21,7 @@ tags:
   - fe-dos-antigos
   - criadores
   - earthropo
+  - religion
 ---
 
 # Fé dos Antigos

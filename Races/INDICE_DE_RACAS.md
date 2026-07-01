@@ -12,6 +12,7 @@ campaign_status: Ativo
 tags:
   - indice
   - raca
+  - race
 ---
 
 # Índice de Raças

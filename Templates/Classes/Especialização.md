@@ -40,6 +40,7 @@ tags:
   - classe
   - especializacao
   - old-dragon
+  - class
 ---
 
 # Nome da Especialização

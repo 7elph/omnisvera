@@ -33,6 +33,7 @@ tags:
   - personagem
   - npc
   - npc-importante
+  - character
 ---
 
 # Nome — Epíteto

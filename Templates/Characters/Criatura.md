@@ -33,6 +33,7 @@ tags:
   - personagem
   - criatura
   - monstro
+  - character
 ---
 
 # Nome

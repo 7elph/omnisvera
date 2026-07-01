@@ -20,6 +20,7 @@ created_by:
 tags:
   - religiao
   - lore
+  - religion
 ---
 
 # Nome da Religião ou Tradição

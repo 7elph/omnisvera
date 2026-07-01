@@ -37,6 +37,7 @@ chapters: []
 tags:
   - classe
   - old-dragon
+  - class
 ---
 
 # Nome da Classe

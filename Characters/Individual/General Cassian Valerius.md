@@ -39,6 +39,7 @@ tags:
   - capitulo01
   - coroa-de-nimalia
   - npc-importante
+  - character
 ---
 
 # GENERAL CASSIAN VALERIUS

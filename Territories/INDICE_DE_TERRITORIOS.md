@@ -12,6 +12,7 @@ created_by: Sage
 tags:
   - indice
   - territorio
+  - territory
 ---
 
 # Índice de Territórios

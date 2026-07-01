@@ -20,6 +20,7 @@ tags:
   - lore
   - caminho-dos-errantes
   - earthropo
+  - religion
 ---
 
 # Caminho dos Errantes

@@ -22,6 +22,7 @@ tags:
   - regiao-maritima
   - mar-da-neblina
   - earthropo
+  - territory
 ---
 
 # Mar da Neblina

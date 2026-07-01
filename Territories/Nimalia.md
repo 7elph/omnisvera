@@ -40,6 +40,7 @@ tags:
   - nimalia
   - antropo
   - earthropo
+  - territory
 ---
 
 # Reino de Nimalia

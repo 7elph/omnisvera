@@ -32,6 +32,7 @@ chapters: []
 tags:
   - personagem
   - jogador
+  - character
 ---
 
 # Nome — Epíteto

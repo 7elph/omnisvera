@@ -33,6 +33,7 @@ tags:
   - personagem
   - npc
   - npc-menor
+  - character
 ---
 
 # Nome

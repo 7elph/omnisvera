@@ -26,6 +26,7 @@ tags:
   - vampiro
   - regra-opcional
   - raziel
+  - class
 ---
 
 # Vampiro

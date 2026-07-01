@@ -20,6 +20,7 @@ tags:
   - lore
   - igreja-das-chamas
   - earthropo
+  - religion
 ---
 
 # Igreja das Chamas

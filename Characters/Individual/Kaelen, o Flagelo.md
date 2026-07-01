@@ -32,6 +32,7 @@ tags:
   - origem
   - origem-raziel
   - earthropo
+  - character
 ---
 
 # Kaelen, o Flagelo

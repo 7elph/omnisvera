@@ -34,6 +34,7 @@ tags:
   - igreja-das-chamas
   - earthropo
   - npc-importante
+  - character
 ---
 
 # PADRE ORIC

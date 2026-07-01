@@ -12,6 +12,7 @@ campaign_status: Ativo
 tags:
   - indice
   - classe
+  - class
 ---
 
 # Índice de Classes
