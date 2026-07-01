@@ -48,7 +48,7 @@ lat: 92.85
 long: 137.3
 minZoom: -1.5
 maxZoom: 8
-defaultZoom: 3
+defaultZoom: 2.5
 zoomDelta: 0.5
 unit: meters
 scale: 1
