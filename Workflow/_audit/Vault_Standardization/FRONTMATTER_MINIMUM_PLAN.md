@@ -1,6 +1,6 @@
 # Omnisvera — Plano C0 de Frontmatter Mínimo
 
-Gerado em: 2026-07-01 14:58
+Gerado em: 2026-07-01 15:05
 
 > [!IMPORTANT]
 > Este relatório é dry-run. Nenhuma nota foi alterada.
@@ -155,7 +155,7 @@ Gerado em: 2026-07-01 14:58
 | `Locations/Leth'valora.md` | `location` | `location` | `settlement` | `settlement` |  | skip | no_action | inferido pela pasta Locations. assentamento detectado. frontmatter já contém campos mínimos auditados. |
 | `Locations/Maré Baixa.md` | `location` | `location` | `port` | `port` |  | skip | no_action | inferido pela pasta Locations. porto detectado. frontmatter já contém campos mínimos auditados. |
 | `Locations/Mercado Central.md` | `location` | `location` |  | `shop` | `subtype`, `work_status`, `canon_status`, `created_by`, `requires_review` | low | plan_add_missing_fields | inferido pela pasta Locations. loja/comércio detectado. campos mínimos ausentes podem ser adicionados em lote futuro. |
-| `Locations/Nimalis.md` | `location` | `location` |  | `settlement` | `subtype`, `work_status`, `canon_status`, `created_by`, `requires_review` | low | plan_add_missing_fields | inferido pela pasta Locations. assentamento detectado. campos mínimos ausentes podem ser adicionados em lote futuro. |
+| `Locations/Nimalis.md` | `location` | `location` |  | `city` | `subtype`, `work_status`, `canon_status`, `created_by`, `requires_review` | low | plan_add_missing_fields | inferido pela pasta Locations. capital/cidade detectada; plano futuro: `role: capital`; `territory: [[Nimalia]]`. campos mínimos ausentes podem ser adicionados em lote futuro. |
 | `Locations/Porto de Nimalia.md` | `location` | `location` |  | `port` | `subtype`, `work_status`, `canon_status`, `created_by`, `requires_review` | low | plan_add_missing_fields | inferido pela pasta Locations. porto detectado. campos mínimos ausentes podem ser adicionados em lote futuro. |
 | `Locations/Ruínas de Valthor.md` | `location` | `location` | `ruin` | `ruin` |  | skip | no_action | inferido pela pasta Locations. ruína detectada. frontmatter já contém campos mínimos auditados. |
 | `Locations/Vale Dourado.md` | `location` | `location` |  |  | `subtype`, `work_status`, `canon_status`, `requires_review` | medium | review_before_apply | inferido pela pasta Locations. subtype de local precisa revisão. subtype ausente sem inferência de baixo risco. |

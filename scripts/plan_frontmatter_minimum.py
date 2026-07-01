@@ -271,6 +271,8 @@ def infer_subtype(path: str, suggested_type: str, fields: dict[str, Any], tags: 
             return "minor_npc", "tag npc-menor."
         return "", "subtype de personagem precisa revisão."
     if suggested_type == "location":
+        if name == "nimalis":
+            return "city", "capital/cidade detectada; plano futuro: `role: capital`; `territory: [[Nimalia]]`."
         if "bairro" in tagset or "distrito" in tagset or name.startswith("bairro"):
             return "district", "bairro/distrito detectado."
         if "porto" in tagset or "porto" in name:
@@ -285,8 +287,6 @@ def infer_subtype(path: str, suggested_type: str, fields: dict[str, Any], tags: 
             return "wilderness", "área selvagem detectada."
         if "vila" in tagset or "cidade" in tagset:
             return "settlement", "assentamento detectado."
-        if name == "nimalis":
-            return "city", "capital/cidade detectada."
         return "", "subtype de local precisa revisão."
     if suggested_type == "faction":
         if "guilda" in tagset or "guilda" in name:
