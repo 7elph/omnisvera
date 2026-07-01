@@ -16,6 +16,11 @@ cover: zz_media/coroa-de-nimalia.png
 info: Autoridade monárquica do Reino de Nimalia.
 description: Poder político central de Nimalia, liderado por Augustus Terra Decimus e apoiado por nobreza, guarda e burocracia real.
 chapters: []
+subtype: noble_house
+work_status: Em desenvolvimento
+canon_status: Working Canon
+created_by: Sage
+requires_review: true
 tags:
   - faction
   - faccao

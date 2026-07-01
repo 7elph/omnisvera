@@ -1,6 +1,6 @@
 # Auditoria Global de Padronização do Vault
 
-Gerado em: 2026-07-01 14:58
+Gerado em: 2026-07-01 20:01
 
 Fonte de padrão: [[Workflow/OMNISVERA_VAULT_STANDARD|OMNISVERA_VAULT_STANDARD]]
 
@@ -12,70 +12,70 @@ Fonte de padrão: [[Workflow/OMNISVERA_VAULT_STANDARD|OMNISVERA_VAULT_STANDARD]]
 
 | métrica | valor |
 |---|---:|
-| notas Markdown auditadas | 322 |
-| notas com frontmatter | 184 |
-| notas sem frontmatter | 138 |
-| YAML/frontmatter parseável | 184 |
+| notas Markdown auditadas | 330 |
+| notas com frontmatter | 187 |
+| notas sem frontmatter | 143 |
+| YAML/frontmatter parseável | 187 |
 | YAML/frontmatter com problema | 0 |
 | campos YAML distintos | 104 |
 | tags distintas | 207 |
 | tipos detectados | 18 |
-| subtipos detectados | 14 |
-| referências de mídia distintas | 182 |
-| mídias em `zz_media` | 103 |
+| subtipos detectados | 17 |
+| referências de mídia distintas | 188 |
+| mídias em `zz_media` | 114 |
 | imagens/mídias quebradas | 26 |
 | imagens/mídias quebradas fora de histórico/auditoria | 0 |
 | possíveis problemas de case-sensitive | 0 |
 | possíveis problemas de case-sensitive fora de histórico/auditoria | 0 |
-| mídias possivelmente órfãs | 7 |
+| mídias possivelmente órfãs | 14 |
 
 Modo de validação YAML:
 
 | item | ocorrências |
 |---|---:|
-| `simple` | 322 |
+| `simple` | 330 |
 
 
 ## Campos YAML encontrados
 
 | item | ocorrências |
 |---|---:|
-| `tags` | 177 |
-| `NoteIcon` | 173 |
-| `NoteStatus` | 168 |
-| `status` | 168 |
-| `obsidianUIMode` | 167 |
-| `visibility` | 154 |
-| `type` | 151 |
-| `spoiler_level` | 146 |
-| `gm_secret` | 146 |
-| `cover` | 133 |
-| `campaign_status` | 127 |
+| `tags` | 180 |
+| `NoteIcon` | 176 |
+| `NoteStatus` | 171 |
+| `status` | 171 |
+| `obsidianUIMode` | 170 |
+| `visibility` | 157 |
+| `type` | 154 |
+| `spoiler_level` | 149 |
+| `gm_secret` | 149 |
+| `cover` | 136 |
+| `campaign_status` | 130 |
 | `thumbnail` | 116 |
 | `chapters` | 116 |
+| `created_by` | 88 |
 | `territory` | 87 |
 | `location` | 84 |
-| `created_by` | 83 |
 | `description` | 62 |
 | `faction` | 62 |
 | `info` | 55 |
 | `danger_level` | 52 |
 | `name` | 40 |
-| `region` | 36 |
+| `region` | 39 |
 | `aliases` | 34 |
 | `level` | 31 |
 | `rumors` | 26 |
 | `hooks` | 25 |
+| `subtype` | 25 |
+| `work_status` | 25 |
+| `canon_status` | 25 |
+| `requires_review` | 25 |
 | `origin` | 23 |
+| `religion` | 21 |
 | `chapter` | 20 |
-| `subtype` | 20 |
-| `work_status` | 20 |
-| `canon_status` | 20 |
-| `requires_review` | 20 |
 | `class` | 19 |
 | `race` | 19 |
 | `role` | 19 |
-| `religion` | 18 |
 | `revealed_in` | 17 |
 | `district` | 16 |
 | `leader` | 15 |
@@ -84,6 +84,7 @@ Modo de validação YAML:
 | `arcs` | 13 |
 | `function` | 11 |
 | `rules_status` | 11 |
+| `population` | 11 |
 | `related_characters` | 11 |
 | `related_factions` | 11 |
 | `related_items` | 11 |
@@ -92,15 +93,20 @@ Modo de validação YAML:
 | `primary_attribute` | 10 |
 | `item_type` | 9 |
 | `owner` | 9 |
-| `population` | 8 |
+| `Alignment` | 8 |
+| `Government` | 8 |
+| `politics` | 8 |
+| `size` | 8 |
+| `exports` | 8 |
+| `imports` | 8 |
 | `portrait` | 8 |
 | `characters` | 6 |
-| `Alignment` | 5 |
-| `Government` | 5 |
-| `politics` | 5 |
-| `size` | 5 |
-| `exports` | 5 |
-| `imports` | 5 |
+| `width` | 6 |
+| `height` | 6 |
+| `scale` | 6 |
+| `distance` | 6 |
+| `Community-Size` | 6 |
+| `map_scope` | 6 |
 | `epithet` | 5 |
 | `origin_tag` | 4 |
 | `ruleset` | 4 |
@@ -111,12 +117,6 @@ Modo de validação YAML:
 | `banner-height` | 3 |
 | `content-start` | 3 |
 | `banner-fade` | 3 |
-| `width` | 3 |
-| `height` | 3 |
-| `scale` | 3 |
-| `distance` | 3 |
-| `Community-Size` | 3 |
-| `map_scope` | 3 |
 | `hit_die` | 3 |
 | `armor_allowed` | 3 |
 | `weapons_allowed` | 3 |
@@ -126,7 +126,7 @@ Modo de validação YAML:
 
 | item | ocorrências |
 |---|---:|
-| `earthropo` | 44 |
+| `earthropo` | 45 |
 | `workflow` | 28 |
 | `lore` | 24 |
 | `character` | 21 |
@@ -135,8 +135,8 @@ Modo de validação YAML:
 | `personagem` | 19 |
 | `bside` | 19 |
 | `audit` | 18 |
+| `nimalia` | 16 |
 | `origem` | 16 |
-| `nimalia` | 14 |
 | `npc` | 13 |
 | `old-dragon` | 13 |
 | `padronizacao` | 13 |
@@ -152,14 +152,16 @@ Modo de validação YAML:
 | `race` | 11 |
 | `indice` | 10 |
 | `faccao` | 10 |
+| `territory` | 10 |
 | `origem-vezemir` | 9 |
 | `vampiro` | 9 |
 | `varkh` | 9 |
+| `territorio` | 9 |
 | `home` | 8 |
-| `territory` | 8 |
 | `npc-importante` | 7 |
 | `sanguinallis` | 7 |
-| `territorio` | 7 |
+| `title` | 7 |
+| `map` | 7 |
 | `capitulo01` | 6 |
 | `coroa-de-nimalia` | 6 |
 | `avenor` | 6 |
@@ -180,11 +182,9 @@ Modo de validação YAML:
 | `jogador` | 4 |
 | `kenku` | 4 |
 | `vezemir` | 4 |
-| `title` | 4 |
 | `veu-cinzento` | 4 |
 | `comercio` | 4 |
 | `mare-baixa` | 4 |
-| `map` | 4 |
 | `report` | 4 |
 | `legacy` | 4 |
 | `rules-reference` | 4 |
@@ -199,6 +199,7 @@ Modo de validação YAML:
 | `guardioes-do-veu-cinzento` | 3 |
 | `guilda-dos-mercadores` | 3 |
 | `anao` | 3 |
+| `capital` | 3 |
 | `criadores` | 3 |
 | `coroa` | 2 |
 | `paladino` | 2 |
@@ -220,7 +221,6 @@ Modo de validação YAML:
 | `dragonborn` | 2 |
 | `fortaleza` | 2 |
 | `porto` | 2 |
-| `capital` | 2 |
 | `mar-da-neblina` | 2 |
 | `valthor` | 2 |
 | `cosmologia` | 2 |
@@ -254,9 +254,9 @@ Modo de validação YAML:
 
 | item | ocorrências |
 |---|---:|
-| `campaign_specific` | 436 |
-| `official` | 153 |
-| `hybrid` | 109 |
+| `campaign_specific` | 446 |
+| `official` | 155 |
+| `hybrid` | 111 |
 | `legacy_allowed` | 61 |
 | `unknown` | 50 |
 
@@ -273,7 +273,7 @@ Modo de validação YAML:
 - `lore` — 24 nota(s). Exemplos: `CALENDAR.md`, `CULTURE.md`, `EARTHROPO\EARTHROPO.md`
 - `race` — 11 nota(s). Exemplos: `Races\Antropo.md`, `Races\Anão.md`, `Races\Dragonborn.md`
 - `religion` — 5 nota(s). Exemplos: `Religion\Caminho dos Errantes.md`, `Religion\Fé dos Antigos.md`, `Religion\Igreja das Chamas.md`
-- `territory` — 8 nota(s). Exemplos: `MAPA DE EARTHROPO.md`, `MAPA DE NIMALIA.md`, `Templates\TEMPLATE - Territory.md`
+- `territory` — 10 nota(s). Exemplos: `MAPA DE EARTHROPO.md`, `MAPA DE NIMALIA.md`, `Templates\TEMPLATE - Territory.md`
 - `workflow` — 28 nota(s). Exemplos: `NOTES.md`, `Workflow\_audit\Character_Standardization\CHARACTERS_INDIVIDUAL_STANDARDIZATION_REPORT.md`, `Workflow\_audit\Cleanup\DELETION_CANDIDATES_CURRENT_REVIEW.md`
 
 ### Tags legacy ou `Category/*` detectadas
@@ -300,7 +300,7 @@ Modo de validação YAML:
 - `personagem` → `character` — 19 nota(s). Exemplos: `Characters\Individual\Augustus Terra Decimus.md`, `Characters\Individual\Dragão de Colar Dourado.md`, `Characters\Individual\Elarion Vaelthor.md`
 - `raca` → `race` — 12 nota(s). Exemplos: `Races\Antropo.md`, `Races\Anão.md`, `Races\Dragonborn.md`
 - `religiao` → `religion` — 5 nota(s). Exemplos: `Religion\Caminho dos Errantes.md`, `Religion\Fé dos Antigos.md`, `Religion\Igreja das Chamas.md`
-- `territorio` → `territory` — 7 nota(s). Exemplos: `MAPA DE EARTHROPO.md`, `MAPA DE NIMALIA.md`, `Territories\Campos de Earthropo.md`
+- `territorio` → `territory` — 9 nota(s). Exemplos: `MAPA DE EARTHROPO.md`, `MAPA DE NIMALIA.md`, `Territories\Campos de Earthropo.md`
 
 ### Tags fora do padrão oficial ou desconhecidas
 
@@ -356,8 +356,8 @@ Modo de validação YAML:
 | `race` | 10 |
 | `index` | 9 |
 | `story` | 8 |
+| `map` | 6 |
 | `territory` | 5 |
-| `map` | 3 |
 | `quest` | 2 |
 | `rumor` | 2 |
 | `spell` | 1 |
@@ -372,6 +372,10 @@ Modo de validação YAML:
 |---|---:|
 | `major_npc` | 6 |
 | `player_character` | 2 |
+| `noble_house` | 2 |
+| `guild` | 2 |
+| `religious` | 1 |
+| `military` | 1 |
 | `district` | 1 |
 | `wilderness` | 1 |
 | `settlement` | 1 |
@@ -379,7 +383,6 @@ Modo de validação YAML:
 | `ruin` | 1 |
 | `controlled_npc` | 1 |
 | `submitted_scene` | 1 |
-| `guild` | 1 |
 | `magic_item` | 1 |
 | `shop` | 1 |
 | `concept` | 1 |
@@ -469,7 +472,12 @@ Modo de validação YAML:
 - `Workflow\_audit\Urban_Structure\NIMALIS_URBAN_STANDARDIZATION_REVIEW.md`
 - `Workflow\_audit\Vault_Standardization\FRONTMATTER_MINIMUM_APPLIED_C1A.md`
 - `Workflow\_audit\Vault_Standardization\FRONTMATTER_MINIMUM_APPLIED_C1B_LOCATIONS.md`
+- `Workflow\_audit\Vault_Standardization\FRONTMATTER_MINIMUM_APPLIED_C1C_FACTIONS.md`
 - `Workflow\_audit\Vault_Standardization\FRONTMATTER_MINIMUM_PLAN.md`
+- `Workflow\_audit\Vault_Standardization\LEAFLET_ID_ALIGNMENT_FIX_REPORT.md`
+- `Workflow\_audit\Vault_Standardization\LEAFLET_IMAGE_LOAD_RESET_REPORT.md`
+- `Workflow\_audit\Vault_Standardization\LEAFLET_MAP_DIAGNOSTIC_REPORT.md`
+- `Workflow\_audit\Vault_Standardization\LEAFLET_MAP_FIX_REPORT.md`
 - `Workflow\_audit\Vault_Standardization\TAG_NORMALIZATION_APPLIED.md`
 - `Workflow\_audit\Vault_Standardization\TAG_NORMALIZATION_IMPACT.md`
 - `Workflow\_audit\Vault_Standardization\TAG_NORMALIZATION_MAP.md`
@@ -483,12 +491,7 @@ Modo de validação YAML:
 - `Workflow\AI_CONTEXT\04_MEDIA_RULES.md`
 - `Workflow\AI_CONTEXT\05_FRONTMATTER_SCHEMA.md`
 - `Workflow\AI_CONTEXT\06_TASK_TEMPLATES.md`
-- `Workflow\AI_CONTEXT\07_VALIDATION_CHECKLIST.md`
-- `Workflow\AI_CONTEXT\08_DO_NOT_INVENT.md`
-- `Workflow\AI_CONTEXT\09_SESSION_STATE.md`
-- `Workflow\AI_REVIEW_CHECKLIST.md`
-- `Workflow\AI_TASK_TEMPLATE.md`
-- ... mais 71 itens.
+- ... mais 76 itens.
 
 
 ## Notas sem frontmatter
@@ -569,7 +572,12 @@ Modo de validação YAML:
 - `Workflow\_audit\Urban_Structure\NIMALIS_URBAN_STANDARDIZATION_REVIEW.md`
 - `Workflow\_audit\Vault_Standardization\FRONTMATTER_MINIMUM_APPLIED_C1A.md`
 - `Workflow\_audit\Vault_Standardization\FRONTMATTER_MINIMUM_APPLIED_C1B_LOCATIONS.md`
+- `Workflow\_audit\Vault_Standardization\FRONTMATTER_MINIMUM_APPLIED_C1C_FACTIONS.md`
 - `Workflow\_audit\Vault_Standardization\FRONTMATTER_MINIMUM_PLAN.md`
+- `Workflow\_audit\Vault_Standardization\LEAFLET_ID_ALIGNMENT_FIX_REPORT.md`
+- `Workflow\_audit\Vault_Standardization\LEAFLET_IMAGE_LOAD_RESET_REPORT.md`
+- `Workflow\_audit\Vault_Standardization\LEAFLET_MAP_DIAGNOSTIC_REPORT.md`
+- `Workflow\_audit\Vault_Standardization\LEAFLET_MAP_FIX_REPORT.md`
 - `Workflow\_audit\Vault_Standardization\TAG_NORMALIZATION_APPLIED.md`
 - `Workflow\_audit\Vault_Standardization\TAG_NORMALIZATION_IMPACT.md`
 - `Workflow\_audit\Vault_Standardization\TAG_NORMALIZATION_MAP.md`
@@ -611,12 +619,7 @@ Modo de validação YAML:
 - `Workflow\OMNISVERA_CHARACTER_TEMPLATE_GUIDE.md`
 - `Workflow\OMNISVERA_CLASS_STANDARD.md`
 - `Workflow\OMNISVERA_DASHBOARD_SYSTEM.md`
-- `Workflow\OMNISVERA_FRONTMATTER_SCHEMA.md`
-- `Workflow\OMNISVERA_LOCATION_TERRITORY_GUIDE.md`
-- `Workflow\OMNISVERA_MEDIA_STANDARD.md`
-- `Workflow\OMNISVERA_NOTE_STANDARD.md`
-- `Workflow\OMNISVERA_SYSTEM_TAXONOMY.md`
-- ... mais 18 itens.
+- ... mais 23 itens.
 
 
 ## Notas sem `subtype`
@@ -653,14 +656,9 @@ Modo de validação YAML:
 - `ECONOMY.md`
 - `Factions\Clã Sanguinallis.md`
 - `Factions\Conclave dos Errantes.md`
-- `Factions\Coroa de Nimalia.md`
-- `Factions\Culto dos Sussurrantes.md`
 - `Factions\Guarda Real de Nimalia.md`
 - `Factions\Guardiões do Véu Cinzento.md`
-- `Factions\Guilda dos Mercadores.md`
-- `Factions\Nobreza de Nimalia.md`
 - `Factions\Rede de Falsificadores de Maré Baixa.md`
-- `Factions\Sentinelas de Leth'valora.md`
 - `Home.md`
 - `Home_Mestre.md`
 - `Items\Adagas de Espectro Fantasma.md`
@@ -723,7 +721,12 @@ Modo de validação YAML:
 - `Templates\Characters\NPC Importante.md`
 - `Templates\Characters\NPC Menor.md`
 - `Templates\Characters\Personagem Jogador.md`
-- ... mais 202 itens.
+- `Templates\Classes\Arquétipo Narrativo.md`
+- `Templates\Classes\Classe Base.md`
+- `Templates\Classes\Especialização.md`
+- `Templates\RPG\B-Side.md`
+- `Templates\RPG\Classe.md`
+- ... mais 205 itens.
 
 
 ## Notas faltando campos Omnisvera mínimos
@@ -760,14 +763,9 @@ Campos mínimos auditados: `type`, `subtype`, `work_status`, `canon_status`, `vi
 - `ECONOMY.md — faltando: canon_status, created_by, requires_review, subtype, type, visibility, work_status`
 - `Factions\Clã Sanguinallis.md — faltando: canon_status, requires_review, subtype, work_status`
 - `Factions\Conclave dos Errantes.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
-- `Factions\Coroa de Nimalia.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
-- `Factions\Culto dos Sussurrantes.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
 - `Factions\Guarda Real de Nimalia.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
 - `Factions\Guardiões do Véu Cinzento.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
-- `Factions\Guilda dos Mercadores.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
-- `Factions\Nobreza de Nimalia.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
 - `Factions\Rede de Falsificadores de Maré Baixa.md — faltando: canon_status, requires_review, subtype, work_status`
-- `Factions\Sentinelas de Leth'valora.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
 - `Home.md — faltando: canon_status, created_by, requires_review, subtype, type, work_status`
 - `Home_Mestre.md — faltando: canon_status, created_by, requires_review, subtype, type, work_status`
 - `Items\Adagas de Espectro Fantasma.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
@@ -830,7 +828,12 @@ Campos mínimos auditados: `type`, `subtype`, `work_status`, `canon_status`, `vi
 - `Templates\Characters\NPC Importante.md — faltando: canon_status, requires_review, subtype, work_status`
 - `Templates\Characters\NPC Menor.md — faltando: canon_status, requires_review, subtype, work_status`
 - `Templates\Characters\Personagem Jogador.md — faltando: canon_status, requires_review, subtype, work_status`
-- ... mais 64 itens.
+- `Templates\Classes\Arquétipo Narrativo.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Templates\Classes\Classe Base.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Templates\Classes\Especialização.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Templates\RPG\B-Side.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Templates\RPG\Classe.md — faltando: canon_status, requires_review, subtype, work_status`
+- ... mais 62 itens.
 
 
 ## YAML/frontmatter com problema
@@ -901,7 +904,7 @@ Campos mínimos auditados: `type`, `subtype`, `work_status`, `canon_status`, `vi
   - `Religion\Igreja das Chamas.md`
   - `Religion\RELIGION.md`
   - `Templates\RPG\Religião.md`
-- `territory/territorio` em 7 nota(s). Exemplos:
+- `territory/territorio` em 9 nota(s). Exemplos:
   - `MAPA DE EARTHROPO.md`
   - `MAPA DE NIMALIA.md`
   - `Territories\Campos de Earthropo.md`
@@ -909,6 +912,8 @@ Campos mínimos auditados: `type`, `subtype`, `work_status`, `canon_status`, `vi
   - `Territories\INDICE_DE_TERRITORIOS.md`
   - `Territories\Mar da Neblina.md`
   - `Territories\Nimalia.md`
+  - `Workflow\_audit\Leaflet_Map_Diagnostics\backups\MAPA DE EARTHROPO.before-map-reset.md`
+  - `Workflow\_audit\Leaflet_Map_Diagnostics\backups\MAPA DE NIMALIA.before-map-reset.md`
 
 ## Tags possivelmente fora do padrão de formato
 
@@ -966,12 +971,19 @@ Critério: tag com espaço, maiúscula inesperada ou formato arriscado. Tags `Ca
 > Não apagar automaticamente. Uma mídia pode ser usada por CSS, plugin, mapa, canvas, nota futura ou referência manual ainda não capturada.
 
 - `anciao.png`
-- `area-comercial-1.png`
-- `area-comercial-2.png`
 - `loja-odran.png`
 - `porto-real.png`
 - `smoke.mp3`
 - `sound.png`
+- `th_alquimista.PNG`
+- `th_antropos.PNG`
+- `th_clerigo.PNG`
+- `th_dragonborn.PNG`
+- `th_guerreiro.PNG`
+- `th_kenku.PNG`
+- `th_ladrao.PNG`
+- `th_mago.PNG`
+- `th_unidade.PNG`
 
 
 ## Reclassificações sugeridas

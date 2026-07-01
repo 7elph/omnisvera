@@ -16,6 +16,11 @@ cover: zz_media/guilda-dos-mercadores.png
 info: Guilda econômica que organiza comércio, rotas, vendas e contratos em Earthropo.
 description: Rede mercantil de alcance amplo, com influência em mercados, portos, caravanas e disputas econômicas.
 chapters: []
+subtype: guild
+work_status: Em desenvolvimento
+canon_status: Working Canon
+created_by: Sage
+requires_review: true
 tags:
   - faction
   - faccao

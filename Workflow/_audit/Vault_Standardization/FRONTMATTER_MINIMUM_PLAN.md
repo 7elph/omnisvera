@@ -1,6 +1,6 @@
 # Omnisvera — Plano C0 de Frontmatter Mínimo
 
-Gerado em: 2026-07-01 15:05
+Gerado em: 2026-07-01 20:01
 
 > [!IMPORTANT]
 > Este relatório é dry-run. Nenhuma nota foi alterada.
@@ -10,29 +10,29 @@ Gerado em: 2026-07-01 15:05
 
 | métrica | valor |
 |---|---:|
-| notas Markdown analisadas | 322 |
-| notas com frontmatter | 184 |
-| notas sem frontmatter | 138 |
-| YAML/frontmatter válido | 184 |
+| notas Markdown analisadas | 330 |
+| notas com frontmatter | 187 |
+| notas sem frontmatter | 143 |
+| YAML/frontmatter válido | 187 |
 | YAML/frontmatter inválido | 0 |
-| notas com type | 151 |
+| notas com type | 154 |
 | notas sem type | 33 |
-| notas com subtype | 20 |
-| notas sem subtype | 164 |
-| candidatos low | 37 |
+| notas com subtype | 25 |
+| notas sem subtype | 162 |
+| candidatos low | 32 |
 | candidatos medium | 64 |
 | candidatos high | 22 |
-| pulados/skip | 199 |
+| pulados/skip | 212 |
 
 ## Campos mínimos ausentes
 
 | campo | ocorrências |
 |---|---:|
-| `subtype` | 164 |
-| `work_status` | 164 |
-| `canon_status` | 164 |
-| `requires_review` | 164 |
-| `created_by` | 101 |
+| `subtype` | 162 |
+| `work_status` | 162 |
+| `canon_status` | 162 |
+| `requires_review` | 162 |
+| `created_by` | 99 |
 | `type` | 33 |
 | `visibility` | 30 |
 
@@ -50,8 +50,8 @@ Gerado em: 2026-07-01 15:05
 | `race` | 10 |
 | `index` | 9 |
 | `story` | 8 |
+| `map` | 6 |
 | `territory` | 5 |
-| `map` | 3 |
 | `quest` | 2 |
 | `rumor` | 2 |
 | `spell` | 1 |
@@ -65,6 +65,10 @@ Gerado em: 2026-07-01 15:05
 |---|---:|
 | `major_npc` | 6 |
 | `player_character` | 2 |
+| `noble_house` | 2 |
+| `guild` | 2 |
+| `religious` | 1 |
+| `military` | 1 |
 | `district` | 1 |
 | `wilderness` | 1 |
 | `settlement` | 1 |
@@ -72,7 +76,6 @@ Gerado em: 2026-07-01 15:05
 | `ruin` | 1 |
 | `controlled_npc` | 1 |
 | `submitted_scene` | 1 |
-| `guild` | 1 |
 | `magic_item` | 1 |
 | `shop` | 1 |
 | `concept` | 1 |
@@ -119,14 +122,14 @@ Gerado em: 2026-07-01 15:05
 | `ECONOMY.md` |  |  |  |  | `type`, `subtype`, `work_status`, `canon_status`, `visibility`, `created_by`, `requires_review` | skip | no_action | não inferido com segurança. subtype para `` não tem regra de baixo risco. sem type sugerido com segurança. |
 | `Factions/Clã Sanguinallis.md` | `faction` | `faction` |  |  | `subtype`, `work_status`, `canon_status`, `requires_review` | medium | review_before_apply | inferido pela pasta Factions. subtype de facção precisa revisão. subtype ausente sem inferência de baixo risco. |
 | `Factions/Conclave dos Errantes.md` | `faction` | `faction` |  |  | `subtype`, `work_status`, `canon_status`, `created_by`, `requires_review` | medium | review_before_apply | inferido pela pasta Factions. subtype de facção precisa revisão. subtype ausente sem inferência de baixo risco. |
-| `Factions/Coroa de Nimalia.md` | `faction` | `faction` |  | `noble_house` | `subtype`, `work_status`, `canon_status`, `created_by`, `requires_review` | low | plan_add_missing_fields | inferido pela pasta Factions. nobreza/casas nobres detectadas. campos mínimos ausentes podem ser adicionados em lote futuro. |
-| `Factions/Culto dos Sussurrantes.md` | `faction` | `faction` |  | `cult` | `subtype`, `work_status`, `canon_status`, `created_by`, `requires_review` | low | plan_add_missing_fields | inferido pela pasta Factions. culto detectado. campos mínimos ausentes podem ser adicionados em lote futuro. |
+| `Factions/Coroa de Nimalia.md` | `faction` | `faction` | `noble_house` | `noble_house` |  | skip | no_action | inferido pela pasta Factions. nobreza/casas nobres detectadas. frontmatter já contém campos mínimos auditados. |
+| `Factions/Culto dos Sussurrantes.md` | `faction` | `faction` | `religious` | `religious` |  | skip | no_action | inferido pela pasta Factions. culto detectado; classificado como facção religiosa. frontmatter já contém campos mínimos auditados. |
 | `Factions/Guarda Real de Nimalia.md` | `faction` | `faction` |  |  | `subtype`, `work_status`, `canon_status`, `created_by`, `requires_review` | medium | review_before_apply | inferido pela pasta Factions. subtype de facção precisa revisão. subtype ausente sem inferência de baixo risco. |
 | `Factions/Guardiões do Véu Cinzento.md` | `faction` | `faction` |  |  | `subtype`, `work_status`, `canon_status`, `created_by`, `requires_review` | medium | review_before_apply | inferido pela pasta Factions. subtype de facção precisa revisão. subtype ausente sem inferência de baixo risco. |
-| `Factions/Guilda dos Mercadores.md` | `faction` | `faction` |  | `guild` | `subtype`, `work_status`, `canon_status`, `created_by`, `requires_review` | low | plan_add_missing_fields | inferido pela pasta Factions. guilda detectada. campos mínimos ausentes podem ser adicionados em lote futuro. |
-| `Factions/Nobreza de Nimalia.md` | `faction` | `faction` |  | `noble_house` | `subtype`, `work_status`, `canon_status`, `created_by`, `requires_review` | low | plan_add_missing_fields | inferido pela pasta Factions. nobreza/casas nobres detectadas. campos mínimos ausentes podem ser adicionados em lote futuro. |
+| `Factions/Guilda dos Mercadores.md` | `faction` | `faction` | `guild` | `guild` |  | skip | no_action | inferido pela pasta Factions. guilda detectada. frontmatter já contém campos mínimos auditados. |
+| `Factions/Nobreza de Nimalia.md` | `faction` | `faction` | `noble_house` | `noble_house` |  | skip | no_action | inferido pela pasta Factions. nobreza/casas nobres detectadas. frontmatter já contém campos mínimos auditados. |
 | `Factions/Rede de Falsificadores de Maré Baixa.md` | `faction` | `faction` |  |  | `subtype`, `work_status`, `canon_status`, `requires_review` | medium | review_before_apply | inferido pela pasta Factions. subtype de facção precisa revisão. subtype ausente sem inferência de baixo risco. |
-| `Factions/Sentinelas de Leth'valora.md` | `faction` | `faction` |  | `military` | `subtype`, `work_status`, `canon_status`, `created_by`, `requires_review` | low | plan_add_missing_fields | inferido pela pasta Factions. força militar/guarda detectada. campos mínimos ausentes podem ser adicionados em lote futuro. |
+| `Factions/Sentinelas de Leth'valora.md` | `faction` | `faction` | `military` | `military` |  | skip | no_action | inferido pela pasta Factions. força militar/guarda detectada. frontmatter já contém campos mínimos auditados. |
 | `Home.md` |  |  |  |  | `type`, `subtype`, `work_status`, `canon_status`, `created_by`, `requires_review` | skip | no_action | não inferido com segurança. subtype para `` não tem regra de baixo risco. sem type sugerido com segurança. |
 | `Home_Mestre.md` |  |  |  |  | `type`, `subtype`, `work_status`, `canon_status`, `created_by`, `requires_review` | skip | no_action | não inferido com segurança. subtype para `` não tem regra de baixo risco. sem type sugerido com segurança. |
 | `Items/Adagas de Espectro Fantasma.md` | `item` | `item` |  | `artifact` | `subtype`, `work_status`, `canon_status`, `created_by`, `requires_review` | low | plan_add_missing_fields | inferido pela pasta Items. artefato detectado. campos mínimos ausentes podem ser adicionados em lote futuro. |
@@ -269,6 +272,9 @@ Gerado em: 2026-07-01 15:05
 | `Workflow/_audit/Index_Standardization/OPERATIONAL_INDEX_REVIEW.md` | `audit` | `workflow` |  |  | `subtype`, `work_status`, `canon_status`, `created_by`, `requires_review` | skip | no_action | inferido pela pasta Workflow/documentação. subtype para `workflow` não tem regra de baixo risco. histórico/auditoria/legacy; não migrar automaticamente. |
 | `Workflow/_audit/Item_Standardization/ITEMS_STANDARDIZATION_REPORT.md` | `audit` | `workflow` |  |  | `subtype`, `work_status`, `canon_status`, `created_by`, `requires_review` | skip | no_action | inferido pela pasta Workflow/documentação. subtype para `workflow` não tem regra de baixo risco. histórico/auditoria/legacy; não migrar automaticamente. |
 | `Workflow/_audit/Item_Structure/ITEM_STANDARDIZATION_REVIEW.md` |  |  |  |  |  | skip | no_action | frontmatter ausente |
+| `Workflow/_audit/Leaflet_Map_Diagnostics/backups/MAPA DE EARTHROPO.before-map-reset.md` | `map` | `workflow` |  |  | `subtype`, `work_status`, `canon_status`, `created_by`, `requires_review` | skip | no_action | inferido pela pasta Workflow/documentação. subtype para `workflow` não tem regra de baixo risco. histórico/auditoria/legacy; não migrar automaticamente. |
+| `Workflow/_audit/Leaflet_Map_Diagnostics/backups/MAPA DE NIMALIA.before-map-reset.md` | `map` | `workflow` |  |  | `subtype`, `work_status`, `canon_status`, `created_by`, `requires_review` | skip | no_action | inferido pela pasta Workflow/documentação. subtype para `workflow` não tem regra de baixo risco. histórico/auditoria/legacy; não migrar automaticamente. |
+| `Workflow/_audit/Leaflet_Map_Diagnostics/backups/MAPA DE NIMALIS.before-map-reset.md` | `map` | `workflow` |  |  | `subtype`, `work_status`, `canon_status`, `created_by`, `requires_review` | skip | no_action | inferido pela pasta Workflow/documentação. subtype para `workflow` não tem regra de baixo risco. histórico/auditoria/legacy; não migrar automaticamente. |
 | `Workflow/_audit/Location_Standardization/LOCATIONS_STANDARDIZATION_REPORT.md` | `audit` | `workflow` |  |  | `subtype`, `work_status`, `canon_status`, `requires_review` | skip | no_action | inferido pela pasta Workflow/documentação. subtype para `workflow` não tem regra de baixo risco. histórico/auditoria/legacy; não migrar automaticamente. |
 | `Workflow/_audit/Lore_Standardization/LORE_AND_PHENOMENA_STANDARDIZATION_REPORT.md` | `audit` | `workflow` |  |  | `subtype`, `work_status`, `canon_status`, `created_by`, `requires_review` | skip | no_action | inferido pela pasta Workflow/documentação. subtype para `workflow` não tem regra de baixo risco. histórico/auditoria/legacy; não migrar automaticamente. |
 | `Workflow/_audit/Lore_Structure/LORE_CULTURE_STORY_FORMAT_STAGE_1.md` |  |  |  |  |  | skip | no_action | frontmatter ausente |
@@ -314,7 +320,12 @@ Gerado em: 2026-07-01 15:05
 | `Workflow/_audit/Urban_Structure/NIMALIS_URBAN_STANDARDIZATION_REVIEW.md` |  |  |  |  |  | skip | no_action | frontmatter ausente |
 | `Workflow/_audit/Vault_Standardization/FRONTMATTER_MINIMUM_APPLIED_C1A.md` |  |  |  |  |  | skip | no_action | frontmatter ausente |
 | `Workflow/_audit/Vault_Standardization/FRONTMATTER_MINIMUM_APPLIED_C1B_LOCATIONS.md` |  |  |  |  |  | skip | no_action | frontmatter ausente |
+| `Workflow/_audit/Vault_Standardization/FRONTMATTER_MINIMUM_APPLIED_C1C_FACTIONS.md` |  |  |  |  |  | skip | no_action | frontmatter ausente |
 | `Workflow/_audit/Vault_Standardization/FRONTMATTER_MINIMUM_PLAN.md` |  |  |  |  |  | skip | no_action | frontmatter ausente |
+| `Workflow/_audit/Vault_Standardization/LEAFLET_ID_ALIGNMENT_FIX_REPORT.md` |  |  |  |  |  | skip | no_action | frontmatter ausente |
+| `Workflow/_audit/Vault_Standardization/LEAFLET_IMAGE_LOAD_RESET_REPORT.md` |  |  |  |  |  | skip | no_action | frontmatter ausente |
+| `Workflow/_audit/Vault_Standardization/LEAFLET_MAP_DIAGNOSTIC_REPORT.md` |  |  |  |  |  | skip | no_action | frontmatter ausente |
+| `Workflow/_audit/Vault_Standardization/LEAFLET_MAP_FIX_REPORT.md` |  |  |  |  |  | skip | no_action | frontmatter ausente |
 | `Workflow/_audit/Vault_Standardization/TAG_NORMALIZATION_APPLIED.md` |  |  |  |  |  | skip | no_action | frontmatter ausente |
 | `Workflow/_audit/Vault_Standardization/TAG_NORMALIZATION_IMPACT.md` |  |  |  |  |  | skip | no_action | frontmatter ausente |
 | `Workflow/_audit/Vault_Standardization/TAG_NORMALIZATION_MAP.md` |  |  |  |  |  | skip | no_action | frontmatter ausente |

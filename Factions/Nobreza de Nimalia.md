@@ -17,6 +17,11 @@ cover: zz_media/coroa-de-nimalia.png
 info: Casas nobres ativas do Reino de Nimalia.
 description: Estrutura social e política das casas nobres de Nimalia, especialmente ligadas à corte, ao Bairro Nobre e à Coroa.
 chapters: []
+subtype: noble_house
+work_status: Em desenvolvimento
+canon_status: Working Canon
+created_by: Sage
+requires_review: true
 tags:
   - faction
   - faccao

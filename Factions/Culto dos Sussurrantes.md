@@ -16,6 +16,11 @@ cover: zz_media/culto-dos-sussurrantes.png
 info: Culto em revisão associado ao Véu Cinzento.
 description: Facção/culto apocalíptico em revisão; pode ser ameaça ativa, rumor falso ou rascunho arquivável.
 chapters: []
+subtype: religious
+work_status: Em desenvolvimento
+canon_status: Draft
+created_by: Sage
+requires_review: true
 tags:
   - faction
   - faccao

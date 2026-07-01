@@ -52,9 +52,21 @@ LOCATION_SUBTYPES = {
     "settlement",
 }
 
+FACTION_SUBTYPES = {
+    "military",
+    "religious",
+    "criminal",
+    "guild",
+    "noble_house",
+    "mercantile",
+    "rebel",
+    "political",
+}
+
 ALLOWED_SUBTYPES_BY_TYPE = {
     "character": CHARACTER_SUBTYPES,
     "location": LOCATION_SUBTYPES,
+    "faction": FACTION_SUBTYPES,
 }
 
 
@@ -215,6 +227,12 @@ def note_status_value(fields: dict[str, Any]) -> str:
     return str(fields.get("NoteStatus") or "").strip().lower()
 
 
+def safe_suggested_subtype(row: PlanRow) -> str:
+    if row.suggested_type == "faction" and row.suggested_subtype == "cult":
+        return "religious"
+    return row.suggested_subtype
+
+
 def field_value(field: str, row: PlanRow, fields: dict[str, Any]) -> str | None:
     status = note_status_value(fields)
     if field == "type":
@@ -222,8 +240,9 @@ def field_value(field: str, row: PlanRow, fields: dict[str, Any]) -> str | None:
             return row.suggested_type
         return None
     if field == "subtype":
-        if row.suggested_subtype in ALLOWED_SUBTYPES_BY_TYPE.get(row.suggested_type, set()):
-            return row.suggested_subtype
+        suggested_subtype = safe_suggested_subtype(row)
+        if suggested_subtype in ALLOWED_SUBTYPES_BY_TYPE.get(row.suggested_type, set()):
+            return suggested_subtype
         return None
     if field == "work_status":
         if status in {"draft", "placeholder", "active"}:
@@ -291,7 +310,8 @@ def apply_row(root: Path, row: PlanRow, do_apply: bool, dirty: set[str]) -> Appl
         result.skipped = True
         result.skip_reason = "Nimalis é capital; sugestão `settlement` precisa revisão antes de aplicar"
         return result
-    if not row.suggested_subtype or row.suggested_subtype not in ALLOWED_SUBTYPES_BY_TYPE.get(row.suggested_type, set()):
+    suggested_subtype = safe_suggested_subtype(row)
+    if not suggested_subtype or suggested_subtype not in ALLOWED_SUBTYPES_BY_TYPE.get(row.suggested_type, set()):
         result.skipped = True
         result.skip_reason = "subtype ausente, ambíguo ou fora da lista permitida"
         return result

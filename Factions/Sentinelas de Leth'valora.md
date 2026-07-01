@@ -16,6 +16,11 @@ cover: "zz_media/sentinelas-de-leth'valora.png"
 info: Guarda local destruída de Leth'valora.
 description: Pequena força de defesa da vila de Leth'valora, destruída junto com a vila durante o ataque do dragão de colar dourado.
 chapters: []
+subtype: military
+work_status: Em desenvolvimento
+canon_status: Working Canon
+created_by: Sage
+requires_review: true
 tags:
   - faction
   - faccao

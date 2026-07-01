@@ -292,7 +292,7 @@ def infer_subtype(path: str, suggested_type: str, fields: dict[str, Any], tags: 
         if "guilda" in tagset or "guilda" in name:
             return "guild", "guilda detectada."
         if "culto" in tagset or "culto" in name:
-            return "cult", "culto detectado."
+            return "religious", "culto detectado; classificado como facção religiosa."
         if "nobreza" in tagset or "nobreza" in name:
             return "noble_house", "nobreza/casas nobres detectadas."
         if "guarda" in tagset or "sentinelas" in name:
