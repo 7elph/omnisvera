@@ -1,6 +1,6 @@
 # Auditoria Global de Padronização do Vault
 
-Gerado em: 2026-07-01 04:36
+Gerado em: 2026-07-01 05:20
 
 Fonte de padrão: [[Workflow/OMNISVERA_VAULT_STANDARD|OMNISVERA_VAULT_STANDARD]]
 
@@ -12,28 +12,28 @@ Fonte de padrão: [[Workflow/OMNISVERA_VAULT_STANDARD|OMNISVERA_VAULT_STANDARD]]
 
 | métrica | valor |
 |---|---:|
-| notas Markdown auditadas | 330 |
-| notas com frontmatter | 185 |
-| notas sem frontmatter | 145 |
-| YAML/frontmatter parseável | 185 |
+| notas Markdown auditadas | 320 |
+| notas com frontmatter | 184 |
+| notas sem frontmatter | 136 |
+| YAML/frontmatter parseável | 184 |
 | YAML/frontmatter com problema | 0 |
 | campos YAML distintos | 104 |
 | tags distintas | 207 |
 | tipos detectados | 18 |
 | subtipos detectados | 8 |
-| referências de mídia distintas | 157 |
-| mídias em `zz_media` | 81 |
+| referências de mídia distintas | 177 |
+| mídias em `zz_media` | 103 |
 | imagens/mídias quebradas | 26 |
 | imagens/mídias quebradas fora de histórico/auditoria | 0 |
 | possíveis problemas de case-sensitive | 0 |
 | possíveis problemas de case-sensitive fora de histórico/auditoria | 0 |
-| mídias possivelmente órfãs | 6 |
+| mídias possivelmente órfãs | 12 |
 
 Modo de validação YAML:
 
 | item | ocorrências |
 |---|---:|
-| `simple` | 330 |
+| `simple` | 320 |
 
 
 ## Campos YAML encontrados
@@ -56,11 +56,11 @@ Modo de validação YAML:
 | `territory` | 87 |
 | `location` | 84 |
 | `created_by` | 74 |
-| `description` | 63 |
+| `description` | 62 |
 | `faction` | 62 |
 | `info` | 55 |
 | `danger_level` | 52 |
-| `name` | 41 |
+| `name` | 40 |
 | `region` | 36 |
 | `aliases` | 34 |
 | `level` | 31 |
@@ -382,17 +382,6 @@ Modo de validação YAML:
 
 ## Notas sem `type`
 
-- `.codex-tools\pymupdf-1.27.2.3.dist-info\README.md`
-- `.local-tools\README.md`
-- `.omnisvera-tools\Lib\site-packages\httpcore-1.0.9.dist-info\licenses\LICENSE.md`
-- `.omnisvera-tools\Lib\site-packages\httpx-0.28.1.dist-info\licenses\LICENSE.md`
-- `.omnisvera-tools\Lib\site-packages\idna-3.18.dist-info\licenses\LICENSE.md`
-- `.omnisvera-tools\Lib\site-packages\pymupdf-1.27.2.3.dist-info\README.md`
-- `.omnisvera-tools\Lib\site-packages\soupsieve-2.8.4.dist-info\licenses\LICENSE.md`
-- `.omnisvera-tools\Lib\site-packages\starlette-1.3.1.dist-info\licenses\LICENSE.md`
-- `.omnisvera-tools\Lib\site-packages\typer\.agents\skills\typer\SKILL.md`
-- `.omnisvera-tools\Lib\site-packages\uvicorn-0.49.0.dist-info\licenses\LICENSE.md`
-- `.omnisvera-tools\Lib\site-packages\win32comext\mapi\NOTICE.md`
 - `ECONOMY.md`
 - `Home.md`
 - `Home_Mestre.md`
@@ -472,6 +461,7 @@ Modo de validação YAML:
 - `Workflow\_audit\Taxonomy_Alignment\TAXONOMY_ALIGNMENT_VALIDATION.md`
 - `Workflow\_audit\Taxonomy_Alignment\TEMPLATE_ALIGNMENT_REPORT.md`
 - `Workflow\_audit\Urban_Structure\NIMALIS_URBAN_STANDARDIZATION_REVIEW.md`
+- `Workflow\_audit\Vault_Standardization\FRONTMATTER_MINIMUM_PLAN.md`
 - `Workflow\_audit\Vault_Standardization\TAG_NORMALIZATION_APPLIED.md`
 - `Workflow\_audit\Vault_Standardization\TAG_NORMALIZATION_IMPACT.md`
 - `Workflow\_audit\Vault_Standardization\TAG_NORMALIZATION_MAP.md`
@@ -482,7 +472,17 @@ Modo de validação YAML:
 - `Workflow\AI_CONTEXT\01_CANON_SUMMARY.md`
 - `Workflow\AI_CONTEXT\02_ENTITY_INDEX.md`
 - `Workflow\AI_CONTEXT\03_OPEN_DECISIONS.md`
-- ... mais 79 itens.
+- `Workflow\AI_CONTEXT\04_MEDIA_RULES.md`
+- `Workflow\AI_CONTEXT\05_FRONTMATTER_SCHEMA.md`
+- `Workflow\AI_CONTEXT\06_TASK_TEMPLATES.md`
+- `Workflow\AI_CONTEXT\07_VALIDATION_CHECKLIST.md`
+- `Workflow\AI_CONTEXT\08_DO_NOT_INVENT.md`
+- `Workflow\AI_CONTEXT\09_SESSION_STATE.md`
+- `Workflow\AI_REVIEW_CHECKLIST.md`
+- `Workflow\AI_TASK_TEMPLATE.md`
+- `Workflow\ASSISTANT_HANDOFF.md`
+- `Workflow\CANON.md`
+- ... mais 69 itens.
 
 
 ## Notas sem frontmatter
@@ -490,16 +490,6 @@ Modo de validação YAML:
 > Nem toda documentação técnica precisa de frontmatter.
 > Esta lista é inventário, não autorização para corrigir em massa.
 
-- `.codex-tools\pymupdf-1.27.2.3.dist-info\README.md`
-- `.local-tools\README.md`
-- `.omnisvera-tools\Lib\site-packages\httpcore-1.0.9.dist-info\licenses\LICENSE.md`
-- `.omnisvera-tools\Lib\site-packages\httpx-0.28.1.dist-info\licenses\LICENSE.md`
-- `.omnisvera-tools\Lib\site-packages\idna-3.18.dist-info\licenses\LICENSE.md`
-- `.omnisvera-tools\Lib\site-packages\pymupdf-1.27.2.3.dist-info\README.md`
-- `.omnisvera-tools\Lib\site-packages\soupsieve-2.8.4.dist-info\licenses\LICENSE.md`
-- `.omnisvera-tools\Lib\site-packages\starlette-1.3.1.dist-info\licenses\LICENSE.md`
-- `.omnisvera-tools\Lib\site-packages\uvicorn-0.49.0.dist-info\licenses\LICENSE.md`
-- `.omnisvera-tools\Lib\site-packages\win32comext\mapi\NOTICE.md`
 - `Workflow\_archive\legacy_removal\DISGRACELAND_REMOVAL_SUMMARY.md`
 - `Workflow\_audit\Character_Structure\CHARACTER_ALIGNMENT_REVIEW.md`
 - `Workflow\_audit\Cleanup\ARCHIVED_CONTENT_LOG.md`
@@ -571,6 +561,7 @@ Modo de validação YAML:
 - `Workflow\_audit\Taxonomy_Alignment\TAXONOMY_ALIGNMENT_VALIDATION.md`
 - `Workflow\_audit\Taxonomy_Alignment\TEMPLATE_ALIGNMENT_REPORT.md`
 - `Workflow\_audit\Urban_Structure\NIMALIS_URBAN_STANDARDIZATION_REVIEW.md`
+- `Workflow\_audit\Vault_Standardization\FRONTMATTER_MINIMUM_PLAN.md`
 - `Workflow\_audit\Vault_Standardization\TAG_NORMALIZATION_APPLIED.md`
 - `Workflow\_audit\Vault_Standardization\TAG_NORMALIZATION_IMPACT.md`
 - `Workflow\_audit\Vault_Standardization\TAG_NORMALIZATION_MAP.md`
@@ -610,24 +601,22 @@ Modo de validação YAML:
 - `Workflow\Legacy\Disgraceland\.trash\Call Out Boxes\Call Out - Right Section.md`
 - `Workflow\LOCAL_ENVIRONMENT_CHECKLIST.md`
 - `Workflow\OMNISVERA_CHARACTER_TEMPLATE_GUIDE.md`
-- ... mais 25 itens.
+- `Workflow\OMNISVERA_CLASS_STANDARD.md`
+- `Workflow\OMNISVERA_DASHBOARD_SYSTEM.md`
+- `Workflow\OMNISVERA_FRONTMATTER_SCHEMA.md`
+- `Workflow\OMNISVERA_LOCATION_TERRITORY_GUIDE.md`
+- `Workflow\OMNISVERA_MEDIA_STANDARD.md`
+- `Workflow\OMNISVERA_NOTE_STANDARD.md`
+- `Workflow\OMNISVERA_SYSTEM_TAXONOMY.md`
+- `Workflow\OMNISVERA_SYSTEM_TAXONOMY_DECISIONS.md`
+- `Workflow\OMNISVERA_TAG_BRIDGE_GUIDE.md`
+- ... mais 16 itens.
 
 
 ## Notas sem `subtype`
 
 > `subtype` é recomendado para padronização futura, mas não deve ser adicionado em massa sem lote controlado.
 
-- `.codex-tools\pymupdf-1.27.2.3.dist-info\README.md`
-- `.local-tools\README.md`
-- `.omnisvera-tools\Lib\site-packages\httpcore-1.0.9.dist-info\licenses\LICENSE.md`
-- `.omnisvera-tools\Lib\site-packages\httpx-0.28.1.dist-info\licenses\LICENSE.md`
-- `.omnisvera-tools\Lib\site-packages\idna-3.18.dist-info\licenses\LICENSE.md`
-- `.omnisvera-tools\Lib\site-packages\pymupdf-1.27.2.3.dist-info\README.md`
-- `.omnisvera-tools\Lib\site-packages\soupsieve-2.8.4.dist-info\licenses\LICENSE.md`
-- `.omnisvera-tools\Lib\site-packages\starlette-1.3.1.dist-info\licenses\LICENSE.md`
-- `.omnisvera-tools\Lib\site-packages\typer\.agents\skills\typer\SKILL.md`
-- `.omnisvera-tools\Lib\site-packages\uvicorn-0.49.0.dist-info\licenses\LICENSE.md`
-- `.omnisvera-tools\Lib\site-packages\win32comext\mapi\NOTICE.md`
 - `Bestiary\INDICE_DE_MONSTROS.md`
 - `CALENDAR.md`
 - `CAMPANHA\ESTADO_DA_CAMPANHA.md`
@@ -717,47 +706,125 @@ Modo de validação YAML:
 - `LORE.md`
 - `MAPA DE EARTHROPO.md`
 - `MAPA DE NIMALIA.md`
-- ... mais 222 itens.
+- `MAPA DE NIMALIS.md`
+- `NOTES.md`
+- `OMNISVERA.md`
+- `Races\Antropo.md`
+- `Races\Anão.md`
+- `Races\Dragonborn.md`
+- `Races\Elfo.md`
+- `Races\Halfling.md`
+- `Races\Humano.md`
+- `Races\INDICE_DE_RACAS.md`
+- `Races\Kenku.md`
+- ... mais 212 itens.
 
 
 ## Notas faltando campos Omnisvera mínimos
 
-Campos mínimos auditados: `type`, `visibility`.
+Campos mínimos auditados: `type`, `subtype`, `work_status`, `canon_status`, `visibility`, `created_by`, `requires_review`.
 
-- `.omnisvera-tools\Lib\site-packages\typer\.agents\skills\typer\SKILL.md — faltando: type, visibility`
-- `ECONOMY.md — faltando: type, visibility`
-- `Home.md — faltando: type`
-- `Home_Mestre.md — faltando: type`
-- `LATEST_NEWS.md — faltando: type, visibility`
-- `LORE.md — faltando: type, visibility`
-- `NOTES.md — faltando: type, visibility`
-- `OMNISVERA.md — faltando: type, visibility`
-- `Workflow\_archive\obsolete_review\Home_Jogadores_ARCHIVED.md — faltando: type`
-- `Workflow\ASSISTANT_HANDOFF.md — faltando: type, visibility`
-- `Workflow\CANON.md — faltando: type, visibility`
-- `Workflow\Charts.md — faltando: type, visibility`
-- `Workflow\Format Audit Report.md — faltando: type, visibility`
-- `Workflow\GEOGRAPHY.md — faltando: type, visibility`
-- `Workflow\Legacy\Disgraceland\.trash\!Ep01 - The Black Marauder\Act 01\A1-Scene 01.md — faltando: type, visibility`
-- `Workflow\Legacy\Disgraceland\.trash\!Ep01 - The Black Marauder\Act 01\A1-Scene 02.md — faltando: type, visibility`
-- `Workflow\Legacy\Disgraceland\.trash\!Ep01 - The Black Marauder\Act 01\A1-Scene 03.md — faltando: type, visibility`
-- `Workflow\Legacy\Disgraceland\.trash\Call Out Boxes\Call Out Boxes.md — faltando: type, visibility`
-- `Workflow\Legacy\Disgraceland\.trash\City Forces\Blueforce.md — faltando: type, visibility`
-- `Workflow\Legacy\Legacy - Archive Index.md — faltando: type, visibility`
-- `Workflow\Legacy\Old Dragon anterior\Legacy - Old Dragon anterior - Clérigo.md — faltando: type, visibility`
-- `Workflow\Legacy\Old Dragon anterior\Legacy - Old Dragon anterior - Homem de Armas.md — faltando: type, visibility`
-- `Workflow\Legacy\Old Dragon anterior\Legacy - Old Dragon anterior - Ladrão.md — faltando: type, visibility`
-- `Workflow\Legacy\Old Dragon anterior\Legacy - Old Dragon anterior - Mago.md — faltando: type, visibility`
-- `Workflow\LOCAL_ASSISTANT_PROTOCOL.md — faltando: type, visibility`
-- `Workflow\LOCAL_TOOLING.md — faltando: type, visibility`
-- `Workflow\MIGRATION_LEDGER.md — faltando: type, visibility`
-- `Workflow\MISSING_NOTES_BACKLOG.md — faltando: type, visibility`
-- `Workflow\OUTLINES.md — faltando: type, visibility`
-- `Workflow\Property Key Dashboard.md — faltando: type, visibility`
-- `Workflow\RULES_SOURCES.md — faltando: type, visibility`
-- `Workflow\Runtime Audit Report.md — faltando: type, visibility`
-- `Workflow\Scratch Notes.md — faltando: type, visibility`
-- `Workflow\Vault Report.md — faltando: type, visibility`
+- `Bestiary\INDICE_DE_MONSTROS.md — faltando: canon_status, requires_review, subtype, work_status`
+- `CALENDAR.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
+- `CAMPANHA\ESTADO_DA_CAMPANHA.md — faltando: canon_status, requires_review, subtype, work_status`
+- `CAMPANHA\Quests\INDICE_DE_QUESTS.md — faltando: canon_status, requires_review, subtype, work_status`
+- `CAMPANHA\Quests\Quest 01 - Investigar Avistamentos de Dragões.md — faltando: canon_status, requires_review, subtype, work_status`
+- `CAMPANHA\Rumors\INDICE_DE_RUMORES.md — faltando: canon_status, requires_review, subtype, work_status`
+- `CAMPANHA\Rumors\Rumor 01 - Dragões ao Sul de Nimalia.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Characters\Individual\Augustus Terra Decimus.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
+- `Characters\Individual\Dragão de Colar Dourado.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Characters\Individual\Elarion Vaelthor.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
+- `Characters\Individual\General Cassian Valerius.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
+- `Characters\Individual\Kaelen, o Flagelo.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Characters\Individual\Lorde Malakar.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Characters\Individual\Mestre Odran Veyl.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
+- `Characters\Individual\Mira Valen.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
+- `Characters\Individual\Padre Oric.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
+- `Characters\Individual\Raziel.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
+- `Characters\Individual\Unidade DORN-7.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
+- `Characters\Individual\Vandor, o Senhor das Bestas.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Characters\Individual\Varkh Nimalis.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
+- `Characters\Individual\Vezemir.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
+- `Classes\Alquimista.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Classes\Clérigo.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Classes\Guerreiro.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Classes\INDICE_DE_CLASSES.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Classes\Ladrão.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Classes\Mago.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Classes\Vampiro.md — faltando: canon_status, requires_review, subtype, work_status`
+- `CULTURE.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
+- `EARTHROPO\00 - As Crônicas de Névoa de Sangue.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
+- `EARTHROPO\00 - O Bastardo de Ferro.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
+- `EARTHROPO\00 - O Corvo da Maré Baixa.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
+- `EARTHROPO\01 - Ecos do Mundo Perdido.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
+- `EARTHROPO\EARTHROPO.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
+- `ECONOMY.md — faltando: canon_status, created_by, requires_review, subtype, type, visibility, work_status`
+- `Factions\Clã Sanguinallis.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Factions\Conclave dos Errantes.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
+- `Factions\Coroa de Nimalia.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
+- `Factions\Culto dos Sussurrantes.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
+- `Factions\Guarda Real de Nimalia.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
+- `Factions\Guardiões do Véu Cinzento.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
+- `Factions\Guilda dos Mercadores.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
+- `Factions\Nobreza de Nimalia.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
+- `Factions\Rede de Falsificadores de Maré Baixa.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Factions\Sentinelas de Leth'valora.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
+- `Home.md — faltando: canon_status, created_by, requires_review, subtype, type, work_status`
+- `Home_Mestre.md — faltando: canon_status, created_by, requires_review, subtype, type, work_status`
+- `Items\Adagas de Espectro Fantasma.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
+- `Items\Caderninho de Vozes.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Items\Grisalma.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
+- `Items\INDICE_DE_ITENS.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Items\Manto Primordial do Ancião.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
+- `Items\Muralha de Dorn.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
+- `Items\Máscara de Médico da Peste de Varkh.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Items\O Frasco Afogado.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Items\O Medalhão.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
+- `LATEST_NEWS.md — faltando: canon_status, created_by, requires_review, subtype, type, visibility, work_status`
+- `Locations\Antiga Estrada Esquecida.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Locations\Bairro dos Anões.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
+- `Locations\Bairro dos Dragonborns.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
+- `Locations\Bairro dos Elfos.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
+- `Locations\Bairro dos Forasteiros.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
+- `Locations\Bairro dos Humanos.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
+- `Locations\Bairro Nobre.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
+- `Locations\Bosque Sussurrante.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Locations\Casa da Moeda de Nimalia.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Locations\Distrito Comercial.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
+- `Locations\Fortaleza Abandonada de Avenor.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Locations\Fortaleza de Gharok.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
+- `Locations\INDICE_DE_LOCAIS.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Locations\Leth'valora.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Locations\Maré Baixa.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Locations\Mercado Central.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
+- `Locations\Nimalis.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
+- `Locations\Porto de Nimalia.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
+- `Locations\Ruínas de Valthor.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
+- `Locations\Vale Dourado.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Lore\Ancião Primordial.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Lore\Criadores.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Lore\Eclipse de Obsidiana.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
+- `Lore\Guardiões do Véu Cinzento.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
+- `Lore\O Fraturamento.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
+- `Lore\Remédios Falsos de Maré Baixa.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Lore\Sangue Antigo.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Lore\Vampiro Sanguinallis.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Lore\Véu Cinzento.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
+- `LORE.md — faltando: canon_status, created_by, requires_review, subtype, type, visibility, work_status`
+- `MAPA DE EARTHROPO.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
+- `MAPA DE NIMALIA.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
+- `MAPA DE NIMALIS.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
+- `NOTES.md — faltando: canon_status, created_by, requires_review, subtype, type, visibility, work_status`
+- `OMNISVERA.md — faltando: canon_status, created_by, requires_review, subtype, type, visibility, work_status`
+- `Races\Antropo.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
+- `Races\Anão.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
+- `Races\Dragonborn.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
+- `Races\Elfo.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
+- `Races\Halfling.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
+- `Races\Humano.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
+- `Races\INDICE_DE_RACAS.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Races\Kenku.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
+- ... mais 76 itens.
 
 
 ## YAML/frontmatter com problema
@@ -892,10 +959,16 @@ Critério: tag com espaço, maiúscula inesperada ou formato arriscado. Tags `Ca
 
 > Não apagar automaticamente. Uma mídia pode ser usada por CSS, plugin, mapa, canvas, nota futura ou referência manual ainda não capturada.
 
+- `anciao.png`
+- `antropos.png`
 - `area-comercial-1.png`
 - `area-comercial-2.png`
-- `area-comercial-3.png`
-- `distrito-comercial.png`
+- `dragonborn.png`
+- `halfling.png`
+- `humano.png`
+- `kenku.png`
+- `loja-odran.png`
+- `porto-real.png`
 - `smoke.mp3`
 - `sound.png`
 

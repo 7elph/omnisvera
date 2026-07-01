@@ -30,8 +30,13 @@ except Exception:  # pragma: no cover - ambiente local pode não ter PyYAML
 
 IGNORE_DIRS = {
     ".git",
+    ".obsidian",
     "zz_media",
     "node_modules",
+    ".codex-tools",
+    ".local-tools",
+    ".ollama",
+    ".omnisvera-tools",
     ".local-index",
     ".smtcmp_json_db",
     ".tmp_refs",
@@ -84,7 +89,12 @@ OMNISVERA_FIELDS = {
 
 MINIMUM_OMNISVERA_FIELDS = {
     "type",
+    "subtype",
+    "work_status",
+    "canon_status",
     "visibility",
+    "created_by",
+    "requires_review",
 }
 
 OFFICIAL_TYPES = {
@@ -792,7 +802,7 @@ Modo de validação YAML:
 
 ## Notas faltando campos Omnisvera mínimos
 
-Campos mínimos auditados: `type`, `visibility`.
+Campos mínimos auditados: `type`, `subtype`, `work_status`, `canon_status`, `visibility`, `created_by`, `requires_review`.
 
 {md_list(notes_missing_minimum, 100)}
 
