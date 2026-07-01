@@ -152,6 +152,151 @@ HYBRID_TAG_PAIRS = [
     ("character", "personagem"),
 ]
 
+TAG_EQUIVALENTS = {
+    "local": "location",
+    "faccao": "faction",
+    "raca": "race",
+    "religiao": "religion",
+    "territorio": "territory",
+    "personagem": "character",
+    "classe": "class",
+    "Category/Location": "location",
+    "Category/Lore": "lore",
+    "Category/Character": "character",
+    "npc": "character",
+    "jogador": "character",
+    "antagonista": "character",
+    "criatura": "character",
+}
+
+TAG_REVIEW_EQUIVALENTS = {
+    "Category/Settlement": "location ou territory",
+    "settlement": "location ou territory",
+}
+
+CAMPAIGN_SYSTEM_TAGS = {
+    "story",
+    "bside",
+    "old-dragon",
+    "capitulo",
+    "origem",
+    "campanha",
+    "earthropo",
+    "nimalia",
+    "nimalis",
+    "raziel",
+    "varkh",
+    "vezemir",
+    "sanguinallis",
+    "avenor",
+    "lethvalora",
+    "criadores",
+    "coroa",
+    "nobreza",
+    "vampiro",
+    "antropo",
+    "elfo",
+    "humano",
+    "humana",
+    "anao",
+    "kenku",
+    "dragonborn",
+    "paladino",
+    "guerreiro",
+    "alquimista",
+    "clerigo",
+    "ladrao",
+    "mago",
+    "misterio",
+    "desaparecido",
+    "artefato",
+    "arma",
+    "escudo",
+    "medalhao",
+    "monstro",
+    "quest",
+    "rumor",
+    "distrito",
+    "bairro",
+    "cidade",
+    "vila",
+    "ruinas",
+    "fortaleza",
+    "porto",
+    "capital",
+    "floresta",
+    "reino",
+    "valthor",
+    "gharok",
+    "comercio",
+    "economia",
+    "guilda",
+    "militar",
+    "monarquia",
+    "culto",
+    "guarda",
+    "aventureiros",
+    "errantes",
+    "exploradores",
+    "cosmologia",
+    "historia",
+    "fenomeno",
+    "magia",
+    "cataclisma",
+    "fraturamento",
+    "investigacao",
+    "estabelecimento",
+    "alquimia",
+    "forasteiros",
+    "home",
+    "dashboard",
+    "map",
+    "calendar",
+    "world",
+    "rules-reference",
+    "vault-standard",
+    "padronizacao",
+    "indice",
+    "omnisvera",
+    "title",
+    "legacy",
+    "culture",
+    "cultura",
+    "notes",
+    "classes",
+    "regras",
+    "assistant",
+    "frontmatter",
+    "cleanup",
+    "personagens",
+    "faccoes",
+    "geografia",
+    "itens",
+    "locations",
+    "locais",
+    "territories",
+    "mapas",
+    "handoff",
+    "backup",
+    "canon",
+    "chart",
+    "geography",
+    "archive",
+    "ollama",
+    "protocol",
+    "tooling",
+    "migration",
+    "placeholder",
+    "loyalist",
+    "rancher",
+    "pirate",
+    "widow",
+    "third",
+    "murray",
+    "steeltown",
+    "water",
+}
+
 MEDIA_KEYS = {"cover", "thumbnail", "portrait", "banner"}
 MEDIA_EXTENSIONS = {
     ".png",
@@ -320,6 +465,38 @@ def tag_format_issue(tag: str) -> bool:
     return False
 
 
+def classify_tag(tag: str) -> str:
+    if tag in OFFICIAL_TAGS:
+        return "official"
+    if tag in TAG_EQUIVALENTS:
+        return "hybrid"
+    if tag in TAG_REVIEW_EQUIVALENTS:
+        return "needs_sage_review"
+    if tag.startswith("Category/"):
+        return "category_tag"
+    if tag in LEGACY_ACCEPTED_TAGS:
+        return "legacy_allowed"
+    if tag in CAMPAIGN_SYSTEM_TAGS:
+        return "campaign_specific"
+    if re.match(r"^(chapter|capitulo|bside)[-_]?\d+", tag):
+        return "campaign_specific"
+    if re.match(r"^[a-z0-9]+(?:-[a-z0-9]+)+$", tag):
+        return "campaign_specific"
+    return "unknown"
+
+
+def official_tag_candidates(tags: list[str]) -> list[tuple[str, str, str]]:
+    current = set(tags)
+    candidates: list[tuple[str, str, str]] = []
+    for existing, official in sorted(TAG_EQUIVALENTS.items()):
+        if existing in current and official not in current:
+            candidates.append((existing, official, "adicionar tag oficial e preservar tag existente"))
+    for existing, official in sorted(TAG_REVIEW_EQUIVALENTS.items()):
+        if existing in current:
+            candidates.append((existing, official, "revisar com Sage antes de adicionar"))
+    return candidates
+
+
 def audit_note(path: Path, root: Path) -> NoteAudit:
     text = path.read_text(encoding="utf-8-sig", errors="replace")
     raw_fm, body, fm_errors = extract_frontmatter(text)
@@ -407,6 +584,8 @@ def build_report(root: Path, audits: list[NoteAudit]) -> str:
     subtype_counter: Counter[str] = Counter()
     yaml_modes: Counter[str] = Counter()
     media_ref_counter: Counter[str] = Counter()
+    tag_category_counter: Counter[str] = Counter()
+    tag_examples: dict[str, list[str]] = defaultdict(list)
     notes_without_type: list[str] = []
     notes_without_subtype: list[str] = []
     notes_missing_minimum: list[str] = []
@@ -414,6 +593,7 @@ def build_report(root: Path, audits: list[NoteAudit]) -> str:
     invalid_yaml: list[str] = []
     outside_tags: dict[str, list[str]] = {}
     hybrid_notes: dict[str, list[str]] = defaultdict(list)
+    tag_candidate_lines: list[str] = []
 
     media_dir = root / "zz_media"
     media_files = {p.name: p for p in media_dir.iterdir() if p.is_file()} if media_dir.exists() else {}
@@ -424,6 +604,10 @@ def build_report(root: Path, audits: list[NoteAudit]) -> str:
     for audit in audits:
         field_counter.update(audit.fields.keys())
         tag_counter.update(audit.tags)
+        for tag in audit.tags:
+            tag_category_counter[classify_tag(tag)] += 1
+            if len(tag_examples[tag]) < 5:
+                tag_examples[tag].append(str(audit.path))
         if audit.note_type:
             type_counter[audit.note_type] += 1
         else:
@@ -446,6 +630,10 @@ def build_report(root: Path, audits: list[NoteAudit]) -> str:
         for a, b in HYBRID_TAG_PAIRS:
             if a in audit.tags and b in audit.tags:
                 hybrid_notes[f"{a}/{b}"].append(str(audit.path))
+        for existing, official, action in official_tag_candidates(audit.tags):
+            tag_candidate_lines.append(
+                f"- `{audit.path}` — `{existing}` → `{official}`; ação: {action}."
+            )
         for ref in audit.media_refs:
             media_ref_counter[ref] += 1
             media_exact_refs.add(Path(ref).name)
@@ -475,6 +663,31 @@ def build_report(root: Path, audits: list[NoteAudit]) -> str:
     outside_lines: list[str] = []
     for path, tags in sorted(outside_tags.items()):
         outside_lines.append(f"- `{path}`: {', '.join(f'`{tag}`' for tag in tags)}")
+
+    official_tag_lines = [
+        f"- `{tag}` — {tag_counter[tag]} nota(s). Exemplos: "
+        + ", ".join(f"`{example}`" for example in tag_examples[tag][:3])
+        for tag in sorted(tag_counter)
+        if classify_tag(tag) == "official"
+    ]
+    legacy_tag_lines = [
+        f"- `{tag}` — {tag_counter[tag]} nota(s). Exemplos: "
+        + ", ".join(f"`{example}`" for example in tag_examples[tag][:3])
+        for tag in sorted(tag_counter)
+        if classify_tag(tag) in {"legacy_allowed", "category_tag"}
+    ]
+    hybrid_tag_lines = [
+        f"- `{tag}` → `{TAG_EQUIVALENTS[tag]}` — {tag_counter[tag]} nota(s). Exemplos: "
+        + ", ".join(f"`{example}`" for example in tag_examples[tag][:3])
+        for tag in sorted(tag_counter)
+        if classify_tag(tag) == "hybrid"
+    ]
+    unknown_tag_lines = [
+        f"- `{tag}` — {tag_counter[tag]} nota(s). Exemplos: "
+        + ", ".join(f"`{example}`" for example in tag_examples[tag][:3])
+        for tag in sorted(tag_counter)
+        if classify_tag(tag) == "unknown"
+    ]
 
     generated = datetime.now().strftime("%Y-%m-%d %H:%M")
     text = f"""# Auditoria Global de Padronização do Vault
@@ -519,6 +732,38 @@ Modo de validação YAML:
 ## Tags encontradas
 
 {counter_table(tag_counter, 120)}
+
+## Auditoria detalhada de tags
+
+### Tags por categoria
+
+{counter_table(tag_category_counter, 20)}
+
+### Tags oficiais Omnisvera já usadas
+
+{chr(10).join(official_tag_lines) if official_tag_lines else "- Nenhuma tag oficial detectada."}
+
+### Tags legacy ou `Category/*` detectadas
+
+> Preservar nesta fase. Elas podem alimentar Dataview, DataCards, Supercharged Links ou dashboards antigos.
+
+{chr(10).join(legacy_tag_lines) if legacy_tag_lines else "- Nenhuma tag legacy detectada."}
+
+### Tags híbridas com equivalente oficial provável
+
+> A ação futura segura é adicionar a tag oficial e preservar a tag existente.
+
+{chr(10).join(hybrid_tag_lines) if hybrid_tag_lines else "- Nenhuma tag híbrida detectada."}
+
+### Tags fora do padrão oficial ou desconhecidas
+
+> Isto não autoriza remoção. Tags de lore/campanha podem ser válidas mesmo fora do vocabulário técnico.
+
+{chr(10).join(unknown_tag_lines[:120]) if unknown_tag_lines else "- Nenhuma tag desconhecida detectada."}
+
+### Notas candidatas a receber tag oficial adicional
+
+{chr(10).join(tag_candidate_lines[:160]) if tag_candidate_lines else "- Nenhuma candidata detectada."}
 
 ## Notas por `type`
 
