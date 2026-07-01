@@ -21,6 +21,11 @@ chapter:
   - 00 - O Bastardo de Ferro
 chapters:
   - 00 - O Bastardo de Ferro
+subtype: major_npc
+work_status: Em desenvolvimento
+canon_status: Working Canon
+created_by: Sage
+requires_review: true
 tags:
   - npc
   - personagem

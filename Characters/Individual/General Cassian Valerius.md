@@ -24,6 +24,11 @@ chapter:
 chapters:
   - 00 - O Bastardo de Ferro
   - 01 - Ecos do Mundo Perdido
+subtype: major_npc
+work_status: Em desenvolvimento
+canon_status: Draft
+created_by: Sage
+requires_review: true
 tags:
   - coroa
   - personagem

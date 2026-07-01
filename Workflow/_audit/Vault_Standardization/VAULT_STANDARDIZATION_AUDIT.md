@@ -1,6 +1,6 @@
 # Auditoria Global de Padronização do Vault
 
-Gerado em: 2026-07-01 05:20
+Gerado em: 2026-07-01 05:30
 
 Fonte de padrão: [[Workflow/OMNISVERA_VAULT_STANDARD|OMNISVERA_VAULT_STANDARD]]
 
@@ -12,15 +12,15 @@ Fonte de padrão: [[Workflow/OMNISVERA_VAULT_STANDARD|OMNISVERA_VAULT_STANDARD]]
 
 | métrica | valor |
 |---|---:|
-| notas Markdown auditadas | 320 |
+| notas Markdown auditadas | 321 |
 | notas com frontmatter | 184 |
-| notas sem frontmatter | 136 |
+| notas sem frontmatter | 137 |
 | YAML/frontmatter parseável | 184 |
 | YAML/frontmatter com problema | 0 |
 | campos YAML distintos | 104 |
 | tags distintas | 207 |
 | tipos detectados | 18 |
-| subtipos detectados | 8 |
+| subtipos detectados | 9 |
 | referências de mídia distintas | 177 |
 | mídias em `zz_media` | 103 |
 | imagens/mídias quebradas | 26 |
@@ -33,7 +33,7 @@ Modo de validação YAML:
 
 | item | ocorrências |
 |---|---:|
-| `simple` | 320 |
+| `simple` | 321 |
 
 
 ## Campos YAML encontrados
@@ -55,7 +55,7 @@ Modo de validação YAML:
 | `chapters` | 116 |
 | `territory` | 87 |
 | `location` | 84 |
-| `created_by` | 74 |
+| `created_by` | 81 |
 | `description` | 62 |
 | `faction` | 62 |
 | `info` | 55 |
@@ -74,6 +74,10 @@ Modo de validação YAML:
 | `religion` | 18 |
 | `revealed_in` | 17 |
 | `district` | 16 |
+| `subtype` | 15 |
+| `work_status` | 15 |
+| `canon_status` | 15 |
+| `requires_review` | 15 |
 | `leader` | 15 |
 | `cssclasses` | 14 |
 | `faith` | 13 |
@@ -89,10 +93,6 @@ Modo de validação YAML:
 | `item_type` | 9 |
 | `owner` | 9 |
 | `population` | 8 |
-| `subtype` | 8 |
-| `work_status` | 8 |
-| `canon_status` | 8 |
-| `requires_review` | 8 |
 | `portrait` | 8 |
 | `characters` | 6 |
 | `Alignment` | 5 |
@@ -370,9 +370,10 @@ Modo de validação YAML:
 
 | item | ocorrências |
 |---|---:|
+| `major_npc` | 6 |
+| `player_character` | 2 |
 | `controlled_npc` | 1 |
 | `submitted_scene` | 1 |
-| `major_npc` | 1 |
 | `guild` | 1 |
 | `magic_item` | 1 |
 | `shop` | 1 |
@@ -461,6 +462,7 @@ Modo de validação YAML:
 - `Workflow\_audit\Taxonomy_Alignment\TAXONOMY_ALIGNMENT_VALIDATION.md`
 - `Workflow\_audit\Taxonomy_Alignment\TEMPLATE_ALIGNMENT_REPORT.md`
 - `Workflow\_audit\Urban_Structure\NIMALIS_URBAN_STANDARDIZATION_REVIEW.md`
+- `Workflow\_audit\Vault_Standardization\FRONTMATTER_MINIMUM_APPLIED_C1A.md`
 - `Workflow\_audit\Vault_Standardization\FRONTMATTER_MINIMUM_PLAN.md`
 - `Workflow\_audit\Vault_Standardization\TAG_NORMALIZATION_APPLIED.md`
 - `Workflow\_audit\Vault_Standardization\TAG_NORMALIZATION_IMPACT.md`
@@ -481,8 +483,7 @@ Modo de validação YAML:
 - `Workflow\AI_REVIEW_CHECKLIST.md`
 - `Workflow\AI_TASK_TEMPLATE.md`
 - `Workflow\ASSISTANT_HANDOFF.md`
-- `Workflow\CANON.md`
-- ... mais 69 itens.
+- ... mais 70 itens.
 
 
 ## Notas sem frontmatter
@@ -561,6 +562,7 @@ Modo de validação YAML:
 - `Workflow\_audit\Taxonomy_Alignment\TAXONOMY_ALIGNMENT_VALIDATION.md`
 - `Workflow\_audit\Taxonomy_Alignment\TEMPLATE_ALIGNMENT_REPORT.md`
 - `Workflow\_audit\Urban_Structure\NIMALIS_URBAN_STANDARDIZATION_REVIEW.md`
+- `Workflow\_audit\Vault_Standardization\FRONTMATTER_MINIMUM_APPLIED_C1A.md`
 - `Workflow\_audit\Vault_Standardization\FRONTMATTER_MINIMUM_PLAN.md`
 - `Workflow\_audit\Vault_Standardization\TAG_NORMALIZATION_APPLIED.md`
 - `Workflow\_audit\Vault_Standardization\TAG_NORMALIZATION_IMPACT.md`
@@ -609,8 +611,7 @@ Modo de validação YAML:
 - `Workflow\OMNISVERA_NOTE_STANDARD.md`
 - `Workflow\OMNISVERA_SYSTEM_TAXONOMY.md`
 - `Workflow\OMNISVERA_SYSTEM_TAXONOMY_DECISIONS.md`
-- `Workflow\OMNISVERA_TAG_BRIDGE_GUIDE.md`
-- ... mais 16 itens.
+- ... mais 17 itens.
 
 
 ## Notas sem `subtype`
@@ -626,18 +627,11 @@ Modo de validação YAML:
 - `CAMPANHA\Rumors\Rumor 01 - Dragões ao Sul de Nimalia.md`
 - `Characters\Individual\Augustus Terra Decimus.md`
 - `Characters\Individual\Dragão de Colar Dourado.md`
-- `Characters\Individual\Elarion Vaelthor.md`
-- `Characters\Individual\General Cassian Valerius.md`
 - `Characters\Individual\Kaelen, o Flagelo.md`
 - `Characters\Individual\Lorde Malakar.md`
-- `Characters\Individual\Mestre Odran Veyl.md`
-- `Characters\Individual\Mira Valen.md`
-- `Characters\Individual\Padre Oric.md`
 - `Characters\Individual\Raziel.md`
 - `Characters\Individual\Unidade DORN-7.md`
 - `Characters\Individual\Vandor, o Senhor das Bestas.md`
-- `Characters\Individual\Varkh Nimalis.md`
-- `Characters\Individual\Vezemir.md`
 - `Classes\Alquimista.md`
 - `Classes\Clérigo.md`
 - `Classes\Guerreiro.md`
@@ -717,7 +711,14 @@ Modo de validação YAML:
 - `Races\Humano.md`
 - `Races\INDICE_DE_RACAS.md`
 - `Races\Kenku.md`
-- ... mais 212 itens.
+- `Races\Meio-Elfo.md`
+- `Races\Vampiro.md`
+- `Religion\Caminho dos Errantes.md`
+- `Religion\Fé dos Antigos.md`
+- `Religion\Igreja das Chamas.md`
+- `Religion\RELIGION.md`
+- `Rules\Spells\INDICE_DE_MAGIAS.md`
+- ... mais 206 itens.
 
 
 ## Notas faltando campos Omnisvera mínimos
@@ -733,18 +734,11 @@ Campos mínimos auditados: `type`, `subtype`, `work_status`, `canon_status`, `vi
 - `CAMPANHA\Rumors\Rumor 01 - Dragões ao Sul de Nimalia.md — faltando: canon_status, requires_review, subtype, work_status`
 - `Characters\Individual\Augustus Terra Decimus.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
 - `Characters\Individual\Dragão de Colar Dourado.md — faltando: canon_status, requires_review, subtype, work_status`
-- `Characters\Individual\Elarion Vaelthor.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
-- `Characters\Individual\General Cassian Valerius.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
 - `Characters\Individual\Kaelen, o Flagelo.md — faltando: canon_status, requires_review, subtype, work_status`
 - `Characters\Individual\Lorde Malakar.md — faltando: canon_status, requires_review, subtype, work_status`
-- `Characters\Individual\Mestre Odran Veyl.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
-- `Characters\Individual\Mira Valen.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
-- `Characters\Individual\Padre Oric.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
 - `Characters\Individual\Raziel.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
 - `Characters\Individual\Unidade DORN-7.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
 - `Characters\Individual\Vandor, o Senhor das Bestas.md — faltando: canon_status, requires_review, subtype, work_status`
-- `Characters\Individual\Varkh Nimalis.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
-- `Characters\Individual\Vezemir.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
 - `Classes\Alquimista.md — faltando: canon_status, requires_review, subtype, work_status`
 - `Classes\Clérigo.md — faltando: canon_status, requires_review, subtype, work_status`
 - `Classes\Guerreiro.md — faltando: canon_status, requires_review, subtype, work_status`
@@ -824,7 +818,14 @@ Campos mínimos auditados: `type`, `subtype`, `work_status`, `canon_status`, `vi
 - `Races\Humano.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
 - `Races\INDICE_DE_RACAS.md — faltando: canon_status, requires_review, subtype, work_status`
 - `Races\Kenku.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
-- ... mais 76 itens.
+- `Races\Meio-Elfo.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
+- `Races\Vampiro.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
+- `Religion\Caminho dos Errantes.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
+- `Religion\Fé dos Antigos.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
+- `Religion\Igreja das Chamas.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
+- `Religion\RELIGION.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
+- `Rules\Spells\INDICE_DE_MAGIAS.md — faltando: canon_status, requires_review, subtype, work_status`
+- ... mais 69 itens.
 
 
 ## YAML/frontmatter com problema

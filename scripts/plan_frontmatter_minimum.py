@@ -341,7 +341,7 @@ def classify_risk(path: str, fields: dict[str, Any], current_type: str, suggeste
         return "medium", "subtype ausente sem inferência de baixo risco."
     if missing:
         return "low", "campos mínimos ausentes podem ser adicionados em lote futuro."
-    return "low", "frontmatter já contém campos mínimos auditados."
+    return "skip", "frontmatter já contém campos mínimos auditados."
 
 
 def audit_file(path: Path, root: Path) -> NotePlan:

@@ -1,6 +1,6 @@
 # Omnisvera — Plano C0 de Frontmatter Mínimo
 
-Gerado em: 2026-07-01 05:20
+Gerado em: 2026-07-01 05:29
 
 > [!IMPORTANT]
 > Este relatório é dry-run. Nenhuma nota foi alterada.
@@ -10,29 +10,29 @@ Gerado em: 2026-07-01 05:20
 
 | métrica | valor |
 |---|---:|
-| notas Markdown analisadas | 320 |
+| notas Markdown analisadas | 321 |
 | notas com frontmatter | 184 |
-| notas sem frontmatter | 136 |
+| notas sem frontmatter | 137 |
 | YAML/frontmatter válido | 184 |
 | YAML/frontmatter inválido | 0 |
 | notas com type | 151 |
 | notas sem type | 33 |
-| notas com subtype | 8 |
-| notas sem subtype | 176 |
-| candidatos low | 57 |
+| notas com subtype | 15 |
+| notas sem subtype | 169 |
+| candidatos low | 42 |
 | candidatos medium | 64 |
 | candidatos high | 22 |
-| pulados/skip | 177 |
+| pulados/skip | 193 |
 
 ## Campos mínimos ausentes
 
 | campo | ocorrências |
 |---|---:|
-| `subtype` | 176 |
-| `work_status` | 176 |
-| `canon_status` | 176 |
-| `requires_review` | 176 |
-| `created_by` | 110 |
+| `subtype` | 169 |
+| `work_status` | 169 |
+| `canon_status` | 169 |
+| `requires_review` | 169 |
+| `created_by` | 103 |
 | `type` | 33 |
 | `visibility` | 30 |
 
@@ -63,9 +63,10 @@ Gerado em: 2026-07-01 05:20
 
 | subtype | notas |
 |---|---:|
+| `major_npc` | 6 |
+| `player_character` | 2 |
 | `controlled_npc` | 1 |
 | `submitted_scene` | 1 |
-| `major_npc` | 1 |
 | `guild` | 1 |
 | `magic_item` | 1 |
 | `shop` | 1 |
@@ -85,18 +86,18 @@ Gerado em: 2026-07-01 05:20
 | `CAMPANHA/Rumors/Rumor 01 - Dragões ao Sul de Nimalia.md` | `rumor` | `session` |  |  | `subtype`, `work_status`, `canon_status`, `requires_review` | high | review_before_apply | inferido por tag narrativa; revisar porque `story` é mantida como ponte. subtype para `session` não tem regra de baixo risco. type atual conflita com sugestão; precisa revisão humana. |
 | `Characters/Individual/Augustus Terra Decimus.md` | `character` | `character` |  | `major_npc` | `subtype`, `work_status`, `canon_status`, `created_by`, `requires_review` | low | plan_add_missing_fields | inferido pela pasta Characters. tag npc-importante. campos mínimos ausentes podem ser adicionados em lote futuro. |
 | `Characters/Individual/Dragão de Colar Dourado.md` | `character` | `character` |  | `creature` | `subtype`, `work_status`, `canon_status`, `requires_review` | low | plan_add_missing_fields | inferido pela pasta Characters. tag criatura/monstro em contexto de personagem. campos mínimos ausentes podem ser adicionados em lote futuro. |
-| `Characters/Individual/Elarion Vaelthor.md` | `character` | `character` |  | `major_npc` | `subtype`, `work_status`, `canon_status`, `created_by`, `requires_review` | low | plan_add_missing_fields | inferido pela pasta Characters. tag npc-importante. campos mínimos ausentes podem ser adicionados em lote futuro. |
-| `Characters/Individual/General Cassian Valerius.md` | `character` | `character` |  | `major_npc` | `subtype`, `work_status`, `canon_status`, `created_by`, `requires_review` | low | plan_add_missing_fields | inferido pela pasta Characters. tag npc-importante. campos mínimos ausentes podem ser adicionados em lote futuro. |
+| `Characters/Individual/Elarion Vaelthor.md` | `character` | `character` | `major_npc` | `major_npc` |  | skip | no_action | inferido pela pasta Characters. tag npc-importante. frontmatter já contém campos mínimos auditados. |
+| `Characters/Individual/General Cassian Valerius.md` | `character` | `character` | `major_npc` | `major_npc` |  | skip | no_action | inferido pela pasta Characters. tag npc-importante. frontmatter já contém campos mínimos auditados. |
 | `Characters/Individual/Kaelen, o Flagelo.md` | `character` | `character` |  | `antagonist` | `subtype`, `work_status`, `canon_status`, `requires_review` | low | plan_add_missing_fields | inferido pela pasta Characters. tag antagonista em contexto de personagem. campos mínimos ausentes podem ser adicionados em lote futuro. |
 | `Characters/Individual/Lorde Malakar.md` | `character` | `character` |  | `antagonist` | `subtype`, `work_status`, `canon_status`, `requires_review` | low | plan_add_missing_fields | inferido pela pasta Characters. tag antagonista em contexto de personagem. campos mínimos ausentes podem ser adicionados em lote futuro. |
-| `Characters/Individual/Mestre Odran Veyl.md` | `character` | `character` |  | `major_npc` | `subtype`, `work_status`, `canon_status`, `created_by`, `requires_review` | low | plan_add_missing_fields | inferido pela pasta Characters. tag npc-importante. campos mínimos ausentes podem ser adicionados em lote futuro. |
-| `Characters/Individual/Mira Valen.md` | `character` | `character` |  | `major_npc` | `subtype`, `work_status`, `canon_status`, `created_by`, `requires_review` | low | plan_add_missing_fields | inferido pela pasta Characters. tag npc-importante. campos mínimos ausentes podem ser adicionados em lote futuro. |
-| `Characters/Individual/Padre Oric.md` | `character` | `character` |  | `major_npc` | `subtype`, `work_status`, `canon_status`, `created_by`, `requires_review` | low | plan_add_missing_fields | inferido pela pasta Characters. tag npc-importante. campos mínimos ausentes podem ser adicionados em lote futuro. |
+| `Characters/Individual/Mestre Odran Veyl.md` | `character` | `character` | `major_npc` | `major_npc` |  | skip | no_action | inferido pela pasta Characters. tag npc-importante. frontmatter já contém campos mínimos auditados. |
+| `Characters/Individual/Mira Valen.md` | `character` | `character` | `major_npc` | `major_npc` |  | skip | no_action | inferido pela pasta Characters. tag npc-importante. frontmatter já contém campos mínimos auditados. |
+| `Characters/Individual/Padre Oric.md` | `character` | `character` | `major_npc` | `major_npc` |  | skip | no_action | inferido pela pasta Characters. tag npc-importante. frontmatter já contém campos mínimos auditados. |
 | `Characters/Individual/Raziel.md` | `character` | `character` |  | `player_character` | `subtype`, `work_status`, `canon_status`, `created_by`, `requires_review` | low | plan_add_missing_fields | inferido pela pasta Characters. tag de personagem jogador. campos mínimos ausentes podem ser adicionados em lote futuro. |
 | `Characters/Individual/Unidade DORN-7.md` | `character` | `character` |  | `creature` | `subtype`, `work_status`, `canon_status`, `created_by`, `requires_review` | low | plan_add_missing_fields | inferido pela pasta Characters. tag criatura/monstro em contexto de personagem. campos mínimos ausentes podem ser adicionados em lote futuro. |
 | `Characters/Individual/Vandor, o Senhor das Bestas.md` | `character` | `character` |  | `antagonist` | `subtype`, `work_status`, `canon_status`, `requires_review` | low | plan_add_missing_fields | inferido pela pasta Characters. tag antagonista em contexto de personagem. campos mínimos ausentes podem ser adicionados em lote futuro. |
-| `Characters/Individual/Varkh Nimalis.md` | `character` | `character` |  | `player_character` | `subtype`, `work_status`, `canon_status`, `created_by`, `requires_review` | low | plan_add_missing_fields | inferido pela pasta Characters. tag de personagem jogador. campos mínimos ausentes podem ser adicionados em lote futuro. |
-| `Characters/Individual/Vezemir.md` | `character` | `character` |  | `player_character` | `subtype`, `work_status`, `canon_status`, `created_by`, `requires_review` | low | plan_add_missing_fields | inferido pela pasta Characters. tag de personagem jogador. campos mínimos ausentes podem ser adicionados em lote futuro. |
+| `Characters/Individual/Varkh Nimalis.md` | `character` | `character` | `player_character` | `player_character` |  | skip | no_action | inferido pela pasta Characters. tag de personagem jogador. frontmatter já contém campos mínimos auditados. |
+| `Characters/Individual/Vezemir.md` | `character` | `character` | `player_character` | `player_character` |  | skip | no_action | inferido pela pasta Characters. tag de personagem jogador. frontmatter já contém campos mínimos auditados. |
 | `Classes/Alquimista.md` | `class` | `class` |  |  | `subtype`, `work_status`, `canon_status`, `requires_review` | medium | review_before_apply | inferido pela pasta Classes. subtype para `class` não tem regra de baixo risco. subtype ausente sem inferência de baixo risco. |
 | `Classes/Clérigo.md` | `class` | `class` |  |  | `subtype`, `work_status`, `canon_status`, `requires_review` | medium | review_before_apply | inferido pela pasta Classes. subtype para `class` não tem regra de baixo risco. subtype ausente sem inferência de baixo risco. |
 | `Classes/Guerreiro.md` | `class` | `class` |  |  | `subtype`, `work_status`, `canon_status`, `requires_review` | medium | review_before_apply | inferido pela pasta Classes. subtype para `class` não tem regra de baixo risco. subtype ausente sem inferência de baixo risco. |
@@ -204,14 +205,14 @@ Gerado em: 2026-07-01 05:20
 | `Templates/RPG/Religião.md` | `lore` | `lore` |  |  | `subtype`, `work_status`, `canon_status`, `requires_review` | medium | review_before_apply | inferido por tags de template de lore. subtype de lore precisa revisão. subtype ausente sem inferência de baixo risco. |
 | `Templates/RPG/Rumor.md` | `rumor` |  |  |  | `subtype`, `work_status`, `canon_status`, `requires_review` | skip | no_action | não inferido com segurança. subtype para `rumor` não tem regra de baixo risco. sem type sugerido com segurança. |
 | `Templates/RPG/Story.md` | `story` | `session` |  |  | `subtype`, `work_status`, `canon_status`, `requires_review` | high | review_before_apply | inferido por tag narrativa; revisar porque `story` é mantida como ponte. subtype para `session` não tem regra de baixo risco. type atual conflita com sugestão; precisa revisão humana. |
-| `Templates/TEMPLATE - AI NPC.md` | `ai_npc` | `ai_npc` | `controlled_npc` |  |  | low | review_before_apply | inferido pelo template-base AI NPC. subtype para `ai_npc` não tem regra de baixo risco. frontmatter já contém campos mínimos auditados. |
-| `Templates/TEMPLATE - Async Scene.md` | `async_scene` | `async_scene` | `submitted_scene` |  |  | low | review_before_apply | inferido pelo template-base Async Scene. subtype para `async_scene` não tem regra de baixo risco. frontmatter já contém campos mínimos auditados. |
-| `Templates/TEMPLATE - Character.md` | `character` | `character` | `major_npc` |  |  | low | review_before_apply | inferido por tags de template de personagem. subtype de personagem precisa revisão. frontmatter já contém campos mínimos auditados. |
-| `Templates/TEMPLATE - Faction.md` | `faction` | `faction` | `guild` |  |  | low | review_before_apply | inferido por tags de template de facção. subtype de facção precisa revisão. frontmatter já contém campos mínimos auditados. |
-| `Templates/TEMPLATE - Item.md` | `item` | `item` | `magic_item` | `magic_item` |  | low | review_before_apply | inferido por tags de template de item. NoteIcon magicitem. frontmatter já contém campos mínimos auditados. |
-| `Templates/TEMPLATE - Location.md` | `location` | `location` | `shop` |  |  | low | review_before_apply | inferido por tags de template de local. subtype de local precisa revisão. frontmatter já contém campos mínimos auditados. |
-| `Templates/TEMPLATE - Lore.md` | `lore` | `lore` | `concept` |  |  | low | review_before_apply | inferido por tags de template de lore. subtype de lore precisa revisão. frontmatter já contém campos mínimos auditados. |
-| `Templates/TEMPLATE - Territory.md` | `territory` | `territory` | `region` |  |  | low | review_before_apply | inferido por tag/NoteIcon. subtype para `territory` não tem regra de baixo risco. frontmatter já contém campos mínimos auditados. |
+| `Templates/TEMPLATE - AI NPC.md` | `ai_npc` | `ai_npc` | `controlled_npc` |  |  | skip | no_action | inferido pelo template-base AI NPC. subtype para `ai_npc` não tem regra de baixo risco. frontmatter já contém campos mínimos auditados. |
+| `Templates/TEMPLATE - Async Scene.md` | `async_scene` | `async_scene` | `submitted_scene` |  |  | skip | no_action | inferido pelo template-base Async Scene. subtype para `async_scene` não tem regra de baixo risco. frontmatter já contém campos mínimos auditados. |
+| `Templates/TEMPLATE - Character.md` | `character` | `character` | `major_npc` |  |  | skip | no_action | inferido por tags de template de personagem. subtype de personagem precisa revisão. frontmatter já contém campos mínimos auditados. |
+| `Templates/TEMPLATE - Faction.md` | `faction` | `faction` | `guild` |  |  | skip | no_action | inferido por tags de template de facção. subtype de facção precisa revisão. frontmatter já contém campos mínimos auditados. |
+| `Templates/TEMPLATE - Item.md` | `item` | `item` | `magic_item` | `magic_item` |  | skip | no_action | inferido por tags de template de item. NoteIcon magicitem. frontmatter já contém campos mínimos auditados. |
+| `Templates/TEMPLATE - Location.md` | `location` | `location` | `shop` |  |  | skip | no_action | inferido por tags de template de local. subtype de local precisa revisão. frontmatter já contém campos mínimos auditados. |
+| `Templates/TEMPLATE - Lore.md` | `lore` | `lore` | `concept` |  |  | skip | no_action | inferido por tags de template de lore. subtype de lore precisa revisão. frontmatter já contém campos mínimos auditados. |
+| `Templates/TEMPLATE - Territory.md` | `territory` | `territory` | `region` |  |  | skip | no_action | inferido por tag/NoteIcon. subtype para `territory` não tem regra de baixo risco. frontmatter já contém campos mínimos auditados. |
 | `Territories/Campos de Earthropo.md` | `territory` | `territory` |  |  | `subtype`, `work_status`, `canon_status`, `requires_review` | medium | review_before_apply | inferido pela pasta Territories. subtype para `territory` não tem regra de baixo risco. subtype ausente sem inferência de baixo risco. |
 | `Territories/Floresta de Avenor.md` | `territory` | `territory` |  |  | `subtype`, `work_status`, `canon_status`, `created_by`, `requires_review` | medium | review_before_apply | inferido pela pasta Territories. subtype para `territory` não tem regra de baixo risco. subtype ausente sem inferência de baixo risco. |
 | `Territories/INDICE_DE_TERRITORIOS.md` | `index` | `territory` |  |  | `subtype`, `work_status`, `canon_status`, `requires_review` | high | review_before_apply | inferido pela pasta Territories. subtype para `territory` não tem regra de baixo risco. type atual conflita com sugestão; precisa revisão humana. |
@@ -306,6 +307,7 @@ Gerado em: 2026-07-01 05:20
 | `Workflow/_audit/Taxonomy_Alignment/TEMPLATE_ALIGNMENT_REPORT.md` |  |  |  |  |  | skip | no_action | frontmatter ausente |
 | `Workflow/_audit/Territory_Map_Standardization/TERRITORIES_AND_MAPS_STANDARDIZATION_REPORT.md` | `audit` | `workflow` |  |  | `subtype`, `work_status`, `canon_status`, `requires_review` | skip | no_action | inferido pela pasta Workflow/documentação. subtype para `workflow` não tem regra de baixo risco. histórico/auditoria/legacy; não migrar automaticamente. |
 | `Workflow/_audit/Urban_Structure/NIMALIS_URBAN_STANDARDIZATION_REVIEW.md` |  |  |  |  |  | skip | no_action | frontmatter ausente |
+| `Workflow/_audit/Vault_Standardization/FRONTMATTER_MINIMUM_APPLIED_C1A.md` |  |  |  |  |  | skip | no_action | frontmatter ausente |
 | `Workflow/_audit/Vault_Standardization/FRONTMATTER_MINIMUM_PLAN.md` |  |  |  |  |  | skip | no_action | frontmatter ausente |
 | `Workflow/_audit/Vault_Standardization/TAG_NORMALIZATION_APPLIED.md` |  |  |  |  |  | skip | no_action | frontmatter ausente |
 | `Workflow/_audit/Vault_Standardization/TAG_NORMALIZATION_IMPACT.md` |  |  |  |  |  | skip | no_action | frontmatter ausente |

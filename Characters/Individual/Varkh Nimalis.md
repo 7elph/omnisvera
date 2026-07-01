@@ -23,6 +23,11 @@ chapter:
   - 00 - O Corvo da Maré Baixa
 chapters:
   - 00 - O Corvo da Maré Baixa
+subtype: player_character
+work_status: Em desenvolvimento
+canon_status: Working Canon
+created_by: Sage
+requires_review: true
 tags:
   - personagem
   - jogador

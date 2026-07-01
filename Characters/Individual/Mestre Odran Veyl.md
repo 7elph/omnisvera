@@ -21,6 +21,11 @@ chapter:
   - 00 - O Corvo da Maré Baixa
 chapters:
   - 00 - O Corvo da Maré Baixa
+subtype: major_npc
+work_status: Em desenvolvimento
+canon_status: Draft
+created_by: Sage
+requires_review: true
 tags:
   - personagem
   - npc
