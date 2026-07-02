@@ -314,6 +314,107 @@ Em revisão. Pode ser ameaça ativa, rumor distorcido, culto menor ou rascunho a
 - Decidir se o Arauto Sombrio permanece, muda ou sai.
 - Definir se o culto fica como facção, religião, rumor ou arquivo.
 
+### Frente — Itens de Vezemir
+
+#### Entidades Ligadas
+
+- [[O Medalhão]]
+- [[Grisalma]]
+- [[Muralha de Dorn]]
+- [[Vezemir]]
+- [[Véu Cinzento]]
+- [[Guardiões do Véu Cinzento]]
+
+#### Status Atual
+
+Itens centrais para identidade, pistas graduais e evolução de Vezemir. As notas principais devem mostrar uso conhecido, aparência e função em mesa sem explicar a origem real.
+
+#### Segredos do Mestre
+
+- [[O Medalhão]] não deve ter sua função real definida publicamente como chave, selo, linhagem ou relíquia reativa.
+- Reações do medalhão devem funcionar como pistas, não como explicação completa.
+- [[Grisalma]] não deve liberar todas as propriedades narrativas como mecânica livre no nível 1.
+- Reações de Grisalma ao [[Véu Cinzento]], ao dragão ou aos Guardiões devem ser reveladas gradualmente.
+- [[Muralha de Dorn]] ainda precisa definir se “Dorn” é pessoa, lugar, tradição, título ou nome simbólico.
+
+#### Condições de Revelação
+
+- Revelar por reação a símbolos antigos, presença do Véu, memória dos Guardiões, conflito com o dragão ou escolhas de Vezemir em mesa.
+
+#### Decisões Pendentes do Sage
+
+- Propriedades finais de Grisalma.
+- Natureza do Medalhão.
+- Origem e significado de Dorn.
+- Quando cada item pode reagir sem quebrar o nível atual do personagem.
+
+### Frente — Itens de Raziel
+
+#### Entidades Ligadas
+
+- [[Adagas de Espectro Fantasma]]
+- [[Manto Primordial do Ancião]]
+- [[Raziel]]
+- [[Sangue Antigo]]
+- [[Clã Sanguinallis]]
+- [[Ancião Primordial]]
+
+#### Status Atual
+
+Itens ligados ao passado de Raziel, ao Sangue Antigo e ao pacto/retorno que ainda não deve ser explicado de uma vez.
+
+#### Segredos do Mestre
+
+- Não definir ainda se as [[Adagas de Espectro Fantasma]] foram forjadas pelo clã, por Raziel ou por outro poder.
+- Não revelar cedo se as adagas drenam energia vital por magia vampírica, Sangue Antigo ou técnica Sanguinallis.
+- Separar as propriedades das adagas das propriedades pessoais de Raziel.
+- Não revelar o [[Ancião Primordial]] por meio do [[Manto Primordial do Ancião]] antes do arco pedir.
+- Manter o custo da dádiva em aberto.
+- O manto é relíquia de campanha, não regra básica da classe [[Vampiro]].
+
+#### Condições de Revelação
+
+- Revelar por memória fragmentada, sangue derramado, ruínas de Gharok, confronto com Sanguinallis ou intervenção do Ancião.
+
+#### Decisões Pendentes do Sage
+
+- Origem real das adagas.
+- Método de forja ou vínculo.
+- Custo do manto.
+- Limites entre item, classe e pacto narrativo.
+
+### Frente — Itens de Varkh
+
+#### Entidades Ligadas
+
+- [[Máscara de Médico da Peste de Varkh]]
+- [[Caderninho de Vozes]]
+- [[Varkh Nimalis]]
+- [[O Frasco Afogado]]
+- [[Mestre Odran Veyl]]
+
+#### Status Atual
+
+Itens de identidade, presença social e investigação. Devem reforçar Varkh em cena sem virar solução automática.
+
+#### Segredos do Mestre
+
+- A [[Máscara de Médico da Peste de Varkh]] não tem função mágica confirmada.
+- Se ganhar regra própria, deve reforçar investigação, proteção ou intimidação.
+- O [[Caderninho de Vozes]] não tem função secreta confirmada.
+- Se virar item mágico ou mecânico, isso deve ser decisão futura.
+- A força atual do caderninho é narrativa: identidade, memória, disfarce social e improviso.
+
+#### Condições de Revelação
+
+- Revelar por uso social, investigação em Maré Baixa, lembranças de Odran, contato com falsificadores ou cena de improviso.
+
+#### Decisões Pendentes do Sage
+
+- Se a máscara terá mecânica própria.
+- Se o caderninho é apenas ferramenta narrativa ou item com efeito futuro.
+- Como esses itens entram no arco dos remédios falsos.
+
 ---
 
 ## Dossiê do Mestre — Capítulo 01: Ecos do Mundo Perdido

@@ -1,10 +1,10 @@
 # Auditoria de Expans?o Player-Safe ? Omnisvera
 
-Gerado em: 2026-07-02 09:13:56
+Gerado em: 2026-07-02 09:22:04
 
 Fonte de regra: [[PLAYER_SAFE_ENTITY_MODEL]]
 
-## Aplicado nesta etapa
+## Aplicado at? agora
 
 - Checkpoint das mudan?as manuais do Sage antes da passagem player-safe.
 - Modelo player-safe oficial criado em `Workflow/Content_Development/PLAYER_SAFE_ENTITY_MODEL.md`.
@@ -12,23 +12,21 @@ Fonte de regra: [[PLAYER_SAFE_ENTITY_MODEL]]
 - Top 10 operacional tratado para remover headings/frases expl?citas de segredo das notas principais alteradas.
 - `CAMPANHA/ESTADO_DA_CAMPANHA.md` recebeu painel de controle e frentes compactas de bastidor.
 - Templates atualizados para encaminhar bastidores ao Estado da Campanha.
+- Lote 2 conclu?do: itens ligados a Vezemir, Raziel e Varkh foram limpos de marcadores expl?citos de segredo.
 
-## Top 10 tratado
+## Lote 2 tratado
 
-- [[O Frasco Afogado]]
-- [[Mar? Baixa]]
-- [[Nimalis]]
-- [[Coroa de Nimalia]]
-- [[Varkh Nimalis]]
-- [[Guilda dos Mercadores]]
-- [[ESTADO_DA_CAMPANHA]]
-- [[Porto de Nimalia]]
-- [[Raziel]]
-- [[Culto dos Sussurrantes]]
+- [[O Medalh?o]]
+- [[Grisalma]]
+- [[Muralha de Dorn]]
+- [[Adagas de Espectro Fantasma]]
+- [[Manto Primordial do Anci?o]]
+- [[M?scara de M?dico da Peste de Varkh]]
+- [[Caderninho de Vozes]]
 
 ## Marcadores restantes no vault operacional
 
-Total de notas com marcador de bastidor/segredo ainda no corpo: **70**
+Total de notas com marcador de bastidor/segredo ainda no corpo: **63**
 
 | nota | ocorr?ncias | a??o recomendada |
 |---|---|---|
@@ -48,13 +46,6 @@ Total de notas com marcador de bastidor/segredo ainda no corpo: **70**
 | `Characters/Individual/Vezemir.md` | 331: - O que apenas o mestre sabe: | Mover bastidor para frente em [[ESTADO_DA_CAMPANHA]] e deixar nota principal player-safe. |
 | `Factions/Clã Sanguinallis.md` | 70: ## Segredos do Mestre<br>90: - O que apenas o mestre sabe: detalhes completos da estrutura, sobrevivência atual e relação com o Sangue Antigo. | Mover bastidor para frente em [[ESTADO_DA_CAMPANHA]] e deixar nota principal player-safe. |
 | `Factions/Rede de Falsificadores de Maré Baixa.md` | 68: ## Segredos do Mestre<br>78: - O que apenas o mestre sabe: identidade, escala e motivação real da rede. | Mover bastidor para frente em [[ESTADO_DA_CAMPANHA]] e deixar nota principal player-safe. |
-| `Items/Adagas de Espectro Fantasma.md` | 62: ## Segredos do Mestre<br>79: - O que apenas o mestre sabe: origem real, método de forja e vínculo completo com Raziel. | Mover bastidor para frente em [[ESTADO_DA_CAMPANHA]] e deixar nota principal player-safe. |
-| `Items/Caderninho de Vozes.md` | 71: ## Segredos do Mestre<br>81: - O que apenas o mestre sabe: nenhuma informação secreta confirmada por enquanto. | Mover bastidor para frente em [[ESTADO_DA_CAMPANHA]] e deixar nota principal player-safe. |
-| `Items/Grisalma.md` | 76: ## Segredos do Mestre<br>94: - O que apenas o mestre sabe: quaisquer propriedades ocultas além do uso confirmado. | Mover bastidor para frente em [[ESTADO_DA_CAMPANHA]] e deixar nota principal player-safe. |
-| `Items/Manto Primordial do Ancião.md` | 64: ## Segredos do Mestre<br>81: - O que apenas o mestre sabe: origem, preço e vínculo real com o Ancião. | Mover bastidor para frente em [[ESTADO_DA_CAMPANHA]] e deixar nota principal player-safe. |
-| `Items/Muralha de Dorn.md` | 74: ## Segredos do Mestre<br>92: - O que apenas o mestre sabe: propriedades ocultas ainda não confirmadas. | Mover bastidor para frente em [[ESTADO_DA_CAMPANHA]] e deixar nota principal player-safe. |
-| `Items/Máscara de Médico da Peste de Varkh.md` | 76: ## Segredos do Mestre<br>86: - O que apenas o mestre sabe: nenhuma função oculta confirmada por enquanto. | Mover bastidor para frente em [[ESTADO_DA_CAMPANHA]] e deixar nota principal player-safe. |
-| `Items/O Medalhão.md` | 68: ## Segredos do Mestre<br>86: - O que apenas o mestre sabe: função real, origem completa e possíveis reações. | Mover bastidor para frente em [[ESTADO_DA_CAMPANHA]] e deixar nota principal player-safe. |
 | `Locations/Antiga Estrada Esquecida.md` | 73: - O que apenas o mestre sabe: possíveis pistas sobre a origem de Vezemir e conexões antigas. | Mover bastidor para frente em [[ESTADO_DA_CAMPANHA]] e deixar nota principal player-safe. |
 | `Locations/Bairro dos Anões.md` | 60: - O que apenas o mestre sabe: contatos com clãs do norte ainda precisam ser definidos. | Mover bastidor para frente em [[ESTADO_DA_CAMPANHA]] e deixar nota principal player-safe. |
 | `Locations/Bairro dos Dragonborns.md` | 60: - O que apenas o mestre sabe: relação política com o futuro reino dragonborn ainda será revelada. | Mover bastidor para frente em [[ESTADO_DA_CAMPANHA]] e deixar nota principal player-safe. |
@@ -105,18 +96,7 @@ Total de notas com marcador de bastidor/segredo ainda no corpo: **70**
 
 ## Pr?ximos lotes recomendados
 
-### Lote 2 ? Itens ligados a personagens
-
-- [[O Medalh?o]]
-- [[Grisalma]]
-- [[Adagas de Espectro Fantasma]]
-- [[Manto Primordial do Anci?o]]
-- [[Muralha de Dorn]]
-- [[M?scara de M?dico da Peste de Varkh]]
-- [[Caderninho de Vozes]]
-
 ### Lote 3 ? Lore e religi?o
-
 - [[Sangue Antigo]]
 - [[V?u Cinzento]]
 - [[Criadores]]
@@ -127,7 +107,6 @@ Total de notas com marcador de bastidor/segredo ainda no corpo: **70**
 - [[Caminho dos Errantes]]
 
 ### Lote 4 ? Personagens restantes
-
 - [[Vezemir]]
 - [[Mestre Odran Veyl]]
 - [[Mira Valen]]
@@ -140,7 +119,6 @@ Total de notas com marcador de bastidor/segredo ainda no corpo: **70**
 - [[Unidade DORN-7]]
 
 ### Lote 5 ? Locais e territ?rios
-
 - [[Fortaleza de Gharok]]
 - [[Ru?nas de Valthor]]
 - [[Mar da Neblina]]

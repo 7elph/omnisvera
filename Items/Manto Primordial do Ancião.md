@@ -61,12 +61,6 @@ Manto escuro e silencioso, com textura de couro batido e sombra compactada. A pe
 
 O custo da dádiva e o vínculo entre o manto e o [[Ancião Primordial]] permanecem desconhecidos.
 
-## Segredos do Mestre
-
-- Não revelar o Ancião Primordial por meio do item antes do arco de Raziel pedir.
-- Manter o custo da dádiva em aberto.
-- Separar o manto da classe [[Vampiro]]; ele é uma relíquia de campanha, não regra básica da classe.
-
 ## Relações
 
 - [[Raziel]]
@@ -78,7 +72,7 @@ O custo da dádiva e o vínculo entre o manto e o [[Ancião Primordial]] permane
 
 - Como apresentar: silêncio antinatural, tecido escuro, movimento sem som e sensação de presença antiga.
 - O que os jogadores sabem: Raziel possui um manto incomum.
-- O que apenas o mestre sabe: origem, preço e vínculo real com o Ancião.
+- O que manter em aberto no [[ESTADO_DA_CAMPANHA]]: origem, preço e vínculo real com o Ancião.
 - Como entra em cena: furtividade, sombras, revelações do passado e sinais de que o presente de Raziel tem custo.
 - Ganchos: preço da dádiva, vontade do Ancião e reação do manto a ruínas antigas.
 

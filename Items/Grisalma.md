@@ -73,12 +73,6 @@ A ficha atual de Vezemir registra **2d8 de dano** para Grisalma.
 - **Armamento Imortal:** não pode ser quebrada, destruída ou enferrujada por meios comuns.
 - **Vontade do Lobo:** sua presença reforça a capacidade de intimidação de Vezemir.
 
-## Segredos do Mestre
-
-- Não ativar todas as propriedades narrativas como mecânica livre no nível 1.
-- Tratar possíveis reações ao [[Véu Cinzento]], ao dragão ou aos Guardiões como revelações graduais.
-- Confirmar dano e propriedades finais antes de transformar em regra permanente.
-
 ## Relações
 
 - [[Vezemir]]
@@ -91,7 +85,7 @@ A ficha atual de Vezemir registra **2d8 de dano** para Grisalma.
 
 - Como apresentar: arma pesada, simbólica e imediatamente reconhecível na silhueta de Vezemir.
 - O que os jogadores sabem: Grisalma é o machado de Vezemir e foi entregue por Elarion.
-- O que apenas o mestre sabe: quaisquer propriedades ocultas além do uso confirmado.
+- O que manter em aberto no [[ESTADO_DA_CAMPANHA]]: quaisquer propriedades ocultas além do uso confirmado.
 - Como entra em cena: combate, intimidação, lembranças de Leth'valora e momentos de legado.
 - Ganchos: origem da relíquia, vínculo com Vezemir e relação com os mistérios de Leth'valora.
 

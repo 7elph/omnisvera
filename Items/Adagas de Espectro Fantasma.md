@@ -59,12 +59,6 @@ As adagas parecem quase apagadas quando empunhadas, como se parte de sua lâmina
 
 Sua origem, o método de forja e a forma como permaneceram ligadas a Raziel durante seu aprisionamento ainda precisam ser definidos.
 
-## Segredos do Mestre
-
-- Não definir ainda se as adagas foram forjadas pelo clã, por Raziel ou por outro poder.
-- Não revelar cedo se drenam energia vital por magia vampírica, Sangue Antigo ou técnica Sanguinallis.
-- Separar as propriedades das adagas das propriedades pessoais de Raziel.
-
 ## Relações
 
 - [[Raziel]]
@@ -76,7 +70,7 @@ Sua origem, o método de forja e a forma como permaneceram ligadas a Raziel dura
 
 - Como apresentar: lâminas que somem à vista, deixam rastro escuro e parecem beber a força vital do alvo.
 - O que os jogadores sabem: são armas de Raziel.
-- O que apenas o mestre sabe: origem real, método de forja e vínculo completo com Raziel.
+- O que manter em aberto no [[ESTADO_DA_CAMPANHA]]: origem real, método de forja e vínculo completo com Raziel.
 - Como entra em cena: combate, infiltração, execução, lembranças da antiga função de Raziel.
 - Ganchos: quem as forjou, por que ainda respondem a Raziel e que preço cobram.
 

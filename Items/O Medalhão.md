@@ -65,12 +65,6 @@ O medalhão representa dever, silêncio e a responsabilidade de guardar conhecim
 
 Sua reação à magia de Vezemir, ao dragão de colar dourado e ao [[Véu Cinzento]] permanece em aberto.
 
-## Segredos do Mestre
-
-- Não definir publicamente se é chave, selo, símbolo de linhagem ou relíquia reativa.
-- Usar reações do medalhão como pista, não como explicação completa.
-- Preservar o nome simples: **O Medalhão**.
-
 ## Relações
 
 - [[Vezemir]]
@@ -83,7 +77,7 @@ Sua reação à magia de Vezemir, ao dragão de colar dourado e ao [[Véu Cinzen
 
 - Como apresentar: frio ao toque, símbolo recorrente, inscrições antigas e sensação de segredo.
 - O que os jogadores sabem: Vezemir carrega o medalhão e ele parece ligado aos Guardiões.
-- O que apenas o mestre sabe: função real, origem completa e possíveis reações.
+- O que manter em aberto no [[ESTADO_DA_CAMPANHA]]: função real, origem completa e possíveis reações.
 - Como entra em cena: proximidade de ruínas, Véu, símbolos antigos, dragão ou estruturas esquecidas.
 - Ganchos: Rosa do Véu, juramento quebrado, reação a artefatos e memória dos Guardiões.
 

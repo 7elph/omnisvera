@@ -73,17 +73,11 @@ Também simboliza a herança de Odran e a adaptação de Varkh ao próprio corpo
 - [[Maré Baixa]]
 - [[Kenku]]
 
-## Segredos do Mestre
-
-- Nenhuma função mágica está confirmada.
-- A máscara deve funcionar primeiro como símbolo de presença e reputação.
-- Se ganhar regra própria, ela deve reforçar investigação, proteção ou intimidação sem virar solução automática.
-
 ## Uso em Mesa
 
 - Como apresentar: máscara escura, cheiro de ervas, presença estranha e respeito desconfortável em ruas pobres.
 - O que os jogadores sabem: é parte do visual e da identidade de Varkh.
-- O que apenas o mestre sabe: nenhuma função oculta confirmada por enquanto.
+- O que manter em aberto no [[ESTADO_DA_CAMPANHA]]: nenhuma função oculta confirmada por enquanto.
 - Como entra em cena: intimidação, infiltração em zonas doentes, investigação, disfarce social e lembranças de Odran.
 - Ganchos: filtro especial, símbolos de Odran, reputação de assassino e reação de moradores de Maré Baixa.
 

@@ -71,12 +71,6 @@ A ficha atual de Vezemir registra a Muralha de Dorn como o bônus de **+2 na Cla
 - **Guardião de Leth'valora:** golpe de escudo capaz de causar dano e empurrar o alvo.
 - **Inabalável:** o escudo não pode ser destruído por meios comuns.
 
-## Segredos do Mestre
-
-- Não ativar propriedades narrativas como mecânica completa sem decisão.
-- Definir se “Dorn” é pessoa, lugar, tradição, título ou nome simbólico.
-- Tratar possíveis reações ao Véu, dragão ou Guardiões como revelações graduais.
-
 ## Relações
 
 - [[Vezemir]]
@@ -89,7 +83,7 @@ A ficha atual de Vezemir registra a Muralha de Dorn como o bônus de **+2 na Cla
 
 - Como apresentar: escudo pesado, quase excessivo, que transforma Vezemir em uma linha de defesa.
 - O que os jogadores sabem: é o escudo de Vezemir e foi entregue por Elarion.
-- O que apenas o mestre sabe: propriedades ocultas ainda não confirmadas.
+- O que manter em aberto no [[ESTADO_DA_CAMPANHA]]: propriedades ocultas ainda não confirmadas.
 - Como entra em cena: defesa de aliados, bloqueio de passagem, impacto dramático e lembranças de Leth'valora.
 - Ganchos: origem de Dorn, símbolos no escudo e possíveis reações a ameaças antigas.
 

@@ -68,17 +68,11 @@ Também reflete sua personalidade peculiar: Varkh coleciona frases absurdas, son
 - [[Kenku]]
 - [[Conclave dos Errantes]]
 
-## Segredos do Mestre
-
-- Nenhuma função secreta está confirmada.
-- Se virar item mágico ou mecânico, isso deve ser decisão futura.
-- A força atual do item é narrativa: identidade, memória, disfarce social e improviso.
-
 ## Uso em Mesa
 
 - Como apresentar: Varkh folheia, consulta, rabisca ou imita vozes em momentos sociais.
 - O que os jogadores sabem: é uma ferramenta pessoal de Varkh.
-- O que apenas o mestre sabe: nenhuma informação secreta confirmada por enquanto.
+- O que manter em aberto no [[ESTADO_DA_CAMPANHA]]: nenhuma informação secreta confirmada por enquanto.
 - Como entra em cena: blefes, distrações, memória de frases, investigação social e cenas de identidade.
 - Ganchos: encontrar uma voz significativa, perder o caderno, registrar uma frase impossível.
 
