@@ -70,10 +70,10 @@ OFFICIAL_TYPES = {
 }
 
 SPECIAL_RECLASSIFICATIONS = {
-    "Items/O Frasco Afogado.md": (
+    "Locations/O Frasco Afogado.md": (
         "location",
         "shop",
-        "Reclassificação futura: é a loja de alquimia do Mestre Odran em Maré Baixa, não item portátil.",
+        "Reclassificação aplicada: é a loja de alquimia do Mestre Odran em Maré Baixa, não item portátil.",
     ),
 }
 
@@ -520,7 +520,7 @@ def render_report(root: Path, plans: list[NotePlan]) -> str:
             "",
             "## Casos especiais",
             "",
-            "- `Items/O Frasco Afogado.md`: marcar como reclassificação futura para `location/shop`; não aplicar como item.",
+            "- `Locations/O Frasco Afogado.md`: validar como `location/shop`; não tratar como item portátil.",
             "- `Factions/Culto dos Sussurrantes.md`: manter como `faction`; não receber `character` automaticamente por causa da tag `antagonista`.",
             "- `Workflow/_audit/*`: tratado como histórico/auditoria; não migrar automaticamente.",
             "- `.obsidian/plugins/obsidian-leaflet-plugin/data.json`: ignorado; não é Markdown e está fora do escopo.",

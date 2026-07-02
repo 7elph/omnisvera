@@ -43,7 +43,7 @@ Este documento lista notas que precisam ser criadas para dar suporte à campanha
 
 | Nota | Pasta Sugerida | Categoria | Motivo da Criação | Notas Relacionadas | Status |
 |:--|:--|:--|:--|:--|:--|
-| O Frasco Afogado | Items/ | Item | Estabelecimento onde Varkh foi treinado por Mestre Odran Veyl | Varkh, Maré Baixa, Mestre Odran Veyl | Criado (Batch 03) |
+| O Frasco Afogado | Locations/ | Local / loja | Estabelecimento onde Varkh foi treinado por Mestre Odran Veyl | Varkh, Maré Baixa, Mestre Odran Veyl | Criado e migrado para Locations |
 | Remédios Falsos de Maré Baixa | Lore/ | Lore | Arco de investigação de Varkh sobre remédios falsos com símbolo de Odran | Varkh, Maré Baixa, O Frasco Afogado | Criado (Batch 03) |
 | Rede de Falsificadores de Maré Baixa | Factions/ | Facção | Organização por trás dos remédios falsos investigados por Varkh | Varkh, Maré Baixa, Remédios Falsos | Criado (Batch 03) |
 | Caderninho de Vozes | Items/ | Item | Item relacionado à identidade e voz de Varkh | Varkh, Kenku | Criado (Batch 03) |
@@ -123,7 +123,7 @@ As seguintes notas foram criadas no Batch 02:
 
 As seguintes notas foram criadas no Batch 03:
 
-- Items/O Frasco Afogado.md
+- Locations/O Frasco Afogado.md
 - Lore/Remédios Falsos de Maré Baixa.md
 - Factions/Rede de Falsificadores de Maré Baixa.md
 - Items/Caderninho de Vozes.md

@@ -848,20 +848,18 @@ Critério: tag com espaço, maiúscula inesperada ou formato arriscado. Tags `Ca
 
 | campo | valor |
 |---|---|
-| estado atual provável | `Items/O Frasco Afogado.md` |
-| classificação correta sugerida | `location/shop` |
+| estado atual | `Locations/O Frasco Afogado.md` |
+| classificação aplicada | `location/shop` |
 | motivo | é a loja de alquimia do Mestre Odran em Maré Baixa, não um item portátil |
 
-Ação recomendada futura:
+Ação realizada:
 
-- mover para `Locations/O Frasco Afogado.md` ou `Locations/Nimalis/Maré Baixa/O Frasco Afogado.md`;
+- movido para `Locations/O Frasco Afogado.md`;
 - atualizar links internos;
-- manter redirect/nota ponte se necessário;
-- atualizar frontmatter para `type: location` e `subtype: shop`;
-- vincular imagem gerada/aprovada do local;
-- executar em commit próprio.
+- frontmatter atualizado para `type: location` e `subtype: shop`;
+- não tratar como item portátil.
 
-Não executar nesta auditoria.
+Imagem específica ainda depende de criação/aprovação futura.
 
 ## Recomendações por prioridade
 
@@ -870,7 +868,7 @@ Não executar nesta auditoria.
 1. Resolver referências de mídia quebradas e problemas de case-sensitive.
 2. Resolver primeiro referências quebradas fora de histórico/auditoria; referências em `Workflow/Legacy`, `_archive` e `_audit` devem ser tratadas como histórico até decisão do Sage.
 3. Definir se tags técnicas oficiais serão aplicadas em inglês em notas novas, mantendo tags PT-BR/legacy como ponte.
-4. Criar plano para `O Frasco Afogado` antes de padronizar Items e Locations em massa.
+4. Revisar imagem e conteúdo de `O Frasco Afogado` como local jogável antes de padronizar Locations em massa.
 
 ### Prioridade média
 

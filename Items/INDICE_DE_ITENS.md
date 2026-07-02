@@ -25,7 +25,7 @@ tags:
 - `gm_secret: true` indica item sensível ou revelação de mestre.
 - `thumbnail` alimenta cards e listagens.
 - Itens que ainda não possuem imagem devem permanecer sem `thumbnail`/`cover` até existir imagem correspondente em `zz_media`.
-- `O Frasco Afogado` permanece em `Items/` por enquanto porque funciona como estabelecimento narrativo ligado a Varkh; pode virar `Location` em etapa futura.
+- `O Frasco Afogado` foi migrado para `Locations/` porque funciona como loja/oficina de alquimia, não como item portátil.
 
 ## Todos os Itens
 
@@ -72,6 +72,6 @@ SORT file.name ASC
 ## Pendências
 
 - Definir imagens para itens de Varkh que ainda não têm thumbnail/capa.
-- Decidir se `O Frasco Afogado` permanece em `Items` ou vira `Location`/estabelecimento no futuro.
+- Revisar imagens e produtos ligados a [[O Frasco Afogado]] como local jogável.
 - Confirmar mecânicas finais de relíquias e artefatos.
 - Confirmar se as propriedades especiais de Grisalma, Muralha de Dorn, Adagas e Manto viram mecânica ou continuam como descrição narrativa controlada pelo mestre.

@@ -96,6 +96,6 @@ A rede de falsificadores representa o antagonismo central do arco de Varkh. Ela 
 
 - [[Characters/Individual/Varkh Nimalis]]
 - [[Characters/Individual/Mestre Odran Veyl]]
-- [[Items/O Frasco Afogado]]
+- [[O Frasco Afogado]]
 - [[Lore/Remédios Falsos de Maré Baixa]]
 - [[Territories/Nimalia]]
