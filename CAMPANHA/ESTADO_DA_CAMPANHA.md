@@ -21,6 +21,31 @@ tags:
 >
 > [[Home_Mestre]] é a navegação visual. Esta nota é o caderno operacional: preparação, bastidores, segredos, consequências e decisões antes/depois da mesa.
 
+## Painel de Controle do Vault
+
+| área | acesso rápido | uso |
+|---|---|---|
+| Home do Mestre | [[Home_Mestre]] | navegação visual e atalhos |
+| Home dos Jogadores | [[Home]] | consulta player-safe |
+| Capítulos | [[01 - Ecos do Mundo Perdido]] | versão pública/jogável do capítulo |
+| Estado da Campanha | [[ESTADO_DA_CAMPANHA]] | bastidores, frentes e decisões |
+| Fila de Conteúdo | [[CONTENT_CREATION_QUEUE]] | notas que precisam desenvolvimento |
+| Modelo Player-Safe | [[PLAYER_SAFE_ENTITY_MODEL]] | regra de separação entre nota pública e bastidor |
+
+## Entidades em Desenvolvimento Prioritário
+
+| entidade | tipo | função no controle |
+|---|---|---|
+| [[O Frasco Afogado]] | local | loja/oficina, investigação dos remédios falsos |
+| [[Maré Baixa]] | local | submundo portuário, origem de Varkh |
+| [[Nimalis]] | cidade | capital e centro político |
+| [[Coroa de Nimalia]] | facção | poder institucional |
+| [[Varkh Nimalis]] | personagem | arco dos remédios falsos |
+| [[Guilda dos Mercadores]] | facção | comércio, rotas e influência econômica |
+| [[Porto de Nimalia]] | local | entrada de cargas, rumores e contrabando |
+| [[Raziel]] | personagem | sangue antigo, Gharok e passado enterrado |
+| [[Culto dos Sussurrantes]] | facção/rumor | ameaça em revisão ligada ao Véu |
+
 ## Capítulo Atual
 
 > [!world]+ CAPÍTULO EM FOCO
@@ -113,6 +138,181 @@ SORT file.name ASC
 - Definir quem transporta os remédios falsos.
 - Definir se a [[Guarda Real de Nimalia]] chega antes ou depois do despertar da [[Unidade DORN-7]].
 - Preparar uma versão curta da cena inicial para leitura em mesa.
+
+---
+
+## Frentes de Controle
+
+> [!IMPORTANT]
+> Estas frentes guardam bastidores e decisões do mestre. As notas principais devem permanecer player-safe.
+
+### Frente — O Frasco Afogado e os Remédios Falsos
+
+#### Entidades Ligadas
+
+- [[O Frasco Afogado]]
+- [[Maré Baixa]]
+- [[Varkh Nimalis]]
+- [[Mestre Odran Veyl]]
+- [[Remédios Falsos de Maré Baixa]]
+- [[Rede de Falsificadores de Maré Baixa]]
+
+#### Status Atual
+
+Em desenvolvimento. A frente conecta a origem de Varkh, a memória de Odran e a circulação de remédios falsos em Nimalia.
+
+#### Segredos do Mestre
+
+- Não confirmar ainda se Odran está envolvido nas falsificações.
+- Não decidir automaticamente se [[O Frasco Afogado]] está aberto, fechado, abandonado, tomado ou vigiado.
+- Se houver estoque escondido, fórmula perdida ou registro comprometedor, tratar como revelação futura.
+
+#### Verdades Possíveis
+
+- Alguém pode estar usando o símbolo de Odran sem autorização.
+- A [[Guilda dos Mercadores]] pode saber mais sobre a rota dos produtos do que admite.
+- A [[Coroa de Nimalia]] pode tentar controlar a investigação se houver risco público.
+
+#### Pistas
+
+- Rótulos antigos.
+- Frascos adulterados.
+- Ingredientes baratos demais.
+- Assinatura perfeita demais.
+- Testemunhas de [[Maré Baixa]] que conhecem Odran.
+
+#### Rumores: Verdadeiros, Falsos ou Incompletos
+
+- Rumores sobre remédios falsos devem aparecer primeiro como problema de rua, não como conspiração resolvida.
+- A verdade de cada rumor fica pendente até decisão do Sage.
+
+#### Condições de Revelação
+
+- Revelar pistas por investigação, compra de remédio adulterado, retorno de Varkh a [[Maré Baixa]] ou contato com falsificadores.
+
+#### Consequências
+
+- Expor a falsificação pode atrair criminosos, mercadores, guardas ou clientes desesperados.
+
+#### Decisões Pendentes do Sage
+
+- Estado atual do Frasco.
+- Papel real de Odran.
+- Identidade de quem usa o símbolo falso.
+- Nível de envolvimento da Guilda e da Coroa.
+
+### Frente — Nimalis, Coroa e Porto
+
+#### Entidades Ligadas
+
+- [[Nimalis]]
+- [[Coroa de Nimalia]]
+- [[Guarda Real de Nimalia]]
+- [[Porto de Nimalia]]
+- [[Guilda dos Mercadores]]
+
+#### Status Atual
+
+Frente estrutural da capital. Define como poder, comércio, segurança e circulação de informações funcionam em Nimalis.
+
+#### Segredos do Mestre
+
+- Rotas ilícitas, cargas suspeitas e autoridade portuária ainda precisam ser definidas.
+- O grau de controle real da Coroa sobre o porto permanece aberto.
+- A influência da Guilda pode ser pública, indireta ou clandestina.
+
+#### Pistas
+
+- Carga atrasada.
+- Navio sem registro.
+- Guarda comprada.
+- Documento comercial contraditório.
+- Mercador que sabe demais.
+
+#### Consequências
+
+- Problemas no porto afetam abastecimento, reputação da Coroa, submundo de [[Maré Baixa]] e poder da Guilda.
+
+#### Decisões Pendentes do Sage
+
+- Autoridade portuária.
+- Rotas principais.
+- Relação entre Coroa, Guarda Real e Guilda.
+- Quanto o povo de Nimalis percebe da corrupção ou tensão econômica.
+
+### Frente — Varkh Nimalis
+
+#### Entidades Ligadas
+
+- [[Varkh Nimalis]]
+- [[O Frasco Afogado]]
+- [[Mestre Odran Veyl]]
+- [[Conclave dos Errantes]]
+- [[Remédios Falsos de Maré Baixa]]
+
+#### Status Atual
+
+Arco pessoal ligado à origem em [[Maré Baixa]], à alquimia de rua e à investigação dos remédios falsos.
+
+#### Segredos do Mestre
+
+- A identidade de quem está usando os métodos de Odran ainda é desconhecida.
+- A extensão real da fama de Varkh como assassino pode ser maior ou menor do que os rumores indicam.
+- A classe mecânica definitiva de Varkh ainda precisa ser reconciliada com a ficha sem nome recebida do jogador.
+
+#### Condições de Revelação
+
+- Revelar por pistas em frascos, testemunhas de Maré Baixa, contato do Conclave ou retorno ao Frasco.
+
+### Frente — Raziel
+
+#### Entidades Ligadas
+
+- [[Raziel]]
+- [[Clã Sanguinallis]]
+- [[Fortaleza de Gharok]]
+- [[Sangue Antigo]]
+- [[Adagas de Espectro Fantasma]]
+
+#### Status Atual
+
+Arco pessoal ligado a sangue antigo, traição, Gharok e estruturas anteriores ao presente.
+
+#### Segredos do Mestre
+
+- O verdadeiro motivo pelo qual o Ancião Primordial libertou Raziel permanece desconhecido.
+- A heresia rúnica usada como pretexto para sua captura ainda não foi definida.
+- Sua relação com o Véu Cinzento e com os Criadores ainda não foi confirmada.
+
+#### Condições de Revelação
+
+- Revelar por reação a ruínas antigas, sangue, máquinas, memórias fragmentadas ou antagonistas ligados a Gharok.
+
+### Frente — Culto dos Sussurrantes
+
+#### Entidades Ligadas
+
+- [[Culto dos Sussurrantes]]
+- [[Véu Cinzento]]
+- [[Igreja das Chamas]]
+- [[Coroa de Nimalia]]
+
+#### Status Atual
+
+Em revisão. Pode ser ameaça ativa, rumor distorcido, culto menor ou rascunho a arquivar.
+
+#### Segredos do Mestre
+
+- Não confirmar ainda se o culto é ameaça ativa.
+- Não revelar o Arauto Sombrio sem decidir se ele será mantido.
+- Evitar usar o culto como explicação fácil para todo mistério do Véu.
+
+#### Decisões Pendentes do Sage
+
+- Confirmar existência canônica.
+- Definir relação real com o [[Véu Cinzento]].
+- Decidir se o Arauto Sombrio permanece, muda ou sai.
+- Definir se o culto fica como facção, religião, rumor ou arquivo.
 
 ---
 

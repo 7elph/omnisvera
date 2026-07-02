@@ -58,7 +58,7 @@ O porto conecta a capital a cargas, passageiros, contrabando, rumores marítimos
 
 - Como apresentar: cheiro de sal, cordas, madeira molhada, gritos de carregadores e sinos de barco.
 - O que os jogadores sabem: é o porto da capital.
-- O que apenas o mestre sabe: rotas ilícitas e cargas suspeitas ainda precisam ser definidas.
+- O que manter em aberto: rotas ilícitas, cargas suspeitas e autoridade portuária ficam no [[ESTADO_DA_CAMPANHA]].
 - Como entra em cena: chegada de navio, carga desaparecida, contrabando, perseguição, rumor marítimo.
 - Ganchos: remessas falsas, carga do Mar da Neblina, passageiro misterioso, navio atrasado.
 - Consequências possíveis: problemas no porto afetam comércio, Maré Baixa e Guilda dos Mercadores.

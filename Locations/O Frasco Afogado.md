@@ -122,13 +122,6 @@ A sensação é de que tudo ali foi salvo do lixo antes de virar ferramenta: fra
 - Ingredientes raros somem do porto e reaparecem em remédios adulterados.
 - Um caderno, recibo ou rótulo antigo pode apontar para a origem da falsificação.
 
-## Segredos do Mestre
-
-- Não confirmar se Odran está envolvido nas falsificações.
-- Não decidir automaticamente se a loja está aberta, fechada, abandonada ou tomada.
-- A situação atual do local deve ser confirmada pelo Sage antes de virar cena central.
-- Se houver estoque escondido, fórmula perdida ou registro comprometedor, tratar como revelação futura.
-
 ## Pendências para o Sage
 
 - Localização exata dentro de [[Maré Baixa]].
@@ -144,7 +137,7 @@ A sensação é de que tudo ali foi salvo do lixo antes de virar ferramenta: fra
 
 - Como apresentar: loja estreita, úmida, cheia de frascos, cheiro forte e silêncio desconfiado.
 - O que os jogadores sabem: foi onde Varkh aprendeu com Odran.
-- O que apenas o mestre sabe: envolvimento real de Odran, se existir, e origem da falsificação.
+- O que manter em aberto: envolvimento real de Odran, estado atual da loja e origem da falsificação ficam no [[ESTADO_DA_CAMPANHA]].
 - Como entra em cena: lembrança, investigação, retorno a Maré Baixa, símbolo em frasco falsificado ou contato antigo.
 - Ganchos: símbolo roubado, remédios falsos, antigos alunos, estoque escondido e reputação de Odran.
 - Consequências possíveis: mexer no local pode atrair falsificadores, clientes desesperados, guardas ou rivais do submundo.

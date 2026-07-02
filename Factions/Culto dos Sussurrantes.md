@@ -84,17 +84,11 @@ Essa versão ainda pode virar:
 - [[Coroa de Nimalia]] — possível alvo de infiltração, ainda não confirmado.
 - [[Igreja das Chamas]] — possível oposição religiosa, se o culto for confirmado.
 
-## Segredos do Mestre
-
-- Não confirmar ainda se o culto é ameaça ativa.
-- Não revelar o Arauto Sombrio sem decidir se ele será mantido.
-- Evitar usar o culto como explicação fácil para todo mistério do Véu.
-
 ## Uso em Mesa
 
 - Como apresentar: sussurros, símbolos, rituais incompletos e boatos sobre pessoas tentando atravessar o Véu.
 - O que os jogadores sabem: nada precisa ser revelado até o culto ser confirmado.
-- O que apenas o mestre sabe: esta nota ainda é rascunho.
+- O que manter em aberto: existência canônica, ameaça ativa e relação real com o Véu ficam no [[ESTADO_DA_CAMPANHA]].
 - Como entra em cena: somente se o Sage decidir manter o culto como ameaça ativa.
 - Ganchos: ritual incompleto, máscara com símbolo do Véu, desaparecimento em fronteira nebulosa, suspeita de infiltração.
 

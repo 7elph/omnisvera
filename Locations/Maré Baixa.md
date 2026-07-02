@@ -86,7 +86,7 @@ A cidade formal tenta fingir que ela não existe, mas muita coisa que move o Rei
 
 - Como apresentar: úmida, barulhenta, apertada, viva e desconfiada.
 - O que os jogadores sabem: é uma região pobre e portuária de Nimalis.
-- O que apenas o mestre sabe: quem controla cada rota, falsificação ou favor ainda precisa ser definido.
+- O que manter em aberto: quem controla cada rota, falsificação ou favor fica no [[ESTADO_DA_CAMPANHA]].
 - Como entra em cena: rumor, esconderijo, perseguição, compra clandestina, memória de Varkh.
 - Ganchos: remédios falsos, Frasco Afogado, contrabando, falsificadores, contatos do Conclave.
 - Consequências possíveis: agir sem cuidado pode chamar atenção de criminosos, mercadores ou guardas corruptos.

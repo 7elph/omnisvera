@@ -89,10 +89,6 @@ SORT file.name ASC
 
 - Ver a Visão Geral, História e Situação Atual desta nota.
 
-## O que só o mestre sabe
-
-- Informações confidenciais ficam centralizadas em [[CAMPANHA/ESTADO_DA_CAMPANHA|Estado da Campanha]].
-
 ## História
 
 > <h4>"Alquimia não é transformar chumbo em ouro. É transformar problema em saída."</h4>
@@ -283,7 +279,7 @@ _Pendente de consolidação pelo Sage._
 
 - Como apresentar:
 - O que os jogadores sabem:
-- O que apenas o mestre sabe:
+- O que manter em aberto: bastidores e segredos ficam no [[CAMPANHA/ESTADO_DA_CAMPANHA|Estado da Campanha]].
 - Como entra em cena:
 - Ganchos:
 - Consequências possíveis:
