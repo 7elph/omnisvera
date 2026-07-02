@@ -88,7 +88,7 @@ Ao desenvolver uma religião ou tradição espiritual, manter esta ordem:
 4. Estrutura.
 5. Influência.
 6. Relações.
-7. Segredos do mestre.
+7. Pontos restritos para o Estado da Campanha.
 8. Uso em mesa.
 
 ## Reservas do Mestre

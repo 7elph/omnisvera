@@ -46,4 +46,4 @@ SORT file.name ASC
 - `Locations/` guarda pontos jogáveis: cidade, bairro, loja, estrada, fortaleza, ruína ou vila.
 - Regiões grandes ficam em `Territories/`.
 - Se uma cena pode acontecer ali diretamente, provavelmente é `location`.
-- Segredos completos e bastidores devem ficar em [[ESTADO_DA_CAMPANHA]].
+- Detalhes restritos e decis?es de mestre devem ficar em [[ESTADO_DA_CAMPANHA]].

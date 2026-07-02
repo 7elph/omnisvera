@@ -70,7 +70,7 @@ Ela pode funcionar como:
 
 - Como apresentar: ruínas cobertas por vegetação, pedras antigas e silêncio de estrada abandonada.
 - O que os jogadores sabem: depende do quanto Vezemir compartilhou.
-- O que apenas o mestre sabe: possíveis pistas sobre a origem de Vezemir e conexões antigas.
+- O que manter em aberto no [[ESTADO_DA_CAMPANHA]]: detalhes restritos e decis?es pendentes.
 - Como entra em cena: lembrança, retorno a Avenor, investigação ou sonho.
 - Ganchos: pais biológicos, Guardiões do Véu Cinzento, magia instável, ruínas antigas.
 - Consequências possíveis: revelar a estrada cedo demais pode antecipar mistérios da origem de Vezemir.

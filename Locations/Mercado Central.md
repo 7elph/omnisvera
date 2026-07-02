@@ -55,7 +55,7 @@ tags:
 
 - Como apresentar: vozes, barracas, cheiros, moedas, carroças e gente de todas as raças.
 - O que os jogadores sabem: é o mercado comum da capital.
-- O que apenas o mestre sabe: vendedores específicos e pistas escondidas ainda podem ser definidos.
+- O que manter em aberto no [[ESTADO_DA_CAMPANHA]]: detalhes restritos e decis?es pendentes.
 - Como entra em cena: compras, rumor, perseguição, encontro casual ou confusão pública.
 - Ganchos: mercadoria adulterada, preço estranho, informante, item roubado, cartaz de recompensa.
 - Consequências possíveis: uma cena pública aqui pode se espalhar rapidamente pela cidade.

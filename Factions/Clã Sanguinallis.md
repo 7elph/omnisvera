@@ -67,12 +67,6 @@ Na lore atual, Gharok foi uma antiga fortaleza anã ao norte de Nimalia antes de
 - Raziel foi traído por Malakar, Kaelen e Vandor
 - A traição foi motivada por inveja, medo e suspeita de que Raziel desejava o trono
 
-## Segredos do Mestre
-
-- Não revelar cedo se o clã ainda existe, mudou de forma ou entrou em decadência.
-- Separar a linhagem Sanguinallis do [[Sangue Antigo]].
-- Usar o clã como eixo de vingança de Raziel sem resolver toda a hierarquia antes da hora.
-
 ## Membros e Associados
 
 ```dataview
@@ -87,7 +81,7 @@ SORT file.name ASC
 
 - Como apresentar: por símbolos vampíricos, nomes sussurrados, ruínas, sangue antigo e memórias fragmentadas de Raziel.
 - O que os jogadores sabem: depende de quanto Raziel revelou ao grupo.
-- O que apenas o mestre sabe: detalhes completos da estrutura, sobrevivência atual e relação com o Sangue Antigo.
+- O que manter em aberto no [[ESTADO_DA_CAMPANHA]]: detalhes restritos e decis?es pendentes.
 - Como entra em cena: antagonistas, pistas de vingança, domínios antigos, relíquias e encontros ligados ao passado de Raziel.
 - Ganchos: retorno de antigos membros, disputa por trono, busca por relíquias e consequências da traição.
 

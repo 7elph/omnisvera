@@ -57,7 +57,7 @@ O bairro funciona como ponto de contato entre a capital de Nimalia, a [[Floresta
 
 - Como apresentar: ruas mais silenciosas, jardins internos, símbolos élficos e comércio refinado.
 - O que os jogadores sabem: elfos vivem ali como comunidade estabelecida.
-- O que apenas o mestre sabe: emissários ou agentes do futuro reino élfico podem circular ali.
+- O que manter em aberto no [[ESTADO_DA_CAMPANHA]]: detalhes restritos e decis?es pendentes.
 - Como entra em cena: contato élfico, informação sobre Avenor, busca por Mira ou pistas sobre Leth'valora.
 - Ganchos: memórias de Leth'valora, conflito entre tradição e cidade, rumores sobre o reino élfico.
 - Consequências possíveis: ações aqui podem afetar relações futuras com elfos de Avenor.

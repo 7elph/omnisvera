@@ -62,7 +62,7 @@ Lugar onde qualquer um com pouca renda pode se estabelecer por um curto tempo.
 
 - Como apresentar: vielas improvisadas, barracos, fogueiras, crianças correndo e gente de muitos sotaques.
 - O que os jogadores sabem: é uma região pobre e temporária.
-- O que apenas o mestre sabe: redes de proteção, crime ou exploração ainda precisam ser definidas.
+- O que manter em aberto no [[ESTADO_DA_CAMPANHA]]: detalhes restritos e decis?es pendentes.
 - Como entra em cena: esconderijo, rumor, desaparecimento, trabalho pequeno ou contato marginal.
 - Ganchos: gente sumida, contrabando barato, testemunhas ignoradas, favores perigosos.
 - Consequências possíveis: ignorar o bairro pode permitir que ameaças pequenas cresçam sem atenção.

@@ -63,7 +63,7 @@ A Casa da Moeda pode servir como ponto de investigação econômica, falsificaç
 
 - Como apresentar: edifício vigiado, com metal, selos, livros contábeis e guardas.
 - O que os jogadores sabem: é onde se produzem moedas oficiais.
-- O que apenas o mestre sabe: possíveis fraudes, falsificações ou influência política.
+- O que manter em aberto no [[ESTADO_DA_CAMPANHA]]: detalhes restritos e decis?es pendentes.
 - Como entra em cena: investigação, contrato da Coroa, pista monetária, falsificação ou roubo.
 - Ganchos: moedas falsas, selo adulterado, remessa desaparecida, conflito entre Coroa e mercadores.
 - Consequências possíveis: mexer na moeda do reino pode atrair a Guarda Real, nobres e guildas.

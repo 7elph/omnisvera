@@ -65,17 +65,11 @@ A rede de falsificadores representa o antagonismo central do arco de Varkh. Ela 
 - Varkh investiga a rede para proteger o nome de Odran
 - Possíveis responsáveis: antigo aluno de Odran, guilda, nobreza demi-humana, ou o próprio Odran
 
-## Segredos do Mestre
-
-- Não decidir ainda se a rede age sozinha ou serve a uma facção maior.
-- Não confirmar cedo se Odran é culpado, vítima ou isca.
-- Manter a rede como investigação aberta até Varkh encontrar pistas em mesa.
-
 ## Uso em Mesa
 
 - Como apresentar: frascos falsificados, símbolos de Odran, documentos perfeitos demais e boatos sobre um corvo alquimista.
 - O que os jogadores sabem: remédios falsos circulam em Nimalia e prejudicam inocentes.
-- O que apenas o mestre sabe: identidade, escala e motivação real da rede.
+- O que manter em aberto no [[ESTADO_DA_CAMPANHA]]: detalhes restritos e decis?es pendentes.
 - Como entra em cena: investigação, perseguição, interrogatório, compra suspeita, vítima envenenada ou carga apreendida.
 - Ganchos: Maré Baixa, guildas, nobreza, antigos alunos de Odran e contratos falsos.
 

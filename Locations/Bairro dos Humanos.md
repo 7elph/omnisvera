@@ -57,7 +57,7 @@ Em um reino onde os [[Antropo|antropos]] predominam, o Bairro dos Humanos ajuda 
 
 - Como apresentar: ruas familiares para humanos, mas cercadas pela diversidade da capital.
 - O que os jogadores sabem: humanos vivem ali como comunidade reconhecida.
-- O que apenas o mestre sabe: possíveis famílias influentes ou tensões ainda não definidas.
+- O que manter em aberto no [[ESTADO_DA_CAMPANHA]]: detalhes restritos e decis?es pendentes.
 - Como entra em cena: abrigo, contato, compra simples, rumor ou apresentação de diferenças sociais.
 - Ganchos: disputa por espaço, preconceito, proteção comunitária, famílias antigas.
 - Consequências possíveis: conflitos aqui podem afetar a relação entre humanos e antropos.

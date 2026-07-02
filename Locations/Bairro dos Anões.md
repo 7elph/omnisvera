@@ -57,7 +57,7 @@ O bairro pode conectar a capital às rotas do norte, à [[Fortaleza de Gharok]] 
 
 - Como apresentar: pedra, metal, fumaça de forja, tavernas robustas e sotaques de clã.
 - O que os jogadores sabem: anões vivem e trabalham ali.
-- O que apenas o mestre sabe: contatos com clãs do norte ainda precisam ser definidos.
+- O que manter em aberto no [[ESTADO_DA_CAMPANHA]]: detalhes restritos e decis?es pendentes.
 - Como entra em cena: conserto de equipamento, informação sobre Gharok, negociação de escudo ou metal.
 - Ganchos: mapas antigos, juramentos de clã, marcas de ferreiro, relíquias anãs.
 - Consequências possíveis: uma pista anã pode levar os jogadores ao norte de Nimalia.

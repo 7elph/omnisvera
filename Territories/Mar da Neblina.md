@@ -65,12 +65,6 @@ Rumores vindos do Mar da Neblina podem cruzar documentos da Coroa, rotas de merc
 - [[Conclave dos Errantes]]
 - [[Véu Cinzento]], apenas como comparação temática; não confirmar origem comum sem decisão.
 
-## Segredos do Mestre
-
-- Não definir ainda se a névoa do mar é natural, mágica ou ligada a fenômenos antigos.
-- Não fundir automaticamente o Mar da Neblina com o [[Véu Cinzento]].
-- Usar como fonte de rumores e pistas antes de virar região totalmente mapeada.
-
 ## Aparições e Menções
 
 ```dataview
@@ -91,5 +85,5 @@ SORT file.name ASC
 
 - Como apresentar: por rumor, mapa incompleto, mercador assustado ou carga chegada ao porto.
 - O que os jogadores sabem: é uma região perigosa, nebulosa e cheia de histórias contraditórias.
-- O que apenas o mestre sabe: ainda em definição.
+- O que manter em aberto no [[ESTADO_DA_CAMPANHA]]: detalhes restritos e decis?es pendentes.
 - Como entra em cena: como origem de pistas, ameaças, rotas ou mensagens distantes.

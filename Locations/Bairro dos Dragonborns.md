@@ -57,7 +57,7 @@ O bairro funciona como ponte inicial para o futuro reino dragonborn do noroeste 
 
 - Como apresentar: arquitetura robusta, símbolos dracônicos, presença imponente e códigos de honra.
 - O que os jogadores sabem: dragonborns vivem ali como comunidade reconhecida.
-- O que apenas o mestre sabe: relação política com o futuro reino dragonborn ainda será revelada.
+- O que manter em aberto no [[ESTADO_DA_CAMPANHA]]: detalhes restritos e decis?es pendentes.
 - Como entra em cena: contato diplomático, rumor sobre dragões, guerreiro contratado ou tensão cultural.
 - Ganchos: reino do noroeste, dragão de colar dourado, linhagens dracônicas, antigos pactos.
 - Consequências possíveis: confundir dragonborns com dragões pode gerar conflito social ou político.

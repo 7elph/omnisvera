@@ -66,7 +66,7 @@ Esse marcador confirma apenas que o nome está associado ao interior do reino. N
 
 - Como apresentar: vila ou vale tranquilo, com campos, rotas rurais e problemas locais.
 - O que os jogadores sabem: é uma localização menor em Nimalia.
-- O que apenas o mestre sabe: função real ainda está em construção.
+- O que manter em aberto no [[ESTADO_DA_CAMPANHA]]: detalhes restritos e decis?es pendentes.
 - Como entra em cena: parada de estrada, rumor rural, pedido de ajuda ou ponto de fronteira.
 - Ganchos: colheitas estranhas, viajantes desaparecidos, imposto da Coroa, notícia vinda do interior.
 - Consequências possíveis: pode virar ponto de descanso, incidente local ou ponte para fronteiras maiores.

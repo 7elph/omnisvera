@@ -51,7 +51,7 @@ Por enquanto, fica como possibilidade dentro da [[Floresta de Avenor]], sem marc
 
 - Como apresentar: não apresentar ainda, salvo decisão do Sage.
 - O que os jogadores sabem: nada confirmado.
-- O que apenas o mestre sabe: o local ainda é placeholder.
+- O que manter em aberto no [[ESTADO_DA_CAMPANHA]]: detalhes restritos e decis?es pendentes.
 - Como entra em cena: futuro bosque, clareira, fronteira élfica ou região de rumores.
 - Ganchos: sussurros na mata, trilhas perdidas, fenômenos de Avenor.
 - Consequências possíveis: canonizar cedo pode criar uma região sem função definida.

@@ -118,7 +118,7 @@ LIMIT 10
 
 - Como apresentar: ruínas élficas belas, queimadas e silenciosas.
 - O que os jogadores sabem: Leth'valora foi destruída por um dragão.
-- O que apenas o mestre sabe: detalhes do ataque, do dragão e das tradições internas ainda podem ser dosados.
+- O que manter em aberto no [[ESTADO_DA_CAMPANHA]]: detalhes restritos e decis?es pendentes.
 - Como entra em cena: memória, investigação, retorno a Avenor ou pista ligada a Mira/Vezemir.
 - Ganchos: dragão de colar dourado, Mira, Sentinelas, preconceitos antigos, ruínas da fortaleza.
 - Consequências possíveis: retornar à vila pode forçar Vezemir e Mira a confrontarem versões diferentes do passado.

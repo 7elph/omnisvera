@@ -69,7 +69,7 @@ Foi o local onde Vezemir recebeu formação em combate, sobrevivência, estraté
 
 - Como apresentar: pedra fria, torres quebradas, vista da floresta e marcas de treino antigo.
 - O que os jogadores sabem: depende da história compartilhada por Vezemir.
-- O que apenas o mestre sabe: relação completa com relíquias, Elarion e possíveis segredos antigos.
+- O que manter em aberto no [[ESTADO_DA_CAMPANHA]]: detalhes restritos e decis?es pendentes.
 - Como entra em cena: retorno emocional, busca por respostas, abrigo ou ruína explorável.
 - Ganchos: relíquias, Elarion, Guardiões do Véu Cinzento, passado de Avenor.
 - Consequências possíveis: pode revelar peças importantes da origem e dos poderes de Vezemir.

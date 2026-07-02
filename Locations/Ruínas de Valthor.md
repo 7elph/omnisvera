@@ -56,17 +56,11 @@ Valthor possui marcador aproximado no [[MAPA DE EARTHROPO]] e no [[MAPA DE NIMAL
 - [[Ancião Primordial]] — ligado às cavernas abissais sob as ruínas na lore de Raziel.
 - [[Sangue Antigo]] — relação de bastidor com a transformação de Raziel.
 
-## Segredos do Mestre
-
-- Não explicar cedo demais o que havia sob Valthor.
-- Não revelar automaticamente a ligação entre Valthor, Raziel, Ancião Primordial e Sangue Antigo.
-- Tratar Valthor como ruína explorável antes de tratá-la como resposta cosmológica.
-
 ## Uso em Mesa
 
 - Como apresentar: ruínas antigas, parcialmente esquecidas, marcadas por silêncio, pedra quebrada e sinais de civilização perdida.
 - O que os jogadores sabem: Valthor foi um reino antigo e hoje é um conjunto de ruínas ao sudeste de Nimalia.
-- O que apenas o mestre sabe: sua relação com Raziel, Ancião Primordial e Sangue Antigo ainda deve ser dosada.
+- O que manter em aberto no [[ESTADO_DA_CAMPANHA]]: detalhes restritos e decis?es pendentes.
 - Como entra em cena: exploração, rumor, mapa incompleto, busca por relíquias ou pistas ligadas ao passado de Earthropo.
 - Ganchos: cavernas, inscrições antigas, facções buscando relíquias e ecos de guerras antigas.
 

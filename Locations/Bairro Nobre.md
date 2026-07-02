@@ -55,7 +55,7 @@ tags:
 
 - Como apresentar: casas altas, jardins, guardas privados, brasões e conversas medidas.
 - O que os jogadores sabem: nobres e famílias influentes vivem ali.
-- O que apenas o mestre sabe: intrigas específicas entre casas ainda precisam ser definidas.
+- O que manter em aberto no [[ESTADO_DA_CAMPANHA]]: detalhes restritos e decis?es pendentes.
 - Como entra em cena: convite, audiência, investigação política, baile ou ameaça velada.
 - Ganchos: casa nobre rival, patrono, dívida, casamento, escândalo, moeda falsa.
 - Consequências possíveis: ofender a nobreza pode fechar portas ou criar inimigos duradouros.

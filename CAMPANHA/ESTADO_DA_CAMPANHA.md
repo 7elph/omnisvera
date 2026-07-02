@@ -624,6 +624,110 @@ Frente de investigação e tecnologia antiga. Odran deve permanecer ambíguo e D
 
 - Revelar por investigação no Frasco, ativação da DORN-7, análise de frascos ou descoberta de estruturas antigas.
 
+### Frente — Bairros e Infraestrutura de Nimalis
+
+#### Entidades Ligadas
+
+- [[Bairro dos Humanos]]
+- [[Bairro dos Elfos]]
+- [[Bairro dos Anões]]
+- [[Bairro dos Dragonborns]]
+- [[Bairro dos Forasteiros]]
+- [[Bairro Nobre]]
+- [[Mercado Central]]
+- [[Distrito Comercial]]
+- [[Casa da Moeda de Nimalia]]
+
+#### Status Atual
+
+Frente de cenário urbano. As notas principais devem funcionar como consulta de mesa: aparência, função social, pontos úteis e rumores leves.
+
+#### Segredos do Mestre
+
+- Famílias influentes, emissários, agentes raciais e intrigas entre casas nobres ficam em definição.
+- Lojas ilegais, pactos escusos, fraudes e pistas escondidas devem ser revelados por cena, não por nota principal.
+- Redes de proteção, crime ou exploração no Bairro dos Forasteiros ainda precisam ser definidas.
+
+#### Condições de Revelação
+
+- Revelar por investigação urbana, perseguição, audiência política, compra suspeita, documento fiscal ou contato de rua.
+
+### Frente — Avenor, Rotas e Ruínas Próximas
+
+#### Entidades Ligadas
+
+- [[Antiga Estrada Esquecida]]
+- [[Fortaleza Abandonada de Avenor]]
+- [[Bosque Sussurrante]]
+- [[Leth'valora]]
+- [[Vale Dourado]]
+- [[Campos de Earthropo]]
+- [[Mar da Neblina]]
+
+#### Status Atual
+
+Frente de exploração e fronteira. As notas principais devem mostrar lugares visitáveis e sensações de cena sem fechar a função real de cada ruína, estrada ou território.
+
+#### Segredos do Mestre
+
+- Possíveis pistas sobre a origem de Vezemir e conexões antigas ficam no Estado da Campanha.
+- Relação completa entre relíquias, Elarion, Avenor e segredos antigos deve ser dosada.
+- Detalhes do ataque a Leth'valora, do dragão e das tradições internas ainda podem ser revelados gradualmente.
+- A função real de Vale Dourado, Campos de Earthropo e Mar da Neblina permanece em construção.
+
+#### Condições de Revelação
+
+- Revelar por viagem, exploração, ruínas, marcas do dragão, rumores de fronteira, pistas ambientais ou retorno a Avenor.
+
+### Frente — Gharok, Valthor e Sanguinallis
+
+#### Entidades Ligadas
+
+- [[Fortaleza de Gharok]]
+- [[Ruínas de Valthor]]
+- [[Clã Sanguinallis]]
+- [[Raziel]]
+- [[Sangue Antigo]]
+- [[Ancião Primordial]]
+
+#### Status Atual
+
+Frente de passado antigo, sangue e queda de reinos. Notas principais devem apresentar história conhecida, reputação e riscos sem revelar sobrevivência, estrutura atual ou ligação total com Raziel.
+
+#### Segredos do Mestre
+
+- Relação exata de [[Fortaleza de Gharok]] com Raziel, Sanguinallis e o futuro reino anão ainda está em revisão.
+- Relação das [[Ruínas de Valthor]] com Raziel, Ancião Primordial e Sangue Antigo deve ser dosada.
+- Estrutura completa, sobrevivência atual e motivação real do [[Clã Sanguinallis]] ficam no bastidor.
+
+#### Condições de Revelação
+
+- Revelar por investigação em ruínas, sangue, relíquias, inimigos antigos, documentos perdidos ou reações de Raziel.
+
+### Frente — Rede de Falsificadores
+
+#### Entidades Ligadas
+
+- [[Rede de Falsificadores de Maré Baixa]]
+- [[Remédios Falsos de Maré Baixa]]
+- [[O Frasco Afogado]]
+- [[Mestre Odran Veyl]]
+- [[Varkh Nimalis]]
+- [[Guilda dos Mercadores]]
+
+#### Status Atual
+
+Frente de investigação urbana ligada ao arco de Varkh. A nota principal da rede deve ser rumorosa e player-safe até a identidade, escala e motivação real serem decididas.
+
+#### Segredos do Mestre
+
+- Identidade, escala e motivação real da rede permanecem em definição.
+- O envolvimento de Odran, da Guilda ou de agentes da Coroa não deve ser confirmado sem decisão do Sage.
+
+#### Condições de Revelação
+
+- Revelar por frascos falsos, testemunhas de Maré Baixa, rotas comerciais, documentos adulterados ou confronto com intermediários.
+
 ---
 
 ## Dossiê do Mestre — Capítulo 01: Ecos do Mundo Perdido

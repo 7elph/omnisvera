@@ -1,6 +1,6 @@
 # Auditoria de Expans?o Player-Safe ? Omnisvera
 
-Gerado em: 2026-07-02 09:31:25
+Gerado em: 2026-07-02 09:34:46
 
 Fonte de regra: [[PLAYER_SAFE_ENTITY_MODEL]]
 
@@ -11,58 +11,28 @@ Fonte de regra: [[PLAYER_SAFE_ENTITY_MODEL]]
 - Protocolo de gera??o ajustado para n?o recomendar `Segredos do Mestre` dentro da nota principal.
 - Top 10 operacional tratado para remover headings/frases expl?citas de segredo das notas principais alteradas.
 - `CAMPANHA/ESTADO_DA_CAMPANHA.md` recebeu painel de controle e frentes compactas de bastidor.
-- Templates atualizados para encaminhar bastidores ao Estado da Campanha.
-- Lote 2 conclu?do: itens ligados a Vezemir, Raziel e Varkh foram limpos de marcadores expl?citos de segredo.
-- Lote 3 conclu?do: lore, religi?o, ra?as e classes foram limpas de marcadores expl?citos de segredo.
-- Lote 4 conclu?do: personagens restantes foram limpos de marcadores expl?citos de segredo.
+- Templates atualizados para encaminhar informa??es restritas ao Estado da Campanha.
+- Lote 2 conclu?do: itens ligados a Vezemir, Raziel e Varkh foram limpos de marcadores expl?citos de restri??o.
+- Lote 3 conclu?do: lore, religi?o, ra?as e classes foram limpas de marcadores expl?citos de restri??o.
+- Lote 4 conclu?do: personagens restantes foram limpos de marcadores expl?citos de restri??o.
+- Lote 5 conclu?do: locais, territ?rios e fac??es restantes foram limpos de marcadores expl?citos de restri??o.
 
 ## Marcadores restantes no vault operacional
 
-Total de notas com marcador de bastidor/segredo ainda no corpo: **22**
+Total de notas com marcador expl?cito de restri??o ainda no corpo: **0**
 
-| nota | ocorr?ncias | a??o recomendada |
-|---|---|---|
-| `Factions/Clã Sanguinallis.md` | 70: ## Segredos do Mestre<br>90: - O que apenas o mestre sabe: detalhes completos da estrutura, sobrevivência atual e relação com o Sangue Antigo. | Mover bastidor para frente em [[ESTADO_DA_CAMPANHA]] e deixar nota principal player-safe. |
-| `Factions/Rede de Falsificadores de Maré Baixa.md` | 68: ## Segredos do Mestre<br>78: - O que apenas o mestre sabe: identidade, escala e motivação real da rede. | Mover bastidor para frente em [[ESTADO_DA_CAMPANHA]] e deixar nota principal player-safe. |
-| `Locations/Antiga Estrada Esquecida.md` | 73: - O que apenas o mestre sabe: possíveis pistas sobre a origem de Vezemir e conexões antigas. | Mover bastidor para frente em [[ESTADO_DA_CAMPANHA]] e deixar nota principal player-safe. |
-| `Locations/Bairro dos Anões.md` | 60: - O que apenas o mestre sabe: contatos com clãs do norte ainda precisam ser definidos. | Mover bastidor para frente em [[ESTADO_DA_CAMPANHA]] e deixar nota principal player-safe. |
-| `Locations/Bairro dos Dragonborns.md` | 60: - O que apenas o mestre sabe: relação política com o futuro reino dragonborn ainda será revelada. | Mover bastidor para frente em [[ESTADO_DA_CAMPANHA]] e deixar nota principal player-safe. |
-| `Locations/Bairro dos Elfos.md` | 60: - O que apenas o mestre sabe: emissários ou agentes do futuro reino élfico podem circular ali. | Mover bastidor para frente em [[ESTADO_DA_CAMPANHA]] e deixar nota principal player-safe. |
-| `Locations/Bairro dos Forasteiros.md` | 65: - O que apenas o mestre sabe: redes de proteção, crime ou exploração ainda precisam ser definidas. | Mover bastidor para frente em [[ESTADO_DA_CAMPANHA]] e deixar nota principal player-safe. |
-| `Locations/Bairro dos Humanos.md` | 60: - O que apenas o mestre sabe: possíveis famílias influentes ou tensões ainda não definidas. | Mover bastidor para frente em [[ESTADO_DA_CAMPANHA]] e deixar nota principal player-safe. |
-| `Locations/Bairro Nobre.md` | 58: - O que apenas o mestre sabe: intrigas específicas entre casas ainda precisam ser definidas. | Mover bastidor para frente em [[ESTADO_DA_CAMPANHA]] e deixar nota principal player-safe. |
-| `Locations/Bosque Sussurrante.md` | 54: - O que apenas o mestre sabe: o local ainda é placeholder. | Mover bastidor para frente em [[ESTADO_DA_CAMPANHA]] e deixar nota principal player-safe. |
-| `Locations/Casa da Moeda de Nimalia.md` | 66: - O que apenas o mestre sabe: possíveis fraudes, falsificações ou influência política. | Mover bastidor para frente em [[ESTADO_DA_CAMPANHA]] e deixar nota principal player-safe. |
-| `Locations/Distrito Comercial.md` | 62: - O que apenas o mestre sabe: quais lojas operam negócios ilegais ou pactos escusos. | Mover bastidor para frente em [[ESTADO_DA_CAMPANHA]] e deixar nota principal player-safe. |
-| `Locations/Fortaleza Abandonada de Avenor.md` | 72: - O que apenas o mestre sabe: relação completa com relíquias, Elarion e possíveis segredos antigos. | Mover bastidor para frente em [[ESTADO_DA_CAMPANHA]] e deixar nota principal player-safe. |
-| `Locations/Fortaleza de Gharok.md` | 67: ## Segredos do Mestre<br>77: - O que apenas o mestre sabe: sua relação exata com Raziel, Sanguinallis e o futuro reino anão ainda está em revisão. | Mover bastidor para frente em [[ESTADO_DA_CAMPANHA]] e deixar nota principal player-safe. |
-| `Locations/INDICE_DE_LOCAIS.md` | 49: - Segredos completos e bastidores devem ficar em [[ESTADO_DA_CAMPANHA]]. | Mover bastidor para frente em [[ESTADO_DA_CAMPANHA]] e deixar nota principal player-safe. |
-| `Locations/Leth'valora.md` | 121: - O que apenas o mestre sabe: detalhes do ataque, do dragão e das tradições internas ainda podem ser dosados. | Mover bastidor para frente em [[ESTADO_DA_CAMPANHA]] e deixar nota principal player-safe. |
-| `Locations/Mercado Central.md` | 58: - O que apenas o mestre sabe: vendedores específicos e pistas escondidas ainda podem ser definidos. | Mover bastidor para frente em [[ESTADO_DA_CAMPANHA]] e deixar nota principal player-safe. |
-| `Locations/Ruínas de Valthor.md` | 59: ## Segredos do Mestre<br>69: - O que apenas o mestre sabe: sua relação com Raziel, Ancião Primordial e Sangue Antigo ainda deve ser dosada. | Mover bastidor para frente em [[ESTADO_DA_CAMPANHA]] e deixar nota principal player-safe. |
-| `Locations/Vale Dourado.md` | 69: - O que apenas o mestre sabe: função real ainda está em construção. | Mover bastidor para frente em [[ESTADO_DA_CAMPANHA]] e deixar nota principal player-safe. |
-| `Religion/RELIGION.md` | 91: 7. Segredos do mestre. | Mover bastidor para frente em [[ESTADO_DA_CAMPANHA]] e deixar nota principal player-safe. |
-| `Territories/Campos de Earthropo.md` | 64: - O que apenas o mestre sabe: a região pode amarrar Valthor, Gharok e Sanguinallis. | Mover bastidor para frente em [[ESTADO_DA_CAMPANHA]] e deixar nota principal player-safe. |
-| `Territories/Mar da Neblina.md` | 68: ## Segredos do Mestre<br>94: - O que apenas o mestre sabe: ainda em definição. | Mover bastidor para frente em [[ESTADO_DA_CAMPANHA]] e deixar nota principal player-safe. |
+Nenhum marcador expl?cito encontrado nas notas operacionais principais.
 
-## Pr?ximo lote recomendado
+## Ocorr?ncias permitidas fora das notas principais
 
-### Lote 5 ? Locais, territ?rios e fac??es restantes
-- [[Fortaleza de Gharok]]
-- [[Ru?nas de Valthor]]
-- [[Mar da Neblina]]
-- [[Leth'valora]]
-- [[Bosque Sussurrante]]
-- [[Bairro Nobre]]
-- [[Casa da Moeda de Nimalia]]
-- [[Distrito Comercial]]
-- [[Rede de Falsificadores de Mar? Baixa]]
-- [[Cl? Sanguinallis]]
+- `Home.md` pode dizer que conte?dos restritos ficam fora da Home dos Jogadores.
+- `Home_Mestre.md` pode dizer que prepara??o e decis?es ficam centralizadas no Estado da Campanha.
+- `CAMPANHA/ESTADO_DA_CAMPANHA.md` pode conter se??es de mestre, frentes e material restrito.
+- Relat?rios em `Workflow/_audit` podem citar termos antigos por finalidade de auditoria.
 
-## Regra para aplicar os pr?ximos lotes
+## Pr?xima recomenda??o
 
-1. N?o apagar conte?do secreto.
-2. Mover ou resumir bastidor em uma frente do Estado da Campanha.
-3. Substituir a nota principal por vers?o consult?vel, jog?vel e sem resposta final de mist?rio.
-4. N?o criar nota secreta nova sem pedido expl?cito do Sage.
-5. N?o duplicar descri??es longas no Estado da Campanha.
+1. Revisar manualmente se alguma nota principal ficou leve demais ap?s a remo??o dos marcadores.
+2. Desenvolver conte?do player-safe por prioridade usando `Workflow/Content_Development/CONTENT_CREATION_QUEUE.md`.
+3. Usar o Estado da Campanha para responder quais rumores s?o verdadeiros, falsos ou incompletos.
+4. Manter Home_Mestre como painel, sem transformar em dep?sito de lore.

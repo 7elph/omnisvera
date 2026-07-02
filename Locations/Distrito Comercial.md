@@ -59,7 +59,7 @@ tags:
 
 - Como apresentar: vitrines, lojas fechadas, guardas particulares, contratos e corredores movimentados.
 - O que os jogadores sabem: é onde ficam produtos e serviços especializados.
-- O que apenas o mestre sabe: quais lojas operam negócios ilegais ou pactos escusos.
+- O que manter em aberto no [[ESTADO_DA_CAMPANHA]]: detalhes restritos e decis?es pendentes.
 - Como entra em cena: compra de poções, item raro, investigação comercial, pista de falsificação.
 - Ganchos: escravidão, contrabando, remédios adulterados, mercador suspeito, preço impossível.
 - Consequências possíveis: investigar comércio ilegal pode envolver mercadores, guardas e nobres.

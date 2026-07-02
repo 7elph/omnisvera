@@ -61,7 +61,7 @@ Por isso, permanece como nota de mestre e não recebe marcador em mapa nesta eta
 
 - Como apresentar: não apresentar como região definida até consolidação da lore de Raziel.
 - O que os jogadores sabem: nada confirmado, salvo menções em história pessoal.
-- O que apenas o mestre sabe: a região pode amarrar Valthor, Gharok e Sanguinallis.
+- O que manter em aberto no [[ESTADO_DA_CAMPANHA]]: detalhes restritos e decis?es pendentes.
 - Como entra em cena: mapa antigo, memória, crônica de origem ou rumor de guerra antiga.
 - Ganchos: patrulhas antigas, campos de batalha, ruínas sob terra, rota de vingança.
 - Consequências possíveis: posicionar cedo demais pode fixar a geografia de Raziel antes da revisão.
