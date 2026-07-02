@@ -28,7 +28,7 @@ tags:
 # Guardiões do Véu Cinzento
 
 > [!NOTE|clean no-i right]+ Retrato
-> ![[os-guardioes-do-veu-cinzento.png|400]]
+> ![[zz_media/thumbnails/os_guardioes_do_veu_cinzento.png|400]]
 
 > [!world]- SINOPSE PÚBLICA
 > Os Guardiões do Véu Cinzento são lembrados como uma ordem antiga demais para existir com clareza na memória atual de Earthropo. Seus registros são fragmentados, contraditórios e cercados de silêncio.

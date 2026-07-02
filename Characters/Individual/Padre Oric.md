@@ -45,7 +45,7 @@ tags:
 # PADRE ORIC
 
 > [!NOTE|clean no-i right]+ Padre Oric
-> ![[oric.png|400]]
+> ![[zz_media/thumbnails/oric.png|400]]
 
 > [!NOTE]- Template aplicado
 > Esta nota segue o formato **NPC Importante**. Informações confidenciais devem ficar no [[CAMPANHA/ESTADO_DA_CAMPANHA|Estado da Campanha]].

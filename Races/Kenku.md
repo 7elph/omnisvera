@@ -35,7 +35,7 @@ tags:
 # Kenku
 
 > [!NOTE|clean no-i right]+ Retrato
-> ![[kenku.png|400]]
+> ![[zz_media/misc/kenku.png|400]]
 
 ## Visão Geral
 

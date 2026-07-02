@@ -30,7 +30,7 @@ tags:
 # Bairro dos Anões
 
 > [!NOTE|clean no-i right]+ Bairro dos Anões
-> ![[bairro-anao.png|400]]
+> ![[zz_media/thumbnails/bairro_anao.png|400]]
 
 > [!world]- SINOPSE PÚBLICA
 > O Bairro dos Anões reúne ofícios, metal, rotas do norte e histórias sobre fortalezas antigas. É uma ponte urbana para temas ligados a [[Fortaleza de Gharok]] e ao futuro reino anão.

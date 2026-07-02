@@ -14,7 +14,7 @@ tags:
 # Omnisvera
 
 > [!NOTE|clean no-i right]+ Retrato
-> ![[omnisvera-1.png|400]]
+> ![[zz_media/covers/omnisvera_1.png|400]]
 
 Omnisvera é o universo onde se passam as Crônicas de Earthropo.
 

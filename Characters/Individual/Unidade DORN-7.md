@@ -35,7 +35,7 @@ tags:
 # Unidade DORN-7
 
 > [!NOTE|clean no-i right]+ Unidade DORN-7
-> ![[unidade.png|400]]
+> ![[zz_media/characters/unidade.png|400]]
 
 > [!NOTE]
 > Entidade secreta do mestre ligada ao primeiro capítulo da campanha. Não revelar diretamente antes da mesa.

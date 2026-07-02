@@ -28,7 +28,7 @@ tags:
 # Conclave dos Errantes
 
 > [!NOTE|clean no-i right]+ Retrato
-> ![[conclave-dos-errantes.png|400]]
+> ![[zz_media/thumbnails/conclave_dos_errantes.png|400]]
 
 > [!world]- SINOPSE PÚBLICA
 > O Conclave dos Errantes é uma rede de aventureiros, investigadores, escoltas e viajantes sem bandeira fixa. Onde a Coroa, guildas ou nobres não conseguem agir diretamente, os Errantes podem aceitar contratos e atravessar fronteiras.

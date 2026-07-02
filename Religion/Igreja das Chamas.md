@@ -26,7 +26,7 @@ tags:
 # Igreja das Chamas
 
 > [!NOTE|clean no-i right]+ Igreja das Chamas
-> ![[igreja-das-chamas.png|400]]
+> ![[zz_media/thumbnails/igreja_das_chamas.png|400]]
 
 > [!world]- SINOPSE PÚBLICA
 > Fé organizada presente em Nimalia e em outras regiões de Earthropo. Seus ensinamentos utilizam chamas como símbolos de virtudes, memória, purificação e orientação.

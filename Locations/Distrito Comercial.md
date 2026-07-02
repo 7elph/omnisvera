@@ -29,7 +29,7 @@ tags:
 # Distrito Comercial
 
 > [!NOTE|clean no-i right]+ Distrito Comercial
-> ![[distrito-comercial.png|400]]
+> ![[zz_media/thumbnails/distrito_comercial.png|400]]
 
 > [!world]- SINOPSE PÚBLICA
 > O Distrito Comercial reúne lojas especializadas, serviços raros, contratos caros e negócios moralmente perigosos. É onde o comércio legal e o submundo podem se tocar.

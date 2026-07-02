@@ -45,7 +45,7 @@ tags:
 # MIRA VALEN
 
 > [!NOTE|clean no-i right]+ Mira Valen
-> ![[mira.png|400]]
+> ![[zz_media/thumbnails/mira.png|400]]
 
 > [!NOTE]- Template aplicado
 > Esta nota segue o formato **NPC Importante**. Informações confidenciais devem ficar no [[CAMPANHA/ESTADO_DA_CAMPANHA|Estado da Campanha]].

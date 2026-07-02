@@ -32,7 +32,7 @@ tags:
 # Vampiro
 
 > [!NOTE|clean no-i right]+ Referência
-> ![[sangue.png|400]]
+> ![[zz_media/thumbnails/sangue.png|400]]
 
 > [!warning] Regra de mesa
 > Esta nota não reproduz texto de livro. Ela existe para registrar como a classe será integrada ao Omnisvera. Para progressão, limitações e regras-base, consultar o material original usado pelo mestre.

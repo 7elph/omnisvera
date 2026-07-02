@@ -34,7 +34,7 @@ tags:
 # Manto Primordial do Ancião
 
 > [!NOTE|clean no-i right]+ Retrato
-> ![[manto-primordial.png|400]]
+> ![[zz_media/thumbnails/manto_primordial.png|400]]
 
 > [!warning] Nota sensível
 > Esta nota cita o [[Ancião Primordial]] e deve permanecer como informação de mestre até o arco de [[Raziel]] revelar mais detalhes.

@@ -36,7 +36,7 @@ tags:
 # Antropo
 
 > [!NOTE|clean no-i right]+ Retrato
-> ![[antropos.PNG|400]]
+> ![[zz_media/misc/antropos.png|400]]
 
 ## Visão Geral
 

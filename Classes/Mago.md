@@ -30,7 +30,7 @@ tags:
 # Mago
 
 > [!NOTE|clean no-i right]+ Retrato
-> ![[mago.png|400]]
+> ![[zz_media/thumbnails/mago.png|400]]
 
 ## Visão Geral
 

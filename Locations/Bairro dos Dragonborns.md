@@ -30,7 +30,7 @@ tags:
 # Bairro dos Dragonborns
 
 > [!NOTE|clean no-i right]+ Bairro dos Dragonborns
-> ![[bairro-dragonborns.png|400]]
+> ![[zz_media/thumbnails/bairro_dragonborns.png|400]]
 
 > [!world]- SINOPSE PÚBLICA
 > O Bairro dos Dragonborns é a comunidade dragonborn de [[Nimalis]], funcionando como primeiro contato urbano com linhagens dracônicas, códigos de honra e o futuro reino dragonborn do noroeste.

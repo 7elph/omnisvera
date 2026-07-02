@@ -26,7 +26,7 @@ tags:
 # Caminho dos Errantes
 
 > [!NOTE|clean no-i right]+ Caminho dos Errantes
-> ![[caminho-dos-errantes.png|400]]
+> ![[zz_media/thumbnails/caminho_dos_errantes.png|400]]
 
 > [!world]- SINOPSE PÚBLICA
 > Tradição espiritual difundida entre viajantes, mercadores e pessoas que passam longos períodos longe de sua terra natal. A viagem é tratada como transformação, não apenas deslocamento.

@@ -30,7 +30,7 @@ tags:
 # Bairro dos Elfos
 
 > [!NOTE|clean no-i right]+ Bairro dos Elfos
-> ![[bairro-elfos.png|400]]
+> ![[zz_media/thumbnails/bairro_elfos.png|400]]
 
 > [!world]- SINOPSE PÚBLICA
 > O Bairro dos Elfos conecta [[Nimalis]] à [[Floresta de Avenor]], a tradições élficas urbanas e a rumores sobre comunidades que vivem fora do futuro reino élfico ainda não apresentado.

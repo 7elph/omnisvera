@@ -27,7 +27,7 @@ tags:
 # Fortaleza de Gharok
 
 > [!NOTE|clean no-i right]+ Fortaleza de Gharok
-> ![[fortaleza-de-gharok.png|400]]
+> ![[zz_media/thumbnails/fortaleza_de_gharok.png|400]]
 
 > [!world]- SINOPSE PÚBLICA
 > Gharok é uma antiga fortaleza anã ao norte de [[Nimalia]], próxima da região onde futuramente será apresentado o reino dos anões. Seu estado atual ainda está em revisão.

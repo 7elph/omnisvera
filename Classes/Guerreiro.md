@@ -31,7 +31,7 @@ tags:
 # Guerreiro
 
 > [!NOTE|clean no-i right]+ Retrato
-> ![[guerreiro.png|400]]
+> ![[zz_media/thumbnails/guerreiro.png|400]]
 
 ## Visão Geral
 

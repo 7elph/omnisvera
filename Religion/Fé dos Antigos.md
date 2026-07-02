@@ -27,7 +27,7 @@ tags:
 # Fé dos Antigos
 
 > [!NOTE|clean no-i right]+ Fé dos Antigos
-> ![[fe-dos-antigos.png|400]]
+> ![[zz_media/thumbnails/fe_dos_antigos.png|400]]
 
 > [!world]- SINOPSE DO MESTRE
 > Nome provisório para tradições religiosas anteriores ao [[Eclipse de Obsidiana]]. Algumas vertentes podem preservar histórias sobre os [[Criadores]], mas essa ligação ainda não foi confirmada como verdade.

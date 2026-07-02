@@ -40,7 +40,7 @@ tags:
 # RAZIEL — O ESPECTRO DA NÉVOA DE SANGUE
 
 > [!NOTE|clean no-i right]+ Raziel
-> ![[raziel.PNG|400]]
+> ![[zz_media/thumbnails/raziel.png|400]]
 
 > [!NOTE]- Template aplicado
 > Esta nota segue o formato **Personagem Jogador**. Informações confidenciais devem ficar no [[CAMPANHA/ESTADO_DA_CAMPANHA|Estado da Campanha]].

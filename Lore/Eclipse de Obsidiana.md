@@ -24,7 +24,7 @@ tags:
 # Eclipse de Obsidiana
 
 > [!NOTE|clean no-i right]+ Eclipse de Obsidiana
-> ![[eclipse-obsidiana.png|400]]
+> ![[zz_media/thumbnails/eclipse_obsidiana.png|400]]
 
 > [!world]- SINOPSE PÚBLICA
 > O Eclipse de Obsidiana é lembrado como o trauma que dividiu a história recente de Earthropo. Por sete dias e sete noites, o sol teria desaparecido. Quando a luz voltou, o [[Véu Cinzento]] marcava parte do mundo conhecido.

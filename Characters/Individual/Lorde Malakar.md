@@ -38,7 +38,7 @@ tags:
 # Lorde Malakar
 
 > [!NOTE|clean no-i right]+ Lorde Malakar
-> ![[malakar.png|400]]
+> ![[zz_media/characters/malakar.png|400]]
 
 
 > [!WARNING] Estado canônico

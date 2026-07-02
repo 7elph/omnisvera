@@ -33,7 +33,7 @@ tags:
 # Coroa de Nimalia
 
 > [!NOTE|clean no-i right]+ Retrato
-> ![[coroa-de-nimalia.png|400]]
+> ![[zz_media/maps/coroa_de_nimalia.png|400]]
 
 > [!world]- SINOPSE PÚBLICA
 > A Coroa de Nimalia representa a autoridade formal do reino dos antropos: leis, impostos, fronteiras, exército, diplomacia e estabilidade sob o rei soberano [[Augustus Terra Decimus]].

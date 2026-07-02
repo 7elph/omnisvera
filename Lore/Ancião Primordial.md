@@ -29,7 +29,7 @@ tags:
 > Esta nota está em desenvolvimento e depende de confirmação do Sage. Ela contém spoilers fortes da origem de [[Raziel]].
 
 > [!NOTE|clean no-i right]+ Ruínas de Valthor
-> ![[ruinas-de-valthor.png|400]]
+> ![[zz_media/thumbnails/ruinas_de_valthor.png|400]]
 
 > [!world]- SINOPSE DO MESTRE
 > O Ancião Primordial é uma entidade esquecida associada às cavernas abissais sob as [[Ruínas de Valthor]]. Na versão atual da lore de Raziel, foi essa entidade que libertou Raziel das correntes de prata e o alimentou com o [[Sangue Antigo]].

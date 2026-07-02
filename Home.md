@@ -24,16 +24,16 @@ gm_secret: false
 
 > [!cards|5]
 > **EARTHROPO**
-> [![[earthropo.png|sban htiny ctr p+t]]](MAPA%20DE%20EARTHROPO.md)
+> [![[zz_media/maps/earthropo.png|sban htiny ctr p+t]]](MAPA%20DE%20EARTHROPO.md)
 >
 > **NIMALIA**
-> [![[mapa-de-nimalia.png|sban htiny ctr]]](MAPA%20DE%20NIMALIA.md)
+> [![[zz_media/maps/mapa_de_nimalia.png|sban htiny ctr]]](MAPA%20DE%20NIMALIA.md)
 >
 > **NIMALIS**
-> [![[mapa-de-nimalis.png|sban htiny ctr]]](MAPA%20DE%20NIMALIS.md)
+> [![[zz_media/maps/mapa_de_nimalis.png|sban htiny ctr]]](MAPA%20DE%20NIMALIS.md)
 >
 > **CRÔNICAS**
-> [![[banner-earthropo.png|sban htiny ctr]]](EARTHROPO/EARTHROPO.md)
+> [![[zz_media/maps/banner_earthropo.png|sban htiny ctr]]](EARTHROPO/EARTHROPO.md)
 >
 > **CALENDÁRIO**
 > [[Calendar|Calendário de Nimalia]]

@@ -40,7 +40,7 @@ tags:
 # AUGUSTUS TERRA DECIMUS
 
 > [!NOTE|clean no-i right]+ Augustus Terra Decimus
-> ![[dukeofd.png|400]]
+> ![[zz_media/thumbnails/dukeofd.png|400]]
 
 > [!NOTE]- Template aplicado
 > Esta nota segue o formato **NPC Importante**. Informações confidenciais devem ficar no [[CAMPANHA/ESTADO_DA_CAMPANHA|Estado da Campanha]].
@@ -88,7 +88,7 @@ _Pendente de consolidação pelo Sage._
 
 > [!infobox]
 >
-> ![[prop.png|260]]
+> ![[zz_media/characters/prop.png|260]]
 
 **Vices:**  
 

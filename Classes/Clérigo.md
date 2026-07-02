@@ -30,7 +30,7 @@ tags:
 # Clérigo
 
 > [!NOTE|clean no-i right]+ Retrato
-> ![[clerigo.png|400]]
+> ![[zz_media/thumbnails/clerigo.png|400]]
 
 ## Visão Geral
 

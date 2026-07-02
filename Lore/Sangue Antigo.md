@@ -29,7 +29,7 @@ tags:
 > Esta nota está em desenvolvimento e depende de confirmação do Sage. Ela contém spoilers fortes da origem de [[Raziel]].
 
 > [!NOTE|clean no-i right]+ Sangue Antigo
-> ![[sangue.png|400]]
+> ![[zz_media/thumbnails/sangue.png|400]]
 
 > [!world]- SINOPSE DO MESTRE
 > O Sangue Antigo é uma substância misteriosa ligada ao [[Ancião Primordial]] e ao renascimento de [[Raziel]] nas cavernas abissais sob as [[Ruínas de Valthor]]. Ele não substitui a classe [[Vampiro]], mas funciona como uma camada única da campanha.

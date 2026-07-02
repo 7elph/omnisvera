@@ -26,7 +26,7 @@ tags:
 # Remédios Falsos de Maré Baixa
 
 > [!NOTE|clean no-i right]+ Remédios Falsos
-> ![[remedios-falsos.png|400]]
+> ![[zz_media/thumbnails/remedios_falsos.png|400]]
 
 > [!WARNING] Estado canônico
 > Esta nota está em desenvolvimento e depende de confirmação do Sage. Ela contém suspeitas do arco de [[Varkh Nimalis]].

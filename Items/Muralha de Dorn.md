@@ -33,7 +33,7 @@ tags:
 # Muralha de Dorn
 
 > [!NOTE|clean no-i right]+ Muralha de Dorn
-> ![[muralha_dorn.png|300]]
+> ![[zz_media/thumbnails/muralha_dorn.png|300]]
 
 > _"Entre o aço e a lenda, há uma muralha. Entre o guerreiro e o fim, há um escudo."_
 

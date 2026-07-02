@@ -30,7 +30,7 @@ tags:
 # Bairro Nobre
 
 > [!NOTE|clean no-i right]+ Bairro Nobre
-> ![[bairro-nobre.png|400]]
+> ![[zz_media/thumbnails/bairro_nobre.png|400]]
 
 > [!world]- SINOPSE PÚBLICA
 > O Bairro Nobre concentra casas influentes, salões, brasões e interesses da [[Nobreza de Nimalia]]. É onde prestígio, intriga e poder político se encontram.

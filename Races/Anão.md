@@ -34,7 +34,7 @@ tags:
 # Anão
 
 > [!NOTE|clean no-i right]+ Retrato
-> ![[anao.PNG|400]]
+> ![[zz_media/thumbnails/anao.png|400]]
 
 ## Visão Geral
 

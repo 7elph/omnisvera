@@ -38,7 +38,7 @@ tags:
 # Dragão de Colar Dourado
 
 > [!NOTE|clean no-i right]+ Dragão de Colar Dourado
-> ![[dragao-colar-dourado.png|400]]
+> ![[zz_media/characters/dragao_colar_dourado.png|400]]
 
 ## Visão Geral
 

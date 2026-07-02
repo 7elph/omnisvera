@@ -28,7 +28,7 @@ tags:
 # Mar da Neblina
 
 > [!NOTE|clean no-i right]+ Retrato
-> ![[mar-da-neblina.png|400]]
+> ![[zz_media/thumbnails/mar_da_neblina.png|400]]
 
 > [!world]- SINOPSE PÚBLICA
 > O Mar da Neblina é uma região marítima de rotas incertas, névoas persistentes e histórias contraditórias. Rumores vindos dele chegam a portos, guildas e viajantes antes que qualquer mapa consiga confirmar sua verdade.

@@ -50,7 +50,7 @@ tags:
 # GENERAL CASSIAN VALERIUS
 
 > [!NOTE|clean no-i right]+ General Cassian Valerius
-> ![[cassian.png|400]]
+> ![[zz_media/thumbnails/cassian.png|400]]
 
 > [!NOTE]- Template aplicado
 > Esta nota segue o formato **NPC Importante**. Informações confidenciais devem ficar no [[CAMPANHA/ESTADO_DA_CAMPANHA|Estado da Campanha]].

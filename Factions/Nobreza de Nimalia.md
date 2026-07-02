@@ -34,7 +34,7 @@ tags:
 # Nobreza de Nimalia
 
 > [!NOTE|clean no-i right]+ Nobreza de Nimalia
-> ![[coroa-de-nimalia.png|400]]
+> ![[zz_media/maps/coroa_de_nimalia.png|400]]
 
 > [!world]- SINOPSE PÚBLICA
 > A Nobreza de Nimalia reúne casas influentes do reino, especialmente próximas à corte de [[Nimalis]], ao [[Bairro Nobre]], aos impostos, ao exército e aos acordos da [[Coroa de Nimalia]].

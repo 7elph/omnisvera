@@ -32,7 +32,7 @@ tags:
 # Alquimista
 
 > [!NOTE|clean no-i right]+ Retrato
-> ![[alquimista.png|400]]
+> ![[zz_media/thumbnails/alquimista.png|400]]
 
 ## Visão Geral
 

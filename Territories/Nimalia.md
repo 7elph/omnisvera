@@ -51,7 +51,7 @@ tags:
 ## Visão Geral
 
 > [!NOTE|clean no-i right]+ Reino de Nimalia
-> ![[mapa-de-nimalia.png|400]]
+> ![[zz_media/maps/mapa_de_nimalia.png|400]]
 
 Nimalia é o reino dos antropos apresentado até agora em Earthropo. Reúne diferentes povos antropo sob a autoridade de [[Augustus Terra Decimus]] e da [[Coroa de Nimalia]].
 

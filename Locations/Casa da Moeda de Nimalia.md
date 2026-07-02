@@ -31,7 +31,7 @@ tags:
 # Casa da Moeda de Nimalia
 
 > [!NOTE|clean no-i right]+ Exterior
-> ![[casa-da-moeda-exterior.png|400]]
+> ![[zz_media/thumbnails/casa_da_moeda_exterior.png|400]]
 
 > [!world]- SINOPSE PÚBLICA
 > A Casa da Moeda de Nimalia é a instituição responsável pela cunhagem oficial do reino. Ela pode transformar economia, impostos, falsificações e interesses da Coroa em gancho de investigação.
@@ -45,7 +45,7 @@ A Casa da Moeda pode servir como ponto de investigação econômica, falsificaç
 ## Funções Atribuídas
 
 > [!NOTE|clean no-i right]+ Interior
-> ![[casa-da-moeda-interior.png|300]]
+> ![[zz_media/locations/casa_da_moeda_interior.png|300]]
 
 - Padronizar peso e composição das moedas.
 - Aplicar o brasão de Nimalia e o ano de cunhagem.

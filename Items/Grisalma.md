@@ -34,7 +34,7 @@ tags:
 # Grisalma
 
 > [!NOTE|clean no-i right]+ Grisalma
-> ![[grisalma.png|300]]
+> ![[zz_media/thumbnails/grisalma.png|300]]
 
 > _"Não é o machado que faz o guerreiro. É o guerreiro que dá propósito ao machado."_
 

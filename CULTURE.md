@@ -24,7 +24,7 @@ tags:
 # Cultura de Earthropo
 
 > [!NOTE|clean no-i right]+ Cultura de Earthropo
-> ![[culture.png|400]]
+> ![[zz_media/thumbnails/culture.png|400]]
 
 > [!world]- SINOPSE
 > Earthropo é um continente moldado por diversas raças, reinos e tradições. Embora cada território possua costumes próprios, algumas práticas são reconhecidas em muitas regiões: feiras sazonais, histórias de estrada, cultos locais, notícias carregadas por arautos e um respeito ambíguo por aventureiros.

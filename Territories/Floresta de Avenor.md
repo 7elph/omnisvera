@@ -50,7 +50,7 @@ tags:
 ## Visão Geral
 
 > [!NOTE|clean no-i right]+ Floresta de Avenor
-> ![[avenor.png|400]]
+> ![[zz_media/thumbnails/avenor.png|400]]
 
 Uma grande floresta das terras centrais de Earthropo. No mapa de trabalho, ocupa a região florestal próxima à [[Nimalis]], estendendo-se ao longo da fronteira do Reino de [[Nimalia]].
 

@@ -34,7 +34,7 @@ tags:
 # Halfling
 
 > [!NOTE|clean no-i right]+ Retrato
-> ![[halfling.png|400]]
+> ![[zz_media/thumbnails/halfling.png|400]]
 
 ## Visão Geral
 

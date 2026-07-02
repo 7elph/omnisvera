@@ -46,7 +46,7 @@ tags:
 # VARKH NIMALIS — O CORVO DA MARÉ BAIXA
 
 > [!NOTE|clean no-i right]+ Varkh Nimalis
-> ![[varkh.jpeg|400]]
+> ![[zz_media/characters/varkh.jpeg|400]]
 
 > [!NOTE]- Template aplicado
 > Esta nota segue o formato **Personagem Jogador**. Informações confidenciais devem ficar no [[CAMPANHA/ESTADO_DA_CAMPANHA|Estado da Campanha]].

@@ -23,7 +23,7 @@ tags:
 # Calendário de Omnisvera
 
 > [!NOTE|clean no-i right]+ Calendário de Omnisvera
-> ![[banner-earthropo.png|400]]
+> ![[zz_media/maps/banner_earthropo.png|400]]
 
 > [!world]- SINOPSE
 > O calendário organiza o tempo de jogo: viagens, prazos, festivais, presságios, feriados e consequências. Ele está ligado à [[TIMELINE]], mas não precisa revelar toda a história antiga de Omnisvera.

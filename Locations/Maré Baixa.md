@@ -37,7 +37,7 @@ tags:
 # Maré Baixa
 
 > [!NOTE|clean no-i right]+ Maré Baixa
-> ![[mare-baixa.png|400]]
+> ![[zz_media/thumbnails/mare_baixa.png|400]]
 
 > [!world]- SINOPSE PÚBLICA
 > Maré Baixa é a parte pobre e portuária de [[Nimalis]], onde trabalhadores, contrabandistas, informantes, curandeiros clandestinos e gente esquecida pela cidade formal sobrevivem lado a lado.

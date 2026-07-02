@@ -25,7 +25,7 @@ tags:
 # O Fraturamento
 
 > [!NOTE|clean no-i right]+ O Fraturamento
-> ![[o-fraturamento.png|400]]
+> ![[zz_media/thumbnails/o_fraturamento.png|400]]
 
 > [!warning]+ Classificação
 > **Tipo:** hipótese cosmológica / mito de bastidor / possível cataclisma antigo  

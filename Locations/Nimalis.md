@@ -30,7 +30,7 @@ tags:
 # Nimalis
 
 > [!NOTE|clean no-i right]+ Nimalis
-> ![[mapa-de-nimalis.png|400]]
+> ![[zz_media/maps/mapa_de_nimalis.png|400]]
 
 > [!world]- SINOPSE PÚBLICA
 > Nimalis é a capital do [[Nimalia|Reino de Nimalia]]: uma cidade grande, viva e desigual, onde bairros raciais, mercado, nobreza, porto e submundo se cruzam sob a sombra da Coroa.

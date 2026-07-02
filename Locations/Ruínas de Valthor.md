@@ -32,7 +32,7 @@ tags:
 # Ruínas de Valthor
 
 > [!NOTE|clean no-i right]+ Ruínas de Valthor
-> ![[ruinas-de-valthor.png|400]]
+> ![[zz_media/thumbnails/ruinas_de_valthor.png|400]]
 
 > [!world]- SINOPSE PÚBLICA
 > Valthor foi um reino antigo e próspero. Hoje restam ruínas ao sudeste de [[Nimalia]], associadas a histórias esquecidas, cavernas profundas e ecos do passado de Earthropo.

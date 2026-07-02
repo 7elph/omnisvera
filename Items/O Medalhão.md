@@ -34,7 +34,7 @@ tags:
 # O Medalhão
 
 > [!NOTE|clean no-i right]+ O Medalhão
-> ![[med.PNG|300]]
+> ![[zz_media/thumbnails/med.png|300]]
 
 > _"Nem tudo que é verdade deve ser dito. Nem tudo que é oculto é mentira."_
 

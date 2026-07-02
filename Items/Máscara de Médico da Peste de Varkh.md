@@ -36,7 +36,7 @@ tags:
 # Máscara de Médico da Peste de Varkh
 
 > [!NOTE|clean no-i right]+ Retrato
-> ![[mascara-doutor.png|400]]
+> ![[zz_media/items/mascara_doutor.png|400]]
 
 > [!world]- SINOPSE PÚBLICA
 > A máscara de médico da peste de [[Varkh Nimalis]] mistura proteção, intimidação e identidade. Adaptada ao corpo kenku, ela ajuda a compor a figura conhecida nas ruas como o Corvo da Maré Baixa.

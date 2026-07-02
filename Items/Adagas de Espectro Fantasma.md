@@ -35,7 +35,7 @@ tags:
 # Adagas de Espectro Fantasma
 
 > [!NOTE|clean no-i right]+ Retrato
-> ![[adagas-de-espectro-fantasma.png|400]]
+> ![[zz_media/thumbnails/adagas_de_espectro_fantasma.png|400]]
 
 > [!world]- SINOPSE PÚBLICA
 > As Adagas de Espectro Fantasma são lâminas etéreas de [[Raziel]], ligadas ao seu passado como executor do [[Clã Sanguinallis]]. Em movimento, parecem desaparecer parcialmente do mundo.

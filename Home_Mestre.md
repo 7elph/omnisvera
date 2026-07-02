@@ -19,19 +19,19 @@ gm_secret: true
 
 > [!cards|5]
 > **NIMALIA**
-> [![[mapa-de-nimalia.png|sban htiny ctr p+t]]](MAPA%20DE%20NIMALIA.md)
+> [![[zz_media/maps/mapa_de_nimalia.png|sban htiny ctr p+t]]](MAPA%20DE%20NIMALIA.md)
 >
 > **CRÔNICAS**
-> [![[banner-earthropo.png|sban htiny ctr]]](EARTHROPO/EARTHROPO.md)
+> [![[zz_media/maps/banner_earthropo.png|sban htiny ctr]]](EARTHROPO/EARTHROPO.md)
 >
 > **NOTAS**
-> [![[guild.png|sban htiny ctr]]](NOTES.md)
+> [![[zz_media/misc/guild.png|sban htiny ctr]]](NOTES.md)
 >
 > **RUMORES E DESCOBERTAS**
-> [![[guild1.png|sban htiny ctr]]](LATEST_NEWS.md)
+> [![[zz_media/misc/guild1.png|sban htiny ctr]]](LATEST_NEWS.md)
 >
 > **MAPAS DE EARTHROPO**
-> [![[earthropo.png|sban htiny ctr]]](MAPA%20DE%20EARTHROPO.md)
+> [![[zz_media/maps/earthropo.png|sban htiny ctr]]](MAPA%20DE%20EARTHROPO.md)
 
 > [!home]+ NAVEGAÇÃO DO MESTRE
 > Esta Home é a mesa visual do mestre: mapas, índices e acesso rápido. A preparação completa, segredos e decisões de sessão ficam em [[CAMPANHA/ESTADO_DA_CAMPANHA|Estado da Campanha]].

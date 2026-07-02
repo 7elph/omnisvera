@@ -24,7 +24,7 @@ tags:
 # Guardiões do Véu Cinzento
 
 > [!NOTE|clean no-i right]+ Guardiões do Véu Cinzento
-> ![[os-guardioes-do-veu-cinzento.png|400]]
+> ![[zz_media/thumbnails/os_guardioes_do_veu_cinzento.png|400]]
 
 > [!note]
 > Esta é a nota de lore/registro sobre os Guardiões. A ficha operacional da facção fica em [[Factions/Guardiões do Véu Cinzento]].

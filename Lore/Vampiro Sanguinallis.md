@@ -28,7 +28,7 @@ tags:
 > Nota de referência em desenvolvimento. Esta página existe para consolidar links e separar lore vampírica de regra mecânica.
 
 > [!NOTE|clean no-i right]+ Raziel
-> ![[raziel.PNG|400]]
+> ![[zz_media/thumbnails/raziel.png|400]]
 
 > [!world]- SINOPSE DO MESTRE
 > Vampiro Sanguinallis é o termo usado para o tipo de vampiro ligado ao [[Clã Sanguinallis]], linhagem da qual [[Raziel]] fazia parte antes de sua traição.

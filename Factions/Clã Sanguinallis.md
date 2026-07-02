@@ -29,7 +29,7 @@ tags:
 # Clã Sanguinallis
 
 > [!NOTE|clean no-i right]+ Retrato
-> ![[sangue.png|400]]
+> ![[zz_media/thumbnails/sangue.png|400]]
 
 > [!warning] Nota sensível
 > Esta nota contém informações de bastidor ligadas à origem de [[Raziel]]. Para uma versão pública, criar resumo separado sem entregar traições, hierarquia interna ou alvos finais.

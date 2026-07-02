@@ -34,7 +34,7 @@ tags:
 # Elfo
 
 > [!NOTE|clean no-i right]+ Retrato
-> ![[elf.PNG|400]]
+> ![[zz_media/thumbnails/elf.png|400]]
 
 ## Visão Geral
 

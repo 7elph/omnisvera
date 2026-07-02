@@ -29,7 +29,7 @@ tags:
 # Vale Dourado
 
 > [!NOTE|clean no-i right]+ Vale Dourado
-> ![[vale-dourado.png|400]]
+> ![[zz_media/thumbnails/vale_dourado.png|400]]
 
 > [!world]- SINOPSE PÚBLICA
 > Vale Dourado é uma localização menor do interior de [[Nimalia]], melhor tratada como vila remota, vale agrícola ou ponto rural de estrada, não como grande território independente.

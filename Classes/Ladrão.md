@@ -31,7 +31,7 @@ tags:
 # Ladrão
 
 > [!NOTE|clean no-i right]+ Retrato
-> ![[ladrao.png|400]]
+> ![[zz_media/thumbnails/ladrao.png|400]]
 
 ## Visão Geral
 

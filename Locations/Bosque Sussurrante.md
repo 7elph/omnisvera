@@ -33,7 +33,7 @@ tags:
 # Bosque Sussurrante
 
 > [!NOTE|clean no-i right]+ Retrato
-> ![[bosque-sussurrante.png|400]]
+> ![[zz_media/thumbnails/bosque_sussurrante.png|400]]
 
 ## Visão Geral
 

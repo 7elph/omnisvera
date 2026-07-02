@@ -33,7 +33,7 @@ tags:
 # Culto dos Sussurrantes
 
 > [!NOTE|clean no-i right]+ Culto dos Sussurrantes
-> ![[culto-dos-sussurrantes.png|400]]
+> ![[zz_media/thumbnails/culto_dos_sussurrantes.png|400]]
 
 > *"O Véu não é uma barreira. É uma porta."*
 

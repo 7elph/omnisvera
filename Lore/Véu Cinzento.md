@@ -24,7 +24,7 @@ tags:
 # Véu Cinzento
 
 > [!NOTE|clean no-i right]+ Véu Cinzento
-> ![[veu-cinzento.png|400]]
+> ![[zz_media/thumbnails/veu_cinzento.png|400]]
 
 > [!world]- SINOPSE PÚBLICA
 > O Véu Cinzento é uma névoa branca, espessa e antinatural ligada a ruínas, memórias fragmentadas e regiões que não voltaram inteiras depois do [[Eclipse de Obsidiana]].

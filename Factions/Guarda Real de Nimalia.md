@@ -29,7 +29,7 @@ tags:
 # Guarda Real de Nimalia
 
 > [!NOTE|clean no-i right]+ Guarda Real de Nimalia
-> ![[guarda-real-nimalia.png|400]]
+> ![[zz_media/maps/guarda_real_nimalia.png|400]]
 
 > [!world]- SINOPSE PÚBLICA
 > A Guarda Real de Nimalia é o braço militar visível da [[Coroa de Nimalia]], presente em patrulhas, postos, escoltas e respostas oficiais a incidentes do reino.

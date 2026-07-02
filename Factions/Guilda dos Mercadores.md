@@ -34,7 +34,7 @@ tags:
 # Guilda dos Mercadores
 
 > [!NOTE|clean no-i right]+ Retrato
-> ![[guilda-dos-mercadores.png|400]]
+> ![[zz_media/thumbnails/guilda_dos_mercadores.png|400]]
 
 > [!world]- SINOPSE PÚBLICA
 > A Guilda dos Mercadores organiza comércio, contratos, rotas e parte da economia formal de Earthropo. Sua influência atravessa mercados, portos, caravanas e acordos que nem sempre passam pela Coroa.

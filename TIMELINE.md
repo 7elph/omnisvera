@@ -23,7 +23,7 @@ tags:
 # Linha do Tempo de Omnisvera
 
 > [!NOTE|clean no-i right]+ Linha do Tempo
-> ![[banner-earthropo.png|400]]
+> ![[zz_media/maps/banner_earthropo.png|400]]
 
 > [!world]- SINOPSE
 > A linha do tempo registra o cânone ativo da campanha: **Omnisvera** como universo, **Earthropo** como continente principal e **Nimalia** como reino dos antropos. Ela existe para manter eras, eventos antigos e campanha atual alinhados sem transformar toda pista em exposição direta para os jogadores.

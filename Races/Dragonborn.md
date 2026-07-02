@@ -36,7 +36,7 @@ tags:
 # Dragonborn
 
 > [!NOTE|clean no-i right]+ Retrato
-> ![[dragonborn.png|400]]
+> ![[zz_media/misc/dragonborn.png|400]]
 
 ## Visão Geral
 

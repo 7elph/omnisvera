@@ -24,7 +24,7 @@ tags:
 # Religiões de Earthropo
 
 > [!NOTE|clean no-i right]+ Religiões de Earthropo
-> ![[fe-dos-antigos.png|400]]
+> ![[zz_media/thumbnails/fe_dos_antigos.png|400]]
 
 > [!world]- SINOPSE
 > A fé em Earthropo aparece como templo, tradição oral, rito doméstico, culto escondido, memória antiga e disputa política. Nem toda crença é uma igreja organizada; nem toda igreja entende a verdade sobre aquilo que venera.

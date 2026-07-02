@@ -38,7 +38,7 @@ tags:
 # Vandor, o Senhor das Bestas
 
 > [!NOTE|clean no-i right]+ Vandor, o Senhor das Bestas
-> ![[senhor-das-bestas.png|400]]
+> ![[zz_media/characters/senhor_das_bestas.png|400]]
 
 > [!WARNING] Estado canônico
 > Esta nota está em desenvolvimento e depende de confirmação do Sage.

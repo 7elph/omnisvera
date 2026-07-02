@@ -31,7 +31,7 @@ tags:
 # Campos de Earthropo
 
 > [!NOTE|clean no-i right]+ Retrato
-> ![[campos-de-earthropo.png|400]]
+> ![[zz_media/maps/campos_de_earthropo.png|400]]
 
 > [!warning]+ Nota de Mestre
 > Esta região ainda existe principalmente para preservar e organizar rascunhos ligados à história de [[Raziel]]. Não apresentar como região pública definida antes da consolidação de Valthor, Gharok e Sanguinallis.

@@ -38,7 +38,7 @@ tags:
 # Leth'valora
 
 > [!NOTE|clean no-i right]+ Leth'valora
-> ![[vila-de-leth'valora.png|400]]
+> ![[zz_media/thumbnails/vila_de_leth_valora.png|400]]
 
 > [!world]- SINOPSE PÚBLICA
 > Leth'valora foi uma pequena vila élfica no interior da [[Floresta de Avenor]]. Ela foi destruída pelo [[Dragão de Colar Dourado]] e permanece como uma das feridas centrais da história de [[Vezemir]].

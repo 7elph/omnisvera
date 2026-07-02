@@ -43,7 +43,7 @@ tags:
 # Mestre Odran Veyl
 
 > [!NOTE|clean no-i right]+ Mestre Odran Veyl
-> ![[mestre-odran.jpeg|400]]
+> ![[zz_media/characters/mestre_odran.jpeg|400]]
 
 > [!WARNING] Estado canônico
 > Esta nota está em desenvolvimento e depende de confirmação do Sage.

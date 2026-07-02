@@ -33,7 +33,7 @@ tags:
 # Sentinelas de Leth'valora
 
 > [!NOTE|clean no-i right]+ Retrato
-> ![[sentinelas-de-leth'valora.png|400]]
+> ![[zz_media/thumbnails/sentinelas_de_leth_valora.png|400]]
 
 > [!world]- SINOPSE PÚBLICA
 > Os Sentinelas de Leth'valora eram a guarda local da vila, responsáveis por trilhas, acessos e proteção comunitária. Foram destruídos junto com a vila no ataque do [[Dragão de Colar Dourado]].
