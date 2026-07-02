@@ -1,6 +1,6 @@
 # Auditoria Global de Padronização do Vault
 
-Gerado em: 2026-07-02 08:08
+Gerado em: 2026-07-02 09:14
 
 Fonte de padrão: [[Workflow/OMNISVERA_VAULT_STANDARD|OMNISVERA_VAULT_STANDARD]]
 
@@ -12,28 +12,28 @@ Fonte de padrão: [[Workflow/OMNISVERA_VAULT_STANDARD|OMNISVERA_VAULT_STANDARD]]
 
 | métrica | valor |
 |---|---:|
-| notas Markdown auditadas | 355 |
+| notas Markdown auditadas | 357 |
 | notas com frontmatter | 187 |
-| notas sem frontmatter | 168 |
+| notas sem frontmatter | 170 |
 | YAML/frontmatter parseável | 187 |
 | YAML/frontmatter com problema | 0 |
 | campos YAML distintos | 105 |
 | tags distintas | 216 |
 | tipos detectados | 18 |
 | subtipos detectados | 17 |
-| referências de mídia distintas | 160 |
-| mídias em `zz_media` | 117 |
+| referências de mídia distintas | 173 |
+| mídias em `zz_media` | 120 |
 | imagens/mídias quebradas | 32 |
 | imagens/mídias quebradas fora de histórico/auditoria | 0 |
-| possíveis problemas de case-sensitive | 45 |
-| possíveis problemas de case-sensitive fora de histórico/auditoria | 0 |
-| mídias possivelmente órfãs | 17 |
+| possíveis problemas de case-sensitive | 47 |
+| possíveis problemas de case-sensitive fora de histórico/auditoria | 1 |
+| mídias possivelmente órfãs | 7 |
 
 Modo de validação YAML:
 
 | item | ocorrências |
 |---|---:|
-| `simple` | 355 |
+| `simple` | 357 |
 
 
 ## Campos YAML encontrados
@@ -492,7 +492,7 @@ Modo de validação YAML:
 - `Workflow\AI_CHANGELOG.md`
 - `Workflow\AI_CONTEXT\00_README_FOR_AI.md`
 - `Workflow\AI_CONTEXT\01_CANON_SUMMARY.md`
-- ... mais 101 itens.
+- ... mais 103 itens.
 
 
 ## Notas sem frontmatter
@@ -620,7 +620,7 @@ Modo de validação YAML:
 - `Workflow\Content_Development\Briefs\Guarda_Real_de_Nimalia.md`
 - `Workflow\Content_Development\Briefs\Guilda_dos_Mercadores.md`
 - `Workflow\Content_Development\Briefs\Mare_Baixa.md`
-- ... mais 48 itens.
+- ... mais 50 itens.
 
 
 ## Notas sem `subtype`
@@ -727,7 +727,7 @@ Modo de validação YAML:
 - `Templates\RPG\B-Side.md`
 - `Templates\RPG\Classe.md`
 - `Templates\RPG\Cultura.md`
-- ... mais 229 itens.
+- ... mais 231 itens.
 
 
 ## Notas faltando campos Omnisvera mínimos
@@ -964,6 +964,7 @@ Critério: tag com espaço, maiúscula inesperada ou formato arriscado. Tags `Ca
 
 ## Possíveis problemas de case-sensitive em mídia
 
+- `Characters\Individual\Vezemir.md — `zz_media/thumbnails/vezemir.png` → provável `zz_media\characters\vezemir.png``
 - `Workflow\Legacy\Old Dragon anterior\Legacy - Old Dragon anterior - Mago.md — `zz_media/thumbnails/mago.png` → provável `zz_media\class\mago.png``
 - `Workflow\Reports\latest_vault_audit.md — `elfs.png` → provável `zz_media\races\elfs.png``
 - `Workflow\Reports\latest_vault_audit.md — `med.png` → provável `zz_media\items\med.png``
@@ -989,6 +990,7 @@ Critério: tag com espaço, maiúscula inesperada ou formato arriscado. Tags `Ca
 - `Workflow\Reports\latest_vault_audit.md — `zz_media/thumbnails/o_fraturamento.png` → provável `zz_media\covers\o_fraturamento.png``
 - `Workflow\Reports\latest_vault_audit.md — `zz_media/thumbnails/raziel.png` → provável `zz_media\characters\raziel.png``
 - `Workflow\Reports\latest_vault_audit.md — `zz_media/thumbnails/sentinelas_de_leth_valora.png` → provável `zz_media\faction\sentinelas_de_leth_valora.png``
+- `Workflow\Reports\latest_vault_audit.md — `zz_media/thumbnails/vezemir.png` → provável `zz_media\characters\vezemir.png``
 - `Workflow\_archive\obsolete_review\Home_Jogadores_ARCHIVED.md — `zz_media/thumbnails/avenor.png` → provável `zz_media\territories\avenor.png``
 - `Workflow\_audit\Leaflet_Map_Diagnostics\backups\MAPA DE EARTHROPO.before-map-reset.md — `zz_media/earthropo.png` → provável `zz_media\maps\earthropo.png``
 - `Workflow\_audit\Lore_Structure\LORE_PILLARS_REVIEW.md — `sangue.png` → provável `zz_media\items\sangue.png``
@@ -1013,7 +1015,7 @@ Critério: tag com espaço, maiúscula inesperada ou formato arriscado. Tags `Ca
 
 ## Possíveis problemas de case-sensitive fora de histórico/auditoria
 
-- Nenhum.
+- `Characters\Individual\Vezemir.md — `zz_media/thumbnails/vezemir.png` → provável `zz_media\characters\vezemir.png``
 
 
 ## Mídias possivelmente órfãs em `zz_media`
@@ -1021,22 +1023,12 @@ Critério: tag com espaço, maiúscula inesperada ou formato arriscado. Tags `Ca
 > Não apagar automaticamente. Uma mídia pode ser usada por CSS, plugin, mapa, canvas, nota futura ou referência manual ainda não capturada.
 
 - `zz_media/characters/anciao.png`
-- `zz_media/locations/estrada_antiga.png`
-- `zz_media/locations/forte_abandonado.png`
-- `zz_media/locations/loja_odran.png`
 - `zz_media/locations/porto_real.png`
 - `zz_media/misc/sound.png`
 - `zz_media/smoke.mp3`
-- `zz_media/thumbnails/th_alquimista.png`
 - `zz_media/thumbnails/th_anciao.png`
-- `zz_media/thumbnails/th_antropos.png`
-- `zz_media/thumbnails/th_clerigo.png`
-- `zz_media/thumbnails/th_dragonborn.png`
-- `zz_media/thumbnails/th_guerreiro.png`
-- `zz_media/thumbnails/th_kenku.png`
-- `zz_media/thumbnails/th_ladrao.png`
-- `zz_media/thumbnails/th_mago.png`
-- `zz_media/thumbnails/th_unidade.png`
+- `zz_media/thumbnails/th_malakar.PNG`
+- `zz_media/thumbnails/th_senhor_das_bestas.PNG`
 
 
 ## Reclassificações sugeridas
