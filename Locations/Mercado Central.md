@@ -13,8 +13,8 @@ territory: "[[Nimalia]]"
 region: Capital do Reino de Nimalia
 district: Mercado Central
 danger_level: Baixo
-thumbnail: zz_media/mapa-de-nimalis.png
-cover: zz_media/mapa-de-nimalis.png
+thumbnail: zz_media/area-comercial-2.png
+cover: zz_media/area-comercial-1.png
 info: Área comercial comum de Nimalis.
 description: Mercado público de produtos comuns, feirantes, rumores e circulação diária.
 chapters: []
@@ -29,7 +29,7 @@ tags:
 # Mercado Central
 
 > [!NOTE|clean no-i right]+ Mercado Central
-> ![[mapa-de-nimalis.png|400]]
+> ![[area-comercial-3.png|400]]
 
 > [!world]- SINOPSE PÚBLICA
 > O Mercado Central é o coração comercial cotidiano de [[Nimalis]], cheio de barracas, moedas, rumores, feirantes, viajantes e produtos comuns.

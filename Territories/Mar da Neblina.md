@@ -8,8 +8,8 @@ campaign_status: Ativo
 visibility: Jogadores
 spoiler_level: light
 gm_secret: false
-thumbnail:
-cover:
+thumbnail: zz_media/mar-da-neblina.png
+cover: zz_media/mar-da-neblina.png
 location:
 territory: "[[EARTHROPO/EARTHROPO|Earthropo]]"
 region:
@@ -27,8 +27,8 @@ tags:
 
 # Mar da Neblina
 
-> [!NOTE]
-> Nota-base criada para centralizar menções ao Mar da Neblina. A lore ainda está em revisão e ainda não possui imagem específica em `zz_media`.
+> [!NOTE|clean no-i right]+ Retrato
+> ![[mar-da-neblina.png|400]]
 
 > [!world]- SINOPSE PÚBLICA
 > O Mar da Neblina é uma região marítima de rotas incertas, névoas persistentes e histórias contraditórias. Rumores vindos dele chegam a portos, guildas e viajantes antes que qualquer mapa consiga confirmar sua verdade.

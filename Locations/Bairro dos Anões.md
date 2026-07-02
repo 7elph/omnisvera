@@ -13,8 +13,8 @@ territory: "[[Nimalia]]"
 region: Capital do Reino de Nimalia
 district: Bairro dos Anões
 danger_level: Baixo
-thumbnail: zz_media/mapa-de-nimalis.png
-cover: zz_media/mapa-de-nimalis.png
+thumbnail: zz_media/bairro-anao.png
+cover: zz_media/bairro-anao.png
 info: Bairro onde anões se estabeleceram em Nimalis.
 description: Comunidade anã urbana ligada a comércio, ofícios, metal e rotas do norte.
 chapters: []
@@ -30,7 +30,7 @@ tags:
 # Bairro dos Anões
 
 > [!NOTE|clean no-i right]+ Bairro dos Anões
-> ![[mapa-de-nimalis.png|400]]
+> ![[bairro-anao.png|400]]
 
 > [!world]- SINOPSE PÚBLICA
 > O Bairro dos Anões reúne ofícios, metal, rotas do norte e histórias sobre fortalezas antigas. É uma ponte urbana para temas ligados a [[Fortaleza de Gharok]] e ao futuro reino anão.

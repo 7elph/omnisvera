@@ -11,8 +11,7 @@ created_by: Sage
 campaign_status: Ativo
 tags:
   - indice
-  - raca
-  - race
+  - indice-raca
 ---
 
 # Índice de Raças

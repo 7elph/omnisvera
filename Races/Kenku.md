@@ -34,6 +34,9 @@ tags:
 
 # Kenku
 
+> [!NOTE|clean no-i right]+ Retrato
+> ![[kenku.png|400]]
+
 ## Visão Geral
 
 Kenkus são humanoides de traços corvídeos, ligados a memória sonora, imitação vocal, segredo, rumor e sobrevivência urbana.

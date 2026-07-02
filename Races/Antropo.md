@@ -35,6 +35,9 @@ tags:
 
 # Antropo
 
+> [!NOTE|clean no-i right]+ Retrato
+> ![[antropos.PNG|400]]
+
 ## Visão Geral
 
 Antropos são povos humanoides de traços animais. Em Omnisvera, esse é o termo oficial para substituir “beastfolk”.

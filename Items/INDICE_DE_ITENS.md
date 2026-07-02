@@ -11,7 +11,7 @@ gm_secret: true
 created_by: Sage
 tags:
   - indice
-  - item
+  - indice-item
 ---
 
 # Índice de Itens

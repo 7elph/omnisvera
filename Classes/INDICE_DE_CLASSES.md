@@ -11,8 +11,7 @@ created_by: Sage
 campaign_status: Ativo
 tags:
   - indice
-  - classe
-  - class
+  - indice-classe
 ---
 
 # Índice de Classes

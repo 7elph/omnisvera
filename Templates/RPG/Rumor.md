@@ -49,7 +49,8 @@ Pistas que levam os jogadores a confirmar, negar ou complicar o rumor.
 ```dataview
 TABLE quest_status, location, faction
 FROM "CAMPANHA/Quests"
-WHERE contains(hooks, this.file.link) OR contains(rumors, this.file.link)
+WHERE (contains(hooks, this.file.link) OR contains(rumors, this.file.link))
+AND type != "index"
 SORT file.name ASC
 ```
 

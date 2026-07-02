@@ -118,6 +118,7 @@ Nimalia é o primeiro horizonte das **Crônicas de Earthropo**: um ponto de part
 > ```datacards
 > TABLE cover, region, leader, population FROM "Territories"
 > WHERE NoteStatus != "Placeholder"
+> AND type != "index"
 > AND !contains(file.path, "Workflow/")
 > AND !contains(file.path, "Templates/")
 > SORT name DESC
@@ -133,6 +134,7 @@ Nimalia é o primeiro horizonte das **Crônicas de Earthropo**: um ponto de part
 > ```datacards
 > TABLE cover, territory, info FROM "Locations"
 > WHERE NoteStatus != "Placeholder"
+> AND type != "index"
 > AND !contains(file.path, "Workflow/")
 > AND !contains(file.path, "Templates/")
 > SORT rating ASC
@@ -148,6 +150,7 @@ Nimalia é o primeiro horizonte das **Crônicas de Earthropo**: um ponto de part
 > ```datacards
 > TABLE cover, status FROM "Races"
 > WHERE NoteStatus != "Placeholder"
+> AND type != "index"
 > SORT name ASC
 >
 > // Settings
@@ -160,6 +163,7 @@ Nimalia é o primeiro horizonte das **Crônicas de Earthropo**: um ponto de part
 > [!note]- CLASSES
 > ```datacards
 > TABLE cover, status FROM "Classes" AND #classe
+> WHERE type != "index"
 > SORT name ASC
 >
 > // Settings
@@ -192,6 +196,7 @@ Nimalia é o primeiro horizonte das **Crônicas de Earthropo**: um ponto de part
 > FROM "/"
 > WHERE file.mtime >= date(today) - dur(30 days)
 > AND file.name != this.file.name
+> AND type != "index"
 > AND !contains(file.path, "zz_media")
 > AND !contains(file.path, "Workflow/")
 > AND !contains(file.path, "Templates/")

@@ -135,6 +135,7 @@ A tag visual oficial para territórios é `territorio`.
 TABLE cover, region, leader, population
 FROM "Territories"
 WHERE NoteStatus != "Placeholder"
+AND type != "index"
 SORT file.name ASC
 ```
 

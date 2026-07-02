@@ -22,8 +22,8 @@ hooks:
   - Povos humanos espalhados por Earthropo
   - Presença importante, mas não majoritária em Nimalia
 rumors: []
-thumbnail: zz_media/earthropo.png
-cover: zz_media/earthropo.png
+thumbnail: zz_media/th_humano.png
+cover: zz_media/th_humano.png
 chapters: []
 tags:
   - raca
@@ -32,6 +32,9 @@ tags:
 ---
 
 # Humano
+
+> [!NOTE|clean no-i right]+ Retrato
+> ![[humano.png|400]]
 
 ## Visão Geral
 

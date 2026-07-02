@@ -55,7 +55,7 @@ gm_secret: false
 >
 > // Settings
 > preset: square
-> columns: 1
+> columns: 3
 > imageProperty: cover
 > imageWidth: 80px
 > showImageOnHover: true
@@ -88,7 +88,8 @@ cardSpacing: 4
 ```dataview
 TABLE quest_status, danger_level, location, faction
 FROM "CAMPANHA/Quests"
-WHERE (visibility = "Jogadores" OR visibility = "Público")
+WHERE type != "index"
+AND (visibility = "Jogadores" OR visibility = "Público")
 AND gm_secret != true
 AND spoiler_level != "medium"
 AND spoiler_level != "heavy"
@@ -102,7 +103,8 @@ SORT file.name ASC
 ```dataview
 TABLE status, danger_level, location, faction
 FROM "CAMPANHA/Rumors"
-WHERE (visibility = "Jogadores" OR visibility = "Público")
+WHERE type != "index"
+AND (visibility = "Jogadores" OR visibility = "Público")
 AND gm_secret != true
 AND spoiler_level != "medium"
 AND spoiler_level != "heavy"
@@ -116,7 +118,8 @@ SORT file.name ASC
 ```datacards
 TABLE cover, region, leader, population
 FROM "Territories"
-WHERE (visibility = "Jogadores" OR visibility = "Público")
+WHERE type != "index"
+AND (visibility = "Jogadores" OR visibility = "Público")
 AND gm_secret != true
 AND spoiler_level != "medium"
 AND spoiler_level != "heavy"
@@ -136,7 +139,8 @@ showImageOnHover: true
 ```datacards
 TABLE cover, territory, info
 FROM "Locations"
-WHERE (visibility = "Jogadores" OR visibility = "Público")
+WHERE type != "index"
+AND (visibility = "Jogadores" OR visibility = "Público")
 AND gm_secret != true
 AND spoiler_level != "medium"
 AND spoiler_level != "heavy"
@@ -156,7 +160,8 @@ showImageOnHover: true
 ```datacards
 TABLE thumbnail, status, leader, territory
 FROM "Factions"
-WHERE (visibility = "Jogadores" OR visibility = "Público")
+WHERE type != "index"
+AND (visibility = "Jogadores" OR visibility = "Público")
 AND gm_secret != true
 AND spoiler_level != "medium"
 AND spoiler_level != "heavy"

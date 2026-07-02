@@ -59,7 +59,8 @@ LIMIT 12
 ```dataview
 TABLE quest_status, location, faction
 FROM "CAMPANHA/Quests"
-WHERE quest_status != "Concluída" AND quest_status != "Falhou"
+WHERE type != "index"
+AND quest_status != "Concluída" AND quest_status != "Falhou"
 SORT file.name ASC
 ```
 
@@ -68,6 +69,7 @@ SORT file.name ASC
 ```dataview
 TABLE status, visibility, spoiler_level
 FROM "CAMPANHA/Rumors"
+WHERE type != "index"
 SORT file.name ASC
 ```
 
@@ -76,6 +78,7 @@ SORT file.name ASC
 ```dataview
 TABLE status, location, territory
 FROM "Factions"
+WHERE type != "index"
 SORT file.name ASC
 ```
 
@@ -84,6 +87,7 @@ SORT file.name ASC
 ```dataview
 TABLE territory, status, danger_level
 FROM "Locations" OR "Territories"
+WHERE type != "index"
 SORT file.name ASC
 LIMIT 12
 ```
@@ -93,7 +97,8 @@ LIMIT 12
 ```dataview
 TABLE status, location
 FROM "Items"
-WHERE contains(tags, "item") OR contains(tags, "artefato")
+WHERE type != "index"
+AND (contains(tags, "item") OR contains(tags, "artefato"))
 SORT file.name ASC
 ```
 
@@ -543,7 +548,8 @@ Escolher de três a cinco para aparecerem na primeira sessão.
 ```dataview
 TABLE quest_status, location, faction
 FROM "CAMPANHA/Quests"
-WHERE quest_status != "Concluída" AND quest_status != "Falhou"
+WHERE type != "index"
+AND quest_status != "Concluída" AND quest_status != "Falhou"
 SORT file.name ASC
 ```
 
@@ -552,6 +558,7 @@ SORT file.name ASC
 ```dataview
 TABLE status, visibility, spoiler_level
 FROM "CAMPANHA/Rumors"
+WHERE type != "index"
 SORT file.name ASC
 ```
 

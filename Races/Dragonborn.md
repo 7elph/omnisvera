@@ -35,6 +35,9 @@ tags:
 
 # Dragonborn
 
+> [!NOTE|clean no-i right]+ Retrato
+> ![[dragonborn.png|400]]
+
 ## Visão Geral
 
 Dragonborns são uma raça de herança dracônica, presença imponente e forte leitura simbólica em sociedades que ainda lembram antigas guerras, dragões e eras mágicas.

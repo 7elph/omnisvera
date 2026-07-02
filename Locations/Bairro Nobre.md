@@ -13,8 +13,8 @@ territory: "[[Nimalia]]"
 region: Capital do Reino de Nimalia
 district: Bairro Nobre
 danger_level: Baixo
-thumbnail: zz_media/mapa-de-nimalis.png
-cover: zz_media/mapa-de-nimalis.png
+thumbnail: zz_media/bairro-nobre.png
+cover: zz_media/bairro-nobre.png
 info: Área nobre de Nimalis.
 description: Região de casas influentes, salões, intrigas e interesses ligados à Nobreza de Nimalia.
 chapters: []
@@ -30,7 +30,7 @@ tags:
 # Bairro Nobre
 
 > [!NOTE|clean no-i right]+ Bairro Nobre
-> ![[mapa-de-nimalis.png|400]]
+> ![[bairro-nobre.png|400]]
 
 > [!world]- SINOPSE PÚBLICA
 > O Bairro Nobre concentra casas influentes, salões, brasões e interesses da [[Nobreza de Nimalia]]. É onde prestígio, intriga e poder político se encontram.

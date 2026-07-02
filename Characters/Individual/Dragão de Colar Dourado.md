@@ -38,7 +38,7 @@ tags:
 # Dragão de Colar Dourado
 
 > [!NOTE|clean no-i right]+ Dragão de Colar Dourado
-> Imagem pendente.
+> ![[dragao-colar-dourado.png|400]]
 
 ## Visão Geral
 

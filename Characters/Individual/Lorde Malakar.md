@@ -38,7 +38,8 @@ tags:
 # Lorde Malakar
 
 > [!NOTE|clean no-i right]+ Lorde Malakar
-> Imagem pendente.
+> ![[malakar.png|400]]
+
 
 > [!WARNING] Estado canônico
 > Esta nota está em desenvolvimento e depende de confirmação do Sage.

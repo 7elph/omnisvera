@@ -92,6 +92,7 @@ Explique o papel deste capítulo na campanha.
 TABLE quest_status, location, faction
 FROM "CAMPANHA/Quests"
 WHERE quest_status != "Concluída" AND quest_status != "Falhou"
+AND type != "index"
 AND (visibility = "Jogadores" OR visibility = "Público")
 AND gm_secret != true
 SORT file.name ASC
@@ -103,6 +104,7 @@ SORT file.name ASC
 TABLE status, visibility, spoiler_level
 FROM "CAMPANHA/Rumors"
 WHERE (visibility = "Jogadores" OR visibility = "Público")
+AND type != "index"
 AND gm_secret != true
 SORT file.name ASC
 ```

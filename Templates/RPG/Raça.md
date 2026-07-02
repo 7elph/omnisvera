@@ -62,7 +62,8 @@ SORT file.name ASC
 ```dataview
 TABLE quest_status, danger_level
 FROM "CAMPANHA/Quests"
-WHERE contains(rumors, this.file.link) OR contains(hooks, this.file.link)
+WHERE (contains(rumors, this.file.link) OR contains(hooks, this.file.link))
+AND type != "index"
 SORT file.mtime DESC
 ```
 

@@ -11,8 +11,7 @@ gm_secret: false
 created_by: Sage
 tags:
   - indice
-  - location
-  - local
+  - indice-local
 ---
 
 # Índice de Locais

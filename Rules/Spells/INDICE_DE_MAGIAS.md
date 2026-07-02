@@ -11,7 +11,7 @@ created_by: Sage
 campaign_status: Em revisao
 tags:
   - indice
-  - magia
+  - indice-magia
 ---
 
 # Índice de Magias

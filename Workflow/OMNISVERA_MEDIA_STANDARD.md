@@ -82,6 +82,7 @@ Dashboards de capa podem usar:
 ```dataview
 TABLE cover, status, description
 FROM "Territories"
+WHERE type != "index"
 SORT file.name ASC
 ```
 

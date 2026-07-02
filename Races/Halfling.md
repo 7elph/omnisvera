@@ -22,8 +22,8 @@ hooks:
   - Raça bônus futura
   - Comunidades pequenas e viajantes curiosos
 rumors: []
-thumbnail: zz_media/earthropo.png
-cover: zz_media/earthropo.png
+thumbnail: zz_media/th_halfling.png
+cover: zz_media/th_halfling.png
 chapters: []
 tags:
   - raca
@@ -32,6 +32,9 @@ tags:
 ---
 
 # Halfling
+
+> [!NOTE|clean no-i right]+ Retrato
+> ![[halfling.png|400]]
 
 ## Visão Geral
 

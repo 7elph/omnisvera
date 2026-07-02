@@ -38,7 +38,7 @@ tags:
 # Kaelen, o Flagelo
 
 > [!NOTE|clean no-i right]+ Kaelen, o Flagelo
-> Imagem pendente.
+> ![[kaelen.png|400]]
 
 > [!WARNING] Estado canônico
 > Esta nota está em desenvolvimento e depende de confirmação do Sage.

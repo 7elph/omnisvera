@@ -46,7 +46,8 @@ O que parece ser o objetivo da quest do ponto de vista dos jogadores.
 ```dataview
 TABLE status, visibility, location
 FROM "CAMPANHA/Rumors"
-WHERE contains(hooks, this.file.link) OR contains(rumors, this.file.link)
+WHERE (contains(hooks, this.file.link) OR contains(rumors, this.file.link))
+AND type != "index"
 SORT file.name ASC
 ```
 

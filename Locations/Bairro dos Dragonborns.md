@@ -13,8 +13,8 @@ territory: "[[Nimalia]]"
 region: Capital do Reino de Nimalia
 district: Bairro dos Dragonborns
 danger_level: Baixo
-thumbnail: zz_media/mapa-de-nimalis.png
-cover: zz_media/mapa-de-nimalis.png
+thumbnail: zz_media/bairro-dragonborns.png
+cover: zz_media/bairro-dragonborns.png
 info: Bairro onde dragonborns se estabeleceram em Nimalis.
 description: Comunidade dragonborn urbana, ponte futura com o reino dragonborn do noroeste.
 chapters: []
@@ -30,7 +30,7 @@ tags:
 # Bairro dos Dragonborns
 
 > [!NOTE|clean no-i right]+ Bairro dos Dragonborns
-> ![[mapa-de-nimalis.png|400]]
+> ![[bairro-dragonborns.png|400]]
 
 > [!world]- SINOPSE PÚBLICA
 > O Bairro dos Dragonborns é a comunidade dragonborn de [[Nimalis]], funcionando como primeiro contato urbano com linhagens dracônicas, códigos de honra e o futuro reino dragonborn do noroeste.

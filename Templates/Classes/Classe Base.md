@@ -127,6 +127,7 @@ SORT file.name ASC
 TABLE rules_status, campaign_status, visibility, danger_level
 FROM "Classes"
 WHERE parent_class = this.file.link
+AND type != "index"
 SORT file.name ASC
 ```
 

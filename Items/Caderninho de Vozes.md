@@ -34,11 +34,8 @@ tags:
 
 # Caderninho de Vozes
 
-> [!WARNING] Estado canônico
-> Esta nota está em desenvolvimento e depende de confirmação do Sage.
-
-> [!NOTE]
-> Este item ainda não possui imagem específica em `zz_media`.
+> [!NOTE|clean no-i right]+ Retrato
+> ![[caderninho.png|400]]
 
 > [!world]- SINOPSE PÚBLICA
 > O Caderninho de Vozes é a coleção pessoal de [[Varkh Nimalis]]: frases, timbres, sons e registros que ele considera úteis, interessantes ou necessários para se comunicar em um mundo onde sua voz nunca é inteiramente sua.

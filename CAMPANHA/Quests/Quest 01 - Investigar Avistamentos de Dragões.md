@@ -67,7 +67,8 @@ Descobrir se há de fato dragões ou criaturas dracônicas envolvidas nos ataque
 ```dataview
 TABLE status, visibility, location
 FROM "CAMPANHA/Rumors"
-WHERE contains(hooks, this.file.link) OR contains(rumors, this.file.link)
+WHERE (contains(hooks, this.file.link) OR contains(rumors, this.file.link))
+AND type != "index"
 SORT file.name ASC
 ```
 

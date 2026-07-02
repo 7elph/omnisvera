@@ -11,8 +11,7 @@ gm_secret: false
 created_by: Sage
 tags:
   - indice
-  - territorio
-  - territory
+  - indice-territorio
 ---
 
 # Índice de Territórios

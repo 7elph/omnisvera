@@ -45,6 +45,7 @@ link(file.path, file.name) AS "Nota",
 file.mtime AS "Modificada"
 FROM "/"
 WHERE file.name != this.file.name
+AND type != "index"
 AND !contains(file.path, "zz_media")
 AND !contains(file.path, "Workflow/")
 AND !contains(file.path, "Templates/")

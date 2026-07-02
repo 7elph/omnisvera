@@ -13,8 +13,8 @@ territory: "[[Nimalia]]"
 region: Capital do Reino de Nimalia
 district: Distrito Comercial
 danger_level: Médio
-thumbnail: zz_media/mapa-de-nimalis.png
-cover: zz_media/mapa-de-nimalis.png
+thumbnail: zz_media/distrito-comercial.png
+cover: zz_media/distrito-comercial.png
 info: Distrito de lojas especializadas em Nimalis.
 description: Área de comércio especializado, serviços raros e negócios moralmente perigosos.
 chapters: []
@@ -29,7 +29,7 @@ tags:
 # Distrito Comercial
 
 > [!NOTE|clean no-i right]+ Distrito Comercial
-> ![[mapa-de-nimalis.png|400]]
+> ![[distrito-comercial.png|400]]
 
 > [!world]- SINOPSE PÚBLICA
 > O Distrito Comercial reúne lojas especializadas, serviços raros, contratos caros e negócios moralmente perigosos. É onde o comércio legal e o submundo podem se tocar.
