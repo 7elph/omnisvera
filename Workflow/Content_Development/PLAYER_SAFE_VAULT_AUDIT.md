@@ -1,6 +1,6 @@
 # Auditoria de Expans?o Player-Safe ? Omnisvera
 
-Gerado em: 2026-07-02 09:29:10
+Gerado em: 2026-07-02 09:31:25
 
 Fonte de regra: [[PLAYER_SAFE_ENTITY_MODEL]]
 
@@ -14,27 +14,14 @@ Fonte de regra: [[PLAYER_SAFE_ENTITY_MODEL]]
 - Templates atualizados para encaminhar bastidores ao Estado da Campanha.
 - Lote 2 conclu?do: itens ligados a Vezemir, Raziel e Varkh foram limpos de marcadores expl?citos de segredo.
 - Lote 3 conclu?do: lore, religi?o, ra?as e classes foram limpas de marcadores expl?citos de segredo.
+- Lote 4 conclu?do: personagens restantes foram limpos de marcadores expl?citos de segredo.
 
 ## Marcadores restantes no vault operacional
 
-Total de notas com marcador de bastidor/segredo ainda no corpo: **36**
+Total de notas com marcador de bastidor/segredo ainda no corpo: **22**
 
 | nota | ocorr?ncias | a??o recomendada |
 |---|---|---|
-| `Characters/Individual/Augustus Terra Decimus.md` | 133: - O que apenas o mestre sabe: | Mover bastidor para frente em [[ESTADO_DA_CAMPANHA]] e deixar nota principal player-safe. |
-| `Characters/Individual/Dragão de Colar Dourado.md` | 126: - O que apenas o mestre sabe: | Mover bastidor para frente em [[ESTADO_DA_CAMPANHA]] e deixar nota principal player-safe. |
-| `Characters/Individual/Elarion Vaelthor.md` | 189: - O que apenas o mestre sabe: | Mover bastidor para frente em [[ESTADO_DA_CAMPANHA]] e deixar nota principal player-safe. |
-| `Characters/Individual/General Cassian Valerius.md` | 174: - O que apenas o mestre sabe: | Mover bastidor para frente em [[ESTADO_DA_CAMPANHA]] e deixar nota principal player-safe. |
-| `Characters/Individual/Kaelen, o Flagelo.md` | 161: - O que apenas o mestre sabe: | Mover bastidor para frente em [[ESTADO_DA_CAMPANHA]] e deixar nota principal player-safe. |
-| `Characters/Individual/Lorde Malakar.md` | 162: - O que apenas o mestre sabe: | Mover bastidor para frente em [[ESTADO_DA_CAMPANHA]] e deixar nota principal player-safe. |
-| `Characters/Individual/Mestre Odran Veyl.md` | 118: - O que apenas o mestre sabe: | Mover bastidor para frente em [[ESTADO_DA_CAMPANHA]] e deixar nota principal player-safe. |
-| `Characters/Individual/Mira Valen.md` | 149: - O que apenas o mestre sabe: | Mover bastidor para frente em [[ESTADO_DA_CAMPANHA]] e deixar nota principal player-safe. |
-| `Characters/Individual/Padre Oric.md` | 149: - O que apenas o mestre sabe: | Mover bastidor para frente em [[ESTADO_DA_CAMPANHA]] e deixar nota principal player-safe. |
-| `Characters/Individual/Raziel.md` | 262: - O que manter em aberto: bastidores e segredos ficam no [[CAMPANHA/ESTADO_DA_CAMPANHA\|Estado da Campanha]]. | Mover bastidor para frente em [[ESTADO_DA_CAMPANHA]] e deixar nota principal player-safe. |
-| `Characters/Individual/Unidade DORN-7.md` | 117: - O que apenas o mestre sabe: ela é parte de um sistema maior. | Mover bastidor para frente em [[ESTADO_DA_CAMPANHA]] e deixar nota principal player-safe. |
-| `Characters/Individual/Vandor, o Senhor das Bestas.md` | 163: - O que apenas o mestre sabe: | Mover bastidor para frente em [[ESTADO_DA_CAMPANHA]] e deixar nota principal player-safe. |
-| `Characters/Individual/Varkh Nimalis.md` | 282: - O que manter em aberto: bastidores e segredos ficam no [[CAMPANHA/ESTADO_DA_CAMPANHA\|Estado da Campanha]]. | Mover bastidor para frente em [[ESTADO_DA_CAMPANHA]] e deixar nota principal player-safe. |
-| `Characters/Individual/Vezemir.md` | 331: - O que apenas o mestre sabe: | Mover bastidor para frente em [[ESTADO_DA_CAMPANHA]] e deixar nota principal player-safe. |
 | `Factions/Clã Sanguinallis.md` | 70: ## Segredos do Mestre<br>90: - O que apenas o mestre sabe: detalhes completos da estrutura, sobrevivência atual e relação com o Sangue Antigo. | Mover bastidor para frente em [[ESTADO_DA_CAMPANHA]] e deixar nota principal player-safe. |
 | `Factions/Rede de Falsificadores de Maré Baixa.md` | 68: ## Segredos do Mestre<br>78: - O que apenas o mestre sabe: identidade, escala e motivação real da rede. | Mover bastidor para frente em [[ESTADO_DA_CAMPANHA]] e deixar nota principal player-safe. |
 | `Locations/Antiga Estrada Esquecida.md` | 73: - O que apenas o mestre sabe: possíveis pistas sobre a origem de Vezemir e conexões antigas. | Mover bastidor para frente em [[ESTADO_DA_CAMPANHA]] e deixar nota principal player-safe. |
@@ -58,21 +45,7 @@ Total de notas com marcador de bastidor/segredo ainda no corpo: **36**
 | `Territories/Campos de Earthropo.md` | 64: - O que apenas o mestre sabe: a região pode amarrar Valthor, Gharok e Sanguinallis. | Mover bastidor para frente em [[ESTADO_DA_CAMPANHA]] e deixar nota principal player-safe. |
 | `Territories/Mar da Neblina.md` | 68: ## Segredos do Mestre<br>94: - O que apenas o mestre sabe: ainda em definição. | Mover bastidor para frente em [[ESTADO_DA_CAMPANHA]] e deixar nota principal player-safe. |
 
-## Pr?ximos lotes recomendados
-
-### Lote 4 ? Personagens restantes
-- [[Vezemir]]
-- [[Mestre Odran Veyl]]
-- [[Mira Valen]]
-- [[Padre Oric]]
-- [[Elarion Vaelthor]]
-- [[Augustus Terra Decimus]]
-- [[Kaelen, o Flagelo]]
-- [[Lorde Malakar]]
-- [[Vandor, o Senhor das Bestas]]
-- [[Unidade DORN-7]]
-- [[Drag?o de Colar Dourado]]
-- [[General Cassian Valerius]]
+## Pr?ximo lote recomendado
 
 ### Lote 5 ? Locais, territ?rios e fac??es restantes
 - [[Fortaleza de Gharok]]

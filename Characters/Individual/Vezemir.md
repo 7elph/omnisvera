@@ -88,10 +88,6 @@ SORT file.name ASC
 
 - Ver a Visão Geral, História e Situação Atual desta nota.
 
-## O que só o mestre sabe
-
-- Informações confidenciais ficam centralizadas em [[CAMPANHA/ESTADO_DA_CAMPANHA|Estado da Campanha]].
-
 ## História
 
 > <h4>"A honra não se herda. Se conquista."</h5>
@@ -328,7 +324,7 @@ _Pendente de consolidação pelo Sage._
 
 - Como apresentar:
 - O que os jogadores sabem:
-- O que apenas o mestre sabe:
+- O que manter em aberto no [[ESTADO_DA_CAMPANHA]]: detalhes restritos e decis?es pendentes.
 - Como entra em cena:
 - Ganchos:
 - Consequências possíveis:

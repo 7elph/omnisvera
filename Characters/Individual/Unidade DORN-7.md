@@ -114,7 +114,7 @@ Primeira evidência concreta de que existem sistemas antigos ainda ativos sob Ea
 
 - Como apresentar: primeiro como estátua ou máquina morta, depois como presença antiga que tenta entender o mundo.
 - O que os jogadores sabem: algo antigo despertou sob a estrada.
-- O que apenas o mestre sabe: ela é parte de um sistema maior.
+- O que manter em aberto no [[ESTADO_DA_CAMPANHA]]: detalhes restritos e decis?es pendentes.
 - Como entra em cena: após o acidente da caravana e a ativação da passagem subterrânea.
 - Função em mesa: ser o primeiro sinal concreto de que existem estruturas antigas ainda funcionando sob Earthropo.
 - Função em mesa: dar pistas sem explicar completamente os [[Criadores]], o [[Véu Cinzento]] ou os [[Guardiões do Véu Cinzento]].

@@ -527,6 +527,103 @@ Frente de bastidores culturais, linhagens e limites mecânicos. Notas principais
 - Quais linhagens têm segredo real.
 - Quais limites mecânicos entram em Old Dragon sem quebrar nível baixo.
 
+### Frente — Vezemir, Avenor e o Dragão
+
+#### Entidades Ligadas
+
+- [[Vezemir]]
+- [[Mira Valen]]
+- [[Padre Oric]]
+- [[Elarion Vaelthor]]
+- [[Dragão de Colar Dourado]]
+- [[Floresta de Avenor]]
+- [[Leth'valora]]
+
+#### Status Atual
+
+Frente pessoal de Vezemir e da destruição de Leth'valora. As notas principais devem mostrar memória, impacto e rumores sem explicar cedo demais o dragão, os Guardiões ou a origem dos sinais.
+
+#### Segredos do Mestre
+
+- Relação completa entre Vezemir, o dragão, o medalhão, Grisalma e os Guardiões deve ser revelada em etapas.
+- Detalhes do ataque a Leth'valora e do que Elarion/Mira/Oric sabiam ainda podem ser dosados.
+- O Dragão de Colar Dourado deve permanecer parcialmente misterioso enquanto o jogador descobre pistas.
+
+#### Condições de Revelação
+
+- Revelar por lembranças, reações de relíquias, viagem a Avenor, rumores sobre Leth'valora ou contato com símbolos dos Guardiões.
+
+### Frente — Nimalia, Coroa e Guarda
+
+#### Entidades Ligadas
+
+- [[Augustus Terra Decimus]]
+- [[General Cassian Valerius]]
+- [[Coroa de Nimalia]]
+- [[Guarda Real de Nimalia]]
+- [[Nimalis]]
+
+#### Status Atual
+
+Frente política da capital. As notas principais devem mostrar imagem pública, função e autoridade, mantendo intrigas, corrupção e decisões de bastidor no Estado da Campanha.
+
+#### Segredos do Mestre
+
+- Relação real entre Coroa, Guarda, Guilda e Maré Baixa ainda pode mudar.
+- Possíveis tensões entre Augustus, Cassian e outras casas nobres não devem ser resolvidas nas notas principais.
+
+#### Condições de Revelação
+
+- Revelar por ordens oficiais, investigação de cargas, reação da Guarda, audiência na capital ou crise pública.
+
+### Frente — Gharok, Sanguinallis e Antagonistas Antigos
+
+#### Entidades Ligadas
+
+- [[Raziel]]
+- [[Lorde Malakar]]
+- [[Kaelen, o Flagelo]]
+- [[Vandor, o Senhor das Bestas]]
+- [[Clã Sanguinallis]]
+- [[Fortaleza de Gharok]]
+
+#### Status Atual
+
+Frente ligada ao passado de Raziel, ao Clã Sanguinallis e aos antagonistas antigos. As notas principais podem apresentar reputação e história conhecida sem revelar sobrevivência, retorno, pacto ou verdade final.
+
+#### Segredos do Mestre
+
+- Sobrevivência atual, influência remanescente e função futura de Malakar, Kaelen e Vandor devem permanecer no bastidor.
+- A relação exata entre Sanguinallis, Sangue Antigo e Raziel deve ser revelada por cenas, não por exposição.
+
+#### Condições de Revelação
+
+- Revelar por ruínas de Gharok, memórias de Raziel, sangue, artefatos Sanguinallis ou inimigos que reconhecem sinais antigos.
+
+### Frente — Odran, DORN-7 e Máquinas Antigas
+
+#### Entidades Ligadas
+
+- [[Mestre Odran Veyl]]
+- [[Unidade DORN-7]]
+- [[O Frasco Afogado]]
+- [[Remédios Falsos de Maré Baixa]]
+- [[Criadores]]
+
+#### Status Atual
+
+Frente de investigação e tecnologia antiga. Odran deve permanecer ambíguo e DORN-7 deve revelar escala maior sem explicar todo o sistema.
+
+#### Segredos do Mestre
+
+- Paradeiro e participação real de Odran nas falsificações ficam pendentes.
+- A [[Unidade DORN-7]] é parte de um sistema maior, mas isso deve ser revelado por funcionamento, falhas e pistas.
+- Conexão entre remédios falsos, materiais antigos e máquinas subterrâneas deve ser dosada.
+
+#### Condições de Revelação
+
+- Revelar por investigação no Frasco, ativação da DORN-7, análise de frascos ou descoberta de estruturas antigas.
+
 ---
 
 ## Dossiê do Mestre — Capítulo 01: Ecos do Mundo Perdido
