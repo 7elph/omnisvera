@@ -19,10 +19,6 @@ tags:
   - lore
 ---
 
-<div style="text-align: center;">
-  <img src="zz_media/maps/earthropo.png">
-</div>
-<br>
 
 > [!world]- SINOPSE
 > **Earthropo** é o continente em foco das Crônicas de Omnisvera: uma terra de reinos jovens sobre ruínas antigas, florestas vivas, portos inquietos, montanhas esquecidas e fronteiras que ainda não foram totalmente nomeadas.

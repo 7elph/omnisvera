@@ -23,7 +23,7 @@ hooks:
   - Fortalezas antigas e ruínas subterrâneas
 rumors: []
 thumbnail: zz_media/thumbnails/th_anao.png
-cover: zz_media/races/anao.png
+cover: zz_media/thumbnails/th_anao.png
 chapters: []
 tags:
   - raca

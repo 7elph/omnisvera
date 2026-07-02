@@ -8,8 +8,8 @@ campaign_status: Planejado
 visibility: Mestre
 spoiler_level: heavy
 gm_secret: true
-thumbnail:
-cover:
+thumbnail: zz_media/thumbnails/th_unidade.png
+cover: zz_media/thumbnails/th_unidade.png
 location: "Passagem sob a estrada entre [[Nimalis]] e [[Floresta de Avenor]]"
 territory: "[[EARTHROPO/EARTHROPO|Earthropo]]"
 faction:

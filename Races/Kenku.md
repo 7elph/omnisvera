@@ -23,8 +23,8 @@ hooks:
   - Alquimia de rua
   - Presságios urbanos
 rumors: []
-thumbnail: zz_media/thumbnails/th_varkh.png
-cover: zz_media/characters/varkh.jpeg
+thumbnail: zz_media/thumbnails/th_kenku.png
+cover: zz_media/thumbnails/th_kenku.png
 chapters: []
 tags:
   - raca

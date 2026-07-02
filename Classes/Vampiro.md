@@ -17,8 +17,8 @@ class_group: Sobrenatural
 primary_attribute:
 level:
 danger_level: Alto
-thumbnail: zz_media/items/sangue.png
-cover: zz_media/items/sangue.png
+thumbnail: zz_media/thumbnails/th_raziel.png
+cover: zz_media/thumbnails/th_raziel.png
 chapters:
   - 00 - As Crônicas de Névoa de Sangue
 tags:
@@ -32,7 +32,7 @@ tags:
 # Vampiro
 
 > [!NOTE|clean no-i right]+ Referência
-> ![[zz_media/items/sangue.png|400]]
+> ![[zz_media/characters/raziel.png|400]]
 
 > [!warning] Regra de mesa
 > Esta nota não reproduz texto de livro. Ela existe para registrar como a classe será integrada ao Omnisvera. Para progressão, limitações e regras-base, consultar o material original usado pelo mestre.

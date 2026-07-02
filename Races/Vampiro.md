@@ -26,7 +26,7 @@ hooks:
   - Linhagens vampíricas
 rumors: []
 thumbnail: zz_media/thumbnails/th_raziel.png
-cover: zz_media/characters/raziel.png
+cover: zz_media/thumbnails/th_raziel.png
 chapters: []
 tags:
   - raca

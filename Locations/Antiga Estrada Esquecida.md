@@ -14,8 +14,8 @@ territory: "[[Floresta de Avenor]]"
 region: Arredores de [[Leth'valora]]
 district:
 danger_level: Baixo
-thumbnail:
-cover:
+thumbnail: zz_media/locations/estrada_antiga.png
+cover: zz_media/locations/estrada_antiga.png
 info: Estrada antiga em ruínas nos arredores de Leth'valora, ligada à origem conhecida de Vezemir.
 description: Local sensível da história de Vezemir, ainda em revisão pelo Sage.
 chapters:
@@ -29,6 +29,9 @@ tags:
 ---
 
 # Antiga Estrada Esquecida
+
+> [!NOTE|clean no-i right]+ Reino de Nimalia
+> ![[zz_media/locations/estrada_antiga.png|400]]
 
 ## Visão Geral
 

@@ -24,8 +24,8 @@ hooks:
   - Reino dragonborn ao noroeste
   - Bairro dos Dragonborns em Nimalis
 rumors: []
-thumbnail: zz_media/maps/earthropo.png
-cover: zz_media/maps/earthropo.png
+thumbnail: zz_media/thumbnails/th_dragonborn.png
+cover: zz_media/thumbnails/th_dragonborn.png
 chapters: []
 tags:
   - raca

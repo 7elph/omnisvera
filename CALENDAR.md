@@ -22,19 +22,8 @@ tags:
 
 # Calendário de Omnisvera
 
-> [!NOTE|clean no-i right]+ Calendário de Omnisvera
-> ![[zz_media/covers/banner_earthropo.png|400]]
-
-> [!world]- SINOPSE
-> O calendário organiza o tempo de jogo: viagens, prazos, festivais, presságios, feriados e consequências. Ele está ligado à [[TIMELINE]], mas não precisa revelar toda a história antiga de Omnisvera.
-
 ```calendarium
 ```
-
-## Status
-
-> [!warning]
-> Calendário em revisão. Usado como estrutura de jogo, não cânone definitivo.
 
 ## Ano Atual da Campanha
 

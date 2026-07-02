@@ -23,8 +23,8 @@ location: "[[Maré Baixa]]"
 faction:
 level:
 danger_level: Médio
-thumbnail:
-cover:
+thumbnail: zz_media/locations/loja_odran.png
+cover: zz_media/locations/loja_odran.png
 info: Pequena loja e oficina de alquimia de Mestre Odran Veyl em Maré Baixa.
 description: Estabelecimento narrativo ligado à formação de Varkh, a Odran e ao arco dos remédios falsos.
 related_characters:
@@ -52,6 +52,9 @@ tags:
 ---
 
 # O Frasco Afogado
+
+> [!NOTE|clean no-i right]+ O Frasco Afogado
+> ![[zz_media/locations/loja_odran.png|400]]
 
 > [!WARNING] Estado canônico
 > Esta nota está em desenvolvimento e depende de confirmação do Sage.

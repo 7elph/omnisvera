@@ -18,8 +18,8 @@ class_group: Marcial
 primary_attribute: Força
 level:
 danger_level: Baixo
-thumbnail: zz_media/class/guerreiro.png
-cover: zz_media/class/guerreiro.png
+thumbnail: zz_media/thumbnails/th_guerreiro.png
+cover: zz_media/thumbnails/th_guerreiro.png
 chapters: []
 tags:
   - classe

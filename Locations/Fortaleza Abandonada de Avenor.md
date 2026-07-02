@@ -14,8 +14,8 @@ territory: "[[Floresta de Avenor]]"
 region: Elevações próximas a [[Leth'valora]]
 district:
 danger_level: Médio
-thumbnail:
-cover:
+thumbnail: zz_media/locations/forte_abandonado.png
+cover: zz_media/locations/forte_abandonado.png
 info: Fortaleza antiga nas elevações de Avenor, ligada à formação de Vezemir.
 description: Local sensível da história de Vezemir, ainda em revisão pelo Sage.
 chapters:
@@ -30,6 +30,9 @@ tags:
 ---
 
 # Fortaleza Abandonada de Avenor
+
+> [!NOTE|clean no-i right]+ Reino de Nimalia
+> ![[zz_media/locations/forte_abandonado.png|400]]
 
 ## Visão Geral
 

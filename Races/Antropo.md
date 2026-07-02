@@ -24,8 +24,8 @@ hooks:
   - Predominância cultural em Nimalia
   - Relação política com humanos, elfos, anões e dragonborns
 rumors: []
-thumbnail: zz_media/maps/earthropo.png
-cover: zz_media/maps/earthropo.png
+thumbnail: zz_media/thumbnails/th_antropos.png
+cover: zz_media/thumbnails/th_antropos.png
 chapters: []
 tags:
   - raca
