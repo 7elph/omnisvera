@@ -5,10 +5,11 @@ Este protocolo orienta como a IA/Codex deve transformar respostas do Sage em con
 ## Ordem de autoridade
 
 1. Respostas recentes do Sage.
-2. Conteúdo já existente no vault.
-3. Relações explícitas entre notas.
-4. Padrões técnicos do vault.
-5. Sugestões da IA, sempre marcadas como sugestão quando não forem confirmadas.
+2. [[PLAYER_SAFE_ENTITY_MODEL]].
+3. Conteúdo já existente no vault.
+4. Relações explícitas entre notas.
+5. Padrões técnicos do vault.
+6. Sugestões da IA, sempre marcadas como sugestão quando não forem confirmadas.
 
 ## Regras
 
@@ -23,6 +24,8 @@ Este protocolo orienta como a IA/Codex deve transformar respostas do Sage em con
 - Gerar conteúdo jogável, não enciclopédia morta.
 - Preservar frontmatter e campos legacy.
 - Não remover tags, links, imagens ou metadados sem autorização.
+- Não colocar spoiler pesado na nota principal.
+- Mover bastidores, verdades ocultas e decisões do mestre para [[ESTADO_DA_CAMPANHA]].
 
 ## Estrutura recomendada para nota desenvolvida
 
@@ -41,12 +44,12 @@ Este protocolo orienta como a IA/Codex deve transformar respostas do Sage em con
 
 ## Ganchos de aventura
 
-## Segredos do Mestre
-
 ## Relações
 
 ## Uso em jogo
 ```
+
+Segredos do mestre não entram na estrutura da nota principal. Quando existirem, criar ou atualizar uma frente correspondente em `CAMPANHA/ESTADO_DA_CAMPANHA.md`.
 
 ## Como usar uma resposta do Sage
 
