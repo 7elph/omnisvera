@@ -7,7 +7,7 @@ tags:
   - economy
   - currency
   - earthropo
-cover: zz_media/casa-da-moeda-interior.png
+cover: zz_media/locations/casa_da_moeda_interior.png
 ---
 
 # ECONOMIA DE EARTHROPO

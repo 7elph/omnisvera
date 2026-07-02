@@ -9,8 +9,8 @@ visibility: Jogadores
 spoiler_level: light
 gm_secret: false
 territory: "[[Nimalia]]"
-thumbnail: zz_media/mapa-de-nimalis.png
-cover: zz_media/mapa-de-nimalis.png
+thumbnail: zz_media/maps/mapa_de_nimalis.png
+cover: zz_media/maps/mapa_de_nimalis.png
 location:
 region: Capital do Reino de Nimalia
 leader: "[[Augustus Terra Decimus]]"

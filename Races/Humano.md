@@ -22,8 +22,8 @@ hooks:
   - Povos humanos espalhados por Earthropo
   - Presença importante, mas não majoritária em Nimalia
 rumors: []
-thumbnail: zz_media/th_humano.png
-cover: zz_media/th_humano.png
+thumbnail: zz_media/thumbnails/th_humano.png
+cover: zz_media/thumbnails/th_humano.png
 chapters: []
 tags:
   - raca

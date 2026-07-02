@@ -25,8 +25,8 @@ hooks:
   - Clã Sanguinallis
   - Linhagens vampíricas
 rumors: []
-thumbnail: zz_media/th_raziel.PNG
-cover: zz_media/raziel.PNG
+thumbnail: zz_media/thumbnails/th_raziel.png
+cover: zz_media/thumbnails/raziel.png
 chapters: []
 tags:
   - raca

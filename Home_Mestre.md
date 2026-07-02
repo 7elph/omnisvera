@@ -1,6 +1,6 @@
 ---
 obsidianUIMode: preview
-banner: "[[zz_media/avenor.png]]"
+banner: "[[zz_media/thumbnails/avenor.png]]"
 banner-x: 51
 banner-y: 34
 banner-height: 280
@@ -12,7 +12,7 @@ gm_secret: true
 ---
 
 <div style="text-align: center;">
-  <img src="zz_media/omnisvera.PNG" width="1300px">
+  <img src="zz_media/misc/omnisvera.png" width="1300px">
 </div>
 
 <br>

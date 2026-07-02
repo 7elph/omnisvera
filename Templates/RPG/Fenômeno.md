@@ -25,7 +25,7 @@ tags:
 # Nome do Fenômeno ou Evento
 
 > [!NOTE|clean no-i right]+ Registro Visual
-> ![[zz_media/banner-earthropo.png|400]]
+> ![[zz_media/maps/banner_earthropo.png|400]]
 
 > [!warning]+ Classificação
 > **Tipo:** fenômeno / evento / catástrofe / ruptura / mistério  

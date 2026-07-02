@@ -12,8 +12,8 @@ spoiler_level: light
 gm_secret: false
 info: Tradição espiritual ligada a viagens, ciclos e reencarnação.
 description: Tradição espiritual difundida entre viajantes, mercadores e pessoas que vivem longe de sua terra natal.
-thumbnail: zz_media/caminho-dos-errantes.png
-cover: zz_media/caminho-dos-errantes.png
+thumbnail: zz_media/thumbnails/caminho_dos_errantes.png
+cover: zz_media/thumbnails/caminho_dos_errantes.png
 chapters: []
 tags:
   - religiao

@@ -6,7 +6,7 @@ distance: 2746
 NoteIcon: none
 NoteStatus: Active
 obsidianUIMode: preview
-cover: zz_media/mapa-de-nimalis.png
+cover: zz_media/maps/mapa_de_nimalis.png
 Community-Size: Capital
 Alignment: 
 Government: Monarquia de Nimalia
@@ -40,7 +40,7 @@ Este mapa representa a cidade capital, não todo o território do reino.
 
 ```leaflet
 id: nimalis-city-map
-image: zz_media/mapa-de-nimalis.png
+image: zz_media/maps/mapa_de_nimalis.png
 height: 1000px
 width: 100%
 bounds: [[0, 0], [185.7, 274.6]]

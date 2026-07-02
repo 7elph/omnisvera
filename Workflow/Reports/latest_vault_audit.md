@@ -269,15 +269,15 @@ Nenhuma
 - **Links quebrados:** 1153
 
 ### Links quebrados
-- [[cash.png]] em ECONOMY.md:16
+- [[zz_media/misc/cash.png]] em ECONOMY.md:16
 - [[econ.png]] em ECONOMY.md:87
-- [[zz_media/avenor.png]] em Home.md:3
-- [[zz_media/avenor.png]] em Home_Mestre.md:3
-- [[mapa-de-nimalia.png]] em Home_Mestre.md:27
-- [[banner-earthropo.png]] em Home_Mestre.md:30
-- [[guild.png]] em Home_Mestre.md:33
-- [[guild1.png]] em Home_Mestre.md:36
-- [[earthropo.png]] em Home_Mestre.md:39
+- [[zz_media/thumbnails/avenor.png]] em Home.md:3
+- [[zz_media/thumbnails/avenor.png]] em Home_Mestre.md:3
+- [[zz_media/maps/mapa_de_nimalia.png]] em Home_Mestre.md:27
+- [[zz_media/maps/banner_earthropo.png]] em Home_Mestre.md:30
+- [[zz_media/misc/guild.png]] em Home_Mestre.md:33
+- [[zz_media/misc/guild1.png]] em Home_Mestre.md:36
+- [[zz_media/maps/earthropo.png]] em Home_Mestre.md:39
 - [[Capital de Nimalia]] em MAPA DE EARTHROPO.md:48
 - [[Earthropo]] em OMNISVERA.md:19
 - [[Workflow/Legacy - Old Dragon anterior - Clérigo]] em Classes\Clérigo.md:77
@@ -285,27 +285,27 @@ Nenhuma
 - [[Workflow/Legacy - Old Dragon anterior - Homem de Armas]] em Classes\Homem de Armas.md:22
 - [[Workflow/Legacy - Old Dragon anterior - Ladrão]] em Classes\Ladrão.md:83
 - [[Workflow/Legacy - Old Dragon anterior - Mago]] em Classes\Mago.md:72
-- [[zz_media/banner-as-cronicas-de-nevoa-de-sangue.png]] em EARTHROPO\00 - As Crônicas de Névoa de Sangue.md:12
-- [[zz_media/banner-bastardo-de-ferro.png]] em EARTHROPO\00 - O Bastardo de Ferro.md:15
-- [[zz_media/banner-o-corvo-da-mare-baixa.png]] em EARTHROPO\00 - O Corvo da Maré Baixa.md:12
+- [[zz_media/covers/banner_as_cronicas_de_nevoa_de_sangue.png]] em EARTHROPO\00 - As Crônicas de Névoa de Sangue.md:12
+- [[zz_media/covers/banner_bastardo_de_ferro.png]] em EARTHROPO\00 - O Bastardo de Ferro.md:15
+- [[zz_media/covers/banner_o_corvo_da_mare_baixa.png]] em EARTHROPO\00 - O Corvo da Maré Baixa.md:12
 - [[Vampiro Sanguinallis]] em Factions\Clã Sanguinallis.md:37
 - [[Reino de Nimalia]] em Factions\Coroa de Nimalia.md:14
-- [[guarda-real-nimalia.png]] em Factions\Guarda Real de Nimalia.md:38
+- [[zz_media/maps/guarda_real_nimalia.png]] em Factions\Guarda Real de Nimalia.md:38
 - [[Reino de Nimalia]] em Factions\Nobreza de Nimalia.md:12
-- [[grisalma.png]] em Items\Grisalma.md:26
-- [[muralha_dorn.png]] em Items\Muralha de Dorn.md:19
-- [[med.PNG]] em Items\O Medalhão dos Guardiões do Véu Cinzento.md:17
-- [[sentinelas-de-leth'valora.png]] em Locations\Leth'valora.md:21
-- [[eclipse-obsidiana.png]] em Lore\Eclipse de Obsidiana.md:19
+- [[zz_media/thumbnails/grisalma.png]] em Items\Grisalma.md:26
+- [[zz_media/thumbnails/muralha_dorn.png]] em Items\Muralha de Dorn.md:19
+- [[zz_media/thumbnails/med.png]] em Items\O Medalhão dos Guardiões do Véu Cinzento.md:17
+- [[zz_media/thumbnails/sentinelas_de_leth_valora.png]] em Locations\Leth'valora.md:21
+- [[zz_media/thumbnails/eclipse_obsidiana.png]] em Lore\Eclipse de Obsidiana.md:19
 - [[Criadores]] em Lore\Guardiões do Véu Cinzento.md:31
-- [[o-fraturamento.png]] em Lore\O Fraturamento.md:19
+- [[zz_media/thumbnails/o_fraturamento.png]] em Lore\O Fraturamento.md:19
 - [[Vampiro Sanguinallis]] em Lore\Sangue Antigo.md:35
-- [[anao.PNG]] em Races\Anão.md:14
-- [[prop_anao.PNG]] em Races\Anão.md:48
-- [[elf.PNG]] em Races\Elfo.md:15
+- [[zz_media/thumbnails/anao.png]] em Races\Anão.md:14
+- [[zz_media/misc/prop_anao.png]] em Races\Anão.md:48
+- [[zz_media/thumbnails/elf.png]] em Races\Elfo.md:15
 - [[elfs.png]] em Races\Elfo.md:40
-- [[avenor.png]] em Territories\Floresta de Avenor.md:44
-- [[mapa-de-nimalia.png]] em Territories\Nimalia.md:33
+- [[zz_media/thumbnails/avenor.png]] em Territories\Floresta de Avenor.md:44
+- [[zz_media/maps/mapa_de_nimalia.png]] em Territories\Nimalia.md:33
 - [[]] em Workflow\AI_REVIEW_CHECKLIST.md:38
 - [[MAPA DE EARTHROPO\]] em Workflow\GEOGRAPHY.md:21
 - [[thumbnail]] em Workflow\OMNISVERA_CHARACTER_TEMPLATE_GUIDE.md:63
@@ -317,9 +317,9 @@ Nenhuma
 - [[Legacy - Disgraceland Scratch Notes]] em Workflow\Scratch Notes.md:14
 - [[]] em Workflow\AI_CONTEXT\04_MEDIA_RULES.md:31
 - [[]] em Workflow\AI_CONTEXT\07_VALIDATION_CHECKLIST.md:39
-- [[cash.png]] em Workflow\Reports\latest_vault_audit.md:155
+- [[zz_media/misc/cash.png]] em Workflow\Reports\latest_vault_audit.md:155
 - [[econ.png]] em Workflow\Reports\latest_vault_audit.md:156
-- [[zz_media/avenor.png]] em Workflow\Reports\latest_vault_audit.md:157
+- [[zz_media/thumbnails/avenor.png]] em Workflow\Reports\latest_vault_audit.md:157
 - [[mapa-de-nimalia.png\]] em Workflow\Reports\latest_vault_audit.md:158
 - [[banner-earthropo.png\]] em Workflow\Reports\latest_vault_audit.md:159
 - [[guild.png\]] em Workflow\Reports\latest_vault_audit.md:160
@@ -332,30 +332,30 @@ Nenhuma
 - [[Workflow/Legacy - Old Dragon anterior - Homem de Armas]] em Workflow\Reports\latest_vault_audit.md:167
 - [[Workflow/Legacy - Old Dragon anterior - Ladrão]] em Workflow\Reports\latest_vault_audit.md:168
 - [[Workflow/Legacy - Old Dragon anterior - Mago]] em Workflow\Reports\latest_vault_audit.md:169
-- [[zz_media/banner-as-cronicas-de-nevoa-de-sangue.png]] em Workflow\Reports\latest_vault_audit.md:170
-- [[zz_media/banner-bastardo-de-ferro.png]] em Workflow\Reports\latest_vault_audit.md:171
-- [[zz_media/banner-o-corvo-da-mare-baixa.png]] em Workflow\Reports\latest_vault_audit.md:172
+- [[zz_media/covers/banner_as_cronicas_de_nevoa_de_sangue.png]] em Workflow\Reports\latest_vault_audit.md:170
+- [[zz_media/covers/banner_bastardo_de_ferro.png]] em Workflow\Reports\latest_vault_audit.md:171
+- [[zz_media/covers/banner_o_corvo_da_mare_baixa.png]] em Workflow\Reports\latest_vault_audit.md:172
 - [[Vampiro Sanguinallis]] em Workflow\Reports\latest_vault_audit.md:173
-- [[t7.png]] em Workflow\Reports\latest_vault_audit.md:174
-- [[grisalma.png]] em Workflow\Reports\latest_vault_audit.md:175
-- [[muralha_dorn.png]] em Workflow\Reports\latest_vault_audit.md:176
+- [[zz_media/covers/t7.png]] em Workflow\Reports\latest_vault_audit.md:174
+- [[zz_media/thumbnails/grisalma.png]] em Workflow\Reports\latest_vault_audit.md:175
+- [[zz_media/thumbnails/muralha_dorn.png]] em Workflow\Reports\latest_vault_audit.md:176
 - [[med.png]] em Workflow\Reports\latest_vault_audit.md:177
 - [[leth'valora.png]] em Workflow\Reports\latest_vault_audit.md:178
 - [[w.png]] em Workflow\Reports\latest_vault_audit.md:179
 - [[Criadores]] em Workflow\Reports\latest_vault_audit.md:180
 - [[w.png]] em Workflow\Reports\latest_vault_audit.md:181
 - [[Vampiro Sanguinallis]] em Workflow\Reports\latest_vault_audit.md:182
-- [[anao.PNG]] em Workflow\Reports\latest_vault_audit.md:183
-- [[prop_anao.PNG]] em Workflow\Reports\latest_vault_audit.md:184
-- [[elf.PNG]] em Workflow\Reports\latest_vault_audit.md:185
+- [[zz_media/thumbnails/anao.png]] em Workflow\Reports\latest_vault_audit.md:183
+- [[zz_media/misc/prop_anao.png]] em Workflow\Reports\latest_vault_audit.md:184
+- [[zz_media/thumbnails/elf.png]] em Workflow\Reports\latest_vault_audit.md:185
 - [[elfs.png]] em Workflow\Reports\latest_vault_audit.md:186
 - [[t8.png]] em Workflow\Reports\latest_vault_audit.md:187
-- [[avenor.png]] em Workflow\Reports\latest_vault_audit.md:188
-- [[mapa-de-nimalia.png]] em Workflow\Reports\latest_vault_audit.md:189
+- [[zz_media/thumbnails/avenor.png]] em Workflow\Reports\latest_vault_audit.md:188
+- [[zz_media/maps/mapa_de_nimalia.png]] em Workflow\Reports\latest_vault_audit.md:189
 - [[MAPA DE EARTHROPO\]] em Workflow\Reports\latest_vault_audit.md:191
-- [[cash.png]] em Workflow\Reports\latest_vault_audit.md:194
+- [[zz_media/misc/cash.png]] em Workflow\Reports\latest_vault_audit.md:194
 - [[econ.png]] em Workflow\Reports\latest_vault_audit.md:195
-- [[zz_media/avenor.png]] em Workflow\Reports\latest_vault_audit.md:196
+- [[zz_media/thumbnails/avenor.png]] em Workflow\Reports\latest_vault_audit.md:196
 - [[mapa-de-nimalia.png\]] em Workflow\Reports\latest_vault_audit.md:197
 - [[banner-earthropo.png\]] em Workflow\Reports\latest_vault_audit.md:198
 - [[guild.png\]] em Workflow\Reports\latest_vault_audit.md:199
@@ -368,30 +368,30 @@ Nenhuma
 - [[Workflow/Legacy - Old Dragon anterior - Homem de Armas]] em Workflow\Reports\latest_vault_audit.md:206
 - [[Workflow/Legacy - Old Dragon anterior - Ladrão]] em Workflow\Reports\latest_vault_audit.md:207
 - [[Workflow/Legacy - Old Dragon anterior - Mago]] em Workflow\Reports\latest_vault_audit.md:208
-- [[zz_media/banner-as-cronicas-de-nevoa-de-sangue.png]] em Workflow\Reports\latest_vault_audit.md:209
-- [[zz_media/banner-bastardo-de-ferro.png]] em Workflow\Reports\latest_vault_audit.md:210
-- [[zz_media/banner-o-corvo-da-mare-baixa.png]] em Workflow\Reports\latest_vault_audit.md:211
+- [[zz_media/covers/banner_as_cronicas_de_nevoa_de_sangue.png]] em Workflow\Reports\latest_vault_audit.md:209
+- [[zz_media/covers/banner_bastardo_de_ferro.png]] em Workflow\Reports\latest_vault_audit.md:210
+- [[zz_media/covers/banner_o_corvo_da_mare_baixa.png]] em Workflow\Reports\latest_vault_audit.md:211
 - [[Vampiro Sanguinallis]] em Workflow\Reports\latest_vault_audit.md:212
-- [[t7.png]] em Workflow\Reports\latest_vault_audit.md:213
-- [[grisalma.png]] em Workflow\Reports\latest_vault_audit.md:214
-- [[muralha_dorn.png]] em Workflow\Reports\latest_vault_audit.md:215
+- [[zz_media/covers/t7.png]] em Workflow\Reports\latest_vault_audit.md:213
+- [[zz_media/thumbnails/grisalma.png]] em Workflow\Reports\latest_vault_audit.md:214
+- [[zz_media/thumbnails/muralha_dorn.png]] em Workflow\Reports\latest_vault_audit.md:215
 - [[med.png]] em Workflow\Reports\latest_vault_audit.md:216
 - [[leth'valora.png]] em Workflow\Reports\latest_vault_audit.md:217
 - [[w.png]] em Workflow\Reports\latest_vault_audit.md:218
 - [[Criadores]] em Workflow\Reports\latest_vault_audit.md:219
 - [[w.png]] em Workflow\Reports\latest_vault_audit.md:220
 - [[Vampiro Sanguinallis]] em Workflow\Reports\latest_vault_audit.md:221
-- [[anao.PNG]] em Workflow\Reports\latest_vault_audit.md:222
-- [[prop_anao.PNG]] em Workflow\Reports\latest_vault_audit.md:223
-- [[elf.PNG]] em Workflow\Reports\latest_vault_audit.md:224
+- [[zz_media/thumbnails/anao.png]] em Workflow\Reports\latest_vault_audit.md:222
+- [[zz_media/misc/prop_anao.png]] em Workflow\Reports\latest_vault_audit.md:223
+- [[zz_media/thumbnails/elf.png]] em Workflow\Reports\latest_vault_audit.md:224
 - [[elfs.png]] em Workflow\Reports\latest_vault_audit.md:225
 - [[t8.png]] em Workflow\Reports\latest_vault_audit.md:226
-- [[avenor.png]] em Workflow\Reports\latest_vault_audit.md:227
-- [[mapa-de-nimalia.png]] em Workflow\Reports\latest_vault_audit.md:228
+- [[zz_media/thumbnails/avenor.png]] em Workflow\Reports\latest_vault_audit.md:227
+- [[zz_media/maps/mapa_de_nimalia.png]] em Workflow\Reports\latest_vault_audit.md:228
 - [[MAPA DE EARTHROPO\]] em Workflow\Reports\latest_vault_audit.md:229
-- [[cash.png]] em Workflow\Reports\latest_vault_audit.md:230
+- [[zz_media/misc/cash.png]] em Workflow\Reports\latest_vault_audit.md:230
 - [[econ.png]] em Workflow\Reports\latest_vault_audit.md:231
-- [[zz_media/avenor.png]] em Workflow\Reports\latest_vault_audit.md:232
+- [[zz_media/thumbnails/avenor.png]] em Workflow\Reports\latest_vault_audit.md:232
 - [[mapa-de-nimalia.png\]] em Workflow\Reports\latest_vault_audit.md:233
 - [[banner-earthropo.png\]] em Workflow\Reports\latest_vault_audit.md:234
 - [[guild.png\]] em Workflow\Reports\latest_vault_audit.md:235
@@ -404,30 +404,30 @@ Nenhuma
 - [[Workflow/Legacy - Old Dragon anterior - Homem de Armas]] em Workflow\Reports\latest_vault_audit.md:242
 - [[Workflow/Legacy - Old Dragon anterior - Ladrão]] em Workflow\Reports\latest_vault_audit.md:243
 - [[Workflow/Legacy - Old Dragon anterior - Mago]] em Workflow\Reports\latest_vault_audit.md:244
-- [[zz_media/banner-as-cronicas-de-nevoa-de-sangue.png]] em Workflow\Reports\latest_vault_audit.md:245
-- [[zz_media/banner-bastardo-de-ferro.png]] em Workflow\Reports\latest_vault_audit.md:246
-- [[zz_media/banner-o-corvo-da-mare-baixa.png]] em Workflow\Reports\latest_vault_audit.md:247
+- [[zz_media/covers/banner_as_cronicas_de_nevoa_de_sangue.png]] em Workflow\Reports\latest_vault_audit.md:245
+- [[zz_media/covers/banner_bastardo_de_ferro.png]] em Workflow\Reports\latest_vault_audit.md:246
+- [[zz_media/covers/banner_o_corvo_da_mare_baixa.png]] em Workflow\Reports\latest_vault_audit.md:247
 - [[Vampiro Sanguinallis]] em Workflow\Reports\latest_vault_audit.md:248
-- [[t7.png]] em Workflow\Reports\latest_vault_audit.md:249
-- [[grisalma.png]] em Workflow\Reports\latest_vault_audit.md:250
-- [[muralha_dorn.png]] em Workflow\Reports\latest_vault_audit.md:251
+- [[zz_media/covers/t7.png]] em Workflow\Reports\latest_vault_audit.md:249
+- [[zz_media/thumbnails/grisalma.png]] em Workflow\Reports\latest_vault_audit.md:250
+- [[zz_media/thumbnails/muralha_dorn.png]] em Workflow\Reports\latest_vault_audit.md:251
 - [[med.png]] em Workflow\Reports\latest_vault_audit.md:252
 - [[leth'valora.png]] em Workflow\Reports\latest_vault_audit.md:253
 - [[w.png]] em Workflow\Reports\latest_vault_audit.md:254
 - [[Criadores]] em Workflow\Reports\latest_vault_audit.md:255
 - [[w.png]] em Workflow\Reports\latest_vault_audit.md:256
 - [[Vampiro Sanguinallis]] em Workflow\Reports\latest_vault_audit.md:257
-- [[anao.PNG]] em Workflow\Reports\latest_vault_audit.md:258
-- [[prop_anao.PNG]] em Workflow\Reports\latest_vault_audit.md:259
-- [[elf.PNG]] em Workflow\Reports\latest_vault_audit.md:260
+- [[zz_media/thumbnails/anao.png]] em Workflow\Reports\latest_vault_audit.md:258
+- [[zz_media/misc/prop_anao.png]] em Workflow\Reports\latest_vault_audit.md:259
+- [[zz_media/thumbnails/elf.png]] em Workflow\Reports\latest_vault_audit.md:260
 - [[elfs.png]] em Workflow\Reports\latest_vault_audit.md:261
 - [[t8.png]] em Workflow\Reports\latest_vault_audit.md:262
-- [[avenor.png]] em Workflow\Reports\latest_vault_audit.md:263
-- [[mapa-de-nimalia.png]] em Workflow\Reports\latest_vault_audit.md:264
+- [[zz_media/thumbnails/avenor.png]] em Workflow\Reports\latest_vault_audit.md:263
+- [[zz_media/maps/mapa_de_nimalia.png]] em Workflow\Reports\latest_vault_audit.md:264
 - [[MAPA DE EARTHROPO\]] em Workflow\Reports\latest_vault_audit.md:265
-- [[cash.png]] em Workflow\Reports\latest_vault_audit.md:266
+- [[zz_media/misc/cash.png]] em Workflow\Reports\latest_vault_audit.md:266
 - [[econ.png]] em Workflow\Reports\latest_vault_audit.md:267
-- [[zz_media/avenor.png]] em Workflow\Reports\latest_vault_audit.md:268
+- [[zz_media/thumbnails/avenor.png]] em Workflow\Reports\latest_vault_audit.md:268
 - [[mapa-de-nimalia.png\]] em Workflow\Reports\latest_vault_audit.md:269
 - [[banner-earthropo.png\]] em Workflow\Reports\latest_vault_audit.md:270
 - [[guild.png\]] em Workflow\Reports\latest_vault_audit.md:271
@@ -440,30 +440,30 @@ Nenhuma
 - [[Workflow/Legacy - Old Dragon anterior - Homem de Armas]] em Workflow\Reports\latest_vault_audit.md:278
 - [[Workflow/Legacy - Old Dragon anterior - Ladrão]] em Workflow\Reports\latest_vault_audit.md:279
 - [[Workflow/Legacy - Old Dragon anterior - Mago]] em Workflow\Reports\latest_vault_audit.md:280
-- [[zz_media/banner-as-cronicas-de-nevoa-de-sangue.png]] em Workflow\Reports\latest_vault_audit.md:281
-- [[zz_media/banner-bastardo-de-ferro.png]] em Workflow\Reports\latest_vault_audit.md:282
-- [[zz_media/banner-o-corvo-da-mare-baixa.png]] em Workflow\Reports\latest_vault_audit.md:283
+- [[zz_media/covers/banner_as_cronicas_de_nevoa_de_sangue.png]] em Workflow\Reports\latest_vault_audit.md:281
+- [[zz_media/covers/banner_bastardo_de_ferro.png]] em Workflow\Reports\latest_vault_audit.md:282
+- [[zz_media/covers/banner_o_corvo_da_mare_baixa.png]] em Workflow\Reports\latest_vault_audit.md:283
 - [[Vampiro Sanguinallis]] em Workflow\Reports\latest_vault_audit.md:284
-- [[t7.png]] em Workflow\Reports\latest_vault_audit.md:285
-- [[grisalma.png]] em Workflow\Reports\latest_vault_audit.md:286
-- [[muralha_dorn.png]] em Workflow\Reports\latest_vault_audit.md:287
+- [[zz_media/covers/t7.png]] em Workflow\Reports\latest_vault_audit.md:285
+- [[zz_media/thumbnails/grisalma.png]] em Workflow\Reports\latest_vault_audit.md:286
+- [[zz_media/thumbnails/muralha_dorn.png]] em Workflow\Reports\latest_vault_audit.md:287
 - [[med.png]] em Workflow\Reports\latest_vault_audit.md:288
 - [[leth'valora.png]] em Workflow\Reports\latest_vault_audit.md:289
 - [[w.png]] em Workflow\Reports\latest_vault_audit.md:290
 - [[Criadores]] em Workflow\Reports\latest_vault_audit.md:291
 - [[w.png]] em Workflow\Reports\latest_vault_audit.md:292
 - [[Vampiro Sanguinallis]] em Workflow\Reports\latest_vault_audit.md:293
-- [[anao.PNG]] em Workflow\Reports\latest_vault_audit.md:294
-- [[prop_anao.PNG]] em Workflow\Reports\latest_vault_audit.md:295
-- [[elf.PNG]] em Workflow\Reports\latest_vault_audit.md:296
+- [[zz_media/thumbnails/anao.png]] em Workflow\Reports\latest_vault_audit.md:294
+- [[zz_media/misc/prop_anao.png]] em Workflow\Reports\latest_vault_audit.md:295
+- [[zz_media/thumbnails/elf.png]] em Workflow\Reports\latest_vault_audit.md:296
 - [[elfs.png]] em Workflow\Reports\latest_vault_audit.md:297
 - [[t8.png]] em Workflow\Reports\latest_vault_audit.md:298
-- [[avenor.png]] em Workflow\Reports\latest_vault_audit.md:299
-- [[mapa-de-nimalia.png]] em Workflow\Reports\latest_vault_audit.md:300
+- [[zz_media/thumbnails/avenor.png]] em Workflow\Reports\latest_vault_audit.md:299
+- [[zz_media/maps/mapa_de_nimalia.png]] em Workflow\Reports\latest_vault_audit.md:300
 - [[MAPA DE EARTHROPO\]] em Workflow\Reports\latest_vault_audit.md:301
-- [[cash.png]] em Workflow\Reports\latest_vault_audit.md:302
+- [[zz_media/misc/cash.png]] em Workflow\Reports\latest_vault_audit.md:302
 - [[econ.png]] em Workflow\Reports\latest_vault_audit.md:303
-- [[zz_media/avenor.png]] em Workflow\Reports\latest_vault_audit.md:304
+- [[zz_media/thumbnails/avenor.png]] em Workflow\Reports\latest_vault_audit.md:304
 - [[sool.png\]] em Workflow\Reports\latest_vault_audit.md:305
 - [[eo.png\]] em Workflow\Reports\latest_vault_audit.md:306
 - [[t2.png\]] em Workflow\Reports\latest_vault_audit.md:307
@@ -475,8 +475,8 @@ Nenhuma
 - [[Workflow/Legacy - Old Dragon anterior - Homem de Armas]] em Workflow\Reports\latest_vault_audit.md:313
 - [[Workflow/Legacy - Old Dragon anterior - Ladrão]] em Workflow\Reports\latest_vault_audit.md:314
 - [[Workflow/Legacy - Old Dragon anterior - Mago]] em Workflow\Reports\latest_vault_audit.md:315
-- [[zz_media/vezemir.png]] em Workflow\Reports\latest_vault_audit.md:316
-- [[zz_media/varkh.jpeg]] em Workflow\Reports\latest_vault_audit.md:317
+- [[zz_media/thumbnails/vezemir.png]] em Workflow\Reports\latest_vault_audit.md:316
+- [[zz_media/characters/varkh.jpeg]] em Workflow\Reports\latest_vault_audit.md:317
 - [[zz_media/raziel.png]] em Workflow\Reports\latest_vault_audit.md:318
 - [[Vampiro Sanguinallis]] em Workflow\Reports\latest_vault_audit.md:319
 - [[Characters/Individual/Raziel.md]] em Workflow\Reports\latest_vault_audit.md:320
@@ -485,9 +485,9 @@ Nenhuma
 - [[Characters/Individual/Vandor, o Senhor das Bestas.md]] em Workflow\Reports\latest_vault_audit.md:323
 - [[Locations/Fortaleza de Gharok.md]] em Workflow\Reports\latest_vault_audit.md:324
 - [[Lore/Sangue Antigo.md]] em Workflow\Reports\latest_vault_audit.md:325
-- [[t7.png]] em Workflow\Reports\latest_vault_audit.md:326
-- [[grisalma.png]] em Workflow\Reports\latest_vault_audit.md:327
-- [[muralha_dorn.png]] em Workflow\Reports\latest_vault_audit.md:328
+- [[zz_media/covers/t7.png]] em Workflow\Reports\latest_vault_audit.md:326
+- [[zz_media/thumbnails/grisalma.png]] em Workflow\Reports\latest_vault_audit.md:327
+- [[zz_media/thumbnails/muralha_dorn.png]] em Workflow\Reports\latest_vault_audit.md:328
 - [[med.png]] em Workflow\Reports\latest_vault_audit.md:329
 - [[leth'valora.png]] em Workflow\Reports\latest_vault_audit.md:330
 - [[Characters/Individual/Raziel.md]] em Workflow\Reports\latest_vault_audit.md:331
@@ -502,13 +502,13 @@ Nenhuma
 - [[Lore/Ancião Primordial.md]] em Workflow\Reports\latest_vault_audit.md:340
 - [[Locations/Ruínas de Valthor.md]] em Workflow\Reports\latest_vault_audit.md:341
 - [[Factions/Clã Sanguinallis.md]] em Workflow\Reports\latest_vault_audit.md:342
-- [[anao.PNG]] em Workflow\Reports\latest_vault_audit.md:343
-- [[prop_anao.PNG]] em Workflow\Reports\latest_vault_audit.md:344
-- [[elf.PNG]] em Workflow\Reports\latest_vault_audit.md:345
+- [[zz_media/thumbnails/anao.png]] em Workflow\Reports\latest_vault_audit.md:343
+- [[zz_media/misc/prop_anao.png]] em Workflow\Reports\latest_vault_audit.md:344
+- [[zz_media/thumbnails/elf.png]] em Workflow\Reports\latest_vault_audit.md:345
 - [[elfs.png]] em Workflow\Reports\latest_vault_audit.md:346
 - [[t8.png]] em Workflow\Reports\latest_vault_audit.md:347
-- [[avenor.png]] em Workflow\Reports\latest_vault_audit.md:348
-- [[t7.png]] em Workflow\Reports\latest_vault_audit.md:349
+- [[zz_media/thumbnails/avenor.png]] em Workflow\Reports\latest_vault_audit.md:348
+- [[zz_media/covers/t7.png]] em Workflow\Reports\latest_vault_audit.md:349
 - [[MAPA DE EARTHROPO\]] em Workflow\Reports\latest_vault_audit.md:350
 - [[zz_media/lyladuke.png]] em Workflow\Reports\latest_vault_audit.md:351
 - [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:352
@@ -669,10 +669,10 @@ Nenhuma
 - [[Gutter Row]] em Workflow\Reports\latest_vault_audit.md:507
 - [[Lash Hawkins]] em Workflow\Reports\latest_vault_audit.md:508
 - [[Nico Murray]] em Workflow\Reports\latest_vault_audit.md:509
-- [[dukeofd.png]] em Workflow\Reports\latest_vault_audit.md:510
-- [[prop.png]] em Workflow\Reports\latest_vault_audit.md:511
-- [[elarion.png]] em Workflow\Reports\latest_vault_audit.md:512
-- [[cassian.png]] em Workflow\Reports\latest_vault_audit.md:513
+- [[zz_media/thumbnails/dukeofd.png]] em Workflow\Reports\latest_vault_audit.md:510
+- [[zz_media/characters/prop.png]] em Workflow\Reports\latest_vault_audit.md:511
+- [[zz_media/thumbnails/elarion.png]] em Workflow\Reports\latest_vault_audit.md:512
+- [[zz_media/thumbnails/cassian.png]] em Workflow\Reports\latest_vault_audit.md:513
 - [[Characters/Individual/Raziel.md]] em Workflow\Reports\latest_vault_audit.md:514
 - [[Characters/Individual/Lorde Malakar.md]] em Workflow\Reports\latest_vault_audit.md:515
 - [[Characters/Individual/Vandor, o Senhor das Bestas.md]] em Workflow\Reports\latest_vault_audit.md:516
@@ -685,17 +685,17 @@ Nenhuma
 - [[Locations/Fortaleza de Gharok.md]] em Workflow\Reports\latest_vault_audit.md:523
 - [[mira.png]] em Workflow\Reports\latest_vault_audit.md:524
 - [[oric.png]] em Workflow\Reports\latest_vault_audit.md:525
-- [[raziel.PNG]] em Workflow\Reports\latest_vault_audit.md:526
-- [[th_raziel.PNG]] em Workflow\Reports\latest_vault_audit.md:527
+- [[zz_media/thumbnails/raziel.png]] em Workflow\Reports\latest_vault_audit.md:526
+- [[zz_media/thumbnails/th_raziel.png]] em Workflow\Reports\latest_vault_audit.md:527
 - [[Characters/Individual/Raziel.md]] em Workflow\Reports\latest_vault_audit.md:528
 - [[Characters/Individual/Lorde Malakar.md]] em Workflow\Reports\latest_vault_audit.md:529
 - [[Characters/Individual/Kaelen, o Flagelo.md]] em Workflow\Reports\latest_vault_audit.md:530
 - [[Factions/Clã Sanguinallis.md]] em Workflow\Reports\latest_vault_audit.md:531
 - [[Locations/Floresta de Avenor.md]] em Workflow\Reports\latest_vault_audit.md:532
-- [[varkh.jpeg]] em Workflow\Reports\latest_vault_audit.md:533
-- [[th_varkh.PNG]] em Workflow\Reports\latest_vault_audit.md:534
-- [[vezemir.png]] em Workflow\Reports\latest_vault_audit.md:535
-- [[th_vezemir.PNG]] em Workflow\Reports\latest_vault_audit.md:536
+- [[zz_media/characters/varkh.jpeg]] em Workflow\Reports\latest_vault_audit.md:533
+- [[zz_media/thumbnails/th_varkh.png]] em Workflow\Reports\latest_vault_audit.md:534
+- [[zz_media/thumbnails/vezemir.png]] em Workflow\Reports\latest_vault_audit.md:535
+- [[zz_media/thumbnails/th_vezemir.png]] em Workflow\Reports\latest_vault_audit.md:536
 - [[zz_media/lyladuke.png]] em Workflow\Reports\latest_vault_audit.md:537
 - [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:538
 - [[The Silo]] em Workflow\Reports\latest_vault_audit.md:539
@@ -855,19 +855,19 @@ Nenhuma
 - [[Gutter Row]] em Workflow\Reports\latest_vault_audit.md:693
 - [[Lash Hawkins]] em Workflow\Reports\latest_vault_audit.md:694
 - [[Nico Murray]] em Workflow\Reports\latest_vault_audit.md:695
-- [[dukeofd.png]] em Workflow\Reports\latest_vault_audit.md:696
-- [[prop.png]] em Workflow\Reports\latest_vault_audit.md:697
-- [[elarion.png]] em Workflow\Reports\latest_vault_audit.md:698
-- [[cassian.png]] em Workflow\Reports\latest_vault_audit.md:699
+- [[zz_media/thumbnails/dukeofd.png]] em Workflow\Reports\latest_vault_audit.md:696
+- [[zz_media/characters/prop.png]] em Workflow\Reports\latest_vault_audit.md:697
+- [[zz_media/thumbnails/elarion.png]] em Workflow\Reports\latest_vault_audit.md:698
+- [[zz_media/thumbnails/cassian.png]] em Workflow\Reports\latest_vault_audit.md:699
 - [[mira.png]] em Workflow\Reports\latest_vault_audit.md:700
 - [[oric.png]] em Workflow\Reports\latest_vault_audit.md:701
-- [[raziel.PNG]] em Workflow\Reports\latest_vault_audit.md:702
-- [[th_raziel.PNG]] em Workflow\Reports\latest_vault_audit.md:703
+- [[zz_media/thumbnails/raziel.png]] em Workflow\Reports\latest_vault_audit.md:702
+- [[zz_media/thumbnails/th_raziel.png]] em Workflow\Reports\latest_vault_audit.md:703
 - [[Locations/Floresta de Avenor]] em Workflow\Reports\latest_vault_audit.md:704
-- [[varkh.jpeg]] em Workflow\Reports\latest_vault_audit.md:705
-- [[th_varkh.PNG]] em Workflow\Reports\latest_vault_audit.md:706
-- [[vezemir.png]] em Workflow\Reports\latest_vault_audit.md:707
-- [[th_vezemir.PNG]] em Workflow\Reports\latest_vault_audit.md:708
+- [[zz_media/characters/varkh.jpeg]] em Workflow\Reports\latest_vault_audit.md:705
+- [[zz_media/thumbnails/th_varkh.png]] em Workflow\Reports\latest_vault_audit.md:706
+- [[zz_media/thumbnails/vezemir.png]] em Workflow\Reports\latest_vault_audit.md:707
+- [[zz_media/thumbnails/th_vezemir.png]] em Workflow\Reports\latest_vault_audit.md:708
 - [[zz_media/lyladuke.png]] em Workflow\Reports\latest_vault_audit.md:709
 - [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:710
 - [[The Silo]] em Workflow\Reports\latest_vault_audit.md:711
@@ -1027,19 +1027,19 @@ Nenhuma
 - [[Gutter Row]] em Workflow\Reports\latest_vault_audit.md:865
 - [[Lash Hawkins]] em Workflow\Reports\latest_vault_audit.md:866
 - [[Nico Murray]] em Workflow\Reports\latest_vault_audit.md:867
-- [[dukeofd.png]] em Workflow\Reports\latest_vault_audit.md:868
-- [[prop.png]] em Workflow\Reports\latest_vault_audit.md:869
-- [[elarion.png]] em Workflow\Reports\latest_vault_audit.md:870
-- [[cassian.png]] em Workflow\Reports\latest_vault_audit.md:871
+- [[zz_media/thumbnails/dukeofd.png]] em Workflow\Reports\latest_vault_audit.md:868
+- [[zz_media/characters/prop.png]] em Workflow\Reports\latest_vault_audit.md:869
+- [[zz_media/thumbnails/elarion.png]] em Workflow\Reports\latest_vault_audit.md:870
+- [[zz_media/thumbnails/cassian.png]] em Workflow\Reports\latest_vault_audit.md:871
 - [[mira.png]] em Workflow\Reports\latest_vault_audit.md:872
 - [[oric.png]] em Workflow\Reports\latest_vault_audit.md:873
-- [[raziel.PNG]] em Workflow\Reports\latest_vault_audit.md:874
-- [[th_raziel.PNG]] em Workflow\Reports\latest_vault_audit.md:875
+- [[zz_media/thumbnails/raziel.png]] em Workflow\Reports\latest_vault_audit.md:874
+- [[zz_media/thumbnails/th_raziel.png]] em Workflow\Reports\latest_vault_audit.md:875
 - [[Locations/Floresta de Avenor]] em Workflow\Reports\latest_vault_audit.md:876
-- [[varkh.jpeg]] em Workflow\Reports\latest_vault_audit.md:877
-- [[th_varkh.PNG]] em Workflow\Reports\latest_vault_audit.md:878
-- [[vezemir.png]] em Workflow\Reports\latest_vault_audit.md:879
-- [[th_vezemir.PNG]] em Workflow\Reports\latest_vault_audit.md:880
+- [[zz_media/characters/varkh.jpeg]] em Workflow\Reports\latest_vault_audit.md:877
+- [[zz_media/thumbnails/th_varkh.png]] em Workflow\Reports\latest_vault_audit.md:878
+- [[zz_media/thumbnails/vezemir.png]] em Workflow\Reports\latest_vault_audit.md:879
+- [[zz_media/thumbnails/th_vezemir.png]] em Workflow\Reports\latest_vault_audit.md:880
 - [[zz_media/lyladuke.png]] em Workflow\Reports\latest_vault_audit.md:881
 - [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:882
 - [[The Silo]] em Workflow\Reports\latest_vault_audit.md:883
@@ -1199,19 +1199,19 @@ Nenhuma
 - [[Gutter Row]] em Workflow\Reports\latest_vault_audit.md:1037
 - [[Lash Hawkins]] em Workflow\Reports\latest_vault_audit.md:1038
 - [[Nico Murray]] em Workflow\Reports\latest_vault_audit.md:1039
-- [[dukeofd.png]] em Workflow\Reports\latest_vault_audit.md:1040
-- [[prop.png]] em Workflow\Reports\latest_vault_audit.md:1041
-- [[elarion.png]] em Workflow\Reports\latest_vault_audit.md:1042
-- [[cassian.png]] em Workflow\Reports\latest_vault_audit.md:1043
+- [[zz_media/thumbnails/dukeofd.png]] em Workflow\Reports\latest_vault_audit.md:1040
+- [[zz_media/characters/prop.png]] em Workflow\Reports\latest_vault_audit.md:1041
+- [[zz_media/thumbnails/elarion.png]] em Workflow\Reports\latest_vault_audit.md:1042
+- [[zz_media/thumbnails/cassian.png]] em Workflow\Reports\latest_vault_audit.md:1043
 - [[mira.png]] em Workflow\Reports\latest_vault_audit.md:1044
 - [[oric.png]] em Workflow\Reports\latest_vault_audit.md:1045
-- [[raziel.PNG]] em Workflow\Reports\latest_vault_audit.md:1046
-- [[th_raziel.PNG]] em Workflow\Reports\latest_vault_audit.md:1047
+- [[zz_media/thumbnails/raziel.png]] em Workflow\Reports\latest_vault_audit.md:1046
+- [[zz_media/thumbnails/th_raziel.png]] em Workflow\Reports\latest_vault_audit.md:1047
 - [[Locations/Floresta de Avenor]] em Workflow\Reports\latest_vault_audit.md:1048
-- [[varkh.jpeg]] em Workflow\Reports\latest_vault_audit.md:1049
-- [[th_varkh.PNG]] em Workflow\Reports\latest_vault_audit.md:1050
-- [[vezemir.png]] em Workflow\Reports\latest_vault_audit.md:1051
-- [[th_vezemir.PNG]] em Workflow\Reports\latest_vault_audit.md:1052
+- [[zz_media/characters/varkh.jpeg]] em Workflow\Reports\latest_vault_audit.md:1049
+- [[zz_media/thumbnails/th_varkh.png]] em Workflow\Reports\latest_vault_audit.md:1050
+- [[zz_media/thumbnails/vezemir.png]] em Workflow\Reports\latest_vault_audit.md:1051
+- [[zz_media/thumbnails/th_vezemir.png]] em Workflow\Reports\latest_vault_audit.md:1052
 - [[zz_media/lyladuke.png]] em Workflow\Reports\latest_vault_audit.md:1053
 - [[Lyla Bonetooth]] em Workflow\Reports\latest_vault_audit.md:1054
 - [[The Silo]] em Workflow\Reports\latest_vault_audit.md:1055
@@ -1371,57 +1371,57 @@ Nenhuma
 - [[Gutter Row]] em Workflow\Reports\latest_vault_audit.md:1209
 - [[Lash Hawkins]] em Workflow\Reports\latest_vault_audit.md:1210
 - [[Nico Murray]] em Workflow\Reports\latest_vault_audit.md:1211
-- [[dukeofd.png]] em Workflow\Reports\latest_vault_audit.md:1212
-- [[prop.png]] em Workflow\Reports\latest_vault_audit.md:1213
-- [[elarion.png]] em Workflow\Reports\latest_vault_audit.md:1214
-- [[cassian.png]] em Workflow\Reports\latest_vault_audit.md:1215
+- [[zz_media/thumbnails/dukeofd.png]] em Workflow\Reports\latest_vault_audit.md:1212
+- [[zz_media/characters/prop.png]] em Workflow\Reports\latest_vault_audit.md:1213
+- [[zz_media/thumbnails/elarion.png]] em Workflow\Reports\latest_vault_audit.md:1214
+- [[zz_media/thumbnails/cassian.png]] em Workflow\Reports\latest_vault_audit.md:1215
 - [[mira.png]] em Workflow\Reports\latest_vault_audit.md:1216
 - [[oric.png]] em Workflow\Reports\latest_vault_audit.md:1217
-- [[raziel.PNG]] em Workflow\Reports\latest_vault_audit.md:1218
-- [[th_raziel.PNG]] em Workflow\Reports\latest_vault_audit.md:1219
+- [[zz_media/thumbnails/raziel.png]] em Workflow\Reports\latest_vault_audit.md:1218
+- [[zz_media/thumbnails/th_raziel.png]] em Workflow\Reports\latest_vault_audit.md:1219
 - [[Locations/Floresta de Avenor]] em Workflow\Reports\latest_vault_audit.md:1220
-- [[varkh.jpeg]] em Workflow\Reports\latest_vault_audit.md:1221
-- [[th_varkh.PNG]] em Workflow\Reports\latest_vault_audit.md:1222
-- [[vezemir.png]] em Workflow\Reports\latest_vault_audit.md:1223
-- [[th_vezemir.PNG]] em Workflow\Reports\latest_vault_audit.md:1224
+- [[zz_media/characters/varkh.jpeg]] em Workflow\Reports\latest_vault_audit.md:1221
+- [[zz_media/thumbnails/th_varkh.png]] em Workflow\Reports\latest_vault_audit.md:1222
+- [[zz_media/thumbnails/vezemir.png]] em Workflow\Reports\latest_vault_audit.md:1223
+- [[zz_media/thumbnails/th_vezemir.png]] em Workflow\Reports\latest_vault_audit.md:1224
 - [[Some Location]] em Workflow\RPG_SYSTEM_DESIGN\RPG_FRONTMATTER_PROPOSAL.md:226
 - [[Some Territory]] em Workflow\RPG_SYSTEM_DESIGN\RPG_FRONTMATTER_PROPOSAL.md:227
 - [[Some Faction]] em Workflow\RPG_SYSTEM_DESIGN\RPG_FRONTMATTER_PROPOSAL.md:229
 - [[Region]] em Workflow\RPG_SYSTEM_DESIGN\RPG_MAP_AND_CALENDAR_REQUIREMENTS.md:47
 - [[npc.png]] em Workflow\RPG_SYSTEM_DESIGN\RPG_MEDIA_AND_HANDOUT_MODEL.md:114
 - [[...]] em Workflow\_audit\Comparison\MEDIA_COMPATIBILITY_MATRIX.md:28
-- [[zz_media/avenor.png]] em Workflow\_audit\Omnisvera\OMNISVERA_DASHBOARD_MAP_SYSTEMS.md:10
-- [[zz_media/banner-bastardo-de-ferro.png]] em Workflow\_audit\Omnisvera\OMNISVERA_FRONTMATTER_FIELD_MATRIX.md:62
-- [[zz_media/banner-o-corvo-da-mare-baixa.png]] em Workflow\_audit\Omnisvera\OMNISVERA_FRONTMATTER_FIELD_MATRIX.md:62
-- [[zz_media/avenor.png]] em Workflow\_audit\Omnisvera\OMNISVERA_FRONTMATTER_FIELD_MATRIX.md:95
-- [[zz_media/avenor.png]] em Workflow\_audit\Omnisvera\OMNISVERA_FRONTMATTER_FIELD_MATRIX.md:405
-- [[zz_media/banner-bastardo-de-ferro.png]] em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md:93
-- [[zz_media/banner-o-corvo-da-mare-baixa.png]] em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md:94
-- [[zz_media/avenor.png]] em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md:101
-- [[zz_media/avenor.png]] em Workflow\_audit\Omnisvera\OMNISVERA_MIGRATION_RISK_REGISTER.md:37
-- [[zz_media/avenor.png]] em Workflow\_audit\Omnisvera\OMNISVERA_OBSIDIAN_DEPENDENCY_MAP.md:81
+- [[zz_media/thumbnails/avenor.png]] em Workflow\_audit\Omnisvera\OMNISVERA_DASHBOARD_MAP_SYSTEMS.md:10
+- [[zz_media/covers/banner_bastardo_de_ferro.png]] em Workflow\_audit\Omnisvera\OMNISVERA_FRONTMATTER_FIELD_MATRIX.md:62
+- [[zz_media/covers/banner_o_corvo_da_mare_baixa.png]] em Workflow\_audit\Omnisvera\OMNISVERA_FRONTMATTER_FIELD_MATRIX.md:62
+- [[zz_media/thumbnails/avenor.png]] em Workflow\_audit\Omnisvera\OMNISVERA_FRONTMATTER_FIELD_MATRIX.md:95
+- [[zz_media/thumbnails/avenor.png]] em Workflow\_audit\Omnisvera\OMNISVERA_FRONTMATTER_FIELD_MATRIX.md:405
+- [[zz_media/covers/banner_bastardo_de_ferro.png]] em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md:93
+- [[zz_media/covers/banner_o_corvo_da_mare_baixa.png]] em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md:94
+- [[zz_media/thumbnails/avenor.png]] em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md:101
+- [[zz_media/thumbnails/avenor.png]] em Workflow\_audit\Omnisvera\OMNISVERA_MIGRATION_RISK_REGISTER.md:37
+- [[zz_media/thumbnails/avenor.png]] em Workflow\_audit\Omnisvera\OMNISVERA_OBSIDIAN_DEPENDENCY_MAP.md:81
 - [[Reino de Nimalia]] em Workflow\_audit\Pilot_Migration\PILOT_MIGRATION_REPORT.md:48
 - [[portrait]] em Workflow\_audit\Plugin_Migration\DATAVIEW_DATACARDS_TEMPLATE_MIGRATION_REPORT.md:116
 - [[thumbnail]] em Workflow\_audit\Plugin_Migration\DATAVIEW_DATACARDS_TEMPLATE_MIGRATION_REPORT.md:116
-- [[zz_media/avenor.png]] em Workflow\_archive\obsolete_review\Home_Jogadores_ARCHIVED.md:3
+- [[zz_media/thumbnails/avenor.png]] em Workflow\_archive\obsolete_review\Home_Jogadores_ARCHIVED.md:3
 - [[thumbnail]] em Templates\Characters\Antagonista.md:40
 - [[thumbnail]] em Templates\Characters\Criatura.md:41
 - [[thumbnail]] em Templates\Characters\NPC Importante.md:41
 - [[thumbnail]] em Templates\Characters\NPC Menor.md:41
 - [[thumbnail]] em Templates\Characters\Personagem Jogador.md:40
-- [[dukeofd.png]] em Characters\Individual\Augustus Terra Decimus.md:30
-- [[prop.png]] em Characters\Individual\Augustus Terra Decimus.md:67
-- [[elarion.png]] em Characters\Individual\Elarion Vaelthor.md:28
-- [[cassian.png]] em Characters\Individual\General Cassian Valerius.md:34
+- [[zz_media/thumbnails/dukeofd.png]] em Characters\Individual\Augustus Terra Decimus.md:30
+- [[zz_media/characters/prop.png]] em Characters\Individual\Augustus Terra Decimus.md:67
+- [[zz_media/thumbnails/elarion.png]] em Characters\Individual\Elarion Vaelthor.md:28
+- [[zz_media/thumbnails/cassian.png]] em Characters\Individual\General Cassian Valerius.md:34
 - [[mira.png]] em Characters\Individual\Mira Valen.md:26
 - [[oric.png]] em Characters\Individual\Padre Oric.md:28
-- [[raziel.PNG]] em Characters\Individual\Raziel.md:30
-- [[th_raziel.PNG]] em Characters\Individual\Raziel.md:127
+- [[zz_media/thumbnails/raziel.png]] em Characters\Individual\Raziel.md:30
+- [[zz_media/thumbnails/th_raziel.png]] em Characters\Individual\Raziel.md:127
 - [[Locations/Floresta de Avenor]] em Characters\Individual\Vandor, o Senhor das Bestas.md:68
-- [[varkh.jpeg]] em Characters\Individual\Varkh Nimalis.md:30
-- [[th_varkh.PNG]] em Characters\Individual\Varkh Nimalis.md:131
-- [[vezemir.png]] em Characters\Individual\Vezemir.md:42
-- [[th_vezemir.PNG]] em Characters\Individual\Vezemir.md:179
+- [[zz_media/characters/varkh.jpeg]] em Characters\Individual\Varkh Nimalis.md:30
+- [[zz_media/thumbnails/th_varkh.png]] em Characters\Individual\Varkh Nimalis.md:131
+- [[zz_media/thumbnails/vezemir.png]] em Characters\Individual\Vezemir.md:42
+- [[zz_media/thumbnails/th_vezemir.png]] em Characters\Individual\Vezemir.md:179
 
 ---
 
@@ -1434,66 +1434,66 @@ Nenhuma
 - **Imagens órfãs:** 150
 
 ### Referências quebradas em notas ativas
-- zz_media/banner-earthropo.png em CALENDAR.md
-- zz_media/earthropo.png em CULTURE.md
-- zz_media/cash.png em ECONOMY.md
-- zz_media/avenor.png em Home.md
-- zz_media/omnisvera.PNG em Home_Mestre.md
-- zz_media/avenor.png em Home_Mestre.md
-- zz_media/omnisvera.PNG" em Home_Mestre.md
+- zz_media/maps/banner_earthropo.png em CALENDAR.md
+- zz_media/maps/earthropo.png em CULTURE.md
+- zz_media/misc/cash.png em ECONOMY.md
+- zz_media/thumbnails/avenor.png em Home.md
+- zz_media/misc/omnisvera.png em Home_Mestre.md
+- zz_media/thumbnails/avenor.png em Home_Mestre.md
+- zz_media/misc/omnisvera.png" em Home_Mestre.md
 - zz_media/news1.png em LATEST_NEWS.md
-- zz_media/t7.png em LORE.md
-- zz_media/earthropo.png em MAPA DE EARTHROPO.md
+- zz_media/covers/t7.png em LORE.md
+- zz_media/maps/earthropo.png em MAPA DE EARTHROPO.md
 - zz_media/nimalia.png em MAPA DE NIMALIA.md
-- zz_media/banner-earthropo.png em TIMELINE.md
-- zz_media/alquimista.png em Classes\Alquimista.md
-- zz_media/clerigo.png em Classes\Clérigo.md
-- zz_media/guerreiro.png em Classes\Guerreiro.md
-- zz_media/avenor.png em Classes\Homem de Armas.md
-- zz_media/ladrao.png em Classes\Ladrão.md
-- zz_media/mago.png em Classes\Mago.md
-- zz_media/banner-as-cronicas-de-nevoa-de-sangue.png em EARTHROPO\00 - As Crônicas de Névoa de Sangue.md
-- zz_media/banner-bastardo-de-ferro.png em EARTHROPO\00 - O Bastardo de Ferro.md
-- zz_media/banner-o-corvo-da-mare-baixa.png em EARTHROPO\00 - O Corvo da Maré Baixa.md
-- zz_media/earthropo.png em EARTHROPO\EARTHROPO.md
-- zz_media/conclave-dos-errantes.png em Factions\Conclave dos Errantes.md
-- zz_media/coroa-de-nimalia.png em Factions\Coroa de Nimalia.md
-- zz_media/culto-dos-sussurrantes.png em Factions\Culto dos Sussurrantes.md
-- zz_media/guarda-real-nimalia.png em Factions\Guarda Real de Nimalia.md
-- zz_media/os-guardioes-do-veu-cinzento.png em Factions\Guardiões do Véu Cinzento.md
-- zz_media/guilda-dos-mercadores.png em Factions\Guilda dos Mercadores.md
-- zz_media/sentinelas-de-leth'valora.png" em Factions\Sentinelas de Leth'valora.md
-- zz_media/adagas-de-espectro-fantasma.png em Items\Adagas de Espectro Fantasma.md
-- zz_media/grisalma.png em Items\Grisalma.md
-- zz_media/manto-primordial.png em Items\Manto Primordial do Ancião.md
-- zz_media/muralha_dorn.png em Items\Muralha de Dorn.md
-- zz_media/med.PNG em Items\O Medalhão dos Guardiões do Véu Cinzento.md
-- zz_media/casa-da-moeda-exterior.png em Locations\Casa da Moeda de Nimalia.md
-- zz_media/fortaleza-de-gharok.png em Locations\Fortaleza de Gharok.md
-- zz_media/sentinelas-de-leth'valora.png" em Locations\Leth'valora.md
-- zz_media/mare-baixa.png em Locations\Maré Baixa.md
-- zz_media/mapa-de-nimalis.png em Locations\Nimalis.md
-- zz_media/ruinas-de-valthor.png em Locations\Ruínas de Valthor.md
-- zz_media/eclipse-obsidiana.png em Lore\Eclipse de Obsidiana.md
-- zz_media/o-fraturamento.png em Lore\O Fraturamento.md
-- zz_media/earthropo.png em Races\Antropo.md
-- zz_media/th_anao.PNG em Races\Anão.md
-- zz_media/earthropo.png em Races\Dragonbourn.md
-- zz_media/th_elf.PNG em Races\Elfo.md
-- zz_media/earthropo.png em Races\Halfling.md
-- zz_media/earthropo.png em Races\Humano.md
-- zz_media/earthropo.png em Races\Kenku.md
-- zz_media/caminho-dos-errantes.png em Religion\Caminho dos Errantes.md
-- zz_media/fe-dos-antigos.png em Religion\Fé dos Antigos.md
-- zz_media/igreja-das-chamas.png em Religion\Igreja das Chamas.md
-- zz_media/fe-dos-antigos.png em Religion\RELIGION.md
-- zz_media/avenor.png em Territories\Floresta de Avenor.md
-- zz_media/mapa-de-nimalia.png em Territories\Nimalia.md
+- zz_media/maps/banner_earthropo.png em TIMELINE.md
+- zz_media/thumbnails/alquimista.png em Classes\Alquimista.md
+- zz_media/thumbnails/clerigo.png em Classes\Clérigo.md
+- zz_media/thumbnails/guerreiro.png em Classes\Guerreiro.md
+- zz_media/thumbnails/avenor.png em Classes\Homem de Armas.md
+- zz_media/thumbnails/ladrao.png em Classes\Ladrão.md
+- zz_media/thumbnails/mago.png em Classes\Mago.md
+- zz_media/covers/banner_as_cronicas_de_nevoa_de_sangue.png em EARTHROPO\00 - As Crônicas de Névoa de Sangue.md
+- zz_media/covers/banner_bastardo_de_ferro.png em EARTHROPO\00 - O Bastardo de Ferro.md
+- zz_media/covers/banner_o_corvo_da_mare_baixa.png em EARTHROPO\00 - O Corvo da Maré Baixa.md
+- zz_media/maps/earthropo.png em EARTHROPO\EARTHROPO.md
+- zz_media/thumbnails/conclave_dos_errantes.png em Factions\Conclave dos Errantes.md
+- zz_media/maps/coroa_de_nimalia.png em Factions\Coroa de Nimalia.md
+- zz_media/thumbnails/culto_dos_sussurrantes.png em Factions\Culto dos Sussurrantes.md
+- zz_media/maps/guarda_real_nimalia.png em Factions\Guarda Real de Nimalia.md
+- zz_media/thumbnails/os_guardioes_do_veu_cinzento.png em Factions\Guardiões do Véu Cinzento.md
+- zz_media/thumbnails/guilda_dos_mercadores.png em Factions\Guilda dos Mercadores.md
+- zz_media/thumbnails/sentinelas_de_leth_valora.png" em Factions\Sentinelas de Leth'valora.md
+- zz_media/thumbnails/adagas_de_espectro_fantasma.png em Items\Adagas de Espectro Fantasma.md
+- zz_media/thumbnails/grisalma.png em Items\Grisalma.md
+- zz_media/thumbnails/manto_primordial.png em Items\Manto Primordial do Ancião.md
+- zz_media/thumbnails/muralha_dorn.png em Items\Muralha de Dorn.md
+- zz_media/thumbnails/med.png em Items\O Medalhão dos Guardiões do Véu Cinzento.md
+- zz_media/thumbnails/casa_da_moeda_exterior.png em Locations\Casa da Moeda de Nimalia.md
+- zz_media/thumbnails/fortaleza_de_gharok.png em Locations\Fortaleza de Gharok.md
+- zz_media/thumbnails/sentinelas_de_leth_valora.png" em Locations\Leth'valora.md
+- zz_media/thumbnails/mare_baixa.png em Locations\Maré Baixa.md
+- zz_media/maps/mapa_de_nimalis.png em Locations\Nimalis.md
+- zz_media/thumbnails/ruinas_de_valthor.png em Locations\Ruínas de Valthor.md
+- zz_media/thumbnails/eclipse_obsidiana.png em Lore\Eclipse de Obsidiana.md
+- zz_media/thumbnails/o_fraturamento.png em Lore\O Fraturamento.md
+- zz_media/maps/earthropo.png em Races\Antropo.md
+- zz_media/thumbnails/th_anao.png em Races\Anão.md
+- zz_media/maps/earthropo.png em Races\Dragonbourn.md
+- zz_media/thumbnails/th_elf.png em Races\Elfo.md
+- zz_media/maps/earthropo.png em Races\Halfling.md
+- zz_media/maps/earthropo.png em Races\Humano.md
+- zz_media/maps/earthropo.png em Races\Kenku.md
+- zz_media/thumbnails/caminho_dos_errantes.png em Religion\Caminho dos Errantes.md
+- zz_media/thumbnails/fe_dos_antigos.png em Religion\Fé dos Antigos.md
+- zz_media/thumbnails/igreja_das_chamas.png em Religion\Igreja das Chamas.md
+- zz_media/thumbnails/fe_dos_antigos.png em Religion\RELIGION.md
+- zz_media/thumbnails/avenor.png em Territories\Floresta de Avenor.md
+- zz_media/maps/mapa_de_nimalia.png em Territories\Nimalia.md
 - zz_media/nome-do-arquivo.ext`. em Workflow\CHARACTER_SCHEMA.md
-- zz_media/vezemir.png em Workflow\OMNISVERA_MEDIA_STANDARD.md
-- zz_media/avenor.png em Workflow\OMNISVERA_MEDIA_STANDARD.md
-- zz_media/avenor.png`; em Workflow\Runtime Audit Report.md
-- zz_media/earthropo.png` em Workflow\Runtime Audit Report.md
+- zz_media/thumbnails/vezemir.png em Workflow\OMNISVERA_MEDIA_STANDARD.md
+- zz_media/thumbnails/avenor.png em Workflow\OMNISVERA_MEDIA_STANDARD.md
+- zz_media/thumbnails/avenor.png`; em Workflow\Runtime Audit Report.md
+- zz_media/maps/earthropo.png` em Workflow\Runtime Audit Report.md
 - zz_media/nimalia.png` em Workflow\Runtime Audit Report.md
 - zz_media/` em Workflow\AI_CONTEXT\00_README_FOR_AI.md
 - zz_media/` em Workflow\AI_CONTEXT\04_MEDIA_RULES.md
@@ -1524,41 +1524,41 @@ Nenhuma
 - zz_media/mapa-nimalia.png em Workflow\COMPATIBILITY_LAYER\MEDIA_FIELD_COMPATIBILITY_MODEL.md
 - zz_media/carta-thumb.png em Workflow\COMPATIBILITY_LAYER\MEDIA_FIELD_COMPATIBILITY_MODEL.md
 - zz_media/carta-antiga.png em Workflow\COMPATIBILITY_LAYER\MEDIA_FIELD_COMPATIBILITY_MODEL.md
-- zz_media/avenor.png em Workflow\Reports\latest_vault_audit.md
-- zz_media/banner-as-cronicas-de-nevoa-de-sangue.png em Workflow\Reports\latest_vault_audit.md
-- zz_media/banner-bastardo-de-ferro.png em Workflow\Reports\latest_vault_audit.md
-- zz_media/banner-o-corvo-da-mare-baixa.png em Workflow\Reports\latest_vault_audit.md
-- zz_media/vezemir.png em Workflow\Reports\latest_vault_audit.md
-- zz_media/varkh.jpeg em Workflow\Reports\latest_vault_audit.md
+- zz_media/thumbnails/avenor.png em Workflow\Reports\latest_vault_audit.md
+- zz_media/covers/banner_as_cronicas_de_nevoa_de_sangue.png em Workflow\Reports\latest_vault_audit.md
+- zz_media/covers/banner_bastardo_de_ferro.png em Workflow\Reports\latest_vault_audit.md
+- zz_media/covers/banner_o_corvo_da_mare_baixa.png em Workflow\Reports\latest_vault_audit.md
+- zz_media/thumbnails/vezemir.png em Workflow\Reports\latest_vault_audit.md
+- zz_media/characters/varkh.jpeg em Workflow\Reports\latest_vault_audit.md
 - zz_media/raziel.png em Workflow\Reports\latest_vault_audit.md
 - zz_media/lyladuke.png em Workflow\Reports\latest_vault_audit.md
 - zz_media/t52.png em Workflow\Reports\latest_vault_audit.md
 - zz_media/t6.png em Workflow\Reports\latest_vault_audit.md
-- zz_media/cash.png em Workflow\Reports\latest_vault_audit.md
+- zz_media/misc/cash.png em Workflow\Reports\latest_vault_audit.md
 - zz_media/news1.png em Workflow\Reports\latest_vault_audit.md
-- zz_media/t7.png em Workflow\Reports\latest_vault_audit.md
-- zz_media/earthropo.png em Workflow\Reports\latest_vault_audit.md
+- zz_media/covers/t7.png em Workflow\Reports\latest_vault_audit.md
+- zz_media/maps/earthropo.png em Workflow\Reports\latest_vault_audit.md
 - zz_media/nimalia.png em Workflow\Reports\latest_vault_audit.md
 - zz_media/t1.png em Workflow\Reports\latest_vault_audit.md
-- zz_media/alquimista.png em Workflow\Reports\latest_vault_audit.md
-- zz_media/clerigo.png em Workflow\Reports\latest_vault_audit.md
-- zz_media/guerreiro.png em Workflow\Reports\latest_vault_audit.md
-- zz_media/ladrao.png em Workflow\Reports\latest_vault_audit.md
-- zz_media/mago.png em Workflow\Reports\latest_vault_audit.md
-- zz_media/grisalma.png em Workflow\Reports\latest_vault_audit.md
-- zz_media/muralha_dorn.png em Workflow\Reports\latest_vault_audit.md
-- zz_media/med.PNG em Workflow\Reports\latest_vault_audit.md
-- zz_media/fortaleza-de-gharok.png em Workflow\Reports\latest_vault_audit.md
+- zz_media/thumbnails/alquimista.png em Workflow\Reports\latest_vault_audit.md
+- zz_media/thumbnails/clerigo.png em Workflow\Reports\latest_vault_audit.md
+- zz_media/thumbnails/guerreiro.png em Workflow\Reports\latest_vault_audit.md
+- zz_media/thumbnails/ladrao.png em Workflow\Reports\latest_vault_audit.md
+- zz_media/thumbnails/mago.png em Workflow\Reports\latest_vault_audit.md
+- zz_media/thumbnails/grisalma.png em Workflow\Reports\latest_vault_audit.md
+- zz_media/thumbnails/muralha_dorn.png em Workflow\Reports\latest_vault_audit.md
+- zz_media/thumbnails/med.png em Workflow\Reports\latest_vault_audit.md
+- zz_media/thumbnails/fortaleza_de_gharok.png em Workflow\Reports\latest_vault_audit.md
 - zz_media/leth'valora.png em Workflow\Reports\latest_vault_audit.md
 - zz_media/gutt.png em Workflow\Reports\latest_vault_audit.md
 - zz_media/w.png em Workflow\Reports\latest_vault_audit.md
-- zz_media/th_anao.PNG em Workflow\Reports\latest_vault_audit.md
-- zz_media/th_elf.PNG em Workflow\Reports\latest_vault_audit.md
+- zz_media/thumbnails/th_anao.png em Workflow\Reports\latest_vault_audit.md
+- zz_media/thumbnails/th_elf.png em Workflow\Reports\latest_vault_audit.md
 - zz_media/t8.png em Workflow\Reports\latest_vault_audit.md
-- zz_media/mapa-de-nimalia.png em Workflow\Reports\latest_vault_audit.md
+- zz_media/maps/mapa_de_nimalia.png em Workflow\Reports\latest_vault_audit.md
 - zz_media/nome-do-arquivo.ext`. em Workflow\Reports\latest_vault_audit.md
-- zz_media/avenor.png`; em Workflow\Reports\latest_vault_audit.md
-- zz_media/earthropo.png` em Workflow\Reports\latest_vault_audit.md
+- zz_media/thumbnails/avenor.png`; em Workflow\Reports\latest_vault_audit.md
+- zz_media/maps/earthropo.png` em Workflow\Reports\latest_vault_audit.md
 - zz_media/nimalia.png` em Workflow\Reports\latest_vault_audit.md
 - zz_media/` em Workflow\Reports\latest_vault_audit.md
 - zz_media/characters/` em Workflow\Reports\latest_vault_audit.md
@@ -1582,14 +1582,14 @@ Nenhuma
 - zz_media/clérigo.png em Workflow\Reports\latest_vault_audit.md
 - zz_media/mestre em Workflow\Reports\latest_vault_audit.md
 - zz_media/ladrão.png em Workflow\Reports\latest_vault_audit.md
-- zz_media/th_dukeofd.png em Workflow\Reports\latest_vault_audit.md
-- zz_media/th_elarion.PNG em Workflow\Reports\latest_vault_audit.md
-- zz_media/th_cassian.PNG em Workflow\Reports\latest_vault_audit.md
-- zz_media/th_mira.PNG em Workflow\Reports\latest_vault_audit.md
-- zz_media/th_oric.PNG em Workflow\Reports\latest_vault_audit.md
-- zz_media/th_raziel.PNG em Workflow\Reports\latest_vault_audit.md
-- zz_media/th_varkh.PNG em Workflow\Reports\latest_vault_audit.md
-- zz_media/th_vezemir.PNG em Workflow\Reports\latest_vault_audit.md
+- zz_media/thumbnails/th_dukeofd.png em Workflow\Reports\latest_vault_audit.md
+- zz_media/thumbnails/th_elarion.png em Workflow\Reports\latest_vault_audit.md
+- zz_media/thumbnails/th_cassian.png em Workflow\Reports\latest_vault_audit.md
+- zz_media/thumbnails/th_mira.png em Workflow\Reports\latest_vault_audit.md
+- zz_media/thumbnails/th_oric.png em Workflow\Reports\latest_vault_audit.md
+- zz_media/thumbnails/th_raziel.png em Workflow\Reports\latest_vault_audit.md
+- zz_media/thumbnails/th_varkh.png em Workflow\Reports\latest_vault_audit.md
+- zz_media/thumbnails/th_vezemir.png em Workflow\Reports\latest_vault_audit.md
 - zz_media/th_npc.png em Workflow\RPG_SYSTEM_DESIGN\RPG_FRONTMATTER_PROPOSAL.md
 - zz_media/npc.png em Workflow\RPG_SYSTEM_DESIGN\RPG_FRONTMATTER_PROPOSAL.md
 - zz_media/session-cover.png em Workflow\RPG_SYSTEM_DESIGN\RPG_FRONTMATTER_PROPOSAL.md
@@ -1610,7 +1610,7 @@ Nenhuma
 - zz_media/ui` em Workflow\RPG_SYSTEM_DESIGN\RPG_MEDIA_AND_HANDOUT_MODEL.md
 - zz_media/t52.png` em Workflow\_audit\Cleanup\BROKEN_LINKS_AND_MEDIA_REFERENCES.md
 - zz_media/t6.png` em Workflow\_audit\Cleanup\BROKEN_LINKS_AND_MEDIA_REFERENCES.md
-- zz_media/banner-as-cronicas-de-nevoa-de-sangue.png em Workflow\_audit\Cleanup\BROKEN_LINKS_AND_MEDIA_REFERENCES.md
+- zz_media/covers/banner_as_cronicas_de_nevoa_de_sangue.png em Workflow\_audit\Cleanup\BROKEN_LINKS_AND_MEDIA_REFERENCES.md
 - zz_media/news1.png` em Workflow\_audit\Cleanup\BROKEN_LINKS_AND_MEDIA_REFERENCES.md
 - zz_media/leth'valora.png` em Workflow\_audit\Cleanup\BROKEN_LINKS_AND_MEDIA_REFERENCES.md
 - zz_media/gutt.png` em Workflow\_audit\Cleanup\BROKEN_LINKS_AND_MEDIA_REFERENCES.md
@@ -1621,237 +1621,237 @@ Nenhuma
 - zz_media/mestre em Workflow\_audit\Cleanup\BROKEN_LINKS_AND_MEDIA_REFERENCES.md
 - zz_media/ladrão.png` em Workflow\_audit\Cleanup\BROKEN_LINKS_AND_MEDIA_REFERENCES.md
 - zz_media/characters/varkh.png` em Workflow\_audit\Cleanup\BROKEN_LINKS_AND_MEDIA_REFERENCES.md
-- zz_media/adagas-de-espectro-fantasma.png` em Workflow\_audit\Cleanup\BROKEN_LINKS_AND_MEDIA_REFERENCES.md
-- zz_media/area-comercial-1.png` em Workflow\_audit\Cleanup\BROKEN_LINKS_AND_MEDIA_REFERENCES.md
-- zz_media/area-comercial-2.png` em Workflow\_audit\Cleanup\BROKEN_LINKS_AND_MEDIA_REFERENCES.md
-- zz_media/area-comercial-3.png` em Workflow\_audit\Cleanup\BROKEN_LINKS_AND_MEDIA_REFERENCES.md
-- zz_media/banner-as-cronicas-de-nevoa-de-sangue.png` em Workflow\_audit\Cleanup\BROKEN_LINKS_AND_MEDIA_REFERENCES.md
-- zz_media/banner-ecos-do-mundo-perdido.png` em Workflow\_audit\Cleanup\BROKEN_LINKS_AND_MEDIA_REFERENCES.md
-- zz_media/bosque-sussurrante.png` em Workflow\_audit\Cleanup\BROKEN_LINKS_AND_MEDIA_REFERENCES.md
-- zz_media/caminho-dos-errantes.png` em Workflow\_audit\Cleanup\BROKEN_LINKS_AND_MEDIA_REFERENCES.md
-- zz_media/campos-de-earthropo.png` em Workflow\_audit\Cleanup\BROKEN_LINKS_AND_MEDIA_REFERENCES.md
-- zz_media/casa-da-moeda-exterior.png` em Workflow\_audit\Cleanup\BROKEN_LINKS_AND_MEDIA_REFERENCES.md
-- zz_media/casa-da-moeda-interior.png` em Workflow\_audit\Cleanup\BROKEN_LINKS_AND_MEDIA_REFERENCES.md
-- zz_media/conclave-dos-errantes.png` em Workflow\_audit\Cleanup\BROKEN_LINKS_AND_MEDIA_REFERENCES.md
-- zz_media/coroa-de-nimalia.png` em Workflow\_audit\Cleanup\BROKEN_LINKS_AND_MEDIA_REFERENCES.md
-- zz_media/culto-dos-sussurrantes.png` em Workflow\_audit\Cleanup\BROKEN_LINKS_AND_MEDIA_REFERENCES.md
-- zz_media/distrito-comercial.png` em Workflow\_audit\Cleanup\BROKEN_LINKS_AND_MEDIA_REFERENCES.md
-- zz_media/eclipse-obsidiana.png` em Workflow\_audit\Cleanup\BROKEN_LINKS_AND_MEDIA_REFERENCES.md
-- zz_media/elfs.PNG` em Workflow\_audit\Cleanup\BROKEN_LINKS_AND_MEDIA_REFERENCES.md
-- zz_media/fe-dos-antigos.png` em Workflow\_audit\Cleanup\BROKEN_LINKS_AND_MEDIA_REFERENCES.md
-- zz_media/guarda-real-nimalia.png` em Workflow\_audit\Cleanup\BROKEN_LINKS_AND_MEDIA_REFERENCES.md
-- zz_media/guilda-dos-mercadores.png` em Workflow\_audit\Cleanup\BROKEN_LINKS_AND_MEDIA_REFERENCES.md
-- zz_media/igreja-das-chamas.png` em Workflow\_audit\Cleanup\BROKEN_LINKS_AND_MEDIA_REFERENCES.md
-- zz_media/manto-primordial.png` em Workflow\_audit\Cleanup\BROKEN_LINKS_AND_MEDIA_REFERENCES.md
-- zz_media/mapa-de-nimalis.png` em Workflow\_audit\Cleanup\BROKEN_LINKS_AND_MEDIA_REFERENCES.md
-- zz_media/mare-baixa.png` em Workflow\_audit\Cleanup\BROKEN_LINKS_AND_MEDIA_REFERENCES.md
-- zz_media/mira.PNG` em Workflow\_audit\Cleanup\BROKEN_LINKS_AND_MEDIA_REFERENCES.md
-- zz_media/o-fraturamento.png` em Workflow\_audit\Cleanup\BROKEN_LINKS_AND_MEDIA_REFERENCES.md
-- zz_media/omnisvera.PNG` em Workflow\_audit\Cleanup\BROKEN_LINKS_AND_MEDIA_REFERENCES.md
-- zz_media/oric.PNG` em Workflow\_audit\Cleanup\BROKEN_LINKS_AND_MEDIA_REFERENCES.md
-- zz_media/os-guardioes-do-veu-cinzento.png` em Workflow\_audit\Cleanup\BROKEN_LINKS_AND_MEDIA_REFERENCES.md
-- zz_media/ruinas-de-valthor.png` em Workflow\_audit\Cleanup\BROKEN_LINKS_AND_MEDIA_REFERENCES.md
-- zz_media/sentinelas-de-leth'valora.png` em Workflow\_audit\Cleanup\BROKEN_LINKS_AND_MEDIA_REFERENCES.md
+- zz_media/thumbnails/adagas_de_espectro_fantasma.png` em Workflow\_audit\Cleanup\BROKEN_LINKS_AND_MEDIA_REFERENCES.md
+- zz_media/locations/area_comercial_1.png` em Workflow\_audit\Cleanup\BROKEN_LINKS_AND_MEDIA_REFERENCES.md
+- zz_media/thumbnails/area_comercial_2.png` em Workflow\_audit\Cleanup\BROKEN_LINKS_AND_MEDIA_REFERENCES.md
+- zz_media/locations/area_comercial_3.png` em Workflow\_audit\Cleanup\BROKEN_LINKS_AND_MEDIA_REFERENCES.md
+- zz_media/covers/banner_as_cronicas_de_nevoa_de_sangue.png` em Workflow\_audit\Cleanup\BROKEN_LINKS_AND_MEDIA_REFERENCES.md
+- zz_media/covers/banner_ecos_do_mundo_perdido.png` em Workflow\_audit\Cleanup\BROKEN_LINKS_AND_MEDIA_REFERENCES.md
+- zz_media/thumbnails/bosque_sussurrante.png` em Workflow\_audit\Cleanup\BROKEN_LINKS_AND_MEDIA_REFERENCES.md
+- zz_media/thumbnails/caminho_dos_errantes.png` em Workflow\_audit\Cleanup\BROKEN_LINKS_AND_MEDIA_REFERENCES.md
+- zz_media/maps/campos_de_earthropo.png` em Workflow\_audit\Cleanup\BROKEN_LINKS_AND_MEDIA_REFERENCES.md
+- zz_media/thumbnails/casa_da_moeda_exterior.png` em Workflow\_audit\Cleanup\BROKEN_LINKS_AND_MEDIA_REFERENCES.md
+- zz_media/locations/casa_da_moeda_interior.png` em Workflow\_audit\Cleanup\BROKEN_LINKS_AND_MEDIA_REFERENCES.md
+- zz_media/thumbnails/conclave_dos_errantes.png` em Workflow\_audit\Cleanup\BROKEN_LINKS_AND_MEDIA_REFERENCES.md
+- zz_media/maps/coroa_de_nimalia.png` em Workflow\_audit\Cleanup\BROKEN_LINKS_AND_MEDIA_REFERENCES.md
+- zz_media/thumbnails/culto_dos_sussurrantes.png` em Workflow\_audit\Cleanup\BROKEN_LINKS_AND_MEDIA_REFERENCES.md
+- zz_media/thumbnails/distrito_comercial.png` em Workflow\_audit\Cleanup\BROKEN_LINKS_AND_MEDIA_REFERENCES.md
+- zz_media/thumbnails/eclipse_obsidiana.png` em Workflow\_audit\Cleanup\BROKEN_LINKS_AND_MEDIA_REFERENCES.md
+- zz_media/misc/elfs.png` em Workflow\_audit\Cleanup\BROKEN_LINKS_AND_MEDIA_REFERENCES.md
+- zz_media/thumbnails/fe_dos_antigos.png` em Workflow\_audit\Cleanup\BROKEN_LINKS_AND_MEDIA_REFERENCES.md
+- zz_media/maps/guarda_real_nimalia.png` em Workflow\_audit\Cleanup\BROKEN_LINKS_AND_MEDIA_REFERENCES.md
+- zz_media/thumbnails/guilda_dos_mercadores.png` em Workflow\_audit\Cleanup\BROKEN_LINKS_AND_MEDIA_REFERENCES.md
+- zz_media/thumbnails/igreja_das_chamas.png` em Workflow\_audit\Cleanup\BROKEN_LINKS_AND_MEDIA_REFERENCES.md
+- zz_media/thumbnails/manto_primordial.png` em Workflow\_audit\Cleanup\BROKEN_LINKS_AND_MEDIA_REFERENCES.md
+- zz_media/maps/mapa_de_nimalis.png` em Workflow\_audit\Cleanup\BROKEN_LINKS_AND_MEDIA_REFERENCES.md
+- zz_media/thumbnails/mare_baixa.png` em Workflow\_audit\Cleanup\BROKEN_LINKS_AND_MEDIA_REFERENCES.md
+- zz_media/thumbnails/mira.png` em Workflow\_audit\Cleanup\BROKEN_LINKS_AND_MEDIA_REFERENCES.md
+- zz_media/thumbnails/o_fraturamento.png` em Workflow\_audit\Cleanup\BROKEN_LINKS_AND_MEDIA_REFERENCES.md
+- zz_media/misc/omnisvera.png` em Workflow\_audit\Cleanup\BROKEN_LINKS_AND_MEDIA_REFERENCES.md
+- zz_media/thumbnails/oric.png` em Workflow\_audit\Cleanup\BROKEN_LINKS_AND_MEDIA_REFERENCES.md
+- zz_media/thumbnails/os_guardioes_do_veu_cinzento.png` em Workflow\_audit\Cleanup\BROKEN_LINKS_AND_MEDIA_REFERENCES.md
+- zz_media/thumbnails/ruinas_de_valthor.png` em Workflow\_audit\Cleanup\BROKEN_LINKS_AND_MEDIA_REFERENCES.md
+- zz_media/thumbnails/sentinelas_de_leth_valora.png` em Workflow\_audit\Cleanup\BROKEN_LINKS_AND_MEDIA_REFERENCES.md
 - zz_media/smoke.mp3` em Workflow\_audit\Cleanup\BROKEN_LINKS_AND_MEDIA_REFERENCES.md
-- zz_media/sound.png` em Workflow\_audit\Cleanup\BROKEN_LINKS_AND_MEDIA_REFERENCES.md
-- zz_media/vale-dourado.png` em Workflow\_audit\Cleanup\BROKEN_LINKS_AND_MEDIA_REFERENCES.md
-- zz_media/veu-cinzento.png` em Workflow\_audit\Cleanup\BROKEN_LINKS_AND_MEDIA_REFERENCES.md
+- zz_media/misc/sound.png` em Workflow\_audit\Cleanup\BROKEN_LINKS_AND_MEDIA_REFERENCES.md
+- zz_media/thumbnails/vale_dourado.png` em Workflow\_audit\Cleanup\BROKEN_LINKS_AND_MEDIA_REFERENCES.md
+- zz_media/thumbnails/veu_cinzento.png` em Workflow\_audit\Cleanup\BROKEN_LINKS_AND_MEDIA_REFERENCES.md
 - zz_media/Tribucia.png` em Workflow\_audit\Comparison\MAP_CALENDAR_COMPATIBILITY_MATRIX.md
 - zz_media/classes/`; em Workflow\_audit\Healthcheck\LOCAL_PENDING_CHANGES_REVIEW.md
-- zz_media/coroa-de-nimalia.png` em Workflow\_audit\Media_Mapping\OPERATIONAL_DATACARDS_AND_MEDIA_FIX_REPORT.md
-- zz_media/conclave-dos-errantes.png` em Workflow\_audit\Media_Mapping\OPERATIONAL_DATACARDS_AND_MEDIA_FIX_REPORT.md
-- zz_media/os-guardioes-do-veu-cinzento.png` em Workflow\_audit\Media_Mapping\OPERATIONAL_DATACARDS_AND_MEDIA_FIX_REPORT.md
-- zz_media/guilda-dos-mercadores.png` em Workflow\_audit\Media_Mapping\OPERATIONAL_DATACARDS_AND_MEDIA_FIX_REPORT.md
-- zz_media/guarda-real-nimalia.png` em Workflow\_audit\Media_Mapping\OPERATIONAL_DATACARDS_AND_MEDIA_FIX_REPORT.md
-- zz_media/culto-dos-sussurrantes.png` em Workflow\_audit\Media_Mapping\OPERATIONAL_DATACARDS_AND_MEDIA_FIX_REPORT.md
-- zz_media/sentinelas-de-leth'valora.png` em Workflow\_audit\Media_Mapping\OPERATIONAL_DATACARDS_AND_MEDIA_FIX_REPORT.md
-- zz_media/mare-baixa.png` em Workflow\_audit\Media_Mapping\OPERATIONAL_DATACARDS_AND_MEDIA_FIX_REPORT.md
-- zz_media/casa-da-moeda-exterior.png` em Workflow\_audit\Media_Mapping\OPERATIONAL_DATACARDS_AND_MEDIA_FIX_REPORT.md
-- zz_media/mapa-de-nimalis.png` em Workflow\_audit\Media_Mapping\OPERATIONAL_DATACARDS_AND_MEDIA_FIX_REPORT.md
-- zz_media/ruinas-de-valthor.png` em Workflow\_audit\Media_Mapping\OPERATIONAL_DATACARDS_AND_MEDIA_FIX_REPORT.md
-- zz_media/fortaleza-de-gharok.png` em Workflow\_audit\Media_Mapping\OPERATIONAL_DATACARDS_AND_MEDIA_FIX_REPORT.md
-- zz_media/o-fraturamento.png` em Workflow\_audit\Media_Mapping\OPERATIONAL_DATACARDS_AND_MEDIA_FIX_REPORT.md
-- zz_media/eclipse-obsidiana.png` em Workflow\_audit\Media_Mapping\OPERATIONAL_DATACARDS_AND_MEDIA_FIX_REPORT.md
-- zz_media/fe-dos-antigos.png` em Workflow\_audit\Media_Mapping\OPERATIONAL_DATACARDS_AND_MEDIA_FIX_REPORT.md
-- zz_media/igreja-das-chamas.png` em Workflow\_audit\Media_Mapping\OPERATIONAL_DATACARDS_AND_MEDIA_FIX_REPORT.md
-- zz_media/caminho-dos-errantes.png` em Workflow\_audit\Media_Mapping\OPERATIONAL_DATACARDS_AND_MEDIA_FIX_REPORT.md
-- zz_media/adagas-de-espectro-fantasma.png` em Workflow\_audit\Media_Mapping\OPERATIONAL_DATACARDS_AND_MEDIA_FIX_REPORT.md
-- zz_media/manto-primordial.png` em Workflow\_audit\Media_Mapping\OPERATIONAL_DATACARDS_AND_MEDIA_FIX_REPORT.md
-- zz_media/th_dukeofd.png em Workflow\_audit\Omnisvera\OMNISVERA_CHARACTER_STRUCTURE_MAP.md
-- zz_media/th_elarion.PNG em Workflow\_audit\Omnisvera\OMNISVERA_CHARACTER_STRUCTURE_MAP.md
-- zz_media/th_cassian.PNG em Workflow\_audit\Omnisvera\OMNISVERA_CHARACTER_STRUCTURE_MAP.md
-- zz_media/th_mira.PNG em Workflow\_audit\Omnisvera\OMNISVERA_CHARACTER_STRUCTURE_MAP.md
-- zz_media/th_oric.PNG em Workflow\_audit\Omnisvera\OMNISVERA_CHARACTER_STRUCTURE_MAP.md
-- zz_media/th_raziel.PNG em Workflow\_audit\Omnisvera\OMNISVERA_CHARACTER_STRUCTURE_MAP.md
-- zz_media/th_varkh.PNG em Workflow\_audit\Omnisvera\OMNISVERA_CHARACTER_STRUCTURE_MAP.md
-- zz_media/th_vezemir.PNG em Workflow\_audit\Omnisvera\OMNISVERA_CHARACTER_STRUCTURE_MAP.md
-- zz_media/avenor.png em Workflow\_audit\Omnisvera\OMNISVERA_DASHBOARD_MAP_SYSTEMS.md
-- zz_media/t7.png em Workflow\_audit\Omnisvera\OMNISVERA_FACTION_TERRITORY_LOCATION_MAP.md
-- zz_media/avenor.png em Workflow\_audit\Omnisvera\OMNISVERA_FACTION_TERRITORY_LOCATION_MAP.md
-- zz_media/mapa-de-nimalia.png em Workflow\_audit\Omnisvera\OMNISVERA_FACTION_TERRITORY_LOCATION_MAP.md
-- zz_media/fortaleza-de-gharok.png em Workflow\_audit\Omnisvera\OMNISVERA_FACTION_TERRITORY_LOCATION_MAP.md
+- zz_media/maps/coroa_de_nimalia.png` em Workflow\_audit\Media_Mapping\OPERATIONAL_DATACARDS_AND_MEDIA_FIX_REPORT.md
+- zz_media/thumbnails/conclave_dos_errantes.png` em Workflow\_audit\Media_Mapping\OPERATIONAL_DATACARDS_AND_MEDIA_FIX_REPORT.md
+- zz_media/thumbnails/os_guardioes_do_veu_cinzento.png` em Workflow\_audit\Media_Mapping\OPERATIONAL_DATACARDS_AND_MEDIA_FIX_REPORT.md
+- zz_media/thumbnails/guilda_dos_mercadores.png` em Workflow\_audit\Media_Mapping\OPERATIONAL_DATACARDS_AND_MEDIA_FIX_REPORT.md
+- zz_media/maps/guarda_real_nimalia.png` em Workflow\_audit\Media_Mapping\OPERATIONAL_DATACARDS_AND_MEDIA_FIX_REPORT.md
+- zz_media/thumbnails/culto_dos_sussurrantes.png` em Workflow\_audit\Media_Mapping\OPERATIONAL_DATACARDS_AND_MEDIA_FIX_REPORT.md
+- zz_media/thumbnails/sentinelas_de_leth_valora.png` em Workflow\_audit\Media_Mapping\OPERATIONAL_DATACARDS_AND_MEDIA_FIX_REPORT.md
+- zz_media/thumbnails/mare_baixa.png` em Workflow\_audit\Media_Mapping\OPERATIONAL_DATACARDS_AND_MEDIA_FIX_REPORT.md
+- zz_media/thumbnails/casa_da_moeda_exterior.png` em Workflow\_audit\Media_Mapping\OPERATIONAL_DATACARDS_AND_MEDIA_FIX_REPORT.md
+- zz_media/maps/mapa_de_nimalis.png` em Workflow\_audit\Media_Mapping\OPERATIONAL_DATACARDS_AND_MEDIA_FIX_REPORT.md
+- zz_media/thumbnails/ruinas_de_valthor.png` em Workflow\_audit\Media_Mapping\OPERATIONAL_DATACARDS_AND_MEDIA_FIX_REPORT.md
+- zz_media/thumbnails/fortaleza_de_gharok.png` em Workflow\_audit\Media_Mapping\OPERATIONAL_DATACARDS_AND_MEDIA_FIX_REPORT.md
+- zz_media/thumbnails/o_fraturamento.png` em Workflow\_audit\Media_Mapping\OPERATIONAL_DATACARDS_AND_MEDIA_FIX_REPORT.md
+- zz_media/thumbnails/eclipse_obsidiana.png` em Workflow\_audit\Media_Mapping\OPERATIONAL_DATACARDS_AND_MEDIA_FIX_REPORT.md
+- zz_media/thumbnails/fe_dos_antigos.png` em Workflow\_audit\Media_Mapping\OPERATIONAL_DATACARDS_AND_MEDIA_FIX_REPORT.md
+- zz_media/thumbnails/igreja_das_chamas.png` em Workflow\_audit\Media_Mapping\OPERATIONAL_DATACARDS_AND_MEDIA_FIX_REPORT.md
+- zz_media/thumbnails/caminho_dos_errantes.png` em Workflow\_audit\Media_Mapping\OPERATIONAL_DATACARDS_AND_MEDIA_FIX_REPORT.md
+- zz_media/thumbnails/adagas_de_espectro_fantasma.png` em Workflow\_audit\Media_Mapping\OPERATIONAL_DATACARDS_AND_MEDIA_FIX_REPORT.md
+- zz_media/thumbnails/manto_primordial.png` em Workflow\_audit\Media_Mapping\OPERATIONAL_DATACARDS_AND_MEDIA_FIX_REPORT.md
+- zz_media/thumbnails/th_dukeofd.png em Workflow\_audit\Omnisvera\OMNISVERA_CHARACTER_STRUCTURE_MAP.md
+- zz_media/thumbnails/th_elarion.png em Workflow\_audit\Omnisvera\OMNISVERA_CHARACTER_STRUCTURE_MAP.md
+- zz_media/thumbnails/th_cassian.png em Workflow\_audit\Omnisvera\OMNISVERA_CHARACTER_STRUCTURE_MAP.md
+- zz_media/thumbnails/th_mira.png em Workflow\_audit\Omnisvera\OMNISVERA_CHARACTER_STRUCTURE_MAP.md
+- zz_media/thumbnails/th_oric.png em Workflow\_audit\Omnisvera\OMNISVERA_CHARACTER_STRUCTURE_MAP.md
+- zz_media/thumbnails/th_raziel.png em Workflow\_audit\Omnisvera\OMNISVERA_CHARACTER_STRUCTURE_MAP.md
+- zz_media/thumbnails/th_varkh.png em Workflow\_audit\Omnisvera\OMNISVERA_CHARACTER_STRUCTURE_MAP.md
+- zz_media/thumbnails/th_vezemir.png em Workflow\_audit\Omnisvera\OMNISVERA_CHARACTER_STRUCTURE_MAP.md
+- zz_media/thumbnails/avenor.png em Workflow\_audit\Omnisvera\OMNISVERA_DASHBOARD_MAP_SYSTEMS.md
+- zz_media/covers/t7.png em Workflow\_audit\Omnisvera\OMNISVERA_FACTION_TERRITORY_LOCATION_MAP.md
+- zz_media/thumbnails/avenor.png em Workflow\_audit\Omnisvera\OMNISVERA_FACTION_TERRITORY_LOCATION_MAP.md
+- zz_media/maps/mapa_de_nimalia.png em Workflow\_audit\Omnisvera\OMNISVERA_FACTION_TERRITORY_LOCATION_MAP.md
+- zz_media/thumbnails/fortaleza_de_gharok.png em Workflow\_audit\Omnisvera\OMNISVERA_FACTION_TERRITORY_LOCATION_MAP.md
 - zz_media/leth'valora.png em Workflow\_audit\Omnisvera\OMNISVERA_FACTION_TERRITORY_LOCATION_MAP.md
 - zz_media/gutt.png em Workflow\_audit\Omnisvera\OMNISVERA_FACTION_TERRITORY_LOCATION_MAP.md
 - zz_media/w.png em Workflow\_audit\Omnisvera\OMNISVERA_FACTION_TERRITORY_LOCATION_MAP.md
 - zz_media/t8.png em Workflow\_audit\Omnisvera\OMNISVERA_FACTION_TERRITORY_LOCATION_MAP.md
 - zz_media/t52.png, em Workflow\_audit\Omnisvera\OMNISVERA_FRONTMATTER_FIELD_MATRIX.md
 - zz_media/t1.png em Workflow\_audit\Omnisvera\OMNISVERA_FRONTMATTER_FIELD_MATRIX.md
-- zz_media/th_dukeofd.png, em Workflow\_audit\Omnisvera\OMNISVERA_FRONTMATTER_FIELD_MATRIX.md
-- zz_media/th_elarion.PNG, em Workflow\_audit\Omnisvera\OMNISVERA_FRONTMATTER_FIELD_MATRIX.md
-- zz_media/th_cassian.PNG, em Workflow\_audit\Omnisvera\OMNISVERA_FRONTMATTER_FIELD_MATRIX.md
-- zz_media/th_mira.PNG, em Workflow\_audit\Omnisvera\OMNISVERA_FRONTMATTER_FIELD_MATRIX.md
-- zz_media/th_oric.PNG em Workflow\_audit\Omnisvera\OMNISVERA_FRONTMATTER_FIELD_MATRIX.md
-- zz_media/alquimista.png, em Workflow\_audit\Omnisvera\OMNISVERA_FRONTMATTER_FIELD_MATRIX.md
-- zz_media/clerigo.png, em Workflow\_audit\Omnisvera\OMNISVERA_FRONTMATTER_FIELD_MATRIX.md
-- zz_media/guerreiro.png, em Workflow\_audit\Omnisvera\OMNISVERA_FRONTMATTER_FIELD_MATRIX.md
-- zz_media/avenor.png, em Workflow\_audit\Omnisvera\OMNISVERA_FRONTMATTER_FIELD_MATRIX.md
-- zz_media/ladrao.png em Workflow\_audit\Omnisvera\OMNISVERA_FRONTMATTER_FIELD_MATRIX.md
-- zz_media/banner-as-cronicas-de-nevoa-de-sangue.png em Workflow\_audit\Omnisvera\OMNISVERA_FRONTMATTER_FIELD_MATRIX.md
-- zz_media/banner-bastardo-de-ferro.png em Workflow\_audit\Omnisvera\OMNISVERA_FRONTMATTER_FIELD_MATRIX.md
-- zz_media/banner-o-corvo-da-mare-baixa.png em Workflow\_audit\Omnisvera\OMNISVERA_FRONTMATTER_FIELD_MATRIX.md
-- zz_media/earthropo.png em Workflow\_audit\Omnisvera\OMNISVERA_FRONTMATTER_FIELD_MATRIX.md
-- zz_media/t7.png em Workflow\_audit\Omnisvera\OMNISVERA_FRONTMATTER_FIELD_MATRIX.md
-- zz_media/avenor.png em Workflow\_audit\Omnisvera\OMNISVERA_FRONTMATTER_FIELD_MATRIX.md
-- zz_media/grisalma.png, em Workflow\_audit\Omnisvera\OMNISVERA_FRONTMATTER_FIELD_MATRIX.md
-- zz_media/muralha_dorn.png, em Workflow\_audit\Omnisvera\OMNISVERA_FRONTMATTER_FIELD_MATRIX.md
-- zz_media/med.PNG em Workflow\_audit\Omnisvera\OMNISVERA_FRONTMATTER_FIELD_MATRIX.md
-- zz_media/fortaleza-de-gharok.png, em Workflow\_audit\Omnisvera\OMNISVERA_FRONTMATTER_FIELD_MATRIX.md
+- zz_media/thumbnails/th_dukeofd.png, em Workflow\_audit\Omnisvera\OMNISVERA_FRONTMATTER_FIELD_MATRIX.md
+- zz_media/thumbnails/th_elarion.png, em Workflow\_audit\Omnisvera\OMNISVERA_FRONTMATTER_FIELD_MATRIX.md
+- zz_media/thumbnails/th_cassian.png, em Workflow\_audit\Omnisvera\OMNISVERA_FRONTMATTER_FIELD_MATRIX.md
+- zz_media/thumbnails/th_mira.png, em Workflow\_audit\Omnisvera\OMNISVERA_FRONTMATTER_FIELD_MATRIX.md
+- zz_media/thumbnails/th_oric.png em Workflow\_audit\Omnisvera\OMNISVERA_FRONTMATTER_FIELD_MATRIX.md
+- zz_media/thumbnails/alquimista.png, em Workflow\_audit\Omnisvera\OMNISVERA_FRONTMATTER_FIELD_MATRIX.md
+- zz_media/thumbnails/clerigo.png, em Workflow\_audit\Omnisvera\OMNISVERA_FRONTMATTER_FIELD_MATRIX.md
+- zz_media/thumbnails/guerreiro.png, em Workflow\_audit\Omnisvera\OMNISVERA_FRONTMATTER_FIELD_MATRIX.md
+- zz_media/thumbnails/avenor.png, em Workflow\_audit\Omnisvera\OMNISVERA_FRONTMATTER_FIELD_MATRIX.md
+- zz_media/thumbnails/ladrao.png em Workflow\_audit\Omnisvera\OMNISVERA_FRONTMATTER_FIELD_MATRIX.md
+- zz_media/covers/banner_as_cronicas_de_nevoa_de_sangue.png em Workflow\_audit\Omnisvera\OMNISVERA_FRONTMATTER_FIELD_MATRIX.md
+- zz_media/covers/banner_bastardo_de_ferro.png em Workflow\_audit\Omnisvera\OMNISVERA_FRONTMATTER_FIELD_MATRIX.md
+- zz_media/covers/banner_o_corvo_da_mare_baixa.png em Workflow\_audit\Omnisvera\OMNISVERA_FRONTMATTER_FIELD_MATRIX.md
+- zz_media/maps/earthropo.png em Workflow\_audit\Omnisvera\OMNISVERA_FRONTMATTER_FIELD_MATRIX.md
+- zz_media/covers/t7.png em Workflow\_audit\Omnisvera\OMNISVERA_FRONTMATTER_FIELD_MATRIX.md
+- zz_media/thumbnails/avenor.png em Workflow\_audit\Omnisvera\OMNISVERA_FRONTMATTER_FIELD_MATRIX.md
+- zz_media/thumbnails/grisalma.png, em Workflow\_audit\Omnisvera\OMNISVERA_FRONTMATTER_FIELD_MATRIX.md
+- zz_media/thumbnails/muralha_dorn.png, em Workflow\_audit\Omnisvera\OMNISVERA_FRONTMATTER_FIELD_MATRIX.md
+- zz_media/thumbnails/med.png em Workflow\_audit\Omnisvera\OMNISVERA_FRONTMATTER_FIELD_MATRIX.md
+- zz_media/thumbnails/fortaleza_de_gharok.png, em Workflow\_audit\Omnisvera\OMNISVERA_FRONTMATTER_FIELD_MATRIX.md
 - zz_media/leth'valora.png, em Workflow\_audit\Omnisvera\OMNISVERA_FRONTMATTER_FIELD_MATRIX.md
 - zz_media/gutt.png em Workflow\_audit\Omnisvera\OMNISVERA_FRONTMATTER_FIELD_MATRIX.md
 - zz_media/w.png em Workflow\_audit\Omnisvera\OMNISVERA_FRONTMATTER_FIELD_MATRIX.md
-- zz_media/earthropo.png, em Workflow\_audit\Omnisvera\OMNISVERA_FRONTMATTER_FIELD_MATRIX.md
+- zz_media/maps/earthropo.png, em Workflow\_audit\Omnisvera\OMNISVERA_FRONTMATTER_FIELD_MATRIX.md
 - zz_media/nimalia.png em Workflow\_audit\Omnisvera\OMNISVERA_FRONTMATTER_FIELD_MATRIX.md
 - zz_media/t6.png, em Workflow\_audit\Omnisvera\OMNISVERA_FRONTMATTER_FIELD_MATRIX.md
-- zz_media/cash.png, em Workflow\_audit\Omnisvera\OMNISVERA_FRONTMATTER_FIELD_MATRIX.md
+- zz_media/misc/cash.png, em Workflow\_audit\Omnisvera\OMNISVERA_FRONTMATTER_FIELD_MATRIX.md
 - zz_media/news1.png, em Workflow\_audit\Omnisvera\OMNISVERA_FRONTMATTER_FIELD_MATRIX.md
-- zz_media/th_anao.PNG, em Workflow\_audit\Omnisvera\OMNISVERA_FRONTMATTER_FIELD_MATRIX.md
-- zz_media/th_elf.PNG em Workflow\_audit\Omnisvera\OMNISVERA_FRONTMATTER_FIELD_MATRIX.md
+- zz_media/thumbnails/th_anao.png, em Workflow\_audit\Omnisvera\OMNISVERA_FRONTMATTER_FIELD_MATRIX.md
+- zz_media/thumbnails/th_elf.png em Workflow\_audit\Omnisvera\OMNISVERA_FRONTMATTER_FIELD_MATRIX.md
 - zz_media/t8.png em Workflow\_audit\Omnisvera\OMNISVERA_FRONTMATTER_FIELD_MATRIX.md
-- zz_media/mapa-de-nimalia.png em Workflow\_audit\Omnisvera\OMNISVERA_FRONTMATTER_FIELD_MATRIX.md
+- zz_media/maps/mapa_de_nimalia.png em Workflow\_audit\Omnisvera\OMNISVERA_FRONTMATTER_FIELD_MATRIX.md
 - zz_media/clérigo.png, em Workflow\_audit\Omnisvera\OMNISVERA_FRONTMATTER_FIELD_MATRIX.md
 - zz_media/mestre em Workflow\_audit\Omnisvera\OMNISVERA_FRONTMATTER_FIELD_MATRIX.md
 - zz_media/ladrão.png, em Workflow\_audit\Omnisvera\OMNISVERA_FRONTMATTER_FIELD_MATRIX.md
-- zz_media/mago.png em Workflow\_audit\Omnisvera\OMNISVERA_FRONTMATTER_FIELD_MATRIX.md
+- zz_media/thumbnails/mago.png em Workflow\_audit\Omnisvera\OMNISVERA_FRONTMATTER_FIELD_MATRIX.md
 - zz_media/t52.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
-- zz_media/th_dukeofd.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
-- zz_media/dukeofd.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
-- zz_media/prop.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
-- zz_media/th_elarion.PNG em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
-- zz_media/elarion.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
-- zz_media/th_cassian.PNG em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
-- zz_media/cassian.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
-- zz_media/th_mira.PNG em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
-- zz_media/th_oric.PNG em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
-- zz_media/th_raziel.PNG em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
-- zz_media/raziel.PNG em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
-- zz_media/th_varkh.PNG em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
-- zz_media/varkh.jpeg em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
-- zz_media/th_vezemir.PNG em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
-- zz_media/vezemir.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
-- zz_media/alquimista.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
-- zz_media/clerigo.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
-- zz_media/guerreiro.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
-- zz_media/avenor.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
-- zz_media/ladrao.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
-- zz_media/mago.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
+- zz_media/thumbnails/th_dukeofd.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
+- zz_media/thumbnails/dukeofd.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
+- zz_media/characters/prop.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
+- zz_media/thumbnails/th_elarion.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
+- zz_media/thumbnails/elarion.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
+- zz_media/thumbnails/th_cassian.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
+- zz_media/thumbnails/cassian.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
+- zz_media/thumbnails/th_mira.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
+- zz_media/thumbnails/th_oric.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
+- zz_media/thumbnails/th_raziel.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
+- zz_media/thumbnails/raziel.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
+- zz_media/thumbnails/th_varkh.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
+- zz_media/characters/varkh.jpeg em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
+- zz_media/thumbnails/th_vezemir.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
+- zz_media/thumbnails/vezemir.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
+- zz_media/thumbnails/alquimista.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
+- zz_media/thumbnails/clerigo.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
+- zz_media/thumbnails/guerreiro.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
+- zz_media/thumbnails/avenor.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
+- zz_media/thumbnails/ladrao.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
+- zz_media/thumbnails/mago.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
 - zz_media/t6.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
-- zz_media/banner-as-cronicas-de-nevoa-de-sangue.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
-- zz_media/banner-bastardo-de-ferro.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
-- zz_media/banner-o-corvo-da-mare-baixa.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
-- zz_media/earthropo.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
-- zz_media/cash.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
-- zz_media/t7.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
-- zz_media/mapa-de-nimalia.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
-- zz_media/banner-earthropo.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
-- zz_media/guild.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
-- zz_media/guild1.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
-- zz_media/grisalma.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
-- zz_media/muralha_dorn.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
-- zz_media/med.PNG em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
+- zz_media/covers/banner_as_cronicas_de_nevoa_de_sangue.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
+- zz_media/covers/banner_bastardo_de_ferro.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
+- zz_media/covers/banner_o_corvo_da_mare_baixa.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
+- zz_media/maps/earthropo.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
+- zz_media/misc/cash.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
+- zz_media/covers/t7.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
+- zz_media/maps/mapa_de_nimalia.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
+- zz_media/maps/banner_earthropo.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
+- zz_media/misc/guild.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
+- zz_media/misc/guild1.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
+- zz_media/thumbnails/grisalma.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
+- zz_media/thumbnails/muralha_dorn.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
+- zz_media/thumbnails/med.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
 - zz_media/news1.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
-- zz_media/fortaleza-de-gharok.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
+- zz_media/thumbnails/fortaleza_de_gharok.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
 - zz_media/leth'valora.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
 - zz_media/gutt.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
 - zz_media/w.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
 - zz_media/nimalia.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
-- zz_media/th_anao.PNG em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
-- zz_media/anao.PNG em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
-- zz_media/prop_anao.PNG em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
-- zz_media/th_elf.PNG em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
-- zz_media/elf.PNG em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
+- zz_media/thumbnails/th_anao.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
+- zz_media/thumbnails/anao.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
+- zz_media/misc/prop_anao.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
+- zz_media/thumbnails/th_elf.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
+- zz_media/thumbnails/elf.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
 - zz_media/t8.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
 - zz_media/t1.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
 - zz_media/clérigo.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
 - zz_media/mestre em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
 - zz_media/ladrão.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
 - zz_media/characters/varkh.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
-- zz_media/adagas-de-espectro-fantasma.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
-- zz_media/area-comercial-1.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
-- zz_media/area-comercial-2.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
-- zz_media/area-comercial-3.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
-- zz_media/banner-ecos-do-mundo-perdido.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
-- zz_media/bosque-sussurrante.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
-- zz_media/caminho-dos-errantes.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
-- zz_media/campos-de-earthropo.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
-- zz_media/casa-da-moeda-exterior.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
-- zz_media/casa-da-moeda-interior.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
-- zz_media/conclave-dos-errantes.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
-- zz_media/coroa-de-nimalia.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
-- zz_media/culto-dos-sussurrantes.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
-- zz_media/distrito-comercial.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
-- zz_media/eclipse-obsidiana.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
-- zz_media/elfs.PNG em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
-- zz_media/fe-dos-antigos.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
-- zz_media/guarda-real-nimalia.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
-- zz_media/guilda-dos-mercadores.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
-- zz_media/igreja-das-chamas.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
-- zz_media/manto-primordial.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
-- zz_media/mapa-de-nimalis.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
-- zz_media/mare-baixa.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
-- zz_media/mira.PNG em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
-- zz_media/o-fraturamento.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
-- zz_media/omnisvera.PNG em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
-- zz_media/oric.PNG em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
-- zz_media/os-guardioes-do-veu-cinzento.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
-- zz_media/ruinas-de-valthor.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
-- zz_media/sentinelas-de-leth'valora.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
+- zz_media/thumbnails/adagas_de_espectro_fantasma.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
+- zz_media/locations/area_comercial_1.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
+- zz_media/thumbnails/area_comercial_2.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
+- zz_media/locations/area_comercial_3.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
+- zz_media/covers/banner_ecos_do_mundo_perdido.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
+- zz_media/thumbnails/bosque_sussurrante.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
+- zz_media/thumbnails/caminho_dos_errantes.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
+- zz_media/maps/campos_de_earthropo.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
+- zz_media/thumbnails/casa_da_moeda_exterior.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
+- zz_media/locations/casa_da_moeda_interior.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
+- zz_media/thumbnails/conclave_dos_errantes.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
+- zz_media/maps/coroa_de_nimalia.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
+- zz_media/thumbnails/culto_dos_sussurrantes.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
+- zz_media/thumbnails/distrito_comercial.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
+- zz_media/thumbnails/eclipse_obsidiana.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
+- zz_media/misc/elfs.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
+- zz_media/thumbnails/fe_dos_antigos.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
+- zz_media/maps/guarda_real_nimalia.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
+- zz_media/thumbnails/guilda_dos_mercadores.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
+- zz_media/thumbnails/igreja_das_chamas.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
+- zz_media/thumbnails/manto_primordial.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
+- zz_media/maps/mapa_de_nimalis.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
+- zz_media/thumbnails/mare_baixa.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
+- zz_media/thumbnails/mira.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
+- zz_media/thumbnails/o_fraturamento.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
+- zz_media/misc/omnisvera.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
+- zz_media/thumbnails/oric.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
+- zz_media/thumbnails/os_guardioes_do_veu_cinzento.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
+- zz_media/thumbnails/ruinas_de_valthor.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
+- zz_media/thumbnails/sentinelas_de_leth_valora.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
 - zz_media/smoke.mp3 em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
-- zz_media/sound.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
-- zz_media/vale-dourado.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
-- zz_media/veu-cinzento.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
-- zz_media/th_dukeofd.png, em Workflow\_audit\Omnisvera\OMNISVERA_MIGRATION_RISK_REGISTER.md
-- zz_media/th_elarion.PNG, em Workflow\_audit\Omnisvera\OMNISVERA_MIGRATION_RISK_REGISTER.md
-- zz_media/th_cassian.PNG, em Workflow\_audit\Omnisvera\OMNISVERA_MIGRATION_RISK_REGISTER.md
-- zz_media/th_mira.PNG em Workflow\_audit\Omnisvera\OMNISVERA_MIGRATION_RISK_REGISTER.md
+- zz_media/misc/sound.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
+- zz_media/thumbnails/vale_dourado.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
+- zz_media/thumbnails/veu_cinzento.png em Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md
+- zz_media/thumbnails/th_dukeofd.png, em Workflow\_audit\Omnisvera\OMNISVERA_MIGRATION_RISK_REGISTER.md
+- zz_media/thumbnails/th_elarion.png, em Workflow\_audit\Omnisvera\OMNISVERA_MIGRATION_RISK_REGISTER.md
+- zz_media/thumbnails/th_cassian.png, em Workflow\_audit\Omnisvera\OMNISVERA_MIGRATION_RISK_REGISTER.md
+- zz_media/thumbnails/th_mira.png em Workflow\_audit\Omnisvera\OMNISVERA_MIGRATION_RISK_REGISTER.md
 - zz_media/t52.png, em Workflow\_audit\Omnisvera\OMNISVERA_MIGRATION_RISK_REGISTER.md
-- zz_media/alquimista.png, em Workflow\_audit\Omnisvera\OMNISVERA_MIGRATION_RISK_REGISTER.md
-- zz_media/clerigo.png, em Workflow\_audit\Omnisvera\OMNISVERA_MIGRATION_RISK_REGISTER.md
-- zz_media/guerreiro.png em Workflow\_audit\Omnisvera\OMNISVERA_MIGRATION_RISK_REGISTER.md
-- zz_media/avenor.png em Workflow\_audit\Omnisvera\OMNISVERA_MIGRATION_RISK_REGISTER.md
-- zz_media/th_dukeofd.png, em Workflow\_audit\Omnisvera\OMNISVERA_OBSIDIAN_DEPENDENCY_MAP.md
-- zz_media/th_elarion.PNG, em Workflow\_audit\Omnisvera\OMNISVERA_OBSIDIAN_DEPENDENCY_MAP.md
-- zz_media/th_cassian.PNG, em Workflow\_audit\Omnisvera\OMNISVERA_OBSIDIAN_DEPENDENCY_MAP.md
-- zz_media/th_mira.PNG em Workflow\_audit\Omnisvera\OMNISVERA_OBSIDIAN_DEPENDENCY_MAP.md
+- zz_media/thumbnails/alquimista.png, em Workflow\_audit\Omnisvera\OMNISVERA_MIGRATION_RISK_REGISTER.md
+- zz_media/thumbnails/clerigo.png, em Workflow\_audit\Omnisvera\OMNISVERA_MIGRATION_RISK_REGISTER.md
+- zz_media/thumbnails/guerreiro.png em Workflow\_audit\Omnisvera\OMNISVERA_MIGRATION_RISK_REGISTER.md
+- zz_media/thumbnails/avenor.png em Workflow\_audit\Omnisvera\OMNISVERA_MIGRATION_RISK_REGISTER.md
+- zz_media/thumbnails/th_dukeofd.png, em Workflow\_audit\Omnisvera\OMNISVERA_OBSIDIAN_DEPENDENCY_MAP.md
+- zz_media/thumbnails/th_elarion.png, em Workflow\_audit\Omnisvera\OMNISVERA_OBSIDIAN_DEPENDENCY_MAP.md
+- zz_media/thumbnails/th_cassian.png, em Workflow\_audit\Omnisvera\OMNISVERA_OBSIDIAN_DEPENDENCY_MAP.md
+- zz_media/thumbnails/th_mira.png em Workflow\_audit\Omnisvera\OMNISVERA_OBSIDIAN_DEPENDENCY_MAP.md
 - zz_media/t52.png, em Workflow\_audit\Omnisvera\OMNISVERA_OBSIDIAN_DEPENDENCY_MAP.md
-- zz_media/alquimista.png, em Workflow\_audit\Omnisvera\OMNISVERA_OBSIDIAN_DEPENDENCY_MAP.md
-- zz_media/clerigo.png, em Workflow\_audit\Omnisvera\OMNISVERA_OBSIDIAN_DEPENDENCY_MAP.md
-- zz_media/guerreiro.png em Workflow\_audit\Omnisvera\OMNISVERA_OBSIDIAN_DEPENDENCY_MAP.md
-- zz_media/avenor.png em Workflow\_audit\Omnisvera\OMNISVERA_OBSIDIAN_DEPENDENCY_MAP.md
+- zz_media/thumbnails/alquimista.png, em Workflow\_audit\Omnisvera\OMNISVERA_OBSIDIAN_DEPENDENCY_MAP.md
+- zz_media/thumbnails/clerigo.png, em Workflow\_audit\Omnisvera\OMNISVERA_OBSIDIAN_DEPENDENCY_MAP.md
+- zz_media/thumbnails/guerreiro.png em Workflow\_audit\Omnisvera\OMNISVERA_OBSIDIAN_DEPENDENCY_MAP.md
+- zz_media/thumbnails/avenor.png em Workflow\_audit\Omnisvera\OMNISVERA_OBSIDIAN_DEPENDENCY_MAP.md
 - zz_media/t1.png` em Workflow\_audit\Operational_Cleanup\CULTURE_RELIGION_CALENDAR_TIMELINE_REVIEW.md
-- zz_media/banner-earthropo.png`, em Workflow\_audit\Operational_Cleanup\CULTURE_RELIGION_CALENDAR_TIMELINE_REVIEW.md
-- zz_media/avenor.png em Workflow\_archive\obsolete_review\Home_Jogadores_ARCHIVED.md
+- zz_media/maps/banner_earthropo.png`, em Workflow\_audit\Operational_Cleanup\CULTURE_RELIGION_CALENDAR_TIMELINE_REVIEW.md
+- zz_media/thumbnails/avenor.png em Workflow\_archive\obsolete_review\Home_Jogadores_ARCHIVED.md
 - zz_media/clérigo.png em Workflow\Legacy\Old Dragon anterior\Legacy - Old Dragon anterior - Clérigo.md
 - zz_media/mestre em Workflow\Legacy\Old Dragon anterior\Legacy - Old Dragon anterior - Homem de Armas.md
 - zz_media/ladrão.png em Workflow\Legacy\Old Dragon anterior\Legacy - Old Dragon anterior - Ladrão.md
-- zz_media/mago.png em Workflow\Legacy\Old Dragon anterior\Legacy - Old Dragon anterior - Mago.md
-- zz_media/th_dukeofd.png em Characters\Individual\Augustus Terra Decimus.md
-- zz_media/th_elarion.PNG em Characters\Individual\Elarion Vaelthor.md
-- zz_media/th_cassian.PNG em Characters\Individual\General Cassian Valerius.md
-- zz_media/th_mira.PNG em Characters\Individual\Mira Valen.md
-- zz_media/th_oric.PNG em Characters\Individual\Padre Oric.md
-- zz_media/th_raziel.PNG em Characters\Individual\Raziel.md
-- zz_media/th_varkh.PNG em Characters\Individual\Varkh Nimalis.md
-- zz_media/th_vezemir.PNG em Characters\Individual\Vezemir.md
+- zz_media/thumbnails/mago.png em Workflow\Legacy\Old Dragon anterior\Legacy - Old Dragon anterior - Mago.md
+- zz_media/thumbnails/th_dukeofd.png em Characters\Individual\Augustus Terra Decimus.md
+- zz_media/thumbnails/th_elarion.png em Characters\Individual\Elarion Vaelthor.md
+- zz_media/thumbnails/th_cassian.png em Characters\Individual\General Cassian Valerius.md
+- zz_media/thumbnails/th_mira.png em Characters\Individual\Mira Valen.md
+- zz_media/thumbnails/th_oric.png em Characters\Individual\Padre Oric.md
+- zz_media/thumbnails/th_raziel.png em Characters\Individual\Raziel.md
+- zz_media/thumbnails/th_varkh.png em Characters\Individual\Varkh Nimalis.md
+- zz_media/thumbnails/th_vezemir.png em Characters\Individual\Vezemir.md
 
 ### Referências quebradas em legacy
 Nenhuma
@@ -1861,22 +1861,22 @@ Nenhuma
 - omnisvera.PNG
 - banner-ecos-do-mundo-perdido.png
 - banner-earthropo.png
-- zz_media\os-guardioes-do-veu-cinzento.png
+- zz_media\thumbnails\os_guardioes_do_veu_cinzento.png
 - adagas-de-espectro-fantasma.png
 - guerreiro.png
 - area-comercial-3.png
-- zz_media\area-comercial-3.png
-- zz_media\area-comercial-2.png
+- zz_media\locations\area_comercial_3.png
+- zz_media\thumbnails\area_comercial_2.png
 - area-comercial-1.png
 - earthropo.png
-- zz_media\guarda-real-nimalia.png
+- zz_media\maps\guarda_real_nimalia.png
 - mapa-de-nimalia.png
-- zz_media\th_raziel.PNG
+- zz_media\thumbnails\th_raziel.png
 - elfs.PNG
 - vezemir.png
-- zz_media\banner-earthropo.png
+- zz_media\maps\banner_earthropo.png
 - avenor.png
-- zz_media\th_anao.PNG
+- zz_media\thumbnails\th_anao.png
 - ... e mais 130 arquivos
 
 ---

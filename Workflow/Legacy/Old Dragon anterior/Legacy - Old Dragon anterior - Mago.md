@@ -5,7 +5,7 @@ tags:
   - legacy
   - old-dragon
   - rules-reference
-cover: zz_media/mago.png
+cover: zz_media/thumbnails/mago.png
 status: Legacy
 ruleset: Old Dragon anterior (conteúdo legado)
 ---

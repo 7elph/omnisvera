@@ -8,8 +8,8 @@ campaign_status: Em revisão
 visibility: Jogadores
 spoiler_level: light
 gm_secret: false
-thumbnail: zz_media/fe-dos-antigos.png
-cover: zz_media/fe-dos-antigos.png
+thumbnail: zz_media/thumbnails/fe_dos_antigos.png
+cover: zz_media/thumbnails/fe_dos_antigos.png
 info: Índice operacional de religiões, cultos e tradições espirituais de Earthropo.
 description: Religiões públicas, tradições espirituais e crenças em revisão para uso em mesa.
 chapters: []

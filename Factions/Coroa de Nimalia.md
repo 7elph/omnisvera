@@ -11,8 +11,8 @@ campaign_status: Ativa
 leader: "[[Augustus Terra Decimus]]"
 location: "[[Nimalis]]"
 territory: "[[Nimalia|Reino de Nimalia]]"
-thumbnail: zz_media/coroa-de-nimalia.png
-cover: zz_media/coroa-de-nimalia.png
+thumbnail: zz_media/maps/coroa_de_nimalia.png
+cover: zz_media/maps/coroa_de_nimalia.png
 info: Autoridade monárquica do Reino de Nimalia.
 description: Poder político central de Nimalia, liderado por Augustus Terra Decimus e apoiado por nobreza, guarda e burocracia real.
 chapters: []

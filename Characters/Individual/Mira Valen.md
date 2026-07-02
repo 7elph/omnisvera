@@ -8,8 +8,8 @@ campaign_status: Ativo
 visibility: Mestre
 spoiler_level: heavy
 gm_secret: true
-thumbnail: zz_media/th_mira.PNG
-cover: zz_media/mira.PNG
+thumbnail: zz_media/thumbnails/th_mira.png
+cover: zz_media/thumbnails/mira.png
 location: "[[Leth'valora]]"
 territory: "[[Floresta de Avenor]]"
 faction: Nenhum

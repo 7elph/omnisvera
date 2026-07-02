@@ -13,8 +13,8 @@ territory: "[[Nimalia]]"
 region: Capital do Reino de Nimalia
 district: Distrito Comercial
 danger_level: Médio
-thumbnail: zz_media/distrito-comercial.png
-cover: zz_media/distrito-comercial.png
+thumbnail: zz_media/thumbnails/distrito_comercial.png
+cover: zz_media/thumbnails/distrito_comercial.png
 info: Distrito de lojas especializadas em Nimalis.
 description: Área de comércio especializado, serviços raros e negócios moralmente perigosos.
 chapters: []

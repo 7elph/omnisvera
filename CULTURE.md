@@ -8,8 +8,8 @@ campaign_status: Ativo
 visibility: Jogadores
 spoiler_level: light
 gm_secret: false
-thumbnail: zz_media/culture.png
-cover: zz_media/culture.png
+thumbnail: zz_media/thumbnails/culture.png
+cover: zz_media/thumbnails/culture.png
 info: Cultura geral de Earthropo como ferramenta de mesa.
 description: Costumes, convivência, festivais, informação e textura social do continente de Earthropo.
 chapters: []

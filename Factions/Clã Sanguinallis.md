@@ -3,8 +3,8 @@ obsidianUIMode: preview
 NoteIcon: faction
 NoteStatus: Active
 type: faction
-thumbnail: zz_media/sangue.png
-cover: zz_media/sangue.png
+thumbnail: zz_media/thumbnails/sangue.png
+cover: zz_media/thumbnails/sangue.png
 status: Antigo / ativo em segredo
 campaign_status: Em revisão
 visibility: Mestre

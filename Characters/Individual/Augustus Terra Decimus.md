@@ -8,8 +8,8 @@ campaign_status: Ativo
 visibility: Mestre
 spoiler_level: heavy
 gm_secret: true
-thumbnail: zz_media/th_dukeofd.png
-cover: zz_media/dukeofd.png
+thumbnail: zz_media/thumbnails/th_dukeofd.png
+cover: zz_media/thumbnails/dukeofd.png
 religion: "[[Igreja das Chamas]]"
 location: "[[Nimalis]]"
 territory: "[[Nimalia]]"

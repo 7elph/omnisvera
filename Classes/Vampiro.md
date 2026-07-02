@@ -17,8 +17,8 @@ class_group: Sobrenatural
 primary_attribute:
 level:
 danger_level: Alto
-thumbnail: zz_media/sangue.png
-cover: zz_media/sangue.png
+thumbnail: zz_media/thumbnails/sangue.png
+cover: zz_media/thumbnails/sangue.png
 chapters:
   - 00 - As Crônicas de Névoa de Sangue
 tags:

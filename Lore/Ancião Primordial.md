@@ -9,8 +9,8 @@ visibility: Mestre
 spoiler_level: heavy
 gm_secret: true
 created_by: IA
-thumbnail: zz_media/ruinas-de-valthor.png
-cover: zz_media/ruinas-de-valthor.png
+thumbnail: zz_media/thumbnails/ruinas_de_valthor.png
+cover: zz_media/thumbnails/ruinas_de_valthor.png
 info: Entidade esquecida associada ao renascimento de Raziel sob as Ruínas de Valthor.
 description: Presença misteriosa ligada às cavernas abissais, ao Sangue Antigo e à origem atual de Raziel.
 chapters:

@@ -9,8 +9,8 @@ visibility: Mestre
 spoiler_level: medium
 gm_secret: true
 created_by: MIA
-thumbnail: zz_media/th_raziel.PNG
-cover: zz_media/raziel.PNG
+thumbnail: zz_media/thumbnails/th_raziel.png
+cover: zz_media/thumbnails/raziel.png
 info: Referência narrativa para a linhagem vampírica ligada ao Clã Sanguinallis.
 description: Consolidação de lore sobre vampiros Sanguinallis, separada da classe Vampiro e da mecânica do Sangue Antigo.
 chapters:

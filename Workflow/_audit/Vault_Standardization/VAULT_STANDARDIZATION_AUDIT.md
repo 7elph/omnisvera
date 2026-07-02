@@ -1,6 +1,6 @@
 # Auditoria Global de Padronização do Vault
 
-Gerado em: 2026-07-01 20:01
+Gerado em: 2026-07-02 03:56
 
 Fonte de padrão: [[Workflow/OMNISVERA_VAULT_STANDARD|OMNISVERA_VAULT_STANDARD]]
 
@@ -12,28 +12,28 @@ Fonte de padrão: [[Workflow/OMNISVERA_VAULT_STANDARD|OMNISVERA_VAULT_STANDARD]]
 
 | métrica | valor |
 |---|---:|
-| notas Markdown auditadas | 330 |
+| notas Markdown auditadas | 332 |
 | notas com frontmatter | 187 |
-| notas sem frontmatter | 143 |
+| notas sem frontmatter | 145 |
 | YAML/frontmatter parseável | 187 |
 | YAML/frontmatter com problema | 0 |
 | campos YAML distintos | 104 |
-| tags distintas | 207 |
+| tags distintas | 216 |
 | tipos detectados | 18 |
 | subtipos detectados | 17 |
-| referências de mídia distintas | 188 |
-| mídias em `zz_media` | 114 |
-| imagens/mídias quebradas | 26 |
-| imagens/mídias quebradas fora de histórico/auditoria | 0 |
+| referências de mídia distintas | 196 |
+| mídias em `zz_media` | 1 |
+| imagens/mídias quebradas | 141 |
+| imagens/mídias quebradas fora de histórico/auditoria | 96 |
 | possíveis problemas de case-sensitive | 0 |
 | possíveis problemas de case-sensitive fora de histórico/auditoria | 0 |
-| mídias possivelmente órfãs | 14 |
+| mídias possivelmente órfãs | 1 |
 
 Modo de validação YAML:
 
 | item | ocorrências |
 |---|---:|
-| `simple` | 330 |
+| `simple` | 332 |
 
 
 ## Campos YAML encontrados
@@ -130,10 +130,10 @@ Modo de validação YAML:
 | `workflow` | 28 |
 | `lore` | 24 |
 | `character` | 21 |
-| `location` | 21 |
-| `local` | 20 |
+| `location` | 20 |
 | `personagem` | 19 |
 | `bside` | 19 |
+| `local` | 19 |
 | `audit` | 18 |
 | `nimalia` | 16 |
 | `origem` | 16 |
@@ -141,23 +141,23 @@ Modo de validação YAML:
 | `old-dragon` | 13 |
 | `padronizacao` | 13 |
 | `nimalis` | 12 |
-| `raca` | 12 |
 | `omnisvera` | 11 |
 | `story` | 11 |
-| `classe` | 11 |
-| `class` | 11 |
 | `raziel` | 11 |
 | `faction` | 11 |
-| `item` | 11 |
-| `race` | 11 |
+| `raca` | 11 |
 | `indice` | 10 |
+| `classe` | 10 |
+| `class` | 10 |
 | `faccao` | 10 |
-| `territory` | 10 |
+| `item` | 10 |
+| `race` | 10 |
 | `origem-vezemir` | 9 |
 | `vampiro` | 9 |
 | `varkh` | 9 |
-| `territorio` | 9 |
+| `territory` | 9 |
 | `home` | 8 |
+| `territorio` | 8 |
 | `npc-importante` | 7 |
 | `sanguinallis` | 7 |
 | `title` | 7 |
@@ -173,8 +173,6 @@ Modo de validação YAML:
 | `artefato` | 5 |
 | `religiao` | 5 |
 | `religion` | 5 |
-| `quest` | 4 |
-| `rumor` | 4 |
 | `antropo` | 4 |
 | `elfo` | 4 |
 | `misterio` | 4 |
@@ -188,7 +186,8 @@ Modo de validação YAML:
 | `report` | 4 |
 | `legacy` | 4 |
 | `rules-reference` | 4 |
-| `monstro` | 3 |
+| `quest` | 3 |
+| `rumor` | 3 |
 | `nobreza-de-nimalia` | 3 |
 | `criatura` | 3 |
 | `sentinelas-de-lethvalora` | 3 |
@@ -227,15 +226,18 @@ Modo de validação YAML:
 | `historia` | 2 |
 | `fenomeno` | 2 |
 | `notes` | 2 |
-| `magia` | 2 |
+| `monstro` | 2 |
 | `classes` | 2 |
 | `regras` | 2 |
 | `dashboard` | 2 |
 | `assistant` | 2 |
 | `frontmatter` | 2 |
+| `indice-monstro` | 1 |
 | `world` | 1 |
 | `calendar` | 1 |
 | `campanha` | 1 |
+| `indice-quest` | 1 |
+| `indice-rumor` | 1 |
 | `dragao` | 1 |
 | `dragao-de-colar-dourado` | 1 |
 | `mentor` | 1 |
@@ -244,8 +246,6 @@ Modo de validação YAML:
 | `falecido` | 1 |
 | `sacerdote` | 1 |
 | `capitulo00-raziel` | 1 |
-| `hemomante` | 1 |
-| `constructo` | 1 |
 
 
 ## Auditoria detalhada de tags
@@ -254,9 +254,9 @@ Modo de validação YAML:
 
 | item | ocorrências |
 |---|---:|
-| `campaign_specific` | 446 |
-| `official` | 155 |
-| `hybrid` | 111 |
+| `campaign_specific` | 451 |
+| `official` | 150 |
+| `hybrid` | 107 |
 | `legacy_allowed` | 61 |
 | `unknown` | 50 |
 
@@ -266,14 +266,14 @@ Modo de validação YAML:
 - `ai_npc` — 1 nota(s). Exemplos: `Templates\TEMPLATE - AI NPC.md`
 - `async_scene` — 1 nota(s). Exemplos: `Templates\TEMPLATE - Async Scene.md`
 - `character` — 21 nota(s). Exemplos: `Characters\Individual\Augustus Terra Decimus.md`, `Characters\Individual\Dragão de Colar Dourado.md`, `Characters\Individual\Elarion Vaelthor.md`
-- `class` — 11 nota(s). Exemplos: `Classes\Alquimista.md`, `Classes\Clérigo.md`, `Classes\Guerreiro.md`
+- `class` — 10 nota(s). Exemplos: `Classes\Alquimista.md`, `Classes\Clérigo.md`, `Classes\Guerreiro.md`
 - `faction` — 11 nota(s). Exemplos: `Factions\Clã Sanguinallis.md`, `Factions\Conclave dos Errantes.md`, `Factions\Coroa de Nimalia.md`
-- `item` — 11 nota(s). Exemplos: `Items\Adagas de Espectro Fantasma.md`, `Items\Caderninho de Vozes.md`, `Items\Grisalma.md`
-- `location` — 21 nota(s). Exemplos: `Locations\Antiga Estrada Esquecida.md`, `Locations\Bairro dos Anões.md`, `Locations\Bairro dos Dragonborns.md`
+- `item` — 10 nota(s). Exemplos: `Items\Adagas de Espectro Fantasma.md`, `Items\Caderninho de Vozes.md`, `Items\Grisalma.md`
+- `location` — 20 nota(s). Exemplos: `Locations\Antiga Estrada Esquecida.md`, `Locations\Bairro dos Anões.md`, `Locations\Bairro dos Dragonborns.md`
 - `lore` — 24 nota(s). Exemplos: `CALENDAR.md`, `CULTURE.md`, `EARTHROPO\EARTHROPO.md`
-- `race` — 11 nota(s). Exemplos: `Races\Antropo.md`, `Races\Anão.md`, `Races\Dragonborn.md`
+- `race` — 10 nota(s). Exemplos: `Races\Antropo.md`, `Races\Anão.md`, `Races\Dragonborn.md`
 - `religion` — 5 nota(s). Exemplos: `Religion\Caminho dos Errantes.md`, `Religion\Fé dos Antigos.md`, `Religion\Igreja das Chamas.md`
-- `territory` — 10 nota(s). Exemplos: `MAPA DE EARTHROPO.md`, `MAPA DE NIMALIA.md`, `Templates\TEMPLATE - Territory.md`
+- `territory` — 9 nota(s). Exemplos: `MAPA DE EARTHROPO.md`, `MAPA DE NIMALIA.md`, `Templates\TEMPLATE - Territory.md`
 - `workflow` — 28 nota(s). Exemplos: `NOTES.md`, `Workflow\_audit\Character_Standardization\CHARACTERS_INDIVIDUAL_STANDARDIZATION_REPORT.md`, `Workflow\_audit\Cleanup\DELETION_CANDIDATES_CURRENT_REVIEW.md`
 
 ### Tags legacy ou `Category/*` detectadas
@@ -291,16 +291,16 @@ Modo de validação YAML:
 > A ação futura segura é adicionar a tag oficial e preservar a tag existente.
 
 - `antagonista` → `character` — 5 nota(s). Exemplos: `Characters\Individual\Kaelen, o Flagelo.md`, `Characters\Individual\Lorde Malakar.md`, `Characters\Individual\Vandor, o Senhor das Bestas.md`
-- `classe` → `class` — 11 nota(s). Exemplos: `Classes\Alquimista.md`, `Classes\Clérigo.md`, `Classes\Guerreiro.md`
+- `classe` → `class` — 10 nota(s). Exemplos: `Classes\Alquimista.md`, `Classes\Clérigo.md`, `Classes\Guerreiro.md`
 - `criatura` → `character` — 3 nota(s). Exemplos: `Characters\Individual\Dragão de Colar Dourado.md`, `Characters\Individual\Unidade DORN-7.md`, `Templates\Characters\Criatura.md`
 - `faccao` → `faction` — 10 nota(s). Exemplos: `Factions\Clã Sanguinallis.md`, `Factions\Conclave dos Errantes.md`, `Factions\Coroa de Nimalia.md`
 - `jogador` → `character` — 4 nota(s). Exemplos: `Characters\Individual\Raziel.md`, `Characters\Individual\Varkh Nimalis.md`, `Characters\Individual\Vezemir.md`
-- `local` → `location` — 20 nota(s). Exemplos: `Locations\Antiga Estrada Esquecida.md`, `Locations\Bairro dos Anões.md`, `Locations\Bairro dos Dragonborns.md`
+- `local` → `location` — 19 nota(s). Exemplos: `Locations\Antiga Estrada Esquecida.md`, `Locations\Bairro dos Anões.md`, `Locations\Bairro dos Dragonborns.md`
 - `npc` → `character` — 13 nota(s). Exemplos: `Characters\Individual\Augustus Terra Decimus.md`, `Characters\Individual\Dragão de Colar Dourado.md`, `Characters\Individual\Elarion Vaelthor.md`
 - `personagem` → `character` — 19 nota(s). Exemplos: `Characters\Individual\Augustus Terra Decimus.md`, `Characters\Individual\Dragão de Colar Dourado.md`, `Characters\Individual\Elarion Vaelthor.md`
-- `raca` → `race` — 12 nota(s). Exemplos: `Races\Antropo.md`, `Races\Anão.md`, `Races\Dragonborn.md`
+- `raca` → `race` — 11 nota(s). Exemplos: `Races\Antropo.md`, `Races\Anão.md`, `Races\Dragonborn.md`
 - `religiao` → `religion` — 5 nota(s). Exemplos: `Religion\Caminho dos Errantes.md`, `Religion\Fé dos Antigos.md`, `Religion\Igreja das Chamas.md`
-- `territorio` → `territory` — 9 nota(s). Exemplos: `MAPA DE EARTHROPO.md`, `MAPA DE NIMALIA.md`, `Territories\Campos de Earthropo.md`
+- `territorio` → `territory` — 8 nota(s). Exemplos: `MAPA DE EARTHROPO.md`, `MAPA DE NIMALIA.md`, `Territories\Campos de Earthropo.md`
 
 ### Tags fora do padrão oficial ou desconhecidas
 
@@ -437,6 +437,8 @@ Modo de validação YAML:
 - `Workflow\_audit\Lore_Structure\LORE_CULTURE_STORY_FORMAT_STAGE_2.md`
 - `Workflow\_audit\Lore_Structure\LORE_PILLARS_REVIEW.md`
 - `Workflow\_audit\Media_Mapping\OPERATIONAL_DATACARDS_AND_MEDIA_FIX_REPORT.md`
+- `Workflow\_audit\Media_Organization\MEDIA_ORGANIZATION_APPLIED.md`
+- `Workflow\_audit\Media_Organization\MEDIA_ORGANIZATION_PLAN.md`
 - `Workflow\_audit\Omnisvera\OMNISVERA_CHARACTER_STRUCTURE_MAP.md`
 - `Workflow\_audit\Omnisvera\OMNISVERA_CSS_SNIPPET_INDEX.md`
 - `Workflow\_audit\Omnisvera\OMNISVERA_DASHBOARD_MAP_SYSTEMS.md`
@@ -489,9 +491,7 @@ Modo de validação YAML:
 - `Workflow\AI_CONTEXT\02_ENTITY_INDEX.md`
 - `Workflow\AI_CONTEXT\03_OPEN_DECISIONS.md`
 - `Workflow\AI_CONTEXT\04_MEDIA_RULES.md`
-- `Workflow\AI_CONTEXT\05_FRONTMATTER_SCHEMA.md`
-- `Workflow\AI_CONTEXT\06_TASK_TEMPLATES.md`
-- ... mais 76 itens.
+- ... mais 78 itens.
 
 
 ## Notas sem frontmatter
@@ -537,6 +537,8 @@ Modo de validação YAML:
 - `Workflow\_audit\Lore_Structure\LORE_CULTURE_STORY_FORMAT_STAGE_2.md`
 - `Workflow\_audit\Lore_Structure\LORE_PILLARS_REVIEW.md`
 - `Workflow\_audit\Media_Mapping\OPERATIONAL_DATACARDS_AND_MEDIA_FIX_REPORT.md`
+- `Workflow\_audit\Media_Organization\MEDIA_ORGANIZATION_APPLIED.md`
+- `Workflow\_audit\Media_Organization\MEDIA_ORGANIZATION_PLAN.md`
 - `Workflow\_audit\Omnisvera\OMNISVERA_CHARACTER_STRUCTURE_MAP.md`
 - `Workflow\_audit\Omnisvera\OMNISVERA_CSS_SNIPPET_INDEX.md`
 - `Workflow\_audit\Omnisvera\OMNISVERA_DASHBOARD_MAP_SYSTEMS.md`
@@ -617,9 +619,7 @@ Modo de validação YAML:
 - `Workflow\Legacy\Disgraceland\.trash\Call Out Boxes\Call Out - Right Section.md`
 - `Workflow\LOCAL_ENVIRONMENT_CHECKLIST.md`
 - `Workflow\OMNISVERA_CHARACTER_TEMPLATE_GUIDE.md`
-- `Workflow\OMNISVERA_CLASS_STANDARD.md`
-- `Workflow\OMNISVERA_DASHBOARD_SYSTEM.md`
-- ... mais 23 itens.
+- ... mais 25 itens.
 
 
 ## Notas sem `subtype`
@@ -726,7 +726,7 @@ Modo de validação YAML:
 - `Templates\Classes\Especialização.md`
 - `Templates\RPG\B-Side.md`
 - `Templates\RPG\Classe.md`
-- ... mais 205 itens.
+- ... mais 207 itens.
 
 
 ## Notas faltando campos Omnisvera mínimos
@@ -854,17 +854,17 @@ Campos mínimos auditados: `type`, `subtype`, `work_status`, `canon_status`, `vi
   - `Characters\Individual\Mira Valen.md`
   - `Characters\Individual\Padre Oric.md`
   - `Characters\Individual\Raziel.md`
-- `class/classe` em 11 nota(s). Exemplos:
+- `class/classe` em 10 nota(s). Exemplos:
   - `Classes\Alquimista.md`
   - `Classes\Clérigo.md`
   - `Classes\Guerreiro.md`
-  - `Classes\INDICE_DE_CLASSES.md`
   - `Classes\Ladrão.md`
   - `Classes\Mago.md`
   - `Classes\Vampiro.md`
   - `Templates\Classes\Arquétipo Narrativo.md`
   - `Templates\Classes\Classe Base.md`
   - `Templates\Classes\Especialização.md`
+  - `Templates\RPG\Classe.md`
 - `faction/faccao` em 10 nota(s). Exemplos:
   - `Factions\Clã Sanguinallis.md`
   - `Factions\Conclave dos Errantes.md`
@@ -876,7 +876,7 @@ Campos mínimos auditados: `type`, `subtype`, `work_status`, `canon_status`, `vi
   - `Factions\Nobreza de Nimalia.md`
   - `Factions\Rede de Falsificadores de Maré Baixa.md`
   - `Factions\Sentinelas de Leth'valora.md`
-- `location/local` em 20 nota(s). Exemplos:
+- `location/local` em 19 nota(s). Exemplos:
   - `Locations\Antiga Estrada Esquecida.md`
   - `Locations\Bairro dos Anões.md`
   - `Locations\Bairro dos Dragonborns.md`
@@ -887,29 +887,28 @@ Campos mínimos auditados: `type`, `subtype`, `work_status`, `canon_status`, `vi
   - `Locations\Bosque Sussurrante.md`
   - `Locations\Casa da Moeda de Nimalia.md`
   - `Locations\Distrito Comercial.md`
-- `race/raca` em 11 nota(s). Exemplos:
+- `race/raca` em 10 nota(s). Exemplos:
   - `Races\Antropo.md`
   - `Races\Anão.md`
   - `Races\Dragonborn.md`
   - `Races\Elfo.md`
   - `Races\Halfling.md`
   - `Races\Humano.md`
-  - `Races\INDICE_DE_RACAS.md`
   - `Races\Kenku.md`
   - `Races\Meio-Elfo.md`
   - `Races\Vampiro.md`
+  - `Templates\RPG\Raça.md`
 - `religion/religiao` em 5 nota(s). Exemplos:
   - `Religion\Caminho dos Errantes.md`
   - `Religion\Fé dos Antigos.md`
   - `Religion\Igreja das Chamas.md`
   - `Religion\RELIGION.md`
   - `Templates\RPG\Religião.md`
-- `territory/territorio` em 9 nota(s). Exemplos:
+- `territory/territorio` em 8 nota(s). Exemplos:
   - `MAPA DE EARTHROPO.md`
   - `MAPA DE NIMALIA.md`
   - `Territories\Campos de Earthropo.md`
   - `Territories\Floresta de Avenor.md`
-  - `Territories\INDICE_DE_TERRITORIOS.md`
   - `Territories\Mar da Neblina.md`
   - `Territories\Nimalia.md`
   - `Workflow\_audit\Leaflet_Map_Diagnostics\backups\MAPA DE EARTHROPO.before-map-reset.md`
@@ -923,37 +922,207 @@ Critério: tag com espaço, maiúscula inesperada ou formato arriscado. Tags `Ca
 
 ## Referências de mídia quebradas
 
+- `CALENDAR.md — `banner-earthropo.png``
+- `CAMPANHA\ESTADO_DA_CAMPANHA.md — `banner-ecos-do-mundo-perdido.png``
+- `CULTURE.md — `culture.png``
+- `Characters\Individual\Augustus Terra Decimus.md — `dukeofd.png``
+- `Characters\Individual\Augustus Terra Decimus.md — `prop.png``
+- `Characters\Individual\Dragão de Colar Dourado.md — `dragao-colar-dourado.png``
+- `Characters\Individual\Elarion Vaelthor.md — `elarion.png``
+- `Characters\Individual\General Cassian Valerius.md — `cassian.png``
+- `Characters\Individual\Kaelen, o Flagelo.md — `kaelen.png``
+- `Characters\Individual\Lorde Malakar.md — `malakar.png``
+- `Characters\Individual\Mestre Odran Veyl.md — `mestre-odran.jpeg``
+- `Characters\Individual\Mira Valen.md — `mira.png``
+- `Characters\Individual\Padre Oric.md — `oric.png``
+- `Characters\Individual\Raziel.md — `raziel.PNG``
+- `Characters\Individual\Unidade DORN-7.md — `unidade.png``
+- `Characters\Individual\Vandor, o Senhor das Bestas.md — `senhor-das-bestas.png``
+- `Characters\Individual\Varkh Nimalis.md — `varkh.jpeg``
+- `Characters\Individual\Vezemir.md — `vezemir.png``
+- `Classes\Alquimista.md — `alquimista.png``
+- `Classes\Clérigo.md — `clerigo.png``
+- `Classes\Guerreiro.md — `guerreiro.png``
+- `Classes\Ladrão.md — `ladrao.png``
+- `Classes\Mago.md — `mago.png``
+- `Classes\Vampiro.md — `sangue.png``
+- `EARTHROPO\01 - Ecos do Mundo Perdido.md — `banner-ecos-do-mundo-perdido.png``
+- `ECONOMY.md — `casa-da-moeda-exterior.png``
+- `ECONOMY.md — `cash.png``
+- `Factions\Clã Sanguinallis.md — `sangue.png``
+- `Factions\Conclave dos Errantes.md — `conclave-dos-errantes.png``
+- `Factions\Coroa de Nimalia.md — `coroa-de-nimalia.png``
+- `Factions\Culto dos Sussurrantes.md — `culto-dos-sussurrantes.png``
+- `Factions\Guarda Real de Nimalia.md — `guarda-real-nimalia.png``
+- `Factions\Guardiões do Véu Cinzento.md — `os-guardioes-do-veu-cinzento.png``
+- `Factions\Guilda dos Mercadores.md — `guilda-dos-mercadores.png``
+- `Factions\Nobreza de Nimalia.md — `coroa-de-nimalia.png``
+- `Factions\Rede de Falsificadores de Maré Baixa.md — `remedios-falsos.png``
+- `Factions\Sentinelas de Leth'valora.md — `sentinelas-de-leth'valora.png``
+- `Home.md — `banner-earthropo.png``
+- `Home.md — `earthropo.png``
+- `Home.md — `mapa-de-nimalia.png``
+- `Home.md — `mapa-de-nimalis.png``
+- `Home_Mestre.md — `banner-earthropo.png``
+- `Home_Mestre.md — `earthropo.png``
+- `Home_Mestre.md — `guild.png``
+- `Home_Mestre.md — `guild1.png``
+- `Home_Mestre.md — `mapa-de-nimalia.png``
+- `Items\Adagas de Espectro Fantasma.md — `adagas-de-espectro-fantasma.png``
+- `Items\Caderninho de Vozes.md — `caderninho.png``
+- `Items\Grisalma.md — `grisalma.png``
+- `Items\Manto Primordial do Ancião.md — `manto-primordial.png``
+- `Items\Muralha de Dorn.md — `muralha_dorn.png``
+- `Items\Máscara de Médico da Peste de Varkh.md — `mascara-doutor.png``
+- `Items\O Medalhão.md — `med.PNG``
+- `Locations\Bairro Nobre.md — `bairro-nobre.png``
+- `Locations\Bairro dos Anões.md — `bairro-anao.png``
+- `Locations\Bairro dos Dragonborns.md — `bairro-dragonborns.png``
+- `Locations\Bairro dos Elfos.md — `bairro-elfos.png``
+- `Locations\Bairro dos Forasteiros.md — `mapa-de-nimalis.png``
+- `Locations\Bairro dos Humanos.md — `bairro-humanos.png``
+- `Locations\Bosque Sussurrante.md — `bosque-sussurrante.png``
+- `Locations\Casa da Moeda de Nimalia.md — `casa-da-moeda-exterior.png``
+- `Locations\Casa da Moeda de Nimalia.md — `casa-da-moeda-interior.png``
+- `Locations\Distrito Comercial.md — `distrito-comercial.png``
+- `Locations\Fortaleza de Gharok.md — `fortaleza-de-gharok.png``
+- `Locations\Leth'valora.md — `vila-de-leth'valora.png``
+- `Locations\Maré Baixa.md — `mare-baixa.png``
+- `Locations\Mercado Central.md — `area-comercial-3.png``
+- `Locations\Nimalis.md — `mapa-de-nimalis.png``
+- `Locations\Porto de Nimalia.md — `porto-nimalis.png``
+- `Locations\Ruínas de Valthor.md — `ruinas-de-valthor.png``
+- `Locations\Vale Dourado.md — `vale-dourado.png``
+- `Lore\Ancião Primordial.md — `ruinas-de-valthor.png``
+- `Lore\Eclipse de Obsidiana.md — `eclipse-obsidiana.png``
+- `Lore\Guardiões do Véu Cinzento.md — `os-guardioes-do-veu-cinzento.png``
+- `Lore\O Fraturamento.md — `o-fraturamento.png``
+- `Lore\Remédios Falsos de Maré Baixa.md — `remedios-falsos.png``
+- `Lore\Sangue Antigo.md — `sangue.png``
+- `Lore\Vampiro Sanguinallis.md — `raziel.PNG``
+- `Lore\Véu Cinzento.md — `veu-cinzento.png``
+- `OMNISVERA.md — `omnisvera-1.png``
+- `Races\Antropo.md — `antropos.PNG``
+- `Races\Anão.md — `anao.PNG``
+- `Races\Dragonborn.md — `dragonborn.png``
+- `Races\Elfo.md — `elf.PNG``
+- `Races\Halfling.md — `halfling.png``
+- `Races\Humano.md — `humano.png``
+- `Races\Kenku.md — `kenku.png``
+- `Religion\Caminho dos Errantes.md — `caminho-dos-errantes.png``
+- `Religion\Fé dos Antigos.md — `fe-dos-antigos.png``
+- `Religion\Igreja das Chamas.md — `igreja-das-chamas.png``
+- `Religion\RELIGION.md — `fe-dos-antigos.png``
+- `TIMELINE.md — `banner-earthropo.png``
+- `Territories\Campos de Earthropo.md — `campos-de-earthropo.png``
+- `Territories\Floresta de Avenor.md — `avenor.png``
+- `Territories\Mar da Neblina.md — `mar-da-neblina.png``
+- `Territories\Nimalia.md — `mapa-de-nimalia.png``
 - `Workflow\Legacy\Disgraceland\.trash\!Ep01 - The Black Marauder\Act 01\A1-Scene 01.md — `th_abel.png``
 - `Workflow\Legacy\Disgraceland\.trash\!Ep01 - The Black Marauder\Act 01\A1-Scene 01.md — `th_jd.png``
 - `Workflow\Legacy\Disgraceland\.trash\!Ep01 - The Black Marauder\Act 01\A1-Scene 01.md — `th_katie.png``
 - `Workflow\Legacy\Disgraceland\.trash\!Ep01 - The Black Marauder\Act 01\A1-Scene 01.md — `th_lj.png``
-- `Workflow\Legacy\Disgraceland\.trash\!Ep01 - The Black Marauder\Act 01\A1-Scene 01.md — `th_mark.png``
-- `Workflow\Legacy\Disgraceland\.trash\!Ep01 - The Black Marauder\Act 01\A1-Scene 01.md — `th_neema.png``
-- `Workflow\Legacy\Disgraceland\.trash\!Ep01 - The Black Marauder\Act 01\A1-Scene 01.md — `th_rod.png``
-- `Workflow\Legacy\Disgraceland\.trash\!Ep01 - The Black Marauder\Act 01\A1-Scene 01.md — `th_sel.png``
-- `Workflow\Legacy\Disgraceland\.trash\!Ep01 - The Black Marauder\Act 01\A1-Scene 02.md — `th_ew.png``
-- `Workflow\Legacy\Disgraceland\.trash\!Ep01 - The Black Marauder\Act 01\A1-Scene 02.md — `th_rott.png``
-- `Workflow\Legacy\Disgraceland\.trash\!Ep01 - The Black Marauder\Act 01\A1-Scene 03.md — `th_ew.png``
-- `Workflow\Legacy\Disgraceland\.trash\!Ep01 - The Black Marauder\Act 01\A1-Scene 03.md — `th_rott.png``
-- `Workflow\Legacy\Disgraceland\.trash\Call Out Boxes\Call Out - Left Section.md — `z_Assets/Misc/ImagePlaceholder.png``
-- `Workflow\Legacy\Disgraceland\.trash\Call Out Boxes\Call Out - Right Section.md — `z_Assets/Misc/ImagePlaceholder.png``
-- `Workflow\Legacy\Disgraceland\.trash\City Forces\Blueforce.md — `1lg2.png``
-- `Workflow\Legacy\Disgraceland\.trash\City Forces\Blueforce.md — `bf.png``
-- `Workflow\Legacy\Disgraceland\.trash\City Forces\Blueforce.md — `blueforce.png``
-- `Workflow\Legacy\Old Dragon anterior\Legacy - Old Dragon anterior - Clérigo.md — `zz_media/clérigo.png``
-- `Workflow\Legacy\Old Dragon anterior\Legacy - Old Dragon anterior - Homem de Armas.md — `zz_media/mestre de armas.png``
-- `Workflow\Legacy\Old Dragon anterior\Legacy - Old Dragon anterior - Ladrão.md — `zz_media/ladrão.png``
-- `Workflow\Reports\latest_vault_audit.md — `econ.png``
-- `Workflow\Reports\latest_vault_audit.md — `leth'valora.png``
-- `Workflow\Reports\latest_vault_audit.md — `npc.png``
-- `Workflow\Reports\latest_vault_audit.md — `t8.png``
-- `Workflow\Reports\latest_vault_audit.md — `w.png``
-- `Workflow\Reports\latest_vault_audit.md — `zz_media/lyladuke.png``
+- ... mais 41 itens.
 
 
 ## Referências de mídia quebradas fora de histórico/auditoria
 
-- Nenhum.
+- `CALENDAR.md — `banner-earthropo.png``
+- `CAMPANHA\ESTADO_DA_CAMPANHA.md — `banner-ecos-do-mundo-perdido.png``
+- `CULTURE.md — `culture.png``
+- `Characters\Individual\Augustus Terra Decimus.md — `dukeofd.png``
+- `Characters\Individual\Augustus Terra Decimus.md — `prop.png``
+- `Characters\Individual\Dragão de Colar Dourado.md — `dragao-colar-dourado.png``
+- `Characters\Individual\Elarion Vaelthor.md — `elarion.png``
+- `Characters\Individual\General Cassian Valerius.md — `cassian.png``
+- `Characters\Individual\Kaelen, o Flagelo.md — `kaelen.png``
+- `Characters\Individual\Lorde Malakar.md — `malakar.png``
+- `Characters\Individual\Mestre Odran Veyl.md — `mestre-odran.jpeg``
+- `Characters\Individual\Mira Valen.md — `mira.png``
+- `Characters\Individual\Padre Oric.md — `oric.png``
+- `Characters\Individual\Raziel.md — `raziel.PNG``
+- `Characters\Individual\Unidade DORN-7.md — `unidade.png``
+- `Characters\Individual\Vandor, o Senhor das Bestas.md — `senhor-das-bestas.png``
+- `Characters\Individual\Varkh Nimalis.md — `varkh.jpeg``
+- `Characters\Individual\Vezemir.md — `vezemir.png``
+- `Classes\Alquimista.md — `alquimista.png``
+- `Classes\Clérigo.md — `clerigo.png``
+- `Classes\Guerreiro.md — `guerreiro.png``
+- `Classes\Ladrão.md — `ladrao.png``
+- `Classes\Mago.md — `mago.png``
+- `Classes\Vampiro.md — `sangue.png``
+- `EARTHROPO\01 - Ecos do Mundo Perdido.md — `banner-ecos-do-mundo-perdido.png``
+- `ECONOMY.md — `casa-da-moeda-exterior.png``
+- `ECONOMY.md — `cash.png``
+- `Factions\Clã Sanguinallis.md — `sangue.png``
+- `Factions\Conclave dos Errantes.md — `conclave-dos-errantes.png``
+- `Factions\Coroa de Nimalia.md — `coroa-de-nimalia.png``
+- `Factions\Culto dos Sussurrantes.md — `culto-dos-sussurrantes.png``
+- `Factions\Guarda Real de Nimalia.md — `guarda-real-nimalia.png``
+- `Factions\Guardiões do Véu Cinzento.md — `os-guardioes-do-veu-cinzento.png``
+- `Factions\Guilda dos Mercadores.md — `guilda-dos-mercadores.png``
+- `Factions\Nobreza de Nimalia.md — `coroa-de-nimalia.png``
+- `Factions\Rede de Falsificadores de Maré Baixa.md — `remedios-falsos.png``
+- `Factions\Sentinelas de Leth'valora.md — `sentinelas-de-leth'valora.png``
+- `Home.md — `banner-earthropo.png``
+- `Home.md — `earthropo.png``
+- `Home.md — `mapa-de-nimalia.png``
+- `Home.md — `mapa-de-nimalis.png``
+- `Home_Mestre.md — `banner-earthropo.png``
+- `Home_Mestre.md — `earthropo.png``
+- `Home_Mestre.md — `guild.png``
+- `Home_Mestre.md — `guild1.png``
+- `Home_Mestre.md — `mapa-de-nimalia.png``
+- `Items\Adagas de Espectro Fantasma.md — `adagas-de-espectro-fantasma.png``
+- `Items\Caderninho de Vozes.md — `caderninho.png``
+- `Items\Grisalma.md — `grisalma.png``
+- `Items\Manto Primordial do Ancião.md — `manto-primordial.png``
+- `Items\Muralha de Dorn.md — `muralha_dorn.png``
+- `Items\Máscara de Médico da Peste de Varkh.md — `mascara-doutor.png``
+- `Items\O Medalhão.md — `med.PNG``
+- `Locations\Bairro Nobre.md — `bairro-nobre.png``
+- `Locations\Bairro dos Anões.md — `bairro-anao.png``
+- `Locations\Bairro dos Dragonborns.md — `bairro-dragonborns.png``
+- `Locations\Bairro dos Elfos.md — `bairro-elfos.png``
+- `Locations\Bairro dos Forasteiros.md — `mapa-de-nimalis.png``
+- `Locations\Bairro dos Humanos.md — `bairro-humanos.png``
+- `Locations\Bosque Sussurrante.md — `bosque-sussurrante.png``
+- `Locations\Casa da Moeda de Nimalia.md — `casa-da-moeda-exterior.png``
+- `Locations\Casa da Moeda de Nimalia.md — `casa-da-moeda-interior.png``
+- `Locations\Distrito Comercial.md — `distrito-comercial.png``
+- `Locations\Fortaleza de Gharok.md — `fortaleza-de-gharok.png``
+- `Locations\Leth'valora.md — `vila-de-leth'valora.png``
+- `Locations\Maré Baixa.md — `mare-baixa.png``
+- `Locations\Mercado Central.md — `area-comercial-3.png``
+- `Locations\Nimalis.md — `mapa-de-nimalis.png``
+- `Locations\Porto de Nimalia.md — `porto-nimalis.png``
+- `Locations\Ruínas de Valthor.md — `ruinas-de-valthor.png``
+- `Locations\Vale Dourado.md — `vale-dourado.png``
+- `Lore\Ancião Primordial.md — `ruinas-de-valthor.png``
+- `Lore\Eclipse de Obsidiana.md — `eclipse-obsidiana.png``
+- `Lore\Guardiões do Véu Cinzento.md — `os-guardioes-do-veu-cinzento.png``
+- `Lore\O Fraturamento.md — `o-fraturamento.png``
+- `Lore\Remédios Falsos de Maré Baixa.md — `remedios-falsos.png``
+- `Lore\Sangue Antigo.md — `sangue.png``
+- `Lore\Vampiro Sanguinallis.md — `raziel.PNG``
+- `Lore\Véu Cinzento.md — `veu-cinzento.png``
+- `OMNISVERA.md — `omnisvera-1.png``
+- `Races\Antropo.md — `antropos.PNG``
+- `Races\Anão.md — `anao.PNG``
+- `Races\Dragonborn.md — `dragonborn.png``
+- `Races\Elfo.md — `elf.PNG``
+- `Races\Halfling.md — `halfling.png``
+- `Races\Humano.md — `humano.png``
+- `Races\Kenku.md — `kenku.png``
+- `Religion\Caminho dos Errantes.md — `caminho-dos-errantes.png``
+- `Religion\Fé dos Antigos.md — `fe-dos-antigos.png``
+- `Religion\Igreja das Chamas.md — `igreja-das-chamas.png``
+- `Religion\RELIGION.md — `fe-dos-antigos.png``
+- `TIMELINE.md — `banner-earthropo.png``
+- `Territories\Campos de Earthropo.md — `campos-de-earthropo.png``
+- `Territories\Floresta de Avenor.md — `avenor.png``
+- `Territories\Mar da Neblina.md — `mar-da-neblina.png``
+- `Territories\Nimalia.md — `mapa-de-nimalia.png``
 
 
 ## Possíveis problemas de case-sensitive em mídia
@@ -970,20 +1139,7 @@ Critério: tag com espaço, maiúscula inesperada ou formato arriscado. Tags `Ca
 
 > Não apagar automaticamente. Uma mídia pode ser usada por CSS, plugin, mapa, canvas, nota futura ou referência manual ainda não capturada.
 
-- `anciao.png`
-- `loja-odran.png`
-- `porto-real.png`
 - `smoke.mp3`
-- `sound.png`
-- `th_alquimista.PNG`
-- `th_antropos.PNG`
-- `th_clerigo.PNG`
-- `th_dragonborn.PNG`
-- `th_guerreiro.PNG`
-- `th_kenku.PNG`
-- `th_ladrao.PNG`
-- `th_mago.PNG`
-- `th_unidade.PNG`
 
 
 ## Reclassificações sugeridas

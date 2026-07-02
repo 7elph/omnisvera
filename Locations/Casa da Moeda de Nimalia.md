@@ -14,8 +14,8 @@ territory: "[[Nimalia]]"
 region:
 district: Distrito Administrativo / Econômico
 danger_level: Baixo
-thumbnail: zz_media/casa-da-moeda-exterior.png
-cover: zz_media/casa-da-moeda-exterior.png
+thumbnail: zz_media/thumbnails/casa_da_moeda_exterior.png
+cover: zz_media/thumbnails/casa_da_moeda_exterior.png
 info: Instituição responsável pela cunhagem das moedas oficiais de Nimalia.
 description: Casa de cunhagem e controle monetário do Reino de Nimalia.
 chapters: []

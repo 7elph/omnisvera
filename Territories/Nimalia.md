@@ -8,8 +8,8 @@ campaign_status: Ativo
 visibility: Jogadores
 spoiler_level: light
 gm_secret: false
-thumbnail: zz_media/mapa-de-nimalia.png
-cover: zz_media/mapa-de-nimalia.png
+thumbnail: zz_media/maps/mapa_de_nimalia.png
+cover: zz_media/maps/mapa_de_nimalia.png
 location: "[[Nimalis]]"
 territory: "[[EARTHROPO/EARTHROPO|Earthropo]]"
 info: Reino dos antropos em Earthropo, governado por Augustus Terra Decimus.

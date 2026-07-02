@@ -11,8 +11,8 @@ gm_secret: false
 territory: "[[EARTHROPO/EARTHROPO|Earthropo]]"
 location:
 region: Sudeste de [[Nimalia]]
-thumbnail: zz_media/ruinas-de-valthor.png
-cover: zz_media/ruinas-de-valthor.png
+thumbnail: zz_media/thumbnails/ruinas_de_valthor.png
+cover: zz_media/thumbnails/ruinas_de_valthor.png
 info: Ruínas de um antigo reino próspero ao sudeste de Nimalia.
 description: Ruínas antigas ao sudeste de Nimalia, ligadas a histórias esquecidas e ao passado profundo de Earthropo.
 subtype: ruin

@@ -24,7 +24,7 @@ tags:
 # Nome da Lore
 
 > [!NOTE|clean no-i right]+ Retrato
-> ![[zz_media/banner-earthropo.png|400]]
+> ![[zz_media/maps/banner_earthropo.png|400]]
 
 ## Status
 

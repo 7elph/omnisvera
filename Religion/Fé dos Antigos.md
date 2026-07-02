@@ -12,8 +12,8 @@ spoiler_level: medium
 gm_secret: true
 info: Conjunto de crenças anteriores ao Eclipse de Obsidiana.
 description: Tradições religiosas antigas possivelmente ligadas aos Criadores, preservadas em fragmentos, ruínas e memórias anteriores ao Eclipse.
-thumbnail: zz_media/fe-dos-antigos.png
-cover: zz_media/fe-dos-antigos.png
+thumbnail: zz_media/thumbnails/fe_dos_antigos.png
+cover: zz_media/thumbnails/fe_dos_antigos.png
 chapters: []
 tags:
   - religiao

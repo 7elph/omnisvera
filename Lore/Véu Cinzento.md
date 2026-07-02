@@ -8,8 +8,8 @@ campaign_status: Ativo
 visibility: Jogadores
 spoiler_level: light
 gm_secret: false
-thumbnail: zz_media/veu-cinzento.png
-cover: zz_media/veu-cinzento.png
+thumbnail: zz_media/thumbnails/veu_cinzento.png
+cover: zz_media/thumbnails/veu_cinzento.png
 info: Fenômeno de névoa branca, ruínas e memória quebrada associado ao Eclipse de Obsidiana.
 description: Fenômeno de névoa branca, espessa e antinatural ligado a ruínas, memórias fragmentadas e mistérios antigos de Earthropo.
 chapters: []

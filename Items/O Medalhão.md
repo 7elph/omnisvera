@@ -14,8 +14,8 @@ location: "[[Vezemir]]"
 faction: "[[Guardiões do Véu Cinzento]]"
 level: 1
 danger_level: Médio
-thumbnail: zz_media/med.PNG
-cover: zz_media/med.PNG
+thumbnail: zz_media/thumbnails/med.png
+cover: zz_media/thumbnails/med.png
 chapters:
   - 00 - O Bastardo de Ferro
 hooks:

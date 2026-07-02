@@ -18,8 +18,8 @@ class_group: Especialista
 primary_attribute: Destreza
 level:
 danger_level: Baixo
-thumbnail: zz_media/ladrao.png
-cover: zz_media/ladrao.png
+thumbnail: zz_media/thumbnails/ladrao.png
+cover: zz_media/thumbnails/ladrao.png
 chapters: []
 tags:
   - classe

@@ -1,7 +1,7 @@
 ---
 tags: 
   - home
-cover: zz_media/t7.png
+cover: zz_media/covers/t7.png
 ---
 
 ```datacards 

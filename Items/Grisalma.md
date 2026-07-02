@@ -14,8 +14,8 @@ location: "[[Vezemir]]"
 faction:
 level: 1
 danger_level: Médio
-thumbnail: zz_media/grisalma.png
-cover: zz_media/grisalma.png
+thumbnail: zz_media/thumbnails/grisalma.png
+cover: zz_media/thumbnails/grisalma.png
 chapters:
   - 00 - O Bastardo de Ferro
 hooks:

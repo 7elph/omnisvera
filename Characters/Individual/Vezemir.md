@@ -7,8 +7,8 @@ visibility: Jogadores
 spoiler_level: none
 gm_secret: false
 campaign_status: Ativo
-thumbnail: zz_media/th_vezemir.PNG
-cover: zz_media/th_vezemir.PNG
+thumbnail: zz_media/thumbnails/th_vezemir.png
+cover: zz_media/thumbnails/th_vezemir.png
 status: Vivo
 location: "[[Floresta de Avenor]]"
 territory: "[[Floresta de Avenor]]"
@@ -199,7 +199,7 @@ Reservado, disciplinado e resiliente. Vezemir raramente demonstra emoções, mas
 
 > [!infobox]
 >
-> ![[th_vezemir.PNG]]
+> ![[zz_media/thumbnails/th_vezemir.png]]
 
 **Virtudes:**  
 Lealdade, coragem, humildade, perseverança.

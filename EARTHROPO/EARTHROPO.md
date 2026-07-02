@@ -2,7 +2,7 @@
 obsidianUIMode: preview
 NoteIcon: lore
 NoteStatus: Active
-cover: zz_media/earthropo.png
+cover: zz_media/maps/earthropo.png
 cssclasses:
   - b-sides-script
 type: lore
@@ -20,7 +20,7 @@ tags:
 ---
 
 <div style="text-align: center;">
-  <img src="zz_media/earthropo.png">
+  <img src="zz_media/maps/earthropo.png">
 </div>
 <br>
 

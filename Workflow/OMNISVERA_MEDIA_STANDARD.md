@@ -26,7 +26,7 @@ Outros campos de mídia não são padrão novo nesta taxonomia. Se existirem em 
 Exemplo:
 
 ```yaml
-thumbnail: zz_media/vezemir.png
+thumbnail: zz_media/thumbnails/vezemir.png
 ```
 
 ## Regras para `cover`
@@ -38,7 +38,7 @@ thumbnail: zz_media/vezemir.png
 Exemplo:
 
 ```yaml
-cover: zz_media/avenor.png
+cover: zz_media/thumbnails/avenor.png
 ```
 
 ## Pasta de mídia

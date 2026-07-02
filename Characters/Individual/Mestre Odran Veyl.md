@@ -8,8 +8,8 @@ campaign_status: Em revisão
 visibility: Mestre
 spoiler_level: heavy
 gm_secret: true
-thumbnail: zz_media/th_mestre-odran.PNG
-cover: zz_media/mestre-odran.jpeg
+thumbnail: zz_media/thumbnails/th_mestre_odran.png
+cover: zz_media/characters/mestre_odran.jpeg
 location: "[[Maré Baixa]]"
 territory: "[[Nimalia]]"
 faction:

@@ -12,8 +12,8 @@ spoiler_level: light
 gm_secret: false
 info: Fé organizada associada ao simbolismo das chamas.
 description: Religião pública presente em Nimalia, ligada a chamas, virtudes, memória, purificação e orientação.
-thumbnail: zz_media/igreja-das-chamas.png
-cover: zz_media/igreja-das-chamas.png
+thumbnail: zz_media/thumbnails/igreja_das_chamas.png
+cover: zz_media/thumbnails/igreja_das_chamas.png
 chapters: []
 tags:
   - religiao

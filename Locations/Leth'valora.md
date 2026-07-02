@@ -14,8 +14,8 @@ location:
 region: Interior de Avenor
 district:
 danger_level: Médio
-thumbnail: "zz_media/vila-de-leth'valora.png"
-cover: "zz_media/vila-de-leth'valora.png"
+thumbnail: "zz_media/thumbnails/vila_de_leth_valora.png"
+cover: "zz_media/thumbnails/vila_de_leth_valora.png"
 info: Antiga vila élfica da Floresta de Avenor, destruída pelo dragão de colar dourado.
 description: Vila élfica menor em Avenor, ligada à origem de Vezemir, Mira e aos Sentinelas de Leth'valora.
 chapters:

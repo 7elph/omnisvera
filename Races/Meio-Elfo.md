@@ -24,8 +24,8 @@ hooks:
   - Identidade entre culturas
   - Relações humanas e élficas em Avenor
 rumors: []
-thumbnail: zz_media/th_vezemir.PNG
-cover: zz_media/th_vezemir.PNG
+thumbnail: zz_media/thumbnails/th_vezemir.png
+cover: zz_media/thumbnails/th_vezemir.png
 chapters: []
 tags:
   - raca

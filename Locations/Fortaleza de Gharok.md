@@ -11,8 +11,8 @@ gm_secret: false
 territory: "[[EARTHROPO/EARTHROPO|Earthropo]]"
 location:
 region: Norte de [[Nimalia]]
-thumbnail: zz_media/fortaleza-de-gharok.png
-cover: zz_media/fortaleza-de-gharok.png
+thumbnail: zz_media/thumbnails/fortaleza_de_gharok.png
+cover: zz_media/thumbnails/fortaleza_de_gharok.png
 info: Antiga fortaleza anã ao norte de Nimalia, ligada ao Clã Sanguinallis e à origem de Raziel.
 description: Fortaleza anã antiga ao norte de Nimalia, hoje cercada por rumores e pendências de lore.
 tags:

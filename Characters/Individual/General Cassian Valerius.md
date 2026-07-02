@@ -8,8 +8,8 @@ campaign_status: Ativo
 visibility: Mestre
 spoiler_level: heavy
 gm_secret: true
-thumbnail: zz_media/th_cassian.PNG
-cover: zz_media/cassian.png
+thumbnail: zz_media/thumbnails/th_cassian.png
+cover: zz_media/thumbnails/cassian.png
 religion: "[[Igreja das Chamas]]"
 location: "[[Nimalis]]"
 territory: "[[Nimalia]]"

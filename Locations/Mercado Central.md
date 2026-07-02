@@ -13,8 +13,8 @@ territory: "[[Nimalia]]"
 region: Capital do Reino de Nimalia
 district: Mercado Central
 danger_level: Baixo
-thumbnail: zz_media/area-comercial-2.png
-cover: zz_media/area-comercial-1.png
+thumbnail: zz_media/thumbnails/area_comercial_2.png
+cover: zz_media/locations/area_comercial_1.png
 info: Área comercial comum de Nimalis.
 description: Mercado público de produtos comuns, feirantes, rumores e circulação diária.
 chapters: []

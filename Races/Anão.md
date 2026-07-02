@@ -22,8 +22,8 @@ hooks:
   - Reinos anões ao norte e nordeste
   - Fortalezas antigas e ruínas subterrâneas
 rumors: []
-thumbnail: zz_media/th_anao.PNG
-cover: zz_media/anao.PNG
+thumbnail: zz_media/thumbnails/th_anao.png
+cover: zz_media/thumbnails/anao.png
 chapters: []
 tags:
   - raca

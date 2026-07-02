@@ -8,8 +8,8 @@ campaign_status: Ativo
 visibility: Mestre
 spoiler_level: heavy
 gm_secret: true
-thumbnail: zz_media/th_elarion.PNG
-cover: zz_media/elarion.png
+thumbnail: zz_media/thumbnails/th_elarion.png
+cover: zz_media/thumbnails/elarion.png
 location: "[[Leth'valora]]"
 territory: "[[Floresta de Avenor]]"
 faction: "[[Sentinelas de Leth'valora]]"

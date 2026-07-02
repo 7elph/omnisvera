@@ -14,8 +14,8 @@ territory: "[[Nimalia]]"
 region: Interior do Reino de Nimalia
 district:
 danger_level: Baixo
-thumbnail: zz_media/vale-dourado.png
-cover: zz_media/vale-dourado.png
+thumbnail: zz_media/thumbnails/vale_dourado.png
+cover: zz_media/thumbnails/vale_dourado.png
 info: Localização menor do interior de Nimalia, ainda em definição.
 description: Vale ou vila remota associada às fronteiras internas do Reino de Nimalia.
 chapters: []

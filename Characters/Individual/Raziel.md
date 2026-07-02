@@ -7,8 +7,8 @@ visibility: Jogadores
 spoiler_level: none
 gm_secret: false
 campaign_status: Ativo
-thumbnail: zz_media/th_raziel.PNG
-cover: zz_media/raziel.PNG
+thumbnail: zz_media/thumbnails/th_raziel.png
+cover: zz_media/thumbnails/raziel.png
 status: Vivo
 location: "[[Ruínas de Valthor]]"
 territory: "[[EARTHROPO/EARTHROPO|Earthropo]]"
@@ -153,7 +153,7 @@ Silencioso, paciente e ameaçador; acostumado a agir fora da luz e sem necessida
 
 > [!infobox]
 >
-> ![[th_raziel.PNG]]
+> ![[zz_media/thumbnails/th_raziel.png]]
 
 **Virtudes:**
 Determinação, domínio próprio, resistência ao sofrimento e conhecimento de uma era desaparecida.

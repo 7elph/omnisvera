@@ -9,8 +9,8 @@ visibility: Mestre
 spoiler_level: medium
 gm_secret: true
 created_by: IA
-thumbnail: zz_media/remedios-falsos.png
-cover: zz_media/remedios-falsos.png
+thumbnail: zz_media/thumbnails/remedios_falsos.png
+cover: zz_media/thumbnails/remedios_falsos.png
 info: Arco de investigação de Varkh sobre remédios falsos em Maré Baixa e Nimalia.
 description: Investigação sobre falsificações alquímicas usando o símbolo e os métodos de Mestre Odran Veyl.
 chapters:

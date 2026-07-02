@@ -8,8 +8,8 @@ campaign_status: Ativo
 visibility: Jogadores
 spoiler_level: light
 gm_secret: false
-thumbnail: zz_media/mar-da-neblina.png
-cover: zz_media/mar-da-neblina.png
+thumbnail: zz_media/thumbnails/mar_da_neblina.png
+cover: zz_media/thumbnails/mar_da_neblina.png
 location:
 territory: "[[EARTHROPO/EARTHROPO|Earthropo]]"
 region:

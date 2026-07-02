@@ -13,8 +13,8 @@ territory: "[[Nimalia]]"
 region: Capital do Reino de Nimalia
 district: Bairro dos Forasteiros
 danger_level: Médio
-thumbnail: zz_media/mapa-de-nimalis.png
-cover: zz_media/mapa-de-nimalis.png
+thumbnail: zz_media/maps/mapa_de_nimalis.png
+cover: zz_media/maps/mapa_de_nimalis.png
 info: Região pobre e instável de Nimalis.
 description: Bairro de abrigo temporário, favelas, trabalhadores sem renda estável e recém-chegados.
 chapters: []

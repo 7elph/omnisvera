@@ -13,8 +13,8 @@ territory: "[[Nimalia]]"
 region: Capital do Reino de Nimalia
 district: Porto de Nimalia
 danger_level: Médio
-thumbnail: zz_media/porto-nimalis.png.png
-cover: zz_media/porto-nimalis.png.png
+thumbnail: zz_media/maps/porto_nimalis.png
+cover: zz_media/maps/porto_nimalis.png
 info: Porto da capital do Reino de Nimalia.
 description: Área de movimentação de barcos, cargas, passageiros, rumores marítimos e contrabando.
 chapters: []

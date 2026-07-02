@@ -2,7 +2,7 @@
 obsidianUIMode: preview
 NoteIcon: lore
 NoteStatus: Active
-cover: zz_media/omnisvera-1.png
+cover: zz_media/covers/omnisvera_1.png
 status: Cânone confirmado
 tags:
   - home

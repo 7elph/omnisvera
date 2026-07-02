@@ -8,8 +8,8 @@ campaign_status: Em revisão
 visibility: Mestre
 spoiler_level: light
 gm_secret: false
-thumbnail: zz_media/banner-earthropo.png
-cover: zz_media/banner-earthropo.png
+thumbnail: zz_media/maps/banner_earthropo.png
+cover: zz_media/maps/banner_earthropo.png
 info: Calendário operacional de Omnisvera para viagens, datas, festivais e consequências.
 description: Estrutura de dias, meses, estações e feriados da campanha, ainda em revisão.
 chapters: []

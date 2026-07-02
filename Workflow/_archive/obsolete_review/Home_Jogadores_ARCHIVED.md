@@ -1,6 +1,6 @@
 ---
 obsidianUIMode: preview
-banner: "[[zz_media/avenor.png]]"
+banner: "[[zz_media/thumbnails/avenor.png]]"
 banner-x: 51
 banner-y: 34
 banner-height: 280

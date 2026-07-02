@@ -9,8 +9,8 @@ visibility: Mestre
 spoiler_level: heavy
 gm_secret: true
 created_by: IA
-thumbnail: zz_media/sangue.png
-cover: zz_media/sangue.png
+thumbnail: zz_media/thumbnails/sangue.png
+cover: zz_media/thumbnails/sangue.png
 info: Substância ancestral ligada ao renascimento de Raziel e ao Ancião Primordial.
 description: Lore e mecânica própria de mesa para a substância conhecida como Sangue Antigo, separada da classe Vampiro.
 chapters:

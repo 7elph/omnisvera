@@ -12,8 +12,8 @@ campaign_status: Em revisão
 location: "[[Nimalis]]"
 territory: "[[Nimalia|Reino de Nimalia]]"
 faction: "[[Guarda Real de Nimalia]]"
-thumbnail: zz_media/guarda-real-nimalia.png
-cover: zz_media/guarda-real-nimalia.png
+thumbnail: zz_media/maps/guarda_real_nimalia.png
+cover: zz_media/maps/guarda_real_nimalia.png
 info: Força militar oficial do Reino de Nimalia.
 description: Braço armado da Coroa de Nimalia, responsável por patrulhas, escoltas, proteção da capital e resposta a incidentes.
 chapters: []

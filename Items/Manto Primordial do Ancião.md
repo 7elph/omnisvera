@@ -14,8 +14,8 @@ location: "[[Raziel]]"
 faction:
 level: 1
 danger_level: Alto
-thumbnail: zz_media/manto-primordial.png
-cover: zz_media/manto-primordial.png
+thumbnail: zz_media/thumbnails/manto_primordial.png
+cover: zz_media/thumbnails/manto_primordial.png
 chapters:
   - 00 - As Crônicas de Névoa de Sangue
 hooks:

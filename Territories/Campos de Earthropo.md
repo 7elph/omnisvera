@@ -9,8 +9,8 @@ visibility: Mestre
 spoiler_level: medium
 gm_secret: true
 created_by: Sage
-thumbnail: zz_media/campos-de-earthropo.png
-cover: zz_media/campos-de-earthropo.png
+thumbnail: zz_media/maps/campos_de_earthropo.png
+cover: zz_media/maps/campos_de_earthropo.png
 location:
 territory: "[[EARTHROPO/EARTHROPO|Earthropo]]"
 region:

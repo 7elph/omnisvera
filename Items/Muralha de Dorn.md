@@ -14,8 +14,8 @@ location: "[[Vezemir]]"
 faction:
 level: 1
 danger_level: Médio
-thumbnail: zz_media/muralha_dorn.png
-cover: zz_media/muralha_dorn.png
+thumbnail: zz_media/thumbnails/muralha_dorn.png
+cover: zz_media/thumbnails/muralha_dorn.png
 chapters:
   - 00 - O Bastardo de Ferro
 hooks:

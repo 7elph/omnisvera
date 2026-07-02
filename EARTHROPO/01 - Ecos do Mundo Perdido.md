@@ -25,7 +25,7 @@ characters:
   - "[[Vezemir]]"
   - "[[Varkh Nimalis]]"
   - "[[Raziel]]"
-cover: "[[zz_media/banner-ecos-do-mundo-perdido.png]]"
+cover: "[[zz_media/covers/banner_ecos_do_mundo_perdido.png]]"
 description: Primeiro capítulo coletivo da campanha, reunindo Vezemir, Varkh e Raziel diante dos primeiros sinais de ruínas antigas, remédios falsos e mistérios esquecidos sob Earthropo.
 tags:
   - capitulo

@@ -14,8 +14,8 @@ location: "[[Raziel]]"
 faction: "[[Clã Sanguinallis]]"
 level: 1
 danger_level: Alto
-thumbnail: zz_media/adagas-de-espectro-fantasma.png
-cover: zz_media/adagas-de-espectro-fantasma.png
+thumbnail: zz_media/thumbnails/adagas_de_espectro_fantasma.png
+cover: zz_media/thumbnails/adagas_de_espectro_fantasma.png
 chapters:
   - 00 - As Crônicas de Névoa de Sangue
 hooks:

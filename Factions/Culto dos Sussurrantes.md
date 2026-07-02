@@ -11,8 +11,8 @@ spoiler_level: medium
 gm_secret: true
 location: Fronteira do [[Véu Cinzento]]
 territory: "[[EARTHROPO/EARTHROPO|Earthropo]]"
-thumbnail: zz_media/culto-dos-sussurrantes.png
-cover: zz_media/culto-dos-sussurrantes.png
+thumbnail: zz_media/thumbnails/culto_dos_sussurrantes.png
+cover: zz_media/thumbnails/culto_dos_sussurrantes.png
 info: Culto em revisão associado ao Véu Cinzento.
 description: Facção/culto apocalíptico em revisão; pode ser ameaça ativa, rumor falso ou rascunho arquivável.
 chapters: []

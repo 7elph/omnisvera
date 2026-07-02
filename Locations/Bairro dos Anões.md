@@ -13,8 +13,8 @@ territory: "[[Nimalia]]"
 region: Capital do Reino de Nimalia
 district: Bairro dos Anões
 danger_level: Baixo
-thumbnail: zz_media/bairro-anao.png
-cover: zz_media/bairro-anao.png
+thumbnail: zz_media/thumbnails/bairro_anao.png
+cover: zz_media/thumbnails/bairro_anao.png
 info: Bairro onde anões se estabeleceram em Nimalis.
 description: Comunidade anã urbana ligada a comércio, ofícios, metal e rotas do norte.
 chapters: []

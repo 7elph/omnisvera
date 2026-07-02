@@ -8,8 +8,8 @@ campaign_status: Cânone de trabalho
 visibility: Jogadores
 spoiler_level: light
 gm_secret: false
-thumbnail: zz_media/eclipse-obsidiana.png
-cover: zz_media/eclipse-obsidiana.png
+thumbnail: zz_media/thumbnails/eclipse_obsidiana.png
+cover: zz_media/thumbnails/eclipse_obsidiana.png
 info: Evento histórico associado ao surgimento ou revelação do Véu Cinzento.
 description: Evento antigo em que o sol foi engolido pela escuridão por sete dias e o Véu Cinzento passou a marcar Earthropo.
 chapters: []

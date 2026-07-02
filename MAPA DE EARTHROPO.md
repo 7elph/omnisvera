@@ -6,7 +6,7 @@ distance: 2746
 NoteIcon: none
 NoteStatus: Active
 obsidianUIMode: preview
-cover: zz_media/earthropo.png
+cover: zz_media/maps/earthropo.png
 Community-Size: Continental
 Alignment:
 Government: Diversos
@@ -41,7 +41,7 @@ Esta camada mostra a escala continental. Fronteiras finas, reinos futuros e coor
 
 ```leaflet
 id: earthropo-map
-image: zz_media/earthropo.png
+image: zz_media/maps/earthropo.png
 height: 1000px
 width: 100%
 bounds: [[0, 0], [185.7, 274.6]]

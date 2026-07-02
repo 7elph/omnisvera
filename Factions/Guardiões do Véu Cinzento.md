@@ -11,8 +11,8 @@ campaign_status: Cânone de trabalho
 leader:
 location:
 territory: "[[EARTHROPO/EARTHROPO|Earthropo]]"
-thumbnail: zz_media/os-guardioes-do-veu-cinzento.png
-cover: zz_media/os-guardioes-do-veu-cinzento.png
+thumbnail: zz_media/thumbnails/os_guardioes_do_veu_cinzento.png
+cover: zz_media/thumbnails/os_guardioes_do_veu_cinzento.png
 info: Ordem antiga associada ao Véu Cinzento, relíquias e registros perdidos.
 description: Facção antiga/desaparecida ligada ao Véu Cinzento, aos Criadores e ao mistério de Vezemir.
 chapters: []

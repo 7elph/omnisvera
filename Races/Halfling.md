@@ -22,8 +22,8 @@ hooks:
   - Raça bônus futura
   - Comunidades pequenas e viajantes curiosos
 rumors: []
-thumbnail: zz_media/th_halfling.png
-cover: zz_media/th_halfling.png
+thumbnail: zz_media/thumbnails/th_halfling.png
+cover: zz_media/thumbnails/th_halfling.png
 chapters: []
 tags:
   - raca

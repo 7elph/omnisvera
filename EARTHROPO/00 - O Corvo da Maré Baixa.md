@@ -31,7 +31,7 @@ location: "[[Maré Baixa]]"
 territory: "[[Nimalia|Reino de Nimalia]]"
 faction:
   - "[[Nobreza de Nimalia]]"
-cover: "[[zz_media/banner-o-corvo-da-mare-baixa.png]]"
+cover: "[[zz_media/covers/banner_o_corvo_da_mare_baixa.png]]"
 description: A história de Varkh Nimalis, o Corvo da Maré Baixa, desde sua infância nos becos portuários de Nimalis até seu aprendizado como alquimista de rua e a descoberta de que alguém está usando o nome de seu mestre para espalhar remédios falsos pelo reino.
 ---
 

@@ -6,7 +6,7 @@ distance: 2746
 NoteIcon: none
 NoteStatus: Active
 obsidianUIMode: preview
-cover: zz_media/mapa-de-nimalia.png
+cover: zz_media/maps/mapa_de_nimalia.png
 Community-Size: Kingdom
 Alignment:
 Government: Monarquia de Nimalia
@@ -41,7 +41,7 @@ Este mapa representa a camada de reino, não o continente inteiro e não apenas 
 
 ```leaflet
 id: nimalia-kingdom-map
-image: zz_media/mapa-de-nimalia.png
+image: zz_media/maps/mapa_de_nimalia.png
 height: 1000px
 width: 100%
 bounds: [[0, 0], [185.7, 274.6]]

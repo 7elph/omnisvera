@@ -8,8 +8,8 @@ spoiler_level: light
 gm_secret: false
 status: Ativa
 campaign_status: Em jogo
-thumbnail: zz_media/avenor.png
-cover: zz_media/avenor.png
+thumbnail: zz_media/thumbnails/avenor.png
+cover: zz_media/thumbnails/avenor.png
 location:
 territory: "[[EARTHROPO/EARTHROPO|Earthropo]]"
 info: Região florestal próxima ao Reino de Nimalia, ligada a Leth'valora e à história de Vezemir.

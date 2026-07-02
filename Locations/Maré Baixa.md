@@ -14,8 +14,8 @@ location: "[[Nimalis]]"
 region: Extremo sul da capital
 district: Maré Baixa
 danger_level: Médio
-thumbnail: zz_media/mare-baixa.png
-cover: zz_media/mare-baixa.png
+thumbnail: zz_media/thumbnails/mare_baixa.png
+cover: zz_media/thumbnails/mare_baixa.png
 info: Favela portuária no extremo sul da capital do Reino de Nimalia.
 description: Região pobre, portuária e informal de Nimalis, ligada à origem de Varkh e ao submundo urbano.
 chapters:

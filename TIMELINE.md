@@ -8,8 +8,8 @@ campaign_status: Ativo
 visibility: Mestre
 spoiler_level: medium
 gm_secret: true
-thumbnail: zz_media/banner-earthropo.png
-cover: zz_media/banner-earthropo.png
+thumbnail: zz_media/maps/banner_earthropo.png
+cover: zz_media/maps/banner_earthropo.png
 info: Linha do tempo operacional de Omnisvera e Earthropo.
 description: Estrutura histórica da campanha, incluindo eras antigas, Eclipse de Obsidiana, reconstrução e campanha atual.
 chapters: []

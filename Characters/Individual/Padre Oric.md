@@ -8,8 +8,8 @@ campaign_status: Ativo
 visibility: Mestre
 spoiler_level: heavy
 gm_secret: true
-thumbnail: zz_media/th_oric.PNG
-cover: zz_media/oric.PNG
+thumbnail: zz_media/thumbnails/th_oric.png
+cover: zz_media/thumbnails/oric.png
 location: Desconhecida
 territory: "[[Nimalia]]"
 faction: Nenhum

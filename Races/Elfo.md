@@ -22,8 +22,8 @@ hooks:
   - Comunidades élficas fora do futuro reino élfico
   - Ruína de Leth'valora
 rumors: []
-thumbnail: zz_media/th_elf.PNG
-cover: zz_media/elf.PNG
+thumbnail: zz_media/thumbnails/th_elf.png
+cover: zz_media/thumbnails/elf.png
 chapters: []
 tags:
   - raca

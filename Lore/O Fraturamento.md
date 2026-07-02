@@ -8,8 +8,8 @@ campaign_status: Rascunho
 visibility: Mestre
 spoiler_level: heavy
 gm_secret: true
-thumbnail: zz_media/o-fraturamento.png
-cover: zz_media/o-fraturamento.png
+thumbnail: zz_media/thumbnails/o_fraturamento.png
+cover: zz_media/thumbnails/o_fraturamento.png
 info: Rascunho cosmológico sobre a quebra do mundo original e fragmentos antigos.
 description: Possível cataclisma cosmológico ligado aos Criadores, fragmentos do mundo e estruturas antigas de Earthropo.
 chapters: []

@@ -13,8 +13,8 @@ territory: "[[Nimalia]]"
 region: Capital do Reino de Nimalia
 district: Bairro dos Elfos
 danger_level: Baixo
-thumbnail: zz_media/bairro-elfos.png
-cover: zz_media/bairro-elfos.png
+thumbnail: zz_media/thumbnails/bairro_elfos.png
+cover: zz_media/thumbnails/bairro_elfos.png
 info: Bairro onde elfos se estabeleceram em Nimalis.
 description: Comunidade élfica urbana, ponte entre Nimalis, Avenor e o futuro reino élfico.
 chapters: []

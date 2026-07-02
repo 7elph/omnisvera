@@ -7,8 +7,8 @@ visibility: Jogadores
 spoiler_level: none
 gm_secret: false
 campaign_status: Ativo
-thumbnail: zz_media/th_varkh.PNG
-cover: zz_media/varkh.jpeg
+thumbnail: zz_media/thumbnails/th_varkh.png
+cover: zz_media/characters/varkh.jpeg
 status: Vivo
 location: "[[Nimalis]]"
 territory: "[[Nimalia]]"
@@ -163,7 +163,7 @@ Curioso, observador, pragmático e difícil de intimidar por muito tempo.
 
 > [!infobox]
 >
-> ![[th_varkh.PNG]]
+> ![[zz_media/thumbnails/th_varkh.png]]
 
 **Virtudes:**
 Criatividade, precisão, lealdade a quem conquista sua confiança e disposição para proteger pessoas sem poder.
