@@ -70,7 +70,7 @@ SORT file.name ASC
 
 - Como apresentar: voz roubada, memória de frases e presença urbana inquieta.
 - O que os jogadores sabem: Varkh é kenku e alquimista.
-- O que apenas o mestre sabe: vozes imitadas podem virar pista ou arma social.
+- O que manter em aberto no [[ESTADO_DA_CAMPANHA]]: vozes imitadas podem virar pista ou arma social.
 - Como entra em cena: mercado, laboratório, taverna, viela, guilda, rumor.
 - Ganchos: máscara de médico da peste, frascos, falsificações, Conclave dos Errantes.
 - Consequências possíveis: uma frase repetida por um kenku pode incriminar, salvar ou revelar alguém.

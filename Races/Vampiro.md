@@ -74,7 +74,7 @@ SORT file.name ASC
 
 - Como apresentar: mistério, fome, linhagem e ameaça velada.
 - O que os jogadores sabem: depende do que já foi revelado sobre Raziel.
-- O que apenas o mestre sabe: origem, limites e consequências do Sangue Antigo.
+- O que manter em aberto no [[ESTADO_DA_CAMPANHA]]: origem, limites e consequências do Sangue Antigo.
 - Como entra em cena: sangue, pactos, clãs, ruínas, inimigos antigos.
 - Ganchos: Clã Sanguinallis, Sangue Antigo, poderes de Raziel.
 - Consequências possíveis: revelar demais cedo pode quebrar mistério e tensão.

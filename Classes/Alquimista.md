@@ -73,7 +73,7 @@ SORT file.name ASC
 
 - Como apresentar: frascos, cheiros fortes, improviso, risco, ingredientes ruins e soluções inesperadas.
 - O que os jogadores sabem: Varkh usa alquimia como ferramenta prática.
-- O que apenas o mestre sabe: limites, fórmulas raras e consequências de uso perigoso.
+- O que manter em aberto no [[ESTADO_DA_CAMPANHA]]: limites, fórmulas raras e consequências de uso perigoso.
 - Como entra em cena: investigação de remédios, preparo antes da missão, explosões pequenas, antídotos e truques.
 - Ganchos: [[O Frasco Afogado]], [[Remédios Falsos de Maré Baixa]], ingredientes raros e reputação de Odran.
 

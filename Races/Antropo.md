@@ -73,7 +73,7 @@ SORT file.name ASC
 
 - Como apresentar: povo comum e dominante em Nimalia, não uma raridade.
 - O que os jogadores sabem: antropos são parte essencial do reino.
-- O que apenas o mestre sabe: linhagens específicas podem esconder tradições, pactos ou rivalidades locais.
+- O que manter em aberto no [[ESTADO_DA_CAMPANHA]]: linhagens específicas podem esconder tradições, pactos ou rivalidades locais.
 - Como entra em cena: corte, ruas, guarda real, guildas, templos e regiões rurais.
 - Ganchos: tensões entre linhagens, nobreza, sucessão, pertencimento social.
 - Consequências possíveis: decisões políticas envolvendo antropos afetam diretamente Nimalia.

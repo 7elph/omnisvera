@@ -76,7 +76,7 @@ SORT file.name ASC
 
 - Como apresentar: fome, silêncio, memória antiga, reação à prata, sangue e autocontrole.
 - O que os jogadores sabem: Raziel é vampiro, mas nem toda a natureza dele precisa estar clara.
-- O que apenas o mestre sabe: origem, limites reais, custo do Sangue Antigo e vínculos de clã.
+- O que manter em aberto no [[ESTADO_DA_CAMPANHA]]: origem, limites reais, custo do Sangue Antigo e vínculos de clã.
 - Como entra em cena: combate, tentação, fraqueza, horror, descoberta do passado e escolhas difíceis.
 - Ganchos: [[Sangue Antigo]], [[Vampiro Sanguinallis]], [[Clã Sanguinallis]] e antigos inimigos.
 

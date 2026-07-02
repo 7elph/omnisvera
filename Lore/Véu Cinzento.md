@@ -70,17 +70,11 @@ Como referência visual de tom, o Véu Cinzento lembra uma neblina de horror psi
 - [[O Fraturamento]]
 - [[Culto dos Sussurrantes]]
 
-## Segredos do Mestre
-
-- Ainda não definir publicamente se é região física, barreira, ruptura, névoa viva ou mais de uma dessas coisas.
-- A relação exata com [[O Fraturamento]] deve permanecer como mistério até existir pista em jogo.
-- Evitar explicar o Véu como simples “magia” ou fenômeno climático.
-
 ## Uso em Mesa
 
 - Como apresentar: névoa branca espessa, silêncio, paisagem engolida, sons distantes e sensação de memória quebrada.
 - O que os jogadores sabem: o Véu é um fenômeno perigoso e pouco compreendido.
-- O que apenas o mestre sabe: a natureza verdadeira do Véu ainda está em construção.
+- O que manter em aberto no [[ESTADO_DA_CAMPANHA]]: a natureza verdadeira do Véu ainda está em construção.
 - Como entra em cena: rumor, fronteira, ruína, visão, registro antigo ou sinal de distorção.
 - Ganchos: pessoas desaparecidas, lugares que mudam, símbolos antigos e registros dos Guardiões.
 

@@ -71,7 +71,7 @@ SORT file.name ASC
 
 - Como apresentar: povo de fortalezas, clãs e obras antigas.
 - O que os jogadores sabem: Gharok tem origem anã.
-- O que apenas o mestre sabe: antigas obras anãs podem guardar segredos de eras anteriores.
+- O que manter em aberto no [[ESTADO_DA_CAMPANHA]]: antigas obras anãs podem guardar segredos de eras anteriores.
 - Como entra em cena: ruínas, escudos, artesãos, guardas, fortalezas.
 - Ganchos: Gharok, Muralha de Dorn, rotas do norte.
 - Consequências possíveis: mexer em ruínas anãs pode envolver clãs ou reinos ainda não apresentados.

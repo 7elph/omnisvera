@@ -70,7 +70,7 @@ SORT file.name ASC
 
 - Como apresentar: símbolo sagrado, ritual, cura, oração, exorcismo ou autoridade moral.
 - O que os jogadores sabem: Clérigos lidam com fé, cura e proteção.
-- O que apenas o mestre sabe: segredos religiosos ainda não consolidados.
+- O que manter em aberto no [[ESTADO_DA_CAMPANHA]]: segredos religiosos ainda não consolidados.
 - Como entra em cena: templo, doença, maldição, investigação espiritual ou memória de Padre Oric.
 - Ganchos: Igreja das Chamas, cultos, ruínas sagradas e tradições antigas.
 

@@ -64,17 +64,11 @@ O verdadeiro motivo pelo qual libertou Raziel permanece desconhecido.
 | Manifestação ligada ao Fraturamento | Pode entregar cosmologia antes da hora. |
 | Entidade vampírica primordial | Pode amarrar demais o Sangue Antigo a uma única origem. |
 
-## Segredos do Mestre
-
-- Não definir publicamente se o Ancião é divindade, criatura, memória, entidade antiga ou algo além disso.
-- A motivação real precisa permanecer aberta até o arco de Raziel pedir.
-- A dádiva pode ter custo, dívida, marca ou consequência futura.
-
 ## Uso em Mesa
 
 - Como apresentar: por ecos, visões, símbolos, cavernas, sangue antigo e consequências no corpo de Raziel.
 - O que os jogadores sabem: nada deve ser revelado sem progressão do arco de Raziel.
-- O que apenas o mestre sabe: a entidade pode ter objetivos próprios e planos ainda não definidos.
+- O que manter em aberto no [[ESTADO_DA_CAMPANHA]]: a entidade pode ter objetivos próprios e planos ainda não definidos.
 - Como entra em cena: sonhos, lembranças fragmentadas, ruínas profundas, marcas no sangue ou reações a artefatos antigos.
 
 ## Pendências do Sage

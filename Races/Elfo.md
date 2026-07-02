@@ -71,7 +71,7 @@ SORT file.name ASC
 
 - Como apresentar: antigos, reservados, ligados a florestas e memórias.
 - O que os jogadores sabem: Avenor e Leth'valora têm conexão élfica.
-- O que apenas o mestre sabe: a política do reino élfico ainda será revelada.
+- O que manter em aberto no [[ESTADO_DA_CAMPANHA]]: a política do reino élfico ainda será revelada.
 - Como entra em cena: ruínas, sobreviventes, trilhas florestais, tradições perdidas.
 - Ganchos: destruição de Leth'valora, Mira, dragão de colar dourado, fronteiras élficas.
 - Consequências possíveis: mexer em Avenor pode chamar atenção de poderes élficos maiores.

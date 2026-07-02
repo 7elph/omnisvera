@@ -72,7 +72,7 @@ SORT file.name ASC
 
 - Como apresentar: presença marcial, treinamento, força, disciplina ou brutalidade controlada.
 - O que os jogadores sabem: Guerreiro é a classe clássica de combate.
-- O que apenas o mestre sabe: ajustes específicos de Vezemir e relíquias.
+- O que manter em aberto no [[ESTADO_DA_CAMPANHA]]: ajustes específicos de Vezemir e relíquias.
 - Como entra em cena: combate, defesa, liderança tática e cenas de resistência física.
 - Ganchos: maestria em arma, reputação, rivalidade marcial e legado de guerra.
 

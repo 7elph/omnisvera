@@ -69,17 +69,11 @@ O arco explora identidade, reputação, honra entre marginalizados e a responsab
 | Guarda procurando “corvo alquimista” | Coloca pressão social e legal sobre Varkh. |
 | Carga desviada | Pode conectar a investigação à [[Guilda dos Mercadores]] ou à [[Nobreza de Nimalia]]. |
 
-## Segredos do Mestre
-
-- Identidade dos responsáveis, escala da operação e possível ligação com facções maiores ainda estão em aberto.
-- Não confirmar se Odran é culpado, vítima ou peça de um plano maior sem decisão posterior.
-- O arco deve funcionar como gancho de investigação, não como sentença pronta.
-
 ## Uso em Mesa
 
 - Como apresentar: vítimas, frascos suspeitos, símbolo falsificado, documentos perfeitos demais e boatos sobre Varkh.
 - O que os jogadores sabem: remédios falsos estão circulando e prejudicando pessoas.
-- O que apenas o mestre sabe: identidade dos responsáveis, escala da operação e possível ligação com facções maiores.
+- O que manter em aberto no [[ESTADO_DA_CAMPANHA]]: identidade dos responsáveis, escala da operação e possível ligação com facções maiores.
 - Como entra em cena: investigação, compra de remédio, vítima envenenada, perseguição da guarda ou pista encontrada em carga.
 - Ganchos: loja de Odran, Maré Baixa, Guilda dos Mercadores, Nobreza de Nimalia e documentos falsificados.
 

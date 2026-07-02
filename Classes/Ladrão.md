@@ -69,7 +69,7 @@ SORT file.name ASC
 
 - Como apresentar: mão rápida, ouvido atento, sombra, tranca aberta ou plano improvisado.
 - O que os jogadores sabem: Ladrões resolvem riscos de exploração e infiltração.
-- O que apenas o mestre sabe: vínculos criminais e contatos ocultos.
+- O que manter em aberto no [[ESTADO_DA_CAMPANHA]]: vínculos criminais e contatos ocultos.
 - Como entra em cena: dungeons, cidades, infiltração, fuga, golpe e investigação.
 - Ganchos: guildas, dívida, segredo, item roubado, máscara social.
 

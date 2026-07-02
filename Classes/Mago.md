@@ -69,7 +69,7 @@ SORT file.name ASC
 
 - Como apresentar: estudo, símbolos, grimório, cálculo, ritual e custo intelectual.
 - O que os jogadores sabem: Magos lidam com magia arcana por estudo.
-- O que apenas o mestre sabe: segredos sobre magia antiga e ruínas.
+- O que manter em aberto no [[ESTADO_DA_CAMPANHA]]: segredos sobre magia antiga e ruínas.
 - Como entra em cena: investigação, ruína, biblioteca, artefato, ritual ou duelo mágico.
 - Ganchos: grimórios perdidos, linguagem antiga, magia corrompida e ecos dos Criadores.
 

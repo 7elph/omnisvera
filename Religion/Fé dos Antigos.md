@@ -74,17 +74,11 @@ tags:
 - [[Véu Cinzento]]
 - [[Igreja das Chamas]]
 
-## Segredos do Mestre
-
-- Não confirmar ainda se a Fé dos Antigos entende corretamente os Criadores.
-- Pode conter verdades misturadas a mito, erro, propaganda ou memória quebrada.
-- Parte da tradição pode ter sido apagada ou distorcida após o Eclipse.
-
 ## Uso em Mesa
 
 - Como apresentar: inscrição antiga, símbolo repetido, oração perdida, ruína, tabu ou relato contraditório.
 - O que os jogadores sabem: pode haver tradições anteriores às religiões atuais.
-- O que apenas o mestre sabe: a relação real com os Criadores está em aberto.
+- O que manter em aberto no [[ESTADO_DA_CAMPANHA]]: a relação real com os Criadores está em aberto.
 - Como entra em cena: exploração de ruínas, pesquisa, conflito religioso, visão ou artefato.
 - Ganchos: templo soterrado, oração que ativa uma ruína, culto doméstico antigo, símbolo proibido.
 

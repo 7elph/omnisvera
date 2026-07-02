@@ -415,6 +415,118 @@ Itens de identidade, presença social e investigação. Devem reforçar Varkh em
 - Se o caderninho é apenas ferramenta narrativa ou item com efeito futuro.
 - Como esses itens entram no arco dos remédios falsos.
 
+### Frente — Cosmologia, Véu e Criadores
+
+#### Entidades Ligadas
+
+- [[Criadores]]
+- [[O Fraturamento]]
+- [[Eclipse de Obsidiana]]
+- [[Véu Cinzento]]
+- [[Guardiões do Véu Cinzento]]
+- [[Ancião Primordial]]
+- [[Sangue Antigo]]
+- [[Vampiro Sanguinallis]]
+
+#### Status Atual
+
+Frente de bastidor cosmológico. As notas principais devem apresentar mitos, fenômenos, rumores e versões conhecidas sem resolver a verdade final do mundo.
+
+#### Segredos do Mestre
+
+- A natureza real dos [[Criadores]] ainda está em definição.
+- A cosmologia real do [[O Fraturamento]] não deve ser fechada publicamente.
+- Causa, escala verdadeira e relação do [[Eclipse de Obsidiana]] com Criadores/Fraturamento permanecem em aberto.
+- A natureza verdadeira do [[Véu Cinzento]] ainda está em construção.
+- A função real dos [[Guardiões do Véu Cinzento]] ainda deve ser dosada.
+- O [[Ancião Primordial]] pode ter objetivos próprios e planos ainda não definidos.
+- Origem, custo real e consequências de longo prazo do [[Sangue Antigo]] ficam no bastidor.
+- Diferenças entre vampirismo comum e [[Vampiro Sanguinallis]] devem ser reveladas gradualmente.
+
+#### Condições de Revelação
+
+- Revelar por ruínas antigas, reação de Raziel, sinais do Véu, registros pré-cataclísmicos, cultos, máquinas antigas ou eventos ligados ao primeiro capítulo.
+
+#### Decisões Pendentes do Sage
+
+- Natureza real dos Criadores.
+- Papel do Véu na criação, corrupção ou proteção do mundo.
+- Custo narrativo do Sangue Antigo.
+- Relação entre Ancião Primordial, Sanguinallis e estruturas antigas.
+
+### Frente — Religiões e Doutrinas
+
+#### Entidades Ligadas
+
+- [[RELIGION]]
+- [[Igreja das Chamas]]
+- [[Fé dos Antigos]]
+- [[Caminho dos Errantes]]
+- [[Culto dos Sussurrantes]]
+- [[Clérigo]]
+
+#### Status Atual
+
+Frente de crenças públicas e tensões espirituais. As notas principais devem mostrar prática, imagem pública e uso em mesa sem confirmar verdades metafísicas.
+
+#### Segredos do Mestre
+
+- Verdades antigas, cultos perigosos e manipulações institucionais ficam no Estado da Campanha.
+- Possíveis contradições doutrinárias da [[Igreja das Chamas]] ainda precisam ser confirmadas.
+- A relação real da [[Fé dos Antigos]] com os Criadores está em aberto.
+- O [[Caminho dos Errantes]] pode ter ligação com ciclos reais, destino ou memória, mas isso não está fechado.
+- Segredos religiosos ligados à classe [[Clérigo]] ainda não estão consolidados.
+
+#### Condições de Revelação
+
+- Revelar por sermões, relíquias, conflitos entre crenças, milagres ambíguos, registros antigos ou contato com o Véu.
+
+#### Decisões Pendentes do Sage
+
+- Quais crenças são canônicas como religião ativa.
+- O que é verdade, interpretação ou mentira institucional.
+- Como clérigos acessam poder no cenário.
+
+### Frente — Povos, Reinos e Classes
+
+#### Entidades Ligadas
+
+- [[Antropo]]
+- [[Anão]]
+- [[Dragonborn]]
+- [[Elfo]]
+- [[Halfling]]
+- [[Humano]]
+- [[Kenku]]
+- [[Vampiro]]
+- [[Alquimista]]
+- [[Guerreiro]]
+- [[Ladrão]]
+- [[Mago]]
+
+#### Status Atual
+
+Frente de bastidores culturais, linhagens e limites mecânicos. Notas principais devem ser úteis aos jogadores sem entregar política futura, linhagens ocultas ou segredos de classe.
+
+#### Segredos do Mestre
+
+- Linhagens específicas de antropos, humanos e meio-elfos podem esconder tradições, pactos ou rivalidades locais.
+- Obras anãs antigas podem guardar segredos de eras anteriores.
+- Reino élfico, reino dragonborn e suas políticas ainda serão revelados.
+- Vozes imitadas por kenkus podem virar pista ou arma social.
+- Origem, limites e consequências do vampirismo/Sangue Antigo ficam no bastidor.
+- Limites de alquimia perigosa, magia antiga, vínculos criminais e ajustes específicos de classe ficam pendentes até uso em mesa.
+
+#### Condições de Revelação
+
+- Revelar por origem de personagem, viagem a reinos raciais, ruínas, tutores, falhas de magia, contatos de classe ou consequências de uso perigoso.
+
+#### Decisões Pendentes do Sage
+
+- Quais reinos raciais entram primeiro em jogo.
+- Quais linhagens têm segredo real.
+- Quais limites mecânicos entram em Old Dragon sem quebrar nível baixo.
+
 ---
 
 ## Dossiê do Mestre — Capítulo 01: Ecos do Mundo Perdido

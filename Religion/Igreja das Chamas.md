@@ -75,17 +75,11 @@ tags:
 - [[Véu Cinzento]]
 - [[Criadores]]
 
-## Segredos do Mestre
-
-- A relação entre a Igreja das Chamas e verdades antigas de Omnisvera ainda não está definida.
-- Não confirmar cedo se a doutrina protege, distorce ou oculta registros antigos.
-- A ligação política com a Coroa deve ser decidida antes de virar cânone forte.
-
 ## Uso em Mesa
 
 - Como apresentar: velas, brasas, sermões, ritos de memória, templos e moral pública.
 - O que os jogadores sabem: é uma religião pública e visível, ligada ao simbolismo das chamas.
-- O que apenas o mestre sabe: possíveis contradições doutrinárias e relação com eventos antigos.
+- O que manter em aberto no [[ESTADO_DA_CAMPANHA]]: possíveis contradições doutrinárias e relação com eventos antigos.
 - Como entra em cena: bênção, funeral, investigação religiosa, templo, sacerdote ou disputa política.
 - Ganchos: sacerdote desaparecido, relíquia falsa, registro queimado, sermão contraditório.
 

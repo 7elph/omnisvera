@@ -59,17 +59,11 @@ Pouco se sabe com segurança sobre eles. A maioria das informações disponívei
 - [[O Medalhão]] é uma chave, um selo, um símbolo de pertencimento ou outra coisa?
 - Qual é a relação real entre os Guardiões e os [[Criadores]]?
 
-## Segredos do Mestre
-
-- Não confirmar cedo se os Guardiões eram heróis, carcereiros, testemunhas ou agentes de algo maior.
-- Separar a ordem antiga da facção operacional atual até haver definição clara.
-- A ligação com Vezemir deve aparecer por pistas e reações do medalhão, não por exposição direta.
-
 ## Uso em Mesa
 
 - Como apresentar: símbolo recorrente, medalhão, registros incompletos, ruínas e investigações interrompidas.
 - O que os jogadores sabem: havia uma ordem antiga chamada Guardiões do Véu Cinzento.
-- O que apenas o mestre sabe: a função real da ordem ainda está em definição.
+- O que manter em aberto no [[ESTADO_DA_CAMPANHA]]: a função real da ordem ainda está em definição.
 - Como entra em cena: por Vezemir, Elarion, Padre Oric, inscrições e reações do medalhão.
 - Ganchos: a função verdadeira da ordem, sua ligação com o Véu e o motivo do silêncio ao redor deles.
 

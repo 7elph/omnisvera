@@ -101,7 +101,7 @@ Ao desenvolver uma religião ou tradição espiritual, manter esta ordem:
 
 - Como apresentar: símbolos, ritos pequenos, frases, medos e costumes locais.
 - O que os jogadores sabem: religiões públicas e seus templos visíveis.
-- O que apenas o mestre sabe: verdades antigas, cultos perigosos e manipulações institucionais.
+- O que manter em aberto no [[ESTADO_DA_CAMPANHA]]: verdades antigas, cultos perigosos e manipulações institucionais.
 - Como entra em cena: bênçãos, funerais, julgamento moral, investigação de ruínas e conflito político.
 - Ganchos: relíquia religiosa falsa, sacerdote desaparecido, templo com registros contraditórios.
 - Consequências possíveis: apoio de fiéis, perseguição, acesso a arquivos ou hostilidade de culto.

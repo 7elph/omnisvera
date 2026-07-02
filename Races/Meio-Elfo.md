@@ -68,7 +68,7 @@ SORT file.name ASC
 
 - Como apresentar: personagem entre culturas.
 - O que os jogadores sabem: Vezemir é meio humano/meio elfo.
-- O que apenas o mestre sabe: linhagens específicas podem se conectar a segredos de Avenor.
+- O que manter em aberto no [[ESTADO_DA_CAMPANHA]]: linhagens específicas podem se conectar a segredos de Avenor.
 - Como entra em cena: conflitos de herança, famílias partidas, memória de vilas destruídas.
 - Ganchos: Leth'valora, Mira Valen, o dragão, o medalhão.
 - Consequências possíveis: escolhas do personagem podem afetar humanos e elfos.

@@ -74,17 +74,11 @@ Registros fragmentados sugerem a existência de mundos-cópia, refúgios ou frag
 - [[Unidade DORN-7]]
 - [[Sangue Antigo]]
 
-## Segredos do Mestre
-
-- O Fraturamento pode ser fato, mito, teoria religiosa ou interpretação errada.
-- Não usar como explicação universal antes da campanha precisar.
-- Se for real, ele deve aparecer por pistas materiais: ruínas, falhas, objetos, memórias e contradições.
-
 ## Uso em Mesa
 
 - Como apresentar: por registros incompletos, mapas impossíveis, ruínas com geometria estranha ou artefatos que parecem pertencer a outro mundo.
 - O que os jogadores sabem: nada precisa ser revelado diretamente no início.
-- O que apenas o mestre sabe: a cosmologia real ainda está em construção.
+- O que manter em aberto no [[ESTADO_DA_CAMPANHA]]: a cosmologia real ainda está em construção.
 - Como entra em cena: como explicação de fundo para ruínas antigas, sistemas esquecidos e mistérios de escala maior.
 
 ## Pendências do Sage

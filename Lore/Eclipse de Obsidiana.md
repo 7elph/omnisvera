@@ -73,17 +73,11 @@ O Eclipse não é apenas passado distante. Ele ainda afeta:
 - [[TIMELINE]]
 - [[CALENDAR]]
 
-## Segredos do Mestre
-
-- Não confirmar cedo se o Eclipse causou o Véu, revelou algo que já existia ou coincidiu com outro evento.
-- A relação com [[O Fraturamento]] deve permanecer em revisão.
-- A versão pública pode estar incompleta, distorcida por religião, política ou perda de registros.
-
 ## Uso em Mesa
 
 - Como apresentar: data histórica, superstição, trauma coletivo, registro antigo ou marco de calendário.
 - O que os jogadores sabem: o Eclipse foi um evento antigo e devastador ligado ao Véu.
-- O que apenas o mestre sabe: causa real, escala verdadeira e relação com Criadores/Fraturamento ainda estão em definição.
+- O que manter em aberto no [[ESTADO_DA_CAMPANHA]]: causa real, escala verdadeira e relação com Criadores/Fraturamento ainda estão em definição.
 - Como entra em cena: ruínas, profecias, documentos antigos, histórias de bardos, cultos ou investigações.
 - Ganchos: datas repetidas, lugares apagados, nomes esquecidos e fronteiras que ninguém atravessa.
 

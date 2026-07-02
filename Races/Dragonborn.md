@@ -71,7 +71,7 @@ SORT file.name ASC
 
 - Como apresentar: presença rara, marcante e politicamente carregada.
 - O que os jogadores sabem: existem dragonborns em Nimalis.
-- O que apenas o mestre sabe: o reino dragonborn e sua história ainda serão revelados.
+- O que manter em aberto no [[ESTADO_DA_CAMPANHA]]: o reino dragonborn e sua história ainda serão revelados.
 - Como entra em cena: bairro próprio, emissários, guerreiros, cultos dracônicos, ruínas antigas.
 - Ganchos: dragões, guerras antigas, noroeste do continente.
 - Consequências possíveis: eventos ligados a dragões podem respingar sobre dragonborns.

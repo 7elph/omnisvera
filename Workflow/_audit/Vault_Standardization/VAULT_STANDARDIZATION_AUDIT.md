@@ -1,6 +1,6 @@
 # Auditoria Global de Padronização do Vault
 
-Gerado em: 2026-07-02 09:21
+Gerado em: 2026-07-02 09:28
 
 Fonte de padrão: [[Workflow/OMNISVERA_VAULT_STANDARD|OMNISVERA_VAULT_STANDARD]]
 

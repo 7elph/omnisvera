@@ -96,17 +96,11 @@ O Sangue Antigo representa uma reserva instável de poder vampírico ancestral. 
 - Separar habilidades da classe [[Vampiro]] daquilo que vem especificamente do [[Sangue Antigo]].
 - Consequências devem aumentar quando Raziel usa o poder em público.
 
-## Segredos do Mestre
-
-- A origem e natureza verdadeira do Sangue Antigo ainda não estão definidas.
-- Não decidir agora se ele vem dos Criadores, do Ancião, do Fraturamento ou de outra fonte.
-- O custo real da dádiva deve ser revelado aos poucos.
-
 ## Uso em Mesa
 
 - Como apresentar: marcas físicas, fome, instabilidade, sonhos, reações a sangue e manifestações visuais.
 - O que os jogadores sabem: deve depender do quanto Raziel revelar em jogo.
-- O que apenas o mestre sabe: origem, custo real e consequências de longo prazo.
+- O que manter em aberto no [[ESTADO_DA_CAMPANHA]]: origem, custo real e consequências de longo prazo.
 - Como entra em cena: momentos de risco extremo, tentação, trauma ou contato com ruínas/entidades antigas.
 
 ## Pendências do Sage

@@ -74,17 +74,11 @@ Em eras antigas, guerras ligadas aos Criadores teriam sido travadas quando a mag
 - [[Sangue Antigo]]
 - [[Unidade DORN-7]]
 
-## Segredos do Mestre
-
-- A natureza real dos Criadores ainda está em definição.
-- Não confirmar cedo se eram deuses, entidade coletiva, civilização, força cósmica ou interpretação errada.
-- A relação com [[O Fraturamento]], [[Eclipse de Obsidiana]] e [[Véu Cinzento]] deve ser revelada por pistas, não por exposição direta.
-
 ## Uso em Mesa
 
 - Como apresentar: por pistas concretas, como metal impossível, ruína deslocada, símbolo repetido, memória quebrada ou artefato reativo.
 - O que os jogadores sabem: existem mitos antigos sobre forças ou deuses que moldaram o mundo.
-- O que apenas o mestre sabe: a natureza real dos Criadores ainda está em definição.
+- O que manter em aberto no [[ESTADO_DA_CAMPANHA]]: a natureza real dos Criadores ainda está em definição.
 - Como entra em cena: por ruínas, registros, símbolos, mecanismos antigos e fenômenos que não se encaixam na magia comum.
 - Ganchos: guerras antigas, tecnologia esquecida, estruturas subterrâneas e relação com o Véu Cinzento.
 

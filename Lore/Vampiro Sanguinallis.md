@@ -69,17 +69,11 @@ O ponto mais importante é separar três camadas:
 - [[Fortaleza de Gharok]]
 - [[Ruínas de Valthor]]
 
-## Segredos do Mestre
-
-- Não decidir automaticamente que todo vampiro Sanguinallis possui os poderes atuais de Raziel.
-- Não misturar a linhagem Sanguinallis com o [[Sangue Antigo]] como se fossem a mesma coisa.
-- A sobrevivência ou queda do Clã Sanguinallis após trezentos anos ainda precisa ser definida.
-
 ## Uso em Mesa
 
 - Como apresentar: lendas vampíricas, sangue ritual, títulos antigos, medo da prata e histórias de clãs esquecidos.
 - O que os jogadores sabem: depende do quanto Raziel revelar.
-- O que apenas o mestre sabe: origem real, limitações e diferenças entre vampirismo comum e Sanguinallis.
+- O que manter em aberto no [[ESTADO_DA_CAMPANHA]]: origem real, limitações e diferenças entre vampirismo comum e Sanguinallis.
 - Como entra em cena: pistas sobre linhagem, fraquezas, inimigos antigos e consequências do [[Sangue Antigo]].
 
 ## Pendências do Sage

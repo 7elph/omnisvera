@@ -73,16 +73,11 @@ tags:
 - [[Nimalis]]
 - [[CULTURE]]
 
-## Segredos do Mestre
-
-- A relação entre reencarnação, ciclos e cosmologia antiga ainda não está definida.
-- Se existir uma verdade sobrenatural por trás da tradição, ela deve ser revelada aos poucos.
-
 ## Uso em Mesa
 
 - Como apresentar: bênção de estrada, frase de despedida, símbolo em marco de rota, ritual antes de viagem.
 - O que os jogadores sabem: é uma tradição conhecida entre viajantes.
-- O que apenas o mestre sabe: possível ligação com ciclos reais, destino ou memória ainda está em aberto.
+- O que manter em aberto no [[ESTADO_DA_CAMPANHA]]: possível ligação com ciclos reais, destino ou memória ainda está em aberto.
 - Como entra em cena: viagem longa, morte na estrada, encontro com peregrino, retorno inesperado.
 - Ganchos: estrada sagrada, guia desaparecido, caravana que repete o mesmo caminho, sinal antigo em rota esquecida.
 

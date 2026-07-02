@@ -69,7 +69,7 @@ SORT file.name ASC
 
 - Como apresentar: raça comum, mas não dominante em todos os contextos.
 - O que os jogadores sabem: humanos vivem em Nimalia e em muitas regiões de Earthropo.
-- O que apenas o mestre sabe: antigas linhagens humanas podem ter laços com ruínas, guerras ou pactos esquecidos.
+- O que manter em aberto no [[ESTADO_DA_CAMPANHA]]: antigas linhagens humanas podem ter laços com ruínas, guerras ou pactos esquecidos.
 - Como entra em cena: vilas, templos, guardas, nobres, mercadores e aventureiros.
 - Ganchos: fronteira cultural, famílias antigas, disputa por posição em reinos não humanos.
 - Consequências possíveis: conflitos humanos locais podem afetar relações raciais e políticas.

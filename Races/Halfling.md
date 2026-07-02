@@ -67,7 +67,7 @@ SORT file.name ASC
 
 - Como apresentar: apenas se a raça entrar na campanha.
 - O que os jogadores sabem: nada obrigatório por enquanto.
-- O que apenas o mestre sabe: pendente.
+- O que manter em aberto no [[ESTADO_DA_CAMPANHA]]: pendente.
 - Como entra em cena: comunidades pequenas, viajantes, mensageiros ou povos de estrada.
 - Ganchos: raça bônus, regiões ainda não exploradas.
 - Consequências possíveis: pode ampliar o leque de povos de Earthropo sem afetar a trama principal.

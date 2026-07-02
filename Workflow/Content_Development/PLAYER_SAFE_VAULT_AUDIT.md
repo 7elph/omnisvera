@@ -1,6 +1,6 @@
 # Auditoria de Expans?o Player-Safe ? Omnisvera
 
-Gerado em: 2026-07-02 09:22:04
+Gerado em: 2026-07-02 09:29:10
 
 Fonte de regra: [[PLAYER_SAFE_ENTITY_MODEL]]
 
@@ -13,20 +13,11 @@ Fonte de regra: [[PLAYER_SAFE_ENTITY_MODEL]]
 - `CAMPANHA/ESTADO_DA_CAMPANHA.md` recebeu painel de controle e frentes compactas de bastidor.
 - Templates atualizados para encaminhar bastidores ao Estado da Campanha.
 - Lote 2 conclu?do: itens ligados a Vezemir, Raziel e Varkh foram limpos de marcadores expl?citos de segredo.
-
-## Lote 2 tratado
-
-- [[O Medalh?o]]
-- [[Grisalma]]
-- [[Muralha de Dorn]]
-- [[Adagas de Espectro Fantasma]]
-- [[Manto Primordial do Anci?o]]
-- [[M?scara de M?dico da Peste de Varkh]]
-- [[Caderninho de Vozes]]
+- Lote 3 conclu?do: lore, religi?o, ra?as e classes foram limpas de marcadores expl?citos de segredo.
 
 ## Marcadores restantes no vault operacional
 
-Total de notas com marcador de bastidor/segredo ainda no corpo: **63**
+Total de notas com marcador de bastidor/segredo ainda no corpo: **36**
 
 | nota | ocorr?ncias | a??o recomendada |
 |---|---|---|
@@ -63,48 +54,11 @@ Total de notas com marcador de bastidor/segredo ainda no corpo: **63**
 | `Locations/Mercado Central.md` | 58: - O que apenas o mestre sabe: vendedores específicos e pistas escondidas ainda podem ser definidos. | Mover bastidor para frente em [[ESTADO_DA_CAMPANHA]] e deixar nota principal player-safe. |
 | `Locations/Ruínas de Valthor.md` | 59: ## Segredos do Mestre<br>69: - O que apenas o mestre sabe: sua relação com Raziel, Ancião Primordial e Sangue Antigo ainda deve ser dosada. | Mover bastidor para frente em [[ESTADO_DA_CAMPANHA]] e deixar nota principal player-safe. |
 | `Locations/Vale Dourado.md` | 69: - O que apenas o mestre sabe: função real ainda está em construção. | Mover bastidor para frente em [[ESTADO_DA_CAMPANHA]] e deixar nota principal player-safe. |
-| `Lore/Ancião Primordial.md` | 67: ## Segredos do Mestre<br>77: - O que apenas o mestre sabe: a entidade pode ter objetivos próprios e planos ainda não definidos. | Mover bastidor para frente em [[ESTADO_DA_CAMPANHA]] e deixar nota principal player-safe. |
-| `Lore/Criadores.md` | 77: ## Segredos do Mestre<br>87: - O que apenas o mestre sabe: a natureza real dos Criadores ainda está em definição. | Mover bastidor para frente em [[ESTADO_DA_CAMPANHA]] e deixar nota principal player-safe. |
-| `Lore/Eclipse de Obsidiana.md` | 76: ## Segredos do Mestre<br>86: - O que apenas o mestre sabe: causa real, escala verdadeira e relação com Criadores/Fraturamento ainda estão em definição. | Mover bastidor para frente em [[ESTADO_DA_CAMPANHA]] e deixar nota principal player-safe. |
-| `Lore/Guardiões do Véu Cinzento.md` | 62: ## Segredos do Mestre<br>72: - O que apenas o mestre sabe: a função real da ordem ainda está em definição. | Mover bastidor para frente em [[ESTADO_DA_CAMPANHA]] e deixar nota principal player-safe. |
-| `Lore/O Fraturamento.md` | 77: ## Segredos do Mestre<br>87: - O que apenas o mestre sabe: a cosmologia real ainda está em construção. | Mover bastidor para frente em [[ESTADO_DA_CAMPANHA]] e deixar nota principal player-safe. |
-| `Lore/Remédios Falsos de Maré Baixa.md` | 72: ## Segredos do Mestre<br>82: - O que apenas o mestre sabe: identidade dos responsáveis, escala da operação e possível ligação com facções maiores. | Mover bastidor para frente em [[ESTADO_DA_CAMPANHA]] e deixar nota principal player-safe. |
-| `Lore/Sangue Antigo.md` | 99: ## Segredos do Mestre<br>109: - O que apenas o mestre sabe: origem, custo real e consequências de longo prazo. | Mover bastidor para frente em [[ESTADO_DA_CAMPANHA]] e deixar nota principal player-safe. |
-| `Lore/Vampiro Sanguinallis.md` | 72: ## Segredos do Mestre<br>82: - O que apenas o mestre sabe: origem real, limitações e diferenças entre vampirismo comum e Sanguinallis. | Mover bastidor para frente em [[ESTADO_DA_CAMPANHA]] e deixar nota principal player-safe. |
-| `Lore/Véu Cinzento.md` | 73: ## Segredos do Mestre<br>83: - O que apenas o mestre sabe: a natureza verdadeira do Véu ainda está em construção. | Mover bastidor para frente em [[ESTADO_DA_CAMPANHA]] e deixar nota principal player-safe. |
-| `Religion/Caminho dos Errantes.md` | 76: ## Segredos do Mestre<br>85: - O que apenas o mestre sabe: possível ligação com ciclos reais, destino ou memória ainda está em aberto. | Mover bastidor para frente em [[ESTADO_DA_CAMPANHA]] e deixar nota principal player-safe. |
-| `Religion/Fé dos Antigos.md` | 77: ## Segredos do Mestre<br>87: - O que apenas o mestre sabe: a relação real com os Criadores está em aberto. | Mover bastidor para frente em [[ESTADO_DA_CAMPANHA]] e deixar nota principal player-safe. |
-| `Religion/Igreja das Chamas.md` | 78: ## Segredos do Mestre<br>88: - O que apenas o mestre sabe: possíveis contradições doutrinárias e relação com eventos antigos. | Mover bastidor para frente em [[ESTADO_DA_CAMPANHA]] e deixar nota principal player-safe. |
-| `Religion/RELIGION.md` | 91: 7. Segredos do mestre.<br>104: - O que apenas o mestre sabe: verdades antigas, cultos perigosos e manipulações institucionais. | Mover bastidor para frente em [[ESTADO_DA_CAMPANHA]] e deixar nota principal player-safe. |
-| `Races/Antropo.md` | 76: - O que apenas o mestre sabe: linhagens específicas podem esconder tradições, pactos ou rivalidades locais. | Mover bastidor para frente em [[ESTADO_DA_CAMPANHA]] e deixar nota principal player-safe. |
-| `Races/Anão.md` | 74: - O que apenas o mestre sabe: antigas obras anãs podem guardar segredos de eras anteriores. | Mover bastidor para frente em [[ESTADO_DA_CAMPANHA]] e deixar nota principal player-safe. |
-| `Races/Dragonborn.md` | 74: - O que apenas o mestre sabe: o reino dragonborn e sua história ainda serão revelados. | Mover bastidor para frente em [[ESTADO_DA_CAMPANHA]] e deixar nota principal player-safe. |
-| `Races/Elfo.md` | 74: - O que apenas o mestre sabe: a política do reino élfico ainda será revelada. | Mover bastidor para frente em [[ESTADO_DA_CAMPANHA]] e deixar nota principal player-safe. |
-| `Races/Halfling.md` | 70: - O que apenas o mestre sabe: pendente. | Mover bastidor para frente em [[ESTADO_DA_CAMPANHA]] e deixar nota principal player-safe. |
-| `Races/Humano.md` | 72: - O que apenas o mestre sabe: antigas linhagens humanas podem ter laços com ruínas, guerras ou pactos esquecidos. | Mover bastidor para frente em [[ESTADO_DA_CAMPANHA]] e deixar nota principal player-safe. |
-| `Races/Kenku.md` | 73: - O que apenas o mestre sabe: vozes imitadas podem virar pista ou arma social. | Mover bastidor para frente em [[ESTADO_DA_CAMPANHA]] e deixar nota principal player-safe. |
-| `Races/Meio-Elfo.md` | 71: - O que apenas o mestre sabe: linhagens específicas podem se conectar a segredos de Avenor. | Mover bastidor para frente em [[ESTADO_DA_CAMPANHA]] e deixar nota principal player-safe. |
-| `Races/Vampiro.md` | 77: - O que apenas o mestre sabe: origem, limites e consequências do Sangue Antigo. | Mover bastidor para frente em [[ESTADO_DA_CAMPANHA]] e deixar nota principal player-safe. |
-| `Classes/Alquimista.md` | 76: - O que apenas o mestre sabe: limites, fórmulas raras e consequências de uso perigoso. | Mover bastidor para frente em [[ESTADO_DA_CAMPANHA]] e deixar nota principal player-safe. |
-| `Classes/Clérigo.md` | 73: - O que apenas o mestre sabe: segredos religiosos ainda não consolidados. | Mover bastidor para frente em [[ESTADO_DA_CAMPANHA]] e deixar nota principal player-safe. |
-| `Classes/Guerreiro.md` | 75: - O que apenas o mestre sabe: ajustes específicos de Vezemir e relíquias. | Mover bastidor para frente em [[ESTADO_DA_CAMPANHA]] e deixar nota principal player-safe. |
-| `Classes/Ladrão.md` | 72: - O que apenas o mestre sabe: vínculos criminais e contatos ocultos. | Mover bastidor para frente em [[ESTADO_DA_CAMPANHA]] e deixar nota principal player-safe. |
-| `Classes/Mago.md` | 72: - O que apenas o mestre sabe: segredos sobre magia antiga e ruínas. | Mover bastidor para frente em [[ESTADO_DA_CAMPANHA]] e deixar nota principal player-safe. |
-| `Classes/Vampiro.md` | 79: - O que apenas o mestre sabe: origem, limites reais, custo do Sangue Antigo e vínculos de clã. | Mover bastidor para frente em [[ESTADO_DA_CAMPANHA]] e deixar nota principal player-safe. |
+| `Religion/RELIGION.md` | 91: 7. Segredos do mestre. | Mover bastidor para frente em [[ESTADO_DA_CAMPANHA]] e deixar nota principal player-safe. |
 | `Territories/Campos de Earthropo.md` | 64: - O que apenas o mestre sabe: a região pode amarrar Valthor, Gharok e Sanguinallis. | Mover bastidor para frente em [[ESTADO_DA_CAMPANHA]] e deixar nota principal player-safe. |
 | `Territories/Mar da Neblina.md` | 68: ## Segredos do Mestre<br>94: - O que apenas o mestre sabe: ainda em definição. | Mover bastidor para frente em [[ESTADO_DA_CAMPANHA]] e deixar nota principal player-safe. |
 
 ## Pr?ximos lotes recomendados
-
-### Lote 3 ? Lore e religi?o
-- [[Sangue Antigo]]
-- [[V?u Cinzento]]
-- [[Criadores]]
-- [[Eclipse de Obsidiana]]
-- [[Guardi?es do V?u Cinzento]]
-- [[Igreja das Chamas]]
-- [[F? dos Antigos]]
-- [[Caminho dos Errantes]]
 
 ### Lote 4 ? Personagens restantes
 - [[Vezemir]]
@@ -117,8 +71,10 @@ Total de notas com marcador de bastidor/segredo ainda no corpo: **63**
 - [[Lorde Malakar]]
 - [[Vandor, o Senhor das Bestas]]
 - [[Unidade DORN-7]]
+- [[Drag?o de Colar Dourado]]
+- [[General Cassian Valerius]]
 
-### Lote 5 ? Locais e territ?rios
+### Lote 5 ? Locais, territ?rios e fac??es restantes
 - [[Fortaleza de Gharok]]
 - [[Ru?nas de Valthor]]
 - [[Mar da Neblina]]
@@ -127,6 +83,8 @@ Total de notas com marcador de bastidor/segredo ainda no corpo: **63**
 - [[Bairro Nobre]]
 - [[Casa da Moeda de Nimalia]]
 - [[Distrito Comercial]]
+- [[Rede de Falsificadores de Mar? Baixa]]
+- [[Cl? Sanguinallis]]
 
 ## Regra para aplicar os pr?ximos lotes
 
