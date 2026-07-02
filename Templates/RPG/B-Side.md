@@ -35,7 +35,7 @@ tags:
 > B-Sides servem para origens, cenas paralelas e histórias pessoais. Ajuste `visibility`, `spoiler_level` e `gm_secret` antes de mostrar a nota aos jogadores.
 
 > [!NOTE|clean no-i right]+ Nome da Origem
-> ![[zz_media/maps/banner_earthropo.png|400]]
+> ![[zz_media/covers/banner_earthropo.png|400]]
 
 > [!world]- RESUMO
 > Escreva aqui a versão resumida da origem, com foco no que ajuda o mestre a consultar durante a campanha.

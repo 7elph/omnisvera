@@ -8,8 +8,8 @@ campaign_status: Cânone de trabalho
 visibility: Jogadores
 spoiler_level: light
 gm_secret: false
-thumbnail: zz_media/thumbnails/os_guardioes_do_veu_cinzento.png
-cover: zz_media/thumbnails/os_guardioes_do_veu_cinzento.png
+thumbnail: zz_media/faction/os_guardioes_do_veu_cinzento.png
+cover: zz_media/faction/os_guardioes_do_veu_cinzento.png
 info: Registro de lore sobre a ordem ancestral ligada ao Véu Cinzento.
 description: Lore e rumores sobre os Guardiões do Véu Cinzento; a ficha operacional da ordem fica em Factions.
 chapters: []
@@ -24,7 +24,7 @@ tags:
 # Guardiões do Véu Cinzento
 
 > [!NOTE|clean no-i right]+ Guardiões do Véu Cinzento
-> ![[zz_media/thumbnails/os_guardioes_do_veu_cinzento.png|400]]
+> ![[zz_media/faction/os_guardioes_do_veu_cinzento.png|400]]
 
 > [!note]
 > Esta é a nota de lore/registro sobre os Guardiões. A ficha operacional da facção fica em [[Factions/Guardiões do Véu Cinzento]].

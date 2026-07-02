@@ -8,8 +8,8 @@ spoiler_level: light
 gm_secret: false
 status: Ativa
 campaign_status: Em jogo
-thumbnail: zz_media/thumbnails/avenor.png
-cover: zz_media/thumbnails/avenor.png
+thumbnail: zz_media/territories/avenor.png
+cover: zz_media/territories/avenor.png
 location:
 territory: "[[EARTHROPO/EARTHROPO|Earthropo]]"
 info: Região florestal próxima ao Reino de Nimalia, ligada a Leth'valora e à história de Vezemir.
@@ -50,7 +50,7 @@ tags:
 ## Visão Geral
 
 > [!NOTE|clean no-i right]+ Floresta de Avenor
-> ![[zz_media/thumbnails/avenor.png|400]]
+> ![[zz_media/territories/avenor.png|400]]
 
 Uma grande floresta das terras centrais de Earthropo. No mapa de trabalho, ocupa a região florestal próxima à [[Nimalis]], estendendo-se ao longo da fronteira do Reino de [[Nimalia]].
 

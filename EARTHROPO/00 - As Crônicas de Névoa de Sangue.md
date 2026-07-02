@@ -33,7 +33,7 @@ location: "[[Ruínas de Valthor]]"
 territory: Earthropo
 faction:
   - "[[Clã Sanguinallis]]"
-cover: "[[zz_media/covers/banner_as_cronicas_de_nevoa_de_sangue.png]]"
+cover: "zz_media/covers/banner_as_cronicas_de_nevoa_de_sangue.png"
 description: A história de Raziel, o Espectro da Névoa de Sangue — desde seu auge como executor do Clã Sanguinallis na Fortaleza de Gharok até a traição que o aprisionou por trezentos anos e seu renascimento nas cavernas abissais sob as Ruínas de Valthor.
 ---
 

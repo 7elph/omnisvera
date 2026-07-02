@@ -12,8 +12,8 @@ campaign_status: Em revisão
 location: "[[Nimalis]]"
 territory: "[[Nimalia|Reino de Nimalia]]"
 faction: "[[Guarda Real de Nimalia]]"
-thumbnail: zz_media/maps/guarda_real_nimalia.png
-cover: zz_media/maps/guarda_real_nimalia.png
+thumbnail: zz_media/faction/guarda_real_nimalia.png
+cover: zz_media/faction/guarda_real_nimalia.png
 info: Força militar oficial do Reino de Nimalia.
 description: Braço armado da Coroa de Nimalia, responsável por patrulhas, escoltas, proteção da capital e resposta a incidentes.
 chapters: []
@@ -29,7 +29,7 @@ tags:
 # Guarda Real de Nimalia
 
 > [!NOTE|clean no-i right]+ Guarda Real de Nimalia
-> ![[zz_media/maps/guarda_real_nimalia.png|400]]
+> ![[zz_media/faction/guarda_real_nimalia.png|400]]
 
 > [!world]- SINOPSE PÚBLICA
 > A Guarda Real de Nimalia é o braço militar visível da [[Coroa de Nimalia]], presente em patrulhas, postos, escoltas e respostas oficiais a incidentes do reino.

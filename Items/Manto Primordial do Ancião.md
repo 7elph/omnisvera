@@ -14,8 +14,8 @@ location: "[[Raziel]]"
 faction:
 level: 1
 danger_level: Alto
-thumbnail: zz_media/thumbnails/manto_primordial.png
-cover: zz_media/thumbnails/manto_primordial.png
+thumbnail: zz_media/items/manto_primordial.png
+cover: zz_media/items/manto_primordial.png
 chapters:
   - 00 - As Crônicas de Névoa de Sangue
 hooks:
@@ -34,7 +34,7 @@ tags:
 # Manto Primordial do Ancião
 
 > [!NOTE|clean no-i right]+ Retrato
-> ![[zz_media/thumbnails/manto_primordial.png|400]]
+> ![[zz_media/items/manto_primordial.png|400]]
 
 > [!warning] Nota sensível
 > Esta nota cita o [[Ancião Primordial]] e deve permanecer como informação de mestre até o arco de [[Raziel]] revelar mais detalhes.

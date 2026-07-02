@@ -12,8 +12,8 @@ spoiler_level: medium
 gm_secret: true
 info: Conjunto de crenças anteriores ao Eclipse de Obsidiana.
 description: Tradições religiosas antigas possivelmente ligadas aos Criadores, preservadas em fragmentos, ruínas e memórias anteriores ao Eclipse.
-thumbnail: zz_media/thumbnails/fe_dos_antigos.png
-cover: zz_media/thumbnails/fe_dos_antigos.png
+thumbnail: zz_media/religion/fe_dos_antigos.png
+cover: zz_media/religion/fe_dos_antigos.png
 chapters: []
 tags:
   - religiao
@@ -27,7 +27,7 @@ tags:
 # Fé dos Antigos
 
 > [!NOTE|clean no-i right]+ Fé dos Antigos
-> ![[zz_media/thumbnails/fe_dos_antigos.png|400]]
+> ![[zz_media/religion/fe_dos_antigos.png|400]]
 
 > [!world]- SINOPSE DO MESTRE
 > Nome provisório para tradições religiosas anteriores ao [[Eclipse de Obsidiana]]. Algumas vertentes podem preservar histórias sobre os [[Criadores]], mas essa ligação ainda não foi confirmada como verdade.

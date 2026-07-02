@@ -22,7 +22,7 @@ from typing import Iterable
 
 
 IMAGE_EXTS = {".png", ".jpg", ".jpeg", ".gif", ".webp", ".svg", ".bmp"}
-MEDIA_FIELDS = {"cover", "thumbnail", "portrait", "image"}
+MEDIA_FIELDS = {"banner", "cover", "thumbnail", "portrait", "image"}
 ACTIVE_DIRS = {
     "Characters",
     "Locations",
@@ -34,6 +34,7 @@ ACTIVE_DIRS = {
     "Races",
     "Classes",
     "CAMPANHA",
+    "EARTHROPO",
     "Templates",
 }
 ACTIVE_ROOT_FILES = {
@@ -135,6 +136,8 @@ def is_active_file(path: Path, root: Path) -> bool:
         # Root markdown files are treated as active unless they are obvious notes
         # outside the operational layer. This catches CALENDAR/TIMELINE/etc.
         return True
+    if rel_path.parts[:2] == ("Workflow", "Content_Development"):
+        return True
     return rel_path.parts[0] in ACTIVE_DIRS
 
 
@@ -214,9 +217,10 @@ def resolve_ref(ref: str, index: dict[str, set[str]], root: Path) -> tuple[str |
 
 
 OBSIDIAN_RE = re.compile(r"!\[\[([^\]]+)\]\]")
+WIKILINK_MEDIA_RE = re.compile(r"(?<!!)\[\[([^\]]+)\]\]")
 MD_IMAGE_RE = re.compile(r"!\[([^\]]*)\]\(([^)]+)\)")
 HTML_IMG_RE = re.compile(r"(<img\b[^>]*\bsrc=[\"'])([^\"']+)([\"'][^>]*>)", re.I)
-FIELD_RE = re.compile(r"^(\s*)(cover|thumbnail|portrait|image)(\s*:\s*)(.+?)(\s*)$", re.I)
+FIELD_RE = re.compile(r"^(\s*)(banner|cover|thumbnail|portrait|image)(\s*:\s*)(.+?)(\s*)$", re.I)
 
 
 def line_number(text: str, index: int) -> int:
@@ -253,6 +257,15 @@ def process_text(path: Path, root: Path, text: str, index: dict[str, set[str]]) 
         replacements.append(Replacement(rel, line_number(text, match.start()), "obsidian_embed", match.group(0), after))
         return after
 
+    def wikilink_media_sub(match: re.Match[str]) -> str:
+        raw = match.group(1)
+        canonical, suffix = resolve_or_problem("wikilink_media", raw, match.start())
+        if canonical is None:
+            return match.group(0)
+        after = f"[[{canonical}{suffix}]]"
+        replacements.append(Replacement(rel, line_number(text, match.start()), "wikilink_media", match.group(0), after))
+        return after
+
     def markdown_sub(match: re.Match[str]) -> str:
         alt = match.group(1)
         raw = match.group(2)
@@ -273,6 +286,7 @@ def process_text(path: Path, root: Path, text: str, index: dict[str, set[str]]) 
         return after
 
     new_text = OBSIDIAN_RE.sub(obsidian_sub, text)
+    new_text = WIKILINK_MEDIA_RE.sub(wikilink_media_sub, new_text)
     new_text = MD_IMAGE_RE.sub(markdown_sub, new_text)
     new_text = HTML_IMG_RE.sub(html_sub, new_text)
 

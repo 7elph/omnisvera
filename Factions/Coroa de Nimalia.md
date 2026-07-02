@@ -11,8 +11,8 @@ campaign_status: Ativa
 leader: "[[Augustus Terra Decimus]]"
 location: "[[Nimalis]]"
 territory: "[[Nimalia|Reino de Nimalia]]"
-thumbnail: zz_media/maps/coroa_de_nimalia.png
-cover: zz_media/maps/coroa_de_nimalia.png
+thumbnail: zz_media/faction/coroa_de_nimalia.png
+cover: zz_media/faction/coroa_de_nimalia.png
 info: Autoridade monárquica do Reino de Nimalia.
 description: Poder político central de Nimalia, liderado por Augustus Terra Decimus e apoiado por nobreza, guarda e burocracia real.
 chapters: []
@@ -33,7 +33,7 @@ tags:
 # Coroa de Nimalia
 
 > [!NOTE|clean no-i right]+ Retrato
-> ![[zz_media/maps/coroa_de_nimalia.png|400]]
+> ![[zz_media/faction/coroa_de_nimalia.png|400]]
 
 > [!world]- SINOPSE PÚBLICA
 > A Coroa de Nimalia representa a autoridade formal do reino dos antropos: leis, impostos, fronteiras, exército, diplomacia e estabilidade sob o rei soberano [[Augustus Terra Decimus]].

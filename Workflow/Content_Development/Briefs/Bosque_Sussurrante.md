@@ -20,7 +20,7 @@
 ## Relações detectadas
 
 - [[Floresta de Avenor]]
-- [[zz_media/thumbnails/bosque_sussurrante.png]]
+- [[zz_media/locations/bosque_sussurrante.png]]
 
 ### Notas que apontam para esta nota
 

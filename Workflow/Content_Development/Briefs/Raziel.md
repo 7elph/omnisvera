@@ -29,7 +29,7 @@
 - [[Manto Primordial do Ancião]]
 - [[Ruínas de Valthor]]
 - [[Vampiro]]
-- [[zz_media/thumbnails/raziel.png]]
+- [[zz_media/characters/raziel.png]]
 - [[zz_media/thumbnails/th_raziel.png]]
 
 ### Notas que apontam para esta nota

@@ -552,6 +552,7 @@ def is_historical_path(path_text: str) -> bool:
 
 def resolve_media(root: Path, ref: str, media_files: dict[str, Path]) -> tuple[str, str | None]:
     ref_path = Path(ref)
+    normalized_ref = ref.replace("\\", "/")
     candidates = []
     if ref.startswith("zz_media/"):
         candidates.append(root / ref)
@@ -562,8 +563,9 @@ def resolve_media(root: Path, ref: str, media_files: dict[str, Path]) -> tuple[s
         if candidate.exists():
             return "ok", None
     lower_name = ref_path.name.lower()
-    for name, path in media_files.items():
-        if name.lower() == lower_name:
+    lower_ref = normalized_ref.lower()
+    for media_ref, path in media_files.items():
+        if media_ref.lower() == lower_ref or path.name.lower() == lower_name:
             return "case_mismatch", str(path.relative_to(root))
     return "missing", None
 
@@ -606,7 +608,11 @@ def build_report(root: Path, audits: list[NoteAudit]) -> str:
     tag_candidate_lines: list[str] = []
 
     media_dir = root / "zz_media"
-    media_files = {p.name: p for p in media_dir.iterdir() if p.is_file()} if media_dir.exists() else {}
+    media_files = (
+        {str(p.relative_to(root)).replace("\\", "/"): p for p in media_dir.rglob("*") if p.is_file()}
+        if media_dir.exists()
+        else {}
+    )
     media_exact_refs: set[str] = set()
     broken_media: list[str] = []
     case_media: list[str] = []
@@ -646,6 +652,7 @@ def build_report(root: Path, audits: list[NoteAudit]) -> str:
             )
         for ref in audit.media_refs:
             media_ref_counter[ref] += 1
+            media_exact_refs.add(ref.replace("\\", "/"))
             media_exact_refs.add(Path(ref).name)
             status, match = resolve_media(root, ref, media_files)
             if status == "missing":
@@ -655,7 +662,9 @@ def build_report(root: Path, audits: list[NoteAudit]) -> str:
 
     media_ref_lower = {name.lower() for name in media_exact_refs}
     orphan_media = sorted(
-        name for name in media_files if name.lower() not in media_ref_lower
+        media_ref
+        for media_ref, media_path in media_files.items()
+        if media_ref.lower() not in media_ref_lower and media_path.name.lower() not in media_ref_lower
     )
     broken_operational = [
         item for item in broken_media if not is_historical_path(item.split(" — ", 1)[0])

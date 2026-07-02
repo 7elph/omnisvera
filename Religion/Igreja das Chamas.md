@@ -12,8 +12,8 @@ spoiler_level: light
 gm_secret: false
 info: Fé organizada associada ao simbolismo das chamas.
 description: Religião pública presente em Nimalia, ligada a chamas, virtudes, memória, purificação e orientação.
-thumbnail: zz_media/thumbnails/igreja_das_chamas.png
-cover: zz_media/thumbnails/igreja_das_chamas.png
+thumbnail: zz_media/religion/igreja_das_chamas.png
+cover: zz_media/religion/igreja_das_chamas.png
 chapters: []
 tags:
   - religiao
@@ -26,7 +26,7 @@ tags:
 # Igreja das Chamas
 
 > [!NOTE|clean no-i right]+ Igreja das Chamas
-> ![[zz_media/thumbnails/igreja_das_chamas.png|400]]
+> ![[zz_media/religion/igreja_das_chamas.png|400]]
 
 > [!world]- SINOPSE PÚBLICA
 > Fé organizada presente em Nimalia e em outras regiões de Earthropo. Seus ensinamentos utilizam chamas como símbolos de virtudes, memória, purificação e orientação.

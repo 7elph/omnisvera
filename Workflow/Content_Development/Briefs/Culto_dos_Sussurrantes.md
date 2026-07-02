@@ -25,7 +25,7 @@
 - [[EARTHROPO/EARTHROPO]]
 - [[Igreja das Chamas]]
 - [[Véu Cinzento]]
-- [[zz_media/thumbnails/culto_dos_sussurrantes.png]]
+- [[zz_media/faction/culto_dos_sussurrantes.png]]
 
 ### Notas que apontam para esta nota
 

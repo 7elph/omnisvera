@@ -38,7 +38,7 @@ territory: "[[Floresta de Avenor]]"
 faction:
   - "[[Sentinelas de Leth'valora]]"
   - "[[Conclave dos Errantes]]"
-cover: "[[zz_media/covers/banner_bastardo_de_ferro.png]]"
+cover: "zz_media/covers/banner_bastardo_de_ferro.png"
 description: A história de Vezemir, o Bastardo de Ferro, desde sua infância entre os elfos de Leth'valora até sua busca implacável pelo dragão que destruiu tudo o que ele amava.
 ---
 

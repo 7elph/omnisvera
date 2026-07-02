@@ -14,8 +14,8 @@ location: "[[Vezemir]]"
 faction:
 level: 1
 danger_level: Médio
-thumbnail: zz_media/thumbnails/grisalma.png
-cover: zz_media/thumbnails/grisalma.png
+thumbnail: zz_media/items/grisalma.png
+cover: zz_media/items/grisalma.png
 chapters:
   - 00 - O Bastardo de Ferro
 hooks:
@@ -34,7 +34,7 @@ tags:
 # Grisalma
 
 > [!NOTE|clean no-i right]+ Grisalma
-> ![[zz_media/thumbnails/grisalma.png|300]]
+> ![[zz_media/items/grisalma.png|300]]
 
 > _"Não é o machado que faz o guerreiro. É o guerreiro que dá propósito ao machado."_
 

@@ -9,7 +9,7 @@ visibility: Mestre
 spoiler_level: heavy
 gm_secret: true
 thumbnail: zz_media/thumbnails/th_mira.png
-cover: zz_media/thumbnails/mira.png
+cover: zz_media/characters/mira.png
 location: "[[Leth'valora]]"
 territory: "[[Floresta de Avenor]]"
 faction: Nenhum
@@ -45,7 +45,7 @@ tags:
 # MIRA VALEN
 
 > [!NOTE|clean no-i right]+ Mira Valen
-> ![[zz_media/thumbnails/mira.png|400]]
+> ![[zz_media/characters/mira.png|400]]
 
 > [!NOTE]- Template aplicado
 > Esta nota segue o formato **NPC Importante**. Informações confidenciais devem ficar no [[CAMPANHA/ESTADO_DA_CAMPANHA|Estado da Campanha]].

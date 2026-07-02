@@ -25,7 +25,7 @@ tags:
 # Cultura de Nome
 
 > [!NOTE|clean no-i right]+ Retrato Cultural
-> ![[zz_media/maps/banner_earthropo.png|400]]
+> ![[zz_media/covers/banner_earthropo.png|400]]
 
 > [!world]- SINOPSE
 > Escreva uma visão curta do tom cultural: costumes, tensões, símbolos públicos e como isso aparece na mesa.

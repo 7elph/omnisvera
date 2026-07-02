@@ -14,8 +14,8 @@ territory: "[[Floresta de Avenor]]"
 region:
 district:
 danger_level:
-thumbnail: zz_media/thumbnails/bosque_sussurrante.png
-cover: zz_media/thumbnails/bosque_sussurrante.png
+thumbnail: zz_media/locations/bosque_sussurrante.png
+cover: zz_media/locations/bosque_sussurrante.png
 info: Nome preservado como placeholder; existência e função ainda não confirmadas.
 description: Possível bosque ou local florestal em Avenor, sem cânone confirmado.
 chapters: []
@@ -33,7 +33,7 @@ tags:
 # Bosque Sussurrante
 
 > [!NOTE|clean no-i right]+ Retrato
-> ![[zz_media/thumbnails/bosque_sussurrante.png|400]]
+> ![[zz_media/locations/bosque_sussurrante.png|400]]
 
 ## Visão Geral
 

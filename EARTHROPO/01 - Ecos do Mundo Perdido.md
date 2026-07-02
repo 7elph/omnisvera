@@ -25,7 +25,7 @@ characters:
   - "[[Vezemir]]"
   - "[[Varkh Nimalis]]"
   - "[[Raziel]]"
-cover: "[[zz_media/covers/banner_ecos_do_mundo_perdido.png]]"
+cover: "zz_media/covers/banner_ecos_do_mundo_perdido.png"
 description: Primeiro capítulo coletivo da campanha, reunindo Vezemir, Varkh e Raziel diante dos primeiros sinais de ruínas antigas, remédios falsos e mistérios esquecidos sob Earthropo.
 tags:
   - capitulo
@@ -39,7 +39,7 @@ tags:
 #### _Crônicas de [[EARTHROPO/EARTHROPO|Earthropo]] — capítulo em preparação_
 
 > [!NOTE|clean no-i right]+ 01 - Ecos do Mundo Perdido
-> ![[banner-ecos-do-mundo-perdido.png|400]]
+> ![[zz_media/covers/banner_ecos_do_mundo_perdido.png|400]]
 
 > [!world]- SINOPSE
 > O primeiro capítulo aproxima [[Vezemir]], [[Varkh Nimalis]] e [[Raziel]] por meio de um incidente em uma estrada secundária entre [[Nimalis]] e a [[Floresta de Avenor]]. Uma caravana sofre um acidente depois de um tremor localizado, frascos de remédios falsificados se quebram e uma passagem artificial surge sob a terra. O que parecia contrabando comum revela sinais de algo antigo sob Earthropo. Cada personagem encontra ali uma pista íntima: o dragão e os Guardiões para Vezemir, os remédios falsos de Odran para Varkh, e marcas de um passado que Raziel reconhece sem compreender totalmente.

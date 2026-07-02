@@ -9,7 +9,7 @@ visibility: Mestre
 spoiler_level: heavy
 gm_secret: true
 thumbnail: zz_media/thumbnails/th_elarion.png
-cover: zz_media/thumbnails/elarion.png
+cover: zz_media/characters/elarion.png
 location: "[[Leth'valora]]"
 territory: "[[Floresta de Avenor]]"
 faction: "[[Sentinelas de Leth'valora]]"
@@ -45,7 +45,7 @@ tags:
 # ELARION VAELTHOR
 
 > [!NOTE|clean no-i right]+ Elarion Vaelthor
-> ![[zz_media/thumbnails/elarion.png|400]]
+> ![[zz_media/characters/elarion.png|400]]
 
 > [!NOTE]- Template aplicado
 > Esta nota segue o formato **NPC Importante**. Informações confidenciais devem ficar no [[CAMPANHA/ESTADO_DA_CAMPANHA|Estado da Campanha]].

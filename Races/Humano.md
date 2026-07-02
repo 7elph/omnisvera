@@ -34,7 +34,7 @@ tags:
 # Humano
 
 > [!NOTE|clean no-i right]+ Retrato
-> ![[zz_media/thumbnails/humano.png|400]]
+> ![[zz_media/races/humano.png|400]]
 
 ## Visão Geral
 

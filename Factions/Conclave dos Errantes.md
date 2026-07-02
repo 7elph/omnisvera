@@ -11,8 +11,8 @@ campaign_status: Ativa
 leader:
 location: "[[Nimalis]]"
 territory: "[[Nimalia|Reino de Nimalia]]"
-thumbnail: zz_media/thumbnails/conclave_dos_errantes.png
-cover: zz_media/thumbnails/conclave_dos_errantes.png
+thumbnail: zz_media/faction/conclave_dos_errantes.png
+cover: zz_media/faction/conclave_dos_errantes.png
 info: Rede de aventureiros, investigadores e errantes de Earthropo.
 description: Organização flexível que reúne aventureiros, escoltas, exploradores e pessoas sem bandeira fixa.
 chapters: []
@@ -28,7 +28,7 @@ tags:
 # Conclave dos Errantes
 
 > [!NOTE|clean no-i right]+ Retrato
-> ![[zz_media/thumbnails/conclave_dos_errantes.png|400]]
+> ![[zz_media/faction/conclave_dos_errantes.png|400]]
 
 > [!world]- SINOPSE PÚBLICA
 > O Conclave dos Errantes é uma rede de aventureiros, investigadores, escoltas e viajantes sem bandeira fixa. Onde a Coroa, guildas ou nobres não conseguem agir diretamente, os Errantes podem aceitar contratos e atravessar fronteiras.

@@ -8,7 +8,7 @@ spoiler_level: none
 gm_secret: false
 campaign_status: Ativo
 thumbnail: zz_media/thumbnails/th_raziel.png
-cover: zz_media/thumbnails/raziel.png
+cover: zz_media/characters/raziel.png
 status: Vivo
 location: "[[Ruínas de Valthor]]"
 territory: "[[EARTHROPO/EARTHROPO|Earthropo]]"
@@ -40,7 +40,7 @@ tags:
 # RAZIEL — O ESPECTRO DA NÉVOA DE SANGUE
 
 > [!NOTE|clean no-i right]+ Raziel
-> ![[zz_media/thumbnails/raziel.png|400]]
+> ![[zz_media/characters/raziel.png|400]]
 
 > [!NOTE]- Template aplicado
 > Esta nota segue o formato **Personagem Jogador**. Informações confidenciais devem ficar no [[CAMPANHA/ESTADO_DA_CAMPANHA|Estado da Campanha]].

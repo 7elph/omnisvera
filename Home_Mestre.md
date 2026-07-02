@@ -1,6 +1,6 @@
 ---
 obsidianUIMode: preview
-banner: "[[zz_media/thumbnails/avenor.png]]"
+banner: "zz_media/territories/avenor.png"
 banner-x: 51
 banner-y: 34
 banner-height: 280
@@ -22,13 +22,13 @@ gm_secret: true
 > [![[zz_media/maps/mapa_de_nimalia.png|sban htiny ctr p+t]]](MAPA%20DE%20NIMALIA.md)
 >
 > **CRÔNICAS**
-> [![[zz_media/maps/banner_earthropo.png|sban htiny ctr]]](EARTHROPO/EARTHROPO.md)
+> [![[zz_media/covers/banner_earthropo.png|sban htiny ctr]]](EARTHROPO/EARTHROPO.md)
 >
 > **NOTAS**
-> [![[zz_media/misc/guild.png|sban htiny ctr]]](NOTES.md)
+> [![[zz_media/covers/guild.png|sban htiny ctr]]](NOTES.md)
 >
 > **RUMORES E DESCOBERTAS**
-> [![[zz_media/misc/guild1.png|sban htiny ctr]]](LATEST_NEWS.md)
+> [![[zz_media/covers/guild1.png|sban htiny ctr]]](LATEST_NEWS.md)
 >
 > **MAPAS DE EARTHROPO**
 > [![[zz_media/maps/earthropo.png|sban htiny ctr]]](MAPA%20DE%20EARTHROPO.md)

@@ -28,7 +28,7 @@
 - [[Rede de Falsificadores de Maré Baixa]]
 - [[Remédios Falsos de Maré Baixa]]
 - [[Varkh Nimalis]]
-- [[zz_media/thumbnails/mare_baixa.png]]
+- [[zz_media/locations/mare_baixa.png]]
 
 ### Notas que apontam para esta nota
 

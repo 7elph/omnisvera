@@ -9,7 +9,7 @@ visibility: Mestre
 spoiler_level: heavy
 gm_secret: true
 thumbnail: zz_media/thumbnails/th_cassian.png
-cover: zz_media/thumbnails/cassian.png
+cover: zz_media/characters/cassian.png
 religion: "[[Igreja das Chamas]]"
 location: "[[Nimalis]]"
 territory: "[[Nimalia]]"
@@ -50,7 +50,7 @@ tags:
 # GENERAL CASSIAN VALERIUS
 
 > [!NOTE|clean no-i right]+ General Cassian Valerius
-> ![[zz_media/thumbnails/cassian.png|400]]
+> ![[zz_media/characters/cassian.png|400]]
 
 > [!NOTE]- Template aplicado
 > Esta nota segue o formato **NPC Importante**. Informações confidenciais devem ficar no [[CAMPANHA/ESTADO_DA_CAMPANHA|Estado da Campanha]].

@@ -27,7 +27,7 @@
 - [[Leth'valora]]
 - [[Mira Valen]]
 - [[Vezemir]]
-- [[zz_media/thumbnails/sentinelas_de_leth_valora.png]]
+- [[zz_media/faction/sentinelas_de_leth_valora.png]]
 
 ### Notas que apontam para esta nota
 

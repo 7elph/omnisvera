@@ -3,8 +3,8 @@ obsidianUIMode: preview
 NoteIcon: faction
 NoteStatus: Active
 type: faction
-thumbnail: zz_media/thumbnails/sangue.png
-cover: zz_media/thumbnails/sangue.png
+thumbnail: zz_media/items/sangue.png
+cover: zz_media/items/sangue.png
 status: Antigo / ativo em segredo
 campaign_status: Em revisão
 visibility: Mestre
@@ -29,7 +29,7 @@ tags:
 # Clã Sanguinallis
 
 > [!NOTE|clean no-i right]+ Retrato
-> ![[zz_media/thumbnails/sangue.png|400]]
+> ![[zz_media/items/sangue.png|400]]
 
 > [!warning] Nota sensível
 > Esta nota contém informações de bastidor ligadas à origem de [[Raziel]]. Para uma versão pública, criar resumo separado sem entregar traições, hierarquia interna ou alvos finais.

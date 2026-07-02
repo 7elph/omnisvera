@@ -12,8 +12,8 @@ created_by: IA
 leader:
 location: "[[Maré Baixa]]"
 territory: "[[Nimalia|Reino de Nimalia]]"
-thumbnail: zz_media/thumbnails/remedios_falsos.png
-cover: zz_media/thumbnails/remedios_falsos.png
+thumbnail: zz_media/misc/remedios_falsos.png
+cover: zz_media/misc/remedios_falsos.png
 info: Rede criminosa em revisão ligada aos remédios falsos de Maré Baixa.
 description: Organização por trás de falsificações alquímicas associadas ao símbolo de Mestre Odran Veyl e ao arco de Varkh.
 chapters:
@@ -30,7 +30,7 @@ tags:
 # Rede de Falsificadores de Maré Baixa
 
 > [!NOTE|clean no-i right]+ Remédios Falsos
-> ![[zz_media/thumbnails/remedios_falsos.png|400]]
+> ![[zz_media/misc/remedios_falsos.png|400]]
 
 > [!WARNING] Estado canônico
 > Esta nota está em desenvolvimento e depende de confirmação do Sage.

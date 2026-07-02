@@ -11,8 +11,8 @@ gm_secret: false
 territory: "[[EARTHROPO/EARTHROPO|Earthropo]]"
 location:
 region: Sudeste de [[Nimalia]]
-thumbnail: zz_media/thumbnails/ruinas_de_valthor.png
-cover: zz_media/thumbnails/ruinas_de_valthor.png
+thumbnail: zz_media/locations/ruinas_de_valthor.png
+cover: zz_media/locations/ruinas_de_valthor.png
 info: Ruínas de um antigo reino próspero ao sudeste de Nimalia.
 description: Ruínas antigas ao sudeste de Nimalia, ligadas a histórias esquecidas e ao passado profundo de Earthropo.
 subtype: ruin
@@ -32,7 +32,7 @@ tags:
 # Ruínas de Valthor
 
 > [!NOTE|clean no-i right]+ Ruínas de Valthor
-> ![[zz_media/thumbnails/ruinas_de_valthor.png|400]]
+> ![[zz_media/locations/ruinas_de_valthor.png|400]]
 
 > [!world]- SINOPSE PÚBLICA
 > Valthor foi um reino antigo e próspero. Hoje restam ruínas ao sudeste de [[Nimalia]], associadas a histórias esquecidas, cavernas profundas e ecos do passado de Earthropo.

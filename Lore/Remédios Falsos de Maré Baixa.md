@@ -9,8 +9,8 @@ visibility: Mestre
 spoiler_level: medium
 gm_secret: true
 created_by: IA
-thumbnail: zz_media/thumbnails/remedios_falsos.png
-cover: zz_media/thumbnails/remedios_falsos.png
+thumbnail: zz_media/misc/remedios_falsos.png
+cover: zz_media/misc/remedios_falsos.png
 info: Arco de investigação de Varkh sobre remédios falsos em Maré Baixa e Nimalia.
 description: Investigação sobre falsificações alquímicas usando o símbolo e os métodos de Mestre Odran Veyl.
 chapters:
@@ -26,7 +26,7 @@ tags:
 # Remédios Falsos de Maré Baixa
 
 > [!NOTE|clean no-i right]+ Remédios Falsos
-> ![[zz_media/thumbnails/remedios_falsos.png|400]]
+> ![[zz_media/misc/remedios_falsos.png|400]]
 
 > [!WARNING] Estado canônico
 > Esta nota está em desenvolvimento e depende de confirmação do Sage. Ela contém suspeitas do arco de [[Varkh Nimalis]].

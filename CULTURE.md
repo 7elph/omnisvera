@@ -8,8 +8,8 @@ campaign_status: Ativo
 visibility: Jogadores
 spoiler_level: light
 gm_secret: false
-thumbnail: zz_media/thumbnails/culture.png
-cover: zz_media/thumbnails/culture.png
+thumbnail: zz_media/covers/culture.png
+cover: zz_media/covers/culture.png
 info: Cultura geral de Earthropo como ferramenta de mesa.
 description: Costumes, convivência, festivais, informação e textura social do continente de Earthropo.
 chapters: []
@@ -24,7 +24,7 @@ tags:
 # Cultura de Earthropo
 
 > [!NOTE|clean no-i right]+ Cultura de Earthropo
-> ![[zz_media/thumbnails/culture.png|400]]
+> ![[zz_media/covers/culture.png|400]]
 
 > [!world]- SINOPSE
 > Earthropo é um continente moldado por diversas raças, reinos e tradições. Embora cada território possua costumes próprios, algumas práticas são reconhecidas em muitas regiões: feiras sazonais, histórias de estrada, cultos locais, notícias carregadas por arautos e um respeito ambíguo por aventureiros.

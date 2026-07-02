@@ -8,8 +8,8 @@ campaign_status: Em revisão
 visibility: Mestre
 spoiler_level: light
 gm_secret: false
-thumbnail: zz_media/maps/banner_earthropo.png
-cover: zz_media/maps/banner_earthropo.png
+thumbnail: zz_media/covers/banner_earthropo.png
+cover: zz_media/covers/banner_earthropo.png
 info: Calendário operacional de Omnisvera para viagens, datas, festivais e consequências.
 description: Estrutura de dias, meses, estações e feriados da campanha, ainda em revisão.
 chapters: []
@@ -23,7 +23,7 @@ tags:
 # Calendário de Omnisvera
 
 > [!NOTE|clean no-i right]+ Calendário de Omnisvera
-> ![[zz_media/maps/banner_earthropo.png|400]]
+> ![[zz_media/covers/banner_earthropo.png|400]]
 
 > [!world]- SINOPSE
 > O calendário organiza o tempo de jogo: viagens, prazos, festivais, presságios, feriados e consequências. Ele está ligado à [[TIMELINE]], mas não precisa revelar toda a história antiga de Omnisvera.

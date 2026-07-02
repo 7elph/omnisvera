@@ -29,7 +29,7 @@
 - [[Nimalis]]
 - [[Nobreza de Nimalia]]
 - [[Véu Cinzento]]
-- [[zz_media/maps/coroa_de_nimalia.png]]
+- [[zz_media/faction/coroa_de_nimalia.png]]
 
 ### Notas que apontam para esta nota
 

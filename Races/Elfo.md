@@ -23,7 +23,7 @@ hooks:
   - Ruína de Leth'valora
 rumors: []
 thumbnail: zz_media/thumbnails/th_elf.png
-cover: zz_media/thumbnails/elf.png
+cover: zz_media/races/elf.png
 chapters: []
 tags:
   - raca
@@ -34,7 +34,7 @@ tags:
 # Elfo
 
 > [!NOTE|clean no-i right]+ Retrato
-> ![[zz_media/thumbnails/elf.png|400]]
+> ![[zz_media/races/elf.png|400]]
 
 ## Visão Geral
 

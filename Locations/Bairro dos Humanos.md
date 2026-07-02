@@ -13,8 +13,8 @@ territory: "[[Nimalia]]"
 region: Capital do Reino de Nimalia
 district: Bairro dos Humanos
 danger_level: Baixo
-thumbnail: zz_media/thumbnails/bairro_humanos.png
-cover: zz_media/thumbnails/bairro_humanos.png
+thumbnail: zz_media/locations/bairro_humanos.png
+cover: zz_media/locations/bairro_humanos.png
 info: Bairro onde humanos se estabeleceram em Nimalis.
 description: Comunidade humana dentro da capital de um reino majoritariamente antropo.
 chapters: []
@@ -30,7 +30,7 @@ tags:
 # Bairro dos Humanos
 
 > [!NOTE|clean no-i right]+ Bairro dos Humanos
-> ![[zz_media/thumbnails/bairro_humanos.png|400]]
+> ![[zz_media/locations/bairro_humanos.png|400]]
 
 > [!world]- SINOPSE PÚBLICA
 > O Bairro dos Humanos é a comunidade humana estabelecida em [[Nimalis]], dentro de um reino onde os antropos predominam. É um ponto útil para contatos, hospedagem, pequenos negócios e tensões culturais.

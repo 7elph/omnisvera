@@ -1,6 +1,6 @@
 ---
 obsidianUIMode: preview
-banner: "[[zz_media/thumbnails/avenor.png]]"
+banner: "zz_media/territories/avenor.png"
 banner-x: 51
 banner-y: 34
 banner-height: 280
@@ -33,7 +33,7 @@ gm_secret: false
 > [![[zz_media/maps/mapa_de_nimalis.png|sban htiny ctr]]](MAPA%20DE%20NIMALIS.md)
 >
 > **CRÔNICAS**
-> [![[zz_media/maps/banner_earthropo.png|sban htiny ctr]]](EARTHROPO/EARTHROPO.md)
+> [![[zz_media/covers/banner_earthropo.png|sban htiny ctr]]](EARTHROPO/EARTHROPO.md)
 >
 > **CALENDÁRIO**
 > [[Calendar|Calendário de Nimalia]]

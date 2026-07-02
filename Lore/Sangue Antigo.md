@@ -9,8 +9,8 @@ visibility: Mestre
 spoiler_level: heavy
 gm_secret: true
 created_by: IA
-thumbnail: zz_media/thumbnails/sangue.png
-cover: zz_media/thumbnails/sangue.png
+thumbnail: zz_media/items/sangue.png
+cover: zz_media/items/sangue.png
 info: Substância ancestral ligada ao renascimento de Raziel e ao Ancião Primordial.
 description: Lore e mecânica própria de mesa para a substância conhecida como Sangue Antigo, separada da classe Vampiro.
 chapters:
@@ -29,7 +29,7 @@ tags:
 > Esta nota está em desenvolvimento e depende de confirmação do Sage. Ela contém spoilers fortes da origem de [[Raziel]].
 
 > [!NOTE|clean no-i right]+ Sangue Antigo
-> ![[zz_media/thumbnails/sangue.png|400]]
+> ![[zz_media/items/sangue.png|400]]
 
 > [!world]- SINOPSE DO MESTRE
 > O Sangue Antigo é uma substância misteriosa ligada ao [[Ancião Primordial]] e ao renascimento de [[Raziel]] nas cavernas abissais sob as [[Ruínas de Valthor]]. Ele não substitui a classe [[Vampiro]], mas funciona como uma camada única da campanha.

@@ -14,8 +14,8 @@ location: "[[Raziel]]"
 faction: "[[Clã Sanguinallis]]"
 level: 1
 danger_level: Alto
-thumbnail: zz_media/thumbnails/adagas_de_espectro_fantasma.png
-cover: zz_media/thumbnails/adagas_de_espectro_fantasma.png
+thumbnail: zz_media/items/adagas_de_espectro_fantasma.png
+cover: zz_media/items/adagas_de_espectro_fantasma.png
 chapters:
   - 00 - As Crônicas de Névoa de Sangue
 hooks:
@@ -35,7 +35,7 @@ tags:
 # Adagas de Espectro Fantasma
 
 > [!NOTE|clean no-i right]+ Retrato
-> ![[zz_media/thumbnails/adagas_de_espectro_fantasma.png|400]]
+> ![[zz_media/items/adagas_de_espectro_fantasma.png|400]]
 
 > [!world]- SINOPSE PÚBLICA
 > As Adagas de Espectro Fantasma são lâminas etéreas de [[Raziel]], ligadas ao seu passado como executor do [[Clã Sanguinallis]]. Em movimento, parecem desaparecer parcialmente do mundo.

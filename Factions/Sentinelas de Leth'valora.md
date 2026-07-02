@@ -11,8 +11,8 @@ campaign_status: Cânone de trabalho
 leader:
 location: "[[Leth'valora]]"
 territory: "[[Floresta de Avenor]]"
-thumbnail: "zz_media/thumbnails/sentinelas_de_leth_valora.png"
-cover: "zz_media/thumbnails/sentinelas_de_leth_valora.png"
+thumbnail: "zz_media/faction/sentinelas_de_leth_valora.png"
+cover: "zz_media/faction/sentinelas_de_leth_valora.png"
 info: Guarda local destruída de Leth'valora.
 description: Pequena força de defesa da vila de Leth'valora, destruída junto com a vila durante o ataque do dragão de colar dourado.
 chapters: []
@@ -33,7 +33,7 @@ tags:
 # Sentinelas de Leth'valora
 
 > [!NOTE|clean no-i right]+ Retrato
-> ![[zz_media/thumbnails/sentinelas_de_leth_valora.png|400]]
+> ![[zz_media/faction/sentinelas_de_leth_valora.png|400]]
 
 > [!world]- SINOPSE PÚBLICA
 > Os Sentinelas de Leth'valora eram a guarda local da vila, responsáveis por trilhas, acessos e proteção comunitária. Foram destruídos junto com a vila no ataque do [[Dragão de Colar Dourado]].

@@ -11,8 +11,8 @@ gm_secret: false
 territory: "[[EARTHROPO/EARTHROPO|Earthropo]]"
 location:
 region: Norte de [[Nimalia]]
-thumbnail: zz_media/thumbnails/fortaleza_de_gharok.png
-cover: zz_media/thumbnails/fortaleza_de_gharok.png
+thumbnail: zz_media/locations/fortaleza_de_gharok.png
+cover: zz_media/locations/fortaleza_de_gharok.png
 info: Antiga fortaleza anã ao norte de Nimalia, ligada ao Clã Sanguinallis e à origem de Raziel.
 description: Fortaleza anã antiga ao norte de Nimalia, hoje cercada por rumores e pendências de lore.
 tags:
@@ -27,7 +27,7 @@ tags:
 # Fortaleza de Gharok
 
 > [!NOTE|clean no-i right]+ Fortaleza de Gharok
-> ![[zz_media/thumbnails/fortaleza_de_gharok.png|400]]
+> ![[zz_media/locations/fortaleza_de_gharok.png|400]]
 
 > [!world]- SINOPSE PÚBLICA
 > Gharok é uma antiga fortaleza anã ao norte de [[Nimalia]], próxima da região onde futuramente será apresentado o reino dos anões. Seu estado atual ainda está em revisão.

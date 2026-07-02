@@ -17,8 +17,8 @@ class_group: Arcano
 primary_attribute: Inteligência
 level:
 danger_level: Baixo
-thumbnail: zz_media/thumbnails/mago.png
-cover: zz_media/thumbnails/mago.png
+thumbnail: zz_media/class/mago.png
+cover: zz_media/class/mago.png
 chapters: []
 tags:
   - classe
@@ -30,7 +30,7 @@ tags:
 # Mago
 
 > [!NOTE|clean no-i right]+ Retrato
-> ![[zz_media/thumbnails/mago.png|400]]
+> ![[zz_media/class/mago.png|400]]
 
 ## Visão Geral
 

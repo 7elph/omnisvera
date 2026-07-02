@@ -27,7 +27,7 @@
 - [[Guarda Real de Nimalia]]
 - [[Nimalia]]
 - [[Nimalis]]
-- [[zz_media/maps/guarda_real_nimalia.png]]
+- [[zz_media/faction/guarda_real_nimalia.png]]
 
 ### Notas que apontam para esta nota
 

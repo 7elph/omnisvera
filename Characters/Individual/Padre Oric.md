@@ -9,7 +9,7 @@ visibility: Mestre
 spoiler_level: heavy
 gm_secret: true
 thumbnail: zz_media/thumbnails/th_oric.png
-cover: zz_media/thumbnails/oric.png
+cover: zz_media/characters/oric.png
 location: Desconhecida
 territory: "[[Nimalia]]"
 faction: Nenhum
@@ -45,7 +45,7 @@ tags:
 # PADRE ORIC
 
 > [!NOTE|clean no-i right]+ Padre Oric
-> ![[zz_media/thumbnails/oric.png|400]]
+> ![[zz_media/characters/oric.png|400]]
 
 > [!NOTE]- Template aplicado
 > Esta nota segue o formato **NPC Importante**. Informações confidenciais devem ficar no [[CAMPANHA/ESTADO_DA_CAMPANHA|Estado da Campanha]].

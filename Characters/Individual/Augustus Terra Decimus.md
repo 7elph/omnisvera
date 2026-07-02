@@ -9,7 +9,7 @@ visibility: Mestre
 spoiler_level: heavy
 gm_secret: true
 thumbnail: zz_media/thumbnails/th_dukeofd.png
-cover: zz_media/thumbnails/dukeofd.png
+cover: zz_media/characters/dukeofd.png
 religion: "[[Igreja das Chamas]]"
 location: "[[Nimalis]]"
 territory: "[[Nimalia]]"
@@ -40,7 +40,7 @@ tags:
 # AUGUSTUS TERRA DECIMUS
 
 > [!NOTE|clean no-i right]+ Augustus Terra Decimus
-> ![[zz_media/thumbnails/dukeofd.png|400]]
+> ![[zz_media/characters/dukeofd.png|400]]
 
 > [!NOTE]- Template aplicado
 > Esta nota segue o formato **NPC Importante**. Informações confidenciais devem ficar no [[CAMPANHA/ESTADO_DA_CAMPANHA|Estado da Campanha]].

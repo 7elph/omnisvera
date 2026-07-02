@@ -1,6 +1,6 @@
 # Auditoria Global de Padronização do Vault
 
-Gerado em: 2026-07-02 07:40
+Gerado em: 2026-07-02 08:08
 
 Fonte de padrão: [[Workflow/OMNISVERA_VAULT_STANDARD|OMNISVERA_VAULT_STANDARD]]
 
@@ -21,13 +21,13 @@ Fonte de padrão: [[Workflow/OMNISVERA_VAULT_STANDARD|OMNISVERA_VAULT_STANDARD]]
 | tags distintas | 216 |
 | tipos detectados | 18 |
 | subtipos detectados | 17 |
-| referências de mídia distintas | 209 |
-| mídias em `zz_media` | 1 |
-| imagens/mídias quebradas | 202 |
-| imagens/mídias quebradas fora de histórico/auditoria | 1 |
-| possíveis problemas de case-sensitive | 0 |
+| referências de mídia distintas | 160 |
+| mídias em `zz_media` | 117 |
+| imagens/mídias quebradas | 32 |
+| imagens/mídias quebradas fora de histórico/auditoria | 0 |
+| possíveis problemas de case-sensitive | 45 |
 | possíveis problemas de case-sensitive fora de histórico/auditoria | 0 |
-| mídias possivelmente órfãs | 1 |
+| mídias possivelmente órfãs | 17 |
 
 Modo de validação YAML:
 
@@ -923,7 +923,6 @@ Critério: tag com espaço, maiúscula inesperada ou formato arriscado. Tags `Ca
 
 ## Referências de mídia quebradas
 
-- `EARTHROPO\01 - Ecos do Mundo Perdido.md — `banner-ecos-do-mundo-perdido.png``
 - `Workflow\Legacy\Disgraceland\.trash\!Ep01 - The Black Marauder\Act 01\A1-Scene 01.md — `th_abel.png``
 - `Workflow\Legacy\Disgraceland\.trash\!Ep01 - The Black Marauder\Act 01\A1-Scene 01.md — `th_jd.png``
 - `Workflow\Legacy\Disgraceland\.trash\!Ep01 - The Black Marauder\Act 01\A1-Scene 01.md — `th_katie.png``
@@ -945,95 +944,71 @@ Critério: tag com espaço, maiúscula inesperada ou formato arriscado. Tags `Ca
 - `Workflow\Legacy\Old Dragon anterior\Legacy - Old Dragon anterior - Homem de Armas.md — `zz_media/mestre de armas.png``
 - `Workflow\Legacy\Old Dragon anterior\Legacy - Old Dragon anterior - Ladrão.md — `zz_media/ladrão.png``
 - `Workflow\Reports\latest_vault_audit.md — `econ.png``
-- `Workflow\Reports\latest_vault_audit.md — `elfs.png``
 - `Workflow\Reports\latest_vault_audit.md — `leth'valora.png``
-- `Workflow\Reports\latest_vault_audit.md — `med.png``
-- `Workflow\Reports\latest_vault_audit.md — `mira.png``
 - `Workflow\Reports\latest_vault_audit.md — `npc.png``
-- `Workflow\Reports\latest_vault_audit.md — `oric.png``
 - `Workflow\Reports\latest_vault_audit.md — `t8.png``
 - `Workflow\Reports\latest_vault_audit.md — `w.png``
 - `Workflow\Reports\latest_vault_audit.md — `zz_media/lyladuke.png``
-- `Workflow\Reports\latest_vault_audit.md — `zz_media/raziel.png``
-- `Workflow\_audit\Leaflet_Map_Diagnostics\backups\MAPA DE EARTHROPO.before-map-reset.md — `zz_media/earthropo.png``
 - `Workflow\_audit\Leaflet_Map_Diagnostics\backups\MAPA DE NIMALIA.before-map-reset.md — `zz_media/mapa-de-nimalia.png``
 - `Workflow\_audit\Leaflet_Map_Diagnostics\backups\MAPA DE NIMALIS.before-map-reset.md — `zz_media/mapa-de-nimalis.png``
-- `Workflow\_audit\Lore_Structure\LORE_PILLARS_REVIEW.md — `sangue.png``
-- `Workflow\_audit\Media_Organization\MEDIA_EMBED_FIX_APPLIED.md — `adagas-de-espectro-fantasma.png``
-- `Workflow\_audit\Media_Organization\MEDIA_EMBED_FIX_APPLIED.md — `alquimista.png``
-- `Workflow\_audit\Media_Organization\MEDIA_EMBED_FIX_APPLIED.md — `anao.PNG``
-- `Workflow\_audit\Media_Organization\MEDIA_EMBED_FIX_APPLIED.md — `antropos.PNG``
-- `Workflow\_audit\Media_Organization\MEDIA_EMBED_FIX_APPLIED.md — `area-comercial-3.png``
-- `Workflow\_audit\Media_Organization\MEDIA_EMBED_FIX_APPLIED.md — `avenor.png``
-- `Workflow\_audit\Media_Organization\MEDIA_EMBED_FIX_APPLIED.md — `bairro-anao.png``
-- `Workflow\_audit\Media_Organization\MEDIA_EMBED_FIX_APPLIED.md — `bairro-dragonborns.png``
-- `Workflow\_audit\Media_Organization\MEDIA_EMBED_FIX_APPLIED.md — `bairro-elfos.png``
-- `Workflow\_audit\Media_Organization\MEDIA_EMBED_FIX_APPLIED.md — `bairro-humanos.png``
-- `Workflow\_audit\Media_Organization\MEDIA_EMBED_FIX_APPLIED.md — `bairro-nobre.png``
-- `Workflow\_audit\Media_Organization\MEDIA_EMBED_FIX_APPLIED.md — `banner-earthropo.png``
-- `Workflow\_audit\Media_Organization\MEDIA_EMBED_FIX_APPLIED.md — `banner-ecos-do-mundo-perdido.png``
-- `Workflow\_audit\Media_Organization\MEDIA_EMBED_FIX_APPLIED.md — `bosque-sussurrante.png``
-- `Workflow\_audit\Media_Organization\MEDIA_EMBED_FIX_APPLIED.md — `caderninho.png``
-- `Workflow\_audit\Media_Organization\MEDIA_EMBED_FIX_APPLIED.md — `caminho-dos-errantes.png``
-- `Workflow\_audit\Media_Organization\MEDIA_EMBED_FIX_APPLIED.md — `campos-de-earthropo.png``
-- `Workflow\_audit\Media_Organization\MEDIA_EMBED_FIX_APPLIED.md — `casa-da-moeda-exterior.png``
-- `Workflow\_audit\Media_Organization\MEDIA_EMBED_FIX_APPLIED.md — `casa-da-moeda-interior.png``
-- `Workflow\_audit\Media_Organization\MEDIA_EMBED_FIX_APPLIED.md — `cash.png``
-- `Workflow\_audit\Media_Organization\MEDIA_EMBED_FIX_APPLIED.md — `cassian.png``
-- `Workflow\_audit\Media_Organization\MEDIA_EMBED_FIX_APPLIED.md — `clerigo.png``
-- `Workflow\_audit\Media_Organization\MEDIA_EMBED_FIX_APPLIED.md — `conclave-dos-errantes.png``
-- `Workflow\_audit\Media_Organization\MEDIA_EMBED_FIX_APPLIED.md — `coroa-de-nimalia.png``
-- `Workflow\_audit\Media_Organization\MEDIA_EMBED_FIX_APPLIED.md — `culto-dos-sussurrantes.png``
-- `Workflow\_audit\Media_Organization\MEDIA_EMBED_FIX_APPLIED.md — `culture.png``
-- `Workflow\_audit\Media_Organization\MEDIA_EMBED_FIX_APPLIED.md — `distrito-comercial.png``
-- `Workflow\_audit\Media_Organization\MEDIA_EMBED_FIX_APPLIED.md — `dragao-colar-dourado.png``
-- `Workflow\_audit\Media_Organization\MEDIA_EMBED_FIX_APPLIED.md — `dragonborn.png``
-- `Workflow\_audit\Media_Organization\MEDIA_EMBED_FIX_APPLIED.md — `dukeofd.png``
-- `Workflow\_audit\Media_Organization\MEDIA_EMBED_FIX_APPLIED.md — `earthropo.png``
-- `Workflow\_audit\Media_Organization\MEDIA_EMBED_FIX_APPLIED.md — `eclipse-obsidiana.png``
-- `Workflow\_audit\Media_Organization\MEDIA_EMBED_FIX_APPLIED.md — `elarion.png``
-- `Workflow\_audit\Media_Organization\MEDIA_EMBED_FIX_APPLIED.md — `elf.PNG``
-- `Workflow\_audit\Media_Organization\MEDIA_EMBED_FIX_APPLIED.md — `fe-dos-antigos.png``
-- `Workflow\_audit\Media_Organization\MEDIA_EMBED_FIX_APPLIED.md — `fortaleza-de-gharok.png``
-- `Workflow\_audit\Media_Organization\MEDIA_EMBED_FIX_APPLIED.md — `grisalma.png``
-- `Workflow\_audit\Media_Organization\MEDIA_EMBED_FIX_APPLIED.md — `guarda-real-nimalia.png``
-- `Workflow\_audit\Media_Organization\MEDIA_EMBED_FIX_APPLIED.md — `guerreiro.png``
-- `Workflow\_audit\Media_Organization\MEDIA_EMBED_FIX_APPLIED.md — `guild.png``
-- `Workflow\_audit\Media_Organization\MEDIA_EMBED_FIX_APPLIED.md — `guild1.png``
-- `Workflow\_audit\Media_Organization\MEDIA_EMBED_FIX_APPLIED.md — `guilda-dos-mercadores.png``
-- `Workflow\_audit\Media_Organization\MEDIA_EMBED_FIX_APPLIED.md — `halfling.png``
-- `Workflow\_audit\Media_Organization\MEDIA_EMBED_FIX_APPLIED.md — `humano.png``
-- `Workflow\_audit\Media_Organization\MEDIA_EMBED_FIX_APPLIED.md — `igreja-das-chamas.png``
-- `Workflow\_audit\Media_Organization\MEDIA_EMBED_FIX_APPLIED.md — `kaelen.png``
-- `Workflow\_audit\Media_Organization\MEDIA_EMBED_FIX_APPLIED.md — `kenku.png``
-- `Workflow\_audit\Media_Organization\MEDIA_EMBED_FIX_APPLIED.md — `ladrao.png``
-- `Workflow\_audit\Media_Organization\MEDIA_EMBED_FIX_APPLIED.md — `mago.png``
-- `Workflow\_audit\Media_Organization\MEDIA_EMBED_FIX_APPLIED.md — `malakar.png``
-- `Workflow\_audit\Media_Organization\MEDIA_EMBED_FIX_APPLIED.md — `manto-primordial.png``
-- `Workflow\_audit\Media_Organization\MEDIA_EMBED_FIX_APPLIED.md — `mapa-de-nimalia.png``
-- `Workflow\_audit\Media_Organization\MEDIA_EMBED_FIX_APPLIED.md — `mapa-de-nimalis.png``
-- `Workflow\_audit\Media_Organization\MEDIA_EMBED_FIX_APPLIED.md — `mar-da-neblina.png``
-- `Workflow\_audit\Media_Organization\MEDIA_EMBED_FIX_APPLIED.md — `mare-baixa.png``
-- `Workflow\_audit\Media_Organization\MEDIA_EMBED_FIX_APPLIED.md — `mascara-doutor.png``
-- `Workflow\_audit\Media_Organization\MEDIA_EMBED_FIX_APPLIED.md — `med.PNG``
-- `Workflow\_audit\Media_Organization\MEDIA_EMBED_FIX_APPLIED.md — `mestre-odran.jpeg``
-- `Workflow\_audit\Media_Organization\MEDIA_EMBED_FIX_APPLIED.md — `mira.png``
-- `Workflow\_audit\Media_Organization\MEDIA_EMBED_FIX_APPLIED.md — `muralha_dorn.png``
-- `Workflow\_audit\Media_Organization\MEDIA_EMBED_FIX_APPLIED.md — `o-fraturamento.png``
-- `Workflow\_audit\Media_Organization\MEDIA_EMBED_FIX_APPLIED.md — `omnisvera-1.png``
-- `Workflow\_audit\Media_Organization\MEDIA_EMBED_FIX_APPLIED.md — `oric.png``
-- `Workflow\_audit\Media_Organization\MEDIA_EMBED_FIX_APPLIED.md — `os-guardioes-do-veu-cinzento.png``
-- ... mais 102 itens.
+- `Workflow\_audit\Omnisvera\OMNISVERA_FRONTMATTER_FIELD_MATRIX.md — `zz_media/banner-bastardo-de-ferro.png``
+- `Workflow\_audit\Omnisvera\OMNISVERA_FRONTMATTER_FIELD_MATRIX.md — `zz_media/banner-o-corvo-da-mare-baixa.png``
+- `Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md — `zz_media/banner-bastardo-de-ferro.png``
+- `Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md — `zz_media/banner-o-corvo-da-mare-baixa.png``
 
 
 ## Referências de mídia quebradas fora de histórico/auditoria
 
-- `EARTHROPO\01 - Ecos do Mundo Perdido.md — `banner-ecos-do-mundo-perdido.png``
+- Nenhum.
 
 
 ## Possíveis problemas de case-sensitive em mídia
 
-- Nenhum.
+- `Workflow\Legacy\Old Dragon anterior\Legacy - Old Dragon anterior - Mago.md — `zz_media/thumbnails/mago.png` → provável `zz_media\class\mago.png``
+- `Workflow\Reports\latest_vault_audit.md — `elfs.png` → provável `zz_media\races\elfs.png``
+- `Workflow\Reports\latest_vault_audit.md — `med.png` → provável `zz_media\items\med.png``
+- `Workflow\Reports\latest_vault_audit.md — `mira.png` → provável `zz_media\characters\mira.png``
+- `Workflow\Reports\latest_vault_audit.md — `oric.png` → provável `zz_media\characters\oric.png``
+- `Workflow\Reports\latest_vault_audit.md — `zz_media/maps/banner_earthropo.png` → provável `zz_media\covers\banner_earthropo.png``
+- `Workflow\Reports\latest_vault_audit.md — `zz_media/maps/guarda_real_nimalia.png` → provável `zz_media\faction\guarda_real_nimalia.png``
+- `Workflow\Reports\latest_vault_audit.md — `zz_media/misc/cash.png` → provável `zz_media\covers\cash.png``
+- `Workflow\Reports\latest_vault_audit.md — `zz_media/misc/guild.png` → provável `zz_media\covers\guild.png``
+- `Workflow\Reports\latest_vault_audit.md — `zz_media/misc/guild1.png` → provável `zz_media\covers\guild1.png``
+- `Workflow\Reports\latest_vault_audit.md — `zz_media/misc/prop_anao.png` → provável `zz_media\races\prop_anao.png``
+- `Workflow\Reports\latest_vault_audit.md — `zz_media/raziel.png` → provável `zz_media\characters\raziel.png``
+- `Workflow\Reports\latest_vault_audit.md — `zz_media/thumbnails/anao.png` → provável `zz_media\races\anao.png``
+- `Workflow\Reports\latest_vault_audit.md — `zz_media/thumbnails/avenor.png` → provável `zz_media\territories\avenor.png``
+- `Workflow\Reports\latest_vault_audit.md — `zz_media/thumbnails/cassian.png` → provável `zz_media\characters\cassian.png``
+- `Workflow\Reports\latest_vault_audit.md — `zz_media/thumbnails/dukeofd.png` → provável `zz_media\characters\dukeofd.png``
+- `Workflow\Reports\latest_vault_audit.md — `zz_media/thumbnails/eclipse_obsidiana.png` → provável `zz_media\covers\eclipse_obsidiana.png``
+- `Workflow\Reports\latest_vault_audit.md — `zz_media/thumbnails/elarion.png` → provável `zz_media\characters\elarion.png``
+- `Workflow\Reports\latest_vault_audit.md — `zz_media/thumbnails/elf.png` → provável `zz_media\races\elf.png``
+- `Workflow\Reports\latest_vault_audit.md — `zz_media/thumbnails/grisalma.png` → provável `zz_media\items\grisalma.png``
+- `Workflow\Reports\latest_vault_audit.md — `zz_media/thumbnails/med.png` → provável `zz_media\items\med.png``
+- `Workflow\Reports\latest_vault_audit.md — `zz_media/thumbnails/muralha_dorn.png` → provável `zz_media\items\muralha_dorn.png``
+- `Workflow\Reports\latest_vault_audit.md — `zz_media/thumbnails/o_fraturamento.png` → provável `zz_media\covers\o_fraturamento.png``
+- `Workflow\Reports\latest_vault_audit.md — `zz_media/thumbnails/raziel.png` → provável `zz_media\characters\raziel.png``
+- `Workflow\Reports\latest_vault_audit.md — `zz_media/thumbnails/sentinelas_de_leth_valora.png` → provável `zz_media\faction\sentinelas_de_leth_valora.png``
+- `Workflow\_archive\obsolete_review\Home_Jogadores_ARCHIVED.md — `zz_media/thumbnails/avenor.png` → provável `zz_media\territories\avenor.png``
+- `Workflow\_audit\Leaflet_Map_Diagnostics\backups\MAPA DE EARTHROPO.before-map-reset.md — `zz_media/earthropo.png` → provável `zz_media\maps\earthropo.png``
+- `Workflow\_audit\Lore_Structure\LORE_PILLARS_REVIEW.md — `sangue.png` → provável `zz_media\items\sangue.png``
+- `Workflow\_audit\Media_Organization\MEDIA_EMBED_FIX_APPLIED.md — `zz_media/maps/coroa_de_nimalia.png` → provável `zz_media\faction\coroa_de_nimalia.png``
+- `Workflow\_audit\Media_Organization\MEDIA_EMBED_FIX_APPLIED.md — `zz_media/maps/guarda_real_nimalia.png` → provável `zz_media\faction\guarda_real_nimalia.png``
+- `Workflow\_audit\Media_Organization\MEDIA_EMBED_FIX_APPLIED.md — `zz_media/maps/porto_nimalis.png` → provável `zz_media\locations\porto_nimalis.png``
+- `Workflow\_audit\Media_Organization\MEDIA_EMBED_FIX_APPLIED.md — `zz_media/thumbnails/avenor.png` → provável `zz_media\territories\avenor.png``
+- `Workflow\_audit\Media_Organization\MEDIA_EMBED_FIX_APPLIED.md — `zz_media/thumbnails/bosque_sussurrante.png` → provável `zz_media\locations\bosque_sussurrante.png``
+- `Workflow\_audit\Media_Organization\MEDIA_EMBED_FIX_APPLIED.md — `zz_media/thumbnails/culto_dos_sussurrantes.png` → provável `zz_media\faction\culto_dos_sussurrantes.png``
+- `Workflow\_audit\Media_Organization\MEDIA_EMBED_FIX_APPLIED.md — `zz_media/thumbnails/guilda_dos_mercadores.png` → provável `zz_media\faction\guilda_dos_mercadores.png``
+- `Workflow\_audit\Media_Organization\MEDIA_EMBED_FIX_APPLIED.md — `zz_media/thumbnails/mare_baixa.png` → provável `zz_media\locations\mare_baixa.png``
+- `Workflow\_audit\Media_Organization\MEDIA_EMBED_FIX_APPLIED.md — `zz_media/thumbnails/raziel.png` → provável `zz_media\characters\raziel.png``
+- `Workflow\_audit\Media_Organization\MEDIA_EMBED_FIX_APPLIED.md — `zz_media/thumbnails/sentinelas_de_leth_valora.png` → provável `zz_media\faction\sentinelas_de_leth_valora.png``
+- `Workflow\_audit\Media_Organization\MEDIA_EMBED_FIX_APPLIED.md — `zz_media/thumbnails/vale_dourado.png` → provável `zz_media\locations\vale_dourado.png``
+- `Workflow\_audit\Omnisvera\OMNISVERA_DASHBOARD_MAP_SYSTEMS.md — `zz_media/avenor.png` → provável `zz_media\territories\avenor.png``
+- `Workflow\_audit\Omnisvera\OMNISVERA_FRONTMATTER_FIELD_MATRIX.md — `zz_media/avenor.png` → provável `zz_media\territories\avenor.png``
+- `Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md — `zz_media/avenor.png` → provável `zz_media\territories\avenor.png``
+- `Workflow\_audit\Omnisvera\OMNISVERA_MIGRATION_RISK_REGISTER.md — `zz_media/avenor.png` → provável `zz_media\territories\avenor.png``
+- `Workflow\_audit\Omnisvera\OMNISVERA_OBSIDIAN_DEPENDENCY_MAP.md — `zz_media/avenor.png` → provável `zz_media\territories\avenor.png``
+- `Workflow\_audit\Vault_Standardization\LEAFLET_IMAGE_LOAD_RESET_REPORT.md — `zz_media/earthropo.png` → provável `zz_media\maps\earthropo.png``
 
 
 ## Possíveis problemas de case-sensitive fora de histórico/auditoria
@@ -1045,7 +1020,23 @@ Critério: tag com espaço, maiúscula inesperada ou formato arriscado. Tags `Ca
 
 > Não apagar automaticamente. Uma mídia pode ser usada por CSS, plugin, mapa, canvas, nota futura ou referência manual ainda não capturada.
 
-- `smoke.mp3`
+- `zz_media/characters/anciao.png`
+- `zz_media/locations/estrada_antiga.png`
+- `zz_media/locations/forte_abandonado.png`
+- `zz_media/locations/loja_odran.png`
+- `zz_media/locations/porto_real.png`
+- `zz_media/misc/sound.png`
+- `zz_media/smoke.mp3`
+- `zz_media/thumbnails/th_alquimista.png`
+- `zz_media/thumbnails/th_anciao.png`
+- `zz_media/thumbnails/th_antropos.png`
+- `zz_media/thumbnails/th_clerigo.png`
+- `zz_media/thumbnails/th_dragonborn.png`
+- `zz_media/thumbnails/th_guerreiro.png`
+- `zz_media/thumbnails/th_kenku.png`
+- `zz_media/thumbnails/th_ladrao.png`
+- `zz_media/thumbnails/th_mago.png`
+- `zz_media/thumbnails/th_unidade.png`
 
 
 ## Reclassificações sugeridas

@@ -26,7 +26,7 @@ tags:
 # Nome da Religião ou Tradição
 
 > [!NOTE|clean no-i right]+ Símbolo
-> ![[zz_media/maps/banner_earthropo.png|400]]
+> ![[zz_media/covers/banner_earthropo.png|400]]
 
 ## Status
 

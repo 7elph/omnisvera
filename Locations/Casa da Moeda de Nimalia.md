@@ -14,8 +14,8 @@ territory: "[[Nimalia]]"
 region:
 district: Distrito Administrativo / Econômico
 danger_level: Baixo
-thumbnail: zz_media/thumbnails/casa_da_moeda_exterior.png
-cover: zz_media/thumbnails/casa_da_moeda_exterior.png
+thumbnail: zz_media/locations/casa_da_moeda_exterior.png
+cover: zz_media/locations/casa_da_moeda_exterior.png
 info: Instituição responsável pela cunhagem das moedas oficiais de Nimalia.
 description: Casa de cunhagem e controle monetário do Reino de Nimalia.
 chapters: []
@@ -31,7 +31,7 @@ tags:
 # Casa da Moeda de Nimalia
 
 > [!NOTE|clean no-i right]+ Exterior
-> ![[zz_media/thumbnails/casa_da_moeda_exterior.png|400]]
+> ![[zz_media/locations/casa_da_moeda_exterior.png|400]]
 
 > [!world]- SINOPSE PÚBLICA
 > A Casa da Moeda de Nimalia é a instituição responsável pela cunhagem oficial do reino. Ela pode transformar economia, impostos, falsificações e interesses da Coroa em gancho de investigação.

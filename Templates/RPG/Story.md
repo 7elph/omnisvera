@@ -38,7 +38,7 @@ tags:
 > Esta nota representa a versão pública/operacional do capítulo. Bastidores completos, spoilers pesados e decisões internas do mestre devem ficar em [[CAMPANHA/ESTADO_DA_CAMPANHA|Estado da Campanha]].
 
 > [!NOTE|clean no-i right]+ Nome do Capítulo
-> ![[zz_media/maps/banner_earthropo.png|400]]
+> ![[zz_media/covers/banner_earthropo.png|400]]
 
 > [!world]- SINOPSE
 > Escreva aqui a sinopse curta do capítulo, com foco no que a nota precisa comunicar em consulta rápida.

@@ -36,7 +36,7 @@ tags:
 # Antropo
 
 > [!NOTE|clean no-i right]+ Retrato
-> ![[zz_media/misc/antropos.png|400]]
+> ![[zz_media/races/antropos.png|400]]
 
 ## Visão Geral
 

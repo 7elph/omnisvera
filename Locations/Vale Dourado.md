@@ -14,8 +14,8 @@ territory: "[[Nimalia]]"
 region: Interior do Reino de Nimalia
 district:
 danger_level: Baixo
-thumbnail: zz_media/thumbnails/vale_dourado.png
-cover: zz_media/thumbnails/vale_dourado.png
+thumbnail: zz_media/locations/vale_dourado.png
+cover: zz_media/locations/vale_dourado.png
 info: Localização menor do interior de Nimalia, ainda em definição.
 description: Vale ou vila remota associada às fronteiras internas do Reino de Nimalia.
 chapters: []
@@ -29,7 +29,7 @@ tags:
 # Vale Dourado
 
 > [!NOTE|clean no-i right]+ Vale Dourado
-> ![[zz_media/thumbnails/vale_dourado.png|400]]
+> ![[zz_media/locations/vale_dourado.png|400]]
 
 > [!world]- SINOPSE PÚBLICA
 > Vale Dourado é uma localização menor do interior de [[Nimalia]], melhor tratada como vila remota, vale agrícola ou ponto rural de estrada, não como grande território independente.

@@ -17,8 +17,8 @@ class_group: Especialista
 primary_attribute: Inteligência
 level:
 danger_level: Médio
-thumbnail: zz_media/thumbnails/alquimista.png
-cover: zz_media/thumbnails/alquimista.png
+thumbnail: zz_media/class/alquimista.png
+cover: zz_media/class/alquimista.png
 chapters:
   - 00 - O Corvo da Maré Baixa
 tags:
@@ -32,7 +32,7 @@ tags:
 # Alquimista
 
 > [!NOTE|clean no-i right]+ Retrato
-> ![[zz_media/thumbnails/alquimista.png|400]]
+> ![[zz_media/class/alquimista.png|400]]
 
 ## Visão Geral
 

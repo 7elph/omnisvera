@@ -13,7 +13,7 @@ cover: zz_media/locations/casa_da_moeda_interior.png
 # ECONOMIA DE EARTHROPO
 
 > [!NOTE|clean no-i right]+ Moedas de Earthropo  
-> ![[zz_media/misc/cash.png|400]]
+> ![[zz_media/covers/cash.png|400]]
 
 ## Sistema Monetário
 
@@ -84,7 +84,7 @@ Extremamente rara. Utilizada para grandes negócios, tesouros, propriedades e co
 
 > [!infobox]
 > 
-> ![[zz_media/thumbnails/casa_da_moeda_exterior.png|260]]
+> ![[zz_media/locations/casa_da_moeda_exterior.png|260]]
 
 ## Cunhagem
 

@@ -17,8 +17,8 @@ class_group: Divino
 primary_attribute: Sabedoria
 level:
 danger_level: Baixo
-thumbnail: zz_media/thumbnails/clerigo.png
-cover: zz_media/thumbnails/clerigo.png
+thumbnail: zz_media/class/clerigo.png
+cover: zz_media/class/clerigo.png
 chapters: []
 tags:
   - classe
@@ -30,7 +30,7 @@ tags:
 # Clérigo
 
 > [!NOTE|clean no-i right]+ Retrato
-> ![[zz_media/thumbnails/clerigo.png|400]]
+> ![[zz_media/class/clerigo.png|400]]
 
 ## Visão Geral
 

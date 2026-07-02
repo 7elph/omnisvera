@@ -24,7 +24,7 @@
 - [[Maré Baixa]]
 - [[Nimalia]]
 - [[Nimalis]]
-- [[zz_media/maps/porto_nimalis.png]]
+- [[zz_media/locations/porto_nimalis.png]]
 
 ### Notas que apontam para esta nota
 

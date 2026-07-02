@@ -14,8 +14,8 @@ location: "[[Vezemir]]"
 faction:
 level: 1
 danger_level: Médio
-thumbnail: zz_media/thumbnails/muralha_dorn.png
-cover: zz_media/thumbnails/muralha_dorn.png
+thumbnail: zz_media/items/muralha_dorn.png
+cover: zz_media/items/muralha_dorn.png
 chapters:
   - 00 - O Bastardo de Ferro
 hooks:
@@ -33,7 +33,7 @@ tags:
 # Muralha de Dorn
 
 > [!NOTE|clean no-i right]+ Muralha de Dorn
-> ![[zz_media/thumbnails/muralha_dorn.png|300]]
+> ![[zz_media/items/muralha_dorn.png|300]]
 
 > _"Entre o aço e a lenda, há uma muralha. Entre o guerreiro e o fim, há um escudo."_
 

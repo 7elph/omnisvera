@@ -27,7 +27,7 @@
 - [[Maré Baixa]]
 - [[Nimalis]]
 - [[Nobreza de Nimalia]]
-- [[zz_media/thumbnails/guilda_dos_mercadores.png]]
+- [[zz_media/faction/guilda_dos_mercadores.png]]
 
 ### Notas que apontam para esta nota
 

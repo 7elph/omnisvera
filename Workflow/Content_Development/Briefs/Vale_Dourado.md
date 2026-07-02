@@ -22,7 +22,7 @@
 - [[MAPA DE NIMALIA]]
 - [[Nimalia]]
 - [[Nimalis]]
-- [[zz_media/thumbnails/vale_dourado.png]]
+- [[zz_media/locations/vale_dourado.png]]
 
 ### Notas que apontam para esta nota
 

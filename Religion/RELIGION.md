@@ -8,8 +8,8 @@ campaign_status: Em revisão
 visibility: Jogadores
 spoiler_level: light
 gm_secret: false
-thumbnail: zz_media/thumbnails/fe_dos_antigos.png
-cover: zz_media/thumbnails/fe_dos_antigos.png
+thumbnail: zz_media/religion/fe_dos_antigos.png
+cover: zz_media/religion/fe_dos_antigos.png
 info: Índice operacional de religiões, cultos e tradições espirituais de Earthropo.
 description: Religiões públicas, tradições espirituais e crenças em revisão para uso em mesa.
 chapters: []
@@ -24,7 +24,7 @@ tags:
 # Religiões de Earthropo
 
 > [!NOTE|clean no-i right]+ Religiões de Earthropo
-> ![[zz_media/thumbnails/fe_dos_antigos.png|400]]
+> ![[zz_media/religion/fe_dos_antigos.png|400]]
 
 > [!world]- SINOPSE
 > A fé em Earthropo aparece como templo, tradição oral, rito doméstico, culto escondido, memória antiga e disputa política. Nem toda crença é uma igreja organizada; nem toda igreja entende a verdade sobre aquilo que venera.

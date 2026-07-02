@@ -8,8 +8,8 @@ campaign_status: Cânone de trabalho
 visibility: Jogadores
 spoiler_level: light
 gm_secret: false
-thumbnail: zz_media/thumbnails/eclipse_obsidiana.png
-cover: zz_media/thumbnails/eclipse_obsidiana.png
+thumbnail: zz_media/covers/eclipse_obsidiana.png
+cover: zz_media/covers/eclipse_obsidiana.png
 info: Evento histórico associado ao surgimento ou revelação do Véu Cinzento.
 description: Evento antigo em que o sol foi engolido pela escuridão por sete dias e o Véu Cinzento passou a marcar Earthropo.
 chapters: []
@@ -24,7 +24,7 @@ tags:
 # Eclipse de Obsidiana
 
 > [!NOTE|clean no-i right]+ Eclipse de Obsidiana
-> ![[zz_media/thumbnails/eclipse_obsidiana.png|400]]
+> ![[zz_media/covers/eclipse_obsidiana.png|400]]
 
 > [!world]- SINOPSE PÚBLICA
 > O Eclipse de Obsidiana é lembrado como o trauma que dividiu a história recente de Earthropo. Por sete dias e sete noites, o sol teria desaparecido. Quando a luz voltou, o [[Véu Cinzento]] marcava parte do mundo conhecido.

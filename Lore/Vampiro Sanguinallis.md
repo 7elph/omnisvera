@@ -10,7 +10,7 @@ spoiler_level: medium
 gm_secret: true
 created_by: MIA
 thumbnail: zz_media/thumbnails/th_raziel.png
-cover: zz_media/thumbnails/raziel.png
+cover: zz_media/characters/raziel.png
 info: Referência narrativa para a linhagem vampírica ligada ao Clã Sanguinallis.
 description: Consolidação de lore sobre vampiros Sanguinallis, separada da classe Vampiro e da mecânica do Sangue Antigo.
 chapters:
@@ -28,7 +28,7 @@ tags:
 > Nota de referência em desenvolvimento. Esta página existe para consolidar links e separar lore vampírica de regra mecânica.
 
 > [!NOTE|clean no-i right]+ Raziel
-> ![[zz_media/thumbnails/raziel.png|400]]
+> ![[zz_media/characters/raziel.png|400]]
 
 > [!world]- SINOPSE DO MESTRE
 > Vampiro Sanguinallis é o termo usado para o tipo de vampiro ligado ao [[Clã Sanguinallis]], linhagem da qual [[Raziel]] fazia parte antes de sua traição.
