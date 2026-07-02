@@ -40,7 +40,7 @@ tags:
 
 ## O que os Jogadores Sabem
 
-## Segredos do Mestre
+## Encaminhamento para o Estado da Campanha
 
 ## Relações
 

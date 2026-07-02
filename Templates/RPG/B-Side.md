@@ -71,7 +71,7 @@ Explique o papel desta origem na história do personagem e quais elementos dela 
 
 ## Facções Ligadas
 
-## Segredos do Mestre
+## Encaminhamento para o Estado da Campanha
 
 ## Ganchos para a Campanha Atual
 
@@ -79,7 +79,7 @@ Explique o papel desta origem na história do personagem e quais elementos dela 
 
 - Como apresentar:
 - O que os jogadores sabem:
-- O que apenas o mestre sabe:
+- O que manter em aberto no Estado da Campanha:
 - Como entra em cena:
 - Ganchos:
 - Consequências possíveis:

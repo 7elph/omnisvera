@@ -40,7 +40,7 @@ tags:
 
 ## Objetivos Públicos
 
-## Segredos do Mestre
+## Encaminhamento para o Estado da Campanha
 
 ## Relações
 
@@ -50,7 +50,7 @@ tags:
 
 - Como apresentar:
 - O que os jogadores sabem:
-- O que apenas o mestre sabe:
+- O que manter em aberto no Estado da Campanha:
 - Ganchos:
 - Consequências possíveis:
 

@@ -62,7 +62,7 @@ Explique como esta lore afeta a campanha atual, personagens, facções, territó
 - [[Eclipse de Obsidiana]]
 - [[Véu Cinzento]]
 
-## Segredos do Mestre
+## Encaminhamento para o Estado da Campanha
 
 - Verdade ainda não revelada:
 - Versão falsa ou incompleta:
@@ -72,7 +72,7 @@ Explique como esta lore afeta a campanha atual, personagens, facções, territó
 
 - Como apresentar:
 - O que os jogadores sabem:
-- O que apenas o mestre sabe:
+- O que manter em aberto no Estado da Campanha:
 - Como entra em cena:
 - Ganchos:
 - Consequências possíveis:

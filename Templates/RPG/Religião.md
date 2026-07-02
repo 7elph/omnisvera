@@ -72,7 +72,7 @@ Explique onde essa religião pesa: política, povo comum, nobreza, aventureiros,
 - Lore relacionada:
 - Territórios relacionados:
 
-## Segredos do Mestre
+## Encaminhamento para o Estado da Campanha
 
 - Verdade oculta:
 - Contradição doutrinária:
@@ -82,7 +82,7 @@ Explique onde essa religião pesa: política, povo comum, nobreza, aventureiros,
 
 - Como apresentar:
 - O que os jogadores sabem:
-- O que apenas o mestre sabe:
+- O que manter em aberto no Estado da Campanha:
 - Como entra em cena:
 - Ganchos:
 - Consequências possíveis:

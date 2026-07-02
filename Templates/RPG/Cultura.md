@@ -82,7 +82,7 @@ cardSpacing: 4
 
 - Como apresentar:
 - O que os jogadores sabem:
-- O que apenas o mestre sabe:
+- O que manter em aberto no Estado da Campanha:
 - Como entra em cena:
 - Ganchos:
 - Consequências possíveis:

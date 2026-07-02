@@ -74,7 +74,7 @@ Explique como isso pode entrar em cena agora sem revelar tudo de uma vez.
 - [[O Fraturamento]]
 - [[Véu Cinzento]]
 
-## Segredos do Mestre
+## Encaminhamento para o Estado da Campanha
 
 - Verdade oculta:
 - Interpretação errada comum:

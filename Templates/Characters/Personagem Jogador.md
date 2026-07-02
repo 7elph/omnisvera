@@ -70,7 +70,7 @@ SORT file.name ASC
 
 <!-- Informações que os jogadores podem acessar livremente -->
 
-## O que só o mestre sabe
+## Encaminhamento para o Estado da Campanha
 
 <!-- Informações restritas ao Sage -->
 
@@ -148,7 +148,7 @@ SORT file.name ASC
 
 - Como apresentar:
 - O que os jogadores sabem:
-- O que apenas o mestre sabe:
+- O que manter em aberto no Estado da Campanha:
 - Como entra em cena:
 - Ganchos:
 - Consequências possíveis:
