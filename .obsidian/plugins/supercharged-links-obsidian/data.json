@@ -97,18 +97,6 @@
     {
       "type": "tag",
       "name": "",
-      "value": "conclave-dos-errantes",
-      "matchCaseSensitive": false,
-      "match": "exact",
-      "uid": "15ae-9b1f",
-      "selectText": true,
-      "selectAppend": true,
-      "selectPrepend": true,
-      "selectBackground": true
-    },
-    {
-      "type": "tag",
-      "name": "",
       "value": "guilda-dos-mercadores",
       "matchCaseSensitive": false,
       "match": "exact",
@@ -121,7 +109,7 @@
     {
       "type": "tag",
       "name": "",
-      "value": "sentinelas-de-lethvalora",
+      "value": "varkh",
       "matchCaseSensitive": false,
       "match": "exact",
       "uid": "6e9a-b654",
@@ -145,7 +133,7 @@
     {
       "type": "tag",
       "name": "",
-      "value": "mar-da-neblina",
+      "value": "raziel",
       "matchCaseSensitive": false,
       "match": "exact",
       "uid": "287d-312f",
@@ -161,6 +149,18 @@
       "matchCaseSensitive": false,
       "match": "exact",
       "uid": "9cd0-d420",
+      "selectText": true,
+      "selectAppend": true,
+      "selectPrepend": true,
+      "selectBackground": true
+    },
+    {
+      "type": "tag",
+      "name": "",
+      "value": "vezemir",
+      "matchCaseSensitive": false,
+      "match": "exact",
+      "uid": "a4c4-f773",
       "selectText": true,
       "selectAppend": true,
       "selectPrepend": true,

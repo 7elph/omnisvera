@@ -2,8 +2,8 @@
   "autoParse": false,
   "calendars": [
     {
-      "name": "Calendário de Omnisvera (rascunho)",
-      "description": "Estrutura provisória baseada em CALENDAR.md; ainda não constitui cânone definitivo.",
+      "name": "Calendário de Omnisvera",
+      "description": "",
       "id": "ID_2bf89b3b6bcb",
       "showIntercalarySeparately": true,
       "static": {
@@ -161,7 +161,7 @@
       "events": [],
       "categories": [],
       "path": [],
-      "supportInlineEvents": true,
+      "supportInlineEvents": false,
       "inlineEventTag": "#inline-events",
       "dateFormat": "DD-MM-YYYY",
       "seasonal": {
