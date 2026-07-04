@@ -42,7 +42,7 @@ tags:
 > ![[zz_media/covers/banner_ecos_do_mundo_perdido.png|400]]
 
 > [!world]- SINOPSE
-> O primeiro capítulo aproxima [[Vezemir]], [[Varkh Nimalis]] e [[Raziel]] por meio de um incidente em uma estrada secundária entre [[Nimalis]] e a [[Floresta de Avenor]]. Uma caravana sofre um acidente depois de um tremor localizado, frascos de remédios falsificados se quebram e uma passagem artificial surge sob a terra. O que parecia contrabando comum revela sinais de algo antigo sob Earthropo. Cada personagem encontra ali uma pista íntima: o dragão e os Guardiões para Vezemir, os remédios falsos de Odran para Varkh, e marcas de um passado que Raziel reconhece sem compreender totalmente.
+> O primeiro capítulo aproxima [[Vezemir]], [[Varkh Nimalis]] e [[Raziel]] por meio de um incidente em uma estrada secundária entre [[Nimalis]] e a [[Floresta de Avenor]]. Uma caravana aparentemente comum sofre um acidente depois de um tremor localizado, frascos de remédios falsificados se quebram e uma passagem artificial surge sob a terra. O que parecia contrabando comum revela sinais de algo antigo sob Earthropo. Cada personagem encontra ali uma pista íntima: símbolos e sensações ligadas a Avenor para Vezemir, os remédios falsos de Odran para Varkh, e marcas de um passado que Raziel reconhece sem compreender totalmente.
 
 ## Elenco Principal
 
@@ -79,7 +79,7 @@ A função dele não é revelar todo o mundo. É colocar os jogadores diante de 
 - relíquias antigas;
 - falsificações alquímicas;
 - ruínas esquecidas;
-- marcas do [[Véu Cinzento]];
+- sinais de ameaças antigas ainda sem explicação;
 - histórias que sobreviveram como rumor, medo ou superstição;
 - estruturas antigas que ainda funcionam parcialmente sob [[EARTHROPO/EARTHROPO|Earthropo]].
 
@@ -87,7 +87,7 @@ A função dele não é revelar todo o mundo. É colocar os jogadores diante de 
 
 ## Pontos Sustentados pelo Vault
 
-- [[Vezemir]] busca o dragão de colar dourado e respostas sobre os [[Guardiões do Véu Cinzento]].
+- [[Vezemir]] busca o dragão de colar dourado e respostas sobre os antigos guardiões ligados à queda de [[Leth'valora]].
 - [[Varkh Nimalis]] investiga remédios falsos ligados aos métodos de [[Mestre Odran Veyl]].
 - [[Raziel]] despertou após mais de trezentos anos e procura os responsáveis por sua traição.
 - [[Nimalia]] é o reino dos antropos, com [[Nimalis]] como capital.
@@ -103,25 +103,25 @@ Rumores recentes falam de tremores na rota entre [[Nimalis]] e a [[Floresta de A
 Os relatos ainda são confusos:
 
 - alguns viajantes falam de luz azulada saindo de rachaduras na pedra;
-- outros mencionam frascos de remédio falso espalhados entre a carga;
+- outros mencionam frascos de remédio falso espalhados entre a carga, com símbolos que lembram o método de [[Mestre Odran Veyl]], mas parecem adulterados;
 - há quem jure ter ouvido sons metálicos vindos do subterrâneo;
-- a [[Guarda Real de Nimalia]] começou a afastar curiosos;
+- a caravana parecia comercial e comum, sem sinal público de missão oficial;
 - o [[Conclave dos Errantes]] pode ter interesse no caso.
 
 Cada personagem tem uma razão própria para seguir esse rastro.
 
 ---
 
-## Possíveis Pontos de Encontro
+## Estrutura da Sessão
 
-> [!note]
-> Escolher apenas um quando a sessão for preparada. Não canonizar todos ao mesmo tempo.
+- **Abertura:** estrada entre [[Nimalis]] e [[Floresta de Avenor]], com uma caravana comercial acidentada.
+- **Investigação inicial:** frascos quebrados, vítimas assustadas, carga adulterada e marcas que apontam para Odran sem confirmar culpa.
+- **Exploração:** a estrada cede e revela uma passagem artificial antiga.
+- **Primeiro contato:** a [[Unidade DORN-7]] desperta parcialmente, confusa e danificada, sem explicar o mundo.
+- **Pressão final:** a [[Guarda Real de Nimalia]] chega apenas no fim, tentando isolar a área e controlar testemunhas.
+- **Gancho de encerramento:** um mapa fragmentado aponta outro setor enquanto alguém foge com uma prova.
 
-- Uma rota entre [[Nimalis]] e a [[Floresta de Avenor]].
-- Uma investigação sobre remédios falsos que chega perto de território ligado ao Véu.
-- Uma ruína menor conectada indiretamente às [[Ruínas de Valthor]].
-- Um pedido do [[Conclave dos Errantes]] envolvendo uma relíquia ou escolta.
-- Um rumor vindo do [[Mar da Neblina]] que cruza com documentos da Coroa.
+O capítulo deve terminar com impacto e pergunta, não com explicação cosmológica.
 
 ---
 

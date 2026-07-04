@@ -83,8 +83,8 @@ tags:
 | Home dos Jogadores | [[Home]] | consulta player-safe |
 | Capítulos | [[01 - Ecos do Mundo Perdido]] | versão pública/jogável do capítulo |
 | Estado da Campanha | [[ESTADO_DA_CAMPANHA]] | bastidores, frentes e decisões |
-| Fila de Conteúdo | [[CONTENT_CREATION_QUEUE]] | notas que precisam desenvolvimento |
-| Modelo Player-Safe | [[PLAYER_SAFE_ENTITY_MODEL]] | regra de separação entre nota pública e bastidor |
+| Fila de Conteúdo | [[Workflow/Content_Development/CONTENT_CREATION_QUEUE]] | notas que precisam desenvolvimento |
+| Modelo Player-Safe | [[Workflow/Content_Development/PLAYER_SAFE_ENTITY_MODEL]] | regra de separação entre nota pública e bastidor |
 
 ---
 
@@ -134,6 +134,18 @@ tags:
 - **Mistério inicial:** os remédios falsos carregam algo que não é apenas alquimia.
 - **Escalada:** a [[Unidade DORN-7]] desperta parcialmente.
 
+## Próxima Sessão — Decisões Aplicadas
+
+- **Local inicial:** estrada entre [[Nimalis]] e [[Floresta de Avenor]].
+- **Caravana:** parece formada por mercadores comuns; no bastidor, há selo, contrato ou documento que sugere proteção indireta da [[Coroa de Nimalia]].
+- **Remédios falsos:** transporte facilitado por um agente menor da [[Guilda dos Mercadores]]; a pessoa carregando os frascos não sabe o que leva.
+- **Guarda Real:** a [[Guarda Real de Nimalia]] chega no fim da sessão, como pressão, complicação ou cliffhanger.
+- **DORN-7:** a [[Unidade DORN-7]] termina parcialmente ativa, danificada e seguindo os personagens.
+- **Símbolo inicial:** os frascos apontam primeiro para [[Mestre Odran Veyl]], mas há sinais de adulteração.
+- **Tom:** investigação sombria + exploração.
+- **Final ideal:** mapa fragmentado aponta outro setor, enquanto um falsificador escapa com prova importante.
+- **Mistério:** os jogadores entendem pouco no sentido cosmológico, mas percebem a existência de uma rede subterrânea antiga ou estrutura maior.
+
 ### Objetivo de Mesa
 
 Unir os personagens por consequência, não por amizade instantânea.
@@ -144,13 +156,11 @@ Só precisam perceber que estão presos no mesmo problema.
 
 ### Preparar Antes da Sessão
 
-- Definir quem está na caravana.
-- Definir quem transporta os remédios falsos.
 - Escolher três a cinco pistas iniciais.
-- Definir se a [[Guarda Real de Nimalia]] chega antes ou depois do despertar da [[Unidade DORN-7]].
 - Preparar uma descrição curta da estrada cedendo.
 - Preparar a primeira fala da [[Unidade DORN-7]].
-- Decidir se a descoberta chega aos ouvidos da [[Coroa de Nimalia]] já na primeira sessão.
+- Preparar a chegada final da [[Guarda Real de Nimalia]] como pressão política, não como interrupção do primeiro contato.
+- Preparar o mapa fragmentado e a prova que pode escapar com o falsificador.
 
 ---
 
@@ -315,14 +325,13 @@ Se os personagens esconderem a descoberta:
 - precisam lidar com reparos, energia e memória falha da [[Unidade DORN-7]];
 - carregam um segredo que pode colocar todos em risco.
 
-### Decisões Pendentes do Sage
+### Ajustes Práticos Antes da Mesa
 
-- Definir ponto inicial da mesa.
-- Definir quem está na caravana.
-- Definir quem transporta os remédios falsos.
-- Definir qual símbolo antigo aparece nos frascos.
-- Definir se a Guarda Real chega antes ou depois do despertar da [[Unidade DORN-7]].
-- Definir se a [[Unidade DORN-7]] fica consciente no fim da sessão ou desliga temporariamente.
+- Nomear dois ou três mercadores comuns da caravana.
+- Escolher a pessoa que carrega os frascos sem saber a verdade.
+- Definir três pistas iniciais visíveis antes da entrada na passagem.
+- Preparar a chegada final da [[Guarda Real de Nimalia]].
+- Preparar a condição instável da [[Unidade DORN-7]] no encerramento.
 
 ---
 
@@ -482,7 +491,7 @@ Frente estrutural da capital. Define como poder, comércio, segurança, rumor e 
 - [[Guilda dos Mercadores]]
 - [[Culto dos Sussurrantes]]
 - [[Véu Cinzento]]
-- [[A Grande Fratura]]
+- [[O Fraturamento]]
 - [[Criadores]]
 - [[Raziel]]
 - [[Varkh Nimalis]]
@@ -536,7 +545,7 @@ Augustus não quer que o povo descubra isso porque teme que medo vire culto, rev
 
 ### O Pecado da Coroa
 
-Existe a possibilidade de que a [[Coroa de Nimalia]] tenha herdado, ocultado ou se beneficiado de algum pacto antigo ligado ao Véu, aos [[Criadores]], à [[A Grande Fratura]] ou à fundação política de [[Nimalia]].
+Existe a possibilidade de que a [[Coroa de Nimalia]] tenha herdado, ocultado ou se beneficiado de algum pacto antigo ligado ao Véu, aos [[Criadores]], ao [[O Fraturamento]] ou à fundação política de [[Nimalia]].
 
 Augustus pode não ser o autor desse pecado.
 
@@ -1006,7 +1015,7 @@ As notas principais devem mostrar prática, imagem pública e uso em mesa sem co
 - [[Guerreiro]]
 - [[Ladrão]]
 - [[Mago]]
-- [[Paladino]]
+- Paladino
 
 ### Status Atual
 
@@ -1244,102 +1253,60 @@ E a última frase antes do silêncio é:
 
 ---
 
-# SEGREDOS CENTRALIZADOS DE PERSONAGENS E ENTIDADES
+# SEGREDOS E PENDÊNCIAS CENTRALIZADAS
 
 > [!WARNING]
-> Conteúdo movido das notas de personagem e entidade para manter o vault operacionalmente público.
-> Revisar e consolidar depois.
+> Esta área concentra bastidores que não devem aparecer nas notas player-safe. As notas principais devem ficar jogáveis; as respostas pesadas ficam aqui.
 
----
+> [!warning]- Segredos do Mestre
+> - [[Augustus Terra Decimus]] pode saber mais sobre o [[Véu Cinzento]] do que admite publicamente.
+> - A [[Coroa de Nimalia]] pode ter herdado, ocultado ou protegido um segredo antigo.
+> - A relação entre Coroa, Igreja, Véu e [[Criadores]] ainda não deve ser revelada.
+> - A ausência de herdeiro público de Augustus pode ser apenas detalhe político ou sinal de algo maior.
+> - Se Augustus descobrir quem [[Raziel]] é, pode tentar prendê-lo, destruí-lo, usá-lo ou tratá-lo como arquivo vivo.
+> - Se os [[Remédios Falsos de Maré Baixa]] virarem crise pública, a Coroa pode tentar transformar [[Varkh Nimalis]] em bode expiatório.
+> - [[Vezemir]] pode ser visto por forças de poder como arma útil, risco político ou peça livre demais.
+> - [[Elarion Vaelthor]] pode ter escondido documentos, artefatos ou registros em [[Leth'valora]].
+> - A [[Unidade DORN-7]] não é única e pode pertencer a uma rede antiga sob Earthropo.
+> - A ativação da [[Unidade DORN-7]] foi causada por material contaminado presente nos remédios falsificados.
 
-## [[Augustus Terra Decimus]]
+> [!question]- Verdades Possíveis
+> - Augustus é um tirano necessário que protege o reino de ameaça real.
+> - Augustus é manipulado por conselheiros, sacerdotes, nobres ou arquivos incompletos.
+> - A Coroa herdou um pecado antigo que não sabe mais como resolver.
+> - O rei acredita controlar a verdade, mas a própria verdade já foi adulterada.
+> - A linhagem Terra Decimus pode estar ligada a juramento, maldição, pacto ou função de contenção.
+> - O papel de [[Mestre Odran Veyl]] nas falsificações pode ser culpa, omissão, incriminação ou imitação.
+> - A [[Guilda dos Mercadores]] pode estar envolvida por meio de agente menor, facção interna ou rota usada sem autorização total.
 
-- Augustus sabe mais sobre o [[Véu Cinzento]] do que admite publicamente.
-- A [[Coroa de Nimalia]] pode ter herdado, ocultado ou protegido um segredo antigo.
-- A relação entre Coroa, Igreja, Véu e Criadores ainda não deve ser revelada.
-- A ausência de herdeiro público pode ser apenas detalhe político ou sinal de algo maior.
-- Augustus pode estar protegendo o reino de uma ameaça real, mesmo usando métodos autoritários.
-- A [[Igreja das Chamas]] pode não ter controle total sobre ele.
-- A [[Guilda dos Mercadores]] é tolerada por necessidade, não por confiança.
-- O [[Culto dos Sussurrantes]] pode usar o medo da Coroa como ferramenta de recrutamento.
-- Se Augustus descobrir quem [[Raziel]] é, pode tratá-lo como arquivo vivo.
-- Se os remédios falsos virarem crise pública, a Coroa pode usar [[Varkh Nimalis]] como bode expiatório.
-- [[Vezemir]] pode ser visto por Augustus como arma útil ou risco livre demais.
-- A linhagem Terra Decimus pode estar ligada a juramento antigo, maldição, pacto ou função de contenção.
-- O rei pode ser guardião trágico, manipulado, corrompido pela ordem, último selo ou falso leão. Não confirmar sem decisão do Sage.
+> [!abstract]- Mistérios para depois
+> - Natureza real dos [[Criadores]].
+> - Custo narrativo do [[Sangue Antigo]].
+> - Origem completa do [[Véu Cinzento]].
+> - Verdades religiosas reais, interpretadas ou manipuladas.
+> - Relação entre [[O Fraturamento]], [[Eclipse de Obsidiana]] e as estruturas antigas.
+> - O que existe nos outros setores indicados pela [[Unidade DORN-7]].
 
----
-
-## [[Elarion Vaelthor]]
-
-- Sabia muito mais sobre a origem de [[Vezemir]] do que jamais revelou.
-- Possivelmente possuía ligações com os [[Guardiões do Véu Cinzento]].
-- Demonstrava preocupação incomum com a magia que habitava o jovem meio-elfo.
-- Pode ter escondido documentos, artefatos ou registros em [[Leth'valora]].
-- Seu desaparecimento ocorreu pouco tempo após a partida de Vezemir.
-
----
-
-## [[Raziel]]
-
-- O verdadeiro motivo pelo qual o [[Ancião Primordial]] libertou Raziel permanece desconhecido.
-- A heresia rúnica usada como pretexto para sua captura ainda não foi definida.
-- A forma como as [[Adagas de Espectro Fantasma]] permaneceram ligadas a Raziel durante o aprisionamento continua em aberto.
-- Sua relação com o [[Véu Cinzento]] e com os [[Criadores]] ainda não foi confirmada.
-- A reação de estruturas antigas a Raziel deve criar tensão, não explicação completa.
-
----
-
-## [[Unidade DORN-7]]
-
-- A [[Unidade DORN-7]] não é única.
-- Ela fazia parte de uma rede antiga sob Earthropo.
-- A ativação dela foi causada por reagente antigo presente nos remédios falsificados.
-- Ela pode reconhecer traços incomuns em [[Vezemir]], [[Varkh Nimalis]] ou [[Raziel]], mas não deve explicar tudo.
-- Ela não reconhece a Coroa, a Guarda Real ou reinos modernos.
-- Seu mapa fragmentado aponta para outro setor ativo.
-
----
-
-## [[Varkh Nimalis]]
-
-- A identidade de quem está usando os métodos de Odran ainda é desconhecida.
-- O envolvimento de Odran com as falsificações, caso exista, ainda não foi definido.
-- A extensão real da fama de Varkh como assassino pode ser maior ou menor do que os rumores indicam.
-- A classe mecânica definitiva de Varkh ainda precisa ser reconciliada com a ficha sem nome recebida do jogador.
-- O arco de Varkh pode escalar de investigação de rua para crise política se a Coroa intervier.
-
----
-
-## [[Vezemir]]
-
-- [[O Medalhão]] pode estar ligado à verdadeira origem de Vezemir.
-- [[Padre Oric]] desapareceu investigando conexões entre os Guardiões e o dragão de colar dourado.
-- O dragão demonstrou reconhecer Vezemir durante o ataque à vila.
-- [[Elarion Vaelthor]] pode ter ocultado informações sobre seus pais biológicos.
-- Existe a possibilidade de Vezemir descender de alguma linhagem élfica.
-- As relíquias de Vezemir devem reagir em camadas, sem explicar tudo cedo demais.
-
----
-
-# DECISÕES PENDENTES GERAIS DO SAGE
-
-- Definir ponto inicial da mesa.
-- Definir quem está na caravana.
-- Definir quem está transportando os remédios falsos.
-- Definir qual símbolo antigo aparece nos frascos.
-- Definir se a Guarda Real chega antes ou depois do despertar da [[Unidade DORN-7]].
-- Definir quais pistas aparecem no primeiro encontro.
-- Decidir se a [[Unidade DORN-7]] fica consciente no fim da sessão ou desliga temporariamente.
-- Confirmar se Augustus é oficialmente antropo leonino.
-- Definir se “O Leão da Chama” será epíteto canônico.
-- Definir o nível real de conhecimento de Augustus sobre o [[Véu Cinzento]].
-- Definir se a linhagem Terra Decimus possui segredo antigo.
-- Confirmar o papel real de Odran nas falsificações.
-- Confirmar o grau de envolvimento da Guilda e da Coroa nos remédios falsos.
-- Definir a natureza real dos [[Criadores]].
-- Definir o custo narrativo do [[Sangue Antigo]].
-- Definir quais verdades religiosas são reais, interpretadas ou manipuladas.
+> [!todo]- Pendências do Sage
+> **Agora**
+> - Escolher três a cinco pistas iniciais do Capítulo 01.
+> - Preparar a primeira fala da [[Unidade DORN-7]].
+> - Definir qual prova o falsificador leva no final da sessão.
+>
+> **Depois**
+> - Confirmar se Augustus é oficialmente antropo leonino.
+> - Definir se “O Leão da Chama” ou “O Leão de Nimalia” será epíteto canônico.
+> - Confirmar o papel real de Odran nas falsificações.
+> - Confirmar o grau de envolvimento da Guilda e da Coroa nos remédios falsos.
+>
+> **Talvez**
+> - Definir se a linhagem Terra Decimus possui segredo antigo.
+> - Definir se a [[Unidade DORN-7]] permanece consciente por longos períodos ou oscila entre despertares.
+>
+> **Cosmologia / Segredos futuros**
+> - Definir a natureza real dos [[Criadores]].
+> - Definir o custo narrativo do [[Sangue Antigo]].
+> - Definir quais verdades religiosas são reais, interpretadas ou manipuladas.
 
 ---
 

@@ -56,6 +56,20 @@ A força militar oficial do [[Nimalia|Reino de Nimalia]], subordinada à [[Coroa
 
 A Guarda Real mantém a ordem, protege a capital, escolta rotas importantes e atua como braço armado visível da Coroa.
 
+## Papel no Capítulo 01
+
+Na primeira sessão, a Guarda Real deve chegar apenas no fim, depois que os personagens já tiveram contato com o acidente, os frascos adulterados e a [[Unidade DORN-7]].
+
+Seu papel é criar pressão política:
+
+- isolar a área;
+- controlar testemunhas;
+- confiscar carga, mapas ou peças suspeitas;
+- impedir que curiosos entrem na passagem;
+- agir em nome da [[Coroa de Nimalia]] sem compreender totalmente o que foi encontrado.
+
+A Guarda não precisa começar como combate imediato. Ela funciona melhor como autoridade, complicação e ameaça de custódia.
+
 ## Escopo de Atuação
 
 | área | função |
@@ -69,7 +83,7 @@ A Guarda Real mantém a ordem, protege a capital, escolta rotas importantes e at
 
 - **Guarda Real:** 2.000 soldados de elite
 - **Legiões de Nimalia:** 10.000 soldados
-- **Posto Vigilia:** defesa contra o Véu
+- **Posto Vigilia:** defesa contra ameaças fronteiriças especiais
 
 ## Relações
 
@@ -96,6 +110,7 @@ SORT file.name ASC
 - O que os jogadores sabem: é a força militar oficial de Nimalia.
 - Como entra em cena: resposta a incidentes, controle de área, interrogatórios, proteção de autoridades ou disputa de jurisdição com aventureiros.
 - Ganchos: remédios falsos, tremores na estrada, incidentes em Avenor, ordens vindas da capital.
+- No Capítulo 01: usar como pressão final, não como interrupção da primeira interação com DORN-7.
 
 ## Pendências do Sage
 

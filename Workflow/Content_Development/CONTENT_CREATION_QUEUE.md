@@ -1,135 +1,149 @@
 # Fila de Criação de Conteúdo — Omnisvera
 
 > [!NOTE]
-> Arquivo gerado por `scripts/generate_content_queue.py`.
-> Use esta fila para escolher quais notas responder primeiro no `SAGE_CONTENT_INBOX.md`.
+> Esta fila prioriza preparação de mesa. A padronização global continua importante, mas vem depois da próxima sessão.
+>
+> Regra atual do Sage: trabalhar em lotes lógicos de até 10 notas centrais, mantendo notas principais player-safe e segredos pesados no [[CAMPANHA/ESTADO_DA_CAMPANHA]].
 
-## Prioridade Alta
+## P0 — Próxima Sessão
 
-| Nota | Tipo | Subtipo | Motivo | Próxima ação |
-|---|---|---|---|---|
-| [[O Frasco Afogado]] | `location` | `shop` | nota indicada como prioridade inicial; muitas referências internas (8); possui pendências ou marcadores de revisão | Criar brief e responder perguntas do Sage. |
-| [[Maré Baixa]] | `location` | `port` | nota indicada como prioridade inicial; muitas referências internas (33); corpo pode ganhar detalhe jogável | Criar brief e responder perguntas do Sage. |
-| [[Nimalis]] | `location` | `` | nota indicada como prioridade inicial; muitas referências internas (109); possui pendências ou marcadores de revisão | Criar brief e responder perguntas do Sage. |
-| [[Coroa de Nimalia]] | `faction` | `noble_house` | nota indicada como prioridade inicial; muitas referências internas (29); corpo pode ganhar detalhe jogável | Criar brief e responder perguntas do Sage. |
-| [[Varkh Nimalis]] | `character` | `player_character` | nota indicada como prioridade inicial; muitas referências internas (60); possui pendências ou marcadores de revisão | Criar brief e responder perguntas do Sage. |
-| [[Guilda dos Mercadores]] | `faction` | `guild` | nota indicada como prioridade inicial; muitas referências internas (17); corpo pode ganhar detalhe jogável | Criar brief e responder perguntas do Sage. |
-| [[ESTADO_DA_CAMPANHA]] | `story` | `` | nota indicada como prioridade inicial; muitas referências internas (47); possui pendências ou marcadores de revisão | Criar brief e responder perguntas do Sage. |
-| [[Porto de Nimalia]] | `location` | `` | nota indicada como prioridade inicial; muitas referências internas (8); corpo pode ganhar detalhe jogável | Criar brief e responder perguntas do Sage. |
-| [[Raziel]] | `character` | `` | nota indicada como prioridade inicial; muitas referências internas (67); possui pendências ou marcadores de revisão | Criar brief e responder perguntas do Sage. |
-| [[Culto dos Sussurrantes]] | `faction` | `religious` | nota indicada como prioridade inicial; corpo pode ganhar detalhe jogável; possui pendências ou marcadores de revisão | Criar brief e responder perguntas do Sage. |
-| [[Sentinelas de Leth'valora]] | `faction` | `military` | muitas referências internas (10); corpo pode ganhar detalhe jogável; possui pendências ou marcadores de revisão | Criar brief e responder perguntas do Sage. |
-| [[Bosque Sussurrante]] | `location` | `wilderness` | referenciada por outras notas (4); corpo ainda curto; possui pendências ou marcadores de revisão | Criar brief e responder perguntas do Sage. |
-| [[Mestre Odran Veyl]] | `character` | `major_npc` | muitas referências internas (29); corpo pode ganhar detalhe jogável; possui pendências ou marcadores de revisão | Criar brief e responder perguntas do Sage. |
-| [[Guarda Real de Nimalia]] | `faction` | `` | muitas referências internas (11); corpo pode ganhar detalhe jogável; possui pendências ou marcadores de revisão | Criar brief e responder perguntas do Sage. |
-| [[Vale Dourado]] | `location` | `` | muitas referências internas (8); corpo pode ganhar detalhe jogável; possui pendências ou marcadores de revisão | Criar brief e responder perguntas do Sage. |
-| [[Ruínas de Valthor]] | `location` | `ruin` | muitas referências internas (46); corpo pode ganhar detalhe jogável; possui pendências ou marcadores de revisão | Criar brief e responder perguntas do Sage. |
-| [[Elarion Vaelthor]] | `character` | `major_npc` | muitas referências internas (31); possui pendências ou marcadores de revisão; faltam seções jogáveis | Criar brief e responder perguntas do Sage. |
-| [[General Cassian Valerius]] | `character` | `major_npc` | muitas referências internas (8); possui pendências ou marcadores de revisão; faltam seções jogáveis | Criar brief e responder perguntas do Sage. |
-| [[Mira Valen]] | `character` | `major_npc` | muitas referências internas (19); possui pendências ou marcadores de revisão; faltam seções jogáveis | Criar brief e responder perguntas do Sage. |
-| [[Padre Oric]] | `character` | `major_npc` | muitas referências internas (13); possui pendências ou marcadores de revisão; faltam seções jogáveis | Criar brief e responder perguntas do Sage. |
-| [[Vezemir]] | `character` | `player_character` | muitas referências internas (82); possui pendências ou marcadores de revisão; faltam seções jogáveis | Criar brief e responder perguntas do Sage. |
-| [[Clã Sanguinallis]] | `faction` | `` | muitas referências internas (38); possui pendências ou marcadores de revisão; faltam seções jogáveis | Criar brief e responder perguntas do Sage. |
-| [[Conclave dos Errantes]] | `faction` | `` | muitas referências internas (41); corpo pode ganhar detalhe jogável; possui pendências ou marcadores de revisão | Criar brief e responder perguntas do Sage. |
-| [[Rede de Falsificadores de Maré Baixa]] | `faction` | `` | muitas referências internas (8); possui pendências ou marcadores de revisão; faltam seções jogáveis | Criar brief e responder perguntas do Sage. |
-| [[Eclipse de Obsidiana]] | `lore` | `` | muitas referências internas (19); corpo pode ganhar detalhe jogável; possui pendências ou marcadores de revisão | Criar brief e responder perguntas do Sage. |
-| [[O Fraturamento]] | `lore` | `` | muitas referências internas (11); corpo pode ganhar detalhe jogável; possui pendências ou marcadores de revisão | Criar brief e responder perguntas do Sage. |
-| [[Vampiro Sanguinallis]] | `lore` | `` | muitas referências internas (18); corpo pode ganhar detalhe jogável; possui pendências ou marcadores de revisão | Criar brief e responder perguntas do Sage. |
-| [[Igreja das Chamas]] | `lore` | `` | muitas referências internas (13); corpo pode ganhar detalhe jogável; possui pendências ou marcadores de revisão | Criar brief e responder perguntas do Sage. |
-| [[Campos de Earthropo]] | `territory` | `` | muitas referências internas (9); corpo pode ganhar detalhe jogável; possui pendências ou marcadores de revisão | Criar brief e responder perguntas do Sage. |
-| [[Nobreza de Nimalia]] | `faction` | `noble_house` | muitas referências internas (11); corpo pode ganhar detalhe jogável; faltam seções jogáveis | Criar brief e responder perguntas do Sage. |
-| [[Casa da Moeda de Nimalia]] | `location` | `` | referenciada por outras notas (4); corpo pode ganhar detalhe jogável; possui pendências ou marcadores de revisão | Criar brief e responder perguntas do Sage. |
-| [[Fortaleza de Gharok]] | `location` | `` | muitas referências internas (38); corpo pode ganhar detalhe jogável; possui pendências ou marcadores de revisão | Criar brief e responder perguntas do Sage. |
-| [[Augustus Terra Decimus]] | `character` | `` | muitas referências internas (24); corpo pode ganhar detalhe jogável; possui pendências ou marcadores de revisão | Criar brief e responder perguntas do Sage. |
-| [[Lorde Malakar]] | `character` | `` | muitas referências internas (8); possui pendências ou marcadores de revisão; faltam seções jogáveis | Criar brief e responder perguntas do Sage. |
-| [[Ancião Primordial]] | `lore` | `` | muitas referências internas (14); possui pendências ou marcadores de revisão; faltam seções jogáveis | Criar brief e responder perguntas do Sage. |
-| [[Criadores]] | `lore` | `` | muitas referências internas (37); possui pendências ou marcadores de revisão; faltam seções jogáveis | Criar brief e responder perguntas do Sage. |
-| [[Sangue Antigo]] | `lore` | `` | muitas referências internas (27); possui pendências ou marcadores de revisão; faltam seções jogáveis | Criar brief e responder perguntas do Sage. |
-| [[TEMPLATE - Territory]] | `territory` | `region` | corpo ainda curto; possui pendências ou marcadores de revisão; faltam seções jogáveis | Criar brief e responder perguntas do Sage. |
-| [[Leth'valora]] | `location` | `settlement` | muitas referências internas (66); faltam seções jogáveis; marcada como requires_review | Criar brief e responder perguntas do Sage. |
-| [[TEMPLATE - Faction]] | `faction` | `guild` | corpo ainda curto; possui pendências ou marcadores de revisão; marcada como requires_review | Criar brief e responder perguntas do Sage. |
+| Nota | Tipo | Motivo | Próxima ação |
+|---|---|---|---|
+| [[CAMPANHA/ESTADO_DA_CAMPANHA]] | painel do mestre | centraliza decisões, segredos e preparação imediata | manter como cockpit da sessão |
+| [[01 - Ecos do Mundo Perdido]] | story/capítulo | primeira sessão jogável | alinhar cena inicial, pistas e encerramento |
+| [[Unidade DORN-7]] | entidade/constructo | primeiro impacto do Mundo Perdido | usar como presença danificada, limitada e perigosa |
+| [[Varkh Nimalis]] | personagem jogador | ligação direta com os remédios falsos e Odran | entrada clara no incidente |
+| [[Vezemir]] | personagem jogador | ligação com Avenor, Leth'valora e o dragão | entrada emocional sem explicar lore pesada |
+| [[Raziel]] | personagem jogador | reage a estruturas antigas e anomalias | entrada misteriosa sem explicar Sangue Antigo |
+| [[O Frasco Afogado]] | local/loja | origem emocional e investigativa dos remédios falsos | usar como local jogável P0/P1 |
+| [[Remédios Falsos de Maré Baixa]] | lore/investigação | pista material inicial da sessão | manter Odran como pista, não culpa confirmada |
+| [[Guarda Real de Nimalia]] | facção | pressão final da sessão | chegar no fim como autoridade e complicação |
+| [[Augustus Terra Decimus]] | personagem/instituição | peso político da Coroa | manter corpo player-safe e segredos no Estado da Campanha |
 
-## Prioridade Média
+## P1 — Primeiro Arco
 
-| Nota | Tipo | Subtipo | Motivo | Próxima ação |
-|---|---|---|---|---|
-| [[01 - Ecos do Mundo Perdido]] | `story` | `` | referenciada por outras notas (6); possui pendências ou marcadores de revisão; faltam seções jogáveis | Desenvolver após prioridades altas. |
-| [[Manto Primordial do Ancião]] | `item` | `` | muitas referências internas (8); corpo pode ganhar detalhe jogável; possui pendências ou marcadores de revisão | Desenvolver após prioridades altas. |
-| [[Vampiro]] | `race` | `` | muitas referências internas (12); corpo pode ganhar detalhe jogável; possui pendências ou marcadores de revisão | Desenvolver após prioridades altas. |
-| [[Caminho dos Errantes]] | `lore` | `` | corpo pode ganhar detalhe jogável; possui pendências ou marcadores de revisão; faltam seções jogáveis | Desenvolver após prioridades altas. |
-| [[Fé dos Antigos]] | `lore` | `` | corpo pode ganhar detalhe jogável; possui pendências ou marcadores de revisão; faltam seções jogáveis | Desenvolver após prioridades altas. |
-| [[TIMELINE]] | `story` | `` | referenciada por outras notas (7); possui pendências ou marcadores de revisão; faltam seções jogáveis | Desenvolver após prioridades altas. |
-| [[Bairro Nobre]] | `location` | `` | referenciada por outras notas (6); corpo pode ganhar detalhe jogável; faltam seções jogáveis | Desenvolver após prioridades altas. |
-| [[Bairro dos Forasteiros]] | `location` | `district` | corpo pode ganhar detalhe jogável; faltam seções jogáveis; marcada como requires_review | Desenvolver após prioridades altas. |
-| [[CULTURE]] | `lore` | `` | possui pendências ou marcadores de revisão; faltam seções jogáveis; status editorial indica desenvolvimento | Desenvolver após prioridades altas. |
-| [[O Medalhão]] | `item` | `` | muitas referências internas (19); corpo pode ganhar detalhe jogável; possui pendências ou marcadores de revisão | Desenvolver após prioridades altas. |
-| [[Mercado Central]] | `location` | `` | corpo ainda curto; faltam seções jogáveis | Desenvolver após prioridades altas. |
-| [[Véu Cinzento]] | `lore` | `` | muitas referências internas (43); faltam seções jogáveis | Desenvolver após prioridades altas. |
-| [[MAPA DE EARTHROPO]] | `map` | `` | muitas referências internas (10); corpo pode ganhar detalhe jogável; possui pendências ou marcadores de revisão | Desenvolver após prioridades altas. |
-| [[RELIGION]] | `lore` | `` | possui pendências ou marcadores de revisão; faltam seções jogáveis; status editorial indica desenvolvimento | Desenvolver após prioridades altas. |
-| [[Antagonista]] | `character` | `` | corpo pode ganhar detalhe jogável; possui pendências ou marcadores de revisão; faltam seções jogáveis | Desenvolver após prioridades altas. |
-| [[NPC Importante]] | `character` | `` | corpo pode ganhar detalhe jogável; possui pendências ou marcadores de revisão; faltam seções jogáveis | Desenvolver após prioridades altas. |
-| [[Personagem Jogador]] | `character` | `` | corpo pode ganhar detalhe jogável; possui pendências ou marcadores de revisão; faltam seções jogáveis | Desenvolver após prioridades altas. |
-| [[Cultura]] | `lore` | `` | corpo pode ganhar detalhe jogável; possui pendências ou marcadores de revisão; faltam seções jogáveis | Desenvolver após prioridades altas. |
-| [[Fenômeno]] | `lore` | `` | corpo pode ganhar detalhe jogável; possui pendências ou marcadores de revisão; faltam seções jogáveis | Desenvolver após prioridades altas. |
-| [[TEMPLATE - Async Scene]] | `async_scene` | `submitted_scene` | corpo ainda curto; possui pendências ou marcadores de revisão; marcada como requires_review | Desenvolver após prioridades altas. |
-| [[TEMPLATE - Item]] | `item` | `magic_item` | corpo ainda curto; possui pendências ou marcadores de revisão; marcada como requires_review | Desenvolver após prioridades altas. |
-| [[Alquimista]] | `class` | `` | referenciada por outras notas (7); corpo pode ganhar detalhe jogável; possui pendências ou marcadores de revisão | Desenvolver após prioridades altas. |
-| [[00 - O Bastardo de Ferro]] | `story` | `` | possui pendências ou marcadores de revisão; faltam seções jogáveis | Desenvolver após prioridades altas. |
-| [[00 - O Corvo da Maré Baixa]] | `story` | `` | possui pendências ou marcadores de revisão; faltam seções jogáveis | Desenvolver após prioridades altas. |
-| [[Halfling]] | `race` | `` | corpo ainda curto; possui pendências ou marcadores de revisão; status editorial indica desenvolvimento | Desenvolver após prioridades altas. |
-| [[NPC Menor]] | `character` | `` | corpo ainda curto; faltam seções jogáveis | Desenvolver após prioridades altas. |
-| [[B-Side]] | `story` | `` | corpo ainda curto; faltam seções jogáveis | Desenvolver após prioridades altas. |
-| [[Classe]] | `class` | `` | corpo ainda curto; possui pendências ou marcadores de revisão; status editorial indica desenvolvimento | Desenvolver após prioridades altas. |
-| [[Item]] | `item` | `` | corpo ainda curto; possui pendências ou marcadores de revisão; status editorial indica desenvolvimento | Desenvolver após prioridades altas. |
-| [[Magia]] | `spell` | `` | corpo ainda curto; possui pendências ou marcadores de revisão; status editorial indica desenvolvimento | Desenvolver após prioridades altas. |
-| [[Monstro]] | `monster` | `` | corpo ainda curto; possui pendências ou marcadores de revisão; status editorial indica desenvolvimento | Desenvolver após prioridades altas. |
-| [[Quest]] | `quest` | `` | corpo ainda curto; possui pendências ou marcadores de revisão; status editorial indica desenvolvimento | Desenvolver após prioridades altas. |
-| [[Raça]] | `race` | `` | corpo ainda curto; possui pendências ou marcadores de revisão; status editorial indica desenvolvimento | Desenvolver após prioridades altas. |
-| [[Rumor]] | `rumor` | `` | corpo ainda curto; possui pendências ou marcadores de revisão; status editorial indica desenvolvimento | Desenvolver após prioridades altas. |
-| [[CANON]] | `` | `` | muitas referências internas (9); possui pendências ou marcadores de revisão | Desenvolver após prioridades altas. |
-| [[OMNISVERA_SYSTEM_TAXONOMY]] | `` | `` | muitas referências internas (15); possui pendências ou marcadores de revisão | Desenvolver após prioridades altas. |
-| [[OMNISVERA_SYSTEM_TAXONOMY_DECISIONS]] | `` | `` | muitas referências internas (11); possui pendências ou marcadores de revisão | Desenvolver após prioridades altas. |
-| [[Guerreiro]] | `class` | `` | referenciada por outras notas (4); corpo pode ganhar detalhe jogável; possui pendências ou marcadores de revisão | Desenvolver após prioridades altas. |
-| [[Guardiões do Véu Cinzento]] | `faction` | `` | faltam seções jogáveis; status editorial indica desenvolvimento | Desenvolver após prioridades altas. |
-| [[Adagas de Espectro Fantasma]] | `item` | `` | referenciada por outras notas (6); corpo pode ganhar detalhe jogável; possui pendências ou marcadores de revisão | Desenvolver após prioridades altas. |
+| Nota | Tipo | Motivo | Próxima ação |
+|---|---|---|---|
+| [[Maré Baixa]] | local/bairro | origem social de Varkh e falsificações | desenvolver depois do P0 |
+| [[Nimalis]] | local/capital | centro político, urbano e de tensão | criar versão jogável sem enciclopédia |
+| [[Coroa de Nimalia]] | facção | eixo institucional do arco | manter ambígua e player-safe |
+| [[Guilda dos Mercadores]] | facção/guilda | rotas, comércio e possíveis agentes menores | desenvolver sem confirmar vilania total |
+| [[Porto de Nimalia]] | local/porto | entrada de cargas, contrabando e investigação | conectar a Maré Baixa e Guilda |
+| [[Mestre Odran Veyl]] | personagem/NPC | mentor de Varkh e pista dos remédios | desenvolver sem cravar culpa |
+| [[Conclave dos Errantes]] | facção | vínculo de Varkh e rotas de aventura | alinhar função no primeiro arco |
+| [[Floresta de Avenor]] | território/região | região próxima ao início e a Vezemir | manter foco jogável |
+| [[Leth'valora]] | local/ruína/vila destruída | passado de Vezemir | desenvolver em camadas |
 
-## Prioridade Baixa
+## P2 — Mundo / Cosmologia / Futuro
 
-| Nota | Tipo | Subtipo | Motivo | Próxima ação |
-|---|---|---|---|---|
-| [[INDICE_DE_MONSTROS]] | `index` | `` | corpo ainda curto; status editorial indica desenvolvimento | Manter em observação. |
-| [[INDICE_DE_QUESTS]] | `index` | `` | corpo ainda curto; status editorial indica desenvolvimento | Manter em observação. |
-| [[INDICE_DE_RUMORES]] | `index` | `` | corpo ainda curto; status editorial indica desenvolvimento | Manter em observação. |
-| [[00 - As Crônicas de Névoa de Sangue]] | `story` | `` | faltam seções jogáveis | Manter em observação. |
-| [[INDICE_DE_ITENS]] | `index` | `` | corpo pode ganhar detalhe jogável; possui pendências ou marcadores de revisão | Manter em observação. |
-| [[LATEST_NEWS]] | `` | `` | corpo pode ganhar detalhe jogável; possui pendências ou marcadores de revisão | Manter em observação. |
-| [[Humano]] | `race` | `` | corpo pode ganhar detalhe jogável; possui pendências ou marcadores de revisão | Manter em observação. |
-| [[INDICE_DE_MAGIAS]] | `index` | `` | corpo ainda curto; status editorial indica desenvolvimento | Manter em observação. |
-| [[Arquétipo Narrativo]] | `class` | `` | corpo pode ganhar detalhe jogável; possui pendências ou marcadores de revisão | Manter em observação. |
-| [[Classe Base]] | `class` | `` | corpo pode ganhar detalhe jogável; possui pendências ou marcadores de revisão | Manter em observação. |
-| [[Especialização]] | `class` | `` | corpo pode ganhar detalhe jogável; possui pendências ou marcadores de revisão | Manter em observação. |
-| [[00_README_FOR_AI]] | `` | `` | corpo pode ganhar detalhe jogável; possui pendências ou marcadores de revisão | Manter em observação. |
-| [[02_ENTITY_INDEX]] | `` | `` | corpo pode ganhar detalhe jogável; possui pendências ou marcadores de revisão | Manter em observação. |
-| [[03_OPEN_DECISIONS]] | `` | `` | corpo pode ganhar detalhe jogável; possui pendências ou marcadores de revisão | Manter em observação. |
-| [[07_VALIDATION_CHECKLIST]] | `` | `` | corpo pode ganhar detalhe jogável; possui pendências ou marcadores de revisão | Manter em observação. |
-| [[08_DO_NOT_INVENT]] | `` | `` | corpo pode ganhar detalhe jogável; possui pendências ou marcadores de revisão | Manter em observação. |
-| [[LOCAL_ASSISTANT_PROTOCOL]] | `` | `` | corpo pode ganhar detalhe jogável; possui pendências ou marcadores de revisão | Manter em observação. |
-| [[OMNISVERA_CLASS_STANDARD]] | `` | `` | corpo pode ganhar detalhe jogável; possui pendências ou marcadores de revisão | Manter em observação. |
-| [[OMNISVERA_FRONTMATTER_SCHEMA]] | `` | `` | corpo pode ganhar detalhe jogável; possui pendências ou marcadores de revisão | Manter em observação. |
-| [[OMNISVERA_MEDIA_STANDARD]] | `` | `` | corpo pode ganhar detalhe jogável; possui pendências ou marcadores de revisão | Manter em observação. |
-| [[Player Character Template]] | `` | `` | corpo pode ganhar detalhe jogável; possui pendências ou marcadores de revisão | Manter em observação. |
-| [[README]] | `` | `` | possui pendências ou marcadores de revisão | Manter em observação. |
-| [[Home]] | `` | `` | possui pendências ou marcadores de revisão | Manter em observação. |
-| [[Home_Mestre]] | `` | `` | possui pendências ou marcadores de revisão | Manter em observação. |
-| [[LORE]] | `` | `` | corpo ainda curto | Manter em observação. |
-| [[INDICE_DE_LOCAIS]] | `index` | `` | corpo ainda curto | Manter em observação. |
-| [[NOTES]] | `` | `` | corpo ainda curto | Manter em observação. |
-| [[OMNISVERA]] | `` | `` | corpo ainda curto | Manter em observação. |
-| [[INDICE_DE_TERRITORIOS]] | `index` | `` | corpo ainda curto | Manter em observação. |
-| [[AI_CHANGELOG]] | `` | `` | possui pendências ou marcadores de revisão | Manter em observação. |
+| Nota | Tipo | Motivo | Próxima ação |
+|---|---|---|---|
+| [[Criadores]] | lore/cosmologia | mistério profundo | manter para revelação gradual |
+| [[Véu Cinzento]] | lore/fenômeno | segredo estrutural | não expor em notas públicas cedo demais |
+| [[O Fraturamento]] | lore/evento | cosmologia futura | desenvolver após arco inicial |
+| [[Eclipse de Obsidiana]] | lore/evento | passado do mundo | manter como mistério posterior |
+| [[Sangue Antigo]] | lore/mecânica | arco de Raziel | manter controlado pelo Estado da Campanha |
+| [[Ancião Primordial]] | lore/entidade | segredo ligado a Raziel | desenvolver depois |
+| [[Clã Sanguinallis]] | facção/linhagem | arco de Raziel | desenvolver após mesa inicial |
+| [[Fortaleza de Gharok]] | local/fortaleza | destino futuro de Raziel | deixar para arco posterior |
+| [[Ruínas de Valthor]] | local/ruína | passado antigo e exploração | desenvolver depois do P0/P1 |
+| religiões profundas | religião/lore | crenças e verdades ocultas | consolidar em lote próprio |
+| reinos raciais | território/cultura | estrutura geopolítica futura | consolidar depois de Nimalis/Nimalia |
+
+## Backlog Futuro
+
+> [!todo]
+> Itens abaixo não foram descartados; apenas saíram da prioridade imediata.
+
+### Personagens
+
+- [[Elarion Vaelthor]]
+- [[General Cassian Valerius]]
+- [[Mira Valen]]
+- [[Padre Oric]]
+- [[Lorde Malakar]]
+
+### Facções
+
+- [[Sentinelas de Leth'valora]]
+- [[Culto dos Sussurrantes]]
+- [[Nobreza de Nimalia]]
+- [[Rede de Falsificadores de Maré Baixa]]
+- [[Guardiões do Véu Cinzento]]
+
+### Locais e Territórios
+
+- [[Bosque Sussurrante]]
+- [[Vale Dourado]]
+- [[Campos de Earthropo]]
+- [[Casa da Moeda de Nimalia]]
+- [[Bairro Nobre]]
+- [[Bairro dos Forasteiros]]
+- [[Mercado Central]]
+- [[Mar da Neblina]]
+
+### Itens, Classes e Regras
+
+- [[O Medalhão]]
+- [[Manto Primordial do Ancião]]
+- [[Adagas de Espectro Fantasma]]
+- [[Vampiro]]
+- [[Alquimista]]
+- [[Guerreiro]]
+- [[Humano]]
+- [[Halfling]]
+
+### Stories, Rumores e Índices
+
+- [[00 - O Bastardo de Ferro]]
+- [[00 - O Corvo da Maré Baixa]]
+- [[00 - As Crônicas de Névoa de Sangue]]
+- [[B-Side]]
+- [[INDICE_DE_ITENS]]
+- [[INDICE_DE_LOCAIS]]
+- [[INDICE_DE_MAGIAS]]
+- [[INDICE_DE_MONSTROS]]
+- [[INDICE_DE_QUESTS]]
+- [[INDICE_DE_RUMORES]]
+
+### Documentação e Templates
+
+- [[CULTURE]]
+- [[RELIGION]]
+- [[TIMELINE]]
+- [[CANON]]
+- [[LORE]]
+- [[MAPA DE EARTHROPO]]
+- [[TEMPLATE - Territory]]
+- [[TEMPLATE - Faction]]
+- [[TEMPLATE - Async Scene]]
+- [[TEMPLATE - Item]]
+- [[Antagonista]]
+- [[NPC Importante]]
+- [[NPC Menor]]
+- [[Personagem Jogador]]
+- [[Classe]]
+- [[Item]]
+- [[Magia]]
+- [[Monstro]]
+- [[Quest]]
+- [[Raça]]
+- [[Rumor]]
+- [[OMNISVERA_SYSTEM_TAXONOMY]]
+- [[OMNISVERA_SYSTEM_TAXONOMY_DECISIONS]]
+- [[OMNISVERA_FRONTMATTER_SCHEMA]]
+- [[OMNISVERA_MEDIA_STANDARD]]
+- [[OMNISVERA_CLASS_STANDARD]]
+- [[LOCAL_ASSISTANT_PROTOCOL]]
+- [[README]]
+- [[AI_CHANGELOG]]
+- [[LATEST_NEWS]]
+- [[NOTES]]
+- [[OMNISVERA]]
 
 ## Observações
 
-- Prioridade alta não significa que a nota está errada; significa que ela é útil para jogo e merece desenvolvimento.
-- Relatórios, auditorias e arquivos históricos são ignorados pelo gerador.
+- P0 é o lote de mesa imediata.
+- P1 sustenta o primeiro arco depois da sessão inicial.
+- P2 guarda mundo profundo, cosmologia e revelações futuras.
+- Tags antigas em português/ponte ainda precisam de lote técnico separado; não remover tags durante preparação narrativa.

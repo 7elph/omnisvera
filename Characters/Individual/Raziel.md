@@ -115,7 +115,7 @@ A prata impedia sua cura. Sua natureza vampírica o impedia de morrer. O torment
 ### O Acordo no Abismo
 O sangue corrosivo de Raziel enfraqueceu o fundo da prisão ao longo dos séculos. Quando o solo ruiu, ele despencou através de fendas vulcânicas extintas até as cavernas abissais sob as [[Ruínas de Valthor]].
 
-Lá encontrou o Ancião Primordial, uma entidade esquecida que despedaçou as correntes de prata e o alimentou com o Sangue Antigo.
+Lá encontrou o Ancião Primordial, uma entidade esquecida que despedaçou as correntes de prata e o devolveu ao mundo marcado por um poder que Raziel ainda não compreende por completo.
 
 A regeneração foi violenta. Sob a tutela da entidade, Raziel aprendeu a tratar o sangue como extensão da própria alma, moldando-o em armas, névoa e asas escarlates.
 
@@ -134,11 +134,20 @@ A ordem e a posição exata desses confrontos permanecem como estrutura narrativ
 
 ## Situação Atual
 
-Raziel escapou do tormento que deveria aprisioná-lo para sempre. O Sangue Antigo restaurou seu corpo e transformou a hemomancia que já dominava.
+Raziel escapou do tormento que deveria aprisioná-lo para sempre. O poder recebido no abismo restaurou seu corpo e transformou a hemomancia que já dominava.
 
 Sua trajetória atual é movida pela vingança contra Kaelen, Vandor e Lorde Malakar. As circunstâncias que o levarão a encontrar Vezemir e Varkh ainda não foram estabelecidas.
 
 O mundo mudou durante seu aprisionamento. Raziel conhece nomes, juramentos e estruturas de poder que podem já não existir da mesma forma.
+
+---
+
+## Entrada no Capítulo 01
+
+- **Pista inicial:** a passagem sob a estrada parece anterior às estruturas políticas atuais de Earthropo.
+- **Leitura de Raziel:** algo ali soa velho demais, familiar demais ou incompatível demais com o mundo que ele encontra após despertar.
+- **Reação possível:** a [[Unidade DORN-7]] pode registrá-lo como anomalia, assinatura vital instável ou presença fora de parâmetro.
+- **Uso em mesa:** Raziel deve sentir que a descoberta toca eras antigas, sem explicar ainda a origem do poder que o trouxe de volta.
 
 ---
 
@@ -206,7 +215,7 @@ Manipula sangue para atacar, defender-se, curar-se e enfraquecer inimigos.
 Transforma sangue em névoa carmesim para ocultação, confusão e deslocamento narrativo.
 
 **Regeneração Acelerada:**
-Utiliza sua natureza vampírica e o Sangue Antigo para recuperar-se de ferimentos.
+Utiliza sua natureza vampírica e o poder recebido no abismo para recuperar-se de ferimentos.
 
 **Asas Escarlates:**
 Manifestação de sangue solidificado associada ao poder recebido do Ancião Primordial.
@@ -239,7 +248,7 @@ Manifestação de sangue solidificado associada ao poder recebido do Ancião Pri
 
 Raziel possui aproximadamente 1,88 m de altura e a aparência de um humano de 30 anos. Tem cabelos longos e negros, pele pálida e olhos marcados pelo brilho vermelho de sua hemomancia.
 
-Usa couro e placas negras, um manto escuro e as Adagas de Espectro Fantasma. Quando utiliza o Sangue Antigo, névoa e filamentos carmesins se formam ao redor de seu corpo.
+Usa couro e placas negras, um manto escuro e as Adagas de Espectro Fantasma. Quando utiliza seus poderes, névoa e filamentos carmesins se formam ao redor de seu corpo.
 
 ---
 
@@ -259,7 +268,7 @@ _Pendente de consolidação pelo Sage._
 
 - Como apresentar:
 - O que os jogadores sabem:
-- O que manter em aberto no [[ESTADO_DA_CAMPANHA]]: detalhes restritos e decis?es pendentes.
+- O que manter em aberto no [[CAMPANHA/ESTADO_DA_CAMPANHA]]: detalhes restritos e decisões pendentes.
 - Como entra em cena:
 - Ganchos:
 - Consequências possíveis:

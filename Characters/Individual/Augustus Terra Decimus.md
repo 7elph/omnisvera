@@ -420,7 +420,7 @@ Sua idade, sua ausência de sucessão clara e o desgaste de seu governo podem tr
 ## Encaminhamento para o Estado da Campanha
 
 > [!warning]
-> Segredos sobre Augustus, a Coroa, sucessão, arquivos restritos, possíveis verdades ocultas e consequências futuras ficam em [[ESTADO_DA_CAMPANHA]].
+> Segredos sobre Augustus, a Coroa, sucessão, arquivos restritos, possíveis verdades ocultas e consequências futuras ficam em [[CAMPANHA/ESTADO_DA_CAMPANHA]].
 
 ---
 

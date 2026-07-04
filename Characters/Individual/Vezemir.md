@@ -188,6 +188,15 @@ Esperando o momento em que finalmente reencontrará a criatura que destruiu sua 
 
 ---
 
+## Entrada no Capítulo 01
+
+- **Pista inicial:** símbolos, marcas ou sensações na passagem sob a estrada lembram histórias antigas ligadas a Avenor e à queda de [[Leth'valora]].
+- **Leitura de Vezemir:** ele sente que a descoberta toca seu passado, mas não entende a verdade por trás disso.
+- **Motivo pessoal:** qualquer sinal conectado ao dragão de colar dourado, aos antigos guardiões ou à floresta pode tirá-lo do isolamento.
+- **Uso em mesa:** Vezemir deve perceber peso emocional e ameaça concreta, não receber explicação completa.
+
+---
+
 ## Personalidade
 
 **Temperamento:**
@@ -311,7 +320,7 @@ _Pendente de consolidação pelo Sage._
 
 - Como apresentar:
 - O que os jogadores sabem:
-- O que manter em aberto no [[ESTADO_DA_CAMPANHA]]: detalhes restritos e decis?es pendentes.
+- O que manter em aberto no [[CAMPANHA/ESTADO_DA_CAMPANHA]]: detalhes restritos e decisões pendentes.
 - Como entra em cena:
 - Ganchos:
 - Consequências possíveis:

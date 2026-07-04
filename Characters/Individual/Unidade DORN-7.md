@@ -78,6 +78,8 @@ Ligada a estruturas antigas anteriores à organização política atual de Earth
 - reage a materiais contaminados;
 - tenta acessar um núcleo local que não responde;
 - entra em instabilidade ao perceber que o setor foi exposto.
+- não reconhece a Coroa, a Guarda Real ou qualquer autoridade moderna como comando válido;
+- pode seguir os personagens por protocolo, falha de contenção ou necessidade de observação.
 
 ## Ameaça
 
@@ -87,7 +89,9 @@ Ligada a estruturas antigas anteriores à organização política atual de Earth
 
 - Escaneia armas, ferimentos e assinaturas vitais.
 - Reage a materiais contaminados ou instáveis.
-- Pode reconhecer sinais antigos ligados aos [[Criadores]], ao [[Véu Cinzento]] ou a sistemas esquecidos.
+- Pode detectar material médico contaminado.
+- Pode reconhecer sinais antigos sem explicar sua origem.
+- Fala em frases quebradas, registros incompletos e comandos fora de contexto.
 
 ## Mecânicas Pendentes
 
@@ -97,9 +101,11 @@ Ligada a estruturas antigas anteriores à organização política atual de Earth
 
 Primeira evidência concreta de que existem sistemas antigos ainda ativos sob Earthropo.
 
+No Capítulo 01, a Unidade DORN-7 deve permanecer danificada, limitada, instável e perigosa. Ela não é uma companheira totalmente funcional. Se seguir os personagens, faz isso porque reconhece risco de contenção, não aceita autoridade local ou identifica neles a melhor chance de resolver o protocolo ativo.
+
 ## Pendências do Sage
 
-- Definir se a Unidade DORN-7 permanece consciente após o primeiro encontro.
+- Definir por quanto tempo a Unidade DORN-7 permanece consciente entre falhas.
 - Definir se existe imagem própria para thumbnail/capa.
 - Definir se ela será tratada futuramente como criatura, NPC, constructo ou relíquia viva.
 
@@ -114,10 +120,10 @@ Primeira evidência concreta de que existem sistemas antigos ainda ativos sob Ea
 
 - Como apresentar: primeiro como estátua ou máquina morta, depois como presença antiga que tenta entender o mundo.
 - O que os jogadores sabem: algo antigo despertou sob a estrada.
-- O que manter em aberto no [[ESTADO_DA_CAMPANHA]]: detalhes restritos e decis?es pendentes.
+- O que manter em aberto no [[CAMPANHA/ESTADO_DA_CAMPANHA]]: detalhes restritos e decisões pendentes.
 - Como entra em cena: após o acidente da caravana e a ativação da passagem subterrânea.
 - Função em mesa: ser o primeiro sinal concreto de que existem estruturas antigas ainda funcionando sob Earthropo.
-- Função em mesa: dar pistas sem explicar completamente os [[Criadores]], o [[Véu Cinzento]] ou os [[Guardiões do Véu Cinzento]].
+- Função em mesa: dar pistas sem explicar completamente a origem das estruturas antigas.
 - Função em mesa: criar tensão sem começar necessariamente como inimiga.
 
 ## Frases Possíveis

@@ -59,9 +59,6 @@ tags:
 > [!WARNING] Estado canônico
 > Esta nota está em desenvolvimento e depende de confirmação do Sage.
 
-> [!NOTE]
-> Este estabelecimento ainda não possui imagem específica em `zz_media`.
-
 > [!world]- SINOPSE PÚBLICA
 > O Frasco Afogado é uma pequena loja e oficina de alquimia em [[Maré Baixa]], ligada a [[Mestre Odran Veyl]] e à formação de [[Varkh Nimalis]].
 
@@ -93,6 +90,7 @@ A sensação é de que tudo ali foi salvo do lixo antes de virar ferramenta: fra
 - Conectar [[Varkh Nimalis]] ao passado em [[Maré Baixa]].
 - Servir como esconderijo, laboratório ou cena de retorno.
 - Reforçar o tema de alquimia de rua: improviso, necessidade e sobrevivência.
+- Servir como local jogável de investigação sem confirmar culpa de Odran.
 
 ## Pessoas ligadas
 
@@ -113,6 +111,7 @@ A sensação é de que tudo ali foi salvo do lixo antes de virar ferramenta: fra
 - Dizem que alguns frascos antigos ainda têm o símbolo verdadeiro da loja.
 - Dizem que remédios falsos começaram a aparecer depois que alguém copiou marcas e receitas ligadas ao Frasco Afogado.
 - Dizem que a loja guarda um estoque que ninguém encontrou.
+- Dizem que alguém tem comprado ingredientes baratos fingindo trabalhar para Odran.
 
 ## Ganchos de aventura
 
@@ -121,6 +120,7 @@ A sensação é de que tudo ali foi salvo do lixo antes de virar ferramenta: fra
 - Um morador de [[Maré Baixa]] afirma ter visto luz dentro da loja quando ela deveria estar vazia.
 - Ingredientes raros somem do porto e reaparecem em remédios adulterados.
 - Um caderno, recibo ou rótulo antigo pode apontar para a origem da falsificação.
+- Um carregamento vindo da estrada entre [[Nimalis]] e [[Floresta de Avenor]] contém frascos com marca parecida, mas quimicamente corrompida.
 
 ## Pendências para o Sage
 
@@ -137,7 +137,7 @@ A sensação é de que tudo ali foi salvo do lixo antes de virar ferramenta: fra
 
 - Como apresentar: loja estreita, úmida, cheia de frascos, cheiro forte e silêncio desconfiado.
 - O que os jogadores sabem: foi onde Varkh aprendeu com Odran.
-- O que manter em aberto: envolvimento real de Odran, estado atual da loja e origem da falsificação ficam no [[ESTADO_DA_CAMPANHA]].
+- O que manter em aberto: envolvimento real de Odran, estado atual da loja e origem da falsificação ficam no [[CAMPANHA/ESTADO_DA_CAMPANHA]].
 - Como entra em cena: lembrança, investigação, retorno a Maré Baixa, símbolo em frasco falsificado ou contato antigo.
 - Ganchos: símbolo roubado, remédios falsos, antigos alunos, estoque escondido e reputação de Odran.
 - Consequências possíveis: mexer no local pode atrair falsificadores, clientes desesperados, guardas ou rivais do submundo.

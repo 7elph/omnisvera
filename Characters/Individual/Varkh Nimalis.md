@@ -148,6 +148,15 @@ Não busca glória ou redenção. Busca respostas, bons ingredientes, moedas no 
 
 ---
 
+## Entrada no Capítulo 01
+
+- **Pista inicial:** os frascos encontrados na estrada usam marcas que lembram o método de [[Mestre Odran Veyl]].
+- **Leitura de Varkh:** a cópia é boa demais para ser acaso, mas errada demais para ser trabalho limpo de Odran.
+- **Motivo pessoal:** investigar a carga é a chance de proteger o nome do mestre e descobrir quem está usando a reputação do [[O Frasco Afogado]].
+- **Uso em mesa:** Varkh pode identificar adulteração, mistura mal estabilizada, rótulo falso ou assinatura alquímica corrompida.
+
+---
+
 ## Personalidade
 
 **Temperamento:**
@@ -253,7 +262,7 @@ _Pendente de consolidação pelo Sage._
 
 - Como apresentar:
 - O que os jogadores sabem:
-- O que manter em aberto no [[ESTADO_DA_CAMPANHA]]: detalhes restritos e decis?es pendentes.
+- O que manter em aberto no [[CAMPANHA/ESTADO_DA_CAMPANHA]]: detalhes restritos e decisões pendentes.
 - Como entra em cena:
 - Ganchos:
 - Consequências possíveis:
