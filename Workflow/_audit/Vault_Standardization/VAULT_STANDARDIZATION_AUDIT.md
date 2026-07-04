@@ -1,6 +1,6 @@
 # Auditoria Global de Padronização do Vault
 
-Gerado em: 2026-07-04 13:14
+Gerado em: 2026-07-04 13:38
 
 Fonte de padrão: [[Workflow/OMNISVERA_VAULT_STANDARD|OMNISVERA_VAULT_STANDARD]]
 
@@ -12,20 +12,20 @@ Fonte de padrão: [[Workflow/OMNISVERA_VAULT_STANDARD|OMNISVERA_VAULT_STANDARD]]
 
 | métrica | valor |
 |---|---:|
-| notas Markdown auditadas | 472 |
-| notas com frontmatter | 302 |
-| notas sem frontmatter | 170 |
-| YAML/frontmatter parseável | 302 |
+| notas Markdown auditadas | 454 |
+| notas com frontmatter | 294 |
+| notas sem frontmatter | 160 |
+| YAML/frontmatter parseável | 294 |
 | YAML/frontmatter com problema | 0 |
 | campos YAML distintos | 134 |
-| tags distintas | 263 |
+| tags distintas | 260 |
 | tipos detectados | 19 |
 | subtipos detectados | 18 |
-| referências de mídia distintas | 175 |
+| referências de mídia distintas | 158 |
 | mídias em `zz_media` | 120 |
-| imagens/mídias quebradas | 33 |
+| imagens/mídias quebradas | 14 |
 | imagens/mídias quebradas fora de histórico/auditoria | 1 |
-| possíveis problemas de case-sensitive | 46 |
+| possíveis problemas de case-sensitive | 44 |
 | possíveis problemas de case-sensitive fora de histórico/auditoria | 0 |
 | mídias possivelmente órfãs | 7 |
 
@@ -33,34 +33,34 @@ Modo de validação YAML:
 
 | item | ocorrências |
 |---|---:|
-| `simple` | 472 |
+| `simple` | 454 |
 
 
 ## Campos YAML encontrados
 
 | item | ocorrências |
 |---|---:|
-| `tags` | 295 |
-| `NoteIcon` | 291 |
-| `NoteStatus` | 286 |
-| `status` | 286 |
-| `obsidianUIMode` | 285 |
-| `visibility` | 272 |
-| `type` | 269 |
-| `spoiler_level` | 264 |
-| `gm_secret` | 264 |
-| `campaign_status` | 245 |
+| `tags` | 291 |
+| `NoteIcon` | 287 |
+| `NoteStatus` | 282 |
+| `status` | 282 |
+| `obsidianUIMode` | 281 |
+| `visibility` | 269 |
+| `type` | 266 |
+| `spoiler_level` | 261 |
+| `gm_secret` | 261 |
+| `campaign_status` | 242 |
 | `chapters` | 229 |
 | `created_by` | 204 |
 | `rumors` | 139 |
 | `hooks` | 138 |
-| `cover` | 136 |
+| `cover` | 133 |
 | `source_system` | 122 |
 | `item_type` | 121 |
 | `item_family` | 120 |
 | `item_category` | 120 |
 | `purchase_status` | 120 |
-| `thumbnail` | 116 |
+| `thumbnail` | 115 |
 | `source_book` | 114 |
 | `source_section` | 114 |
 | `source_table` | 113 |
@@ -68,16 +68,16 @@ Modo de validação YAML:
 | `origin_fit` | 113 |
 | `price_po` | 103 |
 | `territory` | 87 |
-| `location` | 84 |
+| `location` | 83 |
 | `weight_kg` | 77 |
 | `mechanical_effect` | 74 |
 | `description` | 62 |
-| `faction` | 62 |
+| `faction` | 61 |
 | `info` | 55 |
 | `danger_level` | 52 |
 | `aliases` | 48 |
 | `name` | 41 |
-| `region` | 39 |
+| `region` | 36 |
 | `size_category` | 34 |
 | `damage` | 34 |
 | `damage_type` | 34 |
@@ -90,36 +90,36 @@ Modo de validação YAML:
 | `critical` | 27 |
 | `kit_membership` | 25 |
 | `origin` | 24 |
-| `religion` | 21 |
 | `chapter` | 20 |
 | `class` | 19 |
 | `race` | 19 |
 | `role` | 19 |
 | `revealed_in` | 17 |
+| `religion` | 17 |
 | `district` | 16 |
 | `leader` | 15 |
-| `cssclasses` | 14 |
 | `related_factions` | 13 |
 | `faith` | 13 |
 | `arcs` | 13 |
 | `related_characters` | 12 |
 | `function` | 11 |
 | `rules_status` | 11 |
-| `population` | 11 |
 | `related_items` | 11 |
 | `system` | 10 |
 | `class_group` | 10 |
 | `primary_attribute` | 10 |
+| `cssclasses` | 10 |
 | `armor_bonus` | 10 |
 | `movement_penalty` | 10 |
 | `max_dex_bonus` | 10 |
 | `owner` | 9 |
-| `Alignment` | 8 |
-| `Government` | 8 |
-| `politics` | 8 |
-| `size` | 8 |
-| `exports` | 8 |
-| `imports` | 8 |
+| `population` | 8 |
+| `portrait` | 8 |
+| `reload` | 7 |
+| `characters` | 6 |
+| `base_item` | 6 |
+| `Alignment` | 5 |
+| `Government` | 5 |
 
 
 ## Tags encontradas
@@ -131,7 +131,7 @@ Modo de validação YAML:
 | `compra` | 114 |
 | `equipamento` | 113 |
 | `capitulo01` | 67 |
-| `earthropo` | 45 |
+| `earthropo` | 44 |
 | `origem-vezemir` | 36 |
 | `armas` | 34 |
 | `origem-varkh` | 33 |
@@ -146,8 +146,8 @@ Modo de validação YAML:
 | `bside` | 19 |
 | `local` | 19 |
 | `audit` | 18 |
-| `nimalia` | 17 |
 | `origem` | 16 |
+| `nimalia` | 15 |
 | `npc` | 13 |
 | `padronizacao` | 13 |
 | `omnisvera` | 12 |
@@ -167,21 +167,19 @@ Modo de validação YAML:
 | `race` | 10 |
 | `vampiro` | 9 |
 | `materiais-e-magia` | 9 |
-| `territory` | 9 |
 | `home` | 8 |
 | `alquimia-e-especiais` | 8 |
 | `item-especial` | 8 |
-| `territorio` | 8 |
 | `npc-importante` | 7 |
 | `sanguinallis` | 7 |
 | `varkh` | 7 |
-| `title` | 7 |
-| `map` | 7 |
+| `territory` | 7 |
 | `conclave-dos-errantes` | 6 |
 | `antagonista` | 6 |
 | `avenor` | 6 |
 | `distrito` | 6 |
 | `bairro` | 6 |
+| `territorio` | 6 |
 | `antropo` | 5 |
 | `coroa-de-nimalia` | 5 |
 | `varkh-item` | 5 |
@@ -195,6 +193,7 @@ Modo de validação YAML:
 | `humano` | 4 |
 | `jogador` | 4 |
 | `kenku` | 4 |
+| `title` | 4 |
 | `veu-cinzento` | 4 |
 | `comercio` | 4 |
 | `mare-baixa` | 4 |
@@ -203,6 +202,7 @@ Modo de validação YAML:
 | `propriedade` | 4 |
 | `bebida` | 4 |
 | `servico-magico` | 4 |
+| `map` | 4 |
 | `report` | 4 |
 | `legacy` | 4 |
 | `rules-reference` | 4 |
@@ -227,7 +227,6 @@ Modo de validação YAML:
 | `material-especial` | 3 |
 | `vezemir-item` | 3 |
 | `anao` | 3 |
-| `capital` | 3 |
 | `criadores` | 3 |
 | `paladino` | 2 |
 | `guarda-real-de-nimalia` | 2 |
@@ -246,6 +245,7 @@ Modo de validação YAML:
 | `armadura-pesada` | 2 |
 | `ferramenta-de-ladrao` | 2 |
 | `recipiente` | 2 |
+| `escrita` | 2 |
 
 
 ## Auditoria detalhada de tags
@@ -254,11 +254,11 @@ Modo de validação YAML:
 
 | item | ocorrências |
 |---|---:|
-| `campaign_specific` | 734 |
-| `unknown` | 376 |
-| `official` | 265 |
+| `campaign_specific` | 723 |
+| `unknown` | 374 |
+| `official` | 263 |
 | `legacy_allowed` | 175 |
-| `hybrid` | 108 |
+| `hybrid` | 106 |
 
 
 ### Tags oficiais Omnisvera já usadas
@@ -273,7 +273,7 @@ Modo de validação YAML:
 - `lore` — 24 nota(s). Exemplos: `CALENDAR.md`, `CULTURE.md`, `EARTHROPO\EARTHROPO.md`
 - `race` — 10 nota(s). Exemplos: `Races\Antropo.md`, `Races\Anão.md`, `Races\Dragonborn.md`
 - `religion` — 5 nota(s). Exemplos: `Religion\Caminho dos Errantes.md`, `Religion\Fé dos Antigos.md`, `Religion\Igreja das Chamas.md`
-- `territory` — 9 nota(s). Exemplos: `MAPA DE EARTHROPO.md`, `MAPA DE NIMALIA.md`, `Templates\TEMPLATE - Territory.md`
+- `territory` — 7 nota(s). Exemplos: `MAPA DE EARTHROPO.md`, `MAPA DE NIMALIA.md`, `Templates\TEMPLATE - Territory.md`
 - `workflow` — 28 nota(s). Exemplos: `NOTES.md`, `Workflow\_audit\Character_Standardization\CHARACTERS_INDIVIDUAL_STANDARDIZATION_REPORT.md`, `Workflow\_audit\Cleanup\DELETION_CANDIDATES_CURRENT_REVIEW.md`
 
 ### Tags legacy ou `Category/*` detectadas
@@ -300,7 +300,7 @@ Modo de validação YAML:
 - `personagem` → `character` — 19 nota(s). Exemplos: `Characters\Individual\Augustus Terra Decimus.md`, `Characters\Individual\Dragão de Colar Dourado.md`, `Characters\Individual\Elarion Vaelthor.md`
 - `raca` → `race` — 11 nota(s). Exemplos: `Races\Antropo.md`, `Races\Anão.md`, `Races\Dragonborn.md`
 - `religiao` → `religion` — 5 nota(s). Exemplos: `Religion\Caminho dos Errantes.md`, `Religion\Fé dos Antigos.md`, `Religion\Igreja das Chamas.md`
-- `territorio` → `territory` — 8 nota(s). Exemplos: `MAPA DE EARTHROPO.md`, `MAPA DE NIMALIA.md`, `Territories\Campos de Earthropo.md`
+- `territorio` → `territory` — 6 nota(s). Exemplos: `MAPA DE EARTHROPO.md`, `MAPA DE NIMALIA.md`, `Territories\Campos de Earthropo.md`
 
 ### Tags fora do padrão oficial ou desconhecidas
 
@@ -328,7 +328,6 @@ Modo de validação YAML:
 - `especializacao` — 1 nota(s). Exemplos: `Templates\Classes\Especialização.md`
 - `falecido` — 1 nota(s). Exemplos: `Characters\Individual\Mira Valen.md`
 - `ferramenta` — 10 nota(s). Exemplos: `Items\03 Kits e Ferramentas\Apito.md`, `Items\03 Kits e Ferramentas\Arpéu.md`, `Items\03 Kits e Ferramentas\Cadeado.md`
-- `force` — 1 nota(s). Exemplos: `Workflow\Legacy\Disgraceland\.trash\City Forces\Blueforce.md`
 - `fortificacao` — 2 nota(s). Exemplos: `Items\05 Propriedades e Montarias\Castelo.md`, `Items\05 Propriedades e Montarias\Forte.md`
 - `halfling` — 1 nota(s). Exemplos: `Races\Halfling.md`
 - `hemomante` — 1 nota(s). Exemplos: `Characters\Individual\Raziel.md`
@@ -341,7 +340,6 @@ Modo de validação YAML:
 - `mascara` — 1 nota(s). Exemplos: `Items\Máscara de Médico da Peste de Varkh.md`
 - `mentor` — 1 nota(s). Exemplos: `Characters\Individual\Elarion Vaelthor.md`
 - `mestre` — 1 nota(s). Exemplos: `CAMPANHA\ESTADO_DA_CAMPANHA.md`
-- `military` — 1 nota(s). Exemplos: `Workflow\Legacy\Disgraceland\.trash\City Forces\Blueforce.md`
 - `montaria` — 2 nota(s). Exemplos: `Items\05 Propriedades e Montarias\Cavalo de guerra.md`, `Items\05 Propriedades e Montarias\Cavalo de montaria.md`
 - `municao` — 3 nota(s). Exemplos: `Items\01 Armas\Dardo x20.md`, `Items\01 Armas\Flecha improvisada.md`, `Items\01 Armas\Flecha x20.md`
 - `outline` — 1 nota(s). Exemplos: `Workflow\OUTLINES.md`
@@ -380,8 +378,8 @@ Modo de validação YAML:
 | `class` | 10 |
 | `race` | 10 |
 | `story` | 8 |
-| `map` | 6 |
 | `territory` | 5 |
+| `map` | 3 |
 | `quest` | 2 |
 | `rumor` | 2 |
 | `rule` | 1 |
@@ -505,19 +503,19 @@ Modo de validação YAML:
 - `Workflow\_audit\Vault_Standardization\FRONTMATTER_MINIMUM_APPLIED_C1B_LOCATIONS.md`
 - `Workflow\_audit\Vault_Standardization\FRONTMATTER_MINIMUM_APPLIED_C1C_FACTIONS.md`
 - `Workflow\_audit\Vault_Standardization\FRONTMATTER_MINIMUM_PLAN.md`
-- `Workflow\_audit\Vault_Standardization\LEAFLET_ID_ALIGNMENT_FIX_REPORT.md`
-- `Workflow\_audit\Vault_Standardization\LEAFLET_IMAGE_LOAD_RESET_REPORT.md`
-- `Workflow\_audit\Vault_Standardization\LEAFLET_MAP_DIAGNOSTIC_REPORT.md`
-- `Workflow\_audit\Vault_Standardization\LEAFLET_MAP_FIX_REPORT.md`
 - `Workflow\_audit\Vault_Standardization\TAG_NORMALIZATION_APPLIED.md`
 - `Workflow\_audit\Vault_Standardization\TAG_NORMALIZATION_IMPACT.md`
 - `Workflow\_audit\Vault_Standardization\TAG_NORMALIZATION_MAP.md`
 - `Workflow\_audit\Vault_Standardization\TAG_NORMALIZATION_PLAN.md`
 - `Workflow\_audit\Vault_Standardization\VAULT_STANDARDIZATION_AUDIT.md`
+- `Workflow\_audit\Workflow_Cleanup\WORKFLOW_DELETE_REPORT.md`
 - `Workflow\AI_CHANGELOG.md`
 - `Workflow\AI_CONTEXT\00_README_FOR_AI.md`
 - `Workflow\AI_CONTEXT\01_CANON_SUMMARY.md`
-- ... mais 103 itens.
+- `Workflow\AI_CONTEXT\02_ENTITY_INDEX.md`
+- `Workflow\AI_CONTEXT\03_OPEN_DECISIONS.md`
+- `Workflow\AI_CONTEXT\04_MEDIA_RULES.md`
+- ... mais 88 itens.
 
 
 ## Notas sem frontmatter
@@ -605,15 +603,12 @@ Modo de validação YAML:
 - `Workflow\_audit\Vault_Standardization\FRONTMATTER_MINIMUM_APPLIED_C1B_LOCATIONS.md`
 - `Workflow\_audit\Vault_Standardization\FRONTMATTER_MINIMUM_APPLIED_C1C_FACTIONS.md`
 - `Workflow\_audit\Vault_Standardization\FRONTMATTER_MINIMUM_PLAN.md`
-- `Workflow\_audit\Vault_Standardization\LEAFLET_ID_ALIGNMENT_FIX_REPORT.md`
-- `Workflow\_audit\Vault_Standardization\LEAFLET_IMAGE_LOAD_RESET_REPORT.md`
-- `Workflow\_audit\Vault_Standardization\LEAFLET_MAP_DIAGNOSTIC_REPORT.md`
-- `Workflow\_audit\Vault_Standardization\LEAFLET_MAP_FIX_REPORT.md`
 - `Workflow\_audit\Vault_Standardization\TAG_NORMALIZATION_APPLIED.md`
 - `Workflow\_audit\Vault_Standardization\TAG_NORMALIZATION_IMPACT.md`
 - `Workflow\_audit\Vault_Standardization\TAG_NORMALIZATION_MAP.md`
 - `Workflow\_audit\Vault_Standardization\TAG_NORMALIZATION_PLAN.md`
 - `Workflow\_audit\Vault_Standardization\VAULT_STANDARDIZATION_AUDIT.md`
+- `Workflow\_audit\Workflow_Cleanup\WORKFLOW_DELETE_REPORT.md`
 - `Workflow\AI_CHANGELOG.md`
 - `Workflow\AI_CONTEXT\00_README_FOR_AI.md`
 - `Workflow\AI_CONTEXT\01_CANON_SUMMARY.md`
@@ -645,7 +640,10 @@ Modo de validação YAML:
 - `Workflow\Content_Development\Briefs\Guarda_Real_de_Nimalia.md`
 - `Workflow\Content_Development\Briefs\Guilda_dos_Mercadores.md`
 - `Workflow\Content_Development\Briefs\Mare_Baixa.md`
-- ... mais 50 itens.
+- `Workflow\Content_Development\Briefs\Mestre_Odran_Veyl.md`
+- `Workflow\Content_Development\Briefs\Nimalis.md`
+- `Workflow\Content_Development\Briefs\O_Frasco_Afogado.md`
+- ... mais 40 itens.
 
 
 ## Notas sem `subtype`
@@ -752,7 +750,7 @@ Modo de validação YAML:
 - `Items\03 Kits e Ferramentas\Pé de cabra.md`
 - `Items\03 Kits e Ferramentas\Ração de viagem.md`
 - `Items\03 Kits e Ferramentas\Rede.md`
-- ... mais 344 itens.
+- ... mais 326 itens.
 
 
 ## Notas faltando campos Omnisvera mínimos
@@ -859,7 +857,7 @@ Campos mínimos auditados: `type`, `subtype`, `work_status`, `canon_status`, `vi
 - `Items\03 Kits e Ferramentas\Pé de cabra.md — faltando: canon_status, requires_review, subtype, work_status`
 - `Items\03 Kits e Ferramentas\Ração de viagem.md — faltando: canon_status, requires_review, subtype, work_status`
 - `Items\03 Kits e Ferramentas\Rede.md — faltando: canon_status, requires_review, subtype, work_status`
-- ... mais 174 itens.
+- ... mais 166 itens.
 
 
 ## YAML/frontmatter com problema
@@ -930,15 +928,13 @@ Campos mínimos auditados: `type`, `subtype`, `work_status`, `canon_status`, `vi
   - `Religion\Igreja das Chamas.md`
   - `Religion\RELIGION.md`
   - `Templates\RPG\Religião.md`
-- `territory/territorio` em 8 nota(s). Exemplos:
+- `territory/territorio` em 6 nota(s). Exemplos:
   - `MAPA DE EARTHROPO.md`
   - `MAPA DE NIMALIA.md`
   - `Territories\Campos de Earthropo.md`
   - `Territories\Floresta de Avenor.md`
   - `Territories\Mar da Neblina.md`
   - `Territories\Nimalia.md`
-  - `Workflow\_audit\Leaflet_Map_Diagnostics\backups\MAPA DE EARTHROPO.before-map-reset.md`
-  - `Workflow\_audit\Leaflet_Map_Diagnostics\backups\MAPA DE NIMALIA.before-map-reset.md`
 
 ## Tags possivelmente fora do padrão de formato
 
@@ -949,23 +945,6 @@ Critério: tag com espaço, maiúscula inesperada ou formato arriscado. Tags `Ca
 ## Referências de mídia quebradas
 
 - `Characters\Individual\Mestre Odran Veyl.md — `zz_media/characters/th_mestre_odran.jpeg``
-- `Workflow\Legacy\Disgraceland\.trash\!Ep01 - The Black Marauder\Act 01\A1-Scene 01.md — `th_abel.png``
-- `Workflow\Legacy\Disgraceland\.trash\!Ep01 - The Black Marauder\Act 01\A1-Scene 01.md — `th_jd.png``
-- `Workflow\Legacy\Disgraceland\.trash\!Ep01 - The Black Marauder\Act 01\A1-Scene 01.md — `th_katie.png``
-- `Workflow\Legacy\Disgraceland\.trash\!Ep01 - The Black Marauder\Act 01\A1-Scene 01.md — `th_lj.png``
-- `Workflow\Legacy\Disgraceland\.trash\!Ep01 - The Black Marauder\Act 01\A1-Scene 01.md — `th_mark.png``
-- `Workflow\Legacy\Disgraceland\.trash\!Ep01 - The Black Marauder\Act 01\A1-Scene 01.md — `th_neema.png``
-- `Workflow\Legacy\Disgraceland\.trash\!Ep01 - The Black Marauder\Act 01\A1-Scene 01.md — `th_rod.png``
-- `Workflow\Legacy\Disgraceland\.trash\!Ep01 - The Black Marauder\Act 01\A1-Scene 01.md — `th_sel.png``
-- `Workflow\Legacy\Disgraceland\.trash\!Ep01 - The Black Marauder\Act 01\A1-Scene 02.md — `th_ew.png``
-- `Workflow\Legacy\Disgraceland\.trash\!Ep01 - The Black Marauder\Act 01\A1-Scene 02.md — `th_rott.png``
-- `Workflow\Legacy\Disgraceland\.trash\!Ep01 - The Black Marauder\Act 01\A1-Scene 03.md — `th_ew.png``
-- `Workflow\Legacy\Disgraceland\.trash\!Ep01 - The Black Marauder\Act 01\A1-Scene 03.md — `th_rott.png``
-- `Workflow\Legacy\Disgraceland\.trash\Call Out Boxes\Call Out - Left Section.md — `z_Assets/Misc/ImagePlaceholder.png``
-- `Workflow\Legacy\Disgraceland\.trash\Call Out Boxes\Call Out - Right Section.md — `z_Assets/Misc/ImagePlaceholder.png``
-- `Workflow\Legacy\Disgraceland\.trash\City Forces\Blueforce.md — `1lg2.png``
-- `Workflow\Legacy\Disgraceland\.trash\City Forces\Blueforce.md — `bf.png``
-- `Workflow\Legacy\Disgraceland\.trash\City Forces\Blueforce.md — `blueforce.png``
 - `Workflow\Legacy\Old Dragon anterior\Legacy - Old Dragon anterior - Clérigo.md — `zz_media/clérigo.png``
 - `Workflow\Legacy\Old Dragon anterior\Legacy - Old Dragon anterior - Homem de Armas.md — `zz_media/mestre de armas.png``
 - `Workflow\Legacy\Old Dragon anterior\Legacy - Old Dragon anterior - Ladrão.md — `zz_media/ladrão.png``
@@ -975,8 +954,6 @@ Critério: tag com espaço, maiúscula inesperada ou formato arriscado. Tags `Ca
 - `Workflow\Reports\latest_vault_audit.md — `t8.png``
 - `Workflow\Reports\latest_vault_audit.md — `w.png``
 - `Workflow\Reports\latest_vault_audit.md — `zz_media/lyladuke.png``
-- `Workflow\_audit\Leaflet_Map_Diagnostics\backups\MAPA DE NIMALIA.before-map-reset.md — `zz_media/mapa-de-nimalia.png``
-- `Workflow\_audit\Leaflet_Map_Diagnostics\backups\MAPA DE NIMALIS.before-map-reset.md — `zz_media/mapa-de-nimalis.png``
 - `Workflow\_audit\Omnisvera\OMNISVERA_FRONTMATTER_FIELD_MATRIX.md — `zz_media/banner-bastardo-de-ferro.png``
 - `Workflow\_audit\Omnisvera\OMNISVERA_FRONTMATTER_FIELD_MATRIX.md — `zz_media/banner-o-corvo-da-mare-baixa.png``
 - `Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md — `zz_media/banner-bastardo-de-ferro.png``
@@ -1017,7 +994,6 @@ Critério: tag com espaço, maiúscula inesperada ou formato arriscado. Tags `Ca
 - `Workflow\Reports\latest_vault_audit.md — `zz_media/thumbnails/sentinelas_de_leth_valora.png` → provável `zz_media\faction\sentinelas_de_leth_valora.png``
 - `Workflow\Reports\latest_vault_audit.md — `zz_media/thumbnails/vezemir.png` → provável `zz_media\characters\vezemir.png``
 - `Workflow\_archive\obsolete_review\Home_Jogadores_ARCHIVED.md — `zz_media/thumbnails/avenor.png` → provável `zz_media\territories\avenor.png``
-- `Workflow\_audit\Leaflet_Map_Diagnostics\backups\MAPA DE EARTHROPO.before-map-reset.md — `zz_media/earthropo.png` → provável `zz_media\maps\earthropo.png``
 - `Workflow\_audit\Lore_Structure\LORE_PILLARS_REVIEW.md — `sangue.png` → provável `zz_media\items\sangue.png``
 - `Workflow\_audit\Media_Organization\MEDIA_EMBED_FIX_APPLIED.md — `zz_media/maps/coroa_de_nimalia.png` → provável `zz_media\faction\coroa_de_nimalia.png``
 - `Workflow\_audit\Media_Organization\MEDIA_EMBED_FIX_APPLIED.md — `zz_media/maps/guarda_real_nimalia.png` → provável `zz_media\faction\guarda_real_nimalia.png``
@@ -1035,7 +1011,6 @@ Critério: tag com espaço, maiúscula inesperada ou formato arriscado. Tags `Ca
 - `Workflow\_audit\Omnisvera\OMNISVERA_MEDIA_REFERENCE_MAP.md — `zz_media/avenor.png` → provável `zz_media\territories\avenor.png``
 - `Workflow\_audit\Omnisvera\OMNISVERA_MIGRATION_RISK_REGISTER.md — `zz_media/avenor.png` → provável `zz_media\territories\avenor.png``
 - `Workflow\_audit\Omnisvera\OMNISVERA_OBSIDIAN_DEPENDENCY_MAP.md — `zz_media/avenor.png` → provável `zz_media\territories\avenor.png``
-- `Workflow\_audit\Vault_Standardization\LEAFLET_IMAGE_LOAD_RESET_REPORT.md — `zz_media/earthropo.png` → provável `zz_media\maps\earthropo.png``
 
 
 ## Possíveis problemas de case-sensitive fora de histórico/auditoria
