@@ -9,6 +9,14 @@ visibility: Jogadores
 spoiler_level: light
 gm_secret: false
 item_type: Par de adagas / relíquia vampírica
+item_family: Relíquia
+item_category: Arma narrativa
+purchase_status: Não comprável
+source_system: Omnisvera / Old Dragon 2e
+base_item: "[[Adaga]]"
+base_price: 2 PO cada
+base_damage: 1d4
+base_weight_kg: 0.5 cada
 owner: "[[Raziel]]"
 location: "[[Raziel]]"
 faction: "[[Clã Sanguinallis]]"
@@ -48,6 +56,10 @@ Par de lâminas de arremesso etéreas pertencentes a [[Raziel]] desde o período
 
 As adagas parecem quase apagadas quando empunhadas, como se parte de sua lâmina não estivesse inteiramente presente no mundo. Em movimento, deixam rastro de fumaça, sombra ou névoa escura.
 
+## Regra em Uso Inicial
+
+Enquanto as propriedades vampíricas não forem liberadas, cada lâmina usa [[Adaga]] como item base: **1d4 de dano**, perfuração, arremesso 3/6, crítico x2, peso de referência 0,5 kg e preço de referência 2 PO.
+
 ## Propriedades Conhecidas
 
 - Tornam-se quase invisíveis a olho nu quando empunhadas ou arremessadas.
@@ -76,6 +88,6 @@ Sua origem, o método de forja e a forma como permaneceram ligadas a Raziel dura
 
 ## Pendências do Sage
 
-- Definir regra mecânica exata.
+- Confirmar quando as adagas deixam de usar apenas a regra base de [[Adaga]].
 - Definir se drenagem vital é sempre ativa ou apenas em cenas específicas.
 - Definir origem e vínculo das adagas.

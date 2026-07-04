@@ -9,6 +9,14 @@ visibility: Jogadores
 spoiler_level: light
 gm_secret: false
 item_type: Machado de batalha / artefato marcial
+item_family: Relíquia
+item_category: Arma narrativa
+purchase_status: Não comprável
+source_system: Omnisvera / Old Dragon 2e
+base_item: "[[Machado de batalha]]"
+base_price: 12 PO
+base_damage: 2d6
+base_weight_kg: 8
 owner: "[[Vezemir]]"
 location: "[[Vezemir]]"
 faction:
@@ -28,7 +36,7 @@ tags:
   - artefato
   - arma
   - machado
-  - vezemir
+  - vezemir-item
 ---
 
 # Grisalma
@@ -60,10 +68,10 @@ Machado pesado, antigo e incomum, grande demais para ser tratado como arma comum
 
 ## Regra em Uso
 
-A ficha atual de Vezemir registra **2d8 de dano** para Grisalma.
+No início da campanha, Grisalma usa [[Machado de batalha]] como item base: **2d6 de dano**, corte/impacto, crítico x3, peso de referência 8 kg e preço de referência 12 PO.
 
 > [!warning] Ajuste de regras
-> A ficha visual da relíquia propõe dano de 2d10 com duas mãos e 1d10 com uma mão. A ficha de personagem mais recente registra 2d8; esse é o valor mantido até confirmação do mestre.
+> Valores antigos como 2d8 ou 2d10 ficam como proposta de evolução/desbloqueio. Enquanto a relíquia não liberar propriedades próprias, prevalece o item base do catálogo.
 
 ## Propriedades Narrativas
 
@@ -91,6 +99,6 @@ A ficha atual de Vezemir registra **2d8 de dano** para Grisalma.
 
 ## Pendências do Sage
 
-- Confirmar dano final.
+- Confirmar quando, se e como Grisalma ultrapassa o dano base de [[Machado de batalha]].
 - Confirmar se as propriedades narrativas terão mecânica própria.
 - Definir se Grisalma reage a magia, ao Véu Cinzento ou ao dragão de colar dourado.

@@ -9,6 +9,14 @@ visibility: Jogadores
 spoiler_level: light
 gm_secret: false
 item_type: Escudo grande / relíquia marcial
+item_family: Relíquia
+item_category: Escudo narrativo
+purchase_status: Não comprável
+source_system: Omnisvera / Old Dragon 2e
+base_item: "[[Escudo de aço]]"
+base_price: 15 PO
+base_armor_bonus: "+2"
+base_weight_kg: 7
 owner: "[[Vezemir]]"
 location: "[[Vezemir]]"
 faction:
@@ -27,7 +35,7 @@ tags:
   - item
   - artefato
   - escudo
-  - vezemir
+  - vezemir-item
 ---
 
 # Muralha de Dorn
@@ -58,10 +66,10 @@ Escudo grande, pesado e robusto, feito para resistir a impactos violentos. Sua e
 
 ## Regra em Uso
 
-A ficha atual de Vezemir registra a Muralha de Dorn como o bônus de **+2 na Classe de Armadura**.
+No início da campanha, a Muralha de Dorn usa [[Escudo de aço]] como item base: **+2 na Classe de Armadura**, peso de referência 7 kg e preço de referência 15 PO.
 
 > [!warning] Ajuste de regras
-> A ficha visual propõe bônus e reduções maiores que os usados na ficha de personagem. Até nova decisão do mestre, prevalece o bônus de **+2 na CA** registrado na ficha atual.
+> Bônus maiores, redução de dano e efeitos de muralha ficam como propriedades narrativas bloqueadas até decisão do mestre.
 
 ## Propriedades Narrativas
 

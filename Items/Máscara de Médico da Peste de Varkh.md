@@ -10,13 +10,18 @@ spoiler_level: light
 gm_secret: false
 created_by: IA
 item_type: Máscara / equipamento pessoal
+item_family: Item narrativo
+item_category: Equipamento pessoal
+purchase_status: Não comprável
+source_system: Omnisvera / Old Dragon 2e
+base_item: "[[Antitoxina]]"
 owner: "[[Varkh Nimalis]]"
 location: "[[Varkh Nimalis]]"
 faction:
 level: 1
 danger_level: Baixo
-thumbnail:
-cover:
+thumbnail: zz_media/items/mascara_doutor.png
+cover: zz_media/items/mascara_doutor.png
 info: Máscara adaptada ao bico de Varkh, ligada à sua identidade pública como Corvo da Maré Baixa.
 description: Equipamento pessoal de Varkh, herdado/adaptado dos materiais de Odran e usado como proteção, intimidação e identidade visual.
 chapters:
@@ -29,7 +34,7 @@ rumors: []
 tags:
   - item
   - mascara
-  - varkh
+  - varkh-item
   - kenku
 ---
 
@@ -72,6 +77,10 @@ Também simboliza a herança de Odran e a adaptação de Varkh ao próprio corpo
 - [[Mestre Odran Veyl]]
 - [[Maré Baixa]]
 - [[Kenku]]
+
+## Regra em Uso Inicial
+
+A máscara é identidade e proteção narrativa. Ela não substitui [[Antitoxina]] nem concede bônus automático contra venenos, doenças ou gases sem preparação de cena.
 
 ## Uso em Mesa
 

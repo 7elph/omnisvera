@@ -9,6 +9,14 @@ visibility: Mestre
 spoiler_level: medium
 gm_secret: true
 item_type: Manto / armadura leve / relíquia primordial
+item_family: Relíquia
+item_category: Proteção narrativa
+purchase_status: Não comprável
+source_system: Omnisvera / Old Dragon 2e
+base_item: "[[Armadura de couro batido]]"
+base_price: 25 PO
+base_armor_bonus: "+3"
+base_weight_kg: 15
 owner: "[[Raziel]]"
 location: "[[Raziel]]"
 faction:
@@ -50,6 +58,10 @@ Armadura de couro batido extraplanar concedida a [[Raziel]] após seu encontro c
 
 Manto escuro e silencioso, com textura de couro batido e sombra compactada. A peça parece absorver parte do som e da luz ao redor do portador.
 
+## Regra em Uso Inicial
+
+Enquanto sua natureza primordial permanecer bloqueada, o manto usa [[Armadura de couro batido]] como item base: **+3 na CA**, sem penalidade de movimento, bônus máximo de DES +6, peso de referência 15 kg e preço de referência 25 PO.
+
 ## Propriedades Conhecidas
 
 - É tecido com fios de escuridão das cavernas abissais.
@@ -78,6 +90,6 @@ O custo da dádiva e o vínculo entre o manto e o [[Ancião Primordial]] permane
 
 ## Pendências do Sage
 
-- Definir mecânica exata de furtividade/proteção.
+- Confirmar quando o manto deixa de usar apenas a regra base de [[Armadura de couro batido]].
 - Definir custo ou consequência do vínculo.
 - Decidir quando a origem do manto pode ser revelada.

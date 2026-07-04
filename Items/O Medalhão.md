@@ -9,6 +9,10 @@ visibility: Jogadores
 spoiler_level: light
 gm_secret: false
 item_type: Medalhão / relíquia
+item_family: Relíquia
+item_category: Objeto narrativo
+purchase_status: Não comprável
+source_system: Omnisvera
 owner: "[[Vezemir]]"
 location: "[[Vezemir]]"
 faction: "[[Guardiões do Véu Cinzento]]"
@@ -27,7 +31,7 @@ tags:
   - item
   - artefato
   - medalhao
-  - vezemir
+  - vezemir-item
   - guardioes-do-veu-cinzento
 ---
 
@@ -72,6 +76,10 @@ Sua reação à magia de Vezemir, ao dragão de colar dourado e ao [[Véu Cinzen
 - [[Guardiões do Véu Cinzento]]
 - [[Véu Cinzento]]
 - [[Criadores]]
+
+## Regra em Uso Inicial
+
+O medalhão não tem preço de compra, bônus ou função mecânica pública. Sua regra permanece travada até o arco dos [[Guardiões do Véu Cinzento]] pedir revelação.
 
 ## Uso em Mesa
 

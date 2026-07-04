@@ -10,13 +10,19 @@ spoiler_level: light
 gm_secret: false
 created_by: IA
 item_type: Caderno pessoal / ferramenta de mimetismo
+item_family: Item narrativo
+item_category: Ferramenta pessoal
+purchase_status: Não comprável
+source_system: Omnisvera / Old Dragon 2e
+base_item: "[[Pena e tinta]]"
+base_support_item: "[[Pergaminhos]]"
 owner: "[[Varkh Nimalis]]"
 location: "[[Varkh Nimalis]]"
 faction: "[[Conclave dos Errantes]]"
 level: 1
 danger_level: Baixo
-thumbnail:
-cover:
+thumbnail: zz_media/items/caderninho.png
+cover: zz_media/items/caderninho.png
 info: Caderno pessoal de Varkh para registrar vozes, frases e sons úteis.
 description: Objeto narrativo ligado à identidade de Varkh, ao mimetismo kenku e à comunicação por vozes emprestadas.
 chapters:
@@ -28,7 +34,7 @@ rumors: []
 tags:
   - item
   - caderno
-  - varkh
+  - varkh-item
   - kenku
 ---
 
@@ -67,6 +73,10 @@ Também reflete sua personalidade peculiar: Varkh coleciona frases absurdas, son
 - [[Varkh Nimalis]]
 - [[Kenku]]
 - [[Conclave dos Errantes]]
+
+## Regra em Uso Inicial
+
+O caderno não concede bônus automático. Para compra e reposição de materiais, use [[Pena e tinta]] e [[Pergaminhos]] como referências comuns.
 
 ## Uso em Mesa
 
