@@ -42,7 +42,7 @@ tags:
   - origem
   - origem-vezemir
   - capitulo01
-  - coroa-de-nimalia
+  - nobreza-de-nimalia
   - npc-importante
   - character
 ---
@@ -58,16 +58,16 @@ tags:
 ## Visão Geral
 
 **Títulos:** General de Nimalia
-**Apelido:** O Tigre de Ferro  
-**Reputação:** Herói de Guerra e Defensor do Reino  
-**Gênero:** Homem  
-**Esposa:** Falecida  
-**Classe:** Paladino  
-**Raça:** [[Antropo]] 
-**Idade:** 62  
-**Status:** Vivo  
-**Faction:** [[Coroa de Nimalia]]  
-**Location:** [[Nimalia]]  
+**Apelido:** O Tigre de Ferro
+**Reputação:** Herói de Guerra e Defensor do Reino
+**Gênero:** Homem
+**Esposa:** Falecida
+**Classe:** Paladino
+**Raça:** [[Antropo]]
+**Idade:** 62
+**Status:** Vivo
+**Faction:** [[Coroa de Nimalia]]
+**Location:** [[Nimalia]]
 **Fé:** [[Igreja das Chamas]]
 ---
 

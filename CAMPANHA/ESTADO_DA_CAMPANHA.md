@@ -3,27 +3,81 @@ obsidianUIMode: preview
 NoteIcon: story
 NoteStatus: Active
 type: story
+subtype: campaign_state
 visibility: Mestre
 spoiler_level: heavy
 gm_secret: true
 status: Ativo
 campaign_status: Ativo
 created_by: MIA
+updated_by: MIA
+work_status: Em desenvolvimento
+canon_status: Working Canon
+requires_review: true
 tags:
   - story
   - campanha
+  - estado-da-campanha
+  - mestre
+  - gm-secret
+  - omnisvera
 ---
 
-# Estado da Campanha
+## ESTADO DA CAMPANHA
 
-> [!NOTE]
-> Painel manual do Mestre para acompanhar a situação atual da campanha. A nota pública do capítulo fica em [[01 - Ecos do Mundo Perdido]]. A versão completa de mestre fica nesta página.
->
-> [[Home_Mestre]] é a navegação visual. Esta nota é o caderno operacional: preparação, bastidores, segredos, consequências e decisões antes/depois da mesa.
+
+## Painel Rápido
+
+| Campo | Estado |
+|---|---|
+| Campanha | [[Omnisvera]] |
+| Região atual | [[Nimalia]] |
+| Capital em foco | [[Nimalis]] |
+| Capítulo atual | [[01 - Ecos do Mundo Perdido]] |
+| Sessão em preparação | Encontro inicial dos personagens |
+| Personagens centrais | [[Vezemir]], [[Varkh Nimalis]], [[Raziel]] |
+| Frente principal | Estrada, remédios falsos e ruínas antigas |
+| Ameaça visível | Acidente da caravana e descoberta subterrânea |
+| Ameaça oculta | Tecnologia antiga, Véu, falsificadores, Coroa e controle da verdade |
+| Estado da mesa | Preparação |
+
+---
+
+## Regra de Separação do Vault
+
+> [!important]
+> **Nota principal** mostra o mundo.
+> **Estado da Campanha** mostra a engrenagem por trás do mundo.
+> **Home_Mestre** mostra atalhos, painéis e frentes ativas.
+
+### O que fica nas notas principais
+
+- descrição pública;
+- aparência;
+- reputação;
+- função jogável;
+- rumores sem resposta confirmada;
+- relações conhecidas;
+- ganchos sem revelar a verdade final;
+- uso em mesa sem spoiler pesado.
+
+### O que fica no Estado da Campanha
+
+- segredos reais ou possíveis;
+- culpados;
+- verdades ocultas;
+- envolvimento secreto de NPCs ou facções;
+- condições de revelação;
+- consequências futuras;
+- relação entre frentes;
+- decisões pendentes do Sage;
+- interpretação de bastidor.
+
+---
 
 ## Painel de Controle do Vault
 
-| área | acesso rápido | uso |
+| Área | Acesso rápido | Uso |
 |---|---|---|
 | Home do Mestre | [[Home_Mestre]] | navegação visual e atalhos |
 | Home dos Jogadores | [[Home]] | consulta player-safe |
@@ -32,19 +86,25 @@ tags:
 | Fila de Conteúdo | [[CONTENT_CREATION_QUEUE]] | notas que precisam desenvolvimento |
 | Modelo Player-Safe | [[PLAYER_SAFE_ENTITY_MODEL]] | regra de separação entre nota pública e bastidor |
 
+---
+
 ## Entidades em Desenvolvimento Prioritário
 
-| entidade | tipo | função no controle |
+| Entidade | Tipo | Função no controle |
 |---|---|---|
 | [[O Frasco Afogado]] | local | loja/oficina, investigação dos remédios falsos |
 | [[Maré Baixa]] | local | submundo portuário, origem de Varkh |
 | [[Nimalis]] | cidade | capital e centro político |
+| [[Augustus Terra Decimus]] | personagem | rei de Nimalia, peso político e controle da verdade |
 | [[Coroa de Nimalia]] | facção | poder institucional |
 | [[Varkh Nimalis]] | personagem | arco dos remédios falsos |
 | [[Guilda dos Mercadores]] | facção | comércio, rotas e influência econômica |
 | [[Porto de Nimalia]] | local | entrada de cargas, rumores e contrabando |
 | [[Raziel]] | personagem | sangue antigo, Gharok e passado enterrado |
 | [[Culto dos Sussurrantes]] | facção/rumor | ameaça em revisão ligada ao Véu |
+| [[Unidade DORN-7]] | entidade/artefato | tecnologia antiga e primeiro contato com o Mundo Perdido |
+
+---
 
 ## Capítulo Atual
 
@@ -63,13 +123,46 @@ tags:
 > showImageOnHover: true
 > ```
 
+---
+
 ## Próxima Sessão
 
-- Capítulo: [[01 - Ecos do Mundo Perdido]]
-- Situação inicial provável: estrada secundária entre [[Nimalis]] e [[Floresta de Avenor]].
-- Foco de mesa: unir [[Vezemir]], [[Varkh Nimalis]] e [[Raziel]] por meio de um incidente comum.
+- **Capítulo:** [[01 - Ecos do Mundo Perdido]]
+- **Situação inicial provável:** estrada secundária entre [[Nimalis]] e [[Floresta de Avenor]].
+- **Foco de mesa:** unir [[Vezemir]], [[Varkh Nimalis]] e [[Raziel]] por meio de um incidente comum.
+- **Cena-motor:** uma caravana sofre acidente, frascos falsificados quebram e uma passagem antiga é revelada sob a estrada.
+- **Mistério inicial:** os remédios falsos carregam algo que não é apenas alquimia.
+- **Escalada:** a [[Unidade DORN-7]] desperta parcialmente.
 
-## Personagens em Foco
+### Objetivo de Mesa
+
+Unir os personagens por consequência, não por amizade instantânea.
+
+Eles não precisam confiar uns nos outros.
+
+Só precisam perceber que estão presos no mesmo problema.
+
+### Preparar Antes da Sessão
+
+- Definir quem está na caravana.
+- Definir quem transporta os remédios falsos.
+- Escolher três a cinco pistas iniciais.
+- Definir se a [[Guarda Real de Nimalia]] chega antes ou depois do despertar da [[Unidade DORN-7]].
+- Preparar uma descrição curta da estrada cedendo.
+- Preparar a primeira fala da [[Unidade DORN-7]].
+- Decidir se a descoberta chega aos ouvidos da [[Coroa de Nimalia]] já na primeira sessão.
+
+---
+
+## Consequências Recentes
+
+- Nenhuma consequência jogada ainda.
+
+---
+
+## Índices Dinâmicos
+
+### Personagens em Foco
 
 ```dataview
 TABLE status, location, faction
@@ -79,7 +172,7 @@ SORT file.name ASC
 LIMIT 12
 ```
 
-## Quests Ativas
+### Quests Ativas
 
 ```dataview
 TABLE quest_status, location, faction
@@ -89,7 +182,7 @@ AND quest_status != "Concluída" AND quest_status != "Falhou"
 SORT file.name ASC
 ```
 
-## Rumores Ativos
+### Rumores Ativos
 
 ```dataview
 TABLE status, visibility, spoiler_level
@@ -98,7 +191,7 @@ WHERE type != "index"
 SORT file.name ASC
 ```
 
-## Facções em Movimento
+### Facções em Movimento
 
 ```dataview
 TABLE status, location, territory
@@ -107,7 +200,7 @@ WHERE type != "index"
 SORT file.name ASC
 ```
 
-## Locais em Foco
+### Locais em Foco
 
 ```dataview
 TABLE territory, status, danger_level
@@ -117,7 +210,7 @@ SORT file.name ASC
 LIMIT 12
 ```
 
-## Itens Revelados
+### Itens Revelados
 
 ```dataview
 TABLE status, location
@@ -127,28 +220,115 @@ AND (contains(tags, "item") OR contains(tags, "artefato"))
 SORT file.name ASC
 ```
 
-## Consequências Recentes
+---
 
-- Nenhuma consequência jogada ainda.
+# FRENTES DE CONTROLE
 
-## Notas para a Próxima Sessão
-
-- Escolher quais três a cinco pistas do capítulo entram em cena.
-- Definir quem está na caravana.
-- Definir quem transporta os remédios falsos.
-- Definir se a [[Guarda Real de Nimalia]] chega antes ou depois do despertar da [[Unidade DORN-7]].
-- Preparar uma versão curta da cena inicial para leitura em mesa.
+> [!IMPORTANT]
+> Estas frentes guardam bastidores e decisões do mestre.
+> As notas principais devem permanecer player-safe.
 
 ---
 
-## Frentes de Controle
+## Frente — Capítulo 01: Ecos do Mundo Perdido
 
-> [!IMPORTANT]
-> Estas frentes guardam bastidores e decisões do mestre. As notas principais devem permanecer player-safe.
+### Entidades Ligadas
 
-### Frente — O Frasco Afogado e os Remédios Falsos
+- [[01 - Ecos do Mundo Perdido]]
+- [[Vezemir]]
+- [[Varkh Nimalis]]
+- [[Raziel]]
+- [[Unidade DORN-7]]
+- [[Nimalis]]
+- [[Floresta de Avenor]]
+- [[O Frasco Afogado]]
+- [[Remédios Falsos de Maré Baixa]]
+- [[Véu Cinzento]]
+- [[Criadores]]
+- [[Guardiões do Véu Cinzento]]
 
-#### Entidades Ligadas
+### Status Atual
+
+Capítulo em preparação.
+Serve como primeiro ponto de convergência entre os personagens principais.
+
+O capítulo começa com um incidente aparentemente local: uma caravana, remédios falsificados e uma estrada que cede.
+
+No bastidor, o incidente revela a existência de estruturas antigas sob Earthropo e prepara a entrada da [[Unidade DORN-7]].
+
+### O que está visível aos jogadores
+
+- Há remédios falsos circulando.
+- Uma caravana sofreu acidente.
+- A estrada cedeu de forma estranha.
+- Há algo artificial sob a terra.
+- Cada personagem encontra um motivo pessoal para se envolver.
+
+### Segredos do Mestre
+
+- O acidente da caravana não é puro acaso.
+- Parte dos remédios falsos contém reagente antigo.
+- O reagente veio de fragmentos tecnológicos retirados de ruínas menores.
+- O contato do líquido com uma pedra enterrada ativou parcialmente um sistema antigo.
+- A [[Unidade DORN-7]] não é única.
+- A passagem sob a estrada faz parte de uma rede antiga sob Earthropo.
+- Alguém em [[Nimalis]] pode já saber da existência de estruturas semelhantes.
+- A [[Coroa de Nimalia]] provavelmente tentará controlar a descoberta se souber da verdade.
+
+### Pistas
+
+Escolher três a cinco para a primeira sessão:
+
+1. Um frasco falso com símbolo raspado no fundo.
+2. Uma placa metálica marcada com o mesmo símbolo encontrado na galeria.
+3. Um mapa incompleto queimado nas bordas.
+4. Uma inscrição antiga parcialmente legível: “SETOR DORN — CONTENÇÃO”.
+5. Uma peça retirada do corpo de um pequeno mecanismo destruído.
+6. Uma lista de entregas apontando para [[Nimalis]].
+7. Um nome repetido nos documentos falsificados.
+8. Marcas de garras antigas em uma porta interna.
+9. Uma parede onde alguém escreveu: “não acordem o vigia”.
+10. Uma coordenada ou marcação apontando para outra ruína.
+
+### Condições de Revelação
+
+- Revelar por exploração da passagem.
+- Revelar por análise dos frascos.
+- Revelar por reação da [[Unidade DORN-7]].
+- Revelar por chegada da Guarda Real.
+- Revelar por reconhecimento parcial dos símbolos por Vezemir, Varkh ou Raziel.
+
+### Consequências
+
+Se a Coroa tomar o local:
+
+- a estrada é fechada;
+- testemunhas são interrogadas;
+- documentos somem;
+- surgem rumores sobre uma arma antiga;
+- a Guarda Real passa a observar os personagens.
+
+Se os personagens esconderem a descoberta:
+
+- ganham uma fonte perigosa de pistas;
+- podem ser perseguidos;
+- precisam lidar com reparos, energia e memória falha da [[Unidade DORN-7]];
+- carregam um segredo que pode colocar todos em risco.
+
+### Decisões Pendentes do Sage
+
+- Definir ponto inicial da mesa.
+- Definir quem está na caravana.
+- Definir quem transporta os remédios falsos.
+- Definir qual símbolo antigo aparece nos frascos.
+- Definir se a Guarda Real chega antes ou depois do despertar da [[Unidade DORN-7]].
+- Definir se a [[Unidade DORN-7]] fica consciente no fim da sessão ou desliga temporariamente.
+
+---
+
+## Frente — O Frasco Afogado e os Remédios Falsos
+
+### Entidades Ligadas
 
 - [[O Frasco Afogado]]
 - [[Maré Baixa]]
@@ -156,268 +336,563 @@ SORT file.name ASC
 - [[Mestre Odran Veyl]]
 - [[Remédios Falsos de Maré Baixa]]
 - [[Rede de Falsificadores de Maré Baixa]]
+- [[Guilda dos Mercadores]]
+- [[Coroa de Nimalia]]
 
-#### Status Atual
+### Status Atual
 
-Em desenvolvimento. A frente conecta a origem de Varkh, a memória de Odran e a circulação de remédios falsos em Nimalia.
+Frente de investigação urbana ligada à origem de [[Varkh Nimalis]], à memória de [[Mestre Odran Veyl]] e à circulação de remédios falsos em [[Nimalia]].
 
-#### Segredos do Mestre
+A nota principal de [[O Frasco Afogado]] deve mostrar loja, atmosfera, produtos, rumores e ligação com Varkh.
+
+A verdade sobre falsificadores, Odran, Guilda e Coroa fica aqui.
+
+### O que está visível aos jogadores
+
+- O Frasco Afogado existe em [[Maré Baixa]].
+- Odran foi mentor de Varkh.
+- Remédios falsos circulam com marcas parecidas com as de Odran.
+- Moradores de Maré Baixa comentam sobre frascos adulterados.
+- Varkh reconhece que há algo errado nos métodos usados.
+
+### Segredos do Mestre
 
 - Não confirmar ainda se Odran está envolvido nas falsificações.
 - Não decidir automaticamente se [[O Frasco Afogado]] está aberto, fechado, abandonado, tomado ou vigiado.
 - Se houver estoque escondido, fórmula perdida ou registro comprometedor, tratar como revelação futura.
-
-#### Verdades Possíveis
-
-- Alguém pode estar usando o símbolo de Odran sem autorização.
 - A [[Guilda dos Mercadores]] pode saber mais sobre a rota dos produtos do que admite.
 - A [[Coroa de Nimalia]] pode tentar controlar a investigação se houver risco público.
+- O reagente antigo usado nos remédios falsos pode ligar esta frente à [[Unidade DORN-7]] e às ruínas.
 
-#### Pistas
+### Verdades Possíveis
+
+- Alguém está usando o símbolo de Odran sem autorização.
+- Odran foi incriminado.
+- Odran criou uma fórmula antiga e alguém roubou a base.
+- A Rede de Falsificadores encontrou material antigo sem saber o que era.
+- Um agente da Guilda financiou a rota.
+- Um agente da Coroa encobriu o problema para evitar pânico.
+
+### Pistas
 
 - Rótulos antigos.
 - Frascos adulterados.
 - Ingredientes baratos demais.
 - Assinatura perfeita demais.
 - Testemunhas de [[Maré Baixa]] que conhecem Odran.
+- Resíduo que não se comporta como alquimia comum.
+- Documento comercial apontando para o [[Porto de Nimalia]].
 
-#### Rumores: Verdadeiros, Falsos ou Incompletos
+### Condições de Revelação
 
-- Rumores sobre remédios falsos devem aparecer primeiro como problema de rua, não como conspiração resolvida.
-- A verdade de cada rumor fica pendente até decisão do Sage.
+- Revelar por investigação dos frascos.
+- Revelar por retorno de Varkh a [[Maré Baixa]].
+- Revelar por contato com antigos clientes de Odran.
+- Revelar por confronto com falsificadores.
+- Revelar por reação da [[Unidade DORN-7]] ao material contaminado.
 
-#### Condições de Revelação
-
-- Revelar pistas por investigação, compra de remédio adulterado, retorno de Varkh a [[Maré Baixa]] ou contato com falsificadores.
-
-#### Consequências
+### Consequências
 
 - Expor a falsificação pode atrair criminosos, mercadores, guardas ou clientes desesperados.
+- Se a Coroa intervier, Varkh pode virar testemunha, suspeito ou bode expiatório.
+- Se a Guilda for envolvida cedo demais, a investigação pode escalar para crise econômica.
 
-#### Decisões Pendentes do Sage
+### Decisões Pendentes do Sage
 
 - Estado atual do Frasco.
 - Papel real de Odran.
 - Identidade de quem usa o símbolo falso.
 - Nível de envolvimento da Guilda e da Coroa.
+- Origem exata do reagente antigo.
 
-### Frente — Nimalis, Coroa e Porto
+---
 
-#### Entidades Ligadas
+## Frente — Nimalis, Coroa, Porto e Guarda
+
+### Entidades Ligadas
 
 - [[Nimalis]]
 - [[Coroa de Nimalia]]
 - [[Guarda Real de Nimalia]]
 - [[Porto de Nimalia]]
 - [[Guilda dos Mercadores]]
+- [[Maré Baixa]]
+- [[Bairro Nobre]]
+- [[Mercado Central]]
+- [[Distrito Comercial]]
 
-#### Status Atual
+### Status Atual
 
-Frente estrutural da capital. Define como poder, comércio, segurança e circulação de informações funcionam em Nimalis.
+Frente estrutural da capital. Define como poder, comércio, segurança, rumor e circulação de informações funcionam em [[Nimalis]].
 
-#### Segredos do Mestre
+### O que está visível aos jogadores
+
+- Nimalis é capital e centro político.
+- A Coroa domina a imagem pública da cidade.
+- A Guarda Real representa ordem e repressão.
+- O Porto de Nimalia move carga, rumores e contrabando.
+- A Guilda dos Mercadores é economicamente relevante.
+- Maré Baixa escapa parcialmente ao controle formal.
+
+### Segredos do Mestre
 
 - Rotas ilícitas, cargas suspeitas e autoridade portuária ainda precisam ser definidas.
 - O grau de controle real da Coroa sobre o porto permanece aberto.
 - A influência da Guilda pode ser pública, indireta ou clandestina.
+- A Coroa pode usar crise sanitária, falsificações ou descoberta antiga como justificativa para intervenção.
+- A Guarda Real pode agir sem entender totalmente o que está protegendo.
 
-#### Pistas
+### Pistas
 
 - Carga atrasada.
 - Navio sem registro.
 - Guarda comprada.
 - Documento comercial contraditório.
 - Mercador que sabe demais.
+- Testemunha de Maré Baixa desaparecida.
+- Ordem real fechando uma rua, galpão ou trecho do porto.
 
-#### Consequências
+### Consequências
 
 - Problemas no porto afetam abastecimento, reputação da Coroa, submundo de [[Maré Baixa]] e poder da Guilda.
+- Se a Coroa endurecer o controle, a população pobre sofre primeiro.
+- Se a Guilda for pressionada, pode retaliar por preço, escassez ou silêncio comercial.
 
-#### Decisões Pendentes do Sage
+### Decisões Pendentes do Sage
 
 - Autoridade portuária.
 - Rotas principais.
 - Relação entre Coroa, Guarda Real e Guilda.
 - Quanto o povo de Nimalis percebe da corrupção ou tensão econômica.
+- Se a Guarda Real age por dever, medo, corrupção ou ignorância.
 
-### Frente — Varkh Nimalis
+---
 
-#### Entidades Ligadas
+## Frente — Augustus Terra Decimus, Coroa e Véu
+
+### Entidades Ligadas
+
+- [[Augustus Terra Decimus]]
+- [[Coroa de Nimalia]]
+- [[Nobreza de Nimalia]]
+- [[Guarda Real de Nimalia]]
+- [[Igreja das Chamas]]
+- [[Nimalis]]
+- [[Nimalia]]
+- [[Guilda dos Mercadores]]
+- [[Culto dos Sussurrantes]]
+- [[Véu Cinzento]]
+- [[A Grande Fratura]]
+- [[Criadores]]
+- [[Raziel]]
+- [[Varkh Nimalis]]
+- [[Vezemir]]
+
+### Status Atual
+
+Augustus Terra Decimus é o rei soberano de [[Nimalia]] e a principal face institucional da [[Coroa de Nimalia]].
+
+Na superfície, ele deve aparecer como monarca rígido, paladino idoso, devoto da [[Igreja das Chamas]] e governante de pulso de ferro.
+
+No bastidor, Augustus representa o peso político da campanha: controle, censura, estabilidade, medo, fé institucional e possíveis verdades ocultas sobre o reino.
+
+### O que está visível aos jogadores
+
+- Augustus é o rei de [[Nimalia]].
+- Governa a partir de [[Nimalis]].
+- É ligado à [[Coroa de Nimalia]].
+- É associado à [[Igreja das Chamas]].
+- Possui reputação de monarca severo.
+- A [[Guarda Real de Nimalia]] age em nome da ordem real.
+- A nobreza o respeita publicamente.
+- O povo comum o teme, respeita ou critica conforme sua posição social.
+- A [[Guilda dos Mercadores]] mantém relação tensa e necessária com a Coroa.
+
+### Segredos do Mestre
+
+- Augustus sabe mais sobre o [[Véu Cinzento]] do que admite publicamente.
+- A [[Coroa de Nimalia]] pode ter herdado, ocultado ou protegido um segredo antigo.
+- A relação entre Coroa, Igreja, Véu e Criadores ainda não deve ser revelada.
+- A ausência de herdeiro público pode ser apenas detalhe político ou sinal de algo maior.
+- Augustus pode estar protegendo o reino de uma ameaça real, mesmo usando métodos autoritários.
+- A [[Igreja das Chamas]] pode não ter controle total sobre ele.
+- A [[Guilda dos Mercadores]] é tolerada por necessidade, não por confiança.
+- O [[Culto dos Sussurrantes]] pode usar o medo da Coroa como ferramenta de recrutamento.
+- A Guarda Real pode estar protegendo arquivos, prisioneiros ou locais cujo significado nem ela compreende totalmente.
+
+### O Conhecimento sobre o Véu
+
+Augustus possui, ou pode possuir, acesso a registros antigos, confissões de cultistas, mapas censurados, arquivos da [[Igreja das Chamas]] e documentos da Coroa que indicam que o [[Véu Cinzento]] não é apenas uma ameaça externa.
+
+A versão pública diz:
+
+> O Véu é perigo.
+
+A versão secreta pode ser:
+
+> O Véu é herança, prisão, ferida ou porta.
+
+Augustus não quer que o povo descubra isso porque teme que medo vire culto, revolta, heresia ou colapso de autoridade.
+
+### O Pecado da Coroa
+
+Existe a possibilidade de que a [[Coroa de Nimalia]] tenha herdado, ocultado ou se beneficiado de algum pacto antigo ligado ao Véu, aos [[Criadores]], à [[A Grande Fratura]] ou à fundação política de [[Nimalia]].
+
+Augustus pode não ser o autor desse pecado.
+
+Mas é seu guardião atual.
+
+E escolheu preservar o silêncio.
+
+### A Fé em Crise
+
+Augustus ainda acredita na [[Igreja das Chamas]], mas sua fé pode não ser serena.
+
+Em segredo, ele pode se perguntar se a Chama revela a verdade ou apenas queima aquilo que a Coroa manda apagar.
+
+Esse conflito não deve aparecer na nota pública como fato confirmado. Pode surgir em cenas de confronto moral, confissão, ritual, sonho ou crise.
+
+### O Herdeiro Ausente
+
+Augustus não possui esposa nem herdeiro público consolidado.
+
+Isso cria instabilidade futura.
+
+Possibilidades:
+
+- recusou alianças matrimoniais para não submeter a Coroa às famílias nobres;
+- perdeu alguém antes do início da campanha;
+- possui herdeiro secreto;
+- acredita que ninguém é digno de herdar o peso do trono;
+- teme que sua linhagem carregue alguma marca ligada ao Véu;
+- a sucessão está sendo disputada silenciosamente pela nobreza.
+
+Nenhuma dessas opções deve virar cânone sem decisão do Sage.
+
+### O Tirano Necessário
+
+Augustus pode ter impedido catástrofes reais.
+
+Algumas revoltas suprimidas podem ter sido manipuladas por cultos. Alguns estudiosos presos podem ter encontrado verdades perigosas. Alguns arquivos queimados podem ter evitado rituais.
+
+Isso não absolve suas ações.
+
+Mas impede que ele seja reduzido a caricatura.
+
+### Verdades Possíveis
+
+> [!question]- Escolher quando a campanha exigir
+> Não tratar todas as opções como cânone ao mesmo tempo.
+
+#### Opção A — O Guardião Trágico
+
+Augustus sabe que existe uma ameaça real ligada ao Véu e acredita que sua tirania é o preço para manter Nimalia viva.
+
+Ele está errado nos métodos, mas certo sobre o perigo.
+
+#### Opção B — O Rei Manipulado
+
+Augustus acredita controlar a verdade, mas parte das informações que recebe vem de conselheiros, sacerdotes ou nobres contaminados por interesses ocultos.
+
+Ele é menos vilão e mais peça central de uma máquina contaminada.
+
+#### Opção C — O Paladino Corrompido pela Ordem
+
+Augustus começou como protetor verdadeiro, mas décadas de medo e poder transformaram sua fé em ferramenta de repressão.
+
+Ele ainda fala em luz, mas já não percebe quantas sombras criou.
+
+#### Opção D — O Último Selo
+
+A linhagem Terra Decimus pode estar ligada a um juramento antigo de contenção.
+
+Nesse caso, Augustus não é apenas rei: é parte viva de um mecanismo antigo.
+
+Sua morte poderia enfraquecer algo que ninguém compreende totalmente.
+
+#### Opção E — O Falso Leão
+
+Augustus pode estar escondendo doença, maldição, pacto, desgaste espiritual ou dependência de uma relíquia.
+
+Sua imagem pública de força talvez seja sustentada por ritual, fé, mentira política ou recurso antigo.
+
+### Relações Secretas e Pressões
+
+#### Com [[Varkh Nimalis]]
+
+Augustus provavelmente não conhece Varkh pessoalmente no início.
+
+Mas se o arco dos [[Remédios Falsos de Maré Baixa]] provocar crise pública, morte em massa ou instabilidade urbana, a Coroa pode transformar Varkh em:
+
+- bode expiatório;
+- testemunha forçada;
+- informante;
+- ferramenta;
+- ameaça pública;
+- peça descartável.
+
+Para Augustus, Varkh não é importante até virar símbolo.
+
+#### Com [[Raziel]]
+
+Raziel é uma anomalia inaceitável para Augustus.
+
+Um vampiro antigo, ligado à hemomancia, ao passado enterrado e a poderes anteriores à ordem atual, é exatamente o tipo de verdade que a Coroa tentaria destruir, prender ou usar.
+
+Se Augustus descobrir quem Raziel é, dificilmente o tratará como criminoso comum.
+
+Ele o tratará como arquivo vivo.
+
+E arquivos vivos são perigosos.
+
+#### Com [[Vezemir]]
+
+Vezemir pode despertar respeito e desconfiança em Augustus.
+
+É guerreiro, disciplinado, marcado por guerra e ligado a memórias antigas da [[Floresta de Avenor]]. Pode ser visto como arma útil ou risco livre demais.
+
+Augustus reconhece guerreiros marcados pela perda.
+
+Mas não confia em pessoas cuja lealdade maior está presa aos mortos.
+
+### Função Real na Campanha
+
+Augustus não deve ser tratado apenas como “rei tirano”.
+
+Ele funciona melhor como antagonista institucional, patrono ambíguo ou muralha política. Pode estar certo sobre parte do perigo e errado sobre os métodos.
+
+Seu papel é colocar os jogadores diante de perguntas difíceis:
+
+- A Coroa protege Nimalia ou aprisiona Nimalia?
+- Um rei pode esconder verdades para evitar pânico?
+- Ordem ainda é virtude quando depende de silêncio?
+- Se Augustus cair, o reino melhora ou se parte?
+- O que acontece quando um governante cruel talvez esteja impedindo algo pior?
+
+### Pistas
+
+- Decreto real proibindo investigação sobre certos artefatos.
+- Documento antigo com selo da Coroa e trecho apagado.
+- Prisioneiro sem registro oficial.
+- Sacerdote da [[Igreja das Chamas]] contradizendo a versão pública.
+- Guarda Real removendo provas antes dos personagens chegarem.
+- Arquivo real citando nome, linhagem ou símbolo ligado a um personagem.
+- Nobre insinuando que Augustus sabe demais sobre todos.
+- Relatório antigo mencionando cultistas, ruínas e “contenção da verdade”.
+- Ordem sigilosa para confiscar qualquer peça ligada à [[Unidade DORN-7]].
+- Selo real em documento ligado a uma carga falsificada.
+
+### Rumores: Verdadeiros, Falsos ou Incompletos
+
+| Rumor público | Natureza sugerida | Observação do Mestre |
+|---|---|---|
+| Augustus nunca dorme duas noites seguidas no mesmo aposento | Possivelmente verdadeiro | Pode indicar segurança real, paranoia ou medo de assassinato |
+| A espada real foi abençoada pela primeira chama de Nimalia | Incompleto | Pode ser propaganda, relíquia ou ambos |
+| Ele mantém prisioneiros sem registro | Possivelmente verdadeiro | Bom gancho para masmorras, arquivos ou desaparecidos |
+| A Coroa queima livros perigosos | Parcialmente verdadeiro | Pode ser contenção de conhecimento |
+| A Igreja das Chamas teme o rei tanto quanto o aconselha | Possivelmente verdadeiro | Indica tensão entre fé e trono |
+| Augustus não possui herdeiro por causa do sangue Terra Decimus | Em aberto | Pode ser mentira, maldição ou intriga nobre |
+| Ele conhece o nome de algo além do Véu | Em aberto | Usar apenas se o arco do Véu avançar |
+| Ele já morreu uma vez e voltou por juramento | Em aberto | Pode ser lenda, milagre, mentira ou pacto |
+
+### Condições de Revelação
+
+Revelar partes desta frente apenas se:
+
+- os personagens investigarem arquivos reais;
+- houver audiência com Augustus;
+- a Coroa intervier diretamente nos remédios falsos;
+- o [[Culto dos Sussurrantes]] provocar crise pública;
+- [[Raziel]] for identificado como criatura antiga;
+- [[Vezemir]] ou [[Varkh Nimalis]] se tornarem símbolos políticos;
+- a [[Guarda Real de Nimalia]] cometer abuso visível;
+- um sacerdote da [[Igreja das Chamas]] romper silêncio;
+- uma relíquia antiga contradizer a história oficial;
+- a [[Unidade DORN-7]] registrar algo que a Coroa reconhece.
+
+### Consequências
+
+Se os personagens confrontarem Augustus ou a Coroa cedo demais:
+
+- podem ser declarados criminosos;
+- podem ser vigiados pela Guarda Real;
+- podem perder acesso seguro a [[Nimalis]];
+- podem ser usados por nobres rivais;
+- podem ser manipulados pelo [[Culto dos Sussurrantes]];
+- podem descobrir que parte da tirania de Augustus tinha motivo real;
+- podem iniciar crise política antes de entender o tabuleiro.
+
+### Decisões Pendentes do Sage
+
+- Confirmar se Augustus é oficialmente antropo leonino.
+- Definir se “O Leão da Chama” será epíteto canônico.
+- Definir se ele terá herdeiro secreto, herdeiro ausente ou sucessão totalmente aberta.
+- Definir o nível real de conhecimento dele sobre o [[Véu Cinzento]].
+- Definir se sua fé na [[Igreja das Chamas]] é pura, política, abalada ou contaminada.
+- Definir se a linhagem Terra Decimus possui ligação antiga com o Véu, Criadores ou Grande Fratura.
+- Definir se ele será antagonista direto, patrono ambíguo ou figura trágica de fundo.
+- Confirmar quais rumores são verdadeiros, falsos ou parcialmente verdadeiros.
+- Definir até onde a Guarda Real sabe dos segredos da Coroa.
+
+### Uso em Mesa pelo Mestre
+
+- Augustus deve aparecer primeiro como peso institucional, não necessariamente em pessoa.
+- Usar decretos, guardas, brasões, impostos, cerimônias e medo antes da audiência direta.
+- Quando aparecer, ele deve transmitir majestade, cansaço e perigo.
+- Evitar vilanizar cedo demais.
+- Deixar os jogadores se perguntarem se ele é tirano, protetor ou os dois.
+- Se ele lutar, a cena deve parecer julgamento, duelo ritual, defesa desesperada do trono ou colapso de uma ordem inteira.
+
+---
+
+## Frente — Varkh Nimalis
+
+### Entidades Ligadas
 
 - [[Varkh Nimalis]]
 - [[O Frasco Afogado]]
 - [[Mestre Odran Veyl]]
 - [[Conclave dos Errantes]]
 - [[Remédios Falsos de Maré Baixa]]
+- [[Rede de Falsificadores de Maré Baixa]]
 
-#### Status Atual
+### Status Atual
 
 Arco pessoal ligado à origem em [[Maré Baixa]], à alquimia de rua e à investigação dos remédios falsos.
 
-#### Segredos do Mestre
+### Segredos do Mestre
 
 - A identidade de quem está usando os métodos de Odran ainda é desconhecida.
 - A extensão real da fama de Varkh como assassino pode ser maior ou menor do que os rumores indicam.
 - A classe mecânica definitiva de Varkh ainda precisa ser reconciliada com a ficha sem nome recebida do jogador.
+- Varkh pode ser usado pela Coroa como bode expiatório se os remédios falsos virarem crise pública.
 
-#### Condições de Revelação
+### Condições de Revelação
 
-- Revelar por pistas em frascos, testemunhas de Maré Baixa, contato do Conclave ou retorno ao Frasco.
+- Revelar por pistas em frascos.
+- Revelar por testemunhas de Maré Baixa.
+- Revelar por contato do Conclave.
+- Revelar por retorno ao Frasco.
+- Revelar se a Coroa ou a Guarda Real tentarem controlar a narrativa.
 
-### Frente — Raziel
+---
 
-#### Entidades Ligadas
+## Frente — Vezemir, Avenor e o Dragão
+
+### Entidades Ligadas
+
+- [[Vezemir]]
+- [[Mira Valen]]
+- [[Padre Oric]]
+- [[Elarion Vaelthor]]
+- [[Dragão de Colar Dourado]]
+- [[Floresta de Avenor]]
+- [[Leth'valora]]
+- [[O Medalhão]]
+- [[Grisalma]]
+- [[Muralha de Dorn]]
+- [[Guardiões do Véu Cinzento]]
+
+### Status Atual
+
+Frente pessoal de Vezemir e da destruição de [[Leth'valora]].
+As notas principais devem mostrar memória, impacto e rumores sem explicar cedo demais o dragão, os Guardiões ou a origem dos sinais.
+
+### Segredos do Mestre
+
+- Relação completa entre Vezemir, o dragão, o medalhão, Grisalma e os Guardiões deve ser revelada em etapas.
+- Detalhes do ataque a Leth'valora e do que Elarion/Mira/Oric sabiam ainda podem ser dosados.
+- O Dragão de Colar Dourado deve permanecer parcialmente misterioso enquanto o jogador descobre pistas.
+- [[O Medalhão]] pode estar ligado à verdadeira origem de Vezemir.
+- [[Padre Oric]] desapareceu investigando conexões entre os Guardiões e o dragão de colar dourado.
+- O dragão pode ter reconhecido Vezemir durante o ataque à vila.
+- [[Elarion Vaelthor]] pode ter ocultado informações sobre seus pais biológicos.
+- Existe a possibilidade de Vezemir descender de alguma linhagem élfica.
+
+### Condições de Revelação
+
+- Revelar por lembranças.
+- Revelar por reações de relíquias.
+- Revelar por viagem a Avenor.
+- Revelar por rumores sobre Leth'valora.
+- Revelar por contato com símbolos dos Guardiões.
+- Revelar por reação da [[Unidade DORN-7]].
+
+---
+
+## Frente — Raziel, Gharok e Sangue Antigo
+
+### Entidades Ligadas
 
 - [[Raziel]]
 - [[Clã Sanguinallis]]
 - [[Fortaleza de Gharok]]
+- [[Ruínas de Valthor]]
 - [[Sangue Antigo]]
+- [[Ancião Primordial]]
 - [[Adagas de Espectro Fantasma]]
+- [[Manto Primordial do Ancião]]
 
-#### Status Atual
+### Status Atual
 
 Arco pessoal ligado a sangue antigo, traição, Gharok e estruturas anteriores ao presente.
 
-#### Segredos do Mestre
+### Segredos do Mestre
 
 - O verdadeiro motivo pelo qual o Ancião Primordial libertou Raziel permanece desconhecido.
 - A heresia rúnica usada como pretexto para sua captura ainda não foi definida.
-- Sua relação com o Véu Cinzento e com os Criadores ainda não foi confirmada.
+- A forma como as [[Adagas de Espectro Fantasma]] permaneceram ligadas a Raziel durante o aprisionamento continua em aberto.
+- Sua relação com o [[Véu Cinzento]] e com os [[Criadores]] ainda não foi confirmada.
+- A sobrevivência atual, influência remanescente e função futura de Malakar, Kaelen e Vandor devem permanecer no bastidor.
+- A relação exata entre Sanguinallis, Sangue Antigo e Raziel deve ser revelada por cenas, não por exposição.
+- Se Augustus descobrir quem Raziel é, pode tentar prendê-lo, destruí-lo ou usá-lo como arquivo vivo.
 
-#### Condições de Revelação
+### Condições de Revelação
 
-- Revelar por reação a ruínas antigas, sangue, máquinas, memórias fragmentadas ou antagonistas ligados a Gharok.
+- Revelar por reação a ruínas antigas.
+- Revelar por sangue.
+- Revelar por máquinas.
+- Revelar por memórias fragmentadas.
+- Revelar por antagonistas ligados a Gharok.
+- Revelar por reação da Coroa.
 
-### Frente — Culto dos Sussurrantes
+---
 
-#### Entidades Ligadas
+## Frente — Culto dos Sussurrantes
+
+### Entidades Ligadas
 
 - [[Culto dos Sussurrantes]]
 - [[Véu Cinzento]]
 - [[Igreja das Chamas]]
 - [[Coroa de Nimalia]]
+- [[Augustus Terra Decimus]]
 
-#### Status Atual
+### Status Atual
 
 Em revisão. Pode ser ameaça ativa, rumor distorcido, culto menor ou rascunho a arquivar.
 
-#### Segredos do Mestre
+### Segredos do Mestre
 
 - Não confirmar ainda se o culto é ameaça ativa.
 - Não revelar o Arauto Sombrio sem decidir se ele será mantido.
 - Evitar usar o culto como explicação fácil para todo mistério do Véu.
+- O culto pode usar o medo da Coroa para recrutar.
+- O culto pode estar parcialmente certo sobre uma verdade antiga, mesmo sendo perigoso.
 
-#### Decisões Pendentes do Sage
+### Decisões Pendentes do Sage
 
 - Confirmar existência canônica.
 - Definir relação real com o [[Véu Cinzento]].
 - Decidir se o Arauto Sombrio permanece, muda ou sai.
 - Definir se o culto fica como facção, religião, rumor ou arquivo.
+- Definir se Augustus sabe mais sobre o culto do que declara publicamente.
 
-### Frente — Itens de Vezemir
+---
 
-#### Entidades Ligadas
+## Frente — Cosmologia, Véu e Criadores
 
-- [[O Medalhão]]
-- [[Grisalma]]
-- [[Muralha de Dorn]]
-- [[Vezemir]]
-- [[Véu Cinzento]]
-- [[Guardiões do Véu Cinzento]]
-
-#### Status Atual
-
-Itens centrais para identidade, pistas graduais e evolução de Vezemir. As notas principais devem mostrar uso conhecido, aparência e função em mesa sem explicar a origem real.
-
-#### Segredos do Mestre
-
-- [[O Medalhão]] não deve ter sua função real definida publicamente como chave, selo, linhagem ou relíquia reativa.
-- Reações do medalhão devem funcionar como pistas, não como explicação completa.
-- [[Grisalma]] não deve liberar todas as propriedades narrativas como mecânica livre no nível 1.
-- Reações de Grisalma ao [[Véu Cinzento]], ao dragão ou aos Guardiões devem ser reveladas gradualmente.
-- [[Muralha de Dorn]] ainda precisa definir se “Dorn” é pessoa, lugar, tradição, título ou nome simbólico.
-
-#### Condições de Revelação
-
-- Revelar por reação a símbolos antigos, presença do Véu, memória dos Guardiões, conflito com o dragão ou escolhas de Vezemir em mesa.
-
-#### Decisões Pendentes do Sage
-
-- Propriedades finais de Grisalma.
-- Natureza do Medalhão.
-- Origem e significado de Dorn.
-- Quando cada item pode reagir sem quebrar o nível atual do personagem.
-
-### Frente — Itens de Raziel
-
-#### Entidades Ligadas
-
-- [[Adagas de Espectro Fantasma]]
-- [[Manto Primordial do Ancião]]
-- [[Raziel]]
-- [[Sangue Antigo]]
-- [[Clã Sanguinallis]]
-- [[Ancião Primordial]]
-
-#### Status Atual
-
-Itens ligados ao passado de Raziel, ao Sangue Antigo e ao pacto/retorno que ainda não deve ser explicado de uma vez.
-
-#### Segredos do Mestre
-
-- Não definir ainda se as [[Adagas de Espectro Fantasma]] foram forjadas pelo clã, por Raziel ou por outro poder.
-- Não revelar cedo se as adagas drenam energia vital por magia vampírica, Sangue Antigo ou técnica Sanguinallis.
-- Separar as propriedades das adagas das propriedades pessoais de Raziel.
-- Não revelar o [[Ancião Primordial]] por meio do [[Manto Primordial do Ancião]] antes do arco pedir.
-- Manter o custo da dádiva em aberto.
-- O manto é relíquia de campanha, não regra básica da classe [[Vampiro]].
-
-#### Condições de Revelação
-
-- Revelar por memória fragmentada, sangue derramado, ruínas de Gharok, confronto com Sanguinallis ou intervenção do Ancião.
-
-#### Decisões Pendentes do Sage
-
-- Origem real das adagas.
-- Método de forja ou vínculo.
-- Custo do manto.
-- Limites entre item, classe e pacto narrativo.
-
-### Frente — Itens de Varkh
-
-#### Entidades Ligadas
-
-- [[Máscara de Médico da Peste de Varkh]]
-- [[Caderninho de Vozes]]
-- [[Varkh Nimalis]]
-- [[O Frasco Afogado]]
-- [[Mestre Odran Veyl]]
-
-#### Status Atual
-
-Itens de identidade, presença social e investigação. Devem reforçar Varkh em cena sem virar solução automática.
-
-#### Segredos do Mestre
-
-- A [[Máscara de Médico da Peste de Varkh]] não tem função mágica confirmada.
-- Se ganhar regra própria, deve reforçar investigação, proteção ou intimidação.
-- O [[Caderninho de Vozes]] não tem função secreta confirmada.
-- Se virar item mágico ou mecânico, isso deve ser decisão futura.
-- A força atual do caderninho é narrativa: identidade, memória, disfarce social e improviso.
-
-#### Condições de Revelação
-
-- Revelar por uso social, investigação em Maré Baixa, lembranças de Odran, contato com falsificadores ou cena de improviso.
-
-#### Decisões Pendentes do Sage
-
-- Se a máscara terá mecânica própria.
-- Se o caderninho é apenas ferramenta narrativa ou item com efeito futuro.
-- Como esses itens entram no arco dos remédios falsos.
-
-### Frente — Cosmologia, Véu e Criadores
-
-#### Entidades Ligadas
+### Entidades Ligadas
 
 - [[Criadores]]
 - [[O Fraturamento]]
@@ -427,12 +902,15 @@ Itens de identidade, presença social e investigação. Devem reforçar Varkh em
 - [[Ancião Primordial]]
 - [[Sangue Antigo]]
 - [[Vampiro Sanguinallis]]
+- [[Unidade DORN-7]]
+- [[Augustus Terra Decimus]]
 
-#### Status Atual
+### Status Atual
 
-Frente de bastidor cosmológico. As notas principais devem apresentar mitos, fenômenos, rumores e versões conhecidas sem resolver a verdade final do mundo.
+Frente de bastidor cosmológico.
+As notas principais devem apresentar mitos, fenômenos, rumores e versões conhecidas sem resolver a verdade final do mundo.
 
-#### Segredos do Mestre
+### Segredos do Mestre
 
 - A natureza real dos [[Criadores]] ainda está em definição.
 - A cosmologia real do [[O Fraturamento]] não deve ser fechada publicamente.
@@ -442,21 +920,33 @@ Frente de bastidor cosmológico. As notas principais devem apresentar mitos, fen
 - O [[Ancião Primordial]] pode ter objetivos próprios e planos ainda não definidos.
 - Origem, custo real e consequências de longo prazo do [[Sangue Antigo]] ficam no bastidor.
 - Diferenças entre vampirismo comum e [[Vampiro Sanguinallis]] devem ser reveladas gradualmente.
+- A [[Coroa de Nimalia]] pode guardar arquivos antigos sobre essas verdades.
+- Augustus pode estar praticando contenção política de conhecimento cosmológico.
 
-#### Condições de Revelação
+### Condições de Revelação
 
-- Revelar por ruínas antigas, reação de Raziel, sinais do Véu, registros pré-cataclísmicos, cultos, máquinas antigas ou eventos ligados ao primeiro capítulo.
+- Revelar por ruínas antigas.
+- Revelar por reação de Raziel.
+- Revelar por sinais do Véu.
+- Revelar por registros pré-cataclísmicos.
+- Revelar por cultos.
+- Revelar por máquinas antigas.
+- Revelar por eventos ligados ao primeiro capítulo.
+- Revelar por arquivos confiscados pela Coroa.
 
-#### Decisões Pendentes do Sage
+### Decisões Pendentes do Sage
 
 - Natureza real dos Criadores.
 - Papel do Véu na criação, corrupção ou proteção do mundo.
 - Custo narrativo do Sangue Antigo.
 - Relação entre Ancião Primordial, Sanguinallis e estruturas antigas.
+- Relação entre Coroa, Igreja das Chamas e contenção da verdade.
 
-### Frente — Religiões e Doutrinas
+---
 
-#### Entidades Ligadas
+## Frente — Religiões e Doutrinas
+
+### Entidades Ligadas
 
 - [[RELIGION]]
 - [[Igreja das Chamas]]
@@ -464,32 +954,45 @@ Frente de bastidor cosmológico. As notas principais devem apresentar mitos, fen
 - [[Caminho dos Errantes]]
 - [[Culto dos Sussurrantes]]
 - [[Clérigo]]
+- [[Augustus Terra Decimus]]
 
-#### Status Atual
+### Status Atual
 
-Frente de crenças públicas e tensões espirituais. As notas principais devem mostrar prática, imagem pública e uso em mesa sem confirmar verdades metafísicas.
+Frente de crenças públicas e tensões espirituais.
+As notas principais devem mostrar prática, imagem pública e uso em mesa sem confirmar verdades metafísicas.
 
-#### Segredos do Mestre
+### Segredos do Mestre
 
 - Verdades antigas, cultos perigosos e manipulações institucionais ficam no Estado da Campanha.
 - Possíveis contradições doutrinárias da [[Igreja das Chamas]] ainda precisam ser confirmadas.
 - A relação real da [[Fé dos Antigos]] com os Criadores está em aberto.
 - O [[Caminho dos Errantes]] pode ter ligação com ciclos reais, destino ou memória, mas isso não está fechado.
 - Segredos religiosos ligados à classe [[Clérigo]] ainda não estão consolidados.
+- A fé de Augustus pode estar em crise, mas isso não deve aparecer como fato público.
+- A [[Igreja das Chamas]] pode temer o rei tanto quanto o aconselha.
 
-#### Condições de Revelação
+### Condições de Revelação
 
-- Revelar por sermões, relíquias, conflitos entre crenças, milagres ambíguos, registros antigos ou contato com o Véu.
+- Revelar por sermões.
+- Revelar por relíquias.
+- Revelar por conflitos entre crenças.
+- Revelar por milagres ambíguos.
+- Revelar por registros antigos.
+- Revelar por contato com o Véu.
+- Revelar por audiência ou confissão envolvendo Augustus.
 
-#### Decisões Pendentes do Sage
+### Decisões Pendentes do Sage
 
 - Quais crenças são canônicas como religião ativa.
 - O que é verdade, interpretação ou mentira institucional.
 - Como clérigos acessam poder no cenário.
+- Definir a relação real entre Chama, Coroa e Véu.
 
-### Frente — Povos, Reinos e Classes
+---
 
-#### Entidades Ligadas
+## Frente — Povos, Reinos e Classes
+
+### Entidades Ligadas
 
 - [[Antropo]]
 - [[Anão]]
@@ -503,12 +1006,14 @@ Frente de crenças públicas e tensões espirituais. As notas principais devem m
 - [[Guerreiro]]
 - [[Ladrão]]
 - [[Mago]]
+- [[Paladino]]
 
-#### Status Atual
+### Status Atual
 
-Frente de bastidores culturais, linhagens e limites mecânicos. Notas principais devem ser úteis aos jogadores sem entregar política futura, linhagens ocultas ou segredos de classe.
+Frente de bastidores culturais, linhagens e limites mecânicos.
+Notas principais devem ser úteis aos jogadores sem entregar política futura, linhagens ocultas ou segredos de classe.
 
-#### Segredos do Mestre
+### Segredos do Mestre
 
 - Linhagens específicas de antropos, humanos e meio-elfos podem esconder tradições, pactos ou rivalidades locais.
 - Obras anãs antigas podem guardar segredos de eras anteriores.
@@ -516,221 +1021,28 @@ Frente de bastidores culturais, linhagens e limites mecânicos. Notas principais
 - Vozes imitadas por kenkus podem virar pista ou arma social.
 - Origem, limites e consequências do vampirismo/Sangue Antigo ficam no bastidor.
 - Limites de alquimia perigosa, magia antiga, vínculos criminais e ajustes específicos de classe ficam pendentes até uso em mesa.
+- A linhagem Terra Decimus pode esconder tradição, maldição, pacto, juramento ou função antiga.
 
-#### Condições de Revelação
+### Condições de Revelação
 
-- Revelar por origem de personagem, viagem a reinos raciais, ruínas, tutores, falhas de magia, contatos de classe ou consequências de uso perigoso.
+- Revelar por origem de personagem.
+- Revelar por viagem a reinos raciais.
+- Revelar por ruínas.
+- Revelar por tutores.
+- Revelar por falhas de magia.
+- Revelar por contatos de classe.
+- Revelar por consequências de uso perigoso.
 
-#### Decisões Pendentes do Sage
+### Decisões Pendentes do Sage
 
 - Quais reinos raciais entram primeiro em jogo.
 - Quais linhagens têm segredo real.
 - Quais limites mecânicos entram em Old Dragon sem quebrar nível baixo.
-
-### Frente — Vezemir, Avenor e o Dragão
-
-#### Entidades Ligadas
-
-- [[Vezemir]]
-- [[Mira Valen]]
-- [[Padre Oric]]
-- [[Elarion Vaelthor]]
-- [[Dragão de Colar Dourado]]
-- [[Floresta de Avenor]]
-- [[Leth'valora]]
-
-#### Status Atual
-
-Frente pessoal de Vezemir e da destruição de Leth'valora. As notas principais devem mostrar memória, impacto e rumores sem explicar cedo demais o dragão, os Guardiões ou a origem dos sinais.
-
-#### Segredos do Mestre
-
-- Relação completa entre Vezemir, o dragão, o medalhão, Grisalma e os Guardiões deve ser revelada em etapas.
-- Detalhes do ataque a Leth'valora e do que Elarion/Mira/Oric sabiam ainda podem ser dosados.
-- O Dragão de Colar Dourado deve permanecer parcialmente misterioso enquanto o jogador descobre pistas.
-
-#### Condições de Revelação
-
-- Revelar por lembranças, reações de relíquias, viagem a Avenor, rumores sobre Leth'valora ou contato com símbolos dos Guardiões.
-
-### Frente — Nimalia, Coroa e Guarda
-
-#### Entidades Ligadas
-
-- [[Augustus Terra Decimus]]
-- [[General Cassian Valerius]]
-- [[Coroa de Nimalia]]
-- [[Guarda Real de Nimalia]]
-- [[Nimalis]]
-
-#### Status Atual
-
-Frente política da capital. As notas principais devem mostrar imagem pública, função e autoridade, mantendo intrigas, corrupção e decisões de bastidor no Estado da Campanha.
-
-#### Segredos do Mestre
-
-- Relação real entre Coroa, Guarda, Guilda e Maré Baixa ainda pode mudar.
-- Possíveis tensões entre Augustus, Cassian e outras casas nobres não devem ser resolvidas nas notas principais.
-
-#### Condições de Revelação
-
-- Revelar por ordens oficiais, investigação de cargas, reação da Guarda, audiência na capital ou crise pública.
-
-### Frente — Gharok, Sanguinallis e Antagonistas Antigos
-
-#### Entidades Ligadas
-
-- [[Raziel]]
-- [[Lorde Malakar]]
-- [[Kaelen, o Flagelo]]
-- [[Vandor, o Senhor das Bestas]]
-- [[Clã Sanguinallis]]
-- [[Fortaleza de Gharok]]
-
-#### Status Atual
-
-Frente ligada ao passado de Raziel, ao Clã Sanguinallis e aos antagonistas antigos. As notas principais podem apresentar reputação e história conhecida sem revelar sobrevivência, retorno, pacto ou verdade final.
-
-#### Segredos do Mestre
-
-- Sobrevivência atual, influência remanescente e função futura de Malakar, Kaelen e Vandor devem permanecer no bastidor.
-- A relação exata entre Sanguinallis, Sangue Antigo e Raziel deve ser revelada por cenas, não por exposição.
-
-#### Condições de Revelação
-
-- Revelar por ruínas de Gharok, memórias de Raziel, sangue, artefatos Sanguinallis ou inimigos que reconhecem sinais antigos.
-
-### Frente — Odran, DORN-7 e Máquinas Antigas
-
-#### Entidades Ligadas
-
-- [[Mestre Odran Veyl]]
-- [[Unidade DORN-7]]
-- [[O Frasco Afogado]]
-- [[Remédios Falsos de Maré Baixa]]
-- [[Criadores]]
-
-#### Status Atual
-
-Frente de investigação e tecnologia antiga. Odran deve permanecer ambíguo e DORN-7 deve revelar escala maior sem explicar todo o sistema.
-
-#### Segredos do Mestre
-
-- Paradeiro e participação real de Odran nas falsificações ficam pendentes.
-- A [[Unidade DORN-7]] é parte de um sistema maior, mas isso deve ser revelado por funcionamento, falhas e pistas.
-- Conexão entre remédios falsos, materiais antigos e máquinas subterrâneas deve ser dosada.
-
-#### Condições de Revelação
-
-- Revelar por investigação no Frasco, ativação da DORN-7, análise de frascos ou descoberta de estruturas antigas.
-
-### Frente — Bairros e Infraestrutura de Nimalis
-
-#### Entidades Ligadas
-
-- [[Bairro dos Humanos]]
-- [[Bairro dos Elfos]]
-- [[Bairro dos Anões]]
-- [[Bairro dos Dragonborns]]
-- [[Bairro dos Forasteiros]]
-- [[Bairro Nobre]]
-- [[Mercado Central]]
-- [[Distrito Comercial]]
-- [[Casa da Moeda de Nimalia]]
-
-#### Status Atual
-
-Frente de cenário urbano. As notas principais devem funcionar como consulta de mesa: aparência, função social, pontos úteis e rumores leves.
-
-#### Segredos do Mestre
-
-- Famílias influentes, emissários, agentes raciais e intrigas entre casas nobres ficam em definição.
-- Lojas ilegais, pactos escusos, fraudes e pistas escondidas devem ser revelados por cena, não por nota principal.
-- Redes de proteção, crime ou exploração no Bairro dos Forasteiros ainda precisam ser definidas.
-
-#### Condições de Revelação
-
-- Revelar por investigação urbana, perseguição, audiência política, compra suspeita, documento fiscal ou contato de rua.
-
-### Frente — Avenor, Rotas e Ruínas Próximas
-
-#### Entidades Ligadas
-
-- [[Antiga Estrada Esquecida]]
-- [[Fortaleza Abandonada de Avenor]]
-- [[Bosque Sussurrante]]
-- [[Leth'valora]]
-- [[Vale Dourado]]
-- [[Campos de Earthropo]]
-- [[Mar da Neblina]]
-
-#### Status Atual
-
-Frente de exploração e fronteira. As notas principais devem mostrar lugares visitáveis e sensações de cena sem fechar a função real de cada ruína, estrada ou território.
-
-#### Segredos do Mestre
-
-- Possíveis pistas sobre a origem de Vezemir e conexões antigas ficam no Estado da Campanha.
-- Relação completa entre relíquias, Elarion, Avenor e segredos antigos deve ser dosada.
-- Detalhes do ataque a Leth'valora, do dragão e das tradições internas ainda podem ser revelados gradualmente.
-- A função real de Vale Dourado, Campos de Earthropo e Mar da Neblina permanece em construção.
-
-#### Condições de Revelação
-
-- Revelar por viagem, exploração, ruínas, marcas do dragão, rumores de fronteira, pistas ambientais ou retorno a Avenor.
-
-### Frente — Gharok, Valthor e Sanguinallis
-
-#### Entidades Ligadas
-
-- [[Fortaleza de Gharok]]
-- [[Ruínas de Valthor]]
-- [[Clã Sanguinallis]]
-- [[Raziel]]
-- [[Sangue Antigo]]
-- [[Ancião Primordial]]
-
-#### Status Atual
-
-Frente de passado antigo, sangue e queda de reinos. Notas principais devem apresentar história conhecida, reputação e riscos sem revelar sobrevivência, estrutura atual ou ligação total com Raziel.
-
-#### Segredos do Mestre
-
-- Relação exata de [[Fortaleza de Gharok]] com Raziel, Sanguinallis e o futuro reino anão ainda está em revisão.
-- Relação das [[Ruínas de Valthor]] com Raziel, Ancião Primordial e Sangue Antigo deve ser dosada.
-- Estrutura completa, sobrevivência atual e motivação real do [[Clã Sanguinallis]] ficam no bastidor.
-
-#### Condições de Revelação
-
-- Revelar por investigação em ruínas, sangue, relíquias, inimigos antigos, documentos perdidos ou reações de Raziel.
-
-### Frente — Rede de Falsificadores
-
-#### Entidades Ligadas
-
-- [[Rede de Falsificadores de Maré Baixa]]
-- [[Remédios Falsos de Maré Baixa]]
-- [[O Frasco Afogado]]
-- [[Mestre Odran Veyl]]
-- [[Varkh Nimalis]]
-- [[Guilda dos Mercadores]]
-
-#### Status Atual
-
-Frente de investigação urbana ligada ao arco de Varkh. A nota principal da rede deve ser rumorosa e player-safe até a identidade, escala e motivação real serem decididas.
-
-#### Segredos do Mestre
-
-- Identidade, escala e motivação real da rede permanecem em definição.
-- O envolvimento de Odran, da Guilda ou de agentes da Coroa não deve ser confirmado sem decisão do Sage.
-
-#### Condições de Revelação
-
-- Revelar por frascos falsos, testemunhas de Maré Baixa, rotas comerciais, documentos adulterados ou confronto com intermediários.
+- Definir se a linhagem Terra Decimus é apenas política ou possui peso antigo real.
 
 ---
 
-## Dossiê do Mestre — Capítulo 01: Ecos do Mundo Perdido
+# DOSSIÊ DO MESTRE — CAPÍTULO 01: ECOS DO MUNDO PERDIDO
 
 #### _Crônicas de [[EARTHROPO/EARTHROPO|Earthropo]] — capítulo em preparação_
 
@@ -738,32 +1050,9 @@ Frente de investigação urbana ligada ao arco de Varkh. A nota principal da red
 > ![[zz_media/covers/banner_ecos_do_mundo_perdido.png|400]]
 
 > [!world]- SINOPSE
-> O primeiro capítulo aproxima [[Vezemir]], [[Varkh Nimalis]] e [[Raziel]] por meio de um incidente em uma estrada secundária entre [[Nimalis]] e a [[Floresta de Avenor]]. Uma caravana sofre um acidente depois de um tremor localizado, frascos de remédios falsificados se quebram e uma passagem artificial surge sob a terra. O que parecia contrabando comum revela sinais de tecnologia antiga, símbolos ligados ao [[Véu Cinzento]] e ecos de estruturas esquecidas sob Earthropo. Cada personagem encontra ali uma pista íntima: o dragão e os Guardiões para Vezemir, os remédios falsos de Odran para Varkh, e as marcas de sangue antigo para Raziel.
-
-## Elenco Principal
-
-```datacards
-TABLE thumbnail, status, location, faction
-FROM "Characters/Individual"
-WHERE (
-  contains(chapters, "01 - Ecos do Mundo Perdido")
-  OR contains(tags, "capitulo01")
-  OR file.name = "Vezemir"
-  OR file.name = "Varkh Nimalis"
-  OR file.name = "Raziel"
-)
-SORT file.name ASC
-
-// Settings
-preset: compact
-columns: 5
-imageProperty: thumbnail
-showImageOnHover: true
-cardSpacing: 4
-```
-
-> [!warning]- SPOILERS DO MESTRE
-> O acidente da caravana não é acaso. Parte dos remédios falsos ligados aos métodos de [[Mestre Odran Veyl]] foi adulterada com um reagente antigo retirado de fragmentos tecnológicos encontrados em ruínas menores. Quando o líquido toca uma pedra enterrada, um sistema adormecido tenta reiniciar um protocolo de manutenção e defesa. A estrutura chama a [[Unidade DORN-7]], uma entidade mecânica antiga, danificada e incapaz de entender o mundo moderno. O encontro deve revelar que Earthropo vive sobre ruínas ainda parcialmente funcionais, sem explicar de uma vez o [[Véu Cinzento]], os [[Criadores]], os [[Guardiões do Véu Cinzento]] ou a origem completa das relíquias.
+> O primeiro capítulo aproxima [[Vezemir]], [[Varkh Nimalis]] e [[Raziel]] por meio de um incidente em uma estrada secundária entre [[Nimalis]] e a [[Floresta de Avenor]].
+> Uma caravana sofre um acidente depois de um tremor localizado, frascos de remédios falsificados se quebram e uma passagem artificial surge sob a terra.
+> O que parecia contrabando comum revela sinais de tecnologia antiga, símbolos ligados ao [[Véu Cinzento]] e ecos de estruturas esquecidas sob Earthropo.
 
 ---
 
@@ -779,33 +1068,6 @@ A função dele não é revelar todo o mundo. É colocar os jogadores diante de 
 - marcas do [[Véu Cinzento]];
 - histórias que sobreviveram como rumor, medo ou superstição;
 - estruturas antigas que ainda funcionam parcialmente sob [[EARTHROPO/EARTHROPO|Earthropo]].
-
-O [[Conclave dos Errantes]] ouviu rumores recentes sobre tremores na rota entre [[Nimalis]] e a [[Floresta de Avenor]]. Dizem que parte do caminho cedeu, revelando algo no subterrâneo. Alguns viajantes juram ter ouvido vozes ecoando debaixo da terra, como se algo tentasse falar através da pedra.
-
----
-
-## Pontos Sustentados pelo Vault
-
-- [[Vezemir]] busca o dragão de colar dourado e respostas sobre os [[Guardiões do Véu Cinzento]].
-- [[Varkh Nimalis]] investiga remédios falsos ligados aos métodos de [[Mestre Odran Veyl]].
-- [[Raziel]] despertou após mais de trezentos anos e procura os responsáveis por sua traição.
-- [[Nimalia]] é o reino dos antropos, com [[Nimalis]] como capital.
-- A [[Floresta de Avenor]] faz fronteira com Nimalia.
-- [[Leth'valora]] foi destruída pelo [[Dragão de Colar Dourado]].
-- [[Ruínas de Valthor]] e [[Fortaleza de Gharok]] são pontos antigos ligados à camada esquecida de Earthropo.
-- A forma exata como os três personagens se encontram ainda pode ser escolhida durante a preparação da sessão.
-
----
-
-## Premissa de Trabalho
-
-Cada personagem tem uma razão própria para seguir esse rastro.
-
-- Vezemir vê uma possível ligação com o dragão e com os Guardiões do Véu Cinzento: uma história sobre névoa cinzenta contada por gente que jura não acreditar em lendas.
-- Varkh vê uma pista sobre quem está usando os métodos de Odran: um símbolo antigo em um frasco falso, parecido com uma runa que Odran lhe ensinou.
-- Raziel vê ecos de poderes antigos ligados às [[Ruínas de Valthor]], à [[Fortaleza de Gharok]] e ao sangue que o reconstruiu: uma inscrição apagada que pode indicar o clã ao qual pertencia.
-
-Os rumores dizem que o local sob a abertura contém pedras antigas, inscrições desconhecidas e o reflexo de metal opaco visível de cima. Onde há passagem de água, há ferrugem, sugerindo que a estrutura está ali há muito tempo. Vozes ecoam do subterrâneo sem que ninguém entenda o que significam. Até agora, parece haver uma tentativa de abafar o caso e afastar curiosos.
 
 ---
 
@@ -837,115 +1099,9 @@ Não parece uma mina.
 
 Parece uma instalação esquecida.
 
-O cheiro que vem de baixo mistura terra molhada, ferrugem, óleo velho e algo parecido com pedra queimada.
-
-Poucos minutos depois, um som metálico ecoa do fundo.
-
-Algo lá embaixo ouviu o chamado.
-
 ---
 
-## O Que Aconteceu de Verdade
-
-A carga da caravana não era comum.
-
-Parte dos remédios falsos ligados aos métodos de [[Mestre Odran Veyl]] foi adulterada com um reagente antigo, retirado ilegalmente de fragmentos encontrados em ruínas menores de Earthropo.
-
-Quem falsificou os remédios não entendia a origem do material. Usavam apenas porque estabilizava misturas, preservava líquidos por mais tempo e dava aos frascos uma aparência milagrosa.
-
-Mas o reagente não era alquímico.
-
-Era resíduo de uma tecnologia antiga ligada a estruturas anteriores à história conhecida de Nimalia.
-
-Quando o líquido entrou em contato com a pedra enterrada, ativou parcialmente um sistema adormecido.
-
-Esse sistema não despertou uma ameaça mágica.
-
-Ele tentou reiniciar um protocolo antigo.
-
-E o protocolo chamou uma unidade de manutenção e defesa esquecida.
-
----
-
-## Local Principal — A Passagem Sob a Estrada
-
-A abertura leva a um corredor inclinado, parcialmente soterrado.
-
-As paredes são lisas demais para terem sido escavadas com picareta. Em alguns trechos, parecem pedra. Em outros, metal escuro. Raízes atravessam juntas e placas como se a floresta tivesse crescido tentando engolir a estrutura.
-
-A sensação deve ser de lugar antigo, funcional e quebrado.
-
-Não é uma masmorra feita para aventureiros.
-
-É uma parte morta de um sistema que já serviu a algum propósito real.
-
-### Elementos Visíveis
-
-- marcas de arrasto no chão;
-- símbolos repetidos em placas quebradas;
-- pequenas luzes falhando atrás de superfícies translúcidas;
-- portas sem dobradiças aparentes;
-- corredores parcialmente bloqueados por terra;
-- ossos muito antigos presos sob escombros;
-- restos de pequenos mecanismos esmagados;
-- uma inscrição parcialmente legível;
-- uma sala circular no fim do corredor.
-
----
-
-## A Sala Circular
-
-No fim da passagem existe uma sala ampla, circular, com o teto rachado e parcialmente coberto por raízes.
-
-No centro, há uma figura caída de joelhos, presa entre cabos petrificados, pedra partida e suportes metálicos rompidos.
-
-À primeira vista, pode parecer uma estátua.
-
-Mas há detalhes errados demais:
-
-- articulações mecânicas;
-- placas sobrepostas como armadura;
-- marcas de impacto antigas;
-- um núcleo apagado no peito;
-- dedos grossos, feitos para força e precisão;
-- inscrições gravadas em partes do corpo;
-- uma fenda no rosto onde uma luz fraca começa a surgir.
-
-Quando os personagens se aproximam, o chão vibra.
-
-A figura tenta mover um braço.
-
-Falha.
-
-Tenta erguer a cabeça.
-
-Consegue.
-
-Então uma voz grave, quebrada e irregular sai de dentro da estrutura:
-
-> “Setor comprometido.”
-
-Depois de alguns segundos:
-
-> “Autoridade de reconstrução ausente.”
-
-E então:
-
-> “Identifiquem-se.”
-
----
-
-## A [[Unidade DORN-7]]
-
-Nome de trabalho: **[[Unidade DORN-7]]**
-
-Outros nomes possíveis dentro da campanha:
-
-- Vigia Dorn;
-- Sentinela Dorn;
-- O Homem de Pedra e Ferro;
-- O Guardião Soterrado;
-- A Máquina da Estrada Velha.
+## A Unidade DORN-7
 
 A [[Unidade DORN-7]] não foi criada para conquistar, matar ou servir reis.
 
@@ -967,25 +1123,13 @@ Não porque ela seja maligna.
 
 Mas porque ainda tenta obedecer regras que ninguém conhece.
 
----
+### Frases possíveis
 
-## Como a [[Unidade DORN-7]] Deve Agir
+> “Setor comprometido.”
 
-A [[Unidade DORN-7]] não deve atacar imediatamente.
+> “Autoridade de reconstrução ausente.”
 
-Ela primeiro tenta entender a situação.
-
-Suas ações iniciais:
-
-1. tenta se erguer;
-2. escaneia os personagens visualmente;
-3. identifica armas como risco;
-4. identifica sangue, ferimentos ou doença;
-5. reage ao símbolo antigo nos frascos falsos;
-6. tenta acessar um “núcleo local” que não responde;
-7. entra em instabilidade quando percebe que o setor está exposto.
-
-Frases possíveis:
+> “Identifiquem-se.”
 
 > “Ciclos excedidos.”
 
@@ -1005,14 +1149,6 @@ Frases possíveis:
 
 > “Este local deveria permanecer selado.”
 
-A [[Unidade DORN-7]] não explica o que é o Véu.
-
-Não explica quem foram os Criadores.
-
-Não explica a Grande Fratura.
-
-Ela apenas deixa claro que o mundo atual está vivendo sobre ruínas que ainda funcionam parcialmente.
-
 ---
 
 ## Conexão com Cada Personagem
@@ -1021,33 +1157,15 @@ Ela apenas deixa claro que o mundo atual está vivendo sobre ruínas que ainda f
 
 Vezemir pode notar que algumas marcas no local lembram símbolos associados aos [[Guardiões do Véu Cinzento]], mas em uma versão mais antiga, incompleta ou distorcida.
 
-Isso não prova que os Guardiões criaram a estrutura.
-
-Pode indicar o contrário: os Guardiões talvez tenham herdado, protegido ou reinterpretado sinais muito mais antigos.
-
 A [[Unidade DORN-7]] também pode reagir à presença de Vezemir de forma estranha, como se identificasse nele traços de exposição prolongada a algo ligado ao Véu, às ruínas ou ao dragão.
 
 Frase possível:
 
 > “Resíduo de ruptura detectado.”
 
-Vezemir não precisa entender o que isso significa.
-
-Mas deve sentir que aquilo toca sua busca.
-
 ### [[Varkh Nimalis]]
 
 Varkh reconhece nos frascos falsos elementos do método de [[Mestre Odran Veyl]], mas adulterados por alguém que não dominava a técnica original.
-
-Isso liga sua investigação pessoal ao acidente.
-
-Ele pode perceber:
-
-- rótulos falsificados;
-- dosagens erradas;
-- resíduos incomuns;
-- uso de estabilizante desconhecido;
-- tentativa de imitar uma fórmula legítima.
 
 A [[Unidade DORN-7]] identifica os frascos como “material médico contaminado” ou “componente clínico corrompido”.
 
@@ -1059,12 +1177,6 @@ Isso dá a Varkh uma pista concreta:
 
 Raziel pode sentir que a estrutura pertence a uma camada de mundo anterior ao presente.
 
-Não como visão divina.
-
-Não como revelação completa.
-
-Mas como reconhecimento físico: o ar pesa diferente, as inscrições parecem antigas demais, e a presença da máquina desperta ecos de sua própria reconstrução, traição ou vínculo com sangue antigo.
-
 A [[Unidade DORN-7]] pode reagir a Raziel com uma falha específica:
 
 > “Registro biológico incompatível.”
@@ -1073,108 +1185,9 @@ Ou:
 
 > “Assinatura vital instável.”
 
-Isso não precisa explicar Raziel.
+Isso não explica Raziel.
 
 Apenas cria tensão.
-
-A máquina percebe que há algo errado ou incomum nele.
-
----
-
-## Forças em Movimento
-
-### [[Guarda Real de Nimalia]]
-
-A Guarda quer isolar a estrada, controlar testemunhas e impedir que rumores se espalhem.
-
-Eles não entendem o que foi encontrado, mas sabem que algo assim pode gerar pânico ou interesse político.
-
-Se a [[Unidade DORN-7]] for vista por muita gente, a Guarda tentará tomar custódia dela.
-
-### Falsificadores
-
-Alguém ligado aos remédios falsos quer recuperar a carga antes que ela seja rastreada.
-
-Esses agentes não precisam ser vilões grandiosos ainda.
-
-Podem ser capangas, atravessadores, boticários corruptos ou mensageiros pagos.
-
-Eles sabem pouco.
-
-Mas sabem o suficiente para fugir quando veem a estrutura ativar.
-
-### [[Conclave dos Errantes]]
-
-O [[Conclave dos Errantes]] pode aparecer como intermediário, contratante ou fonte de rumor.
-
-Eles não precisam saber tudo.
-
-Mas podem ter ouvido histórias sobre “estradas que respiram luz” ou “homens de pedra sob as raízes de Avenor”.
-
-### [[Guardiões do Véu Cinzento]]
-
-Os [[Guardiões do Véu Cinzento]] não precisam aparecer diretamente.
-
-Melhor que apareçam por sinal:
-
-- símbolo antigo;
-- advertência riscada;
-- fragmento de frase;
-- marca em uma parede;
-- objeto deixado por alguém que esteve ali antes.
-
-Isso mantém o mistério.
-
----
-
-## Pistas Concretas do Primeiro Encontro
-
-Escolher de três a cinco para aparecerem na primeira sessão.
-
-1. Um frasco falso com símbolo raspado no fundo.
-2. Uma placa metálica marcada com o mesmo símbolo encontrado na galeria.
-3. Um mapa incompleto queimado nas bordas.
-4. Uma inscrição antiga parcialmente legível: “SETOR DORN — CONTENÇÃO”.
-5. Uma peça retirada do corpo de um pequeno mecanismo destruído.
-6. Uma lista de entregas apontando para [[Nimalis]].
-7. Um nome repetido nos documentos falsificados.
-8. Marcas de garras antigas em uma porta interna.
-9. Uma parede onde alguém escreveu: “não acordem o vigia”.
-10. Uma coordenada ou marcação apontando para outra ruína.
-
----
-
-## Possíveis Pontos de Encontro
-
-> [!note]
-> Escolher apenas um quando a sessão for preparada. Não canonizar todos ao mesmo tempo.
-
-- Uma rota entre [[Nimalis]] e a [[Floresta de Avenor]].
-- Uma investigação sobre remédios falsos que chega perto de território ligado ao Véu.
-- Uma ruína menor conectada indiretamente às [[Ruínas de Valthor]].
-- Um pedido do [[Conclave dos Errantes]] envolvendo uma relíquia ou escolta.
-- Um rumor vindo do Mar da Neblina que cruza com documentos da Coroa.
-
----
-
-## Quests Ativas
-
-```dataview
-TABLE quest_status, location, faction
-FROM "CAMPANHA/Quests"
-WHERE type != "index"
-AND quest_status != "Concluída" AND quest_status != "Falhou"
-SORT file.name ASC
-```
-
-## Rumores Ativos
-
-```dataview
-TABLE status, visibility, spoiler_level
-FROM "CAMPANHA/Rumors"
-WHERE type != "index"
-SORT file.name ASC
-```
 
 ---
 
@@ -1190,75 +1203,12 @@ Os personagens precisam decidir o que priorizar:
 
 - salvar feridos;
 - impedir a fuga dos falsificadores;
-- conversar com o golem;
+- conversar com a unidade;
 - esconder a descoberta;
 - chamar reforços;
 - fugir antes que sejam culpados;
 - proteger a passagem;
 - impedir que a Guarda tome tudo.
-
-Esse conflito força a união dos personagens sem parecer artificial.
-
-Eles não precisam confiar uns nos outros.
-
-Só precisam perceber que todos estão presos no mesmo problema.
-
----
-
-## Escolhas Possíveis dos Jogadores
-
-Ao fim do capítulo ou da primeira sessão, os personagens podem decidir:
-
-- entregar a [[Unidade DORN-7]] à Guarda Real;
-- esconder a existência do golem;
-- tentar reativá-lo com segurança;
-- levar a informação ao Conclave dos Errantes;
-- investigar a origem dos frascos falsos;
-- seguir o ponto marcado no mapa;
-- procurar alguém que reconheça os símbolos;
-- selar a passagem e fingir que nada aconteceu.
-
-Nenhuma escolha deve encerrar o mistério.
-
-Cada escolha deve abrir uma consequência.
-
----
-
-## Consequências para Sessões Futuras
-
-### Se a Coroa tomar o local
-
-- a estrada é fechada;
-- testemunhas são interrogadas;
-- documentos somem;
-- surgem rumores sobre uma “arma antiga”;
-- a Guarda Real passa a observar os personagens.
-
-### Se os personagens esconderem o golem
-
-- ganham uma fonte perigosa de pistas;
-- podem ser perseguidos;
-- precisam lidar com reparos, energia e memória falha;
-- carregam um segredo que pode colocar todos em risco.
-
-### Se os falsificadores escaparem
-
-- a rede de remédios falsos muda de rota;
-- provas desaparecem;
-- Varkh ganha um inimigo ativo;
-- alguém passa a saber que os personagens viram demais.
-
-### Se o símbolo dos Guardiões for reconhecido
-
-- Vezemir encontra uma pista nova;
-- mas também pode atrair atenção indesejada;
-- os Guardiões do Véu Cinzento deixam de ser apenas uma lembrança distante.
-
-### Se Raziel interagir com a máquina
-
-- a [[Unidade DORN-7]] pode registrar sua presença como anomalia;
-- isso pode ligar Raziel a estruturas antigas sem explicar tudo ainda;
-- alguma parte da instalação pode reagir a ele de forma inesperada.
 
 ---
 
@@ -1294,108 +1244,110 @@ E a última frase antes do silêncio é:
 
 ---
 
-## Segredos do Mestre
+# SEGREDOS CENTRALIZADOS DE PERSONAGENS E ENTIDADES
 
-- A conexão real entre o [[Véu Cinzento]], os Guardiões e os [[Criadores]] ainda não deve ser revelada de uma vez.
-- A relação entre o dragão de colar dourado e os eventos antigos deve ser mostrada por pistas, não por exposição direta.
-- As pistas de Varkh devem parecer mundanas antes de apontarem para algo maior.
-- Raziel deve entrar com peso, mas sem resolver o mistério inteiro sozinho.
-- A [[Unidade DORN-7]] não é única.
-- A passagem sob a estrada faz parte de uma rede antiga sob Earthropo.
-- O reagente usado nos remédios falsos veio de fragmentos de tecnologia antiga.
-- Alguém em Nimalis pode já saber da existência de estruturas semelhantes.
-- A Coroa provavelmente tentará controlar a descoberta se souber da verdade.
-- O mapa fragmentado projetado pela [[Unidade DORN-7]] aponta para outro setor ativo.
+> [!WARNING]
+> Conteúdo movido das notas de personagem e entidade para manter o vault operacionalmente público.
+> Revisar e consolidar depois.
 
 ---
 
-## Pendências Antes de Jogar
+## [[Augustus Terra Decimus]]
+
+- Augustus sabe mais sobre o [[Véu Cinzento]] do que admite publicamente.
+- A [[Coroa de Nimalia]] pode ter herdado, ocultado ou protegido um segredo antigo.
+- A relação entre Coroa, Igreja, Véu e Criadores ainda não deve ser revelada.
+- A ausência de herdeiro público pode ser apenas detalhe político ou sinal de algo maior.
+- Augustus pode estar protegendo o reino de uma ameaça real, mesmo usando métodos autoritários.
+- A [[Igreja das Chamas]] pode não ter controle total sobre ele.
+- A [[Guilda dos Mercadores]] é tolerada por necessidade, não por confiança.
+- O [[Culto dos Sussurrantes]] pode usar o medo da Coroa como ferramenta de recrutamento.
+- Se Augustus descobrir quem [[Raziel]] é, pode tratá-lo como arquivo vivo.
+- Se os remédios falsos virarem crise pública, a Coroa pode usar [[Varkh Nimalis]] como bode expiatório.
+- [[Vezemir]] pode ser visto por Augustus como arma útil ou risco livre demais.
+- A linhagem Terra Decimus pode estar ligada a juramento antigo, maldição, pacto ou função de contenção.
+- O rei pode ser guardião trágico, manipulado, corrompido pela ordem, último selo ou falso leão. Não confirmar sem decisão do Sage.
+
+---
+
+## [[Elarion Vaelthor]]
+
+- Sabia muito mais sobre a origem de [[Vezemir]] do que jamais revelou.
+- Possivelmente possuía ligações com os [[Guardiões do Véu Cinzento]].
+- Demonstrava preocupação incomum com a magia que habitava o jovem meio-elfo.
+- Pode ter escondido documentos, artefatos ou registros em [[Leth'valora]].
+- Seu desaparecimento ocorreu pouco tempo após a partida de Vezemir.
+
+---
+
+## [[Raziel]]
+
+- O verdadeiro motivo pelo qual o [[Ancião Primordial]] libertou Raziel permanece desconhecido.
+- A heresia rúnica usada como pretexto para sua captura ainda não foi definida.
+- A forma como as [[Adagas de Espectro Fantasma]] permaneceram ligadas a Raziel durante o aprisionamento continua em aberto.
+- Sua relação com o [[Véu Cinzento]] e com os [[Criadores]] ainda não foi confirmada.
+- A reação de estruturas antigas a Raziel deve criar tensão, não explicação completa.
+
+---
+
+## [[Unidade DORN-7]]
+
+- A [[Unidade DORN-7]] não é única.
+- Ela fazia parte de uma rede antiga sob Earthropo.
+- A ativação dela foi causada por reagente antigo presente nos remédios falsificados.
+- Ela pode reconhecer traços incomuns em [[Vezemir]], [[Varkh Nimalis]] ou [[Raziel]], mas não deve explicar tudo.
+- Ela não reconhece a Coroa, a Guarda Real ou reinos modernos.
+- Seu mapa fragmentado aponta para outro setor ativo.
+
+---
+
+## [[Varkh Nimalis]]
+
+- A identidade de quem está usando os métodos de Odran ainda é desconhecida.
+- O envolvimento de Odran com as falsificações, caso exista, ainda não foi definido.
+- A extensão real da fama de Varkh como assassino pode ser maior ou menor do que os rumores indicam.
+- A classe mecânica definitiva de Varkh ainda precisa ser reconciliada com a ficha sem nome recebida do jogador.
+- O arco de Varkh pode escalar de investigação de rua para crise política se a Coroa intervier.
+
+---
+
+## [[Vezemir]]
+
+- [[O Medalhão]] pode estar ligado à verdadeira origem de Vezemir.
+- [[Padre Oric]] desapareceu investigando conexões entre os Guardiões e o dragão de colar dourado.
+- O dragão demonstrou reconhecer Vezemir durante o ataque à vila.
+- [[Elarion Vaelthor]] pode ter ocultado informações sobre seus pais biológicos.
+- Existe a possibilidade de Vezemir descender de alguma linhagem élfica.
+- As relíquias de Vezemir devem reagir em camadas, sem explicar tudo cedo demais.
+
+---
+
+# DECISÕES PENDENTES GERAIS DO SAGE
 
 - Definir ponto inicial da mesa.
 - Definir quem está na caravana.
 - Definir quem está transportando os remédios falsos.
 - Definir qual símbolo antigo aparece nos frascos.
 - Definir se a Guarda Real chega antes ou depois do despertar da [[Unidade DORN-7]].
-- Separar informação pública de segredo do mestre.
-- Confirmar quais imagens serão usadas como capa, retrato ou handout.
 - Definir quais pistas aparecem no primeiro encontro.
 - Decidir se a [[Unidade DORN-7]] fica consciente no fim da sessão ou desliga temporariamente.
+- Confirmar se Augustus é oficialmente antropo leonino.
+- Definir se “O Leão da Chama” será epíteto canônico.
+- Definir o nível real de conhecimento de Augustus sobre o [[Véu Cinzento]].
+- Definir se a linhagem Terra Decimus possui segredo antigo.
+- Confirmar o papel real de Odran nas falsificações.
+- Confirmar o grau de envolvimento da Guilda e da Coroa nos remédios falsos.
+- Definir a natureza real dos [[Criadores]].
+- Definir o custo narrativo do [[Sangue Antigo]].
+- Definir quais verdades religiosas são reais, interpretadas ou manipuladas.
 
 ---
 
-## Uso em Mesa
+# USO EM MESA
 
-- **Como apresentar:** começar por uma consequência concreta, não por explicação de lore. A estrada cede, a carroça tomba, os frascos quebram e a passagem antiga aparece.
-- **O que os jogadores sabem:** cada personagem sabe sua própria motivação inicial e percebe que o incidente toca sua busca pessoal.
-- **O que apenas o mestre sabe:** as conexões entre Véu, dragão, sangue antigo, falsificações e estruturas subterrâneas.
-- **Como entra em cena:** por acidente, investigação, contrato, perseguição ou descoberta durante a rota entre Nimalis e a Floresta de Avenor.
-- **Ganchos:** frasco falso, símbolo antigo, sobrevivente assustado, ruína interditada, mapa incompleto, golem danificado, carga adulterada.
-- **Consequências possíveis:** os personagens se unem por conveniência, dívida, suspeita ou ameaça compartilhada.
-
----
-
-## Segredos de Personagens Centralizados
-
-> [!WARNING]
-> Conteúdo movido das notas de personagem para manter o vault operacionalmente público. Revisar e consolidar depois.
-
-### Elarion Vaelthor
-
-- Sabia muito mais sobre a origem de [[Vezemir]] do que jamais revelou.
-    
-- Possivelmente possuía ligações com os [[Guardiões do Véu Cinzento]].
-    
-- Demonstrava preocupação incomum com a magia que habitava o jovem meio-elfo.
-    
-- Pode ter escondido documentos, artefatos ou registros em [[Leth'valora]].
-    
-- Seu desaparecimento ocorreu pouco tempo após a partida de Vezemir.
-    
-
----
-
-### Raziel
-
-- O verdadeiro motivo pelo qual o Ancião Primordial libertou Raziel permanece desconhecido.
-
-- A heresia rúnica usada como pretexto para sua captura ainda não foi definida.
-
-- A forma como as Adagas de Espectro Fantasma permaneceram ligadas a Raziel durante o aprisionamento continua em aberto.
-
-- Sua relação com o Véu Cinzento e com os Criadores ainda não foi confirmada.
-
----
-
-### Unidade DORN-7
-
-- A Unidade DORN-7 não é única.
-- Ela fazia parte de uma rede antiga sob Earthropo.
-- A ativação dela foi causada por reagente antigo presente nos remédios falsificados.
-- Ela pode reconhecer traços incomuns em [[Vezemir]], [[Varkh Nimalis]] ou [[Raziel]], mas não deve explicar tudo.
-
-### Varkh Nimalis
-
-- A identidade de quem está usando os métodos de Odran ainda é desconhecida.
-
-- O envolvimento de Odran com as falsificações, caso exista, ainda não foi definido.
-
-- A extensão real da fama de Varkh como assassino pode ser maior ou menor do que os rumores indicam.
-
-- A classe mecânica definitiva de Varkh ainda precisa ser reconciliada com a ficha sem nome recebida do jogador.
-
----
-
-### Vezemir
-
-- [[O Medalhão]]  pode estar ligado à verdadeira origem de Vezemir.
-    
-- [[Padre Oric]] desapareceu investigando conexões entre os Guardiões e o dragão de colar dourado.
-    
-- O dragão demonstrou reconhecer Vezemir durante o ataque à vila.
-    
-- [[Elarion Vaelthor]] pode ter ocultado informações sobre seus pais biológicos.
-    
-- Existe a possibilidade de Vezemir descender de alguma linhagem élfica.
-    
-
----
+- **Como usar esta nota:** abrir antes e durante a sessão para consultar frentes, segredos, pistas e consequências.
+- **O que não fazer:** ler trechos diretamente para jogadores.
+- **O que mostrar:** apenas descrições player-safe vindas das notas públicas ou adaptadas em fala de mesa.
+- **Ritmo recomendado:** começar por problema concreto; revelar lore por reação, pista e consequência.
+- **Tom da campanha:** fantasia medieval com ruínas antigas, política de Coroa, fé institucional, investigação urbana e segredos enterrados.
+- **Regra de ouro:** cada revelação deve abrir uma pergunta maior, não fechar o universo inteiro.

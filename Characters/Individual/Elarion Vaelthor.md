@@ -5,7 +5,7 @@ NoteStatus: Complete
 type: character
 status: Desaparecido
 campaign_status: Ativo
-visibility: Mestre
+visibility: Jogadores
 spoiler_level: heavy
 gm_secret: true
 thumbnail: zz_media/thumbnails/th_elarion.png
@@ -52,15 +52,15 @@ tags:
 
 ## Visão Geral
 
-**Nome:** Elarion Vaelthor  
+**Nome:** Elarion Vaelthor
 **Títulos:** Capitão, Guardião de [[Leth'valora]]
-**Reputação Pública:** Herói de guerra e veterano respeitado  
-**Raça:** Meio-Elfo  
+**Reputação Pública:** Herói de guerra e veterano respeitado
+**Raça:** Meio-Elfo
 **Classe:** Capitão
-**Idade:** Desconhecida   
-**Status:** Desaparecido  
-**Território:** [[Floresta de Avenor]]  
-**Afiliação:** [[Sentinelas de Leth'valora]]  
+**Idade:** Desconhecida
+**Status:** Desaparecido
+**Território:** [[Floresta de Avenor]]
+**Afiliação:** [[Sentinelas de Leth'valora]]
 **Associados Conhecidos:** [[Vezemir]], [[General Cassian Valerius]]
 
 ---
@@ -116,11 +116,11 @@ Ele começou a temer o que seu pupilo poderia se tornar.
 Na manhã da despedida, entregou ao jovem três relíquias:
 
 - [[Grisalma]]
-    
+
 - [[Muralha de Dorn]]
-    
+
 - [[O Medalhão]]
-    
+
 
 Sem explicações.
 
@@ -140,16 +140,16 @@ _Pendente de consolidação pelo Sage._
 
 ## Personalidade
 
-**Temperamento:**  
+**Temperamento:**
 Calmo, disciplinado e extremamente reservado.
 
-**Virtudes:**  
+**Virtudes:**
 Honra, sabedoria, paciência e senso de responsabilidade.
 
-**Defeitos:**  
+**Defeitos:**
 Excessivamente secreto, emocionalmente distante e disposto a carregar fardos sozinho.
 
-**Crenças:**  
+**Crenças:**
 A verdadeira força não está no poder, mas no controle dele.
 
 ---
@@ -208,16 +208,16 @@ _Pendente de consolidação pelo Sage._
 
 ## Capacidades narrativas
 
-**Mestre Espadachim:**  
+**Mestre Espadachim:**
 Reconhecido como um dos maiores guerreiros de sua geração.
 
-**Estratégia Militar:**  
+**Estratégia Militar:**
 Veterano de campanhas e conflitos que moldaram a história de Leth'valora.
 
-**Magia Élfica Avançada:**  
+**Magia Élfica Avançada:**
 Especialista em magia defensiva, selamentos e contenção arcana.
 
-**Treinamento de Elite:**  
+**Treinamento de Elite:**
 Responsável pela formação de diversos capitães e sentinelas.
 
 ---

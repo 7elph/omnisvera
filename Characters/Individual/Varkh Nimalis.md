@@ -85,10 +85,6 @@ WHERE contains(this.chapters, file.name)
 SORT file.name ASC
 ```
 
-## O que os jogadores sabem
-
-- Ver a Visão Geral, História e Situação Atual desta nota.
-
 ## História
 
 > <h4>"Alquimia não é transformar chumbo em ouro. É transformar problema em saída."</h4>
@@ -181,33 +177,25 @@ _Pendente de consolidação pelo Sage._
 
 ## Equipamentos importantes
 
-### Espada Curta
 
-Arma simples e confiável, adequada aos becos estreitos e herdada do treinamento com Odran.
+```datacards
+TABLE thumbnail, item, status FROM #varkh-item
+SORT name ASC
 
-### Duas Adagas
-
-Usadas para cortar, ameaçar, abrir caminho e encerrar confrontos rapidamente.
-
-### Arco Curto
-
-Arma apropriada para telhados, distância e ataques silenciosos.
+// Settings
+preset: grid
+columns: 6
+imageProperty: thumbnail
+imageHeight: 30px
+showImageOnHover: true
+cardSpacing: 4
+```
 
 ### Cinto de Frascos Alquímicos
 
-Carrega misturas como pó de sono, fumaça cinza, óleo escorregadio, ácido fraco e venenos leves.
-
-### Máscara de Médico da Peste
-
-Máscara adaptada ao bico de Varkh e equipada com filtro de ervas.
-
-### Caderninho de Vozes
-
-Coleção de frases, timbres e sons que Varkh considera úteis ou interessantes.
+Carrega misturas inspiradas por itens comuns como [[Ácido]], [[Fogo de alquimista]], [[Frasco de óleo]], [[Antitoxina]], [[Incenso]] e [[Pedra trovão]].
 
 ---
-
-Os equipamentos de Varkh ainda não possuem notas individuais no vault. Quando forem transformados em itens próprios, esta seção poderá receber a mesma consulta de cartões usada na ficha de Vezemir.
 
 ## Capacidades narrativas
 
@@ -227,20 +215,6 @@ Altera documentos e reproduz marcas usando tintas, solventes e ácidos.
 Conhece o porto, Maré Baixa e parte do submundo da capital de Nimalia.
 
 ---
-
-## Mecânicas confirmadas
-
-> [!warning] Reconciliação pendente
-> A ficha sem nome atribuída provisoriamente a Varkh usa um modelo antigo, enquanto sua história o define como ladrão e alquimista de rua. Nenhum valor mecânico será substituído até confirmação com o jogador.
-
-#### Armas e carga
-
-- Espada curta.
-- Duas adagas.
-- Arco curto.
-- Máscara de médico da peste.
-- Cinto de frascos e utensílios alquímicos.
-- Caderninho de vozes.
 
 #### Idiomas
 

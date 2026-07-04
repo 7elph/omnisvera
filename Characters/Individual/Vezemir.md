@@ -45,7 +45,7 @@ tags:
 # VEZEMIR — O BASTARDO DE FERRO
 
 > [!NOTE|clean no-i right]+ Vezemir
-> ![[zz_media/thumbnails/vezemir.png|400]]
+> ![[zz_media/characters/vezemir.png|400]]
 
 > [!NOTE]- Template aplicado
 > Esta nota segue o formato **Personagem Jogador**. Informações confidenciais devem ficar no [[CAMPANHA/ESTADO_DA_CAMPANHA|Estado da Campanha]].
@@ -64,12 +64,12 @@ tags:
 **Altura:** 2,02 m
 **Nível:** 1
 **Alinhamento:** Neutro
-**Status:** Vivo  
-**Afiliação:** [[Conclave dos Errantes]]  
+**Status:** Vivo
+**Afiliação:** [[Conclave dos Errantes]]
 **Afiliações Anteriores:** [[Sentinelas de Leth'valora]]
 **Associados Conhecidos:** [[Elarion Vaelthor]], [[Mira Valen]], [[Padre Oric]], [[General Cassian Valerius]]
-**Inimigos Conhecidos:** [[Dragão de Colar Dourado]]  
-**Origem:** [[Leth'valora]]  
+**Inimigos Conhecidos:** [[Dragão de Colar Dourado]]
+**Origem:** [[Leth'valora]]
 **Posses:** [[Grisalma]], [[Muralha de Dorn]], [[O Medalhão]]
 
 
@@ -112,11 +112,11 @@ Percebendo que seu pupilo estava caminhando para a destruição, Elarion tomou u
 Entregou-lhe três relíquias ancestrais:
 
 - [[Grisalma]]
-    
+
 - [[Muralha de Dorn]]
-    
+
 - [[O Medalhão]]
-    
+
 
 Na manhã seguinte, Vezemir deixou [[Leth'valora]].
 
@@ -154,7 +154,7 @@ E durante alguns breves anos, Vezemir conheceu a paz.
 
 ---
 
-### O Dragão de Colar Dourado
+### [[Dragão de Colar Dourado]]
 Essa paz terminou quando um enorme dragão verde atacou a vila.
 A criatura usava um misterioso colar dourado.
 Casas foram queimadas.
@@ -190,23 +190,23 @@ Esperando o momento em que finalmente reencontrará a criatura que destruiu sua 
 
 ## Personalidade
 
-**Temperamento:**  
+**Temperamento:**
 Reservado, disciplinado e resiliente. Vezemir raramente demonstra emoções, mas guarda dentro de si uma fúria que jamais desapareceu completamente.
 
 > [!infobox]
 >
 > ![[zz_media/thumbnails/th_vezemir.png]]
 
-**Virtudes:**  
+**Virtudes:**
 Lealdade, coragem, humildade, perseverança.
 
-**Defeitos:**  
+**Defeitos:**
 Obstinação, dificuldade em confiar nos outros, tendência ao isolamento.
 
-**Medos:**  
+**Medos:**
 Perder novamente alguém importante. Tornar-se um monstro consumido pelo ódio.
 
-**Crenças:**  
+**Crenças:**
 O valor de uma pessoa é definido por suas escolhas, não por seu sangue.
 
 ---
@@ -217,26 +217,13 @@ _Pendente de consolidação pelo Sage._
 
 ## Equipamentos importantes
 
-### [[Grisalma]]
-
-Machado lendário entregue por Elarion Vaelthor.
-
-### [[Muralha de Dorn]]
-
-Escudo ancestral entregue por Elarion Vaelthor.
-
-### [[O Medalhão]]
-
-Artefato misterioso cuja verdadeira função permanece desconhecida.
-
----
 
 ```datacards
-TABLE thumbnail, item, status FROM #vezemir
+TABLE thumbnail, item, status FROM #vezemir-item
 SORT name ASC
 
 // Settings
-preset: grid 
+preset: grid
 columns: 6
 imageProperty: thumbnail
 imageHeight: 30px
@@ -246,16 +233,16 @@ cardSpacing: 4
 
 ## Capacidades narrativas
 
-**Combate Marcial:**  
+**Combate Marcial:**
 Especialista em machados de guerra, escudos pesados e combate de linha de frente.
 
-**Resistência Sobre-Humana:**  
+**Resistência Sobre-Humana:**
 Capaz de continuar lutando mesmo após ferimentos que incapacitam guerreiros comuns.
 
-**Estratégia Militar:**  
+**Estratégia Militar:**
 Décadas de experiência em campanhas e conflitos.
 
-**Magia Instável:**  
+**Magia Instável:**
 Embora rejeite sua herança arcana, ocasionalmente manifesta explosões involuntárias de poder mágico.
 
 ---
@@ -281,12 +268,12 @@ Embora rejeite sua herança arcana, ocasionalmente manifesta explosões involunt
 
 #### Armas e carga
 
-- **[[Grisalma]]:** dano registrado de 2d8.
-- **Adaga oculta na bota:** dano de 1d4.
-- **Armadura pesada:** peso registrado de 20 kg.
-- **[[Muralha de Dorn]]:** bônus de +2 na CA.
+- **[[Grisalma]]:** usar [[Machado de batalha]] como referência inicial, com dano base de 2d6.
+- **Adaga oculta na bota:** usar [[Adaga]], dano de 1d4.
+- **Armadura pesada:** usar [[Armadura completa]] como referência inicial, peso de 20 kg.
+- **[[Muralha de Dorn]]:** usar [[Escudo de aço]] como referência inicial, bônus de +2 na CA.
 - **[[O Medalhão]]**.
-- Kit básico.
+- [[Kit básico]].
 
 #### Idiomas
 

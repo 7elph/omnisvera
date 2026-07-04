@@ -1,16 +1,16 @@
 ---
 obsidianUIMode: preview
 NoteIcon: magicitem
-NoteStatus: Draft
+NoteStatus: Active
 type: character
-status: Desconhecido
-campaign_status: Em revisão
-visibility: Mestre
-spoiler_level: heavy
-gm_secret: true
+status: Vivo
+campaign_status: Ativo
+visibility: Jogadores
+spoiler_level: none
+gm_secret: false
 thumbnail: zz_media/thumbnails/th_mestre_odran.png
-cover: zz_media/characters/mestre_odran.jpeg
-location: "[[Maré Baixa]]"
+cover: zz_media/characters/th_mestre_odran.jpeg
+location: "[[O Frasco Afogado]]"
 territory: "[[Nimalia]]"
 faction:
 class: Alquimista
@@ -23,13 +23,14 @@ chapters:
   - 00 - O Corvo da Maré Baixa
 subtype: major_npc
 work_status: Em desenvolvimento
-canon_status: Draft
+canon_status: Working Canon
 created_by: Sage
 requires_review: true
 tags:
   - personagem
   - npc
   - npc-importante
+  - capitulo00-varkh
   - alquimista
   - varkh
   - bside
@@ -38,6 +39,8 @@ tags:
   - nimalia
   - earthropo
   - character
+  - antropo
+  - conclave-dos-errantes
 ---
 
 # Mestre Odran Veyl
@@ -45,15 +48,9 @@ tags:
 > [!NOTE|clean no-i right]+ Mestre Odran Veyl
 > ![[zz_media/characters/mestre_odran.jpeg|400]]
 
-> [!WARNING] Estado canônico
-> Esta nota está em desenvolvimento e depende de confirmação do Sage.
-
-> [!NOTE]- Template aplicado
-> Esta nota segue o formato **NPC Importante**. Informações confidenciais devem ficar no [[CAMPANHA/ESTADO_DA_CAMPANHA|Estado da Campanha]].
-
 ## Visão Geral
 
-Alquimista veterano de [[Maré Baixa]], proprietário do estabelecimento conhecido como **O Frasco Afogado** e mentor de [[Varkh Nimalis]].
+Alquimista veterano de [[Maré Baixa]], proprietário do estabelecimento conhecido como [[O Frasco Afogado]] e mentor de [[Varkh Nimalis]].
 
 ## Aparições
 
@@ -69,11 +66,10 @@ SORT file.name ASC
 _Pendente de consolidação pelo Sage._
 
 ### Informações sustentadas
-- É descrito como um antropo ou demi-humano de características semelhantes às de um abutre.
+- É descrito como um antropo  de características semelhantes às de um abutre.
 - Encontrou Varkh tentando roubar sua loja.
 - Em vez de entregá-lo à guarda, transformou as tentativas de roubo em aprendizado prático.
 - Ensinou alquimia de rua, preparação de remédios e parte de seu código moral.
-- Alguém utiliza seu símbolo ou seus métodos para distribuir remédios falsos.
 
 ## Situação Atual
 
@@ -93,7 +89,7 @@ _Pendente de consolidação pelo Sage._
 
 ## Segredos
 
-- Informações confidenciais ficam centralizadas em [[CAMPANHA/ESTADO_DA_CAMPANHA|Estado da Campanha]].
+- Em desenvolvimento.
 
 ## Aparência
 
