@@ -24,12 +24,12 @@ class: Paladino
 race: Antropo
 role: npc
 related_factions:
-- "[[Coroa de Nimalia]]"
-- "[[Nobreza de Nimalia]]"
-- "[[Guarda Real de Nimalia]]"
-- "[[Igreja das Chamas]]"
-- "[[Culto dos Sussurrantes]]"
-- "[[Guilda dos Mercadores]]"
+  - "[[Coroa de Nimalia]]"
+  - "[[Nobreza de Nimalia]]"
+  - "[[Guarda Real de Nimalia]]"
+  - "[[Igreja das Chamas]]"
+  - "[[Culto dos Sussurrantes]]"
+  - "[[Guilda dos Mercadores]]"
 function: "Rei soberano de [[Nimalia]]"
 chapter:
   - 01 - Ecos do Mundo Perdido

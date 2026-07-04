@@ -1,6 +1,6 @@
 # Auditoria Global de Padronização do Vault
 
-Gerado em: 2026-07-02 09:34
+Gerado em: 2026-07-04 13:14
 
 Fonte de padrão: [[Workflow/OMNISVERA_VAULT_STANDARD|OMNISVERA_VAULT_STANDARD]]
 
@@ -12,65 +12,84 @@ Fonte de padrão: [[Workflow/OMNISVERA_VAULT_STANDARD|OMNISVERA_VAULT_STANDARD]]
 
 | métrica | valor |
 |---|---:|
-| notas Markdown auditadas | 357 |
-| notas com frontmatter | 187 |
+| notas Markdown auditadas | 472 |
+| notas com frontmatter | 302 |
 | notas sem frontmatter | 170 |
-| YAML/frontmatter parseável | 187 |
+| YAML/frontmatter parseável | 302 |
 | YAML/frontmatter com problema | 0 |
-| campos YAML distintos | 105 |
-| tags distintas | 216 |
-| tipos detectados | 18 |
-| subtipos detectados | 17 |
-| referências de mídia distintas | 173 |
+| campos YAML distintos | 134 |
+| tags distintas | 263 |
+| tipos detectados | 19 |
+| subtipos detectados | 18 |
+| referências de mídia distintas | 175 |
 | mídias em `zz_media` | 120 |
-| imagens/mídias quebradas | 32 |
-| imagens/mídias quebradas fora de histórico/auditoria | 0 |
-| possíveis problemas de case-sensitive | 47 |
-| possíveis problemas de case-sensitive fora de histórico/auditoria | 1 |
+| imagens/mídias quebradas | 33 |
+| imagens/mídias quebradas fora de histórico/auditoria | 1 |
+| possíveis problemas de case-sensitive | 46 |
+| possíveis problemas de case-sensitive fora de histórico/auditoria | 0 |
 | mídias possivelmente órfãs | 7 |
 
 Modo de validação YAML:
 
 | item | ocorrências |
 |---|---:|
-| `simple` | 357 |
+| `simple` | 472 |
 
 
 ## Campos YAML encontrados
 
 | item | ocorrências |
 |---|---:|
-| `tags` | 180 |
-| `NoteIcon` | 176 |
-| `NoteStatus` | 171 |
-| `status` | 171 |
-| `obsidianUIMode` | 170 |
-| `visibility` | 157 |
-| `type` | 154 |
-| `spoiler_level` | 149 |
-| `gm_secret` | 149 |
+| `tags` | 295 |
+| `NoteIcon` | 291 |
+| `NoteStatus` | 286 |
+| `status` | 286 |
+| `obsidianUIMode` | 285 |
+| `visibility` | 272 |
+| `type` | 269 |
+| `spoiler_level` | 264 |
+| `gm_secret` | 264 |
+| `campaign_status` | 245 |
+| `chapters` | 229 |
+| `created_by` | 204 |
+| `rumors` | 139 |
+| `hooks` | 138 |
 | `cover` | 136 |
-| `campaign_status` | 130 |
+| `source_system` | 122 |
+| `item_type` | 121 |
+| `item_family` | 120 |
+| `item_category` | 120 |
+| `purchase_status` | 120 |
 | `thumbnail` | 116 |
-| `chapters` | 116 |
-| `created_by` | 88 |
+| `source_book` | 114 |
+| `source_section` | 114 |
+| `source_table` | 113 |
+| `price` | 113 |
+| `origin_fit` | 113 |
+| `price_po` | 103 |
 | `territory` | 87 |
 | `location` | 84 |
+| `weight_kg` | 77 |
+| `mechanical_effect` | 74 |
 | `description` | 62 |
 | `faction` | 62 |
 | `info` | 55 |
 | `danger_level` | 52 |
+| `aliases` | 48 |
 | `name` | 41 |
 | `region` | 39 |
-| `aliases` | 35 |
+| `size_category` | 34 |
+| `damage` | 34 |
+| `damage_type` | 34 |
+| `range` | 34 |
 | `level` | 31 |
-| `rumors` | 26 |
-| `subtype` | 26 |
-| `work_status` | 26 |
-| `canon_status` | 26 |
-| `requires_review` | 26 |
-| `hooks` | 25 |
-| `origin` | 23 |
+| `subtype` | 28 |
+| `work_status` | 28 |
+| `canon_status` | 28 |
+| `requires_review` | 28 |
+| `critical` | 27 |
+| `kit_membership` | 25 |
+| `origin` | 24 |
 | `religion` | 21 |
 | `chapter` | 20 |
 | `class` | 19 |
@@ -80,10 +99,10 @@ Modo de validação YAML:
 | `district` | 16 |
 | `leader` | 15 |
 | `cssclasses` | 14 |
+| `related_factions` | 13 |
 | `faith` | 13 |
 | `arcs` | 13 |
 | `related_characters` | 12 |
-| `related_factions` | 12 |
 | `function` | 11 |
 | `rules_status` | 11 |
 | `population` | 11 |
@@ -91,45 +110,37 @@ Modo de validação YAML:
 | `system` | 10 |
 | `class_group` | 10 |
 | `primary_attribute` | 10 |
+| `armor_bonus` | 10 |
+| `movement_penalty` | 10 |
+| `max_dex_bonus` | 10 |
 | `owner` | 9 |
-| `item_type` | 8 |
 | `Alignment` | 8 |
 | `Government` | 8 |
 | `politics` | 8 |
 | `size` | 8 |
 | `exports` | 8 |
 | `imports` | 8 |
-| `portrait` | 8 |
-| `characters` | 6 |
-| `width` | 6 |
-| `height` | 6 |
-| `scale` | 6 |
-| `distance` | 6 |
-| `Community-Size` | 6 |
-| `map_scope` | 6 |
-| `epithet` | 5 |
-| `origin_tag` | 4 |
-| `related_lore` | 4 |
-| `ruleset` | 4 |
-| `alignment` | 3 |
-| `banner` | 3 |
-| `banner-x` | 3 |
-| `banner-y` | 3 |
-| `banner-height` | 3 |
-| `content-start` | 3 |
-| `banner-fade` | 3 |
-| `hit_die` | 3 |
-| `armor_allowed` | 3 |
 
 
 ## Tags encontradas
 
 | item | ocorrências |
 |---|---:|
+| `old-dragon` | 127 |
+| `item` | 124 |
+| `compra` | 114 |
+| `equipamento` | 113 |
+| `capitulo01` | 67 |
 | `earthropo` | 45 |
+| `origem-vezemir` | 36 |
+| `armas` | 34 |
+| `origem-varkh` | 33 |
+| `kits-e-ferramentas` | 28 |
 | `workflow` | 28 |
+| `arma-corpo-a-corpo` | 27 |
 | `lore` | 24 |
 | `character` | 21 |
+| `origem-raziel` | 21 |
 | `location` | 21 |
 | `personagem` | 19 |
 | `bside` | 19 |
@@ -138,73 +149,91 @@ Modo de validação YAML:
 | `nimalia` | 17 |
 | `origem` | 16 |
 | `npc` | 13 |
-| `old-dragon` | 13 |
 | `padronizacao` | 13 |
+| `omnisvera` | 12 |
+| `propriedades-e-montarias` | 12 |
+| `hospedagem-e-servicos` | 12 |
 | `nimalis` | 12 |
-| `omnisvera` | 11 |
+| `indice` | 11 |
 | `story` | 11 |
 | `raziel` | 11 |
 | `faction` | 11 |
 | `raca` | 11 |
-| `indice` | 10 |
 | `classe` | 10 |
 | `class` | 10 |
 | `faccao` | 10 |
+| `protecao` | 10 |
+| `ferramenta` | 10 |
 | `race` | 10 |
-| `origem-vezemir` | 9 |
 | `vampiro` | 9 |
-| `varkh` | 9 |
-| `item` | 9 |
+| `materiais-e-magia` | 9 |
 | `territory` | 9 |
 | `home` | 8 |
+| `alquimia-e-especiais` | 8 |
+| `item-especial` | 8 |
 | `territorio` | 8 |
 | `npc-importante` | 7 |
 | `sanguinallis` | 7 |
+| `varkh` | 7 |
 | `title` | 7 |
 | `map` | 7 |
-| `capitulo01` | 6 |
-| `coroa-de-nimalia` | 6 |
+| `conclave-dos-errantes` | 6 |
+| `antagonista` | 6 |
 | `avenor` | 6 |
 | `distrito` | 6 |
 | `bairro` | 6 |
-| `conclave-dos-errantes` | 5 |
-| `antagonista` | 5 |
-| `origem-raziel` | 5 |
+| `antropo` | 5 |
+| `coroa-de-nimalia` | 5 |
+| `varkh-item` | 5 |
+| `escudo` | 5 |
 | `artefato` | 5 |
 | `religiao` | 5 |
 | `religion` | 5 |
-| `antropo` | 4 |
+| `nobreza-de-nimalia` | 4 |
 | `elfo` | 4 |
 | `misterio` | 4 |
 | `humano` | 4 |
 | `jogador` | 4 |
 | `kenku` | 4 |
-| `vezemir` | 4 |
 | `veu-cinzento` | 4 |
 | `comercio` | 4 |
 | `mare-baixa` | 4 |
+| `arma-a-distancia` | 4 |
+| `veiculo` | 4 |
+| `propriedade` | 4 |
+| `bebida` | 4 |
+| `servico-magico` | 4 |
 | `report` | 4 |
 | `legacy` | 4 |
 | `rules-reference` | 4 |
 | `quest` | 3 |
 | `rumor` | 3 |
-| `nobreza-de-nimalia` | 3 |
+| `coroa` | 3 |
+| `igreja-das-chamas` | 3 |
 | `criatura` | 3 |
 | `sentinelas-de-lethvalora` | 3 |
 | `alquimista` | 3 |
-| `origem-varkh` | 3 |
 | `lethvalora` | 3 |
 | `sangue-antigo` | 3 |
 | `guardioes-do-veu-cinzento` | 3 |
 | `guilda-dos-mercadores` | 3 |
+| `economia` | 3 |
+| `municao` | 3 |
+| `armadura-leve` | 3 |
+| `kit` | 3 |
+| `iluminacao` | 3 |
+| `servico` | 3 |
+| `hospedagem` | 3 |
+| `material-especial` | 3 |
+| `vezemir-item` | 3 |
 | `anao` | 3 |
 | `capital` | 3 |
 | `criadores` | 3 |
-| `coroa` | 2 |
 | `paladino` | 2 |
+| `guarda-real-de-nimalia` | 2 |
 | `desaparecido` | 2 |
 | `militar` | 2 |
-| `igreja-das-chamas` | 2 |
+| `capitulo00-varkh` | 2 |
 | `guerreiro` | 2 |
 | `meio-elfo` | 2 |
 | `guilda` | 2 |
@@ -213,39 +242,10 @@ Modo de validação YAML:
 | `cultura` | 2 |
 | `capitulo` | 2 |
 | `nobreza` | 2 |
-| `economia` | 2 |
 | `remedios-falsos` | 2 |
-| `arma` | 2 |
-| `anciao-primordial` | 2 |
-| `dragonborn` | 2 |
-| `fortaleza` | 2 |
-| `porto` | 2 |
-| `mar-da-neblina` | 2 |
-| `valthor` | 2 |
-| `cosmologia` | 2 |
-| `historia` | 2 |
-| `fenomeno` | 2 |
-| `notes` | 2 |
-| `monstro` | 2 |
-| `classes` | 2 |
-| `regras` | 2 |
-| `dashboard` | 2 |
-| `assistant` | 2 |
-| `frontmatter` | 2 |
-| `indice-monstro` | 1 |
-| `world` | 1 |
-| `calendar` | 1 |
-| `campanha` | 1 |
-| `indice-quest` | 1 |
-| `indice-rumor` | 1 |
-| `dragao` | 1 |
-| `dragao-de-colar-dourado` | 1 |
-| `mentor` | 1 |
-| `humana` | 1 |
-| `comum` | 1 |
-| `falecido` | 1 |
-| `sacerdote` | 1 |
-| `capitulo00-raziel` | 1 |
+| `armadura-pesada` | 2 |
+| `ferramenta-de-ladrao` | 2 |
+| `recipiente` | 2 |
 
 
 ## Auditoria detalhada de tags
@@ -254,11 +254,11 @@ Modo de validação YAML:
 
 | item | ocorrências |
 |---|---:|
-| `campaign_specific` | 451 |
-| `official` | 150 |
-| `hybrid` | 107 |
-| `legacy_allowed` | 61 |
-| `unknown` | 51 |
+| `campaign_specific` | 734 |
+| `unknown` | 376 |
+| `official` | 265 |
+| `legacy_allowed` | 175 |
+| `hybrid` | 108 |
 
 
 ### Tags oficiais Omnisvera já usadas
@@ -268,7 +268,7 @@ Modo de validação YAML:
 - `character` — 21 nota(s). Exemplos: `Characters\Individual\Augustus Terra Decimus.md`, `Characters\Individual\Dragão de Colar Dourado.md`, `Characters\Individual\Elarion Vaelthor.md`
 - `class` — 10 nota(s). Exemplos: `Classes\Alquimista.md`, `Classes\Clérigo.md`, `Classes\Guerreiro.md`
 - `faction` — 11 nota(s). Exemplos: `Factions\Clã Sanguinallis.md`, `Factions\Conclave dos Errantes.md`, `Factions\Coroa de Nimalia.md`
-- `item` — 9 nota(s). Exemplos: `Items\Adagas de Espectro Fantasma.md`, `Items\Caderninho de Vozes.md`, `Items\Grisalma.md`
+- `item` — 124 nota(s). Exemplos: `Items\01 Armas\Adaga.md`, `Items\01 Armas\Alabarda.md`, `Items\01 Armas\Arco curto.md`
 - `location` — 21 nota(s). Exemplos: `Locations\Antiga Estrada Esquecida.md`, `Locations\Bairro dos Anões.md`, `Locations\Bairro dos Dragonborns.md`
 - `lore` — 24 nota(s). Exemplos: `CALENDAR.md`, `CULTURE.md`, `EARTHROPO\EARTHROPO.md`
 - `race` — 10 nota(s). Exemplos: `Races\Antropo.md`, `Races\Anão.md`, `Races\Dragonborn.md`
@@ -282,7 +282,7 @@ Modo de validação YAML:
 
 - `bside` — 19 nota(s). Exemplos: `Characters\Individual\Dragão de Colar Dourado.md`, `Characters\Individual\Elarion Vaelthor.md`, `Characters\Individual\General Cassian Valerius.md`
 - `capitulo` — 2 nota(s). Exemplos: `EARTHROPO\01 - Ecos do Mundo Perdido.md`, `Templates\RPG\Story.md`
-- `old-dragon` — 13 nota(s). Exemplos: `Classes\Clérigo.md`, `Classes\Guerreiro.md`, `Classes\Ladrão.md`
+- `old-dragon` — 127 nota(s). Exemplos: `Classes\Clérigo.md`, `Classes\Guerreiro.md`, `Classes\Ladrão.md`
 - `origem` — 16 nota(s). Exemplos: `Characters\Individual\Dragão de Colar Dourado.md`, `Characters\Individual\Elarion Vaelthor.md`, `Characters\Individual\General Cassian Valerius.md`
 - `story` — 11 nota(s). Exemplos: `CAMPANHA\ESTADO_DA_CAMPANHA.md`, `CAMPANHA\Quests\Quest 01 - Investigar Avistamentos de Dragões.md`, `CAMPANHA\Rumors\Rumor 01 - Dragões ao Sul de Nimalia.md`
 
@@ -290,7 +290,7 @@ Modo de validação YAML:
 
 > A ação futura segura é adicionar a tag oficial e preservar a tag existente.
 
-- `antagonista` → `character` — 5 nota(s). Exemplos: `Characters\Individual\Kaelen, o Flagelo.md`, `Characters\Individual\Lorde Malakar.md`, `Characters\Individual\Vandor, o Senhor das Bestas.md`
+- `antagonista` → `character` — 6 nota(s). Exemplos: `Characters\Individual\Augustus Terra Decimus.md`, `Characters\Individual\Kaelen, o Flagelo.md`, `Characters\Individual\Lorde Malakar.md`
 - `classe` → `class` — 10 nota(s). Exemplos: `Classes\Alquimista.md`, `Classes\Clérigo.md`, `Classes\Guerreiro.md`
 - `criatura` → `character` — 3 nota(s). Exemplos: `Characters\Individual\Dragão de Colar Dourado.md`, `Characters\Individual\Unidade DORN-7.md`, `Templates\Characters\Criatura.md`
 - `faccao` → `faction` — 10 nota(s). Exemplos: `Factions\Clã Sanguinallis.md`, `Factions\Conclave dos Errantes.md`, `Factions\Coroa de Nimalia.md`
@@ -306,10 +306,16 @@ Modo de validação YAML:
 
 > Isto não autoriza remoção. Tags de lore/campanha podem ser válidas mesmo fora do vocabulário técnico.
 
+- `acampamento` — 2 nota(s). Exemplos: `Items\03 Kits e Ferramentas\Saco de dormir.md`, `Items\03 Kits e Ferramentas\Tenda.md`
 - `adagas` — 1 nota(s). Exemplos: `Items\Adagas de Espectro Fantasma.md`
+- `alimentacao` — 2 nota(s). Exemplos: `Items\06 Hospedagem e Servicos\Banquete.md`, `Items\06 Hospedagem e Servicos\Refeição.md`
+- `antagonist` — 1 nota(s). Exemplos: `Characters\Individual\Augustus Terra Decimus.md`
+- `armas` — 34 nota(s). Exemplos: `Items\01 Armas\Adaga.md`, `Items\01 Armas\Alabarda.md`, `Items\01 Armas\Arco curto.md`
 - `audit` — 18 nota(s). Exemplos: `Workflow\_audit\Character_Standardization\CHARACTERS_INDIVIDUAL_STANDARDIZATION_REPORT.md`, `Workflow\_audit\Class_Rules_Standardization\CLASSES_AND_RULES_STANDARDIZATION_REPORT.md`, `Workflow\_audit\Class_Rules_Standardization\RULES_FOLDER_CONSOLIDATION_REPORT.md`
 - `backlog` — 1 nota(s). Exemplos: `Workflow\MISSING_NOTES_BACKLOG.md`
+- `bebida` — 4 nota(s). Exemplos: `Items\06 Hospedagem e Servicos\Cerveja anã.md`, `Items\06 Hospedagem e Servicos\Cerveja.md`, `Items\06 Hospedagem e Servicos\Hidromel.md`
 - `caderno` — 1 nota(s). Exemplos: `Items\Caderninho de Vozes.md`
+- `compra` — 114 nota(s). Exemplos: `Items\01 Armas\Adaga.md`, `Items\01 Armas\Alabarda.md`, `Items\01 Armas\Arco curto.md`
 - `comum` — 1 nota(s). Exemplos: `Characters\Individual\Mira Valen.md`
 - `constructo` — 1 nota(s). Exemplos: `Characters\Individual\Unidade DORN-7.md`
 - `currency` — 1 nota(s). Exemplos: `ECONOMY.md`
@@ -317,26 +323,43 @@ Modo de validação YAML:
 - `disgraceland` — 1 nota(s). Exemplos: `Workflow\MIGRATION_LEDGER.md`
 - `dragao` — 1 nota(s). Exemplos: `Characters\Individual\Dragão de Colar Dourado.md`
 - `economy` — 1 nota(s). Exemplos: `ECONOMY.md`
+- `equipamento` — 113 nota(s). Exemplos: `Items\01 Armas\Adaga.md`, `Items\01 Armas\Alabarda.md`, `Items\01 Armas\Arco curto.md`
+- `escrita` — 2 nota(s). Exemplos: `Items\03 Kits e Ferramentas\Pena e tinta.md`, `Items\03 Kits e Ferramentas\Pergaminhos.md`
 - `especializacao` — 1 nota(s). Exemplos: `Templates\Classes\Especialização.md`
 - `falecido` — 1 nota(s). Exemplos: `Characters\Individual\Mira Valen.md`
+- `ferramenta` — 10 nota(s). Exemplos: `Items\03 Kits e Ferramentas\Apito.md`, `Items\03 Kits e Ferramentas\Arpéu.md`, `Items\03 Kits e Ferramentas\Cadeado.md`
 - `force` — 1 nota(s). Exemplos: `Workflow\Legacy\Disgraceland\.trash\City Forces\Blueforce.md`
+- `fortificacao` — 2 nota(s). Exemplos: `Items\05 Propriedades e Montarias\Castelo.md`, `Items\05 Propriedades e Montarias\Forte.md`
 - `halfling` — 1 nota(s). Exemplos: `Races\Halfling.md`
 - `hemomante` — 1 nota(s). Exemplos: `Characters\Individual\Raziel.md`
+- `hospedagem` — 3 nota(s). Exemplos: `Items\06 Hospedagem e Servicos\Quarto coletivo.md`, `Items\06 Hospedagem e Servicos\Quarto de luxo.md`, `Items\06 Hospedagem e Servicos\Quarto individual.md`
+- `iluminacao` — 3 nota(s). Exemplos: `Items\03 Kits e Ferramentas\Lanterna furta-fogo.md`, `Items\03 Kits e Ferramentas\Tocha.md`, `Items\03 Kits e Ferramentas\Vela.md`
+- `kit` — 3 nota(s). Exemplos: `Items\03 Kits e Ferramentas\Kit básico.md`, `Items\03 Kits e Ferramentas\Kit explorador.md`, `Items\03 Kits e Ferramentas\Kit ladrão.md`
 - `leaflet` — 1 nota(s). Exemplos: `Workflow\Runtime Audit Report.md`
 - `machado` — 1 nota(s). Exemplos: `Items\Grisalma.md`
 - `manto` — 1 nota(s). Exemplos: `Items\Manto Primordial do Ancião.md`
 - `mascara` — 1 nota(s). Exemplos: `Items\Máscara de Médico da Peste de Varkh.md`
 - `mentor` — 1 nota(s). Exemplos: `Characters\Individual\Elarion Vaelthor.md`
+- `mestre` — 1 nota(s). Exemplos: `CAMPANHA\ESTADO_DA_CAMPANHA.md`
 - `military` — 1 nota(s). Exemplos: `Workflow\Legacy\Disgraceland\.trash\City Forces\Blueforce.md`
+- `montaria` — 2 nota(s). Exemplos: `Items\05 Propriedades e Montarias\Cavalo de guerra.md`, `Items\05 Propriedades e Montarias\Cavalo de montaria.md`
+- `municao` — 3 nota(s). Exemplos: `Items\01 Armas\Dardo x20.md`, `Items\01 Armas\Flecha improvisada.md`, `Items\01 Armas\Flecha x20.md`
 - `outline` — 1 nota(s). Exemplos: `Workflow\OUTLINES.md`
+- `paladin` — 1 nota(s). Exemplos: `Characters\Individual\Augustus Terra Decimus.md`
+- `propriedade` — 4 nota(s). Exemplos: `Items\05 Propriedades e Montarias\Casa pobre.md`, `Items\05 Propriedades e Montarias\Casa rica.md`, `Items\05 Propriedades e Montarias\Fazenda.md`
+- `protecao` — 10 nota(s). Exemplos: `Items\02 Protecao\Armadura acolchoada.md`, `Items\02 Protecao\Armadura completa.md`, `Items\02 Protecao\Armadura de couro batido.md`
+- `recipiente` — 2 nota(s). Exemplos: `Items\03 Kits e Ferramentas\Mochila.md`, `Items\03 Kits e Ferramentas\Odre.md`
 - `report` — 4 nota(s). Exemplos: `Workflow\Charts.md`, `Workflow\Format Audit Report.md`, `Workflow\Property Key Dashboard.md`
-- `rules` — 1 nota(s). Exemplos: `Workflow\RULES_SOURCES.md`
+- `rules` — 2 nota(s). Exemplos: `Items\Regras de Compra e Equipamento.md`, `Workflow\RULES_SOURCES.md`
 - `sacerdote` — 1 nota(s). Exemplos: `Characters\Individual\Padre Oric.md`
+- `servico` — 3 nota(s). Exemplos: `Items\06 Hospedagem e Servicos\Estrebaria.md`, `Items\06 Hospedagem e Servicos\Latrina.md`, `Items\06 Hospedagem e Servicos\Quarto de banho.md`
 - `shop` — 1 nota(s). Exemplos: `Locations\O Frasco Afogado.md`
 - `sources` — 1 nota(s). Exemplos: `Workflow\RULES_SOURCES.md`
+- `suprimento` — 1 nota(s). Exemplos: `Items\03 Kits e Ferramentas\Ração de viagem.md`
 - `template` — 1 nota(s). Exemplos: `Workflow\Property Key Dashboard.md`
 - `timeline` — 1 nota(s). Exemplos: `TIMELINE.md`
 - `universe` — 1 nota(s). Exemplos: `OMNISVERA.md`
+- `veiculo` — 4 nota(s). Exemplos: `Items\05 Propriedades e Montarias\Barco à vela.md`, `Items\05 Propriedades e Montarias\Canoa.md`, `Items\05 Propriedades e Montarias\Carroça.md`
 
 ### Notas candidatas a receber tag oficial adicional
 
@@ -347,20 +370,21 @@ Modo de validação YAML:
 
 | item | ocorrências |
 |---|---:|
+| `item` | 122 |
 | `lore` | 21 |
 | `location` | 21 |
 | `character` | 20 |
 | `audit` | 16 |
 | `faction` | 11 |
+| `index` | 10 |
 | `class` | 10 |
 | `race` | 10 |
-| `index` | 9 |
-| `item` | 9 |
 | `story` | 8 |
 | `map` | 6 |
 | `territory` | 5 |
 | `quest` | 2 |
 | `rumor` | 2 |
+| `rule` | 1 |
 | `spell` | 1 |
 | `monster` | 1 |
 | `ai_npc` | 1 |
@@ -371,11 +395,12 @@ Modo de validação YAML:
 
 | item | ocorrências |
 |---|---:|
-| `major_npc` | 6 |
+| `major_npc` | 7 |
 | `player_character` | 2 |
 | `noble_house` | 2 |
 | `guild` | 2 |
 | `shop` | 2 |
+| `campaign_state` | 1 |
 | `religious` | 1 |
 | `military` | 1 |
 | `district` | 1 |
@@ -629,12 +654,10 @@ Modo de validação YAML:
 
 - `Bestiary\INDICE_DE_MONSTROS.md`
 - `CALENDAR.md`
-- `CAMPANHA\ESTADO_DA_CAMPANHA.md`
 - `CAMPANHA\Quests\INDICE_DE_QUESTS.md`
 - `CAMPANHA\Quests\Quest 01 - Investigar Avistamentos de Dragões.md`
 - `CAMPANHA\Rumors\INDICE_DE_RUMORES.md`
 - `CAMPANHA\Rumors\Rumor 01 - Dragões ao Sul de Nimalia.md`
-- `Characters\Individual\Augustus Terra Decimus.md`
 - `Characters\Individual\Dragão de Colar Dourado.md`
 - `Characters\Individual\Kaelen, o Flagelo.md`
 - `Characters\Individual\Lorde Malakar.md`
@@ -662,72 +685,74 @@ Modo de validação YAML:
 - `Factions\Rede de Falsificadores de Maré Baixa.md`
 - `Home.md`
 - `Home_Mestre.md`
-- `Items\Adagas de Espectro Fantasma.md`
-- `Items\Caderninho de Vozes.md`
-- `Items\Grisalma.md`
-- `Items\INDICE_DE_ITENS.md`
-- `Items\Manto Primordial do Ancião.md`
-- `Items\Muralha de Dorn.md`
-- `Items\Máscara de Médico da Peste de Varkh.md`
-- `Items\O Medalhão.md`
-- `LATEST_NEWS.md`
-- `Locations\Antiga Estrada Esquecida.md`
-- `Locations\Bairro dos Anões.md`
-- `Locations\Bairro dos Dragonborns.md`
-- `Locations\Bairro dos Elfos.md`
-- `Locations\Bairro dos Humanos.md`
-- `Locations\Bairro Nobre.md`
-- `Locations\Casa da Moeda de Nimalia.md`
-- `Locations\Distrito Comercial.md`
-- `Locations\Fortaleza Abandonada de Avenor.md`
-- `Locations\Fortaleza de Gharok.md`
-- `Locations\INDICE_DE_LOCAIS.md`
-- `Locations\Mercado Central.md`
-- `Locations\Nimalis.md`
-- `Locations\Porto de Nimalia.md`
-- `Locations\Vale Dourado.md`
-- `Lore\Ancião Primordial.md`
-- `Lore\Criadores.md`
-- `Lore\Eclipse de Obsidiana.md`
-- `Lore\Guardiões do Véu Cinzento.md`
-- `Lore\O Fraturamento.md`
-- `Lore\Remédios Falsos de Maré Baixa.md`
-- `Lore\Sangue Antigo.md`
-- `Lore\Vampiro Sanguinallis.md`
-- `Lore\Véu Cinzento.md`
-- `LORE.md`
-- `MAPA DE EARTHROPO.md`
-- `MAPA DE NIMALIA.md`
-- `MAPA DE NIMALIS.md`
-- `NOTES.md`
-- `OMNISVERA.md`
-- `Races\Antropo.md`
-- `Races\Anão.md`
-- `Races\Dragonborn.md`
-- `Races\Elfo.md`
-- `Races\Halfling.md`
-- `Races\Humano.md`
-- `Races\INDICE_DE_RACAS.md`
-- `Races\Kenku.md`
-- `Races\Meio-Elfo.md`
-- `Races\Vampiro.md`
-- `Religion\Caminho dos Errantes.md`
-- `Religion\Fé dos Antigos.md`
-- `Religion\Igreja das Chamas.md`
-- `Religion\RELIGION.md`
-- `Rules\Spells\INDICE_DE_MAGIAS.md`
-- `Templates\Characters\Antagonista.md`
-- `Templates\Characters\Criatura.md`
-- `Templates\Characters\NPC Importante.md`
-- `Templates\Characters\NPC Menor.md`
-- `Templates\Characters\Personagem Jogador.md`
-- `Templates\Classes\Arquétipo Narrativo.md`
-- `Templates\Classes\Classe Base.md`
-- `Templates\Classes\Especialização.md`
-- `Templates\RPG\B-Side.md`
-- `Templates\RPG\Classe.md`
-- `Templates\RPG\Cultura.md`
-- ... mais 231 itens.
+- `Items\01 Armas\Adaga.md`
+- `Items\01 Armas\Alabarda.md`
+- `Items\01 Armas\Arco curto.md`
+- `Items\01 Armas\Arco longo.md`
+- `Items\01 Armas\Azagaia.md`
+- `Items\01 Armas\Besta de mão.md`
+- `Items\01 Armas\Besta.md`
+- `Items\01 Armas\Bordão.md`
+- `Items\01 Armas\Cajado.md`
+- `Items\01 Armas\Chicote.md`
+- `Items\01 Armas\Cimitarra.md`
+- `Items\01 Armas\Dardo x20.md`
+- `Items\01 Armas\Espada bastarda.md`
+- `Items\01 Armas\Espada curta.md`
+- `Items\01 Armas\Espada larga.md`
+- `Items\01 Armas\Espada longa.md`
+- `Items\01 Armas\Falcione.md`
+- `Items\01 Armas\Flecha improvisada.md`
+- `Items\01 Armas\Flecha x20.md`
+- `Items\01 Armas\Foice de mão.md`
+- `Items\01 Armas\Lança curta.md`
+- `Items\01 Armas\Lança longa.md`
+- `Items\01 Armas\Machado de arremesso.md`
+- `Items\01 Armas\Machado de batalha.md`
+- `Items\01 Armas\Machado.md`
+- `Items\01 Armas\Mangual.md`
+- `Items\01 Armas\Martelo de batalha.md`
+- `Items\01 Armas\Martelo.md`
+- `Items\01 Armas\Maça.md`
+- `Items\01 Armas\Montante.md`
+- `Items\01 Armas\Picareta.md`
+- `Items\01 Armas\Porrete.md`
+- `Items\01 Armas\Sabre.md`
+- `Items\01 Armas\Tridente.md`
+- `Items\02 Protecao\Armadura acolchoada.md`
+- `Items\02 Protecao\Armadura completa.md`
+- `Items\02 Protecao\Armadura de couro batido.md`
+- `Items\02 Protecao\Armadura de couro.md`
+- `Items\02 Protecao\Armadura de placas.md`
+- `Items\02 Protecao\Broquel.md`
+- `Items\02 Protecao\Cota de malha.md`
+- `Items\02 Protecao\Escudo de aço.md`
+- `Items\02 Protecao\Escudo de madeira.md`
+- `Items\02 Protecao\Escudo torre.md`
+- `Items\03 Kits e Ferramentas\Apito.md`
+- `Items\03 Kits e Ferramentas\Arpéu.md`
+- `Items\03 Kits e Ferramentas\Cadeado.md`
+- `Items\03 Kits e Ferramentas\Corda.md`
+- `Items\03 Kits e Ferramentas\Escada de corda.md`
+- `Items\03 Kits e Ferramentas\Estrepe x5.md`
+- `Items\03 Kits e Ferramentas\Ferramentas de arrombamento.md`
+- `Items\03 Kits e Ferramentas\Ferramentas de desarme de armadilhas.md`
+- `Items\03 Kits e Ferramentas\Frasco de óleo.md`
+- `Items\03 Kits e Ferramentas\Giz.md`
+- `Items\03 Kits e Ferramentas\Kit básico.md`
+- `Items\03 Kits e Ferramentas\Kit explorador.md`
+- `Items\03 Kits e Ferramentas\Kit ladrão.md`
+- `Items\03 Kits e Ferramentas\Lanterna furta-fogo.md`
+- `Items\03 Kits e Ferramentas\Mochila.md`
+- `Items\03 Kits e Ferramentas\Odre.md`
+- `Items\03 Kits e Ferramentas\Pederneira.md`
+- `Items\03 Kits e Ferramentas\Pena e tinta.md`
+- `Items\03 Kits e Ferramentas\Pergaminhos.md`
+- `Items\03 Kits e Ferramentas\Pá ou picareta.md`
+- `Items\03 Kits e Ferramentas\Pé de cabra.md`
+- `Items\03 Kits e Ferramentas\Ração de viagem.md`
+- `Items\03 Kits e Ferramentas\Rede.md`
+- ... mais 344 itens.
 
 
 ## Notas faltando campos Omnisvera mínimos
@@ -736,12 +761,10 @@ Campos mínimos auditados: `type`, `subtype`, `work_status`, `canon_status`, `vi
 
 - `Bestiary\INDICE_DE_MONSTROS.md — faltando: canon_status, requires_review, subtype, work_status`
 - `CALENDAR.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
-- `CAMPANHA\ESTADO_DA_CAMPANHA.md — faltando: canon_status, requires_review, subtype, work_status`
 - `CAMPANHA\Quests\INDICE_DE_QUESTS.md — faltando: canon_status, requires_review, subtype, work_status`
 - `CAMPANHA\Quests\Quest 01 - Investigar Avistamentos de Dragões.md — faltando: canon_status, requires_review, subtype, work_status`
 - `CAMPANHA\Rumors\INDICE_DE_RUMORES.md — faltando: canon_status, requires_review, subtype, work_status`
 - `CAMPANHA\Rumors\Rumor 01 - Dragões ao Sul de Nimalia.md — faltando: canon_status, requires_review, subtype, work_status`
-- `Characters\Individual\Augustus Terra Decimus.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
 - `Characters\Individual\Dragão de Colar Dourado.md — faltando: canon_status, requires_review, subtype, work_status`
 - `Characters\Individual\Kaelen, o Flagelo.md — faltando: canon_status, requires_review, subtype, work_status`
 - `Characters\Individual\Lorde Malakar.md — faltando: canon_status, requires_review, subtype, work_status`
@@ -769,72 +792,74 @@ Campos mínimos auditados: `type`, `subtype`, `work_status`, `canon_status`, `vi
 - `Factions\Rede de Falsificadores de Maré Baixa.md — faltando: canon_status, requires_review, subtype, work_status`
 - `Home.md — faltando: canon_status, created_by, requires_review, subtype, type, work_status`
 - `Home_Mestre.md — faltando: canon_status, created_by, requires_review, subtype, type, work_status`
-- `Items\Adagas de Espectro Fantasma.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
-- `Items\Caderninho de Vozes.md — faltando: canon_status, requires_review, subtype, work_status`
-- `Items\Grisalma.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
-- `Items\INDICE_DE_ITENS.md — faltando: canon_status, requires_review, subtype, work_status`
-- `Items\Manto Primordial do Ancião.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
-- `Items\Muralha de Dorn.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
-- `Items\Máscara de Médico da Peste de Varkh.md — faltando: canon_status, requires_review, subtype, work_status`
-- `Items\O Medalhão.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
-- `LATEST_NEWS.md — faltando: canon_status, created_by, requires_review, subtype, type, visibility, work_status`
-- `Locations\Antiga Estrada Esquecida.md — faltando: canon_status, requires_review, subtype, work_status`
-- `Locations\Bairro dos Anões.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
-- `Locations\Bairro dos Dragonborns.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
-- `Locations\Bairro dos Elfos.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
-- `Locations\Bairro dos Humanos.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
-- `Locations\Bairro Nobre.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
-- `Locations\Casa da Moeda de Nimalia.md — faltando: canon_status, requires_review, subtype, work_status`
-- `Locations\Distrito Comercial.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
-- `Locations\Fortaleza Abandonada de Avenor.md — faltando: canon_status, requires_review, subtype, work_status`
-- `Locations\Fortaleza de Gharok.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
-- `Locations\INDICE_DE_LOCAIS.md — faltando: canon_status, requires_review, subtype, work_status`
-- `Locations\Mercado Central.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
-- `Locations\Nimalis.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
-- `Locations\Porto de Nimalia.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
-- `Locations\Vale Dourado.md — faltando: canon_status, requires_review, subtype, work_status`
-- `Lore\Ancião Primordial.md — faltando: canon_status, requires_review, subtype, work_status`
-- `Lore\Criadores.md — faltando: canon_status, requires_review, subtype, work_status`
-- `Lore\Eclipse de Obsidiana.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
-- `Lore\Guardiões do Véu Cinzento.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
-- `Lore\O Fraturamento.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
-- `Lore\Remédios Falsos de Maré Baixa.md — faltando: canon_status, requires_review, subtype, work_status`
-- `Lore\Sangue Antigo.md — faltando: canon_status, requires_review, subtype, work_status`
-- `Lore\Vampiro Sanguinallis.md — faltando: canon_status, requires_review, subtype, work_status`
-- `Lore\Véu Cinzento.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
-- `LORE.md — faltando: canon_status, created_by, requires_review, subtype, type, visibility, work_status`
-- `MAPA DE EARTHROPO.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
-- `MAPA DE NIMALIA.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
-- `MAPA DE NIMALIS.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
-- `NOTES.md — faltando: canon_status, created_by, requires_review, subtype, type, visibility, work_status`
-- `OMNISVERA.md — faltando: canon_status, created_by, requires_review, subtype, type, visibility, work_status`
-- `Races\Antropo.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
-- `Races\Anão.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
-- `Races\Dragonborn.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
-- `Races\Elfo.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
-- `Races\Halfling.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
-- `Races\Humano.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
-- `Races\INDICE_DE_RACAS.md — faltando: canon_status, requires_review, subtype, work_status`
-- `Races\Kenku.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
-- `Races\Meio-Elfo.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
-- `Races\Vampiro.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
-- `Religion\Caminho dos Errantes.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
-- `Religion\Fé dos Antigos.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
-- `Religion\Igreja das Chamas.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
-- `Religion\RELIGION.md — faltando: canon_status, created_by, requires_review, subtype, work_status`
-- `Rules\Spells\INDICE_DE_MAGIAS.md — faltando: canon_status, requires_review, subtype, work_status`
-- `Templates\Characters\Antagonista.md — faltando: canon_status, requires_review, subtype, work_status`
-- `Templates\Characters\Criatura.md — faltando: canon_status, requires_review, subtype, work_status`
-- `Templates\Characters\NPC Importante.md — faltando: canon_status, requires_review, subtype, work_status`
-- `Templates\Characters\NPC Menor.md — faltando: canon_status, requires_review, subtype, work_status`
-- `Templates\Characters\Personagem Jogador.md — faltando: canon_status, requires_review, subtype, work_status`
-- `Templates\Classes\Arquétipo Narrativo.md — faltando: canon_status, requires_review, subtype, work_status`
-- `Templates\Classes\Classe Base.md — faltando: canon_status, requires_review, subtype, work_status`
-- `Templates\Classes\Especialização.md — faltando: canon_status, requires_review, subtype, work_status`
-- `Templates\RPG\B-Side.md — faltando: canon_status, requires_review, subtype, work_status`
-- `Templates\RPG\Classe.md — faltando: canon_status, requires_review, subtype, work_status`
-- `Templates\RPG\Cultura.md — faltando: canon_status, requires_review, subtype, work_status`
-- ... mais 61 itens.
+- `Items\01 Armas\Adaga.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Items\01 Armas\Alabarda.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Items\01 Armas\Arco curto.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Items\01 Armas\Arco longo.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Items\01 Armas\Azagaia.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Items\01 Armas\Besta de mão.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Items\01 Armas\Besta.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Items\01 Armas\Bordão.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Items\01 Armas\Cajado.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Items\01 Armas\Chicote.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Items\01 Armas\Cimitarra.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Items\01 Armas\Dardo x20.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Items\01 Armas\Espada bastarda.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Items\01 Armas\Espada curta.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Items\01 Armas\Espada larga.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Items\01 Armas\Espada longa.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Items\01 Armas\Falcione.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Items\01 Armas\Flecha improvisada.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Items\01 Armas\Flecha x20.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Items\01 Armas\Foice de mão.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Items\01 Armas\Lança curta.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Items\01 Armas\Lança longa.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Items\01 Armas\Machado de arremesso.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Items\01 Armas\Machado de batalha.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Items\01 Armas\Machado.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Items\01 Armas\Mangual.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Items\01 Armas\Martelo de batalha.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Items\01 Armas\Martelo.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Items\01 Armas\Maça.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Items\01 Armas\Montante.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Items\01 Armas\Picareta.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Items\01 Armas\Porrete.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Items\01 Armas\Sabre.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Items\01 Armas\Tridente.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Items\02 Protecao\Armadura acolchoada.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Items\02 Protecao\Armadura completa.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Items\02 Protecao\Armadura de couro batido.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Items\02 Protecao\Armadura de couro.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Items\02 Protecao\Armadura de placas.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Items\02 Protecao\Broquel.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Items\02 Protecao\Cota de malha.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Items\02 Protecao\Escudo de aço.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Items\02 Protecao\Escudo de madeira.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Items\02 Protecao\Escudo torre.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Items\03 Kits e Ferramentas\Apito.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Items\03 Kits e Ferramentas\Arpéu.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Items\03 Kits e Ferramentas\Cadeado.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Items\03 Kits e Ferramentas\Corda.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Items\03 Kits e Ferramentas\Escada de corda.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Items\03 Kits e Ferramentas\Estrepe x5.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Items\03 Kits e Ferramentas\Ferramentas de arrombamento.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Items\03 Kits e Ferramentas\Ferramentas de desarme de armadilhas.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Items\03 Kits e Ferramentas\Frasco de óleo.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Items\03 Kits e Ferramentas\Giz.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Items\03 Kits e Ferramentas\Kit básico.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Items\03 Kits e Ferramentas\Kit explorador.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Items\03 Kits e Ferramentas\Kit ladrão.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Items\03 Kits e Ferramentas\Lanterna furta-fogo.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Items\03 Kits e Ferramentas\Mochila.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Items\03 Kits e Ferramentas\Odre.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Items\03 Kits e Ferramentas\Pederneira.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Items\03 Kits e Ferramentas\Pena e tinta.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Items\03 Kits e Ferramentas\Pergaminhos.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Items\03 Kits e Ferramentas\Pá ou picareta.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Items\03 Kits e Ferramentas\Pé de cabra.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Items\03 Kits e Ferramentas\Ração de viagem.md — faltando: canon_status, requires_review, subtype, work_status`
+- `Items\03 Kits e Ferramentas\Rede.md — faltando: canon_status, requires_review, subtype, work_status`
+- ... mais 174 itens.
 
 
 ## YAML/frontmatter com problema
@@ -923,6 +948,7 @@ Critério: tag com espaço, maiúscula inesperada ou formato arriscado. Tags `Ca
 
 ## Referências de mídia quebradas
 
+- `Characters\Individual\Mestre Odran Veyl.md — `zz_media/characters/th_mestre_odran.jpeg``
 - `Workflow\Legacy\Disgraceland\.trash\!Ep01 - The Black Marauder\Act 01\A1-Scene 01.md — `th_abel.png``
 - `Workflow\Legacy\Disgraceland\.trash\!Ep01 - The Black Marauder\Act 01\A1-Scene 01.md — `th_jd.png``
 - `Workflow\Legacy\Disgraceland\.trash\!Ep01 - The Black Marauder\Act 01\A1-Scene 01.md — `th_katie.png``
@@ -959,12 +985,11 @@ Critério: tag com espaço, maiúscula inesperada ou formato arriscado. Tags `Ca
 
 ## Referências de mídia quebradas fora de histórico/auditoria
 
-- Nenhum.
+- `Characters\Individual\Mestre Odran Veyl.md — `zz_media/characters/th_mestre_odran.jpeg``
 
 
 ## Possíveis problemas de case-sensitive em mídia
 
-- `Characters\Individual\Vezemir.md — `zz_media/thumbnails/vezemir.png` → provável `zz_media\characters\vezemir.png``
 - `Workflow\Legacy\Old Dragon anterior\Legacy - Old Dragon anterior - Mago.md — `zz_media/thumbnails/mago.png` → provável `zz_media\class\mago.png``
 - `Workflow\Reports\latest_vault_audit.md — `elfs.png` → provável `zz_media\races\elfs.png``
 - `Workflow\Reports\latest_vault_audit.md — `med.png` → provável `zz_media\items\med.png``
@@ -1015,7 +1040,7 @@ Critério: tag com espaço, maiúscula inesperada ou formato arriscado. Tags `Ca
 
 ## Possíveis problemas de case-sensitive fora de histórico/auditoria
 
-- `Characters\Individual\Vezemir.md — `zz_media/thumbnails/vezemir.png` → provável `zz_media\characters\vezemir.png``
+- Nenhum.
 
 
 ## Mídias possivelmente órfãs em `zz_media`
