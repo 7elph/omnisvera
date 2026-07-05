@@ -54,12 +54,24 @@ Humanos são versáteis e politicamente adaptáveis. Em alguns lugares, são mai
 
 ## Mecânica Resumida
 
-Usar a base mecânica de humano do sistema adotado, com ajustes narrativos próprios quando necessário. Não reproduzir texto integral de regras no vault.
+Humanos seguem a regra padrão de raça humana usada na mesa de Old Dragon.
+
+Como a nota atual do vault não consolidou uma adaptação mecânica própria para humanos, usar a regra básica definida pelo mestre no material de mesa ativo.
+
+Em Omnisvera, a função prática dos humanos é:
+
+- versatilidade social;
+- presença ampla em rotas, vilas, templos e fronteiras;
+- facilidade para se encaixar em várias classes;
+- ausência de domínio cultural automático em Nimalia.
+
+> [!note]
+> Não assumir que humano é a raça dominante do cenário. Em Nimalia, os [[Antropo|antropos]] são predominantes.
 
 ## Personagens Relacionados
 
-```dataview
-TABLE status, role, location, faction
+```datacards
+TABLE cover, status, role, location, faction
 FROM "Characters"
 WHERE race = "Humano" OR race = "Humana" OR contains(string(race), "Humano") OR contains(string(race), "Humana")
 SORT file.name ASC
@@ -69,12 +81,3 @@ SORT file.name ASC
 
 - Como apresentar: raça comum, mas não dominante em todos os contextos.
 - O que os jogadores sabem: humanos vivem em Nimalia e em muitas regiões de Earthropo.
-- O que manter em aberto no [[ESTADO_DA_CAMPANHA]]: antigas linhagens humanas podem ter laços com ruínas, guerras ou pactos esquecidos.
-- Como entra em cena: vilas, templos, guardas, nobres, mercadores e aventureiros.
-- Ganchos: fronteira cultural, famílias antigas, disputa por posição em reinos não humanos.
-- Consequências possíveis: conflitos humanos locais podem afetar relações raciais e políticas.
-
-## Pendências do Sage
-
-- Definir regiões onde humanos são maioria.
-- Definir se há reinos humanos específicos fora de Nimalia.

@@ -218,6 +218,30 @@ Conhece o porto, Maré Baixa e parte do submundo da capital de Nimalia.
 
 ---
 
+## Base Mecânica
+
+- **Raça:** [[Kenku]], tratada em Omnisvera como uma linhagem específica dentro do guarda-chuva dos [[Antropo|antropos]].
+- **Classe:** [[Alquimista]].
+- **Sistema:** Old Dragon com suplementos e adaptação de mesa.
+- **Papel mecânico:** investigação, preparo, análise de substâncias, falsificação, frascos, rótulos, selos e soluções improvisadas.
+
+O mimetismo e a falsificação de Kenku ajudam Varkh a reconhecer vozes, marcas, assinaturas e padrões de fraude. A classe Alquimista sustenta seu papel com remédios, reagentes, análise de substâncias e preparo químico.
+
+O mestre decide quais fórmulas, poções e círculos Varkh conhece no início da campanha.
+
+## Fórmulas Iniciais Sugeridas
+
+> [!tip]
+> Sugestões para mesa, não lista definitiva de personagem.
+
+- Cura simples.
+- Antídoto.
+- Fumaça alquímica.
+- Ácido fraco ou solvente.
+- Análise de reagente.
+
+---
+
 ## Atributos
 
 | Status           | Valor |
@@ -242,7 +266,7 @@ Conhece o porto, Maré Baixa e parte do submundo da capital de Nimalia.
 #### Idiomas
 
 - A definir com o jogador.
-- O mimetismo kenku permanece uma característica narrativa até receber uma regra aprovada.
+- O mimetismo kenku usa a referência mecânica de [[Kenku]], com limites decididos pelo mestre.
 
 ## Aparência
 

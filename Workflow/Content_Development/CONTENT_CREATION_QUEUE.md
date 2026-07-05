@@ -13,6 +13,8 @@
 | [[01 - Ecos do Mundo Perdido]] | story/capítulo | primeira sessão jogável | alinhar cena inicial, pistas e encerramento |
 | [[Unidade DORN-7]] | entidade/constructo | primeiro impacto do Mundo Perdido | usar como presença danificada, limitada e perigosa |
 | [[Varkh Nimalis]] | personagem jogador | ligação direta com os remédios falsos e Odran | entrada clara no incidente |
+| [[Alquimista]] | classe jogável | base mecânica de Varkh e investigação dos remédios falsos | usar como consulta rápida de mesa |
+| [[Kenku]] | raça jogável | base racial de Varkh dentro do guarda-chuva antropo | usar mimetismo/falsificação como ferramenta de investigação |
 | [[Vezemir]] | personagem jogador | ligação com Avenor, Leth'valora e o dragão | entrada emocional sem explicar lore pesada |
 | [[Raziel]] | personagem jogador | reage a estruturas antigas e anomalias | entrada misteriosa sem explicar Sangue Antigo |
 | [[O Frasco Afogado]] | local/loja | origem emocional e investigativa dos remédios falsos | usar como local jogável P0/P1 |
@@ -27,6 +29,7 @@
 | [[Maré Baixa]] | local/bairro | origem social de Varkh e falsificações | desenvolver depois do P0 |
 | [[Nimalis]] | local/capital | centro político, urbano e de tensão | criar versão jogável sem enciclopédia |
 | [[Coroa de Nimalia]] | facção | eixo institucional do arco | manter ambígua e player-safe |
+| [[Antropo]] | raça/cultura | raça predominante de Nimalia; substitui beastfolk como nome canônico | manter Homem-Tigre apenas como base mecânica para antropos felinos |
 | [[Guilda dos Mercadores]] | facção/guilda | rotas, comércio e possíveis agentes menores | desenvolver sem confirmar vilania total |
 | [[Porto de Nimalia]] | local/porto | entrada de cargas, contrabando e investigação | conectar a Maré Baixa e Guilda |
 | [[Mestre Odran Veyl]] | personagem/NPC | mentor de Varkh e pista dos remédios | desenvolver sem cravar culpa |
@@ -49,6 +52,7 @@
 | [[Ruínas de Valthor]] | local/ruína | passado antigo e exploração | desenvolver depois do P0/P1 |
 | religiões profundas | religião/lore | crenças e verdades ocultas | consolidar em lote próprio |
 | reinos raciais | território/cultura | estrutura geopolítica futura | consolidar depois de Nimalis/Nimalia |
+| [[Humano]] | raça | raça padrão do sistema, mas não dominante em Nimalia | manter completo o suficiente até decisão mecânica específica |
 
 ## Backlog Futuro
 

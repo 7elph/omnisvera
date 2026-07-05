@@ -53,6 +53,15 @@ tags:
 | Fila de Conteúdo | [[Workflow/Content_Development/CONTENT_CREATION_QUEUE]] | notas que precisam desenvolvimento |
 | Modelo Player-Safe | [[Workflow/Content_Development/PLAYER_SAFE_ENTITY_MODEL]] | regra de separação entre nota pública e bastidor |
 
+> [!todo]- Regras Jogáveis — Classes e Raças
+> - [[Antropo|Antropos]] são o nome canônico de Omnisvera para beastfolk.
+> - Homem-Tigre é base mecânica/referência para antropos felinos, não nome comum do cenário.
+> - [[Kenku]] é raça jogável de [[Varkh Nimalis]] e também uma linhagem específica dentro do guarda-chuva antropo.
+> - [[Alquimista]] usa o suplemento Old Dragon — Expansão de Classes como base jogável.
+> - Varkh combina [[Kenku]] + [[Alquimista]].
+> - Homúnculos, Pedra Filosofal, Quimeras e transmutações avançadas devem ser controlados pelo mestre antes de aparecerem em mesa.
+> - Regras perigosas ou de nível alto ficam disponíveis como opção, não como promessa automática.
+
 ---
 
 ## Entidades em Desenvolvimento Prioritário
