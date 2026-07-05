@@ -30,7 +30,7 @@ Este lote padronizou a camada de classes e regras de apoio sem executar migraç�
 | `Classes/Ladrão.md` | Padronizado | Mantido como classe base, mas Raziel não usa mais Ladrão operacionalmente. |
 | `Classes/Mago.md` | Padronizado | Mantido como classe base para NPCs e referência futura. |
 | `Classes/Alquimista.md` | Padronizado | Classe/arquétipo ligado a Varkh, sem copiar suplemento. |
-| `Classes/Vampiro.md` | Padronizado | Classe especial/restrita, ligada a Raziel, Sangue Antigo e Clã Sanguinallis. |
+| `Races/Vampiro.md` + `Classes/Hemomante.md` | Corrigido | Vampiro é raça/condição; Hemomante é classe autoral de Raziel. |
 
 ## Raças Operacionais Consolidadas
 

@@ -142,13 +142,13 @@ Earthropo vive uma estabilidade aparente. Coroa, religião, comércio e forças 
 - Conhecido como **O Espectro da Névoa de Sangue**.
 - É um personagem de jogador e um dos três protagonistas da campanha.
 - É um vampiro ligado ao Clã Sanguinallis.
-- Sua classe atual é [[Vampiro]], usando material de complemento consultado pelo mestre; a hemomancia permanece como parte de sua identidade e de seus poderes narrativos.
+- Sua raça/condição é [[Vampiro]] e sua classe atual é [[Hemomante]], usando adaptação de mesa aprovada pelo mestre.
 - A referência visual mais recente registra 340 anos, aparência de 30 anos, 1,88 m de altura e alinhamento Caótico Neutro.
 - Utiliza hemomancia e as Adagas de Espectro Fantasma.
 - Também porta o [[Manto Primordial do Ancião]].
 - Foi traído e permaneceu aprisionado por mais de trezentos anos.
 - Sua trajetória atual é movida por vingança contra Kaelen, Vandor e Lorde Malakar.
-- O [[Sangue Antigo]] deve funcionar como mecânica própria de Omnisvera, próxima à classe Vampiro, sem substituir automaticamente a regra-base.
+- O [[Sangue Antigo]] deve funcionar como mecânica própria de Omnisvera, próxima à condição [[Vampiro]] e à classe [[Hemomante]], sem substituir automaticamente a regra-base.
 - A forma como sua história se encontra com Vezemir e Varkh ainda precisa ser definida.
 - A versão anterior chamada **Malakor Thorne**, concebida quando o personagem seria mago, foi substituída. A versão atual de Raziel como vampiro é a válida.
 

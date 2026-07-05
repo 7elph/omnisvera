@@ -71,7 +71,20 @@ Nem todo vampiro precisa ser vilão, nobre oculto ou predador sem controle. Em m
 ## Traços Raciais Propostos
 
 > [!note]
-> Usar como base de mesa. Números e limites podem ser ajustados conforme equilíbrio do grupo.
+> Base mecânica de referência: Vampiro do suplemento Old Dragon — Novas Raças.
+> Em Omnisvera, esta base é adaptada para a raça/condição de [[Raziel]].
+
+| Elemento | Regra de consulta |
+|---|---|
+| Tamanho | 1,60m a 1,80m |
+| Peso | 40kg a 80kg |
+| Envelhecimento | Não envelhece; mantém aparência de quando foi transformado |
+| Visão no Escuro | 12m |
+| Movimento base | 9m andando; 12m voando |
+| Atributos | -2 Constituição, +2 Carisma |
+| Imunidades | Doenças, frio e psíquico |
+
+## Habilidades Raciais
 
 ### Não-Vida Consciente
 
@@ -79,11 +92,41 @@ Nem todo vampiro precisa ser vilão, nobre oculto ou predador sem controle. Em m
 - Não precisa respirar como uma criatura viva comum, mas ainda pode ser afetado por magia, venenos, maldições e efeitos sobrenaturais conforme decisão do mestre.
 - Cura comum, magia divina e efeitos de restauração podem funcionar de forma diferente nele. Em caso de dúvida, tratar como complicação de cena.
 
+### Caixão
+
+- Todo vampiro possui caixão ou sarcófago vinculado magicamente.
+- Descanso completo só pode ser realizado no caixão.
+- Se o caixão for destruído, o vampiro precisa tomar outro para si com jogada de proteção modificada por Sabedoria.
+
 ### Fome de Sangue
 
 - O vampiro precisa se alimentar de sangue em intervalos definidos pelo mestre.
 - Se negligenciar a fome por muito tempo, recebe uma complicação narrativa: sede, instinto predatório, tremores, perda de controle ou penalidade situacional.
 - Alimentar-se não deve ser usado como desculpa para retirar controle do jogador sem aviso.
+
+### Mordida
+
+| Nível | Cura ao beber sangue |
+|---:|---|
+| 1 | 1D4 PV |
+| 5 | 1D6 PV |
+| 8 | 2D6 PV |
+| 16 | 2D10 PV |
+
+Para morder, realizar ataque normal contra a CA do alvo. A vida curada pelo vampiro é causada como dano no alvo. O efeito social e a percepção da vítima dependem de jogada de proteção modificada por Sabedoria.
+
+### Medo
+
+- 1 vez por dia, o vampiro pode usar Medo em uma criatura.
+- A criatura resiste com jogada de proteção modificada por Sabedoria.
+- Em falha, obedece ao vampiro por 1D4 horas.
+- A partir do 5º nível, pode usar 2 vezes por dia.
+
+### Forma da Noite
+
+- 3 vezes por dia, o vampiro pode assumir forma de morcego, corvo ou coruja.
+- Nessa forma, não ataca nem fala e usa a ficha da criatura.
+- Se chegar a 0 PV na forma animal, volta à forma normal e recebe a diferença de dano.
 
 ### Sentido do Sangue
 
@@ -96,13 +139,20 @@ Nem todo vampiro precisa ser vilão, nobre oculto ou predador sem controle. Em m
 - Pode justificar feitos físicos dramáticos, aparência perturbadora e intimidação sobrenatural.
 - Bônus específicos devem ser definidos na ficha final.
 
-### Fraquezas Vampíricas
+### Fraquezas Vampíricas e Cura
 
-Escolher ou confirmar com o Sage quais fraquezas são canônicas em Omnisvera:
+- Fotossensibilidade: exposição à luz solar exige jogada de proteção modificada por Constituição a cada turno.
+- Em falha, sofre 1D6 de dano solar.
+- Em três falhas consecutivas, é puxado magicamente para o caixão.
+- Se for impedido de voltar ao caixão, nova jogada de proteção; em falha, vira pó.
+- Magias de cura feitas por clérigos causam dano equivalente.
+- Magias de infligir dano curam o vampiro na mesma quantidade.
+- Vampiros são suscetíveis a Afastar Mortos-Vivos até o nível 10.
+
+Outras fraquezas possíveis ainda precisam de confirmação do Sage:
 
 - prata;
 - fogo;
-- luz solar direta;
 - símbolos sagrados;
 - água corrente;
 - convite/limiar;

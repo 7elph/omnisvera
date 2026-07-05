@@ -3,8 +3,9 @@ obsidianUIMode: preview
 NoteIcon: class
 NoteStatus: Draft
 type: class
-status: Em revisão
-rules_status: Referência de mesa / adaptação futura
+subtype: specialization
+status: Especialização em revisão
+rules_status: Especialização de Guerreiro / adaptação de mesa
 campaign_status: Em revisão
 visibility: Mestre
 spoiler_level: light
@@ -15,7 +16,8 @@ aliases:
   - Paladino Real
   - Paladino da Coroa
 system: Old Dragon / Omnisvera
-class_group: Sagrado / Marcial
+class_group: Especialização de Guerreiro
+parent_class: "[[Guerreiro]]"
 primary_attribute:
 level:
 danger_level: Médio
@@ -31,8 +33,8 @@ tags:
 # Paladino
 
 > [!NOTE]
-> Nota ponte para personagens descritos como paladinos em Omnisvera.
-> Ainda não define uma classe jogável completa.
+> Paladino é tratado como especialização, título ou caminho avançado de [[Guerreiro]].
+> Não é uma classe-base separada neste momento.
 
 ## Uso Atual
 
@@ -40,15 +42,26 @@ tags:
 
 No momento, aparece principalmente como leitura de personagens como [[Augustus Terra Decimus]] e [[General Cassian Valerius]].
 
+## Base Mecânica
+
+| Elemento | Regra de consulta |
+|---|---|
+| Classe-base | [[Guerreiro]] |
+| Função | especialização marcial/sagrada |
+| Equivalência antiga | Guerreiro é o equivalente operacional de Homem de Armas |
+| Status | em revisão; usar para NPCs e referência narrativa |
+
+Paladino não substitui Guerreiro. Quando uma ficha mencionar `class: Paladino`, interpretar como personagem com base marcial de Guerreiro e especialização/treinamento sagrado.
+
 ## Diretriz de Mesa
 
 - Não criar progressão completa sem decisão do Sage.
 - Não copiar regras extensas de livro.
-- Usar como etiqueta narrativa até existir mecânica própria aprovada.
-- Se virar classe jogável no futuro, criar uma versão autoral compatível com Omnisvera.
+- Usar como especialização ou leitura narrativa até existir mecânica própria aprovada.
+- Se virar opção jogável no futuro, criar uma versão compatível com [[Guerreiro]].
 
 ## Pendências
 
-- Definir se Paladino será classe jogável, título militar/religioso ou arquétipo de NPC.
+- Definir se Paladino será especialização jogável, título militar/religioso ou arquétipo de NPC.
 - Definir relação com a [[Igreja das Chamas]], a [[Coroa de Nimalia]] e a [[Guarda Real de Nimalia]].
 - Decidir se Augustus e Cassian usam mecânica própria ou apenas o título narrativo de paladino.

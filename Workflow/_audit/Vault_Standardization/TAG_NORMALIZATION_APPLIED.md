@@ -48,7 +48,7 @@ Tags oficiais adicionadas/aplicaveis:
 | `Classes/INDICE_DE_CLASSES.md` | `classe` | `class` | `classe` | low | Adicionar `class` preservando `classe`. |
 | `Classes/Ladrão.md` | `classe` | `class` | `classe` | low | Adicionar `class` preservando `classe`. |
 | `Classes/Mago.md` | `classe` | `class` | `classe` | low | Adicionar `class` preservando `classe`. |
-| `Classes/Vampiro.md` | `classe` | `class` | `classe` | low | Adicionar `class` preservando `classe`. |
+| `Races/Vampiro.md` | `raca` | `race` | `raca` | low | Adicionar `race` preservando `raca`. |
 | `MAPA DE EARTHROPO.md` | `territorio` | `territory` | `territorio` | low | Adicionar `territory` preservando `territorio`. |
 | `MAPA DE NIMALIA.md` | `territorio` | `territory` | `territorio` | low | Adicionar `territory` preservando `territorio`. |
 | `Races/INDICE_DE_RACAS.md` | `raca` | `race` | `raca` | low | Adicionar `race` preservando `raca`. |

@@ -28,7 +28,8 @@ Este documento lista notas que precisam ser criadas para dar suporte à campanha
 | Poço nos Picos Congelados | Locations/ | Localização | Prisão de prata onde Raziel foi condenado por trezentos anos | Raziel, Fortaleza de Gharok, Nimalia | Pendente |
 | Cavernas Abissais sob Valthor | Locations/ | Localização | Local onde Raziel encontrou o Ancião Primordial e recebeu o Sangue Antigo | Raziel, Ruínas de Valthor, Ancião Primordial | Pendente |
 | Vampiro Sanguinallis | Lore/ | Lore | Tipo de vampiro ao qual Raziel pertence, ligado ao Clã Sanguinallis | Raziel, Clã Sanguinallis, Sangue Antigo | Criado (Pente fino) |
-| Vampiro | Classes/ | Classe | Classe operacional de Raziel baseada em complemento consultado pelo mestre | Raziel, Sangue Antigo, Vampiro Sanguinallis | Criado (Pente fino) |
+| Vampiro | Races/ | Raça/Condição | Raça/condição de Raziel baseada em complemento consultado pelo mestre | Raziel, Sangue Antigo, Vampiro Sanguinallis | Criado (Pente fino) |
+| Hemomante | Classes/ | Classe | Classe autoral de Raziel para hemomancia | Raziel, Sangue Antigo, Vampiro Sanguinallis | Criado |
 
 ### Vezemir
 
@@ -98,7 +99,8 @@ As seguintes notas foram criadas durante o pente fino operacional:
 
 - Lore/Criadores.md
 - Lore/Vampiro Sanguinallis.md
-- Classes/Vampiro.md
+- Races/Vampiro.md
+- Classes/Hemomante.md
 - Locations/Bairro dos Humanos.md
 - Locations/Bairro dos Elfos.md
 - Locations/Bairro dos Anões.md

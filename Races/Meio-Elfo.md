@@ -53,7 +53,18 @@ Meio-elfos são ótimos para histórias de fronteira, identidade, perda e escolh
 
 ## Mecânica Resumida
 
-Usar regras resumidas pelo mestre conforme o sistema adotado. O foco do vault é a função narrativa e a aplicação na mesa.
+Meio-Elfo é uma categoria especial em Omnisvera.
+
+Para [[Vezemir]], a ficha foi montada pegando parte da base mecânica de Humano e parte da base mecânica de Elfo, conforme decisão de mesa.
+
+| Elemento | Regra de consulta |
+|---|---|
+| Base | Combinação de Humano + Elfo |
+| Uso atual | Raça de [[Vezemir]] |
+| Status | Categoria especial aprovada para personagem |
+| Ajuste fino | Decisão do mestre conforme ficha final |
+
+Não tratar Meio-Elfo como simples “humano com orelha élfica”. Em mesa, ele representa mistura de linhagem, cultura, memória e pertencimento dividido.
 
 ## Personagens Relacionados
 

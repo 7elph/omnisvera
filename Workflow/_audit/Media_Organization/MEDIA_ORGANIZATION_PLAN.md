@@ -198,7 +198,7 @@ M .obsidian/plugins/obsidian-leaflet-plugin/data.json
 | `Classes/Guerreiro.md` | 7 |
 | `Classes/Ladrão.md` | 7 |
 | `Classes/Mago.md` | 7 |
-| `Classes/Vampiro.md` | 7 |
+| `Races/Vampiro.md` | 7 |
 | `EARTHROPO/00 - As Crônicas de Névoa de Sangue.md` | 14 |
 | `EARTHROPO/00 - O Bastardo de Ferro.md` | 7 |
 | `EARTHROPO/00 - O Corvo da Maré Baixa.md` | 14 |

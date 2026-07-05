@@ -14,7 +14,7 @@
 - `territory`: [[EARTHROPO/EARTHROPO|Earthropo]]
 - `faction`: [[Clã Sanguinallis]]
 - `role`: player
-- **Títulos:** O Espectro da Névoa de Sangue **Apelido:** O Espectro **Localização Atual:** [[Ruínas de Valthor]]; sua origem está ligada à [[Fortaleza de Gharok]] **Território:** Earthropo **Reputação Pública:** Antigo executor do [[Clã Sanguinallis]], apagado da história durante seu aprisionamento **Gênero:** Masculino **Classe:** [[Vampiro]]; hemo...
+- **Títulos:** O Espectro da Névoa de Sangue **Apelido:** O Espectro **Localização Atual:** [[Ruínas de Valthor]]; sua origem está ligada à [[Fortaleza de Gharok]] **Território:** Earthropo **Reputação Pública:** Antigo executor do [[Clã Sanguinallis]], apagado da história durante seu aprisionamento **Gênero:** Masculino **Raça/condição:** [[Vampiro]]; **Classe:** [[Hemomante]].
 - - Informações confidenciais ficam centralizadas em [[CAMPANHA/ESTADO_DA_CAMPANHA|Estado da Campanha]].
 
 ## Relações detectadas
@@ -40,7 +40,8 @@
 - [[Unidade DORN-7]] (`Characters/Individual/Unidade DORN-7.md`)
 - [[Vandor, o Senhor das Bestas]] (`Characters/Individual/Vandor, o Senhor das Bestas.md`)
 - [[Ladrão]] (`Classes/Ladrão.md`)
-- [[Vampiro]] (`Classes/Vampiro.md`)
+- [[Vampiro]] (`Races/Vampiro.md`)
+- [[Hemomante]] (`Classes/Hemomante.md`)
 - [[00 - As Crônicas de Névoa de Sangue]] (`EARTHROPO/00 - As Crônicas de Névoa de Sangue.md`)
 - [[01 - Ecos do Mundo Perdido]] (`EARTHROPO/01 - Ecos do Mundo Perdido.md`)
 - [[EARTHROPO]] (`EARTHROPO/EARTHROPO.md`)

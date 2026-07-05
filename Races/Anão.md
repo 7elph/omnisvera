@@ -56,7 +56,16 @@ A rivalidade com elfos pode ser usada como tensão cultural antiga, mas não pre
 
 ## Mecânica Resumida
 
-Usar regras de anão do sistema adotado apenas como referência de mesa. O vault deve manter resumo próprio, sem reprodução extensa de regras.
+Usar a raça Anão do sistema adotado como base mecânica de mesa.
+
+| Elemento | Regra de consulta |
+|---|---|
+| Base | Anão do sistema Old Dragon usado pelo mestre |
+| Papel comum | resistência, técnica, tradição, subterrâneo, fortaleza |
+| Uso em Omnisvera | povo ligado a Gharok, montanhas e obras antigas |
+| Ajuste fino | decisão do mestre conforme ficha/personagem |
+
+O vault não deve transformar todos os anões em mineiros ou soldados. A mecânica serve à mesa; a cultura de Omnisvera ainda será expandida.
 
 ## Personagens Relacionados
 

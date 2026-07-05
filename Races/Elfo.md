@@ -56,7 +56,16 @@ A rivalidade cultural com anões pode existir como tensão antiga, mas deve ser 
 
 ## Mecânica Resumida
 
-Usar elfos como raça jogável ou NPC conforme o sistema adotado, mantendo no vault apenas resumo próprio e decisões de campanha.
+Usar a raça Elfo do sistema adotado como base mecânica de mesa.
+
+| Elemento | Regra de consulta |
+|---|---|
+| Base | Elfo do sistema Old Dragon usado pelo mestre |
+| Papel comum | percepção, tradição, memória, floresta, magia ou técnica refinada |
+| Uso em Omnisvera | Avenor, Leth'valora e futuro reino élfico |
+| Ajuste fino | decisão do mestre conforme ficha/personagem |
+
+Elfos de Omnisvera não precisam pertencer a uma única cultura. A mecânica é a base; a política élfica fica para desenvolvimento posterior.
 
 ## Personagens Relacionados
 

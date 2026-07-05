@@ -56,7 +56,16 @@ Dragonborns podem ser vistos com respeito, cautela ou superstição, dependendo 
 
 ## Mecânica Resumida
 
-Usar resumo próprio e decisão de campanha. Não copiar regras completas de suplementos.
+Dragonborn está em revisão como raça jogável ou raça de cenário.
+
+| Elemento | Regra de consulta |
+|---|---|
+| Base | adaptação de mesa ainda em revisão |
+| Papel comum | herança dracônica, presença imponente, fôlego/traço dracônico se aprovado |
+| Uso em Omnisvera | bairro em Nimalis e futuro reino a noroeste |
+| Ajuste fino | decisão do mestre antes de personagem jogador |
+
+Não assumir automaticamente que todo dragonborn possui as mesmas capacidades de um dragão verdadeiro. Em Omnisvera, a relação entre dragonborns e dragões ainda precisa ser definida.
 
 ## Personagens Relacionados
 

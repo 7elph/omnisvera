@@ -57,16 +57,19 @@ Em Omnisvera, [[Vezemir]] usa Guerreiro como classe operacional.
 - Usar as regras oficiais de Guerreiro do sistema escolhido pelo mestre.
 - Não manter `Homem de Armas` como classe ativa separada.
 - Quando `Homem de Armas` aparecer em material antigo, interpretar como referência histórica ao Guerreiro clássico.
+- Em Omnisvera, Guerreiro é o equivalente operacional de Homem de Armas.
+- [[Paladino]] é tratado como especialização/caminho de Guerreiro, não como classe-base independente.
 - Não recalcular ficha automaticamente sem decisão do mestre.
 
 ## Personagens Relacionados
 
-```dataview
-TABLE thumbnail, race, status, location, faction
+```datacards
+TABLE cover, race, status, location, faction
 FROM "Characters"
 WHERE class = "Guerreiro" OR class = this.file.link
 SORT file.name ASC
 ```
+
 
 ## Uso em Mesa
 

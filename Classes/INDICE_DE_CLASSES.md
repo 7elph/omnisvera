@@ -18,11 +18,28 @@ tags:
 
 Índice operacional das classes usadas em Omnisvera.
 
+## Classes Ativas
+
+- [[Alquimista]]
+- [[Clérigo]]
+- [[Guerreiro]]
+- [[Ladrão]]
+- [[Mago]]
+
+## Classes Autorais / Especiais
+
+- [[Hemomante]]
+
+## Especializações / Caminhos
+
+- [[Paladino]] — especialização/caminho de [[Guerreiro]]
+
 ```dataview
 TABLE status, rules_status, campaign_status, visibility, thumbnail
 FROM "Classes"
 WHERE type = "class"
 AND NoteStatus != "Placeholder"
+AND file.name != "Vampiro"
 SORT file.name ASC
 ```
 
@@ -32,5 +49,6 @@ SORT file.name ASC
 - Não usar `Rules/Classes`.
 - Não reproduzir texto integral de livros ou suplementos.
 - `Homem de Armas` não é classe ativa separada; usar [[Guerreiro]].
+- [[Paladino]] é especialização/caminho de [[Guerreiro]], não classe-base separada.
 - Classes especiais, como [[Hemomante]], ficam em revisão do mestre até estabilização.
-- [[Vampiro]] permanece apenas como nota ponte antiga; a decisão atual usa Vampiro como raça/condição.
+- [[Vampiro]] é raça/condição em `Races/`, não classe.

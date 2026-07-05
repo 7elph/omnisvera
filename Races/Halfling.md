@@ -52,7 +52,16 @@ Podem funcionar como comunidades pequenas, viajantes curiosos, famílias hospita
 
 ## Mecânica Resumida
 
-Usar apenas se o Sage decidir incluir halflings na campanha. Não copiar regras completas de livro.
+Halfling permanece como raça futura/opcional.
+
+| Elemento | Regra de consulta |
+|---|---|
+| Base | regra padrão do sistema, se o Sage aprovar |
+| Status | bônus futuro / em revisão |
+| Uso atual | não essencial para a primeira campanha |
+| Ajuste fino | decidir antes de liberar como personagem jogador |
+
+Não desenvolver cultura profunda de halflings agora. Manter a nota pronta, mas leve.
 
 ## Personagens Relacionados
 

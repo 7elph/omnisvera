@@ -129,7 +129,6 @@ Arquivos relevantes:
 
 - `Races/Vampiro.md`
 - `Classes/Hemomante.md`
-- `Classes/Vampiro.md`
 - `Lore/Sangue Antigo.md`
 - `Lore/Vampiro Sanguinallis.md`
 - `Characters/Individual/Raziel.md`
@@ -152,8 +151,6 @@ No corpo da nota:
 
 Nao tratar `Vampiro` como classe nova.
 
-`Classes/Vampiro.md` virou nota ponte/deprecated para nao quebrar links antigos.
-
 `Classes/Hemomante.md` e a nova nota mecanica principal para a tecnica de sangue.
 
 Estado atual dos arquivos:
@@ -167,10 +164,6 @@ Classes/Hemomante.md
 - Deve explicar a classe/mecanica de manipulacao de sangue.
 - Deve ser usada para Raziel.
 - Regras ainda em revisao de mesa.
-
-Classes/Vampiro.md
-- Deve permanecer temporariamente como ponte/deprecated.
-- Nao remover agora, porque pode haver links, Dataviews ou historico apontando para ela.
 
 Lore/Vampiro Sanguinallis.md
 - Deve representar linhagem/lore, nao classe.
@@ -192,14 +185,12 @@ Separacao conceitual recomendada:
 | Classe | `Classes/Hemomante.md` | O que Raziel faz em termos mecanicos |
 | Linhagem | `Lore/Vampiro Sanguinallis.md` | Origem/sangue/familia/lore |
 | Mistério de campanha | `Lore/Sangue Antigo.md` | Camada especial, rara e progressiva |
-| Ponte legada | `Classes/Vampiro.md` | Compatibilidade temporaria |
 
 Regra para outra IA:
 
 - Nao recriar `Vampiro` como classe ativa.
-- Nao apagar `Classes/Vampiro.md` ainda.
 - Nao copiar regras de suplemento/livro; qualquer mecanica deve ser autoral/resumida.
-- Se precisar expandir regras, expandir `Classes/Hemomante.md`, nao `Classes/Vampiro.md`.
+- Se precisar expandir regras de classe, expandir `Classes/Hemomante.md`.
 - Se precisar expandir a condicao vampirica, expandir `Races/Vampiro.md`.
 - Segredos profundos sobre `Sangue Antigo` devem ficar em `ESTADO_DA_CAMPANHA`/dossies, nao na nota publica de Raziel.
 

@@ -36,7 +36,7 @@ Gerado em: 2026-07-01 04:07
 | `omnisvera` | 11 | `CALENDAR.md`, `EARTHROPO/EARTHROPO.md`, `NOTES.md` |
 | `story` | 11 | `CAMPANHA/ESTADO_DA_CAMPANHA.md`, `CAMPANHA/Quests/Quest 01 - Investigar Avistamentos de Dragões.md`, `CAMPANHA/Rumors/Rumor 01 - Dragões ao Sul de Nimalia.md` |
 | `classe` | 11 | `Classes/Alquimista.md`, `Classes/Clérigo.md`, `Classes/Guerreiro.md` |
-| `raziel` | 11 | `Classes/Vampiro.md`, `EARTHROPO/00 - As Crônicas de Névoa de Sangue.md`, `Factions/Clã Sanguinallis.md` |
+| `raziel` | 11 | `Classes/Hemomante.md`, `EARTHROPO/00 - As Crônicas de Névoa de Sangue.md`, `Factions/Clã Sanguinallis.md` |
 | `faction` | 11 | `Factions/Clã Sanguinallis.md`, `Factions/Conclave dos Errantes.md`, `Factions/Coroa de Nimalia.md` |
 | `item` | 11 | `Items/Adagas de Espectro Fantasma.md`, `Items/Caderninho de Vozes.md`, `Items/Grisalma.md` |
 | `indice` | 10 | `Bestiary/INDICE_DE_MONSTROS.md`, `CAMPANHA/Quests/INDICE_DE_QUESTS.md`, `CAMPANHA/Rumors/INDICE_DE_RUMORES.md` |
@@ -96,7 +96,7 @@ Gerado em: 2026-07-01 04:07
 | `guerreiro` | 2 | `Characters/Individual/Vezemir.md`, `Classes/Guerreiro.md` |
 | `meio-elfo` | 2 | `Characters/Individual/Vezemir.md`, `Races/Meio-Elfo.md` |
 | `guilda` | 2 | `Characters/Individual/Vezemir.md`, `Factions/Guilda dos Mercadores.md` |
-| `regra-opcional` | 2 | `Classes/Alquimista.md`, `Classes/Vampiro.md` |
+| `regra-opcional` | 2 | `Classes/Alquimista.md`, `Races/Vampiro.md` |
 | `culture` | 2 | `CULTURE.md`, `Templates/RPG/Cultura.md` |
 | `cultura` | 2 | `CULTURE.md`, `Templates/RPG/Cultura.md` |
 | `capitulo` | 2 | `EARTHROPO/01 - Ecos do Mundo Perdido.md`, `Templates/RPG/Story.md` |

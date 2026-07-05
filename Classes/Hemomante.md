@@ -46,6 +46,21 @@ A classe não precisa ser exclusiva de vampiros, mas combina naturalmente com pe
 
 Em [[Raziel]], a hemomancia é a técnica principal. A raça/condição dele é [[Vampiro]], sua linhagem é [[Vampiro Sanguinallis]] e a camada excepcional é [[Sangue Antigo]].
 
+## Decisão Atual
+
+Hemomante é a classe autoral de Raziel.
+
+Separação oficial:
+
+| Camada | Nota | Função |
+|---|---|---|
+| Raça/condição | [[Vampiro]] | o que Raziel é |
+| Classe | [[Hemomante]] | o que Raziel faz mecanicamente |
+| Linhagem | [[Vampiro Sanguinallis]] | de onde Raziel vem |
+| Camada especial | [[Sangue Antigo]] | o que alterou Raziel na campanha |
+
+Não usar Vampiro como classe ativa. A antiga nota de classe foi removida; a referência correta é [[Vampiro]] como raça/condição.
+
 ## Papel no Grupo
 
 - Controlar campo por medo, névoa, marcas e sangue.

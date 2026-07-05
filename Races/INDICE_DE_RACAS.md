@@ -31,11 +31,11 @@ SORT file.name ASC
 - [[Antropo]]
 - [[Humano]]
 - [[Elfo]]
-- [[Meio-Elfo]]
+- [[Meio-Elfo]] — categoria especial usada por [[Vezemir]], combinando bases de Humano e Elfo
 - [[Anão]]
 - [[Dragonborn]]
-- [[Kenku]]
-- [[Vampiro]]
+- [[Kenku]] — raça jogável de [[Varkh Nimalis]], dentro do guarda-chuva antropo
+- [[Vampiro]] — raça/condição de [[Raziel]]
 
 ## Em Revisão / Bônus Futuro
 
@@ -47,3 +47,5 @@ SORT file.name ASC
 - Não usar `Rules/Races`.
 - Não copiar regras completas de livros; manter apenas síntese própria e decisões do Sage.
 - Raças ainda não aprovadas podem permanecer como `Em revisão`.
+- [[Antropo]] é o nome canônico de Omnisvera para beastfolk.
+- Homem-Tigre é referência mecânica para antropos felinos, não nome canônico do cenário.

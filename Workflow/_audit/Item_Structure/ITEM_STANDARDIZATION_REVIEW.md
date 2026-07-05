@@ -39,7 +39,7 @@ Esta etapa preservou conteúdo já construído e reforçou:
 
 - `Adagas de Espectro Fantasma` foram mantidas como armas de Raziel.
 - `Manto Primordial do Ancião` permanece como informação de mestre por citar o Ancião Primordial.
-- As propriedades de Raziel, das adagas, do manto, do Sangue Antigo e da classe Vampiro foram mantidas separadas.
+- As propriedades de Raziel, das adagas, do manto, do Sangue Antigo, da raça/condição Vampiro e da classe Hemomante foram mantidas separadas.
 
 ### Itens de Varkh
 
