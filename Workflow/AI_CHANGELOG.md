@@ -152,7 +152,7 @@ Criou Batch 02 de notas faltantes focado no arco de Vezemir. Todas as notas fora
 **Arquivos alterados:**  
 - Workflow/MISSING_NOTES_BACKLOG.md (atualizado)
 - Items/O Frasco Afogado.md (novo)
-- Lore/Remédios Falsos de Maré Baixa.md (novo)
+- CAMPANHA/Rumors/02 - Remédios Falsos da Maré Baixa.md (novo)
 - Factions/Rede de Falsificadores de Maré Baixa.md (novo)
 - Items/Caderninho de Vozes.md (novo)
 - Items/Máscara de Médico da Peste de Varkh.md (novo)

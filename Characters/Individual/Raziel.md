@@ -8,13 +8,13 @@ spoiler_level: none
 gm_secret: false
 campaign_status: Ativo
 thumbnail: zz_media/thumbnails/th_raziel.png
-cover: zz_media/characters/raziel.png
+cover: zz_media/thumbnails/th_raziel.png
 status: Vivo
 location: "[[Ruínas de Valthor]]"
 territory: "[[EARTHROPO/EARTHROPO|Earthropo]]"
 faction: "[[Clã Sanguinallis]]"
-class: Vampiro
-race: Vampiro (Sanguinallis)
+class: Hemomante
+race: Vampiro
 level: 1
 alignment: Caótico Neutro
 role: player
@@ -53,8 +53,10 @@ tags:
 **Território:** Earthropo
 **Reputação Pública:** Antigo executor do [[Clã Sanguinallis]], apagado da história durante seu aprisionamento
 **Gênero:** Masculino
-**Classe:** [[Vampiro]]; hemomante como identidade narrativa
-**Raça:** Vampiro 
+**Classe:** [[Hemomante]]
+**Raça:** [[Vampiro]]
+**Linhagem:** [[Vampiro Sanguinallis]]
+**Camada especial:** [[Sangue Antigo]]
 **Idade:** 340 anos; aparência de aproximadamente 30 anos
 **Altura:** 1,88 m
 **Nível:** 1
@@ -206,7 +208,7 @@ cardSpacing: 4
 ## Capacidades narrativas
 
 **Furto e Infiltração:**
-Treinamento compatível com sua classe atual de vampiro e com sua antiga atuação como executor.
+Treinamento compatível com sua antiga atuação como executor.
 
 **Hemomancia:**
 Manipula sangue para atacar, defender-se, curar-se e enfraquecer inimigos.
@@ -225,7 +227,7 @@ Manifestação de sangue solidificado associada ao poder recebido do Ancião Pri
 ## Mecânicas confirmadas
 
 > [!warning] Regras autorais pendentes
-> Ladrão pertence às regras-base de OD2. Assassino depende de adoção do Livro II. Vampiro, Hemomante, Reserva de Sangue e os poderes atuais ainda precisam de regras próprias.
+> Ladrão pertence às regras-base de OD2. Assassino depende de adoção do Livro II. A estrutura atual separa [[Vampiro]] como raça/condição, [[Hemomante]] como classe e [[Sangue Antigo]] como camada única de campanha.
 
 #### Armas e carga
 
@@ -238,7 +240,9 @@ Manifestação de sangue solidificado associada ao poder recebido do Ancião Pri
 
 #### Habilidades especiais
 
-- Hemomancia, Reserva de Sangue, regeneração vampírica, Névoa de Sangue e Asas Escarlates permanecem como elementos autorais até aprovação mecânica.
+- Hemomancia e Reserva de Sangue seguem a base de [[Hemomante]].
+- Regeneração vampírica segue a condição [[Vampiro]], com limites definidos pelo mestre.
+- Névoa de Sangue e Asas Escarlates podem envolver [[Sangue Antigo]] e não devem ser liberadas automaticamente no nível 1.
 
 ## Mecânicas pendentes
 

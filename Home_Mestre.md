@@ -27,7 +27,7 @@ gm_secret: true
 > **NOTAS**
 > [![[zz_media/covers/guild.png|sban htiny ctr]]](NOTES.md)
 >
-> **RUMORES E DESCOBERTAS**
+> **RUMORES**
 > [![[zz_media/covers/guild1.png|sban htiny ctr]]](LATEST_NEWS.md)
 >
 > **MAPAS DE EARTHROPO**
@@ -179,9 +179,6 @@ Nimalia é o primeiro horizonte das **Crônicas de Earthropo**: um ponto de part
 > - [[CAMPANHA/ESTADO_DA_CAMPANHA|Estado da Campanha]]
 > - [[Workflow/_audit/Pending_Review/VAULT_STANDARDIZATION_BACKLOG|Fila de Padronização]]
 > - [[Workflow/_audit/Pending_Review/VAULT_PENDING_REVIEW|Pendências do Vault]]
->
-> [!warning]- DOCUMENTAÇÃO TÉCNICA
-> Abrir apenas quando estiver organizando o vault, não durante sessão.
 > - [[Workflow/OMNISVERA_SYSTEM_TAXONOMY|Taxonomia Técnica do Omnisvera]]
 > - [[Workflow/OMNISVERA_DASHBOARD_SYSTEM|Sistema de Dashboards]]
 > - [[Workflow/README|Índice do Workflow]]

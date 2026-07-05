@@ -26,7 +26,7 @@
 - [[O Frasco Afogado]]
 - [[Porto de Nimalia]]
 - [[Rede de Falsificadores de Maré Baixa]]
-- [[Remédios Falsos de Maré Baixa]]
+- [[02 - Remédios Falsos da Maré Baixa|Remédios Falsos de Maré Baixa]]
 - [[Varkh Nimalis]]
 - [[zz_media/locations/mare_baixa.png]]
 

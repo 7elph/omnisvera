@@ -16,7 +16,7 @@
 | [[Vezemir]] | personagem jogador | ligação com Avenor, Leth'valora e o dragão | entrada emocional sem explicar lore pesada |
 | [[Raziel]] | personagem jogador | reage a estruturas antigas e anomalias | entrada misteriosa sem explicar Sangue Antigo |
 | [[O Frasco Afogado]] | local/loja | origem emocional e investigativa dos remédios falsos | usar como local jogável P0/P1 |
-| [[Remédios Falsos de Maré Baixa]] | lore/investigação | pista material inicial da sessão | manter Odran como pista, não culpa confirmada |
+| [[02 - Remédios Falsos da Maré Baixa|Remédios Falsos de Maré Baixa]] | rumor/investigação | pista material inicial da sessão | manter Odran como pista, não culpa confirmada |
 | [[Guarda Real de Nimalia]] | facção | pressão final da sessão | chegar no fim como autoridade e complicação |
 | [[Augustus Terra Decimus]] | personagem/instituição | peso político da Coroa | manter corpo player-safe e segredos no Estado da Campanha |
 

@@ -33,7 +33,7 @@ related_characters:
 related_factions:
   - "[[Rede de Falsificadores de Maré Baixa]]"
 related_lore:
-  - "[[Remédios Falsos de Maré Baixa]]"
+  - "[[02 - Remédios Falsos da Maré Baixa|Remédios Falsos de Maré Baixa]]"
 chapters:
   - 00 - O Corvo da Maré Baixa
 hooks:
@@ -102,7 +102,7 @@ A sensação é de que tudo ali foi salvo do lixo antes de virar ferramenta: fra
 
 - [[Maré Baixa]] — bairro onde o estabelecimento fica.
 - [[Nimalis]] — capital onde Maré Baixa está localizada.
-- [[Remédios Falsos de Maré Baixa]] — arco de investigação ligado ao símbolo e aos métodos de Odran.
+- [[02 - Remédios Falsos da Maré Baixa|Remédios Falsos de Maré Baixa]] — arco de investigação ligado ao símbolo e aos métodos de Odran.
 - [[Conclave dos Errantes]] — relação indireta via Varkh.
 
 ## Rumores
@@ -147,5 +147,5 @@ A sensação é de que tudo ali foi salvo do lixo antes de virar ferramenta: fra
 - [[Varkh Nimalis]]
 - [[Mestre Odran Veyl]]
 - [[Maré Baixa]]
-- [[Remédios Falsos de Maré Baixa]]
+- [[02 - Remédios Falsos da Maré Baixa|Remédios Falsos de Maré Baixa]]
 - [[Rede de Falsificadores de Maré Baixa]]

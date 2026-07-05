@@ -12,7 +12,7 @@ created_by: IA
 thumbnail: zz_media/items/sangue.png
 cover: zz_media/items/sangue.png
 info: Substância ancestral ligada ao renascimento de Raziel e ao Ancião Primordial.
-description: Lore e mecânica própria de mesa para a substância conhecida como Sangue Antigo, separada da classe Vampiro.
+description: Lore e mecânica própria de mesa para a substância conhecida como Sangue Antigo, separada da raça Vampiro e da classe Hemomante.
 chapters:
   - 00 - As Crônicas de Névoa de Sangue
 tags:
@@ -32,7 +32,7 @@ tags:
 > ![[zz_media/items/sangue.png|400]]
 
 > [!world]- SINOPSE DO MESTRE
-> O Sangue Antigo é uma substância misteriosa ligada ao [[Ancião Primordial]] e ao renascimento de [[Raziel]] nas cavernas abissais sob as [[Ruínas de Valthor]]. Ele não substitui a classe [[Vampiro]], mas funciona como uma camada única da campanha.
+> O Sangue Antigo é uma substância misteriosa ligada ao [[Ancião Primordial]] e ao renascimento de [[Raziel]] nas cavernas abissais sob as [[Ruínas de Valthor]]. Ele não substitui a raça [[Vampiro]] nem a classe [[Hemomante]], mas funciona como uma camada única da campanha.
 
 ## Fundamento
 
@@ -46,7 +46,7 @@ Ele separa o vampirismo comum daquilo que Raziel se tornou depois do encontro co
 - Está ligado ao renascimento de Raziel.
 - Alterou ou amplificou a hemomancia de Raziel.
 - Permite justificar efeitos narrativos de sangue, plasma e regeneração.
-- Não deve substituir automaticamente a classe [[Vampiro]].
+- Não deve substituir automaticamente a raça [[Vampiro]] nem a classe [[Hemomante]].
 
 ## Relações Conhecidas
 
@@ -60,7 +60,8 @@ Ele separa o vampirismo comum daquilo que Raziel se tornou depois do encontro co
 
 | elemento | função |
 |---|---|
-| [[Vampiro]] | Classe/referência mecânica principal de Raziel. |
+| [[Vampiro]] | Raça/condição vampírica de Raziel. |
+| [[Hemomante]] | Classe mecânica principal de Raziel. |
 | [[Vampiro Sanguinallis]] | Linhagem e identidade vampírica ligada ao Clã Sanguinallis. |
 | [[Sangue Antigo]] | Camada única da campanha, ligada ao Ancião e ao renascimento de Raziel. |
 | [[Ancião Primordial]] | Entidade que concedeu ou despertou o Sangue Antigo. |
@@ -68,7 +69,7 @@ Ele separa o vampirismo comum daquilo que Raziel se tornou depois do encontro co
 ## Mecânica de Mesa — Rascunho
 
 > [!warning] Regra própria do Omnisvera
-> Esta mecânica é uma camada original da campanha. Ela não substitui a classe [[Vampiro]] e não reproduz regras de livro. Deve ser ajustada pelo mestre durante a campanha.
+> Esta mecânica é uma camada original da campanha. Ela não substitui [[Vampiro]] nem [[Hemomante]] e não reproduz regras de livro. Deve ser ajustada pelo mestre durante a campanha.
 
 O Sangue Antigo representa uma reserva instável de poder vampírico ancestral. Em Raziel, ele pode justificar efeitos de hemomancia, regeneração dramática, criação de armas de sangue e manifestações como asas escarlates.
 
@@ -93,7 +94,7 @@ O Sangue Antigo representa uma reserva instável de poder vampírico ancestral. 
 
 - No nível 1, usar como recurso narrativo controlado pelo mestre, não como lista livre de poderes.
 - Não permitir solução automática para todo combate, obstáculo ou investigação.
-- Separar habilidades da classe [[Vampiro]] daquilo que vem especificamente do [[Sangue Antigo]].
+- Separar habilidades da raça/condição [[Vampiro]], da classe [[Hemomante]] e daquilo que vem especificamente do [[Sangue Antigo]].
 - Consequências devem aumentar quando Raziel usa o poder em público.
 
 ## Uso em Mesa

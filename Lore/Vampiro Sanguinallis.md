@@ -12,7 +12,7 @@ created_by: MIA
 thumbnail: zz_media/thumbnails/th_raziel.png
 cover: zz_media/characters/raziel.png
 info: Referência narrativa para a linhagem vampírica ligada ao Clã Sanguinallis.
-description: Consolidação de lore sobre vampiros Sanguinallis, separada da classe Vampiro e da mecânica do Sangue Antigo.
+description: Consolidação de lore sobre vampiros Sanguinallis, separada da raça Vampiro, da classe Hemomante e da mecânica do Sangue Antigo.
 chapters:
   - 00 - As Crônicas de Névoa de Sangue
 tags:
@@ -35,13 +35,14 @@ tags:
 
 ## Fundamento
 
-Esta definição ainda é narrativa. Regras mecânicas de vampirismo, hemomancia, regeneração ou fraquezas precisam ser criadas separadamente antes de entrarem em mesa.
+Esta definição é principalmente narrativa. Regras mecânicas de vampirismo, hemomancia, regeneração ou fraquezas ficam separadas em [[Vampiro]], [[Hemomante]] e [[Sangue Antigo]].
 
-O ponto mais importante é separar três camadas:
+O ponto mais importante é separar quatro camadas:
 
 | camada | função |
 |---|---|
-| Classe [[Vampiro]] | Base mecânica do personagem. |
+| [[Vampiro]] | Raça/condição vampírica. |
+| [[Hemomante]] | Classe mecânica de manipulação de sangue. |
 | Vampiro Sanguinallis | Linhagem, história, política e identidade vampírica. |
 | [[Sangue Antigo]] | Transformação posterior ligada ao [[Ancião Primordial]]. |
 
@@ -57,13 +58,15 @@ O ponto mais importante é separar três camadas:
 - Relação intensa com sangue.
 - Regeneração ligada à natureza vampírica.
 - Vulnerabilidade à prata, pelo menos no caso de Raziel.
-- Possível vínculo com hemomancia.
+- Possível tradição de hemomancia entre certos membros da linhagem.
 - Relação política ou ritual com a [[Fortaleza de Gharok]].
 
 ## Relações
 
 - [[Raziel]]
 - [[Clã Sanguinallis]]
+- [[Vampiro]]
+- [[Hemomante]]
 - [[Sangue Antigo]]
 - [[Ancião Primordial]]
 - [[Fortaleza de Gharok]]

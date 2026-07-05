@@ -47,15 +47,11 @@ tags:
 > [!NOTE|clean no-i right]+ Elarion Vaelthor
 > ![[zz_media/characters/elarion.png|400]]
 
-> [!NOTE]- Template aplicado
-> Esta nota segue o formato **NPC Importante**. Informações confidenciais devem ficar no [[CAMPANHA/ESTADO_DA_CAMPANHA|Estado da Campanha]].
-
 ## Visão Geral
 
-**Nome:** Elarion Vaelthor
 **Títulos:** Capitão, Guardião de [[Leth'valora]]
 **Reputação Pública:** Herói de guerra e veterano respeitado
-**Raça:** Meio-Elfo
+**Raça:** [[Meio-Elfo]]
 **Classe:** Capitão
 **Idade:** Desconhecida
 **Status:** Desaparecido
@@ -136,7 +132,7 @@ Foi a última vez que Vezemir o viu.
 
 ## Situação Atual
 
-_Pendente de consolidação pelo Sage._
+- Desconhecida
 
 ## Personalidade
 
@@ -155,56 +151,28 @@ A verdadeira força não está no poder, mas no controle dele.
 ---
 
 ## Relações
+- [[Mira Valen]]
+- [[Elarion Vaelthor]]
+- [[Padre Oric]]
+- [[Dragão de Colar Dourado]]
+- [[General Cassian Valerius]]
 
-_Pendente de consolidação pelo Sage._
 
 ## Função Narrativa
 
 - Em desenvolvimento.
 
-## Segredos
-
-- Informações confidenciais ficam centralizadas em [[CAMPANHA/ESTADO_DA_CAMPANHA|Estado da Campanha]].
-
 ## Aparência
 
-_Pendente de consolidação pelo Sage._
+Um [[Meio-Elfo]] dragonborn.
 
 ## Papel na Campanha
 
-_Pendente de consolidação pelo Sage._
-
-## Pendências do Sage
-
-- Revisar e completar campos em aberto.
+-
 
 ## Links relevantes
 
-_Pendente de consolidação pelo Sage._
-
-## Uso em Mesa
-
-- Como apresentar:
-- O que os jogadores sabem:
-- O que manter em aberto no [[ESTADO_DA_CAMPANHA]]: detalhes restritos e decis?es pendentes.
-- Como entra em cena:
-- Ganchos:
-- Consequências possíveis:
-
-
-## Legado
-Para os elfos, Elarion é lembrado como um capitão lendário.
-
-Para os poucos que serviram sob seu comando, foi um líder exemplar.
-
-Para [[Vezemir]], porém, ele foi algo muito mais raro.
-
-Foi o único homem que escolheu ficar.
-
-E talvez o único que conheça a verdade sobre quem o Bastardo de Ferro realmente é.
-
-## Equipamentos
-_Pendente de consolidação pelo Sage._
+-
 
 ## Capacidades narrativas
 
@@ -221,3 +189,29 @@ Especialista em magia defensiva, selamentos e contenção arcana.
 Responsável pela formação de diversos capitães e sentinelas.
 
 ---
+
+## Legado
+Para os elfos, Elarion é lembrado como um capitão lendário.
+
+Para os poucos que serviram sob seu comando, foi um líder exemplar.
+
+Para [[Vezemir]], porém, ele foi algo muito mais raro.
+
+Foi o único homem que escolheu ficar.
+
+E talvez o único que conheça a verdade sobre quem o Bastardo de Ferro realmente é.
+
+
+---
+
+## Uso em Mesa
+
+- Como apresentar:
+- O que os jogadores sabem:
+- O que manter em aberto:
+- Como entra em cena:
+- Ganchos:
+- Consequências possíveis:
+
+
+

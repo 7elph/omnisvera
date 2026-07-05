@@ -1,9 +1,9 @@
 ---
 obsidianUIMode: preview
 NoteIcon: race
-NoteStatus: Draft
+NoteStatus: Active
 type: race
-status: Restrita
+status: Regra opcional
 campaign_status: Em revisão
 visibility: Mestre
 spoiler_level: medium
@@ -11,7 +11,7 @@ gm_secret: true
 name: Vampiro
 aliases:
   - Vampiros
-  - Sanguinallis
+  - Condição Vampírica
 origin: Desconhecida
 territory:
 region:
@@ -36,51 +36,111 @@ tags:
 
 # Vampiro
 
-## Visão Geral
+> [!warning] Regra opcional de campanha
+> Esta nota define **Vampiro** como raça/condição jogável de Omnisvera.
+> Ela não reproduz texto de livros ou suplementos. Ajustes finais ficam com o Sage.
 
-Vampiro, em Omnisvera, pode funcionar como raça, condição, linhagem, maldição ou classe especial, dependendo do caso.
+## Decisão Atual
 
-Para [[Raziel]], a decisão atual é tratar Vampiro como classe/personagem especial com ligação ao [[Sangue Antigo]] e ao [[Clã Sanguinallis]].
+Em Omnisvera, **Vampiro** deve ser tratado como raça, condição ou estado sobrenatural.
 
-## Presença em Omnisvera
+Isso separa três camadas:
 
-- Vampiros estão ligados a histórias antigas, sangue, linhagem e segredos.
-- O [[Clã Sanguinallis]] deve ser integrado conforme a lore já conta.
-- A camada pública dessa informação deve ser controlada para não revelar demais aos jogadores antes da hora.
+| Camada | Função |
+|---|---|
+| [[Vampiro]] | raça/condição vampírica |
+| [[Hemomante]] | classe que usa sangue como técnica e recurso |
+| [[Vampiro Sanguinallis]] | linhagem, cultura e história vampírica |
+| [[Sangue Antigo]] | camada única da campanha ligada a Raziel |
 
-## Cultura e Relações
+Regra simples:
 
-Vampiros podem ser aristocratas ocultos, predadores, amaldiçoados, sobreviventes de eras antigas ou herdeiros de sangue proibido.
+```txt
+Vampiro = o que o personagem é.
+Hemomante = o que o personagem faz.
+Sanguinallis = de onde ele vem.
+Sangue Antigo = o que alterou ele.
+```
 
-## Mecânica Resumida
+## Conceito
 
-Não copiar regras de complemento no vault. A mecânica deve ser resumida em termos próprios, com separação entre:
+Vampiros são mortos-vivos conscientes, ligados a sangue, memória, fome e sobrevivência antinatural.
 
-- classe Vampiro;
-- raça/condição Vampiro;
-- [[Sangue Antigo]];
-- poderes específicos de Raziel.
+Nem todo vampiro precisa ser vilão, nobre oculto ou predador sem controle. Em mesa, a condição vampírica deve criar custo, tensão e escolhas, não retirar agência do personagem.
+
+## Traços Raciais Propostos
+
+> [!note]
+> Usar como base de mesa. Números e limites podem ser ajustados conforme equilíbrio do grupo.
+
+### Não-Vida Consciente
+
+- O vampiro não envelhece normalmente.
+- Não precisa respirar como uma criatura viva comum, mas ainda pode ser afetado por magia, venenos, maldições e efeitos sobrenaturais conforme decisão do mestre.
+- Cura comum, magia divina e efeitos de restauração podem funcionar de forma diferente nele. Em caso de dúvida, tratar como complicação de cena.
+
+### Fome de Sangue
+
+- O vampiro precisa se alimentar de sangue em intervalos definidos pelo mestre.
+- Se negligenciar a fome por muito tempo, recebe uma complicação narrativa: sede, instinto predatório, tremores, perda de controle ou penalidade situacional.
+- Alimentar-se não deve ser usado como desculpa para retirar controle do jogador sem aviso.
+
+### Sentido do Sangue
+
+- Pode perceber sangue recente, ferimentos graves ou presença de morte próxima quando isso for relevante para a cena.
+- Em termos de jogo, isso pode conceder pista, bônus situacional ou permissão narrativa para detectar rastros.
+
+### Corpo Predatório
+
+- O vampiro possui presença, reflexos e resistência anormais.
+- Pode justificar feitos físicos dramáticos, aparência perturbadora e intimidação sobrenatural.
+- Bônus específicos devem ser definidos na ficha final.
+
+### Fraquezas Vampíricas
+
+Escolher ou confirmar com o Sage quais fraquezas são canônicas em Omnisvera:
+
+- prata;
+- fogo;
+- luz solar direta;
+- símbolos sagrados;
+- água corrente;
+- convite/limiar;
+- fome prolongada;
+- magia de contenção antiga.
+
+Nem toda tradição precisa valer. Melhor escolher poucas fraquezas fortes do que muitas fraquezas esquecidas.
+
+## Vampiro em Nível Baixo
+
+Para personagens de nível 1, a condição vampírica deve ser contida:
+
+- regeneração limitada;
+- fome presente, mas administrável;
+- poderes dramáticos com custo;
+- fraquezas reais;
+- nenhum domínio completo sobre a própria condição.
 
 ## Personagens Relacionados
 
 ```dataview
-TABLE status, role, location, faction
+TABLE status, class, location, faction
 FROM "Characters"
-WHERE race = "Vampiro" OR contains(string(race), "Vampiro") OR class = "Vampiro" OR contains(string(class), "Vampiro")
+WHERE race = "Vampiro" OR contains(string(race), "Vampiro")
 SORT file.name ASC
 ```
 
 ## Uso em Mesa
 
-- Como apresentar: mistério, fome, linhagem e ameaça velada.
-- O que os jogadores sabem: depende do que já foi revelado sobre Raziel.
-- O que manter em aberto no [[ESTADO_DA_CAMPANHA]]: origem, limites e consequências do Sangue Antigo.
-- Como entra em cena: sangue, pactos, clãs, ruínas, inimigos antigos.
-- Ganchos: Clã Sanguinallis, Sangue Antigo, poderes de Raziel.
-- Consequências possíveis: revelar demais cedo pode quebrar mistério e tensão.
+- **Como apresentar:** fome, memória antiga, autocontrole e ameaça contida.
+- **O que os jogadores sabem:** vampiros existem, mas suas regras exatas podem variar por linhagem.
+- **O que manter em aberto:** origem, limites e consequências profundas ficam no [[CAMPANHA/ESTADO_DA_CAMPANHA]] e nos dossiês do mestre.
+- **Como entra em cena:** sangue, clãs, maldições, caçadas, ruínas, pactos e inimigos antigos.
+- **Ganchos:** [[Clã Sanguinallis]], [[Vampiro Sanguinallis]], [[Sangue Antigo]], prata, fome e antigos juramentos.
 
 ## Pendências do Sage
 
-- Definir o limite entre raça, classe e condição.
-- Definir poderes permitidos no nível 1.
-- Definir o que pode aparecer publicamente sobre Raziel.
+- Confirmar fraquezas vampíricas canônicas.
+- Definir se vampiros comuns existem fora dos Sanguinallis.
+- Definir como cura, magia sagrada e descanso afetam vampiros.
+- Confirmar quais traços são públicos para jogadores.

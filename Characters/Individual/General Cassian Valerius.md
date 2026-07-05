@@ -15,7 +15,7 @@ location: "[[Nimalis]]"
 territory: "[[Nimalia]]"
 faction: "[[Coroa de Nimalia]]"
 class: Paladino
-race: Antropo
+race: Antropo Tigre
 role: npc
 function: "General da [[Coroa de Nimalia]]"
 chapter:
@@ -52,8 +52,6 @@ tags:
 > [!NOTE|clean no-i right]+ General Cassian Valerius
 > ![[zz_media/characters/cassian.png|400]]
 
-> [!NOTE]- Template aplicado
-> Esta nota segue o formato **NPC Importante**. Informações confidenciais devem ficar no [[CAMPANHA/ESTADO_DA_CAMPANHA|Estado da Campanha]].
 
 ## Visão Geral
 
@@ -62,12 +60,13 @@ tags:
 **Reputação:** Herói de Guerra e Defensor do Reino
 **Gênero:** Homem
 **Esposa:** Falecida
-**Classe:** Paladino
-**Raça:** [[Antropo]]
+**Classe:** [[Paladino]]
+**Raça:** [[Antropo]] 
 **Idade:** 62
 **Status:** Vivo
-**Faction:** [[Coroa de Nimalia]]
-**Location:** [[Nimalia]]
+**Facção:** [[Guarda Real de Nimalia]]
+**Localização:** [[Nimalis]]
+**Território:** [[Nimalia]]
 **Fé:** [[Igreja das Chamas]]
 ---
 
@@ -83,7 +82,7 @@ SORT file.name ASC
 ## História
 
 Cassian Valerius é um dos mais respeitados comandantes da história recente de Nimalia.
-Filho de uma tradicional família militar, serviu ao reino desde a juventude, participando de inúmeras campanhas contra invasores, monstros e senhores da guerra que ameaçaram a estabilidade do Reino Central.
+Filho de uma tradicional família militar, serviu ao reino desde a juventude, participando de inúmeras campanhas contra invasores, monstros e senhores da guerra que ameaçaram a estabilidade do Reino.
 Durante as Guerras da Fronteira Sul, conheceu um jovem mercenário meio-elfo chamado [[Vezemir]]. Enquanto muitos oficiais desconfiavam dele por sua origem, Cassian julgava homens por suas ações, não por seu sangue.
 Após testemunhar Vezemir defender sozinho uma linha de batalha que estava prestes a ruir, passou a respeitá-lo profundamente.
 Desde então, tornou-se um dos poucos membros da nobreza militar que mantiveram contato com o Bastardo de Ferro ao longo dos anos.
@@ -93,7 +92,7 @@ Hoje atua como principal estrategista da [[Coroa de Nimalia]], aconselhando o re
 
 ## Situação Atual
 
-_Pendente de consolidação pelo Sage._
+Hoje, Cassian é o general do exército de Nimalia.
 
 ## Personalidade
 
@@ -125,8 +124,6 @@ Cassian raramente levanta a voz. Sua autoridade vem de sua presença, experiênc
 - Conhecedor de fortificações e logística
 - Liderança inspiradora
 
-**Segredos:**
-
 **Crenças:**
 
 - O reino existe para proteger seu povo.
@@ -137,20 +134,16 @@ Cassian raramente levanta a voz. Sua autoridade vem de sua presença, experiênc
 ---
 
 ## Relações
-
-_Pendente de consolidação pelo Sage._
+[[Augustus Terra Decimus]]
+[[Vezemir]]
 
 ## Função Narrativa
 
 - Em desenvolvimento.
 
-## Segredos
-
-- Informações confidenciais ficam centralizadas em [[CAMPANHA/ESTADO_DA_CAMPANHA|Estado da Campanha]].
-
 ## Aparência
 
-_Pendente de consolidação pelo Sage._
+Antropo da classe dos felinos.
 
 ## Papel na Campanha
 
@@ -159,27 +152,15 @@ General supremo das forças armadas de[[Nimalia]] e principal conselheiro milita
 Para [[Vezemir]], Cassian representa uma das poucas autoridades que jamais o julgaram por sua origem.
 Para Nimalia, ele é a muralha que permanece de pé quando todas as outras caem.
 
-## Pendências do Sage
-
-- Revisar e completar campos em aberto.
-
 ## Links relevantes
 
-_Pendente de consolidação pelo Sage._
+-
 
 ## Uso em Mesa
 
 - Como apresentar:
 - O que os jogadores sabem:
-- O que manter em aberto no [[ESTADO_DA_CAMPANHA]]: detalhes restritos e decis?es pendentes.
+- O que manter em aberto:
 - Como entra em cena:
 - Ganchos:
 - Consequências possíveis:
-
-
-## Equipamentos
-_Pendente de consolidação pelo Sage._
-
-## Capacidades narrativas
-
-_Pendente de consolidação pelo Sage._

@@ -51,7 +51,7 @@ A rede de falsificadores representa o antagonismo central do arco de Varkh. Ela 
 - [[Varkh Nimalis]] - Investigador da rede
 - [[Mestre Odran Veyl]] - Mestre cujo símbolo está sendo usado pela rede
 - [[O Frasco Afogado]] - Loja de Odran, origem do símbolo
-- [[Remédios Falsos de Maré Baixa]] - Arco investigativo sobre os produtos da rede
+- [[02 - Remédios Falsos da Maré Baixa|Remédios Falsos de Maré Baixa]] - Arco investigativo sobre os produtos da rede
 - [[Maré Baixa]] - Região onde a rede pode operar
 - [[Nimalia]] - Reino onde os remédios falsos estão circulando
 
@@ -91,5 +91,5 @@ A rede de falsificadores representa o antagonismo central do arco de Varkh. Ela 
 - [[Characters/Individual/Varkh Nimalis]]
 - [[Characters/Individual/Mestre Odran Veyl]]
 - [[O Frasco Afogado]]
-- [[Lore/Remédios Falsos de Maré Baixa]]
+- [[CAMPANHA/Rumors/02 - Remédios Falsos da Maré Baixa|Remédios Falsos de Maré Baixa]]
 - [[Territories/Nimalia]]

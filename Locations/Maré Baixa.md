@@ -74,7 +74,7 @@ Foi ali que [[Varkh Nimalis]] aprendeu alquimia de rua.
 - [[Mestre Odran Veyl]] — mentor de Varkh e dono do Frasco Afogado.
 - [[Rede de Falsificadores de Maré Baixa]] — possível ameaça ligada ao submundo local.
 - [[Porto de Nimalia]] — vizinho direto e fonte de carga, rumor e contrabando.
-- [[Remédios Falsos de Maré Baixa]] — arco de investigação ligado a Varkh e Odran.
+- [[02 - Remédios Falsos da Maré Baixa|Remédios Falsos de Maré Baixa]] — arco de investigação ligado a Varkh e Odran.
 
 ## Reputação
 

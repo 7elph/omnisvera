@@ -47,7 +47,7 @@ Gerado em: 2026-06-26 14:06.
 | Lore/Eclipse de Obsidiana.md | Category/Lore, lore, history, cataclysm | NoteIcon, tags, cover, status, info |  | zz_media/w.png |  |  |  |  | não | não |
 | Lore/Guardiões do Véu Cinzento.md | lore, mystery, veil, guardians, earthropo | obsidianUIMode, NoteIcon, NoteStatus, status, info, tags |  |  |  |  |  |  | não | não |
 | Lore/O Fraturamento.md | Category/Lore, lore, history, creation | NoteIcon, tags, cover, status, info |  | zz_media/w.png |  |  |  |  | não | não |
-| Lore/Remédios Falsos de Maré Baixa.md | Category/Lore, lore, draft | obsidianUIMode, NoteIcon, NoteStatus, status, canon_status, visibility, created_by, requires_review, tags |  |  |  |  |  |  | não | não |
+| CAMPANHA/Rumors/02 - Remédios Falsos da Maré Baixa.md | Category/Lore, lore, draft | obsidianUIMode, NoteIcon, NoteStatus, status, canon_status, visibility, created_by, requires_review, tags |  |  |  |  |  |  | não | não |
 | Lore/Sangue Antigo.md | Category/Lore, lore, draft | obsidianUIMode, NoteIcon, NoteStatus, status, canon_status, visibility, created_by, requires_review, tags |  |  |  |  |  |  | não | não |
 | Lore/Véu Cinzento.md | Category/Lore, lore, veil, mystery, draft | obsidianUIMode, NoteIcon, NoteStatus, status, info, tags |  |  |  |  |  |  | não | não |
 

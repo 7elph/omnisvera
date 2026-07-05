@@ -8,13 +8,13 @@ spoiler_level: none
 gm_secret: false
 campaign_status: Ativo
 thumbnail: zz_media/thumbnails/th_varkh.png
-cover: zz_media/characters/varkh.jpeg
+cover: zz_media/thumbnails/th_varkh.png
 status: Vivo
 location: "[[Nimalis]]"
 territory: "[[Nimalia]]"
 faction: "[[Conclave dos Errantes]]"
 class: Alquimista
-race: Kenku
+race: Antropo Kenku
 level: 1
 age: 30
 alignment: Em aberto
@@ -48,9 +48,6 @@ tags:
 > [!NOTE|clean no-i right]+ Varkh Nimalis
 > ![[zz_media/characters/varkh.jpeg|400]]
 
-> [!NOTE]- Template aplicado
-> Esta nota segue o formato **Personagem Jogador**. Informações confidenciais devem ficar no [[CAMPANHA/ESTADO_DA_CAMPANHA|Estado da Campanha]].
-
 ## Visão Geral
 
 **Títulos:** O Corvo da Maré Baixa
@@ -60,18 +57,17 @@ tags:
 **Reputação Pública:** Alquimista de rua, ladrão, falsificador e possível assassino
 **Gênero:** Masculino
 **Classe:** [[Alquimista]]
-**Raça:** [[Kenku]]
+**Raça:** [[Kenku|Antropo Kenku]]
 **Idade:** 30 anos
-**Altura:** Em aberto
+**Altura:** 1,75
 **Nível:** 1
-**Alinhamento:** Em aberto
+**Alinhamento:** Neutro Bom
 **Status:** Vivo
 **Afiliação:** [[Conclave dos Errantes]]
-**Afiliações Anteriores:** Nenhuma confirmada
 **Associados Conhecidos:** [[Mestre Odran Veyl]]
-**Inimigos Conhecidos:** Responsáveis ainda não identificados pelos remédios falsos
+**Inimigos Conhecidos:** Não identificados
 **Origem:** [[Nimalis]], especialmente a região de [[Maré Baixa]]
-**Posses:** Espada curta, duas adagas, arco curto, máscara de médico da peste e utensílios alquímicos
+**Posses:** [[Espada curta]], duas [[Adaga|adagas]], [[Arco curto]], [[Máscara de Médico da Peste de Varkh|Máscara de Médico da Peste]] e utensílios alquímicos
 
 
 ---
@@ -99,7 +95,7 @@ Curioso e atento a tudo que os outros descartavam, Varkh colecionava frascos rac
 ---
 
 ### O Corvo que Não Sabia Voar
-Em [[Nimalia]], os antropos são maioria. Em Maré Baixa, Varkh não era desprezado simplesmente por ser quem é. O problema era ser corvo.
+Em [[Nimalia]], Maré Baixa, Varkh não era desprezado simplesmente por ser quem é. O problema era ser corvo.
 
 Corvos lembravam mau presságio, carniça, doença, segredo e morte. Às vezes, ser temido evitava confusão. Em outras partes de Nimalia, porém, Varkh percebia olhares desconfiados.
 
@@ -108,7 +104,7 @@ Ele transformou essa reputação em ferramenta. Se as pessoas esperavam que foss
 ---
 
 ### O Frasco Afogado
-Sua vida mudou quando tentou roubar uma caixa de [[Mestre Odran Veyl]], um velho antropo abutre proprietário d'O Frasco Afogado.
+Sua vida mudou quando tentou roubar uma caixa de [[Mestre Odran Veyl|Odran]], um velho antropo abutre proprietário d'O Frasco Afogado.
 
 Em vez de chamar a guarda, Odran propôs que Varkh aprendesse algo útil toda vez que fosse pego. O roubo se transformou em aprendizado.
 
@@ -150,10 +146,7 @@ Não busca glória ou redenção. Busca respostas, bons ingredientes, moedas no 
 
 ## Entrada no Capítulo 01
 
-- **Pista inicial:** os frascos encontrados na estrada usam marcas que lembram o método de [[Mestre Odran Veyl]].
-- **Leitura de Varkh:** a cópia é boa demais para ser acaso, mas errada demais para ser trabalho limpo de Odran.
-- **Motivo pessoal:** investigar a carga é a chance de proteger o nome do mestre e descobrir quem está usando a reputação do [[O Frasco Afogado]].
-- **Uso em mesa:** Varkh pode identificar adulteração, mistura mal estabilizada, rótulo falso ou assinatura alquímica corrompida.
+- **[[02 - Remédios Falsos da Maré Baixa]]:** Remédios falsos circulam em Nimalia usando o símbolo e os métodos de [[Mestre Odran Veyl|Odran]].
 
 ---
 
@@ -173,7 +166,7 @@ Criatividade, precisão, lealdade a quem conquista sua confiança e disposição
 Curiosidade invasiva, hábitos criminosos, desconfiança e tendência a transformar qualquer problema em oportunidade.
 
 **Medos:**
-A definir com o jogador.
+Ser preso.
 
 **Crenças:**
 Tudo possui algum valor. Problemas podem ser transformados em saídas, e ainda existe honra entre ladrões, médicos e mentirosos.
@@ -182,7 +175,7 @@ Tudo possui algum valor. Problemas podem ser transformados em saídas, e ainda e
 
 ## Relações
 
-_Pendente de consolidação pelo Sage._
+[[Mestre Odran Veyl]]
 
 ## Equipamentos importantes
 
@@ -206,7 +199,7 @@ Carrega misturas inspiradas por itens comuns como [[Ácido]], [[Fogo de alquimis
 
 ---
 
-## Capacidades narrativas
+## Capacidades
 
 **Alquimia de Rua:**
 Prepara poções, venenos, fumos e ácidos com ingredientes improvisados.
@@ -225,34 +218,37 @@ Conhece o porto, Maré Baixa e parte do submundo da capital de Nimalia.
 
 ---
 
+## Atributos
+
+| Status           | Valor |
+|------------------|-------|
+| Força            | 12    |
+| Destreza         | 15    |
+| Constituição     | 12    |
+| Inteligência     | 9     |
+| Sabedoria        | 13    |
+| Carisma          | 6     |
+
+| Combate e recursos | Valor |
+|:--|:--|
+| Classe de Armadura | 15 |
+| Pontos de Vida | 11 |
+| Bônus de Ataque | +4 |
+| Movimento | 9 m |
+| Ouro inicial | 120 PO |
+
+---
+
 #### Idiomas
 
 - A definir com o jogador.
 - O mimetismo kenku permanece uma característica narrativa até receber uma regra aprovada.
 
-#### Habilidades especiais
-
-- Alquimia de rua, Kenku e seus demais traços mecânicos permanecem como regras autorais pendentes.
-
-## Mecânicas pendentes
-
-- Nenhuma mecânica pendente registrada nesta nota.
-
 ## Aparência
 
-Varkh é um kenku corvo de porte médio, com penas negras de reflexos azulados e olhos escuros e atentos. Usa manto escuro de médico da peste, máscara de bico, frascos presos ao cinto e um cachecol vermelho desbotado.
-
-De longe, parece uma sombra com olhos. De perto, parece alguém que sabe exatamente onde cortar para não precisar cortar duas vezes.
+Varkh é um kenku corvo de porte médio, com penas negras de reflexos azulados e olhos escuros e atentos. Usa manto escuro de médico da peste, máscara de bico, frascos presos ao cinto e um cachecol vermelho desbotado. De longe, parece uma sombra com olhos.
 
 ---
-
-## Papel na Campanha
-
-_Pendente de consolidação pelo Sage._
-
-## Pendências do Sage
-
-- Revisar e completar campos em aberto.
 
 ## Links relevantes
 
@@ -262,7 +258,7 @@ _Pendente de consolidação pelo Sage._
 
 - Como apresentar:
 - O que os jogadores sabem:
-- O que manter em aberto no [[CAMPANHA/ESTADO_DA_CAMPANHA]]: detalhes restritos e decisões pendentes.
+- O que manter em aberto:
 - Como entra em cena:
 - Ganchos:
 - Consequências possíveis:

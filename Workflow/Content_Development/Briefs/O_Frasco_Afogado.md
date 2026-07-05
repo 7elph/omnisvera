@@ -26,7 +26,7 @@
 - [[Nimalia]]
 - [[Nimalis]]
 - [[Rede de Falsificadores de Maré Baixa]]
-- [[Remédios Falsos de Maré Baixa]]
+- [[02 - Remédios Falsos da Maré Baixa|Remédios Falsos de Maré Baixa]]
 - [[Varkh Nimalis]]
 
 ### Notas que apontam para esta nota
@@ -36,7 +36,7 @@
 - [[INDICE_DE_ITENS]] (`Items/INDICE_DE_ITENS.md`)
 - [[Maré Baixa]] (`Locations/Maré Baixa.md`)
 - [[Nimalis]] (`Locations/Nimalis.md`)
-- [[Remédios Falsos de Maré Baixa]] (`Lore/Remédios Falsos de Maré Baixa.md`)
+- [[02 - Remédios Falsos da Maré Baixa|Remédios Falsos de Maré Baixa]] (`CAMPANHA/Rumors/02 - Remédios Falsos da Maré Baixa.md`)
 
 ## Lacunas
 

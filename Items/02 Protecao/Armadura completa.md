@@ -42,6 +42,7 @@ tags:
   - "old-dragon"
   - "origem-vezemir"
   - "protecao"
+  - vezemir-item
 ---
 
 # Armadura completa

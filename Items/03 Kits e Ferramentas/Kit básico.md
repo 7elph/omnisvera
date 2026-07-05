@@ -41,6 +41,7 @@ tags:
   - "kits-e-ferramentas"
   - "old-dragon"
   - "origem-vezemir"
+  - vezemir-item
 ---
 
 # Kit básico

@@ -197,7 +197,7 @@
 - Lore\Eclipse de Obsidiana.md
 - Lore\Guardiões do Véu Cinzento.md
 - Lore\O Fraturamento.md
-- Lore\Remédios Falsos de Maré Baixa.md
+- CAMPANHA\Rumors\02 - Remédios Falsos da Maré Baixa.md
 - Lore\Sangue Antigo.md
 - Lore\Véu Cinzento.md
 - Races\Kenku.md

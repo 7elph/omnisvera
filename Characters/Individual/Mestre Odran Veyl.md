@@ -9,7 +9,7 @@ visibility: Jogadores
 spoiler_level: none
 gm_secret: false
 thumbnail: zz_media/thumbnails/th_mestre_odran.png
-cover: zz_media/characters/th_mestre_odran.jpeg
+cover: zz_media/thumbnails/th_mestre_odran.png
 location: "[[O Frasco Afogado]]"
 territory: "[[Nimalia]]"
 faction:
@@ -50,7 +50,15 @@ tags:
 
 ## Visão Geral
 
-Alquimista veterano de [[Maré Baixa]], proprietário do estabelecimento conhecido como [[O Frasco Afogado]] e mentor de [[Varkh Nimalis]].
+**Títulos:** O Médico Carniceiro 
+**Reputação Pública:** O Alquimista da Maré Baixa
+**Raça:** [[Antropo]] Abutre
+**Classe:** Alquimista
+**Idade:** Desconhecida
+**Status:** Desaparecido
+**Localização:** [[O Frasco Afogado]]
+**Território:** [[Nimalia]]]
+**Associados Conhecidos:** [[Varkh Nimalis]]
 
 ## Aparições
 
@@ -63,7 +71,7 @@ SORT file.name ASC
 
 ## História
 
-_Pendente de consolidação pelo Sage._
+-
 
 ### Informações sustentadas
 - É descrito como um antropo  de características semelhantes às de um abutre.
@@ -73,62 +81,41 @@ _Pendente de consolidação pelo Sage._
 
 ## Situação Atual
 
-_Pendente de consolidação pelo Sage._
+Ainda adminstra [[O Frasco Afogado]].
 
 ## Personalidade
 
-_Pendente de consolidação pelo Sage._
+-
 
 ## Relações
 
-_Pendente de consolidação pelo Sage._
+[[Varkh Nimalis]]
 
 ## Função Narrativa
 
 - Em desenvolvimento.
 
-## Segredos
-
-- Em desenvolvimento.
-
 ## Aparência
 
-_Pendente de consolidação pelo Sage._
+Um [[Antropo]] Abutre
 
 ## Papel na Campanha
 
-_Pendente de consolidação pelo Sage._
-
-## Pendências do Sage
-
-- Revisar e completar campos em aberto.
+-
 
 ## Links relevantes
 
-_Pendente de consolidação pelo Sage._
+-
+
+## Capacidades narrativas
+
+-
 
 ## Uso em Mesa
 
 - Como apresentar:
 - O que os jogadores sabem:
-- O que manter em aberto no [[ESTADO_DA_CAMPANHA]]: detalhes restritos e decis?es pendentes.
+- O que manter em aberto:
 - Como entra em cena:
 - Ganchos:
 - Consequências possíveis:
-
-
-## Em aberto
-- Paradeiro atual.
-- Participação ou inocência nas falsificações.
-- História anterior a Maré Baixa.
-- Relações com guildas, Coroa ou outras facções.
-- Natureza exata d'O Frasco Afogado.
-
-Nenhuma dessas questões deve ser resolvida sem informação do jogador ou decisão do mestre.
-
-## Equipamentos
-_Pendente de consolidação pelo Sage._
-
-## Capacidades narrativas
-
-_Pendente de consolidação pelo Sage._

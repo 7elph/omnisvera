@@ -81,7 +81,7 @@ Estas notas não devem aparecer em dashboard de jogadores:
 - [[Ancião Primordial]]
 - [[Sangue Antigo]]
 - [[Vampiro Sanguinallis]]
-- [[Remédios Falsos de Maré Baixa]]
+- [[02 - Remédios Falsos da Maré Baixa|Remédios Falsos de Maré Baixa]]
 
 ## Ajustes Importantes
 
@@ -118,7 +118,7 @@ Resultado após o lote:
 - Decidir se [[O Fraturamento]] é fato, mito, teoria falsa ou metáfora.
 - Definir relação exata entre [[Véu Cinzento]], [[Eclipse de Obsidiana]] e [[Criadores]].
 - Confirmar a mecânica final do [[Sangue Antigo]].
-- Decidir se haverá versão pública para [[Remédios Falsos de Maré Baixa]].
+- Decidir se haverá versão pública para [[02 - Remédios Falsos da Maré Baixa|Remédios Falsos de Maré Baixa]].
 - Decidir se a lore dos [[Guardiões do Véu Cinzento]] deve ser ainda mais separada entre público e mestre.
 
 ## Próximo Lote Recomendado

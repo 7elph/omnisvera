@@ -15,12 +15,7 @@ gm_secret: false
   <img src="zz_media/misc/omnisvera.png" width="900px">
 </div>
 
-# Omnisvera — Home dos Jogadores
-
-> [!info]+ CONTEÚDO LIBERADO
-> Esta Home mostra apenas conteúdo público, conhecido pelos jogadores ou explicitamente liberado.
->
-> Se algo não aparece aqui, isso não significa que não exista no mundo: significa apenas que ainda não foi liberado para os personagens.
+# Omnisvera 
 
 > [!cards|5]
 > **EARTHROPO**
@@ -76,17 +71,17 @@ AND spoiler_level != "heavy"
 SORT file.name ASC
 
 // Settings
-preset: compact
-columns: 3
+preset: full
+columns: 4
 imageProperty: thumbnail
 showImageOnHover: true
 cardSpacing: 4
 ```
 
-## Quests Liberadas
+## Quests
 
-```dataview
-TABLE quest_status, danger_level, location, faction
+```datacards
+TABLE cover, quest_status, danger_level, location, faction
 FROM "CAMPANHA/Quests"
 WHERE type != "index"
 AND (visibility = "Jogadores" OR visibility = "Público")
@@ -98,10 +93,10 @@ AND quest_status != "Falhou"
 SORT file.name ASC
 ```
 
-## Rumores Liberados
+## Rumores
 
-```dataview
-TABLE status, danger_level, location, faction
+```datacards
+TABLE cover, status, danger_level, location, faction
 FROM "CAMPANHA/Rumors"
 WHERE type != "index"
 AND (visibility = "Jogadores" OR visibility = "Público")
@@ -123,7 +118,6 @@ AND (visibility = "Jogadores" OR visibility = "Público")
 AND gm_secret != true
 AND spoiler_level != "medium"
 AND spoiler_level != "heavy"
-AND NoteStatus != "Placeholder"
 SORT file.name ASC
 
 // Settings
@@ -169,7 +163,7 @@ AND NoteStatus != "Placeholder"
 SORT file.name ASC
 
 // Settings
-preset: compact
+preset: full
 columns: 4
 imageProperty: thumbnail
 cardSpacing: 4

@@ -35,7 +35,7 @@
 - [[Máscara de Médico da Peste de Varkh]] (`Items/Máscara de Médico da Peste de Varkh.md`)
 - [[Maré Baixa]] (`Locations/Maré Baixa.md`)
 - [[O Frasco Afogado]] (`Locations/O Frasco Afogado.md`)
-- [[Remédios Falsos de Maré Baixa]] (`Lore/Remédios Falsos de Maré Baixa.md`)
+- [[02 - Remédios Falsos da Maré Baixa|Remédios Falsos de Maré Baixa]] (`CAMPANHA/Rumors/02 - Remédios Falsos da Maré Baixa.md`)
 - [[MIGRATION_LEDGER]] (`Workflow/MIGRATION_LEDGER.md`)
 - [[Runtime Audit Report]] (`Workflow/Runtime Audit Report.md`)
 

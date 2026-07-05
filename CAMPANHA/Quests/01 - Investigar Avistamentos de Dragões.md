@@ -9,18 +9,14 @@ campaign_status: Em revisão
 visibility: Jogadores
 spoiler_level: light
 gm_secret: false
-revealed_in:
 created_by: Sage
 name: Investigar Avistamentos de Dragões
 location:
 territory: "[[Nimalia]]"
 faction:
   - "[[Conclave dos Errantes]]"
-danger_level: Médio
-hooks:
-  - "[[Rumor 01 - Dragões ao Sul de Nimalia]]"
-rumors:
-  - "[[Rumor 01 - Dragões ao Sul de Nimalia]]"
+danger_level: C
+info: O Conclave dos Errantes tem interesse em investigar relatos de dragões nas regiões ao sul de Nimalia.
 chapters:
   - 01 - Ecos do Mundo Perdido
 thumbnail:
@@ -32,13 +28,13 @@ tags:
   - conclave-dos-errantes
 ---
 
-# Quest 01 — Investigar Avistamentos de Dragões
+# Investigar Avistamentos de Dragões
 
-## Gancho Público
+## Informações
 
 O [[Conclave dos Errantes]] tem interesse em investigar relatos de dragões nas regiões ao sul de [[Nimalia]].
 
-Os rumores falam de ataques a viajantes, mercadores, vilarejos e até criaturas selvagens. Por enquanto, a informação ainda é confusa demais para separar ameaça real, exagero de estrada e medo popular.
+Os [[01 - Dragões ao Sul de Nimalia|rumores]] falam de ataques a viajantes, mercadores, vilarejos e até criaturas selvagens. Por enquanto, a informação ainda é confusa demais para separar ameaça real, exagero de estrada e medo popular.
 
 ## Objetivo Conhecido
 
@@ -64,10 +60,10 @@ Descobrir se há de fato dragões ou criaturas dracônicas envolvidas nos ataque
 
 ## Rumores Relacionados
 
-```dataview
-TABLE status, visibility, location
+```datacards
+TABLE cover, danger_level, info, location
 FROM "CAMPANHA/Rumors"
-WHERE (contains(hooks, this.file.link) OR contains(rumors, this.file.link))
+WHERE name = "Dragões ao Sul de Nimalia"
 AND type != "index"
 SORT file.name ASC
 ```

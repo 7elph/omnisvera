@@ -59,8 +59,8 @@ tags:
 **Reputação Pública:** Guerreiro lendário, reservado e intimidador
 **Gênero:** Masculino
 **Classe:** [[Guerreiro]]
-**Raça:** Meio Humano / Meio Elfo
-**Idade:** 200 anos
+**Raça:** [[Meio-Elfo]]
+**Idade:** 150 anos
 **Altura:** 2,02 m
 **Nível:** 1
 **Alinhamento:** Neutro
@@ -84,18 +84,14 @@ WHERE contains(this.chapters, file.name)
 SORT file.name ASC
 ```
 
-## O que os jogadores sabem
-
-- Ver a Visão Geral, História e Situação Atual desta nota.
-
 ## História
 
-> <h4>"A honra não se herda. Se conquista."</h5>
+> <h4>"A honra não se herda. Se conquista."</h4>
 
 
 Vezemir foi encontrado ainda bebê nas ruínas de uma [[Antiga Estrada Esquecida]] próxima à uma vila élfica de [[Leth'valora]]. Rejeitado por parte dos elfos devido à sua ascendência mestiça, foi adotado pelo veterano [[Elarion Vaelthor]], antigo capitão das [[Sentinelas de Leth'valora]].
 
-Nos limites de [[Leth'valora]], Elarion o criou em uma fortaleza abandonada nas elevações de Avenor. Ali Vezemir recebeu treinamento rigoroso em combate, sobrevivência, estratégia, história e magia.
+Nos limites de [[Leth'valora]], Elarion o criou em uma [[Fortaleza Abandonada de Avenor|fortaleza abandonada]] nas elevações de Avenor. Ali Vezemir recebeu treinamento rigoroso em combate, sobrevivência, estratégia, história e magia.
 
 Sua magia, porém, nunca se comportou como a dos elfos.
 
@@ -124,7 +120,7 @@ E nunca mais voltou.
 
 ---
 
-### O Bastardo de Ferro
+### [[00 - O Bastardo de Ferro|O Bastardo de ferro]]
 Durante décadas, Vezemir serviu como mercenário nos reinos proximos, através do [[General Cassian Valerius]].
 Participou de guerras, cercos e batalhas que hoje são lembradas apenas em canções e registros antigos.
 Sua reputação cresceu rapidamente.
@@ -190,21 +186,17 @@ Esperando o momento em que finalmente reencontrará a criatura que destruiu sua 
 
 ## Entrada no Capítulo 01
 
-- **Pista inicial:** símbolos, marcas ou sensações na passagem sob a estrada lembram histórias antigas ligadas a Avenor e à queda de [[Leth'valora]].
-- **Leitura de Vezemir:** ele sente que a descoberta toca seu passado, mas não entende a verdade por trás disso.
-- **Motivo pessoal:** qualquer sinal conectado ao dragão de colar dourado, aos antigos guardiões ou à floresta pode tirá-lo do isolamento.
-- **Uso em mesa:** Vezemir deve perceber peso emocional e ameaça concreta, não receber explicação completa.
+- **[[01 - Dragões ao Sul de Nimalia]]:** Há rumores de dragões sobrevoando o sul de [[Nimalia]]. Muitos avistamentos, destruição de caravanas e mortos nas estradas.
 
 ---
 
 ## Personalidade
 
+> [!infobox]
+> ![[zz_media/thumbnails/th_vezemir.png]]
+
 **Temperamento:**
 Reservado, disciplinado e resiliente. Vezemir raramente demonstra emoções, mas guarda dentro de si uma fúria que jamais desapareceu completamente.
-
-> [!infobox]
->
-> ![[zz_media/thumbnails/th_vezemir.png]]
 
 **Virtudes:**
 Lealdade, coragem, humildade, perseverança.
@@ -221,10 +213,15 @@ O valor de uma pessoa é definido por suas escolhas, não por seu sangue.
 ---
 
 ## Relações
+- [[Mira Valen]]
+- [[Elarion Vaelthor]]
+- [[Padre Oric]]
+- [[Dragão de Colar Dourado]]
+- [[General Cassian Valerius]]
 
-_Pendente de consolidação pelo Sage._
+---
 
-## Equipamentos importantes
+## Equipamentos e Itens
 
 
 ```datacards
@@ -240,7 +237,9 @@ showImageOnHover: true
 cardSpacing: 4
 ```
 
-## Capacidades narrativas
+---
+
+## Capacidades 
 
 **Combate Marcial:**
 Especialista em machados de guerra, escudos pesados e combate de linha de frente.
@@ -256,7 +255,7 @@ Embora rejeite sua herança arcana, ocasionalmente manifesta explosões involunt
 
 ---
 
-## Mecânicas confirmadas
+## Atributos
 
 | Status           | Valor |
 |------------------|-------|
@@ -275,42 +274,25 @@ Embora rejeite sua herança arcana, ocasionalmente manifesta explosões involunt
 | Movimento | 9 m |
 | Ouro inicial | 90 PO |
 
-#### Armas e carga
-
-- **[[Grisalma]]:** usar [[Machado de batalha]] como referência inicial, com dano base de 2d6.
-- **Adaga oculta na bota:** usar [[Adaga]], dano de 1d4.
-- **Armadura pesada:** usar [[Armadura completa]] como referência inicial, peso de 20 kg.
-- **[[Muralha de Dorn]]:** usar [[Escudo de aço]] como referência inicial, bônus de +2 na CA.
-- **[[O Medalhão]]**.
-- [[Kit básico]].
+---
 
 #### Idiomas
 
 - Comum: escrita.
 - Élfico: fala.
 
-#### Poderes registrados na ficha
+#### Poderes 
 
 - **Força Arcana:** toque; duração de 1d6 + nível; concede 1 ponto adicional para cada 5 pontos de Força já possuídos.
 - **Velocidade:** toque; duração de 1d4 + nível; dobra a movimentação, concede +2 na CA e um ataque adicional.
 
-## Mecânicas pendentes
-
-- Nenhuma mecânica pendente registrada nesta nota.
+---
 
 ## Aparência
 
 Com 2,02 m de altura, Vezemir é alto e musculoso. Possui cabelos e pele muito claros, olhos verdes e uma cicatriz vertical que cruza o rosto da testa ao queixo. Usa armadura pesada escura, reforçada por placas de ferro.
 
 ---
-
-## Papel na Campanha
-
-_Pendente de consolidação pelo Sage._
-
-## Pendências do Sage
-
-- Revisar e completar campos em aberto.
 
 ## Links relevantes
 
@@ -320,7 +302,7 @@ _Pendente de consolidação pelo Sage._
 
 - Como apresentar:
 - O que os jogadores sabem:
-- O que manter em aberto no [[CAMPANHA/ESTADO_DA_CAMPANHA]]: detalhes restritos e decisões pendentes.
+- O que manter em aberto:
 - Como entra em cena:
 - Ganchos:
 - Consequências possíveis:

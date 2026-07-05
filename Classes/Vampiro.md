@@ -1,22 +1,23 @@
 ---
 obsidianUIMode: preview
 NoteIcon: class
-NoteStatus: Draft
+NoteStatus: Deprecated
 type: class
-status: Regra opcional
-rules_status: Complemento / adaptação de mesa
-campaign_status: Em revisão
+status: Substituído
+rules_status: Ponte / compatibilidade
+campaign_status: Arquivado
 visibility: Mestre
-spoiler_level: medium
-gm_secret: true
+spoiler_level: light
+gm_secret: false
 created_by: Sage
 name: Vampiro
-aliases: []
-system: Old Dragon / complemento consultado pelo mestre
+aliases:
+  - Classe Vampiro
+system: Old Dragon / ponte Omnisvera
 class_group: Sobrenatural
 primary_attribute:
 level:
-danger_level: Alto
+danger_level: Médio
 thumbnail: zz_media/thumbnails/th_raziel.png
 cover: zz_media/thumbnails/th_raziel.png
 chapters:
@@ -24,65 +25,54 @@ chapters:
 tags:
   - classe
   - vampiro
-  - regra-opcional
+  - ponte
+  - deprecated
   - raziel
   - class
 ---
 
 # Vampiro
 
-> [!NOTE|clean no-i right]+ Referência
-> ![[zz_media/characters/raziel.png|400]]
+> [!warning] Nota ponte
+> Esta nota era usada como classe, mas a decisão atual do Sage separa a estrutura:
+>
+> - **Raça/condição:** [[Vampiro]]
+> - **Classe:** [[Hemomante]]
+> - **Linhagem:** [[Vampiro Sanguinallis]]
+> - **Camada única de campanha:** [[Sangue Antigo]]
+>
+> Manter esta nota por enquanto para não quebrar links antigos, consultas e histórico.
 
-> [!warning] Regra de mesa
-> Esta nota não reproduz texto de livro. Ela existe para registrar como a classe será integrada ao Omnisvera. Para progressão, limitações e regras-base, consultar o material original usado pelo mestre.
+## Decisão Atual
 
-## Visão Geral
+`Vampiro` não deve ser usado como classe principal nova.
 
-Vampiro é a classe ou opção de personagem usada por [[Raziel]], baseada em material complementar de Old Dragon consultado pelo mestre.
+Para personagens como [[Raziel]], usar:
 
-Em Omnisvera, o vampiro é um morto-vivo consciente cuja existência depende de sangue, memória, fome e vínculo com linhagem ou maldição.
+```yaml
+race: Vampiro
+class: Hemomante
+```
 
-## Papel no Grupo
+## Como Interpretar Links Antigos
 
-- Atuar como personagem de risco, poder e custo.
-- Explorar furtividade, sobrevivência sobrenatural e tensão moral.
-- Trazer para a mesa temas de fome, controle e passado antigo.
+Se uma nota antiga diz que alguém tem classe Vampiro, ler como:
 
-## Papel no Mundo
+- a criatura é ou foi tratada como vampírica;
+- a mecânica precisa ser convertida para [[Hemomante]] se for personagem jogável;
+- a condição racial deve apontar para [[Vampiro]].
 
-Vampiros podem ser lendas, clãs, maldições, aristocracias ocultas, predadores ou sobreviventes de eras antigas.
-
-No caso de Raziel, a condição passa pelo [[Clã Sanguinallis]], pela traição na [[Fortaleza de Gharok]] e pelo despertar do [[Sangue Antigo]] nas [[Ruínas de Valthor]].
-
-## Notas de Mecânica
-
-- Separar a classe Vampiro da camada única de Raziel: [[Sangue Antigo]].
-- Tratar fome como tensão narrativa, não como punição automática.
-- Usar fraquezas vampíricas como cenas, escolhas e consequências.
-- Não revelar toda a origem da linhagem Sanguinallis de uma vez.
-- Não copiar progressão, poderes ou texto integral de complemento no vault.
-
-## Personagens Relacionados
+## Consulta de Transição
 
 ```dataview
-TABLE thumbnail, race, status, location, faction
+TABLE thumbnail, race, class, status, location, faction
 FROM "Characters"
-WHERE class = "Vampiro" OR class = this.file.link
+WHERE class = "Vampiro" OR class = this.file.link OR contains(string(class), "Vampiro")
 SORT file.name ASC
 ```
 
-## Uso em Mesa
+## Pendências
 
-- Como apresentar: fome, silêncio, memória antiga, reação à prata, sangue e autocontrole.
-- O que os jogadores sabem: Raziel é vampiro, mas nem toda a natureza dele precisa estar clara.
-- O que manter em aberto no [[ESTADO_DA_CAMPANHA]]: origem, limites reais, custo do Sangue Antigo e vínculos de clã.
-- Como entra em cena: combate, tentação, fraqueza, horror, descoberta do passado e escolhas difíceis.
-- Ganchos: [[Sangue Antigo]], [[Vampiro Sanguinallis]], [[Clã Sanguinallis]] e antigos inimigos.
-
-## Pendências do Sage
-
-- Definir custo de uso do Sangue Antigo.
-- Definir como a fome aparece em mesa.
-- Definir fraquezas confirmadas.
-- Definir quais poderes vêm da classe Vampiro e quais vêm do [[Sangue Antigo]].
+- Migrar personagens ativos que ainda usam `class: Vampiro` para `class: Hemomante`, quando seguro.
+- Revisar criaturas/NPCs vampíricos caso precisem de classe própria ou apenas raça/condição.
+- Remover esta ponte somente depois de confirmar que nenhum Dataview/DataCards depende dela.

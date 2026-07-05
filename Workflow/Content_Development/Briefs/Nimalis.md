@@ -42,8 +42,8 @@
 ### Notas que apontam para esta nota
 
 - [[ESTADO_DA_CAMPANHA]] (`CAMPANHA/ESTADO_DA_CAMPANHA.md`)
-- [[Quest 01 - Investigar Avistamentos de Dragões]] (`CAMPANHA/Quests/Quest 01 - Investigar Avistamentos de Dragões.md`)
-- [[Rumor 01 - Dragões ao Sul de Nimalia]] (`CAMPANHA/Rumors/Rumor 01 - Dragões ao Sul de Nimalia.md`)
+- [[01 - Investigar Avistamentos de Dragões]] (`CAMPANHA/Quests/Quest 01 - Investigar Avistamentos de Dragões.md`)
+- [[01 - Dragões ao Sul de Nimalia]] (`CAMPANHA/Rumors/Rumor 01 - Dragões ao Sul de Nimalia.md`)
 - [[Augustus Terra Decimus]] (`Characters/Individual/Augustus Terra Decimus.md`)
 - [[General Cassian Valerius]] (`Characters/Individual/General Cassian Valerius.md`)
 - [[Mestre Odran Veyl]] (`Characters/Individual/Mestre Odran Veyl.md`)

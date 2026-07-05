@@ -54,7 +54,7 @@ Ladrões podem ser criminosos, espiões, batedores, caçadores de tesouro, sobre
 
 - Usar as regras oficiais de Ladrão do sistema escolhido pelo mestre.
 - [[Varkh Nimalis]] possui identidade narrativa próxima de ladrão, mas sua classe operacional atual é [[Alquimista]].
-- [[Raziel]] não usa mais Ladrão como classe operacional; sua classe atual é [[Vampiro]].
+- [[Raziel]] não usa mais Ladrão como classe operacional; sua classe atual é [[Hemomante]].
 
 ## Personagens Relacionados
 

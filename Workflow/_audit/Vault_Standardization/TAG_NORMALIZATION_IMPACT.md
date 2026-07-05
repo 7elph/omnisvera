@@ -102,7 +102,7 @@ Gerado em: 2026-07-01 04:07
 | `capitulo` | 2 | `EARTHROPO/01 - Ecos do Mundo Perdido.md`, `Templates/RPG/Story.md` |
 | `nobreza` | 2 | `Factions/Coroa de Nimalia.md`, `Factions/Nobreza de Nimalia.md` |
 | `economia` | 2 | `Factions/Guilda dos Mercadores.md`, `Locations/Casa da Moeda de Nimalia.md` |
-| `remedios-falsos` | 2 | `Factions/Rede de Falsificadores de Maré Baixa.md`, `Lore/Remédios Falsos de Maré Baixa.md` |
+| `remedios-falsos` | 2 | `Factions/Rede de Falsificadores de Maré Baixa.md`, `CAMPANHA/Rumors/02 - Remédios Falsos da Maré Baixa.md` |
 | `arma` | 2 | `Items/Adagas de Espectro Fantasma.md`, `Items/Grisalma.md` |
 | `anciao-primordial` | 2 | `Items/Manto Primordial do Ancião.md`, `Lore/Ancião Primordial.md` |
 | `dragonborn` | 2 | `Locations/Bairro dos Dragonborns.md`, `Races/Dragonborn.md` |
@@ -173,7 +173,7 @@ Gerado em: 2026-07-01 04:07
 | `cataclisma` | 1 | `Lore/Eclipse de Obsidiana.md` |
 | `eclipse-de-obsidiana` | 1 | `Lore/Eclipse de Obsidiana.md` |
 | `fraturamento` | 1 | `Lore/O Fraturamento.md` |
-| `investigacao` | 1 | `Lore/Remédios Falsos de Maré Baixa.md` |
+| `investigacao` | 1 | `CAMPANHA/Rumors/02 - Remédios Falsos da Maré Baixa.md` |
 | `universe` | 1 | `OMNISVERA.md` |
 | `halfling` | 1 | `Races/Halfling.md` |
 | `caminho-dos-errantes` | 1 | `Religion/Caminho dos Errantes.md` |

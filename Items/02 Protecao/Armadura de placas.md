@@ -40,7 +40,6 @@ tags:
   - "equipamento"
   - "item"
   - "old-dragon"
-  - "origem-vezemir"
   - "protecao"
 ---
 

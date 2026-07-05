@@ -27,7 +27,7 @@ O conteúdo foi preservado e reposicionado. Nenhuma revelação nova foi canoniz
 | `Lore/Sangue Antigo.md` | Lore e mecânica própria de Raziel | Mestre | Separado da classe `Vampiro` e da linhagem Sanguinallis. |
 | `Lore/Ancião Primordial.md` | Entidade ligada ao arco de Raziel | Mestre | Mantido como entidade indefinida, com hipóteses abertas. |
 | `Lore/Vampiro Sanguinallis.md` | Linhagem vampírica de Raziel | Mestre | Separado de `Sangue Antigo` e da classe `Vampiro`. |
-| `Lore/Remédios Falsos de Maré Baixa.md` | Arco de investigação de Varkh | Mestre | Tratado como investigação, não lore cosmológica. |
+| `CAMPANHA/Rumors/02 - Remédios Falsos da Maré Baixa.md` | Arco de investigação de Varkh | Mestre | Tratado como investigação, não lore cosmológica. |
 
 ## Consistências estabelecidas
 

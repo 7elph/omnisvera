@@ -247,7 +247,7 @@ M .obsidian/plugins/obsidian-leaflet-plugin/data.json
 | `Lore/Eclipse de Obsidiana.md` | 7 |
 | `Lore/Guardiões do Véu Cinzento.md` | 14 |
 | `Lore/O Fraturamento.md` | 7 |
-| `Lore/Remédios Falsos de Maré Baixa.md` | 7 |
+| `CAMPANHA/Rumors/02 - Remédios Falsos da Maré Baixa.md` | 7 |
 | `Lore/Sangue Antigo.md` | 7 |
 | `Lore/Vampiro Sanguinallis.md` | 14 |
 | `Lore/Véu Cinzento.md` | 7 |

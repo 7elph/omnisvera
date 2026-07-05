@@ -31,14 +31,14 @@ tags:
 
 # Alquimista
 
-> [!NOTE|clean no-i right]+ Retrato
+> [!NOTE|clean no-i right]+ O Alquimista
 > ![[zz_media/class/alquimista.png|400]]
 
 ## Visão Geral
 
-Alquimista é a classe usada como referência operacional para [[Varkh Nimalis]], focada em preparo, experimentação, remédios, venenos, reagentes, improviso e conhecimento prático.
+Alquimista é a classe focada em preparo, experimentação, remédios, venenos, reagentes, improviso e conhecimento prático.
 
-Esta nota é um resumo próprio de campanha. A base exata vem de material complementar consultado pelo mestre e deve ser adaptada com cuidado para Omnisvera.
+Esta nota é um resumo próprio de campanha. A base exata vem de material complementar consultado pelo mestre e deve ser adaptada para Omnisvera.
 
 ## Papel no Grupo
 
@@ -51,19 +51,15 @@ Esta nota é um resumo próprio de campanha. A base exata vem de material comple
 
 Alquimistas podem ser curandeiros, falsificadores, boticários, estudiosos, criminosos, artesãos de bombas, médicos de rua ou pesquisadores de substâncias raras.
 
-Em Omnisvera, a alquimia de Varkh é mais de rua do que acadêmica.
 
 ## Notas de Mecânica
 
-- Não copiar regras integrais do suplemento para o vault.
-- Usar apenas decisões de mesa, resumo próprio e limites definidos pelo mestre.
 - Diferenciar alquimia de rua de magia arcana.
-- Remédios falsos, venenos e filtros devem ser tratados como ganchos de campanha, não como lista livre de efeitos.
 
 ## Personagens Relacionados
 
-```dataview
-TABLE thumbnail, race, status, location, faction
+```datacards
+TABLE cover, race, status, location, faction
 FROM "Characters"
 WHERE class = "Alquimista" OR class = this.file.link
 SORT file.name ASC
@@ -72,10 +68,8 @@ SORT file.name ASC
 ## Uso em Mesa
 
 - Como apresentar: frascos, cheiros fortes, improviso, risco, ingredientes ruins e soluções inesperadas.
-- O que os jogadores sabem: Varkh usa alquimia como ferramenta prática.
-- O que manter em aberto no [[ESTADO_DA_CAMPANHA]]: limites, fórmulas raras e consequências de uso perigoso.
+- O que manter em aberto: limites, fórmulas raras e consequências de uso perigoso.
 - Como entra em cena: investigação de remédios, preparo antes da missão, explosões pequenas, antídotos e truques.
-- Ganchos: [[O Frasco Afogado]], [[Remédios Falsos de Maré Baixa]], ingredientes raros e reputação de Odran.
 
 ## Pendências do Sage
 

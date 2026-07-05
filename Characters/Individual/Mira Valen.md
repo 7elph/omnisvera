@@ -47,14 +47,10 @@ tags:
 > [!NOTE|clean no-i right]+ Mira Valen
 > ![[zz_media/characters/mira.png|400]]
 
-> [!NOTE]- Template aplicado
-> Esta nota segue o formato **NPC Importante**. Informações confidenciais devem ficar no [[CAMPANHA/ESTADO_DA_CAMPANHA|Estado da Campanha]].
-
 ## Visão Geral
 
-**Nome:** Mira Valen  
-**Títulos:** A Caçadora; A Filha da Vila
-**Reputação Pública:** A Heroína da Vila
+**Títulos:** A Caçadora
+**Reputação Pública:** A Filha da Vila
 **Raça:** Humana  
 **Classe:** Caçadora
 **Idade:** 22 anos (ao falecer)
@@ -66,7 +62,6 @@ tags:
 **Família:** Filha do chefe humano de [[Leth'valora]], morto no mesmo ataque
 **Associados Conhecidos:** [[Vezemir]], moradores da vila
 **Ocupação:** Exploradora, mensageira, caçadora e rastreadora
-**Símbolo:** Flor silvestre
 
 ---
 
@@ -96,7 +91,7 @@ Sua morte tornou-se o principal motivo que impulsiona a jornada de vingança do 
 
 ## Situação Atual
 
-_Pendente de consolidação pelo Sage._
+Falecida
 
 ## Personalidade
 
@@ -116,41 +111,19 @@ Toda pessoa merece ser julgada por suas ações, não por sua origem.
 
 ## Relações
 
-_Pendente de consolidação pelo Sage._
+[[Vezemir]]
 
 ## Função Narrativa
 
-- Em desenvolvimento.
-
-## Segredos
-
-- Informações confidenciais ficam centralizadas em [[CAMPANHA/ESTADO_DA_CAMPANHA|Estado da Campanha]].
-
-## Aparência
-
-_Pendente de consolidação pelo Sage._
+- 
 
 ## Papel na Campanha
 
-_Pendente de consolidação pelo Sage._
-
-## Pendências do Sage
-
-- Revisar e completar campos em aberto.
+-
 
 ## Links relevantes
 
-_Pendente de consolidação pelo Sage._
-
-## Uso em Mesa
-
-- Como apresentar:
-- O que os jogadores sabem:
-- O que manter em aberto no [[ESTADO_DA_CAMPANHA]]: detalhes restritos e decis?es pendentes.
-- Como entra em cena:
-- Ganchos:
-- Consequências possíveis:
-
+-
 
 ## Legado
 Mesmo após sua morte, Mira continua presente na vida de [[Vezemir]].
@@ -160,9 +133,6 @@ Seu nome e sua memória é a única razão pela qual o Bastardo de Ferro ainda l
 Para muitos, Mira foi apenas uma caçadora.
 
 Para Vezemir, ela foi seu lar.
-
-## Equipamentos
-_Pendente de consolidação pelo Sage._
 
 ## Capacidades narrativas
 
@@ -179,3 +149,13 @@ Conhecia os bosques da região como ninguém.
 Percorria trilhas entre a vila e regiões vizinhas, transportando notícias, encontrando rotas seguras e observando mudanças na floresta.
 
 ---
+
+## Uso em Mesa
+
+- Como apresentar:
+- O que os jogadores sabem:
+- O que manter em aberto:
+- Como entra em cena:
+- Ganchos:
+- Consequências possíveis:
+

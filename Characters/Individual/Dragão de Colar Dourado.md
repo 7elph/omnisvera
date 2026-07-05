@@ -73,11 +73,11 @@ Paradeiro atual desconhecido. A ameaça está ligada à região da [[Floresta de
 
 ## Ameaça
 
-Ameaça extrema. Não deve ser tratado como encontro mecânico comum enquanto os personagens estiverem em nível baixo.
+Ameaça extrema. 
 
 ## Capacidades narrativas
 
-_Pendente de consolidação pelo Sage._
+-
 
 ## Mecânicas Pendentes
 
@@ -97,33 +97,25 @@ _Pendente de revisão do Mestre._
 - [[Vezemir]] — guerreiro que persegue o dragão há anos.
 - [[Mira Valen]] — filha do chefe de Leth'valora, sacrificou-se para salvar Vezemir.
 - [[Leth'valora]] — vila destruída pelo dragão.
-- [[Guardiões do Véu Cinzento]] — ordem ligada ao mistério do dragão.
 - [[Padre Oric]] — desapareceu investigando conexões entre os Guardiões e o dragão.
-- [[O Medalhão]] — relíquia que pode ter relação com o dragão.
 
 ## Aparência
 
 Dragão verde de grande porte, identificado pelo colar dourado. Detalhes visuais adicionais permanecem em aberto.
 
-## Pendências do Sage
-
-- Revisar e completar campos em aberto.
-- Decidir quando informações sobre o colar dourado serão reveladas aos jogadores.
-- Definir se haverá imagem própria para thumbnail/capa.
-
 ## Links relevantes
 
-- [[Characters/Individual/Vezemir]]
-- [[Characters/Individual/Mira Valen]]
-- [[Characters/Individual/Padre Oric]]
-- [[Factions/Guardiões do Véu Cinzento]]
-- [[O Medalhão]]
+- [[Vezemir]]
+- [[Mira Valen]]
+- [[Padre Oric]]
+- [[Sentinelas de Leth'valora]]
+- [[Elarion Vaelthor]]
 
 ## Uso em Mesa
 
 - Como apresentar:
 - O que os jogadores sabem:
-- O que manter em aberto no [[ESTADO_DA_CAMPANHA]]: detalhes restritos e decis?es pendentes.
+- O que manter em aberto:
 - Como entra em cena:
 - Ganchos:
 - Consequências possíveis:

@@ -48,6 +48,7 @@ tags:
   - "origem-raziel"
   - "origem-varkh"
   - varkh-item
+  - vezemir-item
 ---
 
 # Adaga

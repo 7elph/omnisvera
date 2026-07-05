@@ -32,4 +32,5 @@ SORT file.name ASC
 - Não usar `Rules/Classes`.
 - Não reproduzir texto integral de livros ou suplementos.
 - `Homem de Armas` não é classe ativa separada; usar [[Guerreiro]].
-- Classes especiais, como [[Vampiro]], ficam em revisão do mestre até estabilização.
+- Classes especiais, como [[Hemomante]], ficam em revisão do mestre até estabilização.
+- [[Vampiro]] permanece apenas como nota ponte antiga; a decisão atual usa Vampiro como raça/condição.

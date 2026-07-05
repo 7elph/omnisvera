@@ -39,7 +39,7 @@
 - [[Mercado Central]] (`Locations/Mercado Central.md`)
 - [[Nimalis]] (`Locations/Nimalis.md`)
 - [[Porto de Nimalia]] (`Locations/Porto de Nimalia.md`)
-- [[Remédios Falsos de Maré Baixa]] (`Lore/Remédios Falsos de Maré Baixa.md`)
+- [[02 - Remédios Falsos da Maré Baixa|Remédios Falsos de Maré Baixa]] (`CAMPANHA/Rumors/02 - Remédios Falsos da Maré Baixa.md`)
 - [[Caminho dos Errantes]] (`Religion/Caminho dos Errantes.md`)
 - [[Mar da Neblina]] (`Territories/Mar da Neblina.md`)
 - [[Nimalia]] (`Territories/Nimalia.md`)

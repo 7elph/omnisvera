@@ -47,12 +47,8 @@ tags:
 > [!NOTE|clean no-i right]+ Padre Oric
 > ![[zz_media/characters/oric.png|400]]
 
-> [!NOTE]- Template aplicado
-> Esta nota segue o formato **NPC Importante**. Informações confidenciais devem ficar no [[CAMPANHA/ESTADO_DA_CAMPANHA|Estado da Campanha]].
-
 ## Visão Geral
 
-**Nome:** Padre Oric  
 **Títulos:** O Peregrino
 **Reputação Pública:** Sacerdote errante e estudioso de antigas lendas  
 **Raça:** Humano  
@@ -65,7 +61,6 @@ tags:
 **Associados Conhecidos:** [[Vezemir]]
 **Origem:** [[Nimalis]]
 **Ocupação:** Sacerdote e escriba
-**Símbolo:** Círculo da Verdade
 
 ---
 
@@ -96,7 +91,7 @@ Apenas suas anotações incompletas permaneceram.
 
 ## Situação Atual
 
-_Pendente de consolidação pelo Sage._
+Desaparecido
 
 ## Personalidade
 
@@ -116,41 +111,24 @@ Todo mistério existe para ser compreendido, independentemente do preço.
 
 ## Relações
 
-_Pendente de consolidação pelo Sage._
+-[[Vezemir]]
 
 ## Função Narrativa
 
 - Em desenvolvimento.
 
-## Segredos
-
-- Informações confidenciais ficam centralizadas em [[CAMPANHA/ESTADO_DA_CAMPANHA|Estado da Campanha]].
-
 ## Aparência
 
-_Pendente de consolidação pelo Sage._
+-
 
 ## Papel na Campanha
 
-_Pendente de consolidação pelo Sage._
+-
 
-## Pendências do Sage
-
-- Revisar e completar campos em aberto.
 
 ## Links relevantes
 
-_Pendente de consolidação pelo Sage._
-
-## Uso em Mesa
-
-- Como apresentar:
-- O que os jogadores sabem:
-- O que manter em aberto no [[ESTADO_DA_CAMPANHA]]: detalhes restritos e decis?es pendentes.
-- Como entra em cena:
-- Ganchos:
-- Consequências possíveis:
-
+-
 
 ## Legado
 As palavras de Oric continuam assombrando Vezemir:
@@ -158,9 +136,6 @@ As palavras de Oric continuam assombrando Vezemir:
 > _"Você não rejeita a magia... você está acorrentando alguma coisa."_
 
 Até hoje, ninguém sabe se Padre Oric morreu, foi capturado ou encontrou uma verdade perigosa demais para retornar.
-
-## Equipamentos
-_Pendente de consolidação pelo Sage._
 
 ## Capacidades narrativas
 
@@ -181,3 +156,13 @@ Reconhecido por desvendar segredos considerados impossíveis.
 
 
 ---
+## Uso em Mesa
+
+- Como apresentar:
+- O que os jogadores sabem:
+- O que manter em aberto:
+- Como entra em cena:
+- Ganchos:
+- Consequências possíveis:
+
+

@@ -21,7 +21,7 @@ territory: "[[Nimalia]]"
 faction: "[[Coroa de Nimalia]]"
 origin: "[[Nimalia]]"
 class: Paladino
-race: Antropo
+race: Antropo Leão
 role: npc
 related_factions:
   - "[[Coroa de Nimalia]]"
@@ -65,10 +65,10 @@ tags:
 ## Visão Geral
 
 **Títulos:** Rei soberano de [[Nimalia]], Protetor da Capital, Guardião da Ordem Real
-**Apelidos públicos:** O Leão de Nimalia, O Rei Soberano, O Tirano de Nimalia
+**Apelidos públicos:** O Leão de Nimalia, O Tirano de Nimalia
 **Reputação:** Monarca de pulso de ferro
 **Gênero:** Homem
-**Classe:** Paladino
+**Classe:** [[Paladino]]
 **Raça:** [[Antropo]]
 **Idade:** 79 anos
 **Status:** Vivo
@@ -78,8 +78,6 @@ tags:
 **Fé:** [[Igreja das Chamas]]
 
 Augustus Terra Decimus é o rei soberano de [[Nimalia]] e a figura pública mais pesada da política do reino. Para alguns, ele é o monarca que manteve a capital de pé em tempos instáveis. Para outros, é um governante duro demais, cercado por cerimônia, guarda, fé e medo.
-
-Em mesa, Augustus deve parecer uma muralha viva: velho, lúcido, perigoso e difícil de mover.
 
 ---
 
@@ -391,36 +389,6 @@ A Coroa mantém olhos em portos, templos, mercados, fortalezas, casas nobres e r
 
 ---
 
-## Papel em Mesa
-
-Augustus funciona melhor como presença de autoridade: alguém que define consequências políticas, pressiona escolhas difíceis e transforma problemas locais em crises do reino.
-
-Ele pode aparecer como:
-
-### Autoridade Distante
-
-No início, pode ser sentido por decretos, guardas, impostos, brasões, cerimônias e medo.
-
-Os jogadores não precisam vê-lo para sentir seu peso.
-
-### Obstáculo Político
-
-Quando os personagens mexem com falsificações, cultos, contrabando, instabilidade urbana ou problemas envolvendo a Coroa, Augustus pode reagir direta ou indiretamente.
-
-### Patrono Ambíguo
-
-Augustus pode contratar, tolerar ou manipular aventureiros caso precise de algo que a Guarda Real não possa fazer oficialmente.
-
-### Rei em Declínio
-
-Sua idade, sua ausência de sucessão clara e o desgaste de seu governo podem transformar qualquer audiência em presságio de mudança.
-
----
-
-## Encaminhamento para o Estado da Campanha
-
-> [!warning]
-> Segredos sobre Augustus, a Coroa, sucessão, arquivos restritos, possíveis verdades ocultas e consequências futuras ficam em [[CAMPANHA/ESTADO_DA_CAMPANHA]].
 
 ---
 
@@ -447,44 +415,6 @@ Sua idade, sua ausência de sucessão clara e o desgaste de seu governo podem tr
 - Dizem que nenhum traidor consegue mentir diante do Leão de Nimalia.
 - Dizem que ele já venceu batalhas sem desembainhar a espada.
 
----
-
-## Ganchos de Aventura
-
-- A Coroa confisca provas ligadas aos [[Remédios Falsos de Maré Baixa]].
-- Um decreto real transforma uma investigação local em crime contra o reino.
-- Um nobre pede ajuda para entender como a sucessão será tratada publicamente.
-- Um sacerdote da [[Igreja das Chamas]] procura os personagens com uma denúncia arriscada.
-- A [[Guarda Real de Nimalia]] prende uma testemunha antes que ela fale com os aventureiros.
-- Um arquivo restrito menciona o nome de um dos personagens.
-- Uma facção clandestina tenta provocar os personagens contra Augustus.
-- Augustus oferece proteção em troca de silêncio público.
-- Uma audiência no palácio revela que o rei sabe mais sobre a crise local do que parecia.
-- A morte de um falsificador aponta para alguém próximo da administração real.
-
----
-
-## Uso em Mesa
-
-- **Como apresentar:** sentado no trono ou diante de uma chama cerimonial, imóvel demais para parecer apenas velho.
-- **Tom de voz:** baixo, firme, sem pressa.
-- **Primeira impressão:** autoridade absoluta, cansaço antigo e ameaça controlada.
-- **O que os jogadores sabem:** ele é o rei de Nimalia, governa com pulso de ferro e está ligado à Igreja das Chamas.
-- **O que manter em aberto:** quanto ele sabe, o que a Coroa esconde e qual será o custo de enfrentá-lo.
-- **Como entra em cena:** decreto, audiência, investigação real, repressão, pedido secreto ou crise em Nimalis.
-- **Ganchos:** Coroa, falsificações, culto, sucessão, arquivos restritos e instabilidade urbana.
-- **Consequências possíveis:** desafiar Augustus pode transformar os personagens em problema público para o reino.
-
----
-
-## Pendências do Sage
-
-- Confirmar se Augustus é oficialmente antropo leonino.
-- Definir se “O Leão de Nimalia” ou “O Leão da Chama” será o epíteto canônico.
-- Definir como a sucessão real é vista publicamente.
-- Criar ou consolidar mecânicas de paladino real para Old Dragon.
-- Confirmar quais rumores públicos devem circular em Nimalis.
-- Manter todos os segredos pesados em [[ESTADO_DA_CAMPANHA]].
 
 ---
 
@@ -499,4 +429,3 @@ Sua idade, sua ausência de sucessão clara e o desgaste de seu governo podem tr
 - [[Culto dos Sussurrantes]]
 - [[Guilda dos Mercadores]]
 - [[Maré Baixa]]
-- [[ESTADO_DA_CAMPANHA]]
