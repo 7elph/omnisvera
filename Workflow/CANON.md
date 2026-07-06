@@ -180,7 +180,7 @@ Estas questões não devem ser resolvidas por inferência:
 | Data atual | A linha do tempo usa o ano 2100; o dia e o mês exatos ainda não foram definidos. |
 | Calendário | O Calendarium espelha o rascunho de `CALENDAR.md`, mas nomes, feriados e significados ainda precisam de aprovação como cânone. |
 | Religião dominante | Igreja das Chamas e Igreja das Sete Chamas aparecem como nomes concorrentes. |
-| Fontes de regras | A base está definida como Old Dragon 2 oficial, conforme [[Workflow/RULES_SOURCES|Fontes de Regras da Campanha]]. Os PDFs de 2017 são da edição anterior; os Tomos de Magia são adaptações de fã; `Expansão de Classes` e `Mestres do Arcano` são independentes. Permanecem em aberto apenas as regras opcionais e autorais adotadas para cada personagem. |
+| Fontes de regras | A base está definida conforme [[Workflow/RULES_SOURCES|Fontes de Regras da Campanha]]. As notas de classes e raças guardam a consulta mecânica usada em mesa; PDFs de regras não devem ser commitados no repositório. Permanecem em aberto apenas testes de balanceamento e regras opcionais adotadas para cada personagem. |
 | Geografia | Algumas regiões ainda usam nomes ou relações herdadas de versões anteriores. |
 
 ## Hierarquia de fontes

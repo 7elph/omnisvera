@@ -47,8 +47,9 @@ O PDF oficial do Livro I não foi localizado entre os arquivos de `Downloads`. A
 | Arquivo | Identificação | Estado |
 |:--|:--|:--|
 | `odlb.pdf` | Old Dragon, 1ª Edição Aprimorada, 7ª impressão, novembro de 2017 | **Referência histórica.** Não usar para corrigir OD2. |
-| `old-dragon-livro-basico-aprimorado-biblioteca-elfica.pdf` | Outra cópia do mesmo Livro Básico Aprimorado de 2017 | **Referência histórica.** |
+| `old-dragon-livro-basico-aprimorado-biblioteca-elfica.pdf` | Outra cópia do mesmo Livro Básico Aprimorado de 2017 | Referência mecânica usada para as tabelas numéricas atualmente adotadas no vault. |
 | `old-dragon---expansao-de-classes.pdf` | Suplemento independente de Caio Mouriz, compatível com Old Dragon da edição anterior | **Opcional e não adotado.** É a fonte da classe [[Alquimista]]. |
+| `old-dragon---novas-racas.pdf` | Suplemento independente de Caio Mouriz com raças adicionais | Referência para [[Vampiro]], [[Kenku]] e base de [[Antropo]] via Homem-Tigre. |
 | `old-dragon-mestres-do-arcano_compress.pdf` | Material de fã não oficial, de 2018, para a edição anterior | **Opcional e não adotado.** |
 | `Tomo de Magia Arcana - OD2.pdf` | Adaptação de fã de Rangel Perez Sardinha para OD2 | **Opcional e não adotado.** Pode substituir ou ampliar a magia oficial, portanto exige decisão expressa. |
 | `Tomo de Magia Divina - OD2.pdf` | Adaptação de fã de Rangel Perez Sardinha para OD2 | **Opcional e não adotado.** |
@@ -60,10 +61,11 @@ O PDF oficial do Livro I não foi localizado entre os arquivos de `Downloads`. A
 
 ### Classes
 
-- [[Guerreiro]], [[Ladrão]], [[Clérigo]] e [[Mago]] possuem notas ativas resumidas a partir do Livro I e do SRD oficial.
-- `Homem de Armas` é apenas uma denominação antiga encontrada em fichas legadas. A classe operacional de Omnisvera é [[Guerreiro]].
+- [[Guerreiro]], [[Ladrão]], [[Clérigo]] e [[Mago]] possuem notas ativas com tabelas numéricas de consulta.
+- [[Guerreiro]] é o nome operacional usado no vault para a classe marcial básica. Não criar uma classe separada chamada `Homem de Armas`.
+- `Especialista de Armas` é o nome operacional da especialização marcial focada em uma arma.
 - As quatro notas mecânicas antigas foram arquivadas em `Workflow/Legacy/Old Dragon anterior/Legacy - Old Dragon anterior - *.md`.
-- [[Alquimista]] vem de suplemento independente e não foi adotado como classe mecânica.
+- [[Alquimista]] é classe jogável aprovada para [[Varkh Nimalis]], baseada no suplemento `old-dragon---expansao-de-classes.pdf`.
 
 ### Vezemir
 
@@ -73,36 +75,37 @@ Isso não remove os poderes de [[Vezemir]]. A origem, o acesso no nível 1 e a v
 
 ### Varkh
 
-A história atual define [[Varkh Nimalis]] como alquimista de rua ligado ao [[Conclave dos Errantes]]. A classe operacional aprovada para ele é [[Alquimista]]. A ficha sem nome usa modelo antigo e deve ser tratada apenas como referência parcial. Nenhuma dessas informações deve apagar a outra automaticamente:
+A história atual define [[Varkh Nimalis]] como alquimista de rua ligado ao [[Conclave dos Errantes]]. A classe operacional aprovada para ele é [[Alquimista]]. A ficha de kenku recebida usa [[Kenku]] como base mecânica/racial de referência para Varkh e para a camada [[Antropo]]. Nenhuma dessas informações deve apagar a outra automaticamente:
 
 - a história permanece como cânone narrativo;
 - a ficha permanece como registro recebido;
-- a classe mecânica definitiva será confirmada com o jogador;
-- a classe independente [[Alquimista]] não entra automaticamente.
+- a raça de referência permanece [[Kenku]];
+- a classe operacional é [[Alquimista]].
 
 ### Raziel
 
-[[Raziel]] usa **Vampiro** como classe operacional, baseada em material de complemento consultado pelo mestre. Hemomancia, [[Sangue Antigo]], Reserva de Sangue e poderes específicos de Raziel são camadas autorais da campanha até receberem regras próprias completamente fechadas.
+[[Raziel]] usa [[Vampiro]] como raça/condição e [[Hemomante]] como classe operacional. A nota [[Vampiro]] guarda a base racial do suplemento de raças; a nota [[Hemomante]] guarda a mecânica de classe de sangue usada em mesa; [[Sangue Antigo]] permanece como camada especial de campanha.
 
 ### Kenku
 
-[[Kenku]] não faz parte das raças básicas adotadas nesta etapa. Sua cultura é cânone de Omnisvera, mas seus traços mecânicos atuais vieram da ficha recebida e permanecem como regra autoral pendente.
+[[Kenku]] está adotado como raça jogável/referência racial de Varkh. No cenário, também funciona como subtipo possível dentro do guarda-chuva maior dos [[Antropo|antropos]].
 
 ## Regras para futuras edições
 
 1. Não recalcular uma ficha sem pedido explícito do jogador ou do mestre.
-2. Não copiar progressões da edição anterior para uma nota apresentada como OD2.
+2. Não apresentar uma tabela como OD2 quando a fonte usada for material de outra edição ou suplemento; registrar a fonte real.
 3. Não incorporar um suplemento de fã apenas porque ele declara compatibilidade.
 4. Separar habilidade narrativa de habilidade mecânica.
 5. Registrar cada regra da casa com origem, versão e personagens afetados.
 6. Quando uma ficha divergir do livro, preservar o valor recebido e registrar a divergência antes de corrigi-la.
-7. Citar a fonte e a página ou URL usada em toda futura nota mecânica.
+7. Citar a fonte usada em toda futura nota mecânica.
+8. Não commitar PDFs de regras no repositório; trazer para o vault apenas a consulta mecânica necessária para mesa.
 
 ## Decisões ainda necessárias
 
-- Confirmar a classe mecânica de Varkh com o jogador.
+- Testar [[Alquimista]] em mesa com Varkh.
 - Definir por que Vezemir possui acesso a `Força Arcana` e `Velocidade` no nível 1.
 - Decidir se a especialização Assassino do Livro II será usada por Raziel.
-- Criar ou escolher regras autorais para Kenku, Vampiro, Hemomante e Reserva de Sangue.
+- Testar [[Vampiro]], [[Hemomante]] e Reserva de Sangue em mesa.
 - Decidir se algum conteúdo dos Tomos de Magia será adotado.
-- Decidir se a classe independente Alquimista será adaptada para OD2 ou permanecerá apenas narrativa.
+- Decidir se Dragonborn terá base mecânica própria no vault.

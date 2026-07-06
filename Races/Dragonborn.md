@@ -54,13 +54,13 @@ Em Omnisvera, o reino dragonborn deve ser apresentado futuramente ao noroeste.
 
 Dragonborns podem ser vistos com respeito, cautela ou superstição, dependendo do lugar. A existência do [[Dragão de Colar Dourado]] pode afetar como outras raças interpretam qualquer herança dracônica.
 
-## Mecânica Resumida
+## Mecânica de Consulta
 
 Dragonborn está em revisão como raça jogável ou raça de cenário.
 
 | Elemento | Regra de consulta |
 |---|---|
-| Base | adaptação de mesa ainda em revisão |
+| Base | adaptação de mesa ainda em revisão; não localizada nos PDFs atuais de Old Dragon usados neste lote |
 | Papel comum | herança dracônica, presença imponente, fôlego/traço dracônico se aprovado |
 | Uso em Omnisvera | bairro em Nimalis e futuro reino a noroeste |
 | Ajuste fino | decisão do mestre antes de personagem jogador |

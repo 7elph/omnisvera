@@ -64,6 +64,16 @@ Para [[Vezemir]], a ficha foi montada pegando parte da base mecânica de Humano 
 | Status | Categoria especial aprovada para personagem |
 | Ajuste fino | Decisão do mestre conforme ficha final |
 
+### Referências mecânicas
+
+| Fonte | Números relevantes |
+|---|---|
+| [[Humano]] | +2 em um atributo e -2 em outro; movimento 9m; maturidade 15 anos; expectativa de vida 70 anos |
+| [[Elfo]] | +2 Destreza, -2 Constituição; visão na penumbra 50m; +1 com arco; percepção de passagens secretas; imunidade a sono; movimento 9m |
+
+> [!warning]
+> Não aplicar todos os traços de Humano e Elfo automaticamente a qualquer meio-elfo. Para [[Vezemir]], usar a ficha aprovada pelo Sage como referência final.
+
 Não tratar Meio-Elfo como simples “humano com orelha élfica”. Em mesa, ele representa mistura de linhagem, cultura, memória e pertencimento dividido.
 
 ## Personagens Relacionados

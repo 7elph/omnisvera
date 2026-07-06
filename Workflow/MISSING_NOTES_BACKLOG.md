@@ -29,7 +29,7 @@ Este documento lista notas que precisam ser criadas para dar suporte à campanha
 | Cavernas Abissais sob Valthor | Locations/ | Localização | Local onde Raziel encontrou o Ancião Primordial e recebeu o Sangue Antigo | Raziel, Ruínas de Valthor, Ancião Primordial | Pendente |
 | Vampiro Sanguinallis | Lore/ | Lore | Tipo de vampiro ao qual Raziel pertence, ligado ao Clã Sanguinallis | Raziel, Clã Sanguinallis, Sangue Antigo | Criado (Pente fino) |
 | Vampiro | Races/ | Raça/Condição | Raça/condição de Raziel baseada em complemento consultado pelo mestre | Raziel, Sangue Antigo, Vampiro Sanguinallis | Criado (Pente fino) |
-| Hemomante | Classes/ | Classe | Classe autoral de Raziel para hemomancia | Raziel, Sangue Antigo, Vampiro Sanguinallis | Criado |
+| Hemomante | Classes/ | Classe | Classe de Raziel para hemomancia, ligada à raça/condição Vampiro | Raziel, Sangue Antigo, Vampiro Sanguinallis | Criado |
 
 ### Vezemir
 
@@ -72,7 +72,7 @@ Este documento lista notas que precisam ser criadas para dar suporte à campanha
 
 | Nota | Pasta Sugerida | Categoria | Motivo da Criação | Notas Relacionadas | Status |
 |:--|:--|:--|:--|:--|:--|
-| Regras Autorais da Campanha | Workflow/ | Sistema | Documentação de regras autorais adotadas para personagens | Raziel, Vezemir, Varkh, Classes | Pendente |
+| Regras de Mesa da Campanha | Workflow/ | Sistema | Documentação de regras adotadas/adaptadas para personagens | Raziel, Vezemir, Varkh, Classes | Pendente |
 | Hemomancia | Lore/ | Sistema | Sistema de magia de sangue usado por Raziel | Raziel, Sangue Antigo, Vampiro Sanguinallis | Parcial em Sangue Antigo |
 | Reserva de Sangue | Lore/ | Sistema | Mecânica de vampirismo de Raziel | Raziel, Vampiro Sanguinallis, Hemomancia | Parcial em Sangue Antigo |
 | Alquimia de Rua | Lore/ | Sistema | Sistema alquímico usado por Varkh | Varkh, Maré Baixa, O Frasco Afogado | Pendente |

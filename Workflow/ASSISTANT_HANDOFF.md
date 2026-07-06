@@ -189,7 +189,8 @@ Separacao conceitual recomendada:
 Regra para outra IA:
 
 - Nao recriar `Vampiro` como classe ativa.
-- Nao copiar regras de suplemento/livro; qualquer mecanica deve ser autoral/resumida.
+- Nao commitar PDFs de regras no repositorio.
+- Pode trazer tabelas numericas e consulta mecanica para as notas quando o Sage pedir, preservando fonte e evitando texto integral desnecessario.
 - Se precisar expandir regras de classe, expandir `Classes/Hemomante.md`.
 - Se precisar expandir a condicao vampirica, expandir `Races/Vampiro.md`.
 - Segredos profundos sobre `Sangue Antigo` devem ficar em `ESTADO_DA_CAMPANHA`/dossies, nao na nota publica de Raziel.

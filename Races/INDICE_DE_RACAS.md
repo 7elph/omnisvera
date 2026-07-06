@@ -45,7 +45,7 @@ SORT file.name ASC
 
 - `Races/` é a pasta oficial de raças.
 - Não usar `Rules/Races`.
-- Não copiar regras completas de livros; manter apenas síntese própria e decisões do Sage.
+- Não commitar PDFs de regras; manter nas notas as tabelas e números necessários para consulta de mesa.
 - Raças ainda não aprovadas podem permanecer como `Em revisão`.
 - [[Antropo]] é o nome canônico de Omnisvera para beastfolk.
 - Homem-Tigre é referência mecânica para antropos felinos, não nome canônico do cenário.

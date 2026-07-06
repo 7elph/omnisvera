@@ -25,10 +25,11 @@ Lista de decisões pendentes detectadas no vault Omnisvera.
 
 ## Regras mecânicas
 
-- Classe definitiva de Varkh Nimalis (Ladrão vs Alquimista)
-- Regras autorais para Vampiro, Hemomante e Reserva de Sangue
-- Regras autorais para Força Arcana e Velocidade
-- Regras autorais para Kenku (se adotadas)
+- Testar [[Alquimista]] em mesa para [[Varkh Nimalis]]
+- Testar [[Vampiro]], [[Hemomante]] e Reserva de Sangue em mesa para [[Raziel]]
+- Regras de mesa para Força Arcana e Velocidade de [[Vezemir]]
+- Limites práticos de [[Kenku]] para mimetismo e falsificação
+- Base mecânica futura de Dragonborn
 - Regras opcionais adotadas para cada personagem
 
 ## Personagens

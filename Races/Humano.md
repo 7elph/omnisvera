@@ -52,18 +52,21 @@ Em [[Nimalia]], os antropos são predominantes. Humanos aparecem como comunidade
 
 Humanos são versáteis e politicamente adaptáveis. Em alguns lugares, são maioria local; em outros, uma comunidade entre muitas.
 
-## Mecânica Resumida
+## Mecânica de Consulta
 
-Humanos seguem a regra padrão de raça humana usada na mesa de Old Dragon.
+| Elemento | Regra de consulta |
+|---|---|
+| Altura comum | 1,60m a 1,90m |
+| Peso comum | 55kg a 90kg |
+| Maturidade | Por volta dos 15 anos |
+| Expectativa de vida | Cerca de 70 anos |
+| Tendência | Não tendem a alinhamento específico |
+| Idioma inicial | Comum |
+| Idiomas adicionais | Por Inteligência alta; geralmente línguas de povos aliados |
+| Atributos | +2 em um atributo à escolha e -2 em outro atributo à escolha |
+| Movimento base | 9m |
 
-Como a nota atual do vault não consolidou uma adaptação mecânica própria para humanos, usar a regra básica definida pelo mestre no material de mesa ativo.
-
-Em Omnisvera, a função prática dos humanos é:
-
-- versatilidade social;
-- presença ampla em rotas, vilas, templos e fronteiras;
-- facilidade para se encaixar em várias classes;
-- ausência de domínio cultural automático em Nimalia.
+Em Omnisvera, a função prática dos humanos é versatilidade, presença ampla em rotas, vilas, templos e fronteiras, além de facilidade para se encaixar em várias classes.
 
 > [!note]
 > Não assumir que humano é a raça dominante do cenário. Em Nimalia, os [[Antropo|antropos]] são predominantes.

@@ -54,16 +54,21 @@ Anões podem ser tratados como povo de tradição, técnica, juramentos e memór
 
 A rivalidade com elfos pode ser usada como tensão cultural antiga, mas não precisa definir todos os personagens.
 
-## Mecânica Resumida
-
-Usar a raça Anão do sistema adotado como base mecânica de mesa.
+## Mecânica de Consulta
 
 | Elemento | Regra de consulta |
 |---|---|
-| Base | Anão do sistema Old Dragon usado pelo mestre |
-| Papel comum | resistência, técnica, tradição, subterrâneo, fortaleza |
-| Uso em Omnisvera | povo ligado a Gharok, montanhas e obras antigas |
-| Ajuste fino | decisão do mestre conforme ficha/personagem |
+| Tendência comum | Geralmente ordeiro |
+| Altura comum | 1,30m a 1,50m |
+| Peso comum | 50kg a 70kg |
+| Maturidade | Cerca de 70 anos |
+| Expectativa de vida | Cerca de 350 anos |
+| Idiomas iniciais | Anão e comum |
+| Idiomas adicionais | Por Inteligência alta; povos aliados ou inimigos como orc, gigante e goblin |
+| Atributos | +2 Constituição, -2 Carisma |
+| Visão no escuro | 15m |
+| Mineradores | Detecta desníveis, fossos ou armadilhas de pedra com resultado 1-2 em 1d6 |
+| Movimento base | 6m |
 
 O vault não deve transformar todos os anões em mineiros ou soldados. A mecânica serve à mesa; a cultura de Omnisvera ainda será expandida.
 

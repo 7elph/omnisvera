@@ -50,16 +50,24 @@ Ainda não definida.
 
 Podem funcionar como comunidades pequenas, viajantes curiosos, famílias hospitaleiras ou povos discretos nas bordas das grandes rotas.
 
-## Mecânica Resumida
-
-Halfling permanece como raça futura/opcional.
+## Mecânica de Consulta
 
 | Elemento | Regra de consulta |
 |---|---|
-| Base | regra padrão do sistema, se o Sage aprovar |
-| Status | bônus futuro / em revisão |
-| Uso atual | não essencial para a primeira campanha |
-| Ajuste fino | decidir antes de liberar como personagem jogador |
+| Status em Omnisvera | Bônus futuro / em revisão |
+| Tendência comum | Normalmente neutro ou caótico |
+| Altura comum | 0,70m a 0,90m |
+| Peso comum | 20kg a 35kg |
+| Maturidade | Cerca de 30 anos |
+| Expectativa de vida | Cerca de 70 anos |
+| Idioma inicial | Comum |
+| Idiomas adicionais | Por Inteligência alta; povos amigos e, em menor escala, inimigos |
+| Atributos | +2 Destreza, -2 Força |
+| Bom de mira | +1 no ataque com arma de arremesso |
+| Pequeno | +2 CA contra alvos grandes ou maiores |
+| Furtivo | +10% em Furtividade |
+| Movimento base | 6m |
+| Restrições de armas | Usa armas médias apenas com duas mãos e não pode usar armas grandes |
 
 Não desenvolver cultura profunda de halflings agora. Manter a nota pronta, mas leve.
 

@@ -26,7 +26,7 @@ tags:
 - [[Ladrão]]
 - [[Mago]]
 
-## Classes Autorais / Especiais
+## Classes Especiais
 
 - [[Hemomante]]
 
@@ -47,8 +47,10 @@ SORT file.name ASC
 
 - `Classes/` é a pasta oficial de classes.
 - Não usar `Rules/Classes`.
-- Não reproduzir texto integral de livros ou suplementos.
 - `Homem de Armas` não é classe ativa separada; usar [[Guerreiro]].
+- [[Guerreiro]] usa a mecânica marcial básica do material de mesa, com o nome operacional confirmado pelo Sage.
+- `Especialista de Armas` é o nome operacional da especialização marcial focada em uma arma.
 - [[Paladino]] é especialização/caminho de [[Guerreiro]], não classe-base separada.
-- Classes especiais, como [[Hemomante]], ficam em revisão do mestre até estabilização.
+- [[Hemomante]] é classe ativa de [[Raziel]], ligada à raça/condição [[Vampiro]].
 - [[Vampiro]] é raça/condição em `Races/`, não classe.
+- PDFs de regras não devem ser commitados; as notas guardam a consulta mecânica necessária para mesa.

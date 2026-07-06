@@ -54,16 +54,23 @@ Elfos podem ser vistos como guardiões de memória, tradição e territórios an
 
 A rivalidade cultural com anões pode existir como tensão antiga, mas deve ser usada em mesa sem virar caricatura obrigatória.
 
-## Mecânica Resumida
-
-Usar a raça Elfo do sistema adotado como base mecânica de mesa.
+## Mecânica de Consulta
 
 | Elemento | Regra de consulta |
 |---|---|
-| Base | Elfo do sistema Old Dragon usado pelo mestre |
-| Papel comum | percepção, tradição, memória, floresta, magia ou técnica refinada |
-| Uso em Omnisvera | Avenor, Leth'valora e futuro reino élfico |
-| Ajuste fino | decisão do mestre conforme ficha/personagem |
+| Tendência comum | Normalmente neutro |
+| Altura comum | 1,50m a 1,70m |
+| Peso comum | 40kg a 50kg |
+| Maturidade | Cerca de 150 anos |
+| Expectativa de vida | Cerca de 700 anos |
+| Idiomas iniciais | Élfico e comum |
+| Idiomas adicionais | Por Inteligência alta; silvestre, comum e ocasionalmente línguas de aliados ou inimigos |
+| Atributos | +2 Destreza, -2 Constituição |
+| Visão na penumbra | 50m |
+| Arqueiro | +1 para acertar com arco |
+| Percepção de passagens secretas | Detecta passivamente com 1 em 1d6; procurando ativamente com 1-2 em 1d6 |
+| Imunidade | Imune a magias ou efeitos de sono |
+| Movimento base | 9m |
 
 Elfos de Omnisvera não precisam pertencer a uma única cultura. A mecânica é a base; a política élfica fica para desenvolvimento posterior.
 

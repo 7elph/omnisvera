@@ -8,23 +8,24 @@ Resumo curto do cânone confirmado de Omnisvera, baseado em `Workflow/CANON.md`.
 - **Earthropo** é o continente principal onde a campanha acontece
 - O nome do mundo onde fica Earthropo existe, mas não será revelado ainda
 - **Nimalia** é o reino dos antropos
-- A capital de Nimalia existe, mas seu nome ainda não foi definido
+- A capital de Nimalia é **Nimalis**
 - **Floresta de Avenor** é uma grande região florestal de Earthropo
 - A Floresta de Avenor faz fronteira com o Reino de Nimalia
 - **Leth'valora** é uma pequena vila élfica situada dentro da Floresta de Avenor
 - Os elfos de Leth'valora vivem fora do futuro reino élfico
 - Leth'valora foi destruída pelo dragão de colar dourado
 - O chefe de Leth'valora era humano, pai de Mira Valen, e morreu durante a destruição
-- Sistema: **Old Dragon 2E**
-- Humanos são a população majoritária de Earthropo
+- Sistema: **Old Dragon / Omnisvera**, conforme [[Workflow/RULES_SOURCES]]
+- Humanos existem em Earthropo, mas não são a população dominante em Nimalia
+- Antropos são predominantes em Nimalia
 - Personagens iniciam no nível 1
 - **Augustus Terra Decimus** é o rei soberano de Nimalia
 
 ## Personagens jogadores (Confirmado)
 
 1. **Vezemir** - O Bastardo de Ferro, guerreiro de origem humana e élfica
-2. **Varkh Nimalis** - O Corvo da Maré Baixa, kenku ladrão e alquimista de rua
-3. **Raziel** - O Espectro da Névoa de Sangue, vampiro ligado ao Clã Sanguinallis
+2. **Varkh Nimalis** - O Corvo da Maré Baixa, kenku/antropo e alquimista de rua
+3. **Raziel** - O Espectro da Névoa de Sangue, vampiro e hemomante ligado ao Clã Sanguinallis
 
 ## Disgraceland (Confirmado)
 
@@ -58,14 +59,12 @@ Earthropo vive estabilidade aparente. Coroa, religião, comércio e forças clan
 
 - Nome do mundo de Earthropo
 - Fronteiras exatas de Nimalia
-- Nome próprio da capital de Nimalia
 - Nomes e fronteiras dos reinos raciais
 - Região de origem de Raziel
-- Ficha do kenku de João (classe conflitante)
 - Data atual (dia e mês exatos)
 - Calendário (nomes, feriados, significados)
 - Religião dominante (Igreja das Chamas vs Igreja das Sete Chamas)
-- Regras opcionais e autorais para personagens
+- Testes de balanceamento de regras opcionais/de mesa para personagens
 
 ## Hierarquia de fontes
 
