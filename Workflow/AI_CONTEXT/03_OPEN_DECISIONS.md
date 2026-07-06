@@ -29,7 +29,7 @@ Lista de decisões pendentes detectadas no vault Omnisvera.
 - Testar [[Vampiro]], [[Hemomante]] e Reserva de Sangue em mesa para [[Raziel]]
 - Regras de mesa para Força Arcana e Velocidade de [[Vezemir]]
 - Limites práticos de [[Kenku]] para mimetismo e falsificação
-- Base mecânica futura de Dragonborn
+- Testar a base mecânica de [[Dragonborn]] em mesa
 - Regras opcionais adotadas para cada personagem
 
 ## Personagens

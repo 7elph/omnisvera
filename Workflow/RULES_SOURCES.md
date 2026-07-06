@@ -49,7 +49,7 @@ O PDF oficial do Livro I não foi localizado entre os arquivos de `Downloads`. A
 | `odlb.pdf` | Old Dragon, 1ª Edição Aprimorada, 7ª impressão, novembro de 2017 | **Referência histórica.** Não usar para corrigir OD2. |
 | `old-dragon-livro-basico-aprimorado-biblioteca-elfica.pdf` | Outra cópia do mesmo Livro Básico Aprimorado de 2017 | Referência mecânica usada para as tabelas numéricas atualmente adotadas no vault. |
 | `old-dragon---expansao-de-classes.pdf` | Suplemento independente de Caio Mouriz, compatível com Old Dragon da edição anterior | **Opcional e não adotado.** É a fonte da classe [[Alquimista]]. |
-| `old-dragon---novas-racas.pdf` | Suplemento independente de Caio Mouriz com raças adicionais | Referência para [[Vampiro]], [[Kenku]] e base de [[Antropo]] via Homem-Tigre. |
+| `old-dragon---novas-racas.pdf` | Suplemento independente de Caio Mouriz com raças adicionais | Referência para [[Vampiro]], [[Kenku]] e base de [[Antropo]] via Homem-Tigre. Não contém Dragonborn/Draconato localizado na auditoria local. |
 | `old-dragon-mestres-do-arcano_compress.pdf` | Material de fã não oficial, de 2018, para a edição anterior | **Opcional e não adotado.** |
 | `Tomo de Magia Arcana - OD2.pdf` | Adaptação de fã de Rangel Perez Sardinha para OD2 | **Opcional e não adotado.** Pode substituir ou ampliar a magia oficial, portanto exige decisão expressa. |
 | `Tomo de Magia Divina - OD2.pdf` | Adaptação de fã de Rangel Perez Sardinha para OD2 | **Opcional e não adotado.** |
@@ -108,4 +108,4 @@ A história atual define [[Varkh Nimalis]] como alquimista de rua ligado ao [[Co
 - Decidir se a especialização Assassino do Livro II será usada por Raziel.
 - Testar [[Vampiro]], [[Hemomante]] e Reserva de Sangue em mesa.
 - Decidir se algum conteúdo dos Tomos de Magia será adotado.
-- Decidir se Dragonborn terá base mecânica própria no vault.
+- Testar a base mecânica de [[Dragonborn]] em mesa.
