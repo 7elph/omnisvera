@@ -9,7 +9,7 @@ visibility: Mestre
 spoiler_level: heavy
 gm_secret: true
 thumbnail: zz_media/thumbnails/th_oric.png
-cover: zz_media/characters/oric.png
+cover: zz_media/thumbnails/th_oric.png
 location: Desconhecida
 territory: "[[Nimalia]]"
 faction: Nenhum

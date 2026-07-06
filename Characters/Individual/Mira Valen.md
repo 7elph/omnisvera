@@ -9,7 +9,7 @@ visibility: Mestre
 spoiler_level: heavy
 gm_secret: true
 thumbnail: zz_media/thumbnails/th_mira.png
-cover: zz_media/characters/mira.png
+cover: zz_media/thumbnails/th_mira.png
 location: "[[Leth'valora]]"
 territory: "[[Floresta de Avenor]]"
 faction: Nenhum

@@ -47,9 +47,6 @@ tags:
 > [!NOTE|clean no-i right]+ Vezemir
 > ![[zz_media/characters/vezemir.png|400]]
 
-> [!NOTE]- Template aplicado
-> Esta nota segue o formato **Personagem Jogador**. Informações confidenciais devem ficar no [[CAMPANHA/ESTADO_DA_CAMPANHA|Estado da Campanha]].
-
 ## Visão Geral
 
 **Títulos:** O Bastardo de Ferro
