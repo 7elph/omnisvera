@@ -50,6 +50,7 @@ tags:
 | Home do Mestre | [[Home_Mestre]] | navegação visual e atalhos |
 | Home dos Jogadores | [[Home]] | consulta player-safe |
 | Capítulos | [[01 - Ecos do Mundo Perdido]] | versão pública/jogável do capítulo |
+| Roteiro da Sessão 01 | [[SESSAO_01_ROTEIRO_DE_MESA]] | condução prática da próxima mesa |
 | Fila de Conteúdo | [[Workflow/Content_Development/CONTENT_CREATION_QUEUE]] | notas que precisam desenvolvimento |
 | Modelo Player-Safe | [[Workflow/Content_Development/PLAYER_SAFE_ENTITY_MODEL]] | regra de separação entre nota pública e bastidor |
 
@@ -58,6 +59,10 @@ tags:
 > - Homem-Tigre é base mecânica/referência para antropos felinos, não nome comum do cenário.
 > - [[Kenku]] é raça jogável de [[Varkh Nimalis]] e também uma linhagem específica dentro do guarda-chuva antropo.
 > - [[Alquimista]] usa o suplemento Old Dragon — Expansão de Classes como base jogável.
+> - [[Guerreiro]] está consolidado como classe marcial de [[Vezemir]].
+> - [[Hemomante]] está consolidado como classe de sangue de [[Raziel]].
+> - [[Vampiro]] é raça/condição de [[Raziel]], não classe.
+> - [[Dragonborn]] possui base mecânica Omnisvera para teste de mesa.
 > - Varkh combina [[Kenku]] + [[Alquimista]].
 > - Homúnculos, Pedra Filosofal, Quimeras e transmutações avançadas devem ser controlados pelo mestre antes de aparecerem em mesa.
 > - Regras perigosas ou de nível alto ficam disponíveis como opção, não como promessa automática.
@@ -104,6 +109,7 @@ tags:
 ## Próxima Sessão
 
 - **Capítulo:** [[01 - Ecos do Mundo Perdido]]
+- **Roteiro de mesa:** [[SESSAO_01_ROTEIRO_DE_MESA]]
 - **Situação inicial provável:** estrada secundária entre [[Nimalis]] e [[Floresta de Avenor]].
 - **Foco de mesa:** unir [[Vezemir]], [[Varkh Nimalis]] e [[Raziel]] por meio de um incidente comum.
 - **Cena-motor:** uma caravana sofre acidente, frascos falsificados quebram e uma passagem antiga é revelada sob a estrada.
@@ -132,11 +138,11 @@ Só precisam perceber que estão presos no mesmo problema.
 
 ### Preparar Antes da Sessão
 
-- Escolher três a cinco pistas iniciais.
-- Preparar uma descrição curta da estrada cedendo.
-- Preparar a primeira fala da [[Unidade DORN-7]].
+- Revisar [[SESSAO_01_ROTEIRO_DE_MESA]].
+- Ajustar ou confirmar os três NPCs descartáveis da caravana.
+- Confirmar quais pistas iniciais serão usadas.
 - Preparar a chegada final da [[Guarda Real de Nimalia]] como pressão política, não como interrupção do primeiro contato.
-- Preparar o mapa fragmentado e a prova que pode escapar com o falsificador.
+- Decidir, se necessário, qual prova específica escapa com o falsificador.
 
 ---
 
@@ -212,6 +218,7 @@ SORT file.name ASC
 
 | Dossiê | Quando abrir |
 |---|---|
+| [[SESSAO_01_ROTEIRO_DE_MESA]] | condução direta da próxima sessão |
 | [[DOSSIE - Capitulo 01 e DORN-7]] | preparação da sessão, incidente da estrada, DORN-7 e final com mapa fragmentado |
 | [[DOSSIE - Remedios Falsos e Odran]] | O Frasco Afogado, símbolos adulterados, Odran, Varkh e falsificações |
 | [[DOSSIE - Coroa Augustus e Nimalis]] | Coroa, Guarda Real, Augustus, Nimalis, arquivos restritos e pressão política |
@@ -275,10 +282,9 @@ SORT file.name ASC
 ## Pendências Rápidas do Sage
 
 > [!todo]- Agora
-> - Escolher três a cinco pistas iniciais do Capítulo 01.
-> - Preparar a primeira fala da [[Unidade DORN-7]].
+> - Revisar as pistas iniciais em [[SESSAO_01_ROTEIRO_DE_MESA]].
+> - Confirmar se os NPCs descartáveis da caravana serão usados como estão.
 > - Definir qual prova o falsificador leva no final da sessão.
-> - Nomear dois ou três mercadores comuns da caravana.
 
 > [!todo]- Depois
 > - Confirmar papel real de [[Mestre Odran Veyl]] nas falsificações.

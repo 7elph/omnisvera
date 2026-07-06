@@ -62,8 +62,8 @@ tags:
 
 > [!todo]- Pendências do Sage
 > **Agora**
-> - Escolher três a cinco pistas iniciais do Capítulo 01.
-> - Preparar a primeira fala da [[Unidade DORN-7]].
+> - Revisar as pistas iniciais e a primeira fala de DORN-7 em [[SESSAO_01_ROTEIRO_DE_MESA]].
+> - Confirmar se os NPCs descartáveis da caravana serão usados como estão.
 > - Definir qual prova o falsificador leva no final da sessão.
 >
 > **Depois**

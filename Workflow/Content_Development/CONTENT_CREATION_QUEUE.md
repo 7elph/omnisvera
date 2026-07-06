@@ -10,6 +10,7 @@
 | Nota | Tipo | Motivo | Próxima ação |
 |---|---|---|---|
 | [[CAMPANHA/ESTADO_DA_CAMPANHA]] | painel do mestre | centraliza decisões, segredos e preparação imediata | manter como cockpit da sessão |
+| [[SESSAO_01_ROTEIRO_DE_MESA]] | roteiro de mesa | condução direta da próxima sessão | abrir durante a mesa |
 | [[01 - Ecos do Mundo Perdido]] | story/capítulo | primeira sessão jogável | alinhar cena inicial, pistas e encerramento |
 | [[Unidade DORN-7]] | entidade/constructo | primeiro impacto do Mundo Perdido | usar como presença danificada, limitada e perigosa |
 | [[Varkh Nimalis]] | personagem jogador | ligação direta com os remédios falsos e Odran | entrada clara no incidente |

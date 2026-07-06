@@ -24,6 +24,8 @@ tags:
 
 **Foco:** preparação da primeira sessão, incidente da estrada, DORN-7 e encerramento.
 
+**Roteiro de mesa:** [[SESSAO_01_ROTEIRO_DE_MESA]]
+
 ---
 
 ## Frente — Capítulo 01: Ecos do Mundo Perdido
@@ -113,9 +115,9 @@ Se os personagens esconderem a descoberta:
 
 ### Ajustes Práticos Antes da Mesa
 
-- Nomear dois ou três mercadores comuns da caravana.
-- Escolher a pessoa que carrega os frascos sem saber a verdade.
-- Definir três pistas iniciais visíveis antes da entrada na passagem.
+- Revisar os NPCs descartáveis em [[SESSAO_01_ROTEIRO_DE_MESA]].
+- Usar Ivo Maran como carregador que não sabe a verdade, se nenhum nome melhor surgir.
+- Usar as pistas iniciais escolhidas em [[SESSAO_01_ROTEIRO_DE_MESA]].
 - Preparar a chegada final da [[Guarda Real de Nimalia]].
 - Preparar a condição instável da [[Unidade DORN-7]] no encerramento.
 
