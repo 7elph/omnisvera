@@ -1,0 +1,59 @@
+from __future__ import annotations
+
+from typing import Any
+
+from pydantic import BaseModel, Field
+
+
+class HealthResponse(BaseModel):
+    backend: str
+    vault_path: str
+    database_path: str
+    ollama_base_url: str
+    ollama_model: str
+    ollama_accessible: bool
+
+
+class RebuildResponse(BaseModel):
+    indexed_notes: int
+    skipped_files: int
+    vault_path: str
+
+
+class NoteSummary(BaseModel):
+    id: int
+    path: str
+    title: str
+    aliases: list[str] = Field(default_factory=list)
+    type: str | None = None
+    visibility: str | None = None
+    tags: list[str] = Field(default_factory=list)
+    updated_at: str
+
+
+class NoteDetail(NoteSummary):
+    content: str
+    frontmatter: dict[str, Any] = Field(default_factory=dict)
+
+
+class SearchRequest(BaseModel):
+    query: str
+    limit: int = 10
+
+
+class SearchResult(NoteSummary):
+    score: int
+    excerpt: str
+
+
+class ChatRequest(BaseModel):
+    question: str
+    limit: int = 4
+
+
+class ChatResponse(BaseModel):
+    answer: str
+    notes_used: list[NoteSummary]
+    note_paths: list[str]
+    insufficient_context: bool
+    warning: str | None = None

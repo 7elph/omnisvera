@@ -1,0 +1,152 @@
+:root {
+  color: #f3ead7;
+  background: #15110d;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+body {
+  margin: 0;
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+}
+
+button {
+  border: 0;
+  border-radius: 14px;
+  background: #d6a858;
+  color: #1d1309;
+  cursor: pointer;
+  font-weight: 700;
+  padding: 0.75rem 1rem;
+}
+
+button:disabled {
+  opacity: 0.6;
+}
+
+.app-shell {
+  margin: 0 auto;
+  max-width: 960px;
+  padding: 1rem;
+}
+
+.hero,
+.panel {
+  background: linear-gradient(135deg, #241a14, #12100e);
+  border: 1px solid #403124;
+  border-radius: 22px;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.24);
+  margin: 1rem 0;
+  padding: 1rem;
+}
+
+.hero {
+  align-items: center;
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+}
+
+.eyebrow {
+  color: #d6a858;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+h1,
+h2 {
+  margin: 0.2rem 0 0.6rem;
+}
+
+.tabs,
+.row {
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+}
+
+.tabs button {
+  background: #2b2119;
+  color: #f3ead7;
+  flex: 1;
+  min-width: max-content;
+}
+
+.tabs button.active {
+  background: #d6a858;
+  color: #1d1309;
+}
+
+textarea,
+input {
+  background: #0d0b09;
+  border: 1px solid #4e3b2a;
+  border-radius: 14px;
+  box-sizing: border-box;
+  color: #f3ead7;
+  padding: 0.85rem;
+  width: 100%;
+}
+
+textarea {
+  min-height: 130px;
+}
+
+.cards {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  margin-top: 1rem;
+}
+
+.note-card {
+  background: #201812;
+  border: 1px solid #473424;
+  color: #f3ead7;
+  display: grid;
+  gap: 0.35rem;
+  padding: 1rem;
+  text-align: left;
+}
+
+.note-card span,
+.note-card small {
+  color: #b8a58b;
+}
+
+.answer,
+.note-content {
+  background: #0d0b09;
+  border-radius: 16px;
+  color: #f3ead7;
+  overflow: auto;
+  padding: 1rem;
+  white-space: pre-wrap;
+}
+
+.metadata {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0.5rem 0 1rem;
+}
+
+.metadata span {
+  background: #302419;
+  border-radius: 999px;
+  color: #d6c3a5;
+  padding: 0.35rem 0.7rem;
+}
+
+@media (max-width: 640px) {
+  .hero {
+    align-items: stretch;
+    flex-direction: column;
+  }
+}
