@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { health, rebuildIndex } from "./api";
+import { getAccessToken, health, rebuildIndex, setAccessToken } from "./api";
 import ChatVault from "./pages/ChatVault";
 import NoteView from "./pages/NoteView";
 import SearchNotes from "./pages/SearchNotes";
@@ -11,6 +11,7 @@ export default function App() {
   const [page, setPage] = useState<Page>("session");
   const [selectedNoteId, setSelectedNoteId] = useState<number | null>(null);
   const [status, setStatus] = useState<string>("verificando...");
+  const [tokenDraft, setTokenDraft] = useState<string>(getAccessToken());
 
   useEffect(() => {
     health()
@@ -21,6 +22,18 @@ export default function App() {
       )
       .catch(() => setStatus("backend indisponível"));
   }, []);
+
+  function saveToken() {
+    setAccessToken(tokenDraft);
+    setStatus("token salvo; verificando backend...");
+    health()
+      .then((data) =>
+        setStatus(
+          `Backend ok · Ollama ${data.ollama_accessible ? "ok" : "offline"} · ${data.ollama_model}`,
+        ),
+      )
+      .catch(() => setStatus("backend indisponível ou token inválido"));
+  }
 
   async function onRebuild() {
     setStatus("reindexando vault...");
@@ -47,6 +60,16 @@ export default function App() {
         </div>
         <button onClick={onRebuild}>Reindexar</button>
       </header>
+
+      <section className="token-bar">
+        <input
+          value={tokenDraft}
+          onChange={(event) => setTokenDraft(event.target.value)}
+          placeholder="Token de acesso, se o servidor pedir"
+          type="password"
+        />
+        <button onClick={saveToken}>Salvar token</button>
+      </section>
 
       <nav className="tabs">
         <button className={page === "session" ? "active" : ""} onClick={() => setPage("session")}>

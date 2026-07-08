@@ -16,7 +16,9 @@ Regras obrigatórias:
 - Não copie trechos longos do contexto; sintetize.
 - Responda em português brasileiro.
 - Seja curto: no máximo 8 linhas, salvo se o usuário pedir detalhe.
-- Separe informação pública, informação do mestre e pendências quando isso aparecer no contexto."""
+- Separe informação pública, informação do mestre e pendências quando isso aparecer no contexto.
+- Responda a pergunta primeiro; não responda apenas com nomes de notas.
+- Não inclua bibliografia no texto: o aplicativo já mostra as notas usadas separadamente."""
 
 
 def _context_from_notes(database_path: Path, note_ids: list[int], max_chars: int = 3000) -> str:
@@ -78,7 +80,8 @@ Responda usando o contexto acima.
 Não use conhecimento externo.
 Se responder com fatos, eles precisam estar no contexto.
 Faça síntese, não transcrição.
-No fim, cite em uma linha: Notas usadas: ..."""
+Comece com a resposta direta em 2 a 6 frases.
+Se houver informação pública e segredo do mestre misturados no contexto, separe em linhas curtas."""
 
     answer = await chat_with_ollama(
         ollama_base_url,

@@ -1,6 +1,26 @@
-const API_BASE =
-  import.meta.env.VITE_API_BASE_URL ||
-  `${window.location.protocol}//${window.location.hostname}:8787`;
+const API_BASE = import.meta.env.VITE_API_BASE_URL || "";
+const TOKEN_KEY = "omnisvera_access_token";
+
+export function getAccessToken() {
+  return localStorage.getItem(TOKEN_KEY) || "";
+}
+
+export function setAccessToken(token: string) {
+  if (token.trim()) {
+    localStorage.setItem(TOKEN_KEY, token.trim());
+  } else {
+    localStorage.removeItem(TOKEN_KEY);
+  }
+}
+
+function authHeaders(extra: Record<string, string> = {}) {
+  const token = getAccessToken();
+  return {
+    "ngrok-skip-browser-warning": "true",
+    ...extra,
+    ...(token ? { "X-Omnisvera-Token": token } : {}),
+  };
+}
 
 export type NoteSummary = {
   id: number;
@@ -24,25 +44,25 @@ export type SearchResult = NoteSummary & {
 };
 
 export async function health() {
-  const response = await fetch(`${API_BASE}/health`);
+  const response = await fetch(`${API_BASE}/health`, { headers: authHeaders() });
   if (!response.ok) throw new Error("Falha ao consultar /health");
   return response.json();
 }
 
 export async function rebuildIndex() {
-  const response = await fetch(`${API_BASE}/index/rebuild`, { method: "POST" });
+  const response = await fetch(`${API_BASE}/index/rebuild`, { method: "POST", headers: authHeaders() });
   if (!response.ok) throw new Error("Falha ao reconstruir índice");
   return response.json();
 }
 
 export async function listNotes(): Promise<NoteSummary[]> {
-  const response = await fetch(`${API_BASE}/notes`);
+  const response = await fetch(`${API_BASE}/notes`, { headers: authHeaders() });
   if (!response.ok) throw new Error("Falha ao listar notas");
   return response.json();
 }
 
 export async function getNote(id: number): Promise<NoteDetail> {
-  const response = await fetch(`${API_BASE}/notes/${id}`);
+  const response = await fetch(`${API_BASE}/notes/${id}`, { headers: authHeaders() });
   if (!response.ok) throw new Error("Nota não encontrada");
   return response.json();
 }
@@ -50,7 +70,7 @@ export async function getNote(id: number): Promise<NoteDetail> {
 export async function searchNotes(query: string, limit = 10): Promise<SearchResult[]> {
   const response = await fetch(`${API_BASE}/search`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: authHeaders({ "Content-Type": "application/json" }),
     body: JSON.stringify({ query, limit }),
   });
   if (!response.ok) throw new Error("Falha na busca");
@@ -60,7 +80,7 @@ export async function searchNotes(query: string, limit = 10): Promise<SearchResu
 export async function chatVault(question: string, limit = 6) {
   const response = await fetch(`${API_BASE}/chat`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: authHeaders({ "Content-Type": "application/json" }),
     body: JSON.stringify({ question, limit }),
   });
   if (!response.ok) throw new Error("Falha no chat");

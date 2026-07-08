@@ -24,7 +24,7 @@ async def chat_with_ollama(
         "messages": messages,
         "stream": False,
         "options": {
-            "num_predict": 180,
+            "num_predict": 260,
             "temperature": 0.2,
         },
     }

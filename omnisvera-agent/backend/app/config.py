@@ -16,6 +16,8 @@ class Settings:
     ollama_base_url: str
     ollama_model: str
     database_path: Path
+    access_token: str | None
+    rebuild_on_startup: bool
 
 
 def get_settings() -> Settings:
@@ -32,4 +34,7 @@ def get_settings() -> Settings:
         ollama_base_url=os.getenv("OLLAMA_BASE_URL", "http://localhost:11434").rstrip("/"),
         ollama_model=os.getenv("OLLAMA_MODEL", "qwen2.5:1.5b"),
         database_path=database_path,
+        access_token=os.getenv("OMNISVERA_ACCESS_TOKEN") or None,
+        rebuild_on_startup=os.getenv("OMNISVERA_REBUILD_ON_STARTUP", "false").lower()
+        in {"1", "true", "yes", "sim"},
     )
