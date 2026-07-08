@@ -114,6 +114,85 @@ def _looks_like_quest_overview(question: str) -> bool:
     return has_quest and asks_list
 
 
+def _direct_entity_target(question: str) -> tuple[str, str] | None:
+    normalized = normalize_text(question)
+    candidates: list[tuple[str, str]] = []
+    if normalized.startswith("quem "):
+        target = re.sub(r"^quem\s+", "", normalized).strip()
+        target = re.sub(r"^(e|eh|foi|sao|sao os|e a|e o|\?)\s*", "", target).strip()
+        candidates.append((target, "who"))
+    if normalized.startswith("o que ") or normalized.startswith("que "):
+        target = re.sub(r"^(o que|que)\s+", "", normalized).strip()
+        target = re.sub(r"^(e|eh|\?)\s*", "", target).strip()
+        candidates.append((target, "what"))
+    for prefix in ("me fala sobre", "fale sobre", "resuma", "resume"):
+        if normalized.startswith(prefix + " "):
+            candidates.append((normalized.removeprefix(prefix).strip(), "about"))
+
+    for target, kind in candidates:
+        target = re.sub(r"^(o|a|os|as|um|uma)\s+", "", target).strip(" ?.!")
+        if len(target) >= 3:
+            return target, kind
+    return None
+
+
+def _basename(path: str) -> str:
+    return Path(path).stem
+
+
+def _entity_candidate_score(item: dict, target: str, kind: str) -> int:
+    target_norm = normalize_text(target)
+    title_norm = normalize_text(item.get("title") or "")
+    path_norm = normalize_text(_basename(item.get("path") or ""))
+    tags_norm = normalize_text(" ".join(item.get("tags") or []))
+    note_type = normalize_text(item.get("type") or "")
+
+    score = int(item.get("score") or 0)
+    if title_norm == target_norm or path_norm == target_norm:
+        score += 120
+    elif target_norm in title_norm or target_norm in path_norm:
+        score += 80
+    if target_norm in tags_norm:
+        score += 10
+
+    if kind == "who":
+        if note_type == "character":
+            score += 90
+        elif note_type in {"faction", "religion"}:
+            score += 20
+        elif note_type == "item":
+            score -= 45
+    elif kind == "what":
+        if note_type in {"item", "location", "territory", "lore", "race", "class", "quest", "rumor"}:
+            score += 45
+
+    return score
+
+
+def _find_direct_entity_note(
+    database_path: Path,
+    question: str,
+    access_mode: AccessMode,
+) -> dict | None:
+    extracted = _direct_entity_target(question)
+    if not extracted:
+        return None
+
+    target, kind = extracted
+    results = search_notes(database_path, target, limit=16, access_mode=access_mode)
+    if not results:
+        return None
+
+    results.sort(key=lambda item: _entity_candidate_score(item, target, kind), reverse=True)
+    best = results[0]
+    target_norm = normalize_text(target)
+    best_lookup = normalize_text(f"{best.get('title', '')} {_basename(best.get('path', ''))} {' '.join(best.get('aliases') or [])}")
+    if target_norm not in best_lookup and best.get("score", 0) < 20:
+        return None
+
+    return get_note(database_path, best["id"], access_mode=access_mode)
+
+
 def _frontmatter(row: Any) -> dict[str, Any]:
     try:
         data = json.loads(row["frontmatter"] or "{}")
@@ -130,9 +209,17 @@ def _is_secret(frontmatter: dict[str, Any]) -> bool:
 
 
 def _first_useful_sentence(content: str) -> str:
-    text = _plain_wikilinks(_strip_code_blocks(content))
+    text = _strip_code_blocks(content)
+    text = re.sub(r"!\[\[[^\]]+\]\]", "", text)
+    text = re.sub(r"!\[[^\]]*\]\([^)]+\)", "", text)
+    text = _plain_wikilinks(text)
     text = re.sub(r"^#.*$", "", text, flags=re.MULTILINE)
     text = re.sub(r"^##.*$", "", text, flags=re.MULTILINE)
+    text = re.sub(r"^>\s*\[![^\n]+$", "", text, flags=re.MULTILINE)
+    text = re.sub(r"^>\s*!\S.*$", "", text, flags=re.MULTILINE)
+    text = re.sub(r"^>\s*[_\"“].*$", "", text, flags=re.MULTILINE)
+    text = re.sub(r"^>\s?", "", text, flags=re.MULTILINE)
+    text = re.sub(r"^\s*\*\*[^*:\n]+:\*\*.*$", "", text, flags=re.MULTILINE)
     text = re.sub(r"[-*] ", "", text)
     text = re.sub(r"\s+", " ", text).strip()
     sentences = re.split(r"(?<=[.!?])\s+", text)
@@ -141,6 +228,108 @@ def _first_useful_sentence(content: str) -> str:
         if len(sentence) >= 40:
             return sentence[:260].strip()
     return text[:220].strip()
+
+
+def _labeled_fields(content: str) -> dict[str, str]:
+    fields: dict[str, str] = {}
+    content = _plain_wikilinks(_strip_code_blocks(content))
+    content = re.sub(r"<h[1-6][^>]*>([\s\S]*?)</h[1-6]>", r"\1", content, flags=re.IGNORECASE)
+    content = re.sub(r"<[^>]+>", "", content)
+    for line in content.splitlines():
+        match = re.match(r"^\s*\*\*([^*:\n]+):\*\*\s*(.+?)\s*$", line)
+        if not match:
+            continue
+        key = normalize_text(match.group(1))
+        value = re.sub(r"\s+", " ", match.group(2)).strip()
+        if value and key not in fields:
+            fields[key] = value
+    return fields
+
+
+def _note_kind_label(note_type: str | None) -> str:
+    labels = {
+        "character": "personagem",
+        "faction": "facção",
+        "location": "local",
+        "territory": "território",
+        "item": "item",
+        "lore": "lore",
+        "race": "raça",
+        "class": "classe",
+        "quest": "missão",
+        "rumor": "rumor",
+        "story": "capítulo",
+    }
+    return labels.get(normalize_text(note_type), "nota")
+
+
+def _direct_entity_answer(note: dict, question: str, access_mode: AccessMode) -> dict:
+    frontmatter = note.get("frontmatter") or {}
+    content = sanitize_player_text(note["content"]) if access_mode == "player" else note["content"]
+    fields = _labeled_fields(content)
+    title = _plain_wikilinks(str(note["title"]))
+    note_type = normalize_text(note.get("type"))
+    tags = [normalize_text(tag) for tag in note.get("tags") or []]
+    lines: list[str] = []
+
+    if note_type == "character":
+        subtype = normalize_text(frontmatter.get("subtype"))
+        role = normalize_text(frontmatter.get("role"))
+        is_player = subtype == "player_character" or role == "player" or "jogador" in tags
+        intro = f"{title} é {'um personagem jogador' if is_player else 'um personagem'} de Omnisvera."
+        lines.append(intro)
+
+        details: list[str] = []
+        race = fields.get("raca") or frontmatter.get("race")
+        char_class = fields.get("classe") or frontmatter.get("class")
+        if race:
+            details.append(f"raça: {_plain_wikilinks(str(race))}")
+        if char_class:
+            details.append(f"classe: {_plain_wikilinks(str(char_class))}")
+        if details:
+            lines.append("No que está liberado aos jogadores, " + "; ".join(details) + ".")
+
+        reputation = fields.get("reputacao publica")
+        location = fields.get("localizacao atual") or frontmatter.get("location")
+        faction = fields.get("afiliacao") or frontmatter.get("faction")
+        if reputation:
+            lines.append(f"É conhecido publicamente como {reputation}.")
+        if location or faction:
+            parts = []
+            if location:
+                parts.append(f"está ligado a {_plain_wikilinks(str(location))}")
+            if faction:
+                parts.append(f"tem ligação com {_plain_wikilinks(str(faction))}")
+            lines.append("Atualmente, " + " e ".join(parts) + ".")
+
+        summary = _first_useful_sentence(content)
+        if len(lines) < 3 and summary and not any(normalize_text(summary) in normalize_text(line) for line in lines):
+            lines.append(summary)
+    else:
+        kind_label = _note_kind_label(note.get("type"))
+        summary = _first_useful_sentence(content)
+        lines.append(f"{title} é uma nota de {kind_label} em Omnisvera.")
+        if note_type == "item":
+            item_type = frontmatter.get("item_type") or frontmatter.get("item_category")
+            owner = frontmatter.get("owner")
+            if item_type or owner:
+                details = []
+                if item_type:
+                    details.append(f"tipo: {_plain_wikilinks(str(item_type))}")
+                if owner:
+                    details.append(f"portador: {_plain_wikilinks(str(owner))}")
+                lines.append("; ".join(details) + ".")
+        if summary:
+            lines.append(summary)
+
+    answer = "\n".join(f"- {line}" for line in lines[:5])
+    return {
+        "answer": answer,
+        "notes_used": [note],
+        "note_paths": [note["path"]],
+        "insufficient_context": False,
+        "warning": None,
+    }
 
 
 def _answer_index_overview(
@@ -233,6 +422,10 @@ async def answer_question(
         )
         if quest_answer:
             return quest_answer
+
+    direct_note = _find_direct_entity_note(database_path, question, access_mode)
+    if direct_note:
+        return _direct_entity_answer(direct_note, question, access_mode)
 
     results = search_notes(database_path, question, limit=limit, access_mode=access_mode)
     operational_results = [
