@@ -42,31 +42,25 @@ tags:
 > [!NOTE|clean no-i right]+ Raziel
 > ![[zz_media/characters/raziel.png|400]]
 
-> [!NOTE]- Template aplicado
-> Esta nota segue o formato **Personagem Jogador**. Informações confidenciais devem ficar no [[CAMPANHA/ESTADO_DA_CAMPANHA|Estado da Campanha]].
-
 ## Visão Geral
-
 **Títulos:** O Espectro da Névoa de Sangue
 **Apelido:** O Espectro
-**Localização Atual:** [[Ruínas de Valthor]]; sua origem está ligada à [[Fortaleza de Gharok]]
-**Território:** Earthropo
-**Reputação Pública:** Antigo executor do [[Clã Sanguinallis]], apagado da história durante seu aprisionamento
+**Localização Atual:** [[Ruínas de Valthor]]; 
+**Território:** [[MAPA DE EARTHROPO|Earthropo]]
+**Reputação Pública:** 
 **Gênero:** Masculino
 **Classe:** [[Hemomante]]
 **Raça:** [[Vampiro]]
 **Linhagem:** [[Vampiro Sanguinallis]]
-**Camada especial:** [[Sangue Antigo]]
-**Idade:** 340 anos; aparência de aproximadamente 30 anos
+**Idade:** 340 anos;
 **Altura:** 1,88 m
 **Nível:** 1
 **Alinhamento:** Caótico Neutro
 **Status:** Vivo
-**Afiliação:** [[Clã Sanguinallis]], antes da traição
-**Afiliações Anteriores:** Executor pessoal de Lorde Malakar
-**Associados Conhecidos:** Ancião Primordial
-**Inimigos Conhecidos:** Lorde Malakar, Kaelen e Vandor
-**Origem:** [[Fortaleza de Gharok]]
+**Afiliação:** [[Conclave dos Errantes]]
+**Afiliações Anteriores:** [[Clã Sanguinallis]]
+**Associados Conhecidos:** 
+**Inimigos Conhecidos:** Figuras antigas do [[Clã Sanguinallis]]
 **Posses:** [[Adagas de Espectro Fantasma]], [[Manto Primordial do Ancião]]
 
 
@@ -83,62 +77,51 @@ SORT file.name ASC
 
 ## O que os jogadores sabem
 
-- Ver a Visão Geral, História e Situação Atual desta nota.
+- Raziel é um vampiro antigo ligado ao [[Clã Sanguinallis]].
+- Ele usa [[Hemomante|hemomancia]] como técnica de combate, sobrevivência e intimidação.
+- Foi traído por figuras do próprio passado e carrega uma vingança antiga.
+- Seu despertar é recente para o mundo atual, mas seu corpo e suas memórias pertencem a outra era.
+- Detalhes sobre a origem real de sua transformação e entidades associadas ficam no [[CAMPANHA/ESTADO_DA_CAMPANHA|Estado da Campanha]].
 
 ## História
 
-> <h4>"O sangue da nova era é fraco e diluído. Mas o teu foi refinado pelo ódio perfeito."</h4>
+> <h4>"Algumas dívidas sobrevivem ao sangue, à pedra e ao tempo."</h4>
 
+Raziel vem de uma linhagem vampírica antiga, associada ao [[Clã Sanguinallis]] e a domínios esquecidos de Earthropo.
 
-Raziel foi o ápice do Clã Sanguinallis e o executor pessoal de Lorde Malakar na [[Fortaleza de Gharok]]. Enquanto Kaelen, o Flagelo, e Vandor, o Senhor das Bestas, marchavam na superfície como generais brutais, Raziel movia-se onde a luz não ousava tocar.
+Antes de desaparecer da história, serviu como executor e agente silencioso de uma estrutura de poder vampírica. Seu nome era sussurrado com medo, respeito e cautela por aqueles que conheciam os corredores escuros de Gharok.
 
-Sua perícia com as [[Adagas de Espectro Fantasma]] desafiava a fronteira entre o plano material e o etéreo. Quando Raziel erguia o braço, seus alvos viam apenas um rastro de fumaça escura antes que suas vidas fossem drenadas.
+Em algum momento, Raziel foi traído por figuras próximas do próprio clã. Os detalhes completos da traição ainda pertencem ao arco pessoal do personagem, mas suas consequências moldam tudo que ele faz agora.
+
+Hoje, Raziel caminha em um mundo que mudou durante sua ausência. Nomes antigos talvez tenham virado lenda. Fortalezas podem ter ruído. Inimigos podem ter se tornado sombras, monstros, reis ou cadáveres que ainda recusam morrer.
+
+O que permanece claro é simples: Raziel voltou, e sua dívida ainda não foi paga.
 
 ---
 
 ### O Executor de Gharok
-O nome de Raziel era sussurrado com reverência e temor nos salões da Fortaleza de Gharok.
 
-Ele servia como braço direito de Malakar e dominava uma forma de hemomancia capaz de transformar o sangue de suas vítimas em névoa carmesim. Sua posição, poder e silêncio despertaram inveja e medo dentro do próprio clã.
+Raziel foi treinado para matar sem espetáculo desnecessário.
 
----
-
-### A Tríade Partida
-Kaelen invejava o controle de Raziel sobre a hemomancia. Vandor temia o silêncio que ele impunha às suas feras. Malakar acreditava que seu executor acabaria desejando o trono.
-
-Sob o pretexto de conter uma heresia rúnica, Raziel foi atraído ao salão principal e subjugado por feitiçarias ancestrais.
-
-Pregos de prata perfuraram seus ombros, correntes do mesmo metal foram cravadas em sua carne imortal e ele foi jogado no fundo de um poço nos picos congelados ao norte de Nimalia.
-
-A prata impedia sua cura. Sua natureza vampírica o impedia de morrer. O tormento durou mais de trezentos anos.
+Sua presença não é a de um guerreiro de campo aberto, mas de uma lâmina guardada para o momento certo. Ele observa antes de agir, mede ameaças pelo sangue, pelo medo e pela hesitação, e prefere descobrir quem segura as correntes antes de cortá-las.
 
 ---
 
-### O Acordo no Abismo
-O sangue corrosivo de Raziel enfraqueceu o fundo da prisão ao longo dos séculos. Quando o solo ruiu, ele despencou através de fendas vulcânicas extintas até as cavernas abissais sob as [[Ruínas de Valthor]].
+### O Retorno
 
-Lá encontrou o Ancião Primordial, uma entidade esquecida que despedaçou as correntes de prata e o devolveu ao mundo marcado por um poder que Raziel ainda não compreende por completo.
+Raziel não entende completamente o mundo atual. Ele conhece juramentos, nomes e horrores de outro tempo, mas precisa descobrir o que sobreviveu, o que foi apagado e o que foi reescrito.
 
-A regeneração foi violenta. Sob a tutela da entidade, Raziel aprendeu a tratar o sangue como extensão da própria alma, moldando-o em armas, névoa e asas escarlates.
+Sua hemomancia ainda responde, mas nem todo poder antigo está sob seu controle. Algumas manifestações são instinto, trauma ou reflexo de algo que ainda não deve ser explicado em voz alta.
 
-Ele entrou no poço como um assassino traído. Emergiu como a própria calamidade encarnada.
-
----
-
-### A Rota da Vingança
-1. **O Primeiro Sangue — [[Campos de Earthropo]]:** Kaelen lidera patrulhas e escava as [[Ruínas de Valthor]] em busca de relíquias.
-2. **O Senhor das Feras — [[Floresta de Avenor]]:** Vandor permanece ligado às feras que um dia marcharam sob seu comando.
-3. **A Queda do Trono — [[Fortaleza de Gharok]]:** Lorde Malakar ainda ocupa o domínio onde a traição começou.
-
-A ordem e a posição exata desses confrontos permanecem como estrutura narrativa, não como acontecimentos já jogados.
+O passado de Raziel deve surgir por fragmentos: um nome reconhecido, uma reação ao sangue, uma ruína familiar, uma palavra antiga, uma lâmina que responde quando não deveria.
 
 ---
 
 ## Situação Atual
 
-Raziel escapou do tormento que deveria aprisioná-lo para sempre. O poder recebido no abismo restaurou seu corpo e transformou a hemomancia que já dominava.
+Raziel está livre, mas não está em paz.
 
-Sua trajetória atual é movida pela vingança contra Kaelen, Vandor e Lorde Malakar. As circunstâncias que o levarão a encontrar Vezemir e Varkh ainda não foram estabelecidas.
+Sua trajetória atual é movida por vingança, sobrevivência e necessidade de compreender o que ainda resta do [[Clã Sanguinallis]].
 
 O mundo mudou durante seu aprisionamento. Raziel conhece nomes, juramentos e estruturas de poder que podem já não existir da mesma forma.
 
@@ -178,17 +161,33 @@ A definir com o jogador.
 
 ## Relações
 
-_Pendente de consolidação pelo Sage._
+| Nota | Relação |
+|---|---|
+| [[Clã Sanguinallis]] | linhagem/facção de origem |
+| [[Vampiro]] | raça/condição vampírica |
+| [[Hemomante]] | classe e técnica de sangue |
+| [[Vampiro Sanguinallis]] | camada de linhagem e identidade |
+| [[Fortaleza de Gharok]] | origem antiga e domínio ligado ao passado |
+| [[Ruínas de Valthor]] | local ligado ao retorno e a estruturas antigas |
+| [[Adagas de Espectro Fantasma]] | armas pessoais |
+| [[Manto Primordial do Ancião]] | item sensível; tratar como mistério |
+| [[Vezemir]] | aliado improvável em contato com ruínas e sinais antigos |
+| [[Varkh Nimalis]] | aliado útil em investigação, alquimia e falsificações |
+| [[Morthak]] | outro personagem ligado à não-vida, mas por via diferente |
 
 ## Equipamentos importantes
 
 ### [[Adagas de Espectro Fantasma]]
 
-Lâminas etéreas praticamente invisíveis quando empunhadas. Ao perfurar uma criatura, drenam energia vital para Raziel.
+Lâminas etéreas praticamente invisíveis quando empunhadas.
+
+No início da campanha, usar como [[Adaga|adagas]] especiais com propriedades narrativas contidas. A drenagem vital completa depende de liberação do mestre.
 
 ### [[Manto Primordial do Ancião]]
 
-Armadura extraplanar concedida após o encontro com o Ancião Primordial. Abafa os movimentos de Raziel e reforça sua capacidade de desaparecer nas sombras.
+Manto escuro, silencioso e incomum.
+
+No início da campanha, funciona como proteção leve e sinal visual do passado de Raziel. A origem e custo real do item ficam no Estado da Campanha.
 
 ---
 
@@ -213,21 +212,21 @@ Treinamento compatível com sua antiga atuação como executor.
 **Hemomancia:**
 Manipula sangue para atacar, defender-se, curar-se e enfraquecer inimigos.
 
-**Névoa de Sangue:**
-Transforma sangue em névoa carmesim para ocultação, confusão e deslocamento narrativo.
+**Marca Rubra:**
+Reconhece, marca ou rastreia sangue em cenas específicas.
 
-**Regeneração Acelerada:**
-Utiliza sua natureza vampírica e o poder recebido no abismo para recuperar-se de ferimentos.
+**Lâmina de Sangue:**
+Reforça golpes curtos, adagas ou ataques precisos com sangue.
 
-**Asas Escarlates:**
-Manifestação de sangue solidificado associada ao poder recebido do Ancião Primordial.
+**Poderes bloqueados:**
+Névoa de Sangue, Asas Escarlates, regeneração dramática e manifestações sobrenaturais profundas não devem ser liberadas automaticamente no nível 1.
 
 ---
 
 ## Mecânicas confirmadas
 
 > [!warning] Regras autorais pendentes
-> Ladrão pertence às regras-base de OD2. Assassino depende de adoção do Livro II. A estrutura atual separa [[Vampiro]] como raça/condição, [[Hemomante]] como classe e [[Sangue Antigo]] como camada única de campanha.
+> A estrutura atual separa [[Vampiro]] como raça/condição, [[Hemomante]] como classe e uma camada sobrenatural de bastidor controlada pelo mestre.
 
 #### Armas e carga
 
@@ -242,7 +241,10 @@ Manifestação de sangue solidificado associada ao poder recebido do Ancião Pri
 
 - Hemomancia e Reserva de Sangue seguem a base de [[Hemomante]].
 - Regeneração vampírica segue a condição [[Vampiro]], com limites definidos pelo mestre.
-- Névoa de Sangue e Asas Escarlates podem envolver [[Sangue Antigo]] e não devem ser liberadas automaticamente no nível 1.
+- Técnicas iniciais de nível 1: **Lâmina de Sangue** e **Marca Rubra**.
+- Reserva de Sangue inicial: **3**.
+- Técnicas ativas por cena: **1**.
+- Névoa de Sangue e Asas Escarlates pertencem a uma camada avançada e não devem ser liberadas automaticamente no nível 1.
 
 ## Mecânicas pendentes
 
@@ -258,21 +260,43 @@ Usa couro e placas negras, um manto escuro e as Adagas de Espectro Fantasma. Qua
 
 ## Papel na Campanha
 
-_Pendente de consolidação pelo Sage._
+Raziel traz para a campanha a sensação de um passado que não morreu direito.
+
+Ele não deve explicar o mundo antigo. Deve reagir a ele.
+
+Seu papel é:
+
+- reconhecer sinais de eras anteriores;
+- criar tensão com sangue, morte, juramentos e vingança;
+- carregar inimigos antigos que ainda podem afetar o presente;
+- mostrar que nem toda ameaça de Omnisvera nasceu agora;
+- abrir portas para Gharok, Valthor e Sanguinallis sem entregar tudo no primeiro capítulo.
 
 ## Pendências do Sage
 
-- Revisar e completar campos em aberto.
+- Definir medos e crenças com o jogador.
+- Definir idiomas.
+- Definir quais detalhes sobre seus inimigos antigos Raziel lembra com clareza.
+- Definir quando o grupo descobrirá a extensão real da camada sobrenatural de bastidor ligada ao retorno de Raziel.
+- Definir quais efeitos das [[Adagas de Espectro Fantasma]] ficam ativos em nível baixo.
 
 ## Links relevantes
 
-_Pendente de consolidação pelo Sage._
+- [[Vampiro]]
+- [[Hemomante]]
+- [[Vampiro Sanguinallis]]
+- [[Clã Sanguinallis]]
+- [[Fortaleza de Gharok]]
+- [[Ruínas de Valthor]]
+- [[Adagas de Espectro Fantasma]]
+- [[Manto Primordial do Ancião]]
+- [[DOSSIE - Personagens Jogadores e Arcos Pessoais]]
 
 ## Uso em Mesa
 
-- Como apresentar:
-- O que os jogadores sabem:
-- O que manter em aberto no [[CAMPANHA/ESTADO_DA_CAMPANHA]]: detalhes restritos e decisões pendentes.
-- Como entra em cena:
-- Ganchos:
-- Consequências possíveis:
+- Como apresentar: silêncio, olhar antigo, sangue reagindo, controle frio e violência contida.
+- O que os jogadores sabem: Raziel é um vampiro hemomante de passado antigo e vingança pessoal.
+- O que manter em aberto no [[CAMPANHA/ESTADO_DA_CAMPANHA]]: custo da transformação, entidade/força de bastidor e verdade completa da traição.
+- Como entra em cena: leitura de ruínas, reação ao sangue, anomalia diante de DORN-7 ou pista sobre Gharok/Valthor.
+- Ganchos: inimigos antigos, nomes esquecidos, prata, sangue, ruínas e sinais de Sanguinallis.
+- Consequências possíveis: usar poder em público pode atrair medo, caçada, interesse da Coroa ou atenção religiosa.

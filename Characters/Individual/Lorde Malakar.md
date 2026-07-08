@@ -44,9 +44,6 @@ tags:
 > [!WARNING] Estado canônico
 > Esta nota está em desenvolvimento e depende de confirmação do Sage.
 
-> [!WARNING] Estado canônico
-> Esta nota está em desenvolvimento e depende de confirmação do Sage.
-
 > [!NOTE]- Template aplicado
 > Esta nota segue o formato **Antagonista**. Informações confidenciais devem ficar no [[CAMPANHA/ESTADO_DA_CAMPANHA|Estado da Campanha]].
 
@@ -65,7 +62,7 @@ SORT file.name ASC
 
 ## História
 
-_Pendente de consolidação pelo Sage._
+Malakar é o centro político da traição de [[Raziel]]. Sua ameaça não vem apenas de força vampírica, mas de domínio, memória, paciência e capacidade de transformar medo em estrutura de poder.
 
 ### O que está confirmado
 - É o lorde do Clã Sanguinallis
@@ -89,23 +86,47 @@ _Pendente de consolidação pelo Sage._
 
 ## Situação Atual
 
-_Pendente de consolidação pelo Sage._
+Malakar deve permanecer distante no início da campanha.
+
+Ele funciona melhor como presença de fundo: nome em registros antigos, trono mencionado por inimigos, símbolo encontrado em Gharok ou voz indireta por meio de agentes.
+
+Seu estado atual após trezentos anos ainda pode ser ajustado pelo Sage:
+
+- ainda governa;
+- governa por intermediários;
+- está adormecido;
+- foi substituído;
+- tornou-se algo pior que um lorde vampiro comum.
 
 ## Personalidade
 
-_Pendente de consolidação pelo Sage._
+Soberano, paciente e possessivo.
+
+Malakar não age como predador faminto. Age como alguém que acredita possuir direito histórico sobre sangue, terra, servos e memória.
 
 ## Motivação
 
-- Motivação a consolidar a partir da lore existente.
+- Preservar ou recuperar o domínio do [[Clã Sanguinallis]].
+- Impedir que [[Raziel]] se torne símbolo de ruptura.
+- Esconder a verdade da traição atrás de uma versão oficial.
+- Manter o controle sobre Gharok e sobre qualquer segredo ligado ao sangue antigo.
 
 ## Métodos
 
-- M?todos ainda n?o detalhados em mesa.
+- pactos antigos;
+- manipulação de linhagem;
+- servos, nobres corrompidos ou vampiros menores;
+- punições exemplares;
+- controle de registros e juramentos;
+- transformar inimigos em instrumentos.
 
 ## Recursos
 
-- Recursos ainda n?o detalhados em mesa.
+- domínio antigo em [[Fortaleza de Gharok]];
+- conhecimento sobre o [[Clã Sanguinallis]];
+- seguidores vampíricos ou remanescentes;
+- símbolos, arquivos e relíquias de sangue;
+- medo político dentro da própria linhagem.
 
 ## Aliados
 
@@ -117,11 +138,16 @@ _Pendente de consolidação pelo Sage._
 
 ## Plano Atual
 
-- Plano atual a definir conforme avan?o da campanha.
+Manter Raziel morto para a história.
+
+Se descobrir que Raziel retornou, Malakar provavelmente tentará primeiro negar, depois capturar, e só então destruir.
 
 ## Fraquezas
 
-- Fraquezas ainda n?o reveladas.
+- orgulho de soberano;
+- necessidade de controle;
+- medo de que Raziel prove que o trono não era inevitável;
+- possível dependência de Gharok, juramento, trono ou relíquia antiga.
 
 ## Segredos
 
@@ -137,11 +163,13 @@ _Pendente de consolidação pelo Sage._
 
 ## Aparência
 
-_Pendente de consolidação pelo Sage._
+Presença régia, fria e antiga. Visual definitivo ainda pendente.
 
 ## Papel na Campanha
 
-_Pendente de consolidação pelo Sage._
+Alvo final do arco de Raziel.
+
+Malakar deve entrar tarde, quando o jogador já tiver entendido Kaelen, Vandor, Gharok e a mentira oficial sobre sua queda.
 
 ## Pendências do Sage
 
@@ -157,17 +185,21 @@ _Pendente de consolidação pelo Sage._
 
 ## Uso em Mesa
 
-- Como apresentar:
-- O que os jogadores sabem:
-- O que manter em aberto no [[ESTADO_DA_CAMPANHA]]: detalhes restritos e decis?es pendentes.
-- Como entra em cena:
-- Ganchos:
-- Consequências possíveis:
+- Como apresentar: nome proibido, brasão antigo, trono vazio, servo apavorado ou registro adulterado.
+- O que os jogadores sabem: Malakar é figura ligada ao passado e à traição de Raziel.
+- O que manter em aberto no [[ESTADO_DA_CAMPANHA]]: estado atual, poder real, relação com Sangue Antigo e destino final.
+- Como entra em cena: primeiro por símbolo, depois por agente, por fim em presença direta.
+- Ganchos: trono de ossos, heresia rúnica, registros de Gharok, servos que ainda obedecem.
+- Consequências possíveis: enfrentar Malakar cedo demais pode transformar vingança em guerra contra uma linhagem inteira.
 
 
 ## Equipamentos
-_Pendente de consolidação pelo Sage._
+Relíquias, símbolos de domínio e itens de sangue ainda pendentes.
 
 ## Capacidades narrativas
 
-_Pendente de consolidação pelo Sage._
+- domínio vampírico;
+- comando de linhagem;
+- manipulação política;
+- magia de sangue antiga;
+- autoridade sobre servos e juramentos.

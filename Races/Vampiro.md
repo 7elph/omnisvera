@@ -149,14 +149,27 @@ Para morder, realizar ataque normal contra a CA do alvo. A vida curada pelo vamp
 - Magias de infligir dano curam o vampiro na mesma quantidade.
 - Vampiros são suscetíveis a Afastar Mortos-Vivos até o nível 10.
 
-Outras fraquezas possíveis ainda precisam de confirmação do Sage:
+### Fraquezas Canônicas Atuais
 
-- prata;
+Para a primeira fase da campanha, usar apenas estas fraquezas como canônicas:
+
+| Fraqueza | Aplicação |
+|---|---|
+| Luz solar | risco real, dano e retorno forçado ao caixão conforme regra acima |
+| Cura divina | magias de cura clerical causam dano em vez de curar |
+| Afastar Mortos-Vivos | afeta vampiros até o nível 10 |
+| Prata | especialmente relevante para [[Raziel]] e a linhagem [[Vampiro Sanguinallis]] |
+| Fome prolongada | gera complicação narrativa, instabilidade ou perda de controle controlada pelo mestre |
+| Caixão/sarcófago | descanso completo depende do vínculo vampírico |
+
+Outras tradições ficam **não canônicas por enquanto**, salvo decisão de cena:
+
 - fogo;
-- símbolos sagrados;
 - água corrente;
 - convite/limiar;
-- fome prolongada;
+- alho;
+- estaca;
+- reflexo;
 - magia de contenção antiga.
 
 Nem toda tradição precisa valer. Melhor escolher poucas fraquezas fortes do que muitas fraquezas esquecidas.
@@ -190,7 +203,6 @@ SORT file.name ASC
 
 ## Pendências do Sage
 
-- Confirmar fraquezas vampíricas canônicas.
 - Definir se vampiros comuns existem fora dos Sanguinallis.
 - Definir como cura, magia sagrada e descanso afetam vampiros.
 - Confirmar quais traços são públicos para jogadores.

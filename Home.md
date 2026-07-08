@@ -18,20 +18,20 @@ gm_secret: false
 # Omnisvera 
 
 > [!cards|5]
-> **EARTHROPO**
-> [![[zz_media/maps/earthropo.png|sban htiny ctr p+t]]](MAPA%20DE%20EARTHROPO.md)
+> **CAPÍTULO ATUAL**
+> [![[zz_media/covers/banner_ecos_do_mundo_perdido.png|sban htiny ctr p+t]]](EARTHROPO/01%20-%20Ecos%20do%20Mundo%20Perdido.md)
 >
-> **NIMALIA**
-> [![[zz_media/maps/mapa_de_nimalia.png|sban htiny ctr]]](MAPA%20DE%20NIMALIA.md)
+> **MISSÕES**
+> [[#Quests|Missões abertas]]
 >
-> **NIMALIS**
-> [![[zz_media/maps/mapa_de_nimalis.png|sban htiny ctr]]](MAPA%20DE%20NIMALIS.md)
+> **RUMORES**
+> [[#Rumores|Rumores ativos]]
 >
-> **CRÔNICAS**
-> [![[zz_media/covers/banner_earthropo.png|sban htiny ctr]]](EARTHROPO/EARTHROPO.md)
+> **PERSONAGENS**
+> [[#Personagens dos Jogadores|Personagens dos jogadores]]
 >
-> **CALENDÁRIO**
-> [[Calendar|Calendário de Nimalia]]
+> **MAPA**
+> [[MAPA DE EARTHROPO|Mapa de Earthropo]]
 
 ---
 
@@ -91,6 +91,13 @@ AND spoiler_level != "heavy"
 AND quest_status != "Concluída"
 AND quest_status != "Falhou"
 SORT file.name ASC
+
+// Settings
+preset: grid
+columns: 3
+imageProperty: cover
+cardSpacing: 4
+showImageOnHover: true
 ```
 
 ## Rumores
@@ -104,7 +111,23 @@ AND gm_secret != true
 AND spoiler_level != "medium"
 AND spoiler_level != "heavy"
 SORT file.name ASC
+
+// Settings
+preset: compact
+columns: 3
+imageProperty: cover
+cardSpacing: 4
+showImageOnHover: true
 ```
+
+---
+
+## Mapas de Consulta
+
+> [!note]- Abrir mapas
+> - [[MAPA DE EARTHROPO]]
+> - [[MAPA DE NIMALIA]]
+> - [[MAPA DE NIMALIS]]
 
 ---
 
@@ -177,7 +200,8 @@ showImageOnHover: true
 > ```
 
 > [!note]- COMO USAR ESTA HOME
-> - Use os mapas para se localizar.
+> - Use missões e rumores para decidir o próximo passo.
+> - Use os mapas apenas quando precisar se localizar.
 > - Use personagens, facções, territórios e locais conhecidos como referência rápida.
 > - Quests e rumores aparecem aqui apenas quando estiverem liberados para os jogadores.
 > - B-Sides, segredos de origem e bastidores ficam fora desta página até serem revelados em jogo.

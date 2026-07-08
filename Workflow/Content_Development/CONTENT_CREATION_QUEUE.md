@@ -18,6 +18,9 @@
 | [[Kenku]] | raça jogável | base racial de Varkh dentro do guarda-chuva antropo | usar mimetismo/falsificação como ferramenta de investigação |
 | [[Vezemir]] | personagem jogador | ligação com Avenor, Leth'valora e o dragão | entrada emocional sem explicar lore pesada |
 | [[Raziel]] | personagem jogador | reage a estruturas antigas e anomalias | entrada misteriosa sem explicar Sangue Antigo |
+| [[Morthak]] | personagem jogador | mago morto-vivo esqueleto; nova presença arcana do grupo | definir entrada na cena inicial e magias de nível 1 |
+| [[Morto-Vivo Esqueleto]] | raça jogável | base racial de Morthak | usar como consulta rápida de mesa |
+| [[Mago]] | classe jogável | classe inicial de Morthak antes de qualquer caminho necromântico | usar como base mecânica de nível 1 |
 | [[O Frasco Afogado]] | local/loja | origem emocional e investigativa dos remédios falsos | usar como local jogável P0/P1 |
 | [[02 - Remédios Falsos da Maré Baixa|Remédios Falsos de Maré Baixa]] | rumor/investigação | pista material inicial da sessão | manter Odran como pista, não culpa confirmada |
 | [[Guarda Real de Nimalia]] | facção | pressão final da sessão | chegar no fim como autoridade e complicação |

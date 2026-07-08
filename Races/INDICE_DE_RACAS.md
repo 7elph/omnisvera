@@ -36,6 +36,7 @@ SORT file.name ASC
 - [[Dragonborn]]
 - [[Kenku]] — raça jogável de [[Varkh Nimalis]], dentro do guarda-chuva antropo
 - [[Vampiro]] — raça/condição de [[Raziel]]
+- [[Morto-Vivo Esqueleto]] — raça/condição jogável de [[Morthak]]
 
 ## Em Revisão / Bônus Futuro
 

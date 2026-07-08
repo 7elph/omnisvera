@@ -106,17 +106,52 @@ As notas principais devem mostrar memória, impacto e rumores sem explicar cedo 
 ### Entidades Ligadas
 
 - [[Raziel]]
+- [[Vampiro]]
+- [[Hemomante]]
+- [[Vampiro Sanguinallis]]
 - [[Clã Sanguinallis]]
 - [[Fortaleza de Gharok]]
 - [[Ruínas de Valthor]]
 - [[Sangue Antigo]]
 - [[Ancião Primordial]]
+- [[Lorde Malakar]]
+- [[Kaelen, o Flagelo]]
+- [[Vandor, o Senhor das Bestas]]
 - [[Adagas de Espectro Fantasma]]
 - [[Manto Primordial do Ancião]]
 
 ### Status Atual
 
 Arco pessoal ligado a sangue antigo, traição, Gharok e estruturas anteriores ao presente.
+
+### Separação de Camadas
+
+| Camada | Função |
+|---|---|
+| [[Raziel]] | personagem jogador e nota player-safe |
+| [[Vampiro]] | raça/condição vampírica |
+| [[Hemomante]] | classe e técnicas de sangue |
+| [[Vampiro Sanguinallis]] | linhagem, cultura e história vampírica |
+| [[Sangue Antigo]] | camada única de campanha, controlada pelo mestre |
+| [[Ancião Primordial]] | entidade ligada ao renascimento e ao custo futuro |
+
+### Mecânica Inicial Controlada
+
+- Raziel começa com [[Vampiro]] como raça/condição e [[Hemomante]] como classe.
+- No nível 1, usar apenas técnicas básicas de hemomancia.
+- **Técnicas iniciais recomendadas:** Lâmina de Sangue e Marca Rubra.
+- **Reserva de Sangue inicial:** 3.
+- **Técnicas ativas por cena:** 1.
+- [[Sangue Antigo]] não é poder livre de nível 1; entra apenas por cena, custo ou reação do mestre.
+- Névoa de Sangue, Asas Escarlates e regeneração dramática devem aparecer como prenúncio, não como solução automática.
+
+### Antagonistas do Arco
+
+| Antagonista | Função | Uso em mesa |
+|---|---|---|
+| [[Kaelen, o Flagelo]] | primeiro alvo | patrulhas, escavações e busca por relíquias em [[Ruínas de Valthor]] |
+| [[Vandor, o Senhor das Bestas]] | segundo alvo | feras, caçadas, Avenor e medo do silêncio de Raziel |
+| [[Lorde Malakar]] | alvo final | trono, domínio de Gharok e origem da traição |
 
 ### Segredos do Mestre
 
@@ -127,6 +162,8 @@ Arco pessoal ligado a sangue antigo, traição, Gharok e estruturas anteriores a
 - A sobrevivência atual, influência remanescente e função futura de Malakar, Kaelen e Vandor devem permanecer no bastidor.
 - A relação exata entre Sanguinallis, Sangue Antigo e Raziel deve ser revelada por cenas, não por exposição.
 - Se Augustus descobrir quem Raziel é, pode tentar prendê-lo, destruí-lo ou usá-lo como arquivo vivo.
+- Nem todo poder visual descrito na origem de Raziel deve estar disponível mecanicamente no nível 1.
+- O jogador deve sentir antiguidade, fome, vingança e poder contido, não receber todas as respostas.
 
 ### Condições de Revelação
 

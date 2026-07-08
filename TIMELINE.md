@@ -62,18 +62,25 @@ tags:
 - [1900] #green A Coroa de Nimalia consolida rotas, impostos e alianças sobre grande parte de Earthropo.
 - [1960] #green A Igreja das Chamas se torna a principal força religiosa institucional do reino.
 
-@ [1900~2070] #orange A ERA DE VEZEMIR
-- [1900] #orange Vezemir é encontrado ainda bebê próximo às fronteiras de Leth'valora.
-- [1920] #orange Elarion Vaelthor treina Vezemir longe das cortes élficas.
-- [1940] #red Vezemir deixa Leth'valora carregando Grisalma, Muralha de Dorn e o medalhão dos Guardiões do Véu Cinzento.
-- [1980] #blue Vezemir serve em campanhas humanas e conhece General Cassian Valerius.
+@ [1760~2100] #magenta RAZIEL E O CLÃ SANGUINALLIS
+- [1760] #magenta Raziel pertence a uma era antiga do Clã Sanguinallis. Data aproximada, usada para sustentar sua idade atual.
+- [1800] #magenta A traição e o tormento de Raziel podem coincidir com o período do Eclipse de Obsidiana.
+- [2100] #magenta Raziel retorna ao tabuleiro da campanha carregando trezentos anos de memória, vingança e lacunas.
+
+@ [1950~2100] #orange A ERA DE VEZEMIR
+- [1950] #orange Vezemir é encontrado ainda bebê próximo às fronteiras de Leth'valora.
+- [1970] #orange Elarion Vaelthor treina Vezemir longe das cortes élficas.
+- [1990] #red Vezemir deixa Leth'valora carregando Grisalma, Muralha de Dorn e o medalhão dos Guardiões do Véu Cinzento.
 - [2040] #red Leth'valora é destruída pelo dragão de colar dourado. Mira Valen e seu pai, o chefe humano da vila, morrem no ataque.
+- [2070] #blue Vezemir serve em campanhas recentes de Nimalia e conhece General Cassian Valerius.
 - [2040~2100] #orange Vezemir caça pistas sobre o dragão e sobre a origem dos Guardiões.
 
 @ [2099~2100] #cyan CAMPANHA ATUAL
 - [2100] #cyan Um viajante moribundo chega às ruínas de Leth'valora trazendo uma moeda desconhecida e notícias do Véu.
 - [2100] #cyan Inquisidores da Igreja das Chamas começam a disputar artefatos ligados aos Criadores.
 - [2100] #cyan Varkh Nimalis deixa Maré Baixa em busca de quem está usando os métodos de seu mestre.
+- [2100] #cyan Morthak é atraído por uma ativação antiga ligada à Unidade DORN-7.
+- [2100] #cyan 1º de Aurora: Capítulo 01, Ecos do Mundo Perdido.
 - [2100] #cyan CURRENT DAY
 ```
 
@@ -95,14 +102,36 @@ Em 2100, Earthropo parece estável na superfície. Nimalia exerce influência, a
 
 - [[Vezemir]]: o Bastardo de Ferro, ligado aos Guardiões do Véu Cinzento.
 - [[Varkh Nimalis]]: alquimista e ladrão de Maré Baixa, envolvido em falsificações perigosas.
+- [[Raziel]]: vampiro hemomante ligado ao Clã Sanguinallis e a uma era anterior à campanha atual.
+- [[Morthak]]: morto-vivo esqueleto cuja não-vida foi despertada por ritual falho e magia antiga.
 - [[Elarion Vaelthor]]: mentor desaparecido de Vezemir.
 - [[Mira Valen]]: memória central da queda pessoal de Vezemir.
 - [[General Cassian Valerius]]: autoridade militar de Nimalia e antigo aliado de Vezemir.
+
+## Cronologia Canônica de Personagens
+
+| personagem | marco temporal | decisão atual | status |
+|---|---|---|---|
+| [[Vezemir]] | encontrado bebê em 1950 | sustenta idade atual de 150 anos em 2100 | Cânone de trabalho |
+| [[Elarion Vaelthor]] | treina Vezemir a partir de 1970 | mentor antigo, idade exata não definida | Cânone de trabalho |
+| [[Vezemir]] | deixa Leth'valora por volta de 1990 | início da vida fora da vila e da trajetória marcial | Cânone de trabalho |
+| [[Mira Valen]] | nasce por volta de 2018 e morre em 2040 | 22 anos ao falecer durante a queda de Leth'valora | Cânone de trabalho |
+| [[Vezemir]] | caça o dragão entre 2040 e 2100 | eixo principal de sua vida recente | Cânone de trabalho |
+| [[General Cassian Valerius]] | nasce por volta de 2038 | sua relação com Vezemir deve ocorrer depois de 2060 | Cânone de trabalho |
+| [[Varkh Nimalis]] | nasce por volta de 2070 | 30 anos no início da campanha | Cânone de trabalho |
+| [[Augustus Terra Decimus]] | nasce por volta de 2021 | 79 anos no início da campanha | Cânone de trabalho |
+| [[Padre Oric]] | nasce por volta de 2042 | 58 anos no início da campanha | Cânone de trabalho |
+| [[Raziel]] | origem aproximada em 1760 | idade atual de 340 anos; tormento de trezentos anos encaixa no ciclo 1800–2100 | Cânone de trabalho |
+| [[Morthak]] | morte e despertar ainda sem data fechada | entrou em não-vida por ritual falho; relação com magia antiga permanece em aberto | Precisa decisão do Sage |
+
+> [!warning]
+> A cronologia acima substitui a versão anterior em que Vezemir era encontrado bebê em 1900. A data antiga criava conflito com a idade atual de 150 anos.
 
 ## Sincronização com Calendário
 
 - Ano atual: 2100.
 - Calendário em revisão: [[CALENDAR]].
+- Data inicial de jogo: 1º de Aurora de 2100, Dia da Primeira Luz.
 - Eventos que conflitam com o calendário devem ser registrados como pendência antes de virar cânone.
 
 ## Uso em Mesa
@@ -116,6 +145,6 @@ Em 2100, Earthropo parece estável na superfície. Nimalia exerce influência, a
 ## Pendências do Sage
 
 - Definir quais partes da Era dos Criadores podem virar informação pública.
-- Confirmar se os anos da Era de Vezemir estão definitivos.
-- Alinhar primeira data de jogo com [[CALENDAR]] e [[CAMPANHA/ESTADO_DA_CAMPANHA]].
+- Confirmar se a data de 1º de Aurora de 2100 deve permanecer como início oficial da campanha.
+- Definir data exata da morte e do Despertar do Último Suspiro de [[Morthak]].
 - Separar versão pública futura da timeline, se os jogadores forem acessar esta nota diretamente.

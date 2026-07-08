@@ -43,9 +43,6 @@ tags:
 > [!WARNING] Estado canônico
 > Esta nota está em desenvolvimento e depende de confirmação do Sage.
 
-> [!WARNING] Estado canônico
-> Esta nota está em desenvolvimento e depende de confirmação do Sage.
-
 > [!NOTE]- Template aplicado
 > Esta nota segue o formato **Antagonista**. Informações confidenciais devem ficar no [[CAMPANHA/ESTADO_DA_CAMPANHA|Estado da Campanha]].
 
@@ -64,7 +61,9 @@ SORT file.name ASC
 
 ## História
 
-_Pendente de consolidação pelo Sage._
+Vandor é a face predatória e bestial do passado de [[Raziel]].
+
+Enquanto Kaelen representa força militar e Malakar representa trono, Vandor representa caça, feras, instinto e medo de perder controle.
 
 ### O que está confirmado
 - É um general do Clã Sanguinallis
@@ -90,23 +89,44 @@ _Pendente de consolidação pelo Sage._
 
 ## Situação Atual
 
-_Pendente de consolidação pelo Sage._
+Vandor permanece ligado à [[Floresta de Avenor]] e às criaturas que um dia marcharam sob seu comando.
+
+Seu estado atual pode variar conforme o Sage decidir:
+
+- senhor de uma matilha sobrenatural;
+- caçador isolado;
+- vampiro deformado pelo tempo;
+- guardião involuntário de um segredo antigo;
+- força que contaminou feras locais.
 
 ## Personalidade
 
-_Pendente de consolidação pelo Sage._
+Instintivo, territorial e cruel.
+
+Vandor respeita domínio, força e medo. Sua insegurança nasce do fato de que Raziel conseguia impor silêncio até às criaturas que ele julgava controlar.
 
 ## Motivação
 
-- Motivação a consolidar a partir da lore existente.
+- Manter controle sobre feras e território.
+- Provar que a natureza obedece a ele, não a Raziel.
+- Impedir que o passado de Gharok alcance Avenor.
+- Caçar qualquer pista que ameace expor sua participação na traição.
 
 ## Métodos
 
-- M?todos ainda n?o detalhados em mesa.
+- ataques por feras;
+- emboscadas;
+- rastreamento;
+- intimidação;
+- uso de medo animal;
+- caçadas prolongadas antes do confronto direto.
 
 ## Recursos
 
-- Recursos ainda n?o detalhados em mesa.
+- feras corrompidas ou treinadas;
+- território em Avenor;
+- conhecimento de trilhas, sangue e cheiro;
+- seguidores bestiais ou caçadores.
 
 ## Aliados
 
@@ -118,11 +138,14 @@ _Pendente de consolidação pelo Sage._
 
 ## Plano Atual
 
-- Plano atual a definir conforme avan?o da campanha.
+Manter sua influência nas regiões selvagens e impedir que o retorno de Raziel destrua aquilo que ainda controla.
 
 ## Fraquezas
 
-- Fraquezas ainda n?o reveladas.
+- necessidade de controle;
+- medo de ser desobedecido;
+- instinto territorial;
+- reação emocional ao silêncio, presença ou sangue de Raziel.
 
 ## Segredos
 
@@ -138,11 +161,13 @@ _Pendente de consolidação pelo Sage._
 
 ## Aparência
 
-_Pendente de consolidação pelo Sage._
+Visual definitivo pendente. Deve transmitir caça, fera, sangue e autoridade selvagem.
 
 ## Papel na Campanha
 
-_Pendente de consolidação pelo Sage._
+Segundo alvo do arco de Raziel.
+
+Vandor cria uma ponte entre a vingança vampírica e a [[Floresta de Avenor]], permitindo cruzar o arco de Raziel com ecos do arco de Vezemir.
 
 ## Pendências do Sage
 
@@ -158,17 +183,21 @@ _Pendente de consolidação pelo Sage._
 
 ## Uso em Mesa
 
-- Como apresentar:
-- O que os jogadores sabem:
-- O que manter em aberto no [[ESTADO_DA_CAMPANHA]]: detalhes restritos e decis?es pendentes.
-- Como entra em cena:
-- Ganchos:
-- Consequências possíveis:
+- Como apresentar: olhos de feras no escuro, rastros impossíveis, animais silenciosos demais ou um caçador que nunca aparece primeiro.
+- O que os jogadores sabem: Vandor é ligado ao passado de Raziel e às feras de Avenor.
+- O que manter em aberto no [[ESTADO_DA_CAMPANHA]]: extensão real de seu controle, estado atual e relação com Sangue Antigo.
+- Como entra em cena: ataques de feras, rastros, sobreviventes mutilados, símbolos do clã em território selvagem.
+- Ganchos: matilha corrompida, fera antiga, memória de Gharok, conexão com Leth'valora/Avenor.
+- Consequências possíveis: enfrentar Vandor pode misturar a vingança de Raziel com feridas abertas de Avenor.
 
 
 ## Equipamentos
-_Pendente de consolidação pelo Sage._
+Coleiras, talismãs, armas de caça ou relíquias bestiais ainda pendentes.
 
 ## Capacidades narrativas
 
-_Pendente de consolidação pelo Sage._
+- comando ou influência sobre feras;
+- caça sobrenatural;
+- sentidos vampíricos ampliados;
+- brutalidade física;
+- uso de medo e território como arma.

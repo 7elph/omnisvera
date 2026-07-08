@@ -161,6 +161,20 @@ Reserva de Sangue representa energia vital, autocontrole, fome e sangue disponí
 | Efeito | permite reconhecer/rastrear o alvo por curto período |
 | Limite | falha se não houver sangue, ferimento ou contato significativo |
 
+## Técnicas Iniciais de Raziel
+
+> [!IMPORTANT]
+> Decisão atual de mesa: [[Raziel]] começa com **2 técnicas conhecidas** e pode manter **1 técnica ativa por cena**, conforme a progressão de nível 1.
+
+Para a primeira sessão, usar:
+
+| Técnica | Por que entra no nível 1 |
+|---|---|
+| Lâmina de Sangue | reforça o papel de executor e conversa com as [[Adagas de Espectro Fantasma]] |
+| Marca Rubra | dá utilidade investigativa, rastreio e leitura de sangue sem liberar poderes grandes |
+
+Técnicas como Névoa Carmesim, Estancar, Névoa de Sangue, Asas Escarlates e controle de sangue alheio ficam bloqueadas até decisão de cena, nível ou consequência.
+
 ## Técnicas Intermediárias
 
 ### Sangue Defensivo
@@ -231,6 +245,5 @@ SORT file.name ASC
 
 ## Pendências do Sage
 
-- Confirmar quais técnicas Raziel conhece no nível 1.
 - Testar Reserva de Sangue na primeira sessão com valores conservadores.
 - Definir quais técnicas avançadas pertencem ao [[Sangue Antigo]] e não à classe comum.

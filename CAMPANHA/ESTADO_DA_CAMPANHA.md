@@ -35,7 +35,8 @@ tags:
 | Capital em foco | [[Nimalis]] |
 | Capítulo atual | [[01 - Ecos do Mundo Perdido]] |
 | Sessão em preparação | Encontro inicial dos personagens |
-| Personagens centrais | [[Vezemir]], [[Varkh Nimalis]], [[Raziel]] |
+| Data em jogo atual | 1º de Aurora de 2100 — Dia da Primeira Luz |
+| Personagens centrais | [[Vezemir]], [[Varkh Nimalis]], [[Raziel]], [[Morthak]] |
 | Frente principal | Estrada, remédios falsos e ruínas antigas |
 | Ameaça visível | Acidente da caravana e descoberta subterrânea |
 | Ameaça oculta | Tecnologia antiga, Véu, falsificadores, Coroa e controle da verdade |
@@ -62,6 +63,8 @@ tags:
 > - [[Guerreiro]] está consolidado como classe marcial de [[Vezemir]].
 > - [[Hemomante]] está consolidado como classe de sangue de [[Raziel]].
 > - [[Vampiro]] é raça/condição de [[Raziel]], não classe.
+> - [[Morto-Vivo Esqueleto]] é raça/condição jogável de [[Morthak]].
+> - [[Morthak]] começa como [[Mago]]; Necromante é caminho futuro, não classe inicial ativa.
 > - [[Dragonborn]] possui base mecânica Omnisvera para teste de mesa.
 > - Varkh combina [[Kenku]] + [[Alquimista]].
 > - Homúnculos, Pedra Filosofal, Quimeras e transmutações avançadas devem ser controlados pelo mestre antes de aparecerem em mesa.
@@ -82,6 +85,7 @@ tags:
 | [[Guilda dos Mercadores]] | facção | comércio, rotas e influência econômica |
 | [[Porto de Nimalia]] | local | entrada de cargas, rumores e contrabando |
 | [[Raziel]] | personagem | sangue antigo, Gharok e passado enterrado |
+| [[Morthak]] | personagem | morto-vivo esqueleto, magia proibida e necromancia antiga |
 | [[Culto dos Sussurrantes]] | facção/rumor | ameaça em revisão ligada ao Véu |
 | [[Unidade DORN-7]] | entidade/artefato | tecnologia antiga e primeiro contato com o Mundo Perdido |
 
@@ -110,19 +114,23 @@ tags:
 
 - **Capítulo:** [[01 - Ecos do Mundo Perdido]]
 - **Roteiro de mesa:** [[SESSAO_01_ROTEIRO_DE_MESA]]
+- **Data em jogo:** 1º de Aurora de 2100 — Dia da Primeira Luz.
 - **Situação inicial provável:** estrada secundária entre [[Nimalis]] e [[Floresta de Avenor]].
-- **Foco de mesa:** unir [[Vezemir]], [[Varkh Nimalis]] e [[Raziel]] por meio de um incidente comum.
+- **Foco de mesa:** unir [[Vezemir]], [[Varkh Nimalis]], [[Raziel]] e [[Morthak]] por meio de um incidente comum.
 - **Cena-motor:** uma caravana sofre acidente, frascos falsificados quebram e uma passagem antiga é revelada sob a estrada.
 - **Mistério inicial:** os remédios falsos carregam algo que não é apenas alquimia.
 - **Escalada:** a [[Unidade DORN-7]] desperta parcialmente.
+- **Novo vetor arcano:** [[Morthak]] é atraído pela ativação da [[Unidade DORN-7]].
 
 ## Próxima Sessão — Decisões Aplicadas
 
+- **Data inicial:** 1º de Aurora de 2100 — Dia da Primeira Luz.
 - **Local inicial:** estrada entre [[Nimalis]] e [[Floresta de Avenor]].
 - **Caravana:** parece formada por mercadores comuns; no bastidor, há selo, contrato ou documento que sugere proteção indireta da [[Coroa de Nimalia]].
 - **Remédios falsos:** transporte facilitado por um agente menor da [[Guilda dos Mercadores]]; a pessoa carregando os frascos não sabe o que leva.
 - **Guarda Real:** a [[Guarda Real de Nimalia]] chega no fim da sessão, como pressão, complicação ou cliffhanger.
 - **DORN-7:** a [[Unidade DORN-7]] termina parcialmente ativa, danificada e seguindo os personagens.
+- **Morthak:** chega ou se aproxima por causa da ativação de DORN-7; DORN-7 pode identificá-lo como “morto ativo fora de registro”.
 - **Símbolo inicial:** os frascos apontam primeiro para [[Mestre Odran Veyl]], mas há sinais de adulteração.
 - **Tom:** investigação sombria + exploração.
 - **Final ideal:** mapa fragmentado aponta outro setor, enquanto um falsificador escapa com prova importante.
@@ -240,7 +248,18 @@ SORT file.name ASC
 - **Agora:** entidade antiga danificada desperta parcialmente.
 - **Uso:** tensão, falas quebradas, detecção de material contaminado, mapa fragmentado.
 - **Fim da sessão:** DORN-7 segue os personagens de forma limitada e perigosa.
+- **Reação a Morthak:** pode registrar “morto ativo fora de registro” sem explicar o significado.
 - **Dossiê:** [[DOSSIE - Capitulo 01 e DORN-7]].
+
+### Morthak
+
+- **Agora:** quarto personagem jogador, [[Mago]] de nível 1 e [[Morto-Vivo Esqueleto]].
+- **Entrada:** atraído pela ativação da [[Unidade DORN-7]].
+- **Condição:** morreu e voltou por um ritual falho chamado **Despertar do Último Suspiro**.
+- **Memória:** lembra fragmentos, mas não confia nas próprias memórias.
+- **Necromancia:** deseja poder e a necromancia o chama involuntariamente.
+- **Sigilo:** trabalha para o [[Conclave dos Errantes]] sob sigilo.
+- **Não revelar:** quem executou o ritual, se Morthak ainda tem alma, por que o ritual falhou ou se a magia envolvida é anterior à magia moderna.
 
 ### Remédios Falsos e O Frasco Afogado
 
@@ -270,6 +289,7 @@ SORT file.name ASC
 - **Varkh:** Odran, remédios falsos, reputação e Maré Baixa.
 - **Vezemir:** Avenor, Leth'valora, dragão e passado perdido.
 - **Raziel:** estruturas antigas, anomalia e vingança antiga.
+- **Morthak:** Despertar do Último Suspiro, necromancia antiga, Conclave em sigilo e memória fraturada.
 - **Dossiê:** [[DOSSIE - Personagens Jogadores e Arcos Pessoais]].
 
 ## P2 — Cosmologia / Futuro
@@ -285,17 +305,23 @@ SORT file.name ASC
 > - Revisar as pistas iniciais em [[SESSAO_01_ROTEIRO_DE_MESA]].
 > - Confirmar se os NPCs descartáveis da caravana serão usados como estão.
 > - Definir qual prova o falsificador leva no final da sessão.
+> - Definir como [[Morthak]] surge na cena da estrada ao ser atraído por DORN-7.
+> - Definir magias iniciais de [[Morthak]] como [[Mago]] de nível 1.
 
 > [!todo]- Depois
 > - Confirmar papel real de [[Mestre Odran Veyl]] nas falsificações.
 > - Confirmar grau de envolvimento da [[Guilda dos Mercadores]] e da [[Coroa de Nimalia]].
 > - Confirmar se Augustus é oficialmente antropo leonino.
 > - Definir se “O Leão da Chama” ou “O Leão de Nimalia” será epíteto canônico.
+> - Definir quem executou o Despertar do Último Suspiro em [[Morthak]].
+> - Definir qual é o vínculo sigiloso de [[Morthak]] com o [[Conclave dos Errantes]].
 
 > [!abstract]- Talvez / Segredos futuros
 > - Segredo da linhagem Terra Decimus.
 > - Natureza real dos [[Criadores]].
 > - Custo narrativo do [[Sangue Antigo]].
+> - Se [[Morthak]] ainda possui alma, consciência presa aos ossos ou outra coisa.
+> - Se o Despertar do Último Suspiro usa magia anterior à magia moderna.
 > - Verdades religiosas reais, interpretadas ou manipuladas.
 
 ---

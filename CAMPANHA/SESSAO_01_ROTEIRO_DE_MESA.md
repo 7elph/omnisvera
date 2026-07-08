@@ -29,9 +29,15 @@ tags:
 
 ## Objetivo da Sessão
 
-Unir [[Vezemir]], [[Varkh Nimalis]] e [[Raziel]] por consequência, não por amizade instantânea.
+Unir [[Vezemir]], [[Varkh Nimalis]], [[Raziel]] e [[Morthak]] por consequência, não por amizade instantânea.
 
 Eles não precisam confiar uns nos outros. Só precisam perceber que estão presos no mesmo problema.
+
+## Data em Jogo
+
+**1º de Aurora de 2100 — Dia da Primeira Luz**
+
+Esta data é a âncora inicial da campanha. O dia pode ser apresentado como começo simbólico de ciclo, estrada cheia de movimento e circulação de mercadores, sem transformar o feriado em exposição pesada de lore.
 
 ## Tom
 
@@ -78,6 +84,7 @@ Depois, a terra responde.
 | [[Varkh Nimalis]] | reconhece que os frascos imitam métodos de [[Mestre Odran Veyl]], mas percebe adulteração |
 | [[Vezemir]] | sente eco antigo vindo da direção da passagem e associa a símbolos/presságios de Avenor |
 | [[Raziel]] | percebe que a estrutura sob a estrada é anterior ao mundo político atual |
+| [[Morthak]] | é atraído pela ativação da [[Unidade DORN-7]] e sente que a energia antiga responde à sua não-vida |
 
 ## Pistas iniciais escolhidas
 
@@ -133,6 +140,7 @@ Variações:
 - “Registro de superfície indisponível.”
 - “Sobreviventes fora de cadastro.”
 - “Este local deveria permanecer selado.”
+- “Morto ativo fora de registro.” — usar se DORN-7 escanear [[Morthak]].
 
 ### 6. Complicação final
 
@@ -181,6 +189,7 @@ Após a sessão, preencher:
 - A Guarda viu DORN-7?
 - Algum personagem escondeu prova?
 - DORN-7 seguiu quem?
+- DORN-7 registrou [[Morthak]] como morto ativo fora de registro?
 - O falsificador escapou com o quê?
 - Quem foi ferido, salvo ou acusado?
 
@@ -192,6 +201,8 @@ Após a sessão, preencher:
 - [[DOSSIE - Coroa Augustus e Nimalis]]
 - [[01 - Ecos do Mundo Perdido]]
 - [[Unidade DORN-7]]
+- [[Morthak]]
+- [[Morto-Vivo Esqueleto]]
 - [[O Frasco Afogado]]
 - [[02 - Remédios Falsos da Maré Baixa]]
 - [[Guarda Real de Nimalia]]

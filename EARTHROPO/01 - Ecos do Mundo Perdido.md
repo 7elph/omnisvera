@@ -15,7 +15,7 @@ chapter: 01 - Ecos do Mundo Perdido
 chapter_tag: capitulo01
 chapters:
   - 01 - Ecos do Mundo Perdido
-date:
+date: "1º de Aurora de 2100"
 location: "Rota entre [[Nimalis]] e [[Floresta de Avenor]]"
 territory: "[[EARTHROPO/EARTHROPO|Earthropo]]"
 faction:
@@ -25,8 +25,9 @@ characters:
   - "[[Vezemir]]"
   - "[[Varkh Nimalis]]"
   - "[[Raziel]]"
+  - "[[Morthak]]"
 cover: "zz_media/covers/banner_ecos_do_mundo_perdido.png"
-description: Primeiro capítulo coletivo da campanha, reunindo Vezemir, Varkh e Raziel diante dos primeiros sinais de ruínas antigas, remédios falsos e mistérios esquecidos sob Earthropo.
+description: Primeiro capítulo coletivo da campanha, reunindo Vezemir, Varkh, Raziel e Morthak diante dos primeiros sinais de ruínas antigas, remédios falsos e mistérios esquecidos sob Earthropo.
 tags:
   - capitulo
   - story
@@ -36,13 +37,13 @@ tags:
 
 # Capítulo 01: Ecos do Mundo Perdido
 
-#### _Crônicas de [[EARTHROPO/EARTHROPO|Earthropo]] — capítulo em preparação_
+#### _Crônicas de [[EARTHROPO/EARTHROPO|Earthropo]] — 1º de [[CALENDAR|Aurora]], 2100_
 
 > [!NOTE|clean no-i right]+ 01 - Ecos do Mundo Perdido
 > ![[zz_media/covers/banner_ecos_do_mundo_perdido.png|400]]
 
 > [!world]- SINOPSE
-> O primeiro capítulo aproxima [[Vezemir]], [[Varkh Nimalis]] e [[Raziel]] por meio de um incidente em uma estrada secundária entre [[Nimalis]] e a [[Floresta de Avenor]]. Uma caravana aparentemente comum sofre um acidente depois de um tremor localizado, frascos de remédios falsificados se quebram e uma passagem artificial surge sob a terra. O que parecia contrabando comum revela sinais de algo antigo sob Earthropo. Cada personagem encontra ali uma pista íntima: símbolos e sensações ligadas a Avenor para Vezemir, os remédios falsos de Odran para Varkh, e marcas de um passado que Raziel reconhece sem compreender totalmente.
+> O primeiro capítulo aproxima [[Vezemir]], [[Varkh Nimalis]], [[Raziel]] e [[Morthak]] por meio de um incidente em uma estrada secundária entre [[Nimalis]] e a [[Floresta de Avenor]]. Uma caravana aparentemente comum sofre um acidente depois de um tremor localizado, frascos de remédios falsificados se quebram e uma passagem artificial surge sob a terra. O que parecia contrabando comum revela sinais de algo antigo sob Earthropo. Cada personagem encontra ali uma pista íntima: símbolos e sensações ligadas a Avenor para Vezemir, os remédios falsos de Odran para Varkh, marcas de um passado que Raziel reconhece sem compreender totalmente e uma ativação antiga que chama Morthak como se sua não-vida estivesse fora de registro.
 
 ## Elenco Principal
 
@@ -55,6 +56,7 @@ WHERE (
   OR file.name = "Vezemir"
   OR file.name = "Varkh Nimalis"
   OR file.name = "Raziel"
+  OR file.name = "Morthak"
 )
 AND (visibility = "Jogadores" OR visibility = "Público")
 AND gm_secret != true
@@ -72,7 +74,7 @@ cardSpacing: 4
 
 ## Função do Capítulo
 
-Este capítulo serve como o primeiro ponto de convergência entre as histórias de [[Vezemir]], [[Varkh Nimalis]] e [[Raziel]].
+Este capítulo serve como o primeiro ponto de convergência entre as histórias de [[Vezemir]], [[Varkh Nimalis]], [[Raziel]] e [[Morthak]].
 
 A função dele não é revelar todo o mundo. É colocar os jogadores diante de sinais concretos de que suas buscas individuais tocam o mesmo problema maior:
 
@@ -90,6 +92,7 @@ A função dele não é revelar todo o mundo. É colocar os jogadores diante de 
 - [[Vezemir]] busca o dragão de colar dourado e respostas sobre os antigos guardiões ligados à queda de [[Leth'valora]].
 - [[Varkh Nimalis]] investiga remédios falsos ligados aos métodos de [[Mestre Odran Veyl]].
 - [[Raziel]] despertou após mais de trezentos anos e procura os responsáveis por sua traição.
+- [[Morthak]] é um [[Morto-Vivo Esqueleto]] e [[Mago]] atraído pela ativação da [[Unidade DORN-7]].
 - [[Nimalia]] é o reino dos antropos, com [[Nimalis]] como capital.
 - A [[Floresta de Avenor]] faz fronteira com Nimalia.
 - [[Leth'valora]] foi destruída pelo [[Dragão de Colar Dourado]].
@@ -107,6 +110,7 @@ Os relatos ainda são confusos:
 - há quem jure ter ouvido sons metálicos vindos do subterrâneo;
 - a caravana parecia comercial e comum, sem sinal público de missão oficial;
 - o [[Conclave dos Errantes]] pode ter interesse no caso.
+- uma presença arcana incomum pode ser atraída pela ativação subterrânea sem entender o motivo.
 
 Cada personagem tem uma razão própria para seguir esse rastro.
 
@@ -117,7 +121,7 @@ Cada personagem tem uma razão própria para seguir esse rastro.
 - **Abertura:** estrada entre [[Nimalis]] e [[Floresta de Avenor]], com uma caravana comercial acidentada.
 - **Investigação inicial:** frascos quebrados, vítimas assustadas, carga adulterada e marcas que apontam para Odran sem confirmar culpa.
 - **Exploração:** a estrada cede e revela uma passagem artificial antiga.
-- **Primeiro contato:** a [[Unidade DORN-7]] desperta parcialmente, confusa e danificada, sem explicar o mundo.
+- **Primeiro contato:** a [[Unidade DORN-7]] desperta parcialmente, confusa e danificada, sem explicar o mundo; se detectar [[Morthak]], pode registrá-lo como “morto ativo fora de registro”.
 - **Pressão final:** a [[Guarda Real de Nimalia]] chega apenas no fim, tentando isolar a área e controlar testemunhas.
 - **Gancho de encerramento:** um mapa fragmentado aponta outro setor enquanto alguém foge com uma prova.
 
@@ -156,6 +160,7 @@ SORT file.name ASC
 - **O que os jogadores sabem:** há um acidente, uma carga suspeita, uma passagem antiga e interesses conflitantes na estrada.
 - **O que fica no [[CAMPANHA/ESTADO_DA_CAMPANHA|Estado da Campanha]]:** a verdade completa sobre a estrutura, a entidade subterrânea e as conexões maiores da campanha.
 - **Como entra em cena:** por acidente, investigação, contrato, perseguição ou descoberta durante a rota entre Nimalis e a Floresta de Avenor.
+- **Entrada de Morthak:** atraído pela ativação de DORN-7, como se a estrutura reconhecesse sua não-vida.
 - **Ganchos:** frasco falso, símbolo antigo, sobrevivente assustado, ruína interditada, mapa incompleto, carga adulterada.
 - **Consequências possíveis:** os personagens se unem por conveniência, dívida, suspeita ou ameaça compartilhada.
 

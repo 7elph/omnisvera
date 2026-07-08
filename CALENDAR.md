@@ -31,6 +31,14 @@ tags:
 
 O ano 2100 é o presente operacional da campanha e deve permanecer alinhado com [[TIMELINE]].
 
+## Data Atual de Jogo
+
+**1º de Aurora de 2100 — Dia da Primeira Luz**
+
+Esta é a data operacional inicial da campanha e da primeira sessão de [[01 - Ecos do Mundo Perdido]].
+
+Por enquanto, essa data funciona como âncora de mesa. Se o Sage quiser mudar o clima, estação ou pressão de calendário antes da sessão, ajustar aqui, em [[TIMELINE]] e no [[CAMPANHA/ESTADO_DA_CAMPANHA|Estado da Campanha]].
+
 ## Relação com a Timeline
 
 - A [[TIMELINE]] define a escala histórica.
@@ -98,6 +106,12 @@ O ano 2100 é o presente operacional da campanha e deve permanecer alinhado com 
 | 21 de Nevaris | Vigília dos Ancestrais | Rascunho |
 | 31 de Eterna | Festival do Recomeço | Rascunho |
 
+## Eventos de Campanha Marcados
+
+| data em jogo | evento | nota | status |
+|---|---|---|---|
+| 1º de Aurora de 2100 | Início do Capítulo 01 — Ecos do Mundo Perdido | [[01 - Ecos do Mundo Perdido]] | Ativo |
+
 ## Eventos Secretos do Mestre
 
 As antigas seções chamadas “Verdade Esquecida” devem ser tratadas como segredo do mestre até confirmação. Não exibir em material de jogador sem revisão.
@@ -114,7 +128,7 @@ Possíveis eventos secretos:
 - Confirmar se nomes dos meses são definitivos.
 - Confirmar se dias da semana são diegéticos ou apenas ferramenta de mesa.
 - Validar feriados ligados à [[Igreja das Chamas]].
-- Definir primeira data em jogo da campanha.
+- Confirmar se 1º de Aurora de 2100 permanece como data oficial da primeira sessão.
 - Sincronizar eventos futuros com [[CAMPANHA/ESTADO_DA_CAMPANHA]].
 
 ## Uso em Mesa

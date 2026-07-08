@@ -61,7 +61,9 @@ SORT file.name ASC
 
 ## História
 
-_Pendente de consolidação pelo Sage._
+Kaelen é a face militar da traição contra [[Raziel]].
+
+Onde Malakar representa trono e controle, Kaelen representa inveja armada, brutalidade e ocupação de território.
 
 ### O que está confirmado
 - É um general do Clã Sanguinallis
@@ -87,23 +89,37 @@ _Pendente de consolidação pelo Sage._
 
 ## Situação Atual
 
-_Pendente de consolidação pelo Sage._
+Kaelen atua melhor como antagonista do primeiro contato com o passado de Raziel.
+
+Ele lidera patrulhas, escavações e busca por relíquias nas [[Ruínas de Valthor]], caminhando sobre terras ligadas ao retorno de Raziel sem compreender totalmente o que despertou abaixo.
 
 ## Personalidade
 
-_Pendente de consolidação pelo Sage._
+Violento, competitivo e orgulhoso.
+
+Kaelen quer provar que a força direta vale mais que o silêncio e a precisão de Raziel.
 
 ## Motivação
 
-- Motivação a consolidar a partir da lore existente.
+- Provar que sempre foi superior a Raziel.
+- Encontrar relíquias que consolidem sua posição.
+- Impedir que o nome de Raziel volte a inspirar medo.
+- Entregar resultados a Malakar ou tomar poder para si, conforme a campanha evoluir.
 
 ## Métodos
 
-- M?todos ainda n?o detalhados em mesa.
+- patrulhas;
+- escavações forçadas;
+- interrogatório brutal;
+- uso de soldados, servos ou vampiros menores;
+- ataque direto quando provocado.
 
 ## Recursos
 
-- Recursos ainda n?o detalhados em mesa.
+- patrulhas nos [[Campos de Earthropo]];
+- escavações nas [[Ruínas de Valthor]];
+- força militar do [[Clã Sanguinallis]];
+- conhecimento parcial sobre relíquias antigas.
 
 ## Aliados
 
@@ -115,11 +131,14 @@ _Pendente de consolidação pelo Sage._
 
 ## Plano Atual
 
-- Plano atual a definir conforme avan?o da campanha.
+Encontrar algo nas ruínas antes que Raziel ou outros interessados cheguem.
 
 ## Fraquezas
 
-- Fraquezas ainda n?o reveladas.
+- inveja;
+- impaciência;
+- necessidade de provar superioridade;
+- subestimação de inimigos silenciosos.
 
 ## Segredos
 
@@ -136,11 +155,13 @@ _Pendente de consolidação pelo Sage._
 
 ## Aparência
 
-_Pendente de consolidação pelo Sage._
+Visual definitivo pendente. Deve transmitir brutalidade, guerra e sangue antigo.
 
 ## Papel na Campanha
 
-_Pendente de consolidação pelo Sage._
+Primeiro alvo forte do arco de vingança de Raziel.
+
+Kaelen deve mostrar ao jogador que o passado ainda está ativo, armado e escavando respostas.
 
 ## Pendências do Sage
 
@@ -156,17 +177,21 @@ _Pendente de consolidação pelo Sage._
 
 ## Uso em Mesa
 
-- Como apresentar:
-- O que os jogadores sabem:
-- O que manter em aberto no [[ESTADO_DA_CAMPANHA]]: detalhes restritos e decis?es pendentes.
-- Como entra em cena:
-- Ganchos:
-- Consequências possíveis:
+- Como apresentar: patrulha brutal, escavação violenta, prisioneiro interrogado ou relíquia arrancada das ruínas.
+- O que os jogadores sabem: Kaelen é ligado ao passado de Raziel e às forças do Clã Sanguinallis.
+- O que manter em aberto no [[ESTADO_DA_CAMPANHA]]: poderes exatos, estado atual do clã e relação com Sangue Antigo.
+- Como entra em cena: rumores de patrulhas, marcas de sangue nas ruínas ou ataque contra testemunhas.
+- Ganchos: mapa de Valthor, escavações, relíquias, ordens de Malakar.
+- Consequências possíveis: confrontar Kaelen pode revelar que Raziel não é o único sobrevivente do passado.
 
 
 ## Equipamentos
-_Pendente de consolidação pelo Sage._
+Armas, armadura e símbolos militares do clã ainda pendentes.
 
 ## Capacidades narrativas
 
-_Pendente de consolidação pelo Sage._
+- força vampírica;
+- comando de patrulhas;
+- brutalidade em combate;
+- hemomancia menos refinada que a de Raziel;
+- resistência e intimidação.
