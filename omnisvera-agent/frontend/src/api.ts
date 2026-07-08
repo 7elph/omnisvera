@@ -1,5 +1,8 @@
 const API_BASE = import.meta.env.VITE_API_BASE_URL || "";
 const TOKEN_KEY = "omnisvera_access_token";
+const MODE_KEY = "omnisvera_access_mode";
+
+export type AccessMode = "gm" | "player";
 
 export function getAccessToken() {
   return localStorage.getItem(TOKEN_KEY) || "";
@@ -11,6 +14,18 @@ export function setAccessToken(token: string) {
   } else {
     localStorage.removeItem(TOKEN_KEY);
   }
+}
+
+export function getAccessMode(): AccessMode {
+  return localStorage.getItem(MODE_KEY) === "player" ? "player" : "gm";
+}
+
+export function setAccessMode(mode: AccessMode) {
+  localStorage.setItem(MODE_KEY, mode);
+}
+
+function scoped(path: string) {
+  return `${API_BASE}/${getAccessMode()}${path}`;
 }
 
 function authHeaders(extra: Record<string, string> = {}) {
@@ -43,6 +58,16 @@ export type SearchResult = NoteSummary & {
   excerpt: string;
 };
 
+export type DashboardSection = {
+  title: string;
+  items: NoteSummary[];
+};
+
+export type PlayerDashboard = {
+  mode: "player";
+  sections: DashboardSection[];
+};
+
 export async function health() {
   const response = await fetch(`${API_BASE}/health`, { headers: authHeaders() });
   if (!response.ok) throw new Error("Falha ao consultar /health");
@@ -56,19 +81,19 @@ export async function rebuildIndex() {
 }
 
 export async function listNotes(): Promise<NoteSummary[]> {
-  const response = await fetch(`${API_BASE}/notes`, { headers: authHeaders() });
+  const response = await fetch(scoped("/notes"), { headers: authHeaders() });
   if (!response.ok) throw new Error("Falha ao listar notas");
   return response.json();
 }
 
 export async function getNote(id: number): Promise<NoteDetail> {
-  const response = await fetch(`${API_BASE}/notes/${id}`, { headers: authHeaders() });
+  const response = await fetch(scoped(`/notes/${id}`), { headers: authHeaders() });
   if (!response.ok) throw new Error("Nota não encontrada");
   return response.json();
 }
 
 export async function searchNotes(query: string, limit = 10): Promise<SearchResult[]> {
-  const response = await fetch(`${API_BASE}/search`, {
+  const response = await fetch(scoped("/search"), {
     method: "POST",
     headers: authHeaders({ "Content-Type": "application/json" }),
     body: JSON.stringify({ query, limit }),
@@ -78,11 +103,17 @@ export async function searchNotes(query: string, limit = 10): Promise<SearchResu
 }
 
 export async function chatVault(question: string, limit = 6) {
-  const response = await fetch(`${API_BASE}/chat`, {
+  const response = await fetch(scoped("/chat"), {
     method: "POST",
     headers: authHeaders({ "Content-Type": "application/json" }),
     body: JSON.stringify({ question, limit }),
   });
   if (!response.ok) throw new Error("Falha no chat");
+  return response.json();
+}
+
+export async function playerDashboard(): Promise<PlayerDashboard> {
+  const response = await fetch(`${API_BASE}/player/dashboard`, { headers: authHeaders() });
+  if (!response.ok) throw new Error("Falha ao carregar painel dos jogadores");
   return response.json();
 }

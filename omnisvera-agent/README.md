@@ -21,7 +21,8 @@ O terminal mostra:
 
 - URL local;
 - URL da rede Wi-Fi;
-- token de acesso.
+- token do Mestre;
+- token dos Jogadores.
 
 No celular, se estiver na mesma Wi-Fi, abra a URL da rede.
 
@@ -45,6 +46,35 @@ Abra a URL pública HTTPS impressa pelo ngrok no celular.
 
 Use o token impresso pelo `start_companion.ps1`.
 
+## Modos de acesso
+
+O Companion possui dois modos:
+
+| Modo | O que vê | Token |
+|---|---|---|
+| Mestre | Todo o índice do vault | Token do Mestre |
+| Jogador | Apenas notas player-safe | Token dos Jogadores |
+
+Uma nota é considerada player-safe quando:
+
+- `visibility` é `Jogadores` ou `Público`;
+- `gm_secret` não é `true`;
+- `spoiler_level` não é `medium` nem `heavy`;
+- a nota não está em pastas técnicas como `Workflow/`, `Templates/` ou `.obsidian/`.
+
+Os endpoints do backend também são separados:
+
+```txt
+/gm/search
+/gm/chat
+/gm/notes
+
+/player/search
+/player/chat
+/player/notes
+/player/dashboard
+```
+
 ## Modelos Ollama
 
 Por padrão, o script usa:
@@ -63,4 +93,4 @@ Também pode usar:
 
 O token protege o backend, mas este MVP ainda é uma ferramenta local de campanha. Não publique URL/token em lugar público.
 
-Se for liberar para jogadores, o ideal é criar uma versão player-safe com índice filtrado por `visibility`.
+Para jogadores, compartilhe somente o token dos Jogadores. O token do Mestre abre notas de mestre e segredos.

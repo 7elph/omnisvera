@@ -2,6 +2,8 @@ param(
   [string]$VaultPath = (Resolve-Path "$PSScriptRoot\..").Path,
   [string]$Model = "omnisvera-fast:latest",
   [string]$AccessToken = "",
+  [string]$MasterToken = "",
+  [string]$PlayerToken = "",
   [int]$Port = 8787,
   [switch]$NoBuild,
   [switch]$NoRebuild
@@ -26,8 +28,16 @@ $Backend = Join-Path $PSScriptRoot "backend"
 $Frontend = Join-Path $PSScriptRoot "frontend"
 $Venv = Join-Path $Backend ".venv"
 
-if (-not $AccessToken) {
-  $AccessToken = New-Token
+if ($AccessToken -and -not $MasterToken) {
+  $MasterToken = $AccessToken
+}
+
+if (-not $MasterToken) {
+  $MasterToken = New-Token
+}
+
+if (-not $PlayerToken) {
+  $PlayerToken = New-Token
 }
 
 if (-not (Test-Path $Venv)) {
@@ -52,7 +62,9 @@ if (-not $NoBuild) {
 $env:OMNISVERA_VAULT_PATH = $VaultPath
 $env:OLLAMA_BASE_URL = "http://localhost:11434"
 $env:OLLAMA_MODEL = $Model
-$env:OMNISVERA_ACCESS_TOKEN = $AccessToken
+$env:OMNISVERA_ACCESS_TOKEN = $MasterToken
+$env:OMNISVERA_MASTER_TOKEN = $MasterToken
+$env:OMNISVERA_PLAYER_TOKEN = $PlayerToken
 $env:OMNISVERA_REBUILD_ON_STARTUP = if ($NoRebuild) { "false" } else { "true" }
 
 $localIps = Get-NetIPAddress -AddressFamily IPv4 |
@@ -63,7 +75,8 @@ Write-Host ""
 Write-Host "Omnisvera Companion" -ForegroundColor Yellow
 Write-Host "Vault: $VaultPath"
 Write-Host "Modelo Ollama: $Model"
-Write-Host "Token de acesso: $AccessToken" -ForegroundColor Cyan
+Write-Host "Token do Mestre: $MasterToken" -ForegroundColor Cyan
+Write-Host "Token dos Jogadores: $PlayerToken" -ForegroundColor Green
 Write-Host "Local: http://127.0.0.1:$Port"
 foreach ($ip in $localIps) {
   Write-Host "Wi-Fi/LAN: http://$ip`:$Port"

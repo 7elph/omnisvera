@@ -80,6 +80,22 @@ h2 {
   padding: 0.75rem;
 }
 
+.mode-switch {
+  display: flex;
+  gap: 0.35rem;
+}
+
+.mode-switch button {
+  background: #2b2119;
+  color: #f3ead7;
+  white-space: nowrap;
+}
+
+.mode-switch button.active {
+  background: #d6a858;
+  color: #1d1309;
+}
+
 .tabs button {
   background: #2b2119;
   color: #f3ead7;
@@ -153,9 +169,31 @@ textarea {
   padding: 0.35rem 0.7rem;
 }
 
+.dashboard-section {
+  margin-top: 1.25rem;
+}
+
+.dashboard-section h3 {
+  color: #d6a858;
+  margin-bottom: 0.4rem;
+}
+
+.muted,
+.warning-text {
+  color: #b8a58b;
+}
+
+.warning-text {
+  color: #ffcf8a;
+}
+
 @media (max-width: 640px) {
   .hero {
     align-items: stretch;
+    flex-direction: column;
+  }
+
+  .token-bar {
     flex-direction: column;
   }
 }

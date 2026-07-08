@@ -4,6 +4,7 @@ import re
 import json
 from pathlib import Path
 
+from .access import AccessMode, is_player_safe_row, sanitize_player_text
 from .vault_index import all_notes_for_search
 
 
@@ -20,18 +21,24 @@ def _excerpt(content: str, terms: list[str], size: int = 260) -> str:
     return excerpt + ("..." if end < len(content) else "")
 
 
-def search_notes(database_path: Path, query: str, limit: int = 10) -> list[dict]:
+def search_notes(database_path: Path, query: str, limit: int = 10, access_mode: AccessMode = "gm") -> list[dict]:
     terms = _terms(query)
     if not terms:
         return []
 
     results: list[dict] = []
     for row in all_notes_for_search(database_path):
+        if access_mode == "player" and not is_player_safe_row(row):
+            continue
+        content = row["content"]
+        if access_mode == "player":
+            content = sanitize_player_text(content)
+
         haystacks = {
             "title": row["title"].lower(),
             "path": row["path"].lower(),
             "tags": row["tags"].lower(),
-            "content": row["content"].lower(),
+            "content": content.lower(),
             "aliases": row["aliases"].lower(),
         }
         score = 0
@@ -55,7 +62,7 @@ def search_notes(database_path: Path, query: str, limit: int = 10) -> list[dict]
                     "tags": json.loads(row["tags"] or "[]"),
                     "updated_at": row["updated_at"],
                     "score": score,
-                    "excerpt": _excerpt(row["content"], terms),
+                    "excerpt": _excerpt(content, terms),
                 }
             )
     results.sort(key=lambda item: item["score"], reverse=True)

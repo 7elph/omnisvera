@@ -5,6 +5,7 @@ import re
 from pathlib import Path
 from typing import Any
 
+from .access import AccessMode, is_player_safe_row
 from .ollama_client import chat_with_ollama
 from .search import search_notes
 from .vault_index import all_notes_for_search, get_note, get_notes_by_ids
@@ -66,12 +67,17 @@ def _compact_markdown(content: str, max_chars: int = 850) -> str:
     return (clipped or text[:max_chars].strip()) + "..."
 
 
-def _context_from_notes(database_path: Path, note_ids: list[int], max_chars: int = 3200) -> str:
+def _context_from_notes(
+    database_path: Path,
+    note_ids: list[int],
+    access_mode: AccessMode = "gm",
+    max_chars: int = 3200,
+) -> str:
     chunks: list[str] = []
     total = 0
     seen_paths: set[str] = set()
     for note_id in note_ids:
-        note = get_note(database_path, note_id)
+        note = get_note(database_path, note_id, access_mode=access_mode)
         if not note or note["path"] in seen_paths:
             continue
         seen_paths.add(note["path"])
@@ -99,6 +105,13 @@ def _looks_like_rumor_overview(question: str) -> bool:
     has_rumor = "rumor" in lowered or "rumores" in lowered
     asks_list = any(term in lowered for term in ("quais", "lista", "liste", "ativos", "ativas", "tem", "existem"))
     return has_rumor and asks_list
+
+
+def _looks_like_quest_overview(question: str) -> bool:
+    lowered = question.lower()
+    has_quest = any(term in lowered for term in ("quest", "quests", "missão", "missões", "missao", "missoes"))
+    asks_list = any(term in lowered for term in ("quais", "lista", "liste", "ativas", "ativos", "tem", "existem"))
+    return has_quest and asks_list
 
 
 def _frontmatter(row: Any) -> dict[str, Any]:
@@ -130,13 +143,22 @@ def _first_useful_sentence(content: str) -> str:
     return text[:220].strip()
 
 
-def _answer_rumor_overview(database_path: Path) -> dict | None:
+def _answer_index_overview(
+    database_path: Path,
+    *,
+    folder: str,
+    note_type: str,
+    label: str,
+    access_mode: AccessMode,
+) -> dict | None:
     rows = []
     for row in all_notes_for_search(database_path):
         path = row["path"]
-        if not path.startswith("CAMPANHA/Rumors/") or "INDICE_" in path:
+        if not path.startswith(folder) or "INDICE_" in path:
             continue
-        if row["type"] != "rumor":
+        if row["type"] != note_type:
+            continue
+        if access_mode == "player" and not is_player_safe_row(row):
             continue
         frontmatter = _frontmatter(row)
         status = str(frontmatter.get("status") or "").lower()
@@ -148,7 +170,8 @@ def _answer_rumor_overview(database_path: Path) -> dict | None:
         return None
 
     rows.sort(key=lambda item: item[0]["path"])
-    lines = ["Rumores ativos no vault:"]
+    adjective = "ativas" if label.lower().endswith("ões") or label.lower().endswith("sões") else "ativos"
+    lines = [f"{label} {adjective} no vault:"]
     note_ids: list[int] = []
     for row, frontmatter in rows[:10]:
         note_ids.append(row["id"])
@@ -163,7 +186,7 @@ def _answer_rumor_overview(database_path: Path) -> dict | None:
 
     return {
         "answer": "\n".join(lines),
-        "notes_used": get_notes_by_ids(database_path, note_ids),
+        "notes_used": get_notes_by_ids(database_path, note_ids, access_mode=access_mode),
         "note_paths": [row["path"] for row, _ in rows[:10]],
         "insufficient_context": False,
         "warning": None,
@@ -184,13 +207,31 @@ async def answer_question(
     ollama_model: str,
     question: str,
     limit: int = 6,
+    access_mode: AccessMode = "gm",
 ) -> dict:
     if _looks_like_rumor_overview(question):
-        rumor_answer = _answer_rumor_overview(database_path)
+        rumor_answer = _answer_index_overview(
+            database_path,
+            folder="CAMPANHA/Rumors/",
+            note_type="rumor",
+            label="Rumores",
+            access_mode=access_mode,
+        )
         if rumor_answer:
             return rumor_answer
 
-    results = search_notes(database_path, question, limit=limit)
+    if _looks_like_quest_overview(question):
+        quest_answer = _answer_index_overview(
+            database_path,
+            folder="CAMPANHA/Quests/",
+            note_type="quest",
+            label="Missões",
+            access_mode=access_mode,
+        )
+        if quest_answer:
+            return quest_answer
+
+    results = search_notes(database_path, question, limit=limit, access_mode=access_mode)
     operational_results = [
         item
         for item in results
@@ -202,8 +243,8 @@ async def answer_question(
     if operational_results:
         results = operational_results
     note_ids = list(dict.fromkeys(item["id"] for item in results))
-    notes_used = get_notes_by_ids(database_path, note_ids)
-    context = _context_from_notes(database_path, note_ids)
+    notes_used = get_notes_by_ids(database_path, note_ids, access_mode=access_mode)
+    context = _context_from_notes(database_path, note_ids, access_mode=access_mode)
     insufficient = len(notes_used) == 0 or len(context.strip()) < 300
     warning = None
     if insufficient:

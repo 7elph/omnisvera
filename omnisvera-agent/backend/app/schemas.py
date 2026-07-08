@@ -12,6 +12,8 @@ class HealthResponse(BaseModel):
     ollama_base_url: str
     ollama_model: str
     ollama_accessible: bool
+    access_mode: str | None = None
+    player_mode_available: bool = False
 
 
 class RebuildResponse(BaseModel):
@@ -57,3 +59,13 @@ class ChatResponse(BaseModel):
     note_paths: list[str]
     insufficient_context: bool
     warning: str | None = None
+
+
+class DashboardSection(BaseModel):
+    title: str
+    items: list[NoteSummary] = Field(default_factory=list)
+
+
+class PlayerDashboardResponse(BaseModel):
+    mode: str = "player"
+    sections: list[DashboardSection] = Field(default_factory=list)

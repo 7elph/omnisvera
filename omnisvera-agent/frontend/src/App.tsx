@@ -1,23 +1,25 @@
 import { useEffect, useState } from "react";
-import { getAccessToken, health, rebuildIndex, setAccessToken } from "./api";
+import { AccessMode, getAccessMode, getAccessToken, health, rebuildIndex, setAccessMode, setAccessToken } from "./api";
 import ChatVault from "./pages/ChatVault";
 import NoteView from "./pages/NoteView";
+import PlayerPanel from "./pages/PlayerPanel";
 import SearchNotes from "./pages/SearchNotes";
 import SessionPanel from "./pages/SessionPanel";
 
-type Page = "chat" | "search" | "note" | "session";
+type Page = "chat" | "search" | "note" | "session" | "player";
 
 export default function App() {
   const [page, setPage] = useState<Page>("session");
   const [selectedNoteId, setSelectedNoteId] = useState<number | null>(null);
   const [status, setStatus] = useState<string>("verificando...");
   const [tokenDraft, setTokenDraft] = useState<string>(getAccessToken());
+  const [mode, setMode] = useState<AccessMode>(getAccessMode());
 
   useEffect(() => {
     health()
       .then((data) =>
         setStatus(
-          `Backend ok · Ollama ${data.ollama_accessible ? "ok" : "offline"} · ${data.ollama_model}`,
+          `${data.access_mode === "player" ? "Jogador" : "Mestre"} · Ollama ${data.ollama_accessible ? "ok" : "offline"} · ${data.ollama_model}`,
         ),
       )
       .catch(() => setStatus("backend indisponível"));
@@ -25,17 +27,22 @@ export default function App() {
 
   function saveToken() {
     setAccessToken(tokenDraft);
+    setAccessMode(mode);
     setStatus("token salvo; verificando backend...");
     health()
       .then((data) =>
         setStatus(
-          `Backend ok · Ollama ${data.ollama_accessible ? "ok" : "offline"} · ${data.ollama_model}`,
+          `${data.access_mode === "player" ? "Jogador" : "Mestre"} · Ollama ${data.ollama_accessible ? "ok" : "offline"} · ${data.ollama_model}`,
         ),
       )
       .catch(() => setStatus("backend indisponível ou token inválido"));
   }
 
   async function onRebuild() {
+    if (mode === "player") {
+      setStatus("atualização de índice é função do Mestre");
+      return;
+    }
     setStatus("atualizando índice...");
     try {
       const data = await rebuildIndex();
@@ -58,23 +65,51 @@ export default function App() {
           <h1>Omnisvera</h1>
           <p>{status}</p>
         </div>
-        <button onClick={onRebuild}>Atualizar índice</button>
+        {mode === "gm" && <button onClick={onRebuild}>Atualizar índice</button>}
       </header>
 
       <section className="token-bar">
+        <div className="mode-switch">
+          <button
+            className={mode === "gm" ? "active" : ""}
+            onClick={() => {
+              setMode("gm");
+              setAccessMode("gm");
+              setPage("session");
+            }}
+          >
+            Mestre
+          </button>
+          <button
+            className={mode === "player" ? "active" : ""}
+            onClick={() => {
+              setMode("player");
+              setAccessMode("player");
+              setPage("player");
+            }}
+          >
+            Jogador
+          </button>
+        </div>
         <input
           value={tokenDraft}
           onChange={(event) => setTokenDraft(event.target.value)}
-          placeholder="Token de acesso, se o servidor pedir"
+          placeholder={mode === "player" ? "Token dos jogadores" : "Token do mestre"}
           type="password"
         />
         <button onClick={saveToken}>Salvar token</button>
       </section>
 
       <nav className="tabs">
-        <button className={page === "session" ? "active" : ""} onClick={() => setPage("session")}>
-          Sessão
-        </button>
+        {mode === "gm" ? (
+          <button className={page === "session" ? "active" : ""} onClick={() => setPage("session")}>
+            Sessão
+          </button>
+        ) : (
+          <button className={page === "player" ? "active" : ""} onClick={() => setPage("player")}>
+            Jogadores
+          </button>
+        )}
         <button className={page === "chat" ? "active" : ""} onClick={() => setPage("chat")}>
           Chat
         </button>
@@ -87,6 +122,7 @@ export default function App() {
       </nav>
 
       {page === "session" && <SessionPanel onOpenNote={openNote} />}
+      {page === "player" && <PlayerPanel onOpenNote={openNote} />}
       {page === "chat" && <ChatVault onOpenNote={openNote} />}
       {page === "search" && <SearchNotes onOpenNote={openNote} />}
       {page === "note" && <NoteView noteId={selectedNoteId} />}

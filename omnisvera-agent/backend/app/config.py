@@ -17,6 +17,8 @@ class Settings:
     ollama_model: str
     database_path: Path
     access_token: str | None
+    master_token: str | None
+    player_token: str | None
     rebuild_on_startup: bool
 
 
@@ -35,6 +37,8 @@ def get_settings() -> Settings:
         ollama_model=os.getenv("OLLAMA_MODEL", "qwen2.5:1.5b"),
         database_path=database_path,
         access_token=os.getenv("OMNISVERA_ACCESS_TOKEN") or None,
+        master_token=os.getenv("OMNISVERA_MASTER_TOKEN") or os.getenv("OMNISVERA_ACCESS_TOKEN") or None,
+        player_token=os.getenv("OMNISVERA_PLAYER_TOKEN") or None,
         rebuild_on_startup=os.getenv("OMNISVERA_REBUILD_ON_STARTUP", "false").lower()
         in {"1", "true", "yes", "sim"},
     )

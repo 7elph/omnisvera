@@ -5,6 +5,7 @@ import sqlite3
 from pathlib import Path
 from typing import Any
 
+from .access import AccessMode, is_player_safe_row, sanitize_player_note
 from .vault_reader import VaultNote
 
 
@@ -66,7 +67,7 @@ def rebuild_index(database_path: Path, notes: list[VaultNote]) -> int:
     return len(notes)
 
 
-def _row_to_note(row: sqlite3.Row, include_content: bool = False) -> dict[str, Any]:
+def row_to_note(row: sqlite3.Row, include_content: bool = False) -> dict[str, Any]:
     data: dict[str, Any] = {
         "id": row["id"],
         "path": row["path"],
@@ -83,31 +84,43 @@ def _row_to_note(row: sqlite3.Row, include_content: bool = False) -> dict[str, A
     return data
 
 
-def list_notes(database_path: Path, limit: int = 500) -> list[dict[str, Any]]:
+def _row_allowed(row: sqlite3.Row, access_mode: AccessMode = "gm") -> bool:
+    return access_mode == "gm" or is_player_safe_row(row)
+
+
+def list_notes(database_path: Path, limit: int = 500, access_mode: AccessMode = "gm") -> list[dict[str, Any]]:
     init_db(database_path)
     with connect(database_path) as conn:
         rows = conn.execute(
             "SELECT * FROM notes ORDER BY title COLLATE NOCASE ASC LIMIT ?",
-            (limit,),
+            (limit if access_mode == "gm" else limit * 4,),
         ).fetchall()
-    return [_row_to_note(row) for row in rows]
+    filtered = [row for row in rows if _row_allowed(row, access_mode)]
+    return [row_to_note(row) for row in filtered[:limit]]
 
 
-def get_note(database_path: Path, note_id: int) -> dict[str, Any] | None:
+def get_note(database_path: Path, note_id: int, access_mode: AccessMode = "gm") -> dict[str, Any] | None:
     init_db(database_path)
     with connect(database_path) as conn:
         row = conn.execute("SELECT * FROM notes WHERE id = ?", (note_id,)).fetchone()
-    return _row_to_note(row, include_content=True) if row else None
+    if not row or not _row_allowed(row, access_mode):
+        return None
+    note = row_to_note(row, include_content=True)
+    return sanitize_player_note(note) if access_mode == "player" else note
 
 
-def get_notes_by_ids(database_path: Path, note_ids: list[int]) -> list[dict[str, Any]]:
+def get_notes_by_ids(
+    database_path: Path,
+    note_ids: list[int],
+    access_mode: AccessMode = "gm",
+) -> list[dict[str, Any]]:
     if not note_ids:
         return []
     init_db(database_path)
     placeholders = ",".join("?" for _ in note_ids)
     with connect(database_path) as conn:
         rows = conn.execute(f"SELECT * FROM notes WHERE id IN ({placeholders})", note_ids).fetchall()
-    by_id = {row["id"]: _row_to_note(row) for row in rows}
+    by_id = {row["id"]: row_to_note(row) for row in rows if _row_allowed(row, access_mode)}
     return [by_id[note_id] for note_id in note_ids if note_id in by_id]
 
 
