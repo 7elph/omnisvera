@@ -36,12 +36,12 @@ export default function App() {
   }
 
   async function onRebuild() {
-    setStatus("reindexando vault...");
+    setStatus("atualizando índice...");
     try {
       const data = await rebuildIndex();
       setStatus(`índice pronto · ${data.indexed_notes} notas`);
     } catch (error) {
-      setStatus("falha ao reindexar");
+      setStatus("falha ao atualizar índice");
     }
   }
 
@@ -55,10 +55,10 @@ export default function App() {
       <header className="hero">
         <div>
           <p className="eyebrow">Omnisvera Companion</p>
-          <h1>Vault no celular</h1>
+          <h1>Omnisvera</h1>
           <p>{status}</p>
         </div>
-        <button onClick={onRebuild}>Reindexar</button>
+        <button onClick={onRebuild}>Atualizar índice</button>
       </header>
 
       <section className="token-bar">
