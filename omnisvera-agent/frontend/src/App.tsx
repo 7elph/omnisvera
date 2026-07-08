@@ -9,21 +9,30 @@ import SessionPanel from "./pages/SessionPanel";
 type Page = "chat" | "search" | "note" | "session" | "player";
 
 export default function App() {
-  const [page, setPage] = useState<Page>("session");
+  const initialMode = getAccessMode();
+  const [page, setPage] = useState<Page>(initialMode === "player" ? "player" : "session");
   const [selectedNoteId, setSelectedNoteId] = useState<number | null>(null);
   const [noteHistory, setNoteHistory] = useState<number[]>([]);
   const [chatSeed, setChatSeed] = useState("");
   const [status, setStatus] = useState<string>("verificando...");
   const [tokenDraft, setTokenDraft] = useState<string>(getAccessToken());
-  const [mode, setMode] = useState<AccessMode>(getAccessMode());
+  const [mode, setMode] = useState<AccessMode>(initialMode);
 
   useEffect(() => {
     health()
-      .then((data) =>
+      .then((data) => {
+        const detectedMode: AccessMode = data.access_mode === "player" ? "player" : "gm";
+        setMode(detectedMode);
+        setAccessMode(detectedMode);
+        setPage((current) => {
+          if (current === "session" && detectedMode === "player") return "player";
+          if (current === "player" && detectedMode === "gm") return "session";
+          return current;
+        });
         setStatus(
           `${data.access_mode === "player" ? "Jogador" : "Mestre"} · Ollama ${data.ollama_accessible ? "ok" : "offline"} · ${data.ollama_model}`,
-        ),
-      )
+        );
+      })
       .catch(() => setStatus("backend indisponível"));
   }, []);
 
@@ -32,11 +41,15 @@ export default function App() {
     setAccessMode(mode);
     setStatus("token salvo; verificando backend...");
     health()
-      .then((data) =>
+      .then((data) => {
+        const detectedMode: AccessMode = data.access_mode === "player" ? "player" : "gm";
+        setMode(detectedMode);
+        setAccessMode(detectedMode);
+        setPage(detectedMode === "player" ? "player" : "session");
         setStatus(
           `${data.access_mode === "player" ? "Jogador" : "Mestre"} · Ollama ${data.ollama_accessible ? "ok" : "offline"} · ${data.ollama_model}`,
-        ),
-      )
+        );
+      })
       .catch(() => setStatus("backend indisponível ou token inválido"));
   }
 
@@ -137,8 +150,8 @@ export default function App() {
         </button>
       </nav>
 
-      {page === "session" && <SessionPanel onOpenNote={openNote} />}
-      {page === "player" && <PlayerPanel onOpenNote={openNote} onAskPrompt={askPrompt} />}
+      {page === "session" && mode === "gm" && <SessionPanel onOpenNote={openNote} />}
+      {page === "player" && mode === "player" && <PlayerPanel onOpenNote={openNote} onAskPrompt={askPrompt} />}
       {page === "chat" && <ChatVault onOpenNote={openNote} initialQuestion={chatSeed} />}
       {page === "search" && <SearchNotes onOpenNote={openNote} />}
       {page === "note" && (

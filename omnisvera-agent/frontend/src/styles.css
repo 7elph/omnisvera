@@ -298,6 +298,19 @@ textarea {
   line-height: 0.95;
 }
 
+.version-pill {
+  background: #d6a858;
+  border-radius: 999px;
+  color: #1d1309;
+  display: inline-flex;
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.7rem;
+  padding: 0.35rem 0.7rem;
+  text-transform: uppercase;
+}
+
 .featured-card {
   align-content: end;
   background: linear-gradient(135deg, #463321, #18120e);

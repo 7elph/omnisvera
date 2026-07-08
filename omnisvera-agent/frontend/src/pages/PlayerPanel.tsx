@@ -56,6 +56,7 @@ export default function PlayerPanel({
       <div className="player-hero">
         <div>
           <p className="eyebrow">Modo Jogador</p>
+          <span className="version-pill">Home Jogável v2</span>
           <h2>Omnisvera em jogo</h2>
           <p>Rumores, missões, mapas e notas liberadas — sem abrir bastidores do mestre.</p>
         </div>
