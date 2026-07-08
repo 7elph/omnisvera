@@ -302,22 +302,10 @@ def player_dashboard(_: AccessContext = Depends(require_player)) -> dict:
     )
     quests = by_path("CAMPANHA/Quests/")
     rumors = by_path("CAMPANHA/Rumors/")
-    now = sort_by_priority(
-        [*diary[:1], *quests[:2], *rumors[:2]],
-        ("01 - Ecos do Mundo Perdido", "Remédios Falsos", "Corvo da Maré Baixa"),
-    )
 
     return {
         "mode": "player",
         "sections": [
-            _section(
-                "now",
-                "Agora em jogo",
-                "O essencial para abrir o celular na mesa sem cair em bastidor.",
-                now,
-                limit=5,
-                prompt="O que está acontecendo agora na campanha?",
-            ),
             _section(
                 "diary",
                 "Diário da campanha",

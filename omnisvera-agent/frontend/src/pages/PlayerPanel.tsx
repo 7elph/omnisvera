@@ -2,7 +2,6 @@ import { useEffect, useMemo, useState } from "react";
 import { mediaUrlFromVaultPath, NoteSummary, playerDashboard, PlayerDashboard } from "../api";
 
 const SECTION_ICONS: Record<string, string> = {
-  now: "➤",
   diary: "✦",
   characters: "♟",
   quests: "!",
@@ -12,7 +11,6 @@ const SECTION_ICONS: Record<string, string> = {
 };
 
 const SECTION_LABELS: Record<string, string> = {
-  now: "Agora",
   diary: "Diário",
   characters: "Grupo",
   quests: "Missão",
@@ -69,9 +67,8 @@ export default function PlayerPanel({
   }, []);
 
   const sections = dashboard?.sections || [];
-  const now = sections.find((section) => section.kind === "now");
   const diary = sections.find((section) => section.kind === "diary");
-  const featured = useMemo(() => now?.items[0] || diary?.items[0], [diary, now]);
+  const featured = useMemo(() => diary?.items[0], [diary]);
   const counts = {
     quests: sections.find((section) => section.kind === "quests")?.items.length || 0,
     rumors: sections.find((section) => section.kind === "rumors")?.items.length || 0,
