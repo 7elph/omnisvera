@@ -82,16 +82,16 @@ export default function PlayerPanel({
   return (
     <section className="panel player-home">
       <div className="player-hero">
-        <div>
+        <div className="player-hero-main">
           <p className="eyebrow">Modo Jogador</p>
-          <span className="version-pill">Home Jogável v3 · player-safe</span>
+          <span className="version-pill">Home Jogável v4 · player-safe</span>
           <h2>Omnisvera em jogo</h2>
           <p>Missões, rumores, personagens e lugares liberados — sem abrir bastidores do mestre.</p>
           <div className="player-stats" aria-label="Resumo do painel dos jogadores">
-            <span><strong>{counts.quests}</strong> missões</span>
-            <span><strong>{counts.rumors}</strong> rumores</span>
-            <span><strong>{counts.characters}</strong> personagens</span>
-            <span><strong>{counts.places}</strong> lugares</span>
+            <span><strong>{counts.quests}</strong><em>missões</em></span>
+            <span><strong>{counts.rumors}</strong><em>rumores</em></span>
+            <span><strong>{counts.characters}</strong><em>personagens</em></span>
+            <span><strong>{counts.places}</strong><em>lugares</em></span>
           </div>
         </div>
         {featured && (
