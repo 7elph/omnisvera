@@ -30,6 +30,10 @@ class NoteSummary(BaseModel):
     type: str | None = None
     visibility: str | None = None
     tags: list[str] = Field(default_factory=list)
+    cover: str | None = None
+    thumbnail: str | None = None
+    status: str | None = None
+    description: str | None = None
     updated_at: str
 
 
@@ -62,7 +66,10 @@ class ChatResponse(BaseModel):
 
 
 class DashboardSection(BaseModel):
+    kind: str | None = None
     title: str
+    description: str | None = None
+    prompt: str | None = None
     items: list[NoteSummary] = Field(default_factory=list)
 
 

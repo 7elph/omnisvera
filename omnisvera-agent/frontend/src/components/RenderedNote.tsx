@@ -1,25 +1,11 @@
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { getAccessToken, resolveNote } from "../api";
+import { mediaUrlFromVaultPath, resolveNote } from "../api";
 
 type RenderedNoteProps = {
   content: string;
   onOpenNote?: (id: number) => void;
 };
-
-function encodeMediaPath(path: string) {
-  return path
-    .split("/")
-    .map((part) => encodeURIComponent(part))
-    .join("/");
-}
-
-function mediaUrl(path: string) {
-  const cleanPath = path.replace(/^\/+/, "");
-  const token = getAccessToken();
-  const query = token ? `?token=${encodeURIComponent(token)}` : "";
-  return `/media/${encodeMediaPath(cleanPath)}${query}`;
-}
 
 function normalizeMediaTarget(target: string) {
   const clean = target.split("|")[0].trim();
@@ -53,7 +39,7 @@ function transformObsidianMarkdown(content: string) {
     const mediaPath = normalizeMediaTarget(path);
     const alt = path.split("/").pop() || "imagem";
     const size = pipe && /^\d+$/.test(pipe.trim()) ? ` width="${pipe.trim()}"` : "";
-    return `<img src="${mediaUrl(mediaPath)}" alt="${alt}"${size} />`;
+    return `<img src="${mediaUrlFromVaultPath(mediaPath)}" alt="${alt}"${size} />`;
   });
 
   transformed = transformed.replace(/\[\[([^\]]+)\]\]/g, (_match, target) => {

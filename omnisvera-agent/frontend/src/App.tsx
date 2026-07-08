@@ -12,6 +12,7 @@ export default function App() {
   const [page, setPage] = useState<Page>("session");
   const [selectedNoteId, setSelectedNoteId] = useState<number | null>(null);
   const [noteHistory, setNoteHistory] = useState<number[]>([]);
+  const [chatSeed, setChatSeed] = useState("");
   const [status, setStatus] = useState<string>("verificando...");
   const [tokenDraft, setTokenDraft] = useState<string>(getAccessToken());
   const [mode, setMode] = useState<AccessMode>(getAccessMode());
@@ -65,6 +66,11 @@ export default function App() {
     setNoteHistory((current) => current.slice(0, -1));
     setSelectedNoteId(previous);
     setPage("note");
+  }
+
+  function askPrompt(prompt: string) {
+    setChatSeed(prompt);
+    setPage("chat");
   }
 
   return (
@@ -132,8 +138,8 @@ export default function App() {
       </nav>
 
       {page === "session" && <SessionPanel onOpenNote={openNote} />}
-      {page === "player" && <PlayerPanel onOpenNote={openNote} />}
-      {page === "chat" && <ChatVault onOpenNote={openNote} />}
+      {page === "player" && <PlayerPanel onOpenNote={openNote} onAskPrompt={askPrompt} />}
+      {page === "chat" && <ChatVault onOpenNote={openNote} initialQuestion={chatSeed} />}
       {page === "search" && <SearchNotes onOpenNote={openNote} />}
       {page === "note" && (
         <>

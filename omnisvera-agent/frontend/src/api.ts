@@ -24,6 +24,25 @@ export function setAccessMode(mode: AccessMode) {
   localStorage.setItem(MODE_KEY, mode);
 }
 
+export function mediaUrlFromVaultPath(path?: string | null) {
+  if (!path) return "";
+  const clean = path
+    .replace(/^\[\[/, "")
+    .replace(/\]\]$/, "")
+    .split("|")[0]
+    .trim()
+    .replace(/^\/+/, "");
+  if (!clean) return "";
+  const mediaPath = clean.startsWith("zz_media/") ? clean : `zz_media/${clean}`;
+  const encoded = mediaPath
+    .split("/")
+    .map((part) => encodeURIComponent(part))
+    .join("/");
+  const token = getAccessToken();
+  const query = token ? `?token=${encodeURIComponent(token)}` : "";
+  return `${API_BASE}/media/${encoded}${query}`;
+}
+
 function scoped(path: string) {
   return `${API_BASE}/${getAccessMode()}${path}`;
 }
@@ -45,6 +64,10 @@ export type NoteSummary = {
   type?: string | null;
   visibility?: string | null;
   tags: string[];
+  cover?: string | null;
+  thumbnail?: string | null;
+  status?: string | null;
+  description?: string | null;
   updated_at: string;
 };
 
@@ -59,7 +82,10 @@ export type SearchResult = NoteSummary & {
 };
 
 export type DashboardSection = {
+  kind?: string | null;
   title: string;
+  description?: string | null;
+  prompt?: string | null;
   items: NoteSummary[];
 };
 

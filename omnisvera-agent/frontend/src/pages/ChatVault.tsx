@@ -1,11 +1,21 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { chatVault, NoteSummary } from "../api";
 
-export default function ChatVault({ onOpenNote }: { onOpenNote: (id: number) => void }) {
+export default function ChatVault({
+  onOpenNote,
+  initialQuestion,
+}: {
+  onOpenNote: (id: number) => void;
+  initialQuestion?: string;
+}) {
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState("");
   const [notes, setNotes] = useState<NoteSummary[]>([]);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (initialQuestion) setQuestion(initialQuestion);
+  }, [initialQuestion]);
 
   async function ask() {
     if (!question.trim()) return;

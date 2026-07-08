@@ -219,8 +219,22 @@ async def player_chat(request: ChatRequest, _: AccessContext = Depends(require_p
     )
 
 
-def _section(title: str, rows: list, limit: int = 8) -> dict:
-    return {"title": title, "items": [row_to_note(row) for row in rows[:limit]]}
+def _section(
+    kind: str,
+    title: str,
+    description: str,
+    rows: list,
+    *,
+    limit: int = 8,
+    prompt: str | None = None,
+) -> dict:
+    return {
+        "kind": kind,
+        "title": title,
+        "description": description,
+        "prompt": prompt,
+        "items": [row_to_note(row) for row in rows[:limit]],
+    }
 
 
 @app.get("/player/dashboard", response_model=PlayerDashboardResponse)
@@ -247,15 +261,66 @@ def player_dashboard(_: AccessContext = Depends(require_player)) -> dict:
     ]
     maps = by_type("map")
     locations = [row for row in by_type("location", "territory") if row not in maps]
+    diary = sorted(
+        [
+            row
+            for row in rows
+            if row["path"] == "LATEST_NEWS.md"
+            or row["path"].startswith("EARTHROPO/")
+            or (row["type"] == "story" and not row["path"].startswith("CAMPANHA/"))
+        ],
+        key=lambda row: (0 if row["path"] == "LATEST_NEWS.md" else 1, row["path"]),
+    )
 
     return {
         "mode": "player",
         "sections": [
-            _section("Rumores liberados", by_path("CAMPANHA/Rumors/")),
-            _section("Missões conhecidas", by_path("CAMPANHA/Quests/")),
-            _section("Personagens dos jogadores", characters),
-            _section("Locais e territórios conhecidos", locations, limit=10),
-            _section("Mapas", maps, limit=6),
+            _section(
+                "diary",
+                "Diário da campanha",
+                "Resumo público do que o grupo já pode consultar.",
+                diary,
+                limit=5,
+                prompt="O que aconteceu até agora?",
+            ),
+            _section(
+                "characters",
+                "Personagens dos jogadores",
+                "Os protagonistas atuais da mesa.",
+                characters,
+                limit=8,
+                prompt="Quem são os personagens jogadores?",
+            ),
+            _section(
+                "quests",
+                "Missões conhecidas",
+                "Objetivos e caminhos que já podem aparecer em jogo.",
+                by_path("CAMPANHA/Quests/"),
+                prompt="Quais missões estão ativas?",
+            ),
+            _section(
+                "rumors",
+                "Rumores liberados",
+                "Boatos, pistas e fios soltos conhecidos pelos jogadores.",
+                by_path("CAMPANHA/Rumors/"),
+                prompt="Quais rumores estão ativos?",
+            ),
+            _section(
+                "places",
+                "Lugares conhecidos",
+                "Locais e territórios que o grupo pode consultar sem spoiler.",
+                locations,
+                limit=10,
+                prompt="Quais lugares conhecemos?",
+            ),
+            _section(
+                "maps",
+                "Mapas",
+                "Mapas liberados para navegação de campanha.",
+                maps,
+                limit=6,
+                prompt="Quais mapas estão disponíveis?",
+            ),
         ],
     }
 
