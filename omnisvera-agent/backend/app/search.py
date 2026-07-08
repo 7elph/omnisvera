@@ -4,17 +4,56 @@ import re
 import json
 from pathlib import Path
 
-from .access import AccessMode, is_player_safe_row, sanitize_player_text
+from .access import AccessMode, is_player_safe_row, normalize_text, sanitize_player_text
 from .vault_index import all_notes_for_search
 
 
+STOPWORDS = {
+    "a",
+    "as",
+    "ao",
+    "aos",
+    "de",
+    "da",
+    "das",
+    "do",
+    "dos",
+    "e",
+    "eh",
+    "em",
+    "o",
+    "os",
+    "que",
+    "quem",
+    "qual",
+    "quais",
+    "sobre",
+    "um",
+    "uma",
+}
+
+
 def _terms(query: str) -> list[str]:
-    return [term.lower() for term in re.findall(r"[\wÀ-ÿ'-]+", query) if len(term) > 1]
+    normalized = normalize_text(query)
+    return [
+        term
+        for term in re.findall(r"[\w'-]+", normalized)
+        if len(term) > 1 and term not in STOPWORDS
+    ]
 
 
 def _excerpt(content: str, terms: list[str], size: int = 260) -> str:
     lowered = content.lower()
-    index = min((lowered.find(term) for term in terms if term in lowered), default=0)
+    normalized = normalize_text(content)
+    index = min(
+        (
+            position
+            for term in terms
+            for position in (normalized.find(term), lowered.find(term))
+            if position >= 0
+        ),
+        default=0,
+    )
     start = max(index - 80, 0)
     end = min(start + size, len(content))
     excerpt = content[start:end].replace("\n", " ").strip()
@@ -35,20 +74,25 @@ def search_notes(database_path: Path, query: str, limit: int = 10, access_mode: 
             content = sanitize_player_text(content)
 
         haystacks = {
-            "title": row["title"].lower(),
-            "path": row["path"].lower(),
-            "tags": row["tags"].lower(),
-            "content": content.lower(),
-            "aliases": row["aliases"].lower(),
+            "title": normalize_text(row["title"]),
+            "path": normalize_text(row["path"]),
+            "tags": normalize_text(row["tags"]),
+            "content": normalize_text(content),
+            "aliases": normalize_text(row["aliases"]),
         }
         score = 0
+        phrase = " ".join(terms)
+        if phrase and phrase in haystacks["title"]:
+            score += 30
+        if phrase and phrase in haystacks["path"]:
+            score += 18
         for term in terms:
             if term in haystacks["title"]:
-                score += 12
+                score += 16
             if term in haystacks["path"]:
-                score += 8
+                score += 10
             if term in haystacks["tags"] or term in haystacks["aliases"]:
-                score += 6
+                score += 8
             score += min(haystacks["content"].count(term), 8)
         if score:
             results.append(

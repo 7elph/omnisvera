@@ -114,9 +114,29 @@ def _looks_like_quest_overview(question: str) -> bool:
     return has_quest and asks_list
 
 
+def _looks_like_player_character_overview(question: str) -> bool:
+    lowered = normalize_text(question)
+    has_character = any(term in lowered for term in ("personagens", "jogadores", "grupo", "party"))
+    asks_list = any(term in lowered for term in ("quem", "quais", "lista", "liste", "sao", "são"))
+    return has_character and asks_list
+
+
+def _looks_like_campaign_recap(question: str) -> bool:
+    lowered = normalize_text(question)
+    has_recap = any(term in lowered for term in ("aconteceu", "ate agora", "resumo", "recap", "diario", "historia"))
+    asks_campaign = any(term in lowered for term in ("campanha", "sessao", "historia", "agora")) or "ate agora" in lowered
+    return has_recap and asks_campaign
+
+
 def _direct_entity_target(question: str) -> tuple[str, str] | None:
     normalized = normalize_text(question)
     candidates: list[tuple[str, str]] = []
+    for prefix in ("o que sabemos sobre", "o que se sabe sobre", "me fala sobre", "fale sobre", "resuma", "resume"):
+        if normalized.startswith(prefix + " "):
+            candidates.append((normalized.removeprefix(prefix).strip(), "about"))
+    for prefix in ("onde fica", "onde esta", "onde esta localizado", "onde fica localizado"):
+        if normalized.startswith(prefix + " "):
+            candidates.append((normalized.removeprefix(prefix).strip(), "where"))
     if normalized.startswith("quem "):
         target = re.sub(r"^quem\s+", "", normalized).strip()
         target = re.sub(r"^(e|eh|foi|sao|sao os|e a|e o|\?)\s*", "", target).strip()
@@ -125,9 +145,9 @@ def _direct_entity_target(question: str) -> tuple[str, str] | None:
         target = re.sub(r"^(o que|que)\s+", "", normalized).strip()
         target = re.sub(r"^(e|eh|\?)\s*", "", target).strip()
         candidates.append((target, "what"))
-    for prefix in ("me fala sobre", "fale sobre", "resuma", "resume"):
-        if normalized.startswith(prefix + " "):
-            candidates.append((normalized.removeprefix(prefix).strip(), "about"))
+    if normalized.startswith("qual "):
+        target = re.sub(r"^qual\s+(?:e|eh|foi)?\s*", "", normalized).strip()
+        candidates.append((target, "what"))
 
     for target, kind in candidates:
         target = re.sub(r"^(o|a|os|as|um|uma)\s+", "", target).strip(" ?.!")
@@ -138,6 +158,72 @@ def _direct_entity_target(question: str) -> tuple[str, str] | None:
 
 def _basename(path: str) -> str:
     return Path(path).stem
+
+
+def _row_lookup(row: Any) -> str:
+    aliases = ""
+    try:
+        aliases = " ".join(json.loads(row["aliases"] or "[]"))
+    except Exception:
+        aliases = ""
+    return normalize_text(f"{row['title']} {_basename(row['path'])} {aliases}")
+
+
+def _without_initial_article(value: str) -> str:
+    return re.sub(r"^(o|a|os|as|um|uma)\s+", "", normalize_text(value)).strip()
+
+
+def _find_exact_row(database_path: Path, target: str, access_mode: AccessMode | None = None) -> Any | None:
+    target_norm = normalize_text(target)
+    target_without_article = _without_initial_article(target)
+    if not target_norm:
+        return None
+    matches: list[Any] = []
+    for row in all_notes_for_search(database_path):
+        candidates = {normalize_text(row["title"]), normalize_text(_basename(row["path"]))}
+        try:
+            candidates.update(normalize_text(alias) for alias in json.loads(row["aliases"] or "[]"))
+        except Exception:
+            pass
+        candidates_without_article = {_without_initial_article(candidate) for candidate in candidates}
+        if target_norm in candidates or target_without_article in candidates_without_article:
+            matches.append(row)
+    if not matches:
+        return None
+
+    def rank(row: Any) -> tuple[int, str]:
+        score = 0
+        path = row["path"]
+        note_type = normalize_text(row["type"])
+        if access_mode == "player" and is_player_safe_row(row):
+            score += 200
+        if path.startswith(("Workflow/", "Templates/", "omnisvera-agent/")):
+            score -= 120
+        if note_type in {"character", "location", "territory", "faction", "item", "quest", "rumor", "story"}:
+            score += 30
+        if normalize_text(row["title"]) == target_norm:
+            score += 20
+        if normalize_text(_basename(path)) == target_norm:
+            score += 10
+        return (score, path)
+
+    matches.sort(key=rank, reverse=True)
+    return matches[0]
+
+
+def _blocked_player_entity_answer(target: str) -> dict:
+    clean_target = target.strip().title()
+    return {
+        "answer": (
+            f"A nota principal de **{clean_target}** existe no vault, "
+            "mas ainda não está liberada para o modo jogador. "
+            "Para evitar spoiler, não vou completar a resposta usando nota lateral, rumor ou referência indireta."
+        ),
+        "notes_used": [],
+        "note_paths": [],
+        "insufficient_context": False,
+        "warning": "Nota principal não liberada no modo jogador.",
+    }
 
 
 def _entity_candidate_score(item: dict, target: str, kind: str) -> int:
@@ -165,6 +251,16 @@ def _entity_candidate_score(item: dict, target: str, kind: str) -> int:
     elif kind == "what":
         if note_type in {"item", "location", "territory", "lore", "race", "class", "quest", "rumor"}:
             score += 45
+    elif kind == "where":
+        if note_type in {"location", "territory", "map"}:
+            score += 90
+        elif note_type == "character":
+            score += 20
+        else:
+            score -= 60
+    elif kind == "about":
+        if note_type in {"character", "location", "territory", "faction", "item", "quest", "rumor"}:
+            score += 35
 
     return score
 
@@ -187,7 +283,11 @@ def _find_direct_entity_note(
     best = results[0]
     target_norm = normalize_text(target)
     best_lookup = normalize_text(f"{best.get('title', '')} {_basename(best.get('path', ''))} {' '.join(best.get('aliases') or [])}")
-    if target_norm not in best_lookup and best.get("score", 0) < 20:
+    best_entity_score = _entity_candidate_score(best, target, kind)
+    best_type = normalize_text(best.get("type"))
+    if kind in {"who", "what", "where"} and target_norm not in best_lookup and best_entity_score < 40:
+        return None
+    if kind == "where" and best_type not in {"location", "territory", "map", "character", "faction"}:
         return None
 
     return get_note(database_path, best["id"], access_mode=access_mode)
@@ -263,6 +363,20 @@ def _note_kind_label(note_type: str | None) -> str:
     return labels.get(normalize_text(note_type), "nota")
 
 
+def _clean_value(value: Any) -> str:
+    if value is None:
+        return ""
+    if isinstance(value, list):
+        return ", ".join(_clean_value(item) for item in value if _clean_value(item))
+    return _plain_wikilinks(str(value)).strip()
+
+
+def _append_if(lines: list[str], label: str, value: Any) -> None:
+    cleaned = _clean_value(value)
+    if cleaned:
+        lines.append(f"{label}: {cleaned}.")
+
+
 def _direct_entity_answer(note: dict, question: str, access_mode: AccessMode) -> dict:
     frontmatter = note.get("frontmatter") or {}
     content = sanitize_player_text(note["content"]) if access_mode == "player" else note["content"]
@@ -270,7 +384,28 @@ def _direct_entity_answer(note: dict, question: str, access_mode: AccessMode) ->
     title = _plain_wikilinks(str(note["title"]))
     note_type = normalize_text(note.get("type"))
     tags = [normalize_text(tag) for tag in note.get("tags") or []]
+    query_kind = (_direct_entity_target(question) or ("", "about"))[1]
     lines: list[str] = []
+
+    if query_kind == "where":
+        if note_type in {"location", "territory", "map"}:
+            lines.append(f"{title} é {_note_kind_label(note.get('type'))} em Omnisvera.")
+            _append_if(lines, "Território", frontmatter.get("territory"))
+            _append_if(lines, "Localização superior", frontmatter.get("parent_location") or frontmatter.get("location"))
+            summary = _first_useful_sentence(content)
+            if summary:
+                lines.append(summary)
+        else:
+            location = fields.get("localizacao atual") or frontmatter.get("location")
+            territory = fields.get("territorio") or frontmatter.get("territory")
+            lines.append(f"{title} está ligado a {_clean_value(location or territory) or 'local não definido no contexto liberado'}.")
+        return {
+            "answer": "\n".join(f"- {line}" for line in lines[:5]),
+            "notes_used": [note],
+            "note_paths": [note["path"]],
+            "insufficient_context": False,
+            "warning": None,
+        }
 
     if note_type == "character":
         subtype = normalize_text(frontmatter.get("subtype"))
@@ -319,6 +454,20 @@ def _direct_entity_answer(note: dict, question: str, access_mode: AccessMode) ->
                 if owner:
                     details.append(f"portador: {_plain_wikilinks(str(owner))}")
                 lines.append("; ".join(details) + ".")
+        elif note_type in {"location", "territory"}:
+            _append_if(lines, "Território", frontmatter.get("territory"))
+            _append_if(lines, "Localização superior", frontmatter.get("parent_location") or frontmatter.get("location"))
+            _append_if(lines, "Função", frontmatter.get("role") or frontmatter.get("subtype"))
+        elif note_type == "faction":
+            _append_if(lines, "Status", frontmatter.get("status") or frontmatter.get("campaign_status"))
+            _append_if(lines, "Atuação", frontmatter.get("location") or frontmatter.get("territory"))
+            _append_if(lines, "Liderança", frontmatter.get("leader"))
+        elif note_type in {"race", "class"}:
+            _append_if(lines, "Status", frontmatter.get("status") or frontmatter.get("work_status"))
+            _append_if(lines, "Sistema", frontmatter.get("ruleset") or frontmatter.get("source_system"))
+        elif note_type in {"quest", "rumor"}:
+            _append_if(lines, "Status", frontmatter.get("quest_status") or frontmatter.get("status"))
+            _append_if(lines, "Local", frontmatter.get("location") or frontmatter.get("territory"))
         if summary:
             lines.append(summary)
 
@@ -330,6 +479,158 @@ def _direct_entity_answer(note: dict, question: str, access_mode: AccessMode) ->
         "insufficient_context": False,
         "warning": None,
     }
+
+
+def _answer_player_characters(database_path: Path, access_mode: AccessMode) -> dict | None:
+    rows = []
+    for row in all_notes_for_search(database_path):
+        if row["type"] != "character":
+            continue
+        if access_mode == "player" and not is_player_safe_row(row):
+            continue
+        frontmatter = _frontmatter(row)
+        tags = normalize_text(row["tags"])
+        subtype = normalize_text(frontmatter.get("subtype"))
+        role = normalize_text(frontmatter.get("role"))
+        if subtype != "player_character" and role != "player" and "jogador" not in tags:
+            continue
+        rows.append((row, frontmatter))
+
+    if not rows:
+        return None
+
+    priority = ("vezemir", "varkh", "raziel", "morthak", "mira")
+
+    def rank(item: tuple[Any, dict]) -> tuple[int, str]:
+        row, _frontmatter = item
+        lookup = normalize_text(f"{row['path']} {row['title']}")
+        for index, name in enumerate(priority):
+            if name in lookup:
+                return (index, lookup)
+        return (len(priority), lookup)
+
+    rows.sort(key=rank)
+    lines = ["Personagens jogadores liberados no vault:"]
+    note_ids: list[int] = []
+    for row, frontmatter in rows[:8]:
+        note = get_note(database_path, row["id"], access_mode=access_mode)
+        if not note:
+            continue
+        note_ids.append(row["id"])
+        content = sanitize_player_text(note["content"]) if access_mode == "player" else note["content"]
+        fields = _labeled_fields(content)
+        race = _clean_value(fields.get("raca") or frontmatter.get("race"))
+        char_class = _clean_value(fields.get("classe") or frontmatter.get("class"))
+        role_text = "; ".join(part for part in (race, char_class) if part)
+        suffix = f" — {role_text}" if role_text else ""
+        lines.append(f"- **{_plain_wikilinks(row['title'])}**{suffix}.")
+
+    return {
+        "answer": "\n".join(lines),
+        "notes_used": get_notes_by_ids(database_path, note_ids, access_mode=access_mode),
+        "note_paths": [row["path"] for row, _frontmatter in rows[:8]],
+        "insufficient_context": False,
+        "warning": None,
+    }
+
+
+def _answer_campaign_recap(database_path: Path, access_mode: AccessMode) -> dict | None:
+    wanted_paths = [
+        "EARTHROPO/01 - Ecos do Mundo Perdido.md",
+        "CAMPANHA/Quests/02 - Investigar Remédios Falsos de Maré Baixa.md",
+        "CAMPANHA/Quests/03 - Explorar a Passagem Sob a Estrada.md",
+        "CAMPANHA/Rumors/02 - Remédios Falsos da Maré Baixa.md",
+        "CAMPANHA/Rumors/03 - Caravana Acidentada na Estrada de Avenor.md",
+    ]
+    rows_by_path = {row["path"]: row for row in all_notes_for_search(database_path)}
+    notes: list[dict] = []
+    for path in wanted_paths:
+        row = rows_by_path.get(path)
+        if not row:
+            continue
+        if access_mode == "player" and not is_player_safe_row(row):
+            continue
+        note = get_note(database_path, row["id"], access_mode=access_mode)
+        if note:
+            notes.append(note)
+
+    if not notes:
+        return None
+
+    lines = ["Resumo público liberado até agora:"]
+    chapter = next((note for note in notes if normalize_text(note.get("type")) == "story"), None)
+    if chapter:
+        summary = _first_useful_sentence(chapter["content"])
+        if summary:
+            lines.append(f"- **{chapter['title']}**: {summary}")
+
+    quests = [note for note in notes if normalize_text(note.get("type")) == "quest"]
+    if quests:
+        quest_titles = ", ".join(f"**{note['title']}**" for note in quests[:3])
+        lines.append(f"- Missões em aberto: {quest_titles}.")
+
+    rumors = [note for note in notes if normalize_text(note.get("type")) == "rumor"]
+    if rumors:
+        rumor_summaries = []
+        for note in rumors[:2]:
+            summary = _first_useful_sentence(note["content"])
+            if summary:
+                rumor_summaries.append(summary)
+        if rumor_summaries:
+            lines.append("- Pistas públicas: " + " ".join(rumor_summaries[:2]))
+
+    lines.append("- Mistérios maiores continuam não confirmados no modo jogador.")
+    return {
+        "answer": "\n".join(lines),
+        "notes_used": notes,
+        "note_paths": [note["path"] for note in notes],
+        "insufficient_context": False,
+        "warning": None,
+    }
+
+
+def _type_hints_for_question(question: str) -> set[str]:
+    lowered = normalize_text(question)
+    hints: set[str] = set()
+    if any(term in lowered for term in ("quem", "personagem", "npc", "jogador")):
+        hints.add("character")
+    if any(term in lowered for term in ("onde", "lugar", "local", "cidade", "bairro", "reino", "mapa")):
+        hints.update({"location", "territory", "map"})
+    if any(term in lowered for term in ("faccao", "facao", "guilda", "coroa", "guarda", "culto")):
+        hints.add("faction")
+    if any(term in lowered for term in ("item", "arma", "escudo", "medalhao", "remedio", "frasco")):
+        hints.add("item")
+    if any(term in lowered for term in ("classe", "raca", "mecanica", "regra")):
+        hints.update({"class", "race"})
+    if any(term in lowered for term in ("missao", "quest", "objetivo")):
+        hints.add("quest")
+    if any(term in lowered for term in ("rumor", "boato", "pista")):
+        hints.add("rumor")
+    if any(term in lowered for term in ("capitulo", "sessao", "aconteceu", "historia")):
+        hints.add("story")
+    return hints
+
+
+def _rerank_results(question: str, results: list[dict]) -> list[dict]:
+    hints = _type_hints_for_question(question)
+    if not results:
+        return []
+
+    def rank(item: dict) -> tuple[int, int, str]:
+        score = int(item.get("score") or 0)
+        note_type = normalize_text(item.get("type"))
+        path = item.get("path") or ""
+        if hints and note_type in hints:
+            score += 30
+        if path.startswith(("Workflow/", "Templates/", "omnisvera-agent/")) or "INDICE_" in path:
+            score -= 80
+        if note_type == "index":
+            score -= 80
+        if note_type in {"quest", "rumor", "story", "character", "location", "faction", "item"}:
+            score += 5
+        return (score, -len(path), item.get("title") or "")
+
+    return sorted(results, key=rank, reverse=True)
 
 
 def _answer_index_overview(
@@ -423,11 +724,28 @@ async def answer_question(
         if quest_answer:
             return quest_answer
 
+    if _looks_like_player_character_overview(question):
+        character_answer = _answer_player_characters(database_path, access_mode)
+        if character_answer:
+            return character_answer
+
+    if _looks_like_campaign_recap(question):
+        recap_answer = _answer_campaign_recap(database_path, access_mode)
+        if recap_answer:
+            return recap_answer
+
+    extracted = _direct_entity_target(question)
+    if extracted and access_mode == "player":
+        target, _kind = extracted
+        exact_row = _find_exact_row(database_path, target, access_mode=access_mode)
+        if exact_row is not None and not is_player_safe_row(exact_row):
+            return _blocked_player_entity_answer(target)
+
     direct_note = _find_direct_entity_note(database_path, question, access_mode)
     if direct_note:
         return _direct_entity_answer(direct_note, question, access_mode)
 
-    results = search_notes(database_path, question, limit=limit, access_mode=access_mode)
+    results = search_notes(database_path, question, limit=max(limit, 12), access_mode=access_mode)
     operational_results = [
         item
         for item in results
@@ -438,6 +756,7 @@ async def answer_question(
     ]
     if operational_results:
         results = operational_results
+    results = _rerank_results(question, results)[: max(3, min(limit, 8))]
     note_ids = list(dict.fromkeys(item["id"] for item in results))
     notes_used = get_notes_by_ids(database_path, note_ids, access_mode=access_mode)
     context = _context_from_notes(database_path, note_ids, access_mode=access_mode)
@@ -455,6 +774,8 @@ Contexto encontrado no vault:
 Responda usando o contexto acima.
 Não use conhecimento externo.
 Se responder com fatos, eles precisam estar no contexto.
+Considere a primeira nota do contexto como a mais relevante.
+Não troque o assunto principal por item, nota ou referência relacionada.
 Faça síntese, não transcrição.
 Evite repetir a mesma informação.
 Comece com a resposta direta em 2 a 6 frases ou bullets.
