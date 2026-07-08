@@ -7,7 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
-from .access import AccessContext, is_player_safe_row
+from .access import AccessContext, is_player_safe_row, sanitize_player_summary
 from .config import get_settings
 from .ollama_client import check_ollama
 from .rag import answer_question
@@ -233,7 +233,7 @@ def _section(
         "title": title,
         "description": description,
         "prompt": prompt,
-        "items": [row_to_note(row) for row in rows[:limit]],
+        "items": [sanitize_player_summary(row_to_note(row)) for row in rows[:limit]],
     }
 
 
@@ -241,46 +241,89 @@ def _section(
 def player_dashboard(_: AccessContext = Depends(require_player)) -> dict:
     rows = [row for row in all_notes_for_search(settings.database_path) if is_player_safe_row(row)]
 
+    def is_active(row) -> bool:
+        status = str(row_to_note(row).get("status") or "").strip().lower()
+        return status not in {"arquivado", "deprecated", "non canon", "non-canon", "removido"}
+
+    def sort_by_priority(items: list, priority: tuple[str, ...]) -> list:
+        def rank(row) -> tuple[int, str]:
+            text = f"{row['path']} {row['title']}".lower()
+            for index, term in enumerate(priority):
+                if term.lower() in text:
+                    return (index, row["title"].lower())
+            return (len(priority), row["title"].lower())
+
+        return sorted(items, key=rank)
+
     def by_path(prefix: str) -> list:
         return sorted(
-            [row for row in rows if row["path"].startswith(prefix) and "INDICE_" not in row["path"]],
+            [row for row in rows if row["path"].startswith(prefix) and "INDICE_" not in row["path"] and is_active(row)],
             key=lambda row: row["path"],
         )
 
     def by_type(*types: str) -> list:
         wanted = set(types)
         return sorted(
-            [row for row in rows if row["type"] in wanted and "INDICE_" not in row["path"]],
+            [row for row in rows if row["type"] in wanted and "INDICE_" not in row["path"] and is_active(row)],
             key=lambda row: row["title"],
         )
 
+    player_character_priority = ("Vezemir", "Varkh Nimalis", "Raziel", "Morthak", "Mira Valen")
     characters = [
         row
         for row in by_type("character")
         if any(tag in row["tags"].lower() for tag in ("jogador", "player", "personagem-jogador"))
+        or any(name.lower() in f"{row['path']} {row['title']}".lower() for name in player_character_priority)
     ]
-    maps = by_type("map")
-    locations = [row for row in by_type("location", "territory") if row not in maps]
-    diary = sorted(
+    characters = sort_by_priority(characters, player_character_priority)
+    maps = sort_by_priority(by_type("map"), ("earthropo", "nimalia", "nimalis"))
+    locations = sort_by_priority(
+        [row for row in by_type("location", "territory") if row not in maps],
+        (
+            "O Frasco Afogado",
+            "Maré Baixa",
+            "Nimalis",
+            "Porto de Nimalia",
+            "Floresta de Avenor",
+            "Vale Dourado",
+            "Bosque Sussurrante",
+        ),
+    )
+    diary = sort_by_priority(
         [
             row
             for row in rows
             if row["path"] == "LATEST_NEWS.md"
             or row["path"].startswith("EARTHROPO/")
             or (row["type"] == "story" and not row["path"].startswith("CAMPANHA/"))
+            if "INDICE_" not in row["path"] and is_active(row)
         ],
-        key=lambda row: (0 if row["path"] == "LATEST_NEWS.md" else 1, row["path"]),
+        ("LATEST_NEWS", "01 - Ecos do Mundo Perdido"),
+    )
+    quests = by_path("CAMPANHA/Quests/")
+    rumors = by_path("CAMPANHA/Rumors/")
+    now = sort_by_priority(
+        [*diary[:1], *quests[:2], *rumors[:2]],
+        ("01 - Ecos do Mundo Perdido", "Remédios Falsos", "Corvo da Maré Baixa"),
     )
 
     return {
         "mode": "player",
         "sections": [
             _section(
+                "now",
+                "Agora em jogo",
+                "O essencial para abrir o celular na mesa sem cair em bastidor.",
+                now,
+                limit=5,
+                prompt="O que está acontecendo agora na campanha?",
+            ),
+            _section(
                 "diary",
                 "Diário da campanha",
                 "Resumo público do que o grupo já pode consultar.",
                 diary,
-                limit=5,
+                limit=3,
                 prompt="O que aconteceu até agora?",
             ),
             _section(
@@ -295,14 +338,16 @@ def player_dashboard(_: AccessContext = Depends(require_player)) -> dict:
                 "quests",
                 "Missões conhecidas",
                 "Objetivos e caminhos que já podem aparecer em jogo.",
-                by_path("CAMPANHA/Quests/"),
+                quests,
+                limit=6,
                 prompt="Quais missões estão ativas?",
             ),
             _section(
                 "rumors",
                 "Rumores liberados",
                 "Boatos, pistas e fios soltos conhecidos pelos jogadores.",
-                by_path("CAMPANHA/Rumors/"),
+                rumors,
+                limit=6,
                 prompt="Quais rumores estão ativos?",
             ),
             _section(

@@ -5,7 +5,7 @@ import re
 from pathlib import Path
 from typing import Any
 
-from .access import AccessMode, is_player_safe_row
+from .access import AccessMode, is_player_safe_row, normalize_text, sanitize_player_text
 from .ollama_client import chat_with_ollama
 from .search import search_notes
 from .vault_index import all_notes_for_search, get_note, get_notes_by_ids
@@ -101,15 +101,15 @@ def _context_from_notes(
 
 
 def _looks_like_rumor_overview(question: str) -> bool:
-    lowered = question.lower()
+    lowered = normalize_text(question)
     has_rumor = "rumor" in lowered or "rumores" in lowered
     asks_list = any(term in lowered for term in ("quais", "lista", "liste", "ativos", "ativas", "tem", "existem"))
     return has_rumor and asks_list
 
 
 def _looks_like_quest_overview(question: str) -> bool:
-    lowered = question.lower()
-    has_quest = any(term in lowered for term in ("quest", "quests", "missão", "missões", "missao", "missoes"))
+    lowered = normalize_text(question)
+    has_quest = any(term in lowered for term in ("quest", "quests", "missao", "missoes"))
     asks_list = any(term in lowered for term in ("quais", "lista", "liste", "ativas", "ativos", "tem", "existem"))
     return has_quest and asks_list
 
@@ -174,13 +174,16 @@ def _answer_index_overview(
     lines = [f"{label} {adjective} no vault:"]
     note_ids: list[int] = []
     for row, frontmatter in rows[:10]:
-        note_ids.append(row["id"])
         title = frontmatter.get("name") or row["title"]
         status = frontmatter.get("status") or "sem status"
         visibility = frontmatter.get("visibility") or row["visibility"] or "sem visibilidade"
         location = frontmatter.get("location") or frontmatter.get("territory") or ""
-        summary = _first_useful_sentence(row["content"])
-        secret_marker = " — contém informação de mestre" if _is_secret(frontmatter) else ""
+        content = sanitize_player_text(row["content"]) if access_mode == "player" else row["content"]
+        summary = _first_useful_sentence(content)
+        if access_mode == "player" and not summary:
+            continue
+        note_ids.append(row["id"])
+        secret_marker = "" if access_mode == "player" else (" — contém informação de mestre" if _is_secret(frontmatter) else "")
         location_text = f" ({_plain_wikilinks(str(location))})" if location else ""
         lines.append(f"- **{_plain_wikilinks(str(title))}**{location_text}: {summary} _[{status}; {visibility}{secret_marker}]_")
 

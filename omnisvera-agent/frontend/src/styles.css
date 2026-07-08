@@ -298,6 +298,10 @@ textarea {
   line-height: 0.95;
 }
 
+.player-hero p {
+  max-width: 46rem;
+}
+
 .version-pill {
   background: #d6a858;
   border-radius: 999px;
@@ -326,6 +330,32 @@ textarea {
   color: #d6a858;
   font-size: 0.8rem;
   text-transform: uppercase;
+}
+
+.player-stats {
+  display: grid;
+  gap: 0.55rem;
+  grid-template-columns: repeat(auto-fit, minmax(118px, 1fr));
+  margin-top: 1rem;
+  max-width: 680px;
+}
+
+.player-stats span {
+  background: rgba(13, 11, 9, 0.62);
+  border: 1px solid #403124;
+  border-radius: 16px;
+  color: #d8c4a4;
+  display: grid;
+  font-size: 0.78rem;
+  gap: 0.15rem;
+  padding: 0.6rem 0.75rem;
+  text-transform: uppercase;
+}
+
+.player-stats strong {
+  color: #ffd489;
+  font-size: 1.45rem;
+  line-height: 1;
 }
 
 .player-prompts {
@@ -393,9 +423,18 @@ textarea {
   padding: 0 1rem;
 }
 
+.section-now .play-grid {
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+.section-now .play-card {
+  min-height: 210px;
+}
+
 .play-card {
   background: #201812;
   border: 1px solid #473424;
+  border-radius: 18px;
   color: #f3ead7;
   display: grid;
   min-height: 155px;
@@ -428,6 +467,38 @@ textarea {
   gap: 0.3rem;
   padding: 1rem;
   position: relative;
+}
+
+.card-kicker {
+  align-self: start;
+  background: rgba(214, 168, 88, 0.92);
+  border-radius: 999px;
+  color: #1d1309;
+  display: inline-flex;
+  font-size: 0.68rem;
+  font-weight: 900;
+  justify-self: start;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.1rem;
+  padding: 0.23rem 0.52rem;
+  text-transform: uppercase;
+}
+
+.card-quests .card-kicker {
+  background: #9fd0ff;
+}
+
+.card-rumors .card-kicker {
+  background: #d6a0ff;
+}
+
+.card-characters .card-kicker {
+  background: #f6d07a;
+}
+
+.card-places .card-kicker,
+.card-maps .card-kicker {
+  background: #a8d88f;
 }
 
 .play-card strong {

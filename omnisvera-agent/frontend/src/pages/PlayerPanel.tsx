@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { mediaUrlFromVaultPath, NoteSummary, playerDashboard, PlayerDashboard } from "../api";
 
 const SECTION_ICONS: Record<string, string> = {
+  now: "➤",
   diary: "✦",
   characters: "♟",
   quests: "!",
@@ -10,14 +11,34 @@ const SECTION_ICONS: Record<string, string> = {
   maps: "◇",
 };
 
-function NoteTile({ note, onOpenNote }: { note: NoteSummary; onOpenNote: (id: number) => void }) {
+const SECTION_LABELS: Record<string, string> = {
+  now: "Agora",
+  diary: "Diário",
+  characters: "Grupo",
+  quests: "Missão",
+  rumors: "Rumor",
+  places: "Lugar",
+  maps: "Mapa",
+};
+
+function NoteTile({
+  note,
+  sectionKind,
+  onOpenNote,
+}: {
+  note: NoteSummary;
+  sectionKind?: string | null;
+  onOpenNote: (id: number) => void;
+}) {
   const image = mediaUrlFromVaultPath(note.thumbnail || note.cover);
+  const label = SECTION_LABELS[sectionKind || ""] || note.type || "Nota";
 
   return (
-    <button className={`play-card ${image ? "has-image" : ""}`} onClick={() => onOpenNote(note.id)}>
+    <button className={`play-card ${image ? "has-image" : ""} card-${sectionKind || "default"}`} onClick={() => onOpenNote(note.id)}>
       {image && <img src={image} alt="" loading="lazy" />}
       <span className="play-card-overlay" />
       <span className="play-card-content">
+        <span className="card-kicker">{label}</span>
         <strong>{note.title}</strong>
         <small>
           {note.status || note.type || "nota"} · {note.visibility || "liberado"}
@@ -48,21 +69,34 @@ export default function PlayerPanel({
   }, []);
 
   const sections = dashboard?.sections || [];
+  const now = sections.find((section) => section.kind === "now");
   const diary = sections.find((section) => section.kind === "diary");
-  const featured = useMemo(() => diary?.items[0], [diary]);
+  const featured = useMemo(() => now?.items[0] || diary?.items[0], [diary, now]);
+  const counts = {
+    quests: sections.find((section) => section.kind === "quests")?.items.length || 0,
+    rumors: sections.find((section) => section.kind === "rumors")?.items.length || 0,
+    characters: sections.find((section) => section.kind === "characters")?.items.length || 0,
+    places: sections.find((section) => section.kind === "places")?.items.length || 0,
+  };
 
   return (
     <section className="panel player-home">
       <div className="player-hero">
         <div>
           <p className="eyebrow">Modo Jogador</p>
-          <span className="version-pill">Home Jogável v2</span>
+          <span className="version-pill">Home Jogável v3 · player-safe</span>
           <h2>Omnisvera em jogo</h2>
-          <p>Rumores, missões, mapas e notas liberadas — sem abrir bastidores do mestre.</p>
+          <p>Missões, rumores, personagens e lugares liberados — sem abrir bastidores do mestre.</p>
+          <div className="player-stats" aria-label="Resumo do painel dos jogadores">
+            <span><strong>{counts.quests}</strong> missões</span>
+            <span><strong>{counts.rumors}</strong> rumores</span>
+            <span><strong>{counts.characters}</strong> personagens</span>
+            <span><strong>{counts.places}</strong> lugares</span>
+          </div>
         </div>
         {featured && (
           <button className="featured-card" onClick={() => onOpenNote(featured.id)}>
-            <span>Continuar de onde paramos</span>
+            <span>Começar por aqui</span>
             <strong>{featured.title}</strong>
           </button>
         )}
@@ -97,7 +131,7 @@ export default function PlayerPanel({
 
           <div className="play-grid">
             {section.items.map((note) => (
-              <NoteTile key={note.id} note={note} onOpenNote={onOpenNote} />
+              <NoteTile key={note.id} note={note} sectionKind={section.kind} onOpenNote={onOpenNote} />
             ))}
             {section.items.length === 0 && <p className="muted">Nada liberado nesta seção ainda.</p>}
           </div>

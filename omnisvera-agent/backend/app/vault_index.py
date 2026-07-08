@@ -5,7 +5,7 @@ import sqlite3
 from pathlib import Path
 from typing import Any
 
-from .access import AccessMode, is_player_safe_row, sanitize_player_note
+from .access import AccessMode, is_player_safe_row, sanitize_player_note, sanitize_player_summary
 from .vault_reader import VaultNote
 
 
@@ -122,7 +122,8 @@ def list_notes(database_path: Path, limit: int = 500, access_mode: AccessMode = 
             (limit if access_mode == "gm" else limit * 4,),
         ).fetchall()
     filtered = [row for row in rows if _row_allowed(row, access_mode)]
-    return [row_to_note(row) for row in filtered[:limit]]
+    notes = [row_to_note(row) for row in filtered[:limit]]
+    return [sanitize_player_summary(note) for note in notes] if access_mode == "player" else notes
 
 
 def get_note(database_path: Path, note_id: int, access_mode: AccessMode = "gm") -> dict[str, Any] | None:
@@ -146,7 +147,15 @@ def get_notes_by_ids(
     placeholders = ",".join("?" for _ in note_ids)
     with connect(database_path) as conn:
         rows = conn.execute(f"SELECT * FROM notes WHERE id IN ({placeholders})", note_ids).fetchall()
-    by_id = {row["id"]: row_to_note(row) for row in rows if _row_allowed(row, access_mode)}
+    by_id = {
+        row["id"]: (
+            sanitize_player_summary(row_to_note(row))
+            if access_mode == "player"
+            else row_to_note(row)
+        )
+        for row in rows
+        if _row_allowed(row, access_mode)
+    }
     return [by_id[note_id] for note_id in note_ids if note_id in by_id]
 
 
@@ -187,6 +196,7 @@ def resolve_note(database_path: Path, target: str, access_mode: AccessMode = "gm
         candidates.update(_normalize_lookup(str(alias)) for alias in aliases)
 
         if wanted in candidates or wanted == path.split("/")[-1]:
-            return row_to_note(row)
+            note = row_to_note(row)
+            return sanitize_player_summary(note) if access_mode == "player" else note
 
     return None
