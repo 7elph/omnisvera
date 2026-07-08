@@ -18,8 +18,36 @@ function prettifyWikilink(target: string) {
   return (label || path.split("/").pop() || path).replace(/\.md$/i, "");
 }
 
+function stripInlineHtml(value: string) {
+  return value.replace(/<[^>]+>/g, "").trim();
+}
+
+function mediaMarkdownFromTarget(target: string, alt = "imagem") {
+  let clean = target.trim();
+  clean = clean.replace(/^\/media\//, "");
+  clean = clean.split("?")[0];
+  const mediaPath = normalizeMediaTarget(clean);
+  const url = mediaUrlFromVaultPath(mediaPath);
+  return `![${alt || mediaPath.split("/").pop() || "imagem"}](${url})`;
+}
+
 function transformObsidianMarkdown(content: string) {
   let transformed = content;
+
+  transformed = transformed.replace(/<h([1-6])[^>]*>([\s\S]*?)<\/h\1>/gi, (_match, level, inner) => {
+    const hashes = "#".repeat(Number(level));
+    return `\n\n${hashes} ${stripInlineHtml(String(inner))}\n\n`;
+  });
+
+  transformed = transformed.replace(/<br\s*\/?>/gi, "\n");
+  transformed = transformed.replace(/<hr\s*\/?>/gi, "\n\n---\n\n");
+  transformed = transformed.replace(/<\/?(div|center|span)[^>]*>/gi, "\n");
+
+  transformed = transformed.replace(/<img\b[^>]*\bsrc=["']([^"']+)["'][^>]*>/gi, (match, src) => {
+    const altMatch = String(match).match(/\balt=["']([^"']*)["']/i);
+    const alt = altMatch?.[1] || String(src).split("/").pop()?.split("?")[0] || "imagem";
+    return `\n\n${mediaMarkdownFromTarget(String(src), alt)}\n\n`;
+  });
 
   transformed = transformed.replace(/```(dataview|datacards|leaflet)([\s\S]*?)```/gi, (_match, kind) => {
     const label = String(kind).toLowerCase();
@@ -35,11 +63,9 @@ function transformObsidianMarkdown(content: string) {
 
   transformed = transformed.replace(/!\[\[([^\]]+)\]\]/g, (_match, target) => {
     const raw = String(target);
-    const [path, pipe] = raw.split("|");
-    const mediaPath = normalizeMediaTarget(path);
+    const [path] = raw.split("|");
     const alt = path.split("/").pop() || "imagem";
-    const size = pipe && /^\d+$/.test(pipe.trim()) ? ` width="${pipe.trim()}"` : "";
-    return `<img src="${mediaUrlFromVaultPath(mediaPath)}" alt="${alt}"${size} />`;
+    return mediaMarkdownFromTarget(path, alt);
   });
 
   transformed = transformed.replace(/\[\[([^\]]+)\]\]/g, (_match, target) => {
