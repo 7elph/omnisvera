@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import { searchNotes, SearchResult } from "../api";
+import { mediaUrlFromVaultPath, searchNotes, SearchResult } from "../api";
 
 const QUICK_SEARCHES = [
   "Sessão 01 Roteiro de Mesa",
   "01 Ecos do Mundo Perdido",
+  "Estado da Campanha",
   "Varkh Nimalis",
   "Vezemir",
   "Raziel",
@@ -12,9 +13,36 @@ const QUICK_SEARCHES = [
   "Remédios Falsos",
   "O Frasco Afogado",
   "Guarda Real de Nimalia",
+  "Nimalis",
 ];
 
-export default function SessionPanel({ onOpenNote }: { onOpenNote: (id: number) => void }) {
+const GM_PROMPTS = [
+  "O que preciso preparar para a próxima sessão?",
+  "Quais segredos não devo revelar aos jogadores?",
+  "Quais NPCs entram na sessão 01?",
+  "Quais pistas apontam para remédios falsos?",
+];
+
+function SessionCard({ note, onOpenNote }: { note: SearchResult; onOpenNote: (id: number) => void }) {
+  const image = mediaUrlFromVaultPath(note.thumbnail || note.cover);
+
+  return (
+    <button className={`note-card result-card ${image ? "has-image" : ""}`} onClick={() => onOpenNote(note.id)}>
+      {image && <img src={image} alt="" loading="lazy" />}
+      <strong>{note.title}</strong>
+      <small>{note.type || "nota"} · {note.visibility || "sem visibilidade"}</small>
+      <span>{note.path}</span>
+    </button>
+  );
+}
+
+export default function SessionPanel({
+  onOpenNote,
+  onAskPrompt,
+}: {
+  onOpenNote: (id: number) => void;
+  onAskPrompt: (prompt: string) => void;
+}) {
   const [items, setItems] = useState<SearchResult[]>([]);
 
   useEffect(() => {
@@ -31,14 +59,25 @@ export default function SessionPanel({ onOpenNote }: { onOpenNote: (id: number) 
 
   return (
     <section className="panel">
-      <h2>Painel da Sessão</h2>
-      <p>Atalhos rápidos para mesa. Reindexe o vault se algo não aparecer.</p>
+      <div className="chat-header">
+        <div>
+          <p className="eyebrow">Painel do Mestre</p>
+          <h2>Preparação de sessão</h2>
+          <p>Atalhos rápidos para abrir mesa, consultar P0 e perguntar ao vault sem caçar arquivo.</p>
+        </div>
+      </div>
+
+      <div className="prompt-chips">
+        {GM_PROMPTS.map((prompt) => (
+          <button key={prompt} onClick={() => onAskPrompt(prompt)}>
+            {prompt}
+          </button>
+        ))}
+      </div>
+
       <div className="cards">
         {items.map((note) => (
-          <button key={note.id} className="note-card" onClick={() => onOpenNote(note.id)}>
-            <strong>{note.title}</strong>
-            <span>{note.path}</span>
-          </button>
+          <SessionCard key={note.id} note={note} onOpenNote={onOpenNote} />
         ))}
       </div>
     </section>

@@ -155,6 +155,156 @@ textarea {
   white-space: pre-wrap;
 }
 
+.chat-header {
+  align-items: flex-start;
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+}
+
+.chat-header p {
+  color: #b8a58b;
+  margin: 0.2rem 0 0;
+}
+
+.secondary-button {
+  background: #2b2119;
+  border: 1px solid #463321;
+  color: #f3ead7;
+}
+
+.prompt-chips,
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 1rem 0;
+}
+
+.prompt-chips button,
+.filter-bar button {
+  background: #241a14;
+  border: 1px solid #463321;
+  border-radius: 999px;
+  color: #ffd489;
+  font-size: 0.9rem;
+  font-weight: 700;
+  padding: 0.45rem 0.75rem;
+}
+
+.filter-bar button.active {
+  background: #d6a858;
+  color: #1d1309;
+}
+
+.chat-input-box {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.chat-input-box textarea {
+  min-height: 110px;
+}
+
+.empty-chat {
+  background: #18120e;
+  border: 1px dashed #6e512f;
+  border-radius: 16px;
+  color: #d6c3a5;
+  display: grid;
+  gap: 0.25rem;
+  margin-top: 1rem;
+  padding: 1rem;
+}
+
+.chat-thread {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.chat-message {
+  background: rgba(13, 11, 9, 0.48);
+  border: 1px solid #35271d;
+  border-radius: 18px;
+  display: grid;
+  gap: 0.75rem;
+  padding: 0.75rem;
+}
+
+.user-bubble {
+  align-self: start;
+  background: #d6a858;
+  border-radius: 16px 16px 16px 4px;
+  color: #1d1309;
+  font-weight: 800;
+  justify-self: start;
+  max-width: min(720px, 100%);
+  padding: 0.65rem 0.85rem;
+}
+
+.source-list {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.source-grid {
+  display: grid;
+  gap: 0.65rem;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+}
+
+.source-card {
+  align-items: stretch;
+  background: #201812;
+  border: 1px solid #473424;
+  color: #f3ead7;
+  display: grid;
+  gap: 0.55rem;
+  grid-template-columns: 58px minmax(0, 1fr);
+  padding: 0.55rem;
+  text-align: left;
+}
+
+.source-card:not(.has-image) {
+  grid-template-columns: 1fr;
+}
+
+.source-card img,
+.result-card img {
+  border-radius: 12px;
+  height: 58px;
+  object-fit: cover;
+  width: 58px;
+}
+
+.source-card span,
+.result-card {
+  min-width: 0;
+}
+
+.source-card small,
+.source-card em,
+.result-card em {
+  color: #b8a58b;
+  display: block;
+  font-size: 0.78rem;
+  font-style: normal;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.result-card.has-image {
+  grid-template-columns: 68px minmax(0, 1fr);
+}
+
+.result-card.has-image img {
+  grid-row: span 4;
+  height: 68px;
+  width: 68px;
+}
+
 .rendered-note {
   background: #0d0b09;
   border: 1px solid #2f241b;

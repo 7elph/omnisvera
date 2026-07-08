@@ -16,6 +16,7 @@ Esta pasta concentra documentos técnicos, guias de operação, auditorias e his
 - [[OMNISVERA_VISIBILITY_AND_SPOILER_GUIDE]]
 - [[OMNISVERA_LOCATION_TERRITORY_GUIDE]]
 - [[OMNISVERA_TAG_BRIDGE_GUIDE]]
+- [[OMNISVERA_COMPANION_GUIDE]]
 
 ## Ferramentas Locais
 

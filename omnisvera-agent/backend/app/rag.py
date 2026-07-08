@@ -223,6 +223,11 @@ def _blocked_player_entity_answer(target: str) -> dict:
         "note_paths": [],
         "insufficient_context": False,
         "warning": "Nota principal não liberada no modo jogador.",
+        "suggested_questions": [
+            "Quais rumores estão ativos?",
+            "Quais missões estão ativas?",
+            "O que aconteceu até agora?",
+        ],
     }
 
 
@@ -371,6 +376,17 @@ def _clean_value(value: Any) -> str:
     return _plain_wikilinks(str(value)).strip()
 
 
+def _short_note_title(value: Any) -> str:
+    title = _plain_wikilinks(str(value or "")).strip()
+    if "—" in title:
+        title = title.split("—", 1)[0].strip()
+    if " - " in title and title[:2].isdigit():
+        title = title.split(" - ", 1)[-1].strip()
+    if title.isupper() and any(char.isalpha() for char in title):
+        title = " ".join(word[:1].upper() + word[1:].lower() for word in title.split())
+    return title
+
+
 def _append_if(lines: list[str], label: str, value: Any) -> None:
     cleaned = _clean_value(value)
     if cleaned:
@@ -405,6 +421,7 @@ def _direct_entity_answer(note: dict, question: str, access_mode: AccessMode) ->
             "note_paths": [note["path"]],
             "insufficient_context": False,
             "warning": None,
+            "suggested_questions": _suggested_questions_for_notes(question, [note], access_mode),
         }
 
     if note_type == "character":
@@ -478,6 +495,7 @@ def _direct_entity_answer(note: dict, question: str, access_mode: AccessMode) ->
         "note_paths": [note["path"]],
         "insufficient_context": False,
         "warning": None,
+        "suggested_questions": _suggested_questions_for_notes(question, [note], access_mode),
     }
 
 
@@ -531,6 +549,11 @@ def _answer_player_characters(database_path: Path, access_mode: AccessMode) -> d
         "note_paths": [row["path"] for row, _frontmatter in rows[:8]],
         "insufficient_context": False,
         "warning": None,
+        "suggested_questions": [
+            "O que aconteceu até agora?",
+            "Quais missões estão ativas?",
+            "Quais rumores estão ativos?",
+        ],
     }
 
 
@@ -586,6 +609,7 @@ def _answer_campaign_recap(database_path: Path, access_mode: AccessMode) -> dict
         "note_paths": [note["path"] for note in notes],
         "insufficient_context": False,
         "warning": None,
+        "suggested_questions": _suggested_questions_for_notes("O que aconteceu até agora?", notes, access_mode),
     }
 
 
@@ -631,6 +655,54 @@ def _rerank_results(question: str, results: list[dict]) -> list[dict]:
         return (score, -len(path), item.get("title") or "")
 
     return sorted(results, key=rank, reverse=True)
+
+
+def _suggested_questions_for_notes(question: str, notes: list[dict], access_mode: AccessMode) -> list[str]:
+    suggestions: list[str] = []
+    seen: set[str] = set()
+
+    def add(value: str) -> None:
+        if value not in seen:
+            seen.add(value)
+            suggestions.append(value)
+
+    lowered = normalize_text(question)
+    for note in notes[:4]:
+        title = _short_note_title(note.get("title"))
+        note_type = normalize_text(note.get("type"))
+        if not title:
+            continue
+        if note_type == "character":
+            add(f"O que sabemos sobre {title}?")
+            add(f"Com quem {title} está ligado?")
+        elif note_type in {"location", "territory"}:
+            add(f"O que sabemos sobre {title}?")
+            add(f"Quem está ligado a {title}?")
+        elif note_type == "faction":
+            add(f"O que a facção {title} quer?")
+            add(f"Quem está ligado a {title}?")
+        elif note_type == "item":
+            add(f"O que é {title}?")
+            add(f"Quem está ligado a {title}?")
+        elif note_type == "quest":
+            add("Quais missões estão ativas?")
+            add(f"O que sabemos sobre {title}?")
+        elif note_type == "rumor":
+            add("Quais rumores estão ativos?")
+            add(f"O que sabemos sobre {title}?")
+        elif note_type == "story":
+            add("O que aconteceu até agora?")
+
+    if "rumor" not in lowered:
+        add("Quais rumores estão ativos?")
+    if "miss" not in lowered and "quest" not in lowered:
+        add("Quais missões estão ativas?")
+    if access_mode == "player":
+        add("Quem são os personagens jogadores?")
+    else:
+        add("O que precisa preparar para a próxima sessão?")
+
+    return suggestions[:5]
 
 
 def _answer_index_overview(
@@ -683,6 +755,17 @@ def _answer_index_overview(
         "note_paths": [row["path"] for row, _ in rows[:10]],
         "insufficient_context": False,
         "warning": None,
+        "suggested_questions": [
+            "O que aconteceu até agora?",
+            "Quem são os personagens jogadores?",
+            "Quais lugares conhecemos?",
+        ]
+        if access_mode == "player"
+        else [
+            "O que precisa preparar para a próxima sessão?",
+            "Quais pendências existem?",
+            "Quais notas precisam revisão?",
+        ],
     }
 
 
@@ -795,4 +878,5 @@ Se houver informação pública e segredo do mestre misturados no contexto, sepa
         "note_paths": [note["path"] for note in notes_used],
         "insufficient_context": insufficient,
         "warning": warning,
+        "suggested_questions": _suggested_questions_for_notes(question, notes_used, access_mode),
     }

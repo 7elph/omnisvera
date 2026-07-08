@@ -63,6 +63,7 @@ class ChatResponse(BaseModel):
     note_paths: list[str]
     insufficient_context: bool
     warning: str | None = None
+    suggested_questions: list[str] = Field(default_factory=list)
 
 
 class DashboardSection(BaseModel):

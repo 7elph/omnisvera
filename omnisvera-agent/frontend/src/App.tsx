@@ -150,7 +150,7 @@ export default function App() {
         </button>
       </nav>
 
-      {page === "session" && mode === "gm" && <SessionPanel onOpenNote={openNote} />}
+      {page === "session" && mode === "gm" && <SessionPanel onOpenNote={openNote} onAskPrompt={askPrompt} />}
       {page === "player" && mode === "player" && <PlayerPanel onOpenNote={openNote} onAskPrompt={askPrompt} />}
       {page === "chat" && <ChatVault onOpenNote={openNote} initialQuestion={chatSeed} />}
       {page === "search" && <SearchNotes onOpenNote={openNote} />}

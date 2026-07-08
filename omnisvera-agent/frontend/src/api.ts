@@ -81,6 +81,15 @@ export type SearchResult = NoteSummary & {
   excerpt: string;
 };
 
+export type ChatResult = {
+  answer: string;
+  notes_used: NoteSummary[];
+  note_paths: string[];
+  insufficient_context: boolean;
+  warning?: string | null;
+  suggested_questions?: string[];
+};
+
 export type DashboardSection = {
   kind?: string | null;
   title: string;
@@ -135,7 +144,7 @@ export async function searchNotes(query: string, limit = 10): Promise<SearchResu
   return response.json();
 }
 
-export async function chatVault(question: string, limit = 6) {
+export async function chatVault(question: string, limit = 6): Promise<ChatResult> {
   const response = await fetch(scoped("/chat"), {
     method: "POST",
     headers: authHeaders({ "Content-Type": "application/json" }),
