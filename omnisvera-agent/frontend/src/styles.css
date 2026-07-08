@@ -155,6 +155,87 @@ textarea {
   white-space: pre-wrap;
 }
 
+.rendered-note {
+  background: #0d0b09;
+  border: 1px solid #2f241b;
+  border-radius: 16px;
+  color: #f3ead7;
+  line-height: 1.65;
+  overflow: hidden;
+  padding: 1rem;
+}
+
+.rendered-note + .metadata,
+.metadata + .rendered-note {
+  margin-top: 1rem;
+}
+
+.rendered-note img {
+  border: 1px solid #463321;
+  border-radius: 16px;
+  display: block;
+  height: auto;
+  margin: 0.75rem auto;
+  max-height: 70vh;
+  max-width: 100%;
+  object-fit: contain;
+}
+
+.rendered-note h1,
+.rendered-note h2,
+.rendered-note h3 {
+  color: #f8d28a;
+  line-height: 1.2;
+  margin-top: 1.5rem;
+}
+
+.rendered-note h1:first-child,
+.rendered-note h2:first-child {
+  margin-top: 0;
+}
+
+.rendered-note blockquote {
+  background: #18120e;
+  border-left: 4px solid #d6a858;
+  border-radius: 12px;
+  color: #e8dbc8;
+  margin: 1rem 0;
+  padding: 0.75rem 1rem;
+}
+
+.rendered-note code {
+  background: #211811;
+  border-radius: 6px;
+  color: #ffd489;
+  padding: 0.1rem 0.3rem;
+}
+
+.rendered-note pre {
+  background: #090705;
+  border: 1px solid #302419;
+  border-radius: 12px;
+  overflow: auto;
+  padding: 0.9rem;
+}
+
+.rendered-note table {
+  border-collapse: collapse;
+  display: block;
+  overflow-x: auto;
+  width: 100%;
+}
+
+.rendered-note th,
+.rendered-note td {
+  border: 1px solid #463321;
+  padding: 0.55rem 0.7rem;
+}
+
+.rendered-note th {
+  background: #241a14;
+  color: #f8d28a;
+}
+
 .metadata {
   display: flex;
   flex-wrap: wrap;

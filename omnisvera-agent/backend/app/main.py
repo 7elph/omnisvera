@@ -244,6 +244,25 @@ def player_dashboard(_: AccessContext = Depends(require_player)) -> dict:
     }
 
 
+@app.get("/media/{media_path:path}", response_model=None)
+def vault_media(media_path: str, _: AccessContext = Depends(require_any)):
+    if not media_path.startswith("zz_media/"):
+        raise HTTPException(status_code=404, detail="Mídia não encontrada.")
+
+    requested = (settings.vault_path / media_path).resolve()
+    media_root = (settings.vault_path / "zz_media").resolve()
+
+    try:
+        requested.relative_to(media_root)
+    except ValueError as exc:
+        raise HTTPException(status_code=404, detail="Mídia não encontrada.") from exc
+
+    if not requested.exists() or not requested.is_file():
+        raise HTTPException(status_code=404, detail="Mídia não encontrada.")
+
+    return FileResponse(requested)
+
+
 if FRONTEND_DIST.exists():
     app.mount("/assets", StaticFiles(directory=FRONTEND_DIST / "assets"), name="assets")
 
@@ -260,7 +279,7 @@ def frontend_root():
 
 @app.get("/{full_path:path}", response_model=None)
 def frontend_fallback(request: Request, full_path: str):
-    if full_path.startswith(("health", "notes", "index", "search", "chat", "gm", "player")):
+    if full_path.startswith(("health", "notes", "index", "search", "chat", "gm", "player", "media")):
         raise HTTPException(status_code=404, detail="Endpoint não encontrado.")
     index = FRONTEND_DIST / "index.html"
     if index.exists():

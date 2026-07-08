@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { getNote, NoteDetail } from "../api";
+import RenderedNote from "../components/RenderedNote";
 
 export default function NoteView({ noteId }: { noteId: number | null }) {
   const [note, setNote] = useState<NoteDetail | null>(null);
@@ -26,15 +27,30 @@ export default function NoteView({ noteId }: { noteId: number | null }) {
     );
   }
 
+  const mediaField =
+    typeof note.frontmatter.cover === "string"
+      ? note.frontmatter.cover
+      : typeof note.frontmatter.thumbnail === "string"
+        ? note.frontmatter.thumbnail
+        : typeof note.frontmatter.portrait === "string"
+          ? note.frontmatter.portrait
+          : "";
+  const cover = mediaField
+    .replace(/^\[\[/, "")
+    .replace(/\]\]$/, "")
+    .split("|")[0]
+    .trim();
+
   return (
     <section className="panel">
       <p className="eyebrow">{note.path}</p>
       <h2>{note.title}</h2>
+      {cover && <RenderedNote content={`![[${cover}]]`} />}
       <div className="metadata">
         <span>{note.type || "sem type"}</span>
         <span>{note.visibility || "sem visibility"}</span>
       </div>
-      <pre className="note-content">{note.content}</pre>
+      <RenderedNote content={note.content} />
     </section>
   );
 }
