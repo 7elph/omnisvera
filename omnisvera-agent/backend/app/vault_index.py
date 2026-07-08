@@ -128,3 +128,39 @@ def all_notes_for_search(database_path: Path) -> list[sqlite3.Row]:
     init_db(database_path)
     with connect(database_path) as conn:
         return conn.execute("SELECT * FROM notes").fetchall()
+
+
+def _normalize_lookup(value: str) -> str:
+    return (
+        value.strip()
+        .replace("\\", "/")
+        .replace(".md", "")
+        .split("#", 1)[0]
+        .lower()
+    )
+
+
+def resolve_note(database_path: Path, target: str, access_mode: AccessMode = "gm") -> dict[str, Any] | None:
+    wanted = _normalize_lookup(target.split("|", 1)[0])
+    if not wanted:
+        return None
+
+    init_db(database_path)
+    with connect(database_path) as conn:
+        rows = conn.execute("SELECT * FROM notes").fetchall()
+
+    for row in rows:
+        if not _row_allowed(row, access_mode):
+            continue
+
+        path = _normalize_lookup(row["path"])
+        title = _normalize_lookup(row["title"])
+        stem = _normalize_lookup(Path(row["path"]).stem)
+        aliases = json.loads(row["aliases"] or "[]")
+        candidates = {path, title, stem}
+        candidates.update(_normalize_lookup(str(alias)) for alias in aliases)
+
+        if wanted in candidates or wanted == path.split("/")[-1]:
+            return row_to_note(row)
+
+    return None

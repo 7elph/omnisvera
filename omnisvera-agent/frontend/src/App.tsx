@@ -11,6 +11,7 @@ type Page = "chat" | "search" | "note" | "session" | "player";
 export default function App() {
   const [page, setPage] = useState<Page>("session");
   const [selectedNoteId, setSelectedNoteId] = useState<number | null>(null);
+  const [noteHistory, setNoteHistory] = useState<number[]>([]);
   const [status, setStatus] = useState<string>("verificando...");
   const [tokenDraft, setTokenDraft] = useState<string>(getAccessToken());
   const [mode, setMode] = useState<AccessMode>(getAccessMode());
@@ -53,7 +54,16 @@ export default function App() {
   }
 
   function openNote(id: number) {
+    setNoteHistory((current) => (selectedNoteId ? [...current.slice(-12), selectedNoteId] : current));
     setSelectedNoteId(id);
+    setPage("note");
+  }
+
+  function goBackNote() {
+    const previous = noteHistory.at(-1);
+    if (!previous) return;
+    setNoteHistory((current) => current.slice(0, -1));
+    setSelectedNoteId(previous);
     setPage("note");
   }
 
@@ -125,7 +135,16 @@ export default function App() {
       {page === "player" && <PlayerPanel onOpenNote={openNote} />}
       {page === "chat" && <ChatVault onOpenNote={openNote} />}
       {page === "search" && <SearchNotes onOpenNote={openNote} />}
-      {page === "note" && <NoteView noteId={selectedNoteId} />}
+      {page === "note" && (
+        <>
+          {noteHistory.length > 0 && (
+            <button className="back-button" onClick={goBackNote}>
+              Voltar
+            </button>
+          )}
+          <NoteView noteId={selectedNoteId} onOpenNote={openNote} />
+        </>
+      )}
     </main>
   );
 }

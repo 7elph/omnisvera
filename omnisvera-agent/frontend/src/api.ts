@@ -92,6 +92,13 @@ export async function getNote(id: number): Promise<NoteDetail> {
   return response.json();
 }
 
+export async function resolveNote(target: string): Promise<NoteSummary | null> {
+  const response = await fetch(`${scoped("/resolve")}?target=${encodeURIComponent(target)}`, { headers: authHeaders() });
+  if (response.status === 404) return null;
+  if (!response.ok) throw new Error("Falha ao resolver wikilink");
+  return response.json();
+}
+
 export async function searchNotes(query: string, limit = 10): Promise<SearchResult[]> {
   const response = await fetch(scoped("/search"), {
     method: "POST",

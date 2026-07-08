@@ -17,7 +17,13 @@ export default function PlayerPanel({ onOpenNote }: { onOpenNote: (id: number) =
   return (
     <section className="panel">
       <h2>Painel dos Jogadores</h2>
-      <p>Conteúdo liberado pelo vault: rumores, missões, personagens, locais e mapas player-safe.</p>
+      <p>O que o grupo pode consultar sem abrir bastidores do mestre.</p>
+      <div className="player-prompts">
+        <span>Perguntas úteis:</span>
+        <code>Quais rumores estão ativos?</code>
+        <code>Quais missões estão ativas?</code>
+        <code>O que sabemos sobre Nimalis?</code>
+      </div>
       {error && <p className="warning-text">{error}</p>}
       {dashboard?.sections.map((section) => (
         <div key={section.title} className="dashboard-section">

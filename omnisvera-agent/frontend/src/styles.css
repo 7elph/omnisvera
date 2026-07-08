@@ -236,6 +236,23 @@ textarea {
   color: #f8d28a;
 }
 
+.rendered-note a {
+  color: #f8d28a;
+  cursor: pointer;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.rendered-note a:hover {
+  text-decoration: underline;
+}
+
+.back-button {
+  background: #2b2119;
+  color: #f3ead7;
+  margin-top: 1rem;
+}
+
 .metadata {
   display: flex;
   flex-wrap: wrap;
@@ -257,6 +274,26 @@ textarea {
 .dashboard-section h3 {
   color: #d6a858;
   margin-bottom: 0.4rem;
+}
+
+.player-prompts {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 1rem 0;
+}
+
+.player-prompts span {
+  color: #b8a58b;
+}
+
+.player-prompts code {
+  background: #241a14;
+  border: 1px solid #463321;
+  border-radius: 999px;
+  color: #ffd489;
+  padding: 0.35rem 0.65rem;
 }
 
 .muted,

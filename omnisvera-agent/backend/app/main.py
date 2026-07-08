@@ -23,7 +23,7 @@ from .schemas import (
     SearchResult,
 )
 from .search import search_notes
-from .vault_index import all_notes_for_search, get_note, init_db, list_notes, rebuild_index, row_to_note
+from .vault_index import all_notes_for_search, get_note, init_db, list_notes, rebuild_index, resolve_note, row_to_note
 from .vault_reader import iter_markdown_notes
 
 
@@ -161,6 +161,14 @@ def gm_search(request: SearchRequest, _: AccessContext = Depends(require_master)
     return search_notes(settings.database_path, request.query, request.limit, access_mode="gm")
 
 
+@app.get("/gm/resolve", response_model=NoteSummary)
+def gm_resolve(target: str, _: AccessContext = Depends(require_master)) -> dict:
+    item = resolve_note(settings.database_path, target, access_mode="gm")
+    if item is None:
+        raise HTTPException(status_code=404, detail="Nota não encontrada")
+    return item
+
+
 @app.post("/gm/chat", response_model=ChatResponse)
 async def gm_chat(request: ChatRequest, _: AccessContext = Depends(require_master)) -> dict:
     return await answer_question(
@@ -189,6 +197,14 @@ def player_note(note_id: int, _: AccessContext = Depends(require_player)) -> dic
 @app.post("/player/search", response_model=list[SearchResult])
 def player_search(request: SearchRequest, _: AccessContext = Depends(require_player)) -> list[dict]:
     return search_notes(settings.database_path, request.query, request.limit, access_mode="player")
+
+
+@app.get("/player/resolve", response_model=NoteSummary)
+def player_resolve(target: str, _: AccessContext = Depends(require_player)) -> dict:
+    item = resolve_note(settings.database_path, target, access_mode="player")
+    if item is None:
+        raise HTTPException(status_code=404, detail="Nota não encontrada ou não liberada para jogadores")
+    return item
 
 
 @app.post("/player/chat", response_model=ChatResponse)

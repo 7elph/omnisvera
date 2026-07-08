@@ -1,9 +1,10 @@
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { getAccessToken } from "../api";
+import { getAccessToken, resolveNote } from "../api";
 
 type RenderedNoteProps = {
   content: string;
+  onOpenNote?: (id: number) => void;
 };
 
 function encodeMediaPath(path: string) {
@@ -57,21 +58,37 @@ function transformObsidianMarkdown(content: string) {
 
   transformed = transformed.replace(/\[\[([^\]]+)\]\]/g, (_match, target) => {
     const label = prettifyWikilink(String(target));
-    return `**${label}**`;
+    const encodedTarget = encodeURIComponent(String(target));
+    return `[${label}](omnisvera://note/${encodedTarget})`;
   });
 
   return transformed;
 }
 
-export default function RenderedNote({ content }: RenderedNoteProps) {
+export default function RenderedNote({ content, onOpenNote }: RenderedNoteProps) {
+  async function handleLink(event: React.MouseEvent<HTMLAnchorElement>, href?: string) {
+    if (!href?.startsWith("omnisvera://note/")) return;
+    event.preventDefault();
+    if (!onOpenNote) return;
+    const target = decodeURIComponent(href.replace("omnisvera://note/", ""));
+    const note = await resolveNote(target);
+    if (note) onOpenNote(note.id);
+  }
+
   return (
     <div className="rendered-note">
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         components={{
           img: ({ ...props }) => <img loading="lazy" {...props} />,
-          a: ({ children, ...props }) => (
-            <a target="_blank" rel="noreferrer" {...props}>
+          a: ({ children, href, ...props }) => (
+            <a
+              href={href}
+              onClick={(event) => handleLink(event, href)}
+              target={href?.startsWith("omnisvera://note/") ? undefined : "_blank"}
+              rel={href?.startsWith("omnisvera://note/") ? undefined : "noreferrer"}
+              {...props}
+            >
               {children}
             </a>
           ),
