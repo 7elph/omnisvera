@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { AccessMode, getAccessMode, getAccessToken, health, rebuildIndex, setAccessMode, setAccessToken } from "./api";
+import { AccessMode, getAccessMode, getAccessToken, health, rebuildIndex, resolveNote, setAccessMode, setAccessToken } from "./api";
 import ChatVault from "./pages/ChatVault";
 import NoteView from "./pages/NoteView";
 import PlayerPanel from "./pages/PlayerPanel";
@@ -36,6 +36,43 @@ export default function App() {
         );
       })
       .catch(() => setStatus("backend indisponível"));
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function openHashNote() {
+      const prefix = "#/note/";
+      if (!window.location.hash.startsWith(prefix)) return;
+      const target = decodeURIComponent(window.location.hash.slice(prefix.length));
+      window.history.replaceState(null, "", window.location.pathname + window.location.search);
+      if (!target.trim()) return;
+
+      try {
+        const note = await resolveNote(target);
+        if (cancelled) return;
+        if (note) {
+          setUnknownTarget(null);
+          setSelectedNoteId(note.id);
+        } else {
+          setSelectedNoteId(null);
+          setUnknownTarget(target);
+        }
+        setPage("note");
+      } catch {
+        if (cancelled) return;
+        setSelectedNoteId(null);
+        setUnknownTarget(target);
+        setPage("note");
+      }
+    }
+
+    void openHashNote();
+    window.addEventListener("hashchange", openHashNote);
+    return () => {
+      cancelled = true;
+      window.removeEventListener("hashchange", openHashNote);
+    };
   }, []);
 
   function saveToken() {

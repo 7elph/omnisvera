@@ -23,6 +23,26 @@ function prettifyWikilink(target: string) {
   return (label || path.split("/").pop() || path).replace(/\.md$/i, "");
 }
 
+function noteHrefFromTarget(target: string) {
+  return `#/note/${encodeURIComponent(target)}`;
+}
+
+function noteTargetFromHref(href?: string) {
+  if (!href) return null;
+  const legacyPrefix = "omnisvera://note/";
+  if (href.startsWith(legacyPrefix)) {
+    return decodeURIComponent(href.slice(legacyPrefix.length));
+  }
+
+  const hashPrefix = "#/note/";
+  const hashIndex = href.indexOf(hashPrefix);
+  if (hashIndex >= 0) {
+    return decodeURIComponent(href.slice(hashIndex + hashPrefix.length));
+  }
+
+  return null;
+}
+
 function stripInlineHtml(value: string) {
   return value.replace(/<[^>]+>/g, "").trim();
 }
@@ -236,8 +256,7 @@ function transformObsidianMarkdown(content: string) {
 
   transformed = transformed.replace(/\[\[([^\]]+)\]\]/g, (_match, target) => {
     const label = prettifyWikilink(String(target));
-    const encodedTarget = encodeURIComponent(String(target));
-    return `[${label}](omnisvera://note/${encodedTarget})`;
+    return `[${label}](${noteHrefFromTarget(String(target))})`;
   });
 
   transformed = transformed.replace(/^(\*\*[^*\n]+:\*\*\s*.+)$/gm, "- $1");
@@ -247,9 +266,10 @@ function transformObsidianMarkdown(content: string) {
 
 export default function RenderedNote({ content, onOpenNote, onUnknownNote }: RenderedNoteProps) {
   async function handleLink(event: React.MouseEvent<HTMLAnchorElement>, href?: string) {
-    if (!href?.startsWith("omnisvera://note/")) return;
+    const target = noteTargetFromHref(href);
+    if (!target) return;
     event.preventDefault();
-    const target = decodeURIComponent(href.replace("omnisvera://note/", ""));
+    window.history.replaceState(null, "", window.location.pathname + window.location.search);
     if (!onOpenNote) {
       onUnknownNote?.(target);
       return;
@@ -297,8 +317,8 @@ export default function RenderedNote({ content, onOpenNote, onUnknownNote }: Ren
             <a
               href={href}
               onClick={(event) => handleLink(event, href)}
-              target={href?.startsWith("omnisvera://note/") ? undefined : "_blank"}
-              rel={href?.startsWith("omnisvera://note/") ? undefined : "noreferrer"}
+              target={noteTargetFromHref(href) ? undefined : "_blank"}
+              rel={noteTargetFromHref(href) ? undefined : "noreferrer"}
               {...props}
             >
               {children}
