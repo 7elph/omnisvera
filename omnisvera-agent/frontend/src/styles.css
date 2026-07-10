@@ -256,6 +256,32 @@ textarea {
   padding: 0.38rem 0.65rem;
 }
 
+.chat-runtime {
+  align-items: center;
+  color: #8f826f;
+  display: flex;
+  flex-wrap: wrap;
+  font-size: 0.72rem;
+  gap: 0.45rem;
+}
+
+.chat-runtime span {
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid rgba(255, 255, 255, 0.065);
+  border-radius: 999px;
+  padding: 0.22rem 0.5rem;
+}
+
+.chat-runtime .runtime-ok {
+  border-color: rgba(113, 196, 121, 0.32);
+  color: #aad08d;
+}
+
+.chat-runtime .runtime-fallback {
+  border-color: rgba(217, 168, 80, 0.25);
+  color: #d9b275;
+}
+
 .user-bubble {
   align-self: start;
   background: #d6a858;

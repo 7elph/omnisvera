@@ -64,6 +64,9 @@ class ChatResponse(BaseModel):
     insufficient_context: bool
     warning: str | None = None
     suggested_questions: list[str] = Field(default_factory=list)
+    ollama_used: bool = False
+    model: str | None = None
+    retrieval_mode: str | None = None
 
 
 class DashboardSection(BaseModel):

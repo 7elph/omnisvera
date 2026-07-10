@@ -18,15 +18,24 @@ async def chat_with_ollama(
     base_url: str,
     model: str,
     messages: list[dict[str, str]],
+    options: dict[str, Any] | None = None,
 ) -> str:
+    default_options: dict[str, Any] = {
+        "num_ctx": 4096,
+        "num_predict": 420,
+        "temperature": 0.25,
+        "top_p": 0.9,
+        "repeat_penalty": 1.12,
+    }
+    if options:
+        default_options.update(options)
+
     payload: dict[str, Any] = {
         "model": model,
         "messages": messages,
         "stream": False,
-        "options": {
-            "num_predict": 260,
-            "temperature": 0.2,
-        },
+        "keep_alive": "15m",
+        "options": default_options,
     }
     async with httpx.AsyncClient(timeout=180.0) as client:
         response = await client.post(f"{base_url}/api/chat", json=payload)

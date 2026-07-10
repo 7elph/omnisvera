@@ -65,6 +65,7 @@ def _compact_markdown(content: str, max_chars: int = 850) -> str:
     text = _strip_code_blocks(content)
     text = re.sub(r"!\[\[[^\]]+\]\]", "", text)
     text = re.sub(r"!\[[^\]]*\]\([^)]+\)", "", text)
+    text = re.sub(r"(?im)^\s*(esta nota|este arquivo|este documento)\b.*$", "", text)
     text = re.sub(r"## Liga[çc][ãa]o com Quests[\s\S]*$", "", text, flags=re.IGNORECASE)
     text = re.sub(r"## Dataview[\s\S]*$", "", text, flags=re.IGNORECASE)
     text = _dedupe_paragraphs(text)
@@ -534,12 +535,15 @@ def _answer_from_sections(title: str, blocks: list[tuple[str, list[str]]]) -> st
 
 def _answer_as_guide(title: str, blocks: list[tuple[str, list[str]]]) -> str:
     """Format answers as in-world guidance, avoiding technical vault labels."""
-    output: list[str] = []
+    prepared: list[tuple[str, str]] = []
     for heading, lines in blocks:
         body = _join_nonempty(lines)
         if not body:
             continue
-        output.append(f"### {heading}\n{body}")
+        prepared.append((heading, body))
+    if len(prepared) == 1:
+        return prepared[0][1].strip()
+    output = [f"### {heading}\n{body}" for heading, body in prepared]
     return "\n\n".join(output).strip() or f"Ainda não há informação segura suficiente sobre {title} no contexto liberado."
 
 
@@ -1398,6 +1402,169 @@ def _clean_answer(answer: str) -> str:
     return (clipped or answer[:1800].strip()) + "..."
 
 
+def _with_chat_meta(
+    result: dict,
+    *,
+    ollama_used: bool,
+    model: str,
+    retrieval_mode: str,
+) -> dict:
+    result = dict(result)
+    result.setdefault("warning", None)
+    result.setdefault("suggested_questions", [])
+    result["ollama_used"] = ollama_used
+    result["model"] = model
+    result["retrieval_mode"] = retrieval_mode
+    return result
+
+
+def _should_skip_ollama_polish(result: dict) -> bool:
+    warning = normalize_text(result.get("warning"))
+    answer = normalize_text(result.get("answer"))
+    if "protegida" in warning or "nao liberada" in warning:
+        return True
+    if "protegida" in answer or "nao esta liberad" in answer:
+        return True
+    return False
+
+
+def _looks_like_bad_ai_answer(answer: str, access_mode: AccessMode) -> bool:
+    normalized = normalize_text(answer)
+    if len(normalized) < 10:
+        return True
+    if any(term in normalized for term in ("como modelo de linguagem", "nao tenho acesso", "com base no contexto")):
+        return True
+    player_check = normalized.replace("arquivo vivo", "")
+    if access_mode == "player" and any(
+        term in player_check
+        for term in (
+            "frontmatter",
+            "vault",
+            "markdown",
+            "esta nota",
+            "a nota",
+            "nota de",
+            "arquivo markdown",
+            "contexto autorizado",
+        )
+    ):
+        return True
+    return False
+
+
+def _is_short_fact_question(question: str) -> bool:
+    normalized = normalize_text(question)
+    return any(term in normalized for term in ("quantos anos", "idade", "nivel", "qual e a classe", "qual e a raca"))
+
+
+def _proper_names(text: str) -> set[str]:
+    text = _plain_wikilinks(text)
+    return {
+        name
+        for name in re.findall(r"\b[A-ZÁÉÍÓÚÂÊÔÃÕÇ][A-Za-zÁÉÍÓÚÂÊÔÃÕÇáéíóúâêôãõç'’.-]{2,}\b", text)
+        if name.lower() not in {"visão", "geral", "resposta", "arquivo", "vivo", "omnisvera"}
+    }
+
+
+def _has_new_proper_names(base_answer: str, answer: str) -> bool:
+    allowed = {
+        "Arquivo",
+        "Vivo",
+        "Omnisvera",
+    }
+    base_names = _proper_names(base_answer) | allowed
+    answer_names = _proper_names(answer)
+    return bool(answer_names - base_names)
+
+
+def _must_preserve_numbers(question: str, base_answer: str) -> list[str]:
+    normalized = normalize_text(question)
+    if not any(term in normalized for term in ("quantos", "idade", "anos", "nivel", "populacao")):
+        return []
+    return re.findall(r"\b\d+(?:[.,]\d+)?\b", base_answer)
+
+
+async def _polish_response_with_ollama(
+    database_path: Path,
+    ollama_base_url: str,
+    ollama_model: str,
+    question: str,
+    result: dict,
+    access_mode: AccessMode,
+    retrieval_mode: str,
+) -> dict:
+    base_answer = _clean_answer(str(result.get("answer") or ""))
+    if not base_answer or _should_skip_ollama_polish(result):
+        return _with_chat_meta(result, ollama_used=False, model=ollama_model, retrieval_mode=retrieval_mode)
+
+    mode_rule = (
+        "Modo jogador: seja player-safe; não revele bastidores, segredos do mestre, pendências editoriais ou instruções de mesa."
+        if access_mode == "player"
+        else "Modo mestre: pode citar bastidores se estiverem no contexto, mas priorize utilidade de mesa."
+    )
+    numbers_to_preserve = _must_preserve_numbers(question, base_answer)
+
+    polish_prompt = f"""Pergunta:
+{question}
+
+Resposta-base factual, já verificada pelo sistema:
+{base_answer}
+
+Tarefa:
+Reescreva a resposta-base como o Arquivo Vivo de Omnisvera: natural, direta e com atmosfera.
+
+Regras:
+- Use somente a resposta-base. Não use conhecimento externo.
+- Não acrescente nomes, lugares, números, poderes, relações, classes ou eventos que não estejam na resposta-base.
+- Preserve a resposta direta logo no começo.
+- Se a pergunta for factual curta, como idade ou localização, responda curto.
+- Se a resposta-base parecer uma ficha, transforme em uma resposta orgânica; não reproduza a ficha inteira.
+- Não diga "nota", "arquivo", "frontmatter", "vault", "markdown" ou "com base no contexto".
+- Não liste caminhos de arquivo.
+- Não use títulos técnicos como "Uso em Mesa", "Como apresentar" ou "Pendências".
+- Não crie cabeçalho como "Arquivo Vivo", "Resposta" ou ficha completa antes da resposta.
+- Não repita frases.
+- {mode_rule}
+- Responda em português brasileiro.
+- Tamanho ideal: 1 a 3 parágrafos curtos, ou bullets se a pergunta pedir lista."""
+
+    try:
+        polished = await chat_with_ollama(
+            ollama_base_url,
+            ollama_model,
+            [
+                {"role": "system", "content": SYSTEM_PROMPT},
+                {"role": "user", "content": polish_prompt},
+            ],
+            options={
+                "num_predict": 360,
+                "temperature": 0.35 if access_mode == "player" else 0.3,
+                "repeat_penalty": 1.18,
+            },
+        )
+    except Exception:
+        return _with_chat_meta(result, ollama_used=False, model=ollama_model, retrieval_mode=f"{retrieval_mode}:fallback")
+
+    cleaned = _plain_wikilinks(_clean_answer(polished))
+    cleaned = re.sub(r"(?im)^\s*#{1,6}\s*(o\s+)?arquivo vivo(?: de omnisvera)?\s*$", "", cleaned).strip()
+    cleaned = re.sub(r"(?im)^\s*(o\s+)?arquivo vivo(?: de omnisvera)?\s*:\s*", "", cleaned).strip()
+    cleaned = re.sub(r"(?im)^\s*#{1,6}\s*resposta\s*$", "", cleaned).strip()
+    if _looks_like_bad_ai_answer(cleaned, access_mode):
+        return _with_chat_meta(result, ollama_used=False, model=ollama_model, retrieval_mode=f"{retrieval_mode}:fallback")
+    if _is_short_fact_question(question) and len(cleaned) > 320:
+        return _with_chat_meta(result, ollama_used=False, model=ollama_model, retrieval_mode=f"{retrieval_mode}:fallback")
+    if len(cleaned) > max(900, int(len(base_answer) * 1.35) + 160):
+        return _with_chat_meta(result, ollama_used=False, model=ollama_model, retrieval_mode=f"{retrieval_mode}:fallback")
+    if _has_new_proper_names(base_answer, cleaned):
+        return _with_chat_meta(result, ollama_used=False, model=ollama_model, retrieval_mode=f"{retrieval_mode}:fallback")
+    if numbers_to_preserve and any(number not in cleaned for number in numbers_to_preserve):
+        return _with_chat_meta(result, ollama_used=False, model=ollama_model, retrieval_mode=f"{retrieval_mode}:fallback")
+
+    result = dict(result)
+    result["answer"] = cleaned
+    return _with_chat_meta(result, ollama_used=True, model=ollama_model, retrieval_mode=retrieval_mode)
+
+
 async def answer_question(
     database_path: Path,
     ollama_base_url: str,
@@ -1415,7 +1582,15 @@ async def answer_question(
             access_mode=access_mode,
         )
         if rumor_answer:
-            return rumor_answer
+            return await _polish_response_with_ollama(
+                database_path,
+                ollama_base_url,
+                ollama_model,
+                question,
+                rumor_answer,
+                access_mode,
+                "structured:rumors",
+            )
 
     if _looks_like_quest_overview(question):
         quest_answer = _answer_index_overview(
@@ -1426,35 +1601,83 @@ async def answer_question(
             access_mode=access_mode,
         )
         if quest_answer:
-            return quest_answer
+            return await _polish_response_with_ollama(
+                database_path,
+                ollama_base_url,
+                ollama_model,
+                question,
+                quest_answer,
+                access_mode,
+                "structured:quests",
+            )
 
     if _looks_like_player_character_overview(question):
         character_answer = _answer_player_characters(database_path, access_mode)
         if character_answer:
-            return character_answer
+            return await _polish_response_with_ollama(
+                database_path,
+                ollama_base_url,
+                ollama_model,
+                question,
+                character_answer,
+                access_mode,
+                "structured:player_characters",
+            )
 
     if _looks_like_campaign_recap(question):
         recap_answer = _answer_campaign_recap(database_path, access_mode)
         if recap_answer:
-            return recap_answer
+            return await _polish_response_with_ollama(
+                database_path,
+                ollama_base_url,
+                ollama_model,
+                question,
+                recap_answer,
+                access_mode,
+                "structured:campaign_recap",
+            )
 
     extracted = _direct_entity_target(question)
     if extracted and access_mode == "player":
         target, _kind = extracted
         normalized_target = normalize_text(target)
         if any(normalize_text(term) in normalized_target for term in PLAYER_BLOCKED_LOOKUP_TERMS):
-            return _blocked_player_entity_answer(target)
+            return _with_chat_meta(
+                _blocked_player_entity_answer(target),
+                ollama_used=False,
+                model=ollama_model,
+                retrieval_mode="blocked:player_sensitive_term",
+            )
         exact_row = _find_exact_row(database_path, target, access_mode=access_mode)
         if exact_row is not None and not is_player_safe_row(exact_row):
-            return _blocked_player_entity_answer(target)
+            return _with_chat_meta(
+                _blocked_player_entity_answer(target),
+                ollama_used=False,
+                model=ollama_model,
+                retrieval_mode="blocked:private_exact_match",
+            )
         if exact_row is None:
             blocked_row = _find_blocked_player_entity_row(database_path, target)
             if blocked_row is not None:
-                return _blocked_player_entity_answer(target)
+                return _with_chat_meta(
+                    _blocked_player_entity_answer(target),
+                    ollama_used=False,
+                    model=ollama_model,
+                    retrieval_mode="blocked:private_related_match",
+                )
 
     direct_note = _find_direct_entity_note(database_path, question, access_mode)
     if direct_note:
-        return _direct_entity_answer(direct_note, question, access_mode)
+        direct_answer = _direct_entity_answer(direct_note, question, access_mode)
+        return await _polish_response_with_ollama(
+            database_path,
+            ollama_base_url,
+            ollama_model,
+            question,
+            direct_answer,
+            access_mode,
+            "direct_entity",
+        )
 
     results = search_notes(database_path, question, limit=max(limit, 12), access_mode=access_mode)
     operational_results = [
@@ -1514,6 +1737,11 @@ Formato desejado:
             {"role": "system", "content": SYSTEM_PROMPT},
             {"role": "user", "content": user_prompt},
         ],
+        options={
+            "num_predict": 520,
+            "temperature": 0.35 if access_mode == "player" else 0.3,
+            "repeat_penalty": 1.18,
+        },
     )
     return {
         "answer": _clean_answer(answer),
@@ -1522,4 +1750,7 @@ Formato desejado:
         "insufficient_context": insufficient,
         "warning": warning,
         "suggested_questions": _suggested_questions_for_notes(question, notes_used, access_mode),
+        "ollama_used": True,
+        "model": ollama_model,
+        "retrieval_mode": "rag:semantic_lexical",
     }

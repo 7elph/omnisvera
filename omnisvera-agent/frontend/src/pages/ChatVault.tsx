@@ -78,6 +78,9 @@ export default function ChatVault({
             insufficient_context: true,
             warning: "Backend indisponível.",
             suggested_questions: DEFAULT_PLAYER_PROMPTS,
+            ollama_used: false,
+            model: null,
+            retrieval_mode: "offline",
           },
         },
       ]);
@@ -151,6 +154,13 @@ export default function ChatVault({
               onOpenNote={onOpenNote}
               onUnknownNote={onUnknownNote}
             />
+            <div className="chat-runtime">
+              <span className={message.result.ollama_used ? "runtime-ok" : "runtime-fallback"}>
+                {message.result.ollama_used ? "Ollama respondeu" : "Resposta segura do índice"}
+              </span>
+              {message.result.model && <span>{message.result.model}</span>}
+              {message.result.retrieval_mode && <span>{message.result.retrieval_mode}</span>}
+            </div>
             {message.result.suggested_questions && message.result.suggested_questions.length > 0 && (
               <div className="message-suggestions">
                 <span>Continuar com:</span>

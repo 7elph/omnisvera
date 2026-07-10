@@ -92,6 +92,9 @@ export type ChatResult = {
   insufficient_context: boolean;
   warning?: string | null;
   suggested_questions?: string[];
+  ollama_used?: boolean;
+  model?: string | null;
+  retrieval_mode?: string | null;
 };
 
 export type DashboardSection = {
