@@ -56,22 +56,29 @@ export default function PlayerPanel({
 }) {
   const [dashboard, setDashboard] = useState<PlayerDashboard | null>(null);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    setLoading(true);
+    setError("");
     playerDashboard()
       .then((data) => {
         setDashboard(data);
         setError("");
       })
-      .catch(() => setError("Não consegui carregar o painel dos jogadores. Confira o modo e o token."));
+      .catch(() => {
+        setDashboard(null);
+        setError("Não consegui carregar o painel dos jogadores. Confira o modo e o token.");
+      })
+      .finally(() => setLoading(false));
   }, []);
 
   const sections = dashboard?.sections || [];
   const counts = {
-    quests: sections.find((section) => section.kind === "quests")?.items.length || 0,
-    rumors: sections.find((section) => section.kind === "rumors")?.items.length || 0,
-    characters: sections.find((section) => section.kind === "characters")?.items.length || 0,
-    places: sections.find((section) => section.kind === "places")?.items.length || 0,
+    quests: sections.find((section) => section.kind === "quests")?.items.length ?? null,
+    rumors: sections.find((section) => section.kind === "rumors")?.items.length ?? null,
+    characters: sections.find((section) => section.kind === "characters")?.items.length ?? null,
+    places: sections.find((section) => section.kind === "places")?.items.length ?? null,
   };
 
   return (
@@ -83,10 +90,10 @@ export default function PlayerPanel({
           <h2>Omnisvera em jogo</h2>
           <p>Missões, rumores, personagens e lugares liberados — sem abrir bastidores do mestre.</p>
           <div className="player-stats" aria-label="Resumo do painel dos jogadores">
-            <span><strong>{counts.quests}</strong><em>missões</em></span>
-            <span><strong>{counts.rumors}</strong><em>rumores</em></span>
-            <span><strong>{counts.characters}</strong><em>personagens</em></span>
-            <span><strong>{counts.places}</strong><em>lugares</em></span>
+            <span><strong>{loading || counts.quests === null ? "…" : counts.quests}</strong><em>missões</em></span>
+            <span><strong>{loading || counts.rumors === null ? "…" : counts.rumors}</strong><em>rumores</em></span>
+            <span><strong>{loading || counts.characters === null ? "…" : counts.characters}</strong><em>personagens</em></span>
+            <span><strong>{loading || counts.places === null ? "…" : counts.places}</strong><em>lugares</em></span>
           </div>
         </div>
       </div>
@@ -106,8 +113,9 @@ export default function PlayerPanel({
       </div>
 
       {error && <p className="warning-text">{error}</p>}
+      {loading && <p className="muted">Carregando painel dos jogadores...</p>}
 
-      {sections.map((section) => (
+      {!loading && sections.map((section) => (
         <div key={section.title} className={`dashboard-section section-${section.kind || "default"}`}>
           <div className="section-heading">
             <span>{SECTION_ICONS[section.kind || ""] || "•"}</span>

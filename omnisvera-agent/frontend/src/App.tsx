@@ -17,6 +17,7 @@ export default function App() {
   const [status, setStatus] = useState<string>("verificando...");
   const [tokenDraft, setTokenDraft] = useState<string>(getAccessToken());
   const [mode, setMode] = useState<AccessMode>(initialMode);
+  const [authVersion, setAuthVersion] = useState(0);
 
   useEffect(() => {
     health()
@@ -49,6 +50,7 @@ export default function App() {
         setStatus(
           `${data.access_mode === "player" ? "Jogador" : "Mestre"} · Ollama ${data.ollama_accessible ? "ok" : "offline"} · ${data.ollama_model}`,
         );
+        setAuthVersion((current) => current + 1);
       })
       .catch(() => setStatus("backend indisponível ou token inválido"));
   }
@@ -147,7 +149,9 @@ export default function App() {
       </nav>
 
       {page === "session" && mode === "gm" && <SessionPanel onOpenNote={openNote} onAskPrompt={askPrompt} />}
-      {page === "player" && mode === "player" && <PlayerPanel onOpenNote={openNote} onAskPrompt={askPrompt} />}
+      {page === "player" && mode === "player" && (
+        <PlayerPanel key={`player-${authVersion}`} onOpenNote={openNote} onAskPrompt={askPrompt} />
+      )}
       {page === "chat" && <ChatVault onOpenNote={openNote} initialQuestion={chatSeed} />}
       {page === "search" && <SearchNotes onOpenNote={openNote} />}
       {page === "note" && (

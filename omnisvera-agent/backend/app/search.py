@@ -60,6 +60,17 @@ def _excerpt(content: str, terms: list[str], size: int = 260) -> str:
     return excerpt + ("..." if end < len(content) else "")
 
 
+def _starts_with_term(value: str, terms: list[str]) -> bool:
+    normalized = normalize_text(value)
+    return any(normalized == term or normalized.startswith(f"{term} ") for term in terms)
+
+
+def _contains_exact_token(value: str, terms: list[str]) -> bool:
+    normalized = normalize_text(value)
+    tokens = set(re.findall(r"[a-z0-9]+", normalized))
+    return any(term in tokens for term in terms)
+
+
 def search_notes(database_path: Path, query: str, limit: int = 10, access_mode: AccessMode = "gm") -> list[dict]:
     terms = _terms(query)
     if not terms:
@@ -80,12 +91,21 @@ def search_notes(database_path: Path, query: str, limit: int = 10, access_mode: 
             "content": normalize_text(content),
             "aliases": normalize_text(row["aliases"]),
         }
+        stem = Path(row["path"]).stem
         score = 0
         phrase = " ".join(terms)
         if phrase and phrase in haystacks["title"]:
             score += 30
         if phrase and phrase in haystacks["path"]:
             score += 18
+        if _starts_with_term(row["title"], terms):
+            score += 45
+        if _starts_with_term(stem, terms):
+            score += 45
+        if row["type"] == "character" and (
+            _contains_exact_token(row["title"], terms) or _contains_exact_token(stem, terms)
+        ):
+            score += 24
         for term in terms:
             if term in haystacks["title"]:
                 score += 16

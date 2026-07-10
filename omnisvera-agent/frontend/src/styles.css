@@ -353,6 +353,28 @@ textarea {
   padding: 0.75rem 1rem;
 }
 
+.rendered-note blockquote p {
+  margin: 0.35rem 0;
+}
+
+.rendered-note blockquote p:first-child strong:first-child {
+  background: rgba(214, 168, 88, 0.16);
+  border: 1px solid rgba(214, 168, 88, 0.32);
+  border-radius: 999px;
+  color: #ffd489;
+  display: inline-flex;
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.25rem;
+  padding: 0.18rem 0.55rem;
+  text-transform: uppercase;
+}
+
+.rendered-note blockquote img {
+  margin-left: 0;
+  margin-right: 0;
+}
+
 .rendered-note code {
   background: #211811;
   border-radius: 6px;
@@ -415,6 +437,13 @@ textarea {
   border-radius: 999px;
   color: #d6c3a5;
   padding: 0.35rem 0.7rem;
+}
+
+.note-path {
+  color: #9e8d76;
+  font-size: 0.82rem;
+  margin: -0.5rem 0 0.75rem;
+  word-break: break-word;
 }
 
 .dashboard-section {

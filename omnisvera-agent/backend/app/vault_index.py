@@ -203,6 +203,18 @@ def _lookup_variants(value: str) -> set[str]:
     return {item for item in expanded if item}
 
 
+def _candidate_lookup_variants(value: str) -> set[str]:
+    variants = _lookup_variants(value)
+    token_variants: set[str] = set()
+    for item in list(variants):
+        # Let wikilinks such as [[Varkh]] resolve to notes titled/stemmed
+        # "Varkh Nimalis" without turning one-letter/common words into matches.
+        for token in re.split(r"[^a-z0-9]+", item):
+            if len(token) >= 4:
+                token_variants.add(token)
+    return variants | token_variants
+
+
 def resolve_note(database_path: Path, target: str, access_mode: AccessMode = "gm") -> dict[str, Any] | None:
     wanted_variants = _lookup_variants(target.split("|", 1)[0])
     if not wanted_variants:
@@ -223,7 +235,7 @@ def resolve_note(database_path: Path, target: str, access_mode: AccessMode = "gm
         aliases = json.loads(row["aliases"] or "[]")
         candidates: set[str] = set()
         for value in [path, title, stem, *aliases]:
-            candidates.update(_lookup_variants(str(value)))
+            candidates.update(_candidate_lookup_variants(str(value)))
 
         if wanted_variants & candidates:
             matches.append(row)
@@ -234,6 +246,8 @@ def resolve_note(database_path: Path, target: str, access_mode: AccessMode = "gm
     def rank(row: sqlite3.Row) -> tuple[int, str]:
         path = row["path"]
         note_type = _normalize_lookup(row["type"] or "")
+        title_lookup = _normalize_lookup(row["title"])
+        stem_lookup = _normalize_lookup(Path(path).stem)
         title_variants = _lookup_variants(row["title"])
         stem_variants = _lookup_variants(Path(path).stem)
         path_variants = _lookup_variants(path)
@@ -248,6 +262,16 @@ def resolve_note(database_path: Path, target: str, access_mode: AccessMode = "gm
             score += 30
         if wanted_variants & stem_variants:
             score += 25
+        if any(title_lookup == wanted or title_lookup.startswith(f"{wanted} ") for wanted in wanted_variants):
+            score += 80
+        if any(stem_lookup == wanted or stem_lookup.startswith(f"{wanted} ") for wanted in wanted_variants):
+            score += 80
+        if note_type == "character" and any(
+            re.search(rf"(^|[^a-z0-9]){re.escape(wanted)}([^a-z0-9]|$)", title_lookup)
+            or re.search(rf"(^|[^a-z0-9]){re.escape(wanted)}([^a-z0-9]|$)", stem_lookup)
+            for wanted in wanted_variants
+        ):
+            score += 35
         if wanted_variants & path_variants:
             score += 10
         return (score, path)

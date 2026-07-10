@@ -1,6 +1,6 @@
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { mediaUrlFromVaultPath, resolveNote, searchNotes } from "../api";
+import { getAccessMode, mediaUrlFromVaultPath, resolveNote, searchNotes } from "../api";
 
 type RenderedNoteProps = {
   content: string;
@@ -8,7 +8,11 @@ type RenderedNoteProps = {
 };
 
 function normalizeMediaTarget(target: string) {
-  const clean = target.split("|")[0].trim();
+  const clean = target
+    .split("|")[0]
+    .trim()
+    .replace(/^\/media\//, "")
+    .split("?")[0];
   if (clean.startsWith("zz_media/")) return clean;
   return `zz_media/${clean}`;
 }
@@ -22,17 +26,126 @@ function stripInlineHtml(value: string) {
   return value.replace(/<[^>]+>/g, "").trim();
 }
 
+function parseMediaTarget(target: string, fallbackAlt = "imagem") {
+  const clean = target.trim().replace(/^\/media\//, "").split("?")[0];
+  const [rawPath, ...rawModifiers] = clean.split("|").map((part) => part.trim()).filter(Boolean);
+  const modifier = rawModifiers[0] || "";
+  const width = modifier.match(/^\d+$/) ? modifier : "";
+  const alt = width ? fallbackAlt : modifier || fallbackAlt;
+  return {
+    path: normalizeMediaTarget(rawPath || clean),
+    alt,
+    width,
+  };
+}
+
 function mediaMarkdownFromTarget(target: string, alt = "imagem") {
-  let clean = target.trim();
-  clean = clean.replace(/^\/media\//, "");
-  clean = clean.split("?")[0];
-  const mediaPath = normalizeMediaTarget(clean);
-  const url = mediaUrlFromVaultPath(mediaPath);
-  return `![${alt || mediaPath.split("/").pop() || "imagem"}](${url})`;
+  const parsed = parseMediaTarget(target, alt);
+  const url = mediaUrlFromVaultPath(parsed.path);
+  const safeAlt = parsed.alt || parsed.path.split("/").pop() || "imagem";
+  return parsed.width ? `![${safeAlt}](${url} "w:${parsed.width}")` : `![${safeAlt}](${url})`;
+}
+
+function displayCalloutKind(kind: string) {
+  const normalized = kind.toLowerCase();
+  const labels: Record<string, string> = {
+    abstract: "Resumo",
+    attention: "Atenção",
+    bug: "Problema",
+    cards: "Cards",
+    caution: "Cuidado",
+    danger: "Perigo",
+    error: "Erro",
+    example: "Exemplo",
+    failure: "Falha",
+    faq: "Pergunta",
+    help: "Ajuda",
+    hint: "Dica",
+    important: "Importante",
+    info: "Info",
+    infobox: "Ficha visual",
+    map: "Mapa",
+    note: "Nota",
+    query: "Consulta",
+    question: "Pergunta",
+    quote: "Citação",
+    success: "Sucesso",
+    summary: "Resumo",
+    tip: "Dica",
+    todo: "A fazer",
+    warning: "Aviso",
+    world: "Mundo",
+  };
+  return labels[normalized] || kind;
+}
+
+function stripCalloutBlocksByTitle(content: string, blockedTitles: RegExp[]) {
+  const lines = content.split("\n");
+  const kept: string[] = [];
+  for (let index = 0; index < lines.length; index += 1) {
+    const line = lines[index];
+    const callout = line.match(/^>\s*\[!([^\]\|\s]+)(?:\|[^\]]+)?\]([+-])?\s*(.*)$/i);
+    const title = callout?.[3] || "";
+    if (callout && blockedTitles.some((pattern) => pattern.test(title))) {
+      while (index + 1 < lines.length && (lines[index + 1].startsWith(">") || lines[index + 1].trim() === "")) {
+        index += 1;
+        if (lines[index].trim() === "") break;
+      }
+      continue;
+    }
+    kept.push(line);
+  }
+  return kept.join("\n");
+}
+
+function removeEmptySections(content: string) {
+  const lines = content.split("\n");
+  const kept: string[] = [];
+  for (let index = 0; index < lines.length; index += 1) {
+    const line = lines[index];
+    const heading = line.match(/^(#{2,6})\s+(.+?)\s*$/);
+    if (!heading) {
+      kept.push(line);
+      continue;
+    }
+
+    let cursor = index + 1;
+    const sectionLines: string[] = [];
+    while (cursor < lines.length && !/^#{1,6}\s+/.test(lines[cursor])) {
+      sectionLines.push(lines[cursor]);
+      cursor += 1;
+    }
+
+    const meaningful = sectionLines.some((sectionLine) => {
+      const clean = sectionLine.trim();
+      return clean && clean !== "---" && !/^>\s*$/.test(clean);
+    });
+
+    if (!meaningful) {
+      index = cursor - 1;
+      continue;
+    }
+
+    kept.push(line, ...sectionLines);
+    index = cursor - 1;
+  }
+  return kept.join("\n").replace(/\n{3,}/g, "\n\n").trim();
+}
+
+function normalizeMarkdownImageSrc(src?: string) {
+  if (!src) return src;
+  if (/^(https?:|data:|blob:)/i.test(src)) return src;
+  if (src.startsWith("/media/")) return src;
+  if (src.startsWith("zz_media/")) return mediaUrlFromVaultPath(src);
+  if (/\.(png|jpe?g|gif|webp|svg)$/i.test(src)) return mediaUrlFromVaultPath(src);
+  return src;
 }
 
 function transformObsidianMarkdown(content: string) {
+  const isPlayerMode = getAccessMode() === "player";
   let transformed = content;
+
+  transformed = stripCalloutBlocksByTitle(transformed, [/template aplicado/i]);
 
   transformed = transformed.replace(/<h([1-6])[^>]*>([\s\S]*?)<\/h\1>/gi, (_match, level, inner) => {
     const hashes = "#".repeat(Number(level));
@@ -50,22 +163,28 @@ function transformObsidianMarkdown(content: string) {
   });
 
   transformed = transformed.replace(/```(dataview|datacards|leaflet)([\s\S]*?)```/gi, (_match, kind) => {
+    if (isPlayerMode) return "\n\n";
     const label = String(kind).toLowerCase();
     if (label === "leaflet") return "\n\n> [!map] Mapa Leaflet disponível no Obsidian.\n\n";
     if (label === "datacards") return "\n\n> [!cards] DataCards disponível no Obsidian.\n\n";
     return "\n\n> [!query] Consulta Dataview disponível no Obsidian.\n\n";
   });
 
-  transformed = transformed.replace(/^>\s*\[!(\w+)\]([+-])?\s*(.*)$/gim, (_match, kind, collapse, title) => {
-    const marker = collapse ? " recolhido" : "";
-    return `> **${String(kind).toUpperCase()}${marker}${title ? ` — ${title}` : ""}**`;
+  transformed = transformed.replace(/^>\s*\[!([^\]\|\s]+)(?:\|([^\]]+))?\]([+-])?\s*(.*)$/gim, (_match, kind, classes, collapse, title) => {
+    const marker = collapse === "-" ? " recolhido" : "";
+    const rawKind = String(kind);
+    const classText = String(classes || "");
+    const label = rawKind.toLowerCase() === "note" && /clean|right|infobox/i.test(classText)
+      ? "Retrato"
+      : displayCalloutKind(rawKind);
+    return `> **${label}${marker}${title ? ` — ${title}` : ""}**`;
   });
 
   transformed = transformed.replace(/!\[\[([^\]]+)\]\]/g, (_match, target) => {
     const raw = String(target);
     const [path] = raw.split("|");
     const alt = path.split("/").pop() || "imagem";
-    return mediaMarkdownFromTarget(path, alt);
+    return mediaMarkdownFromTarget(raw, alt);
   });
 
   transformed = transformed.replace(/\[\[([^\]]+)\]\]/g, (_match, target) => {
@@ -74,7 +193,9 @@ function transformObsidianMarkdown(content: string) {
     return `[${label}](omnisvera://note/${encodedTarget})`;
   });
 
-  return transformed;
+  transformed = transformed.replace(/^(\*\*[^*\n]+:\*\*\s*.+)$/gm, "- $1");
+
+  return removeEmptySections(transformed);
 }
 
 export default function RenderedNote({ content, onOpenNote }: RenderedNoteProps) {
@@ -103,7 +224,20 @@ export default function RenderedNote({ content, onOpenNote }: RenderedNoteProps)
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         components={{
-          img: ({ ...props }) => <img loading="lazy" {...props} />,
+          img: ({ ...props }) => {
+            const widthMatch = typeof props.title === "string" ? props.title.match(/^w:(\d+)$/) : null;
+            const width = widthMatch ? Number(widthMatch[1]) : undefined;
+            const src = normalizeMarkdownImageSrc(typeof props.src === "string" ? props.src : undefined);
+            return (
+              <img
+                loading="lazy"
+                {...props}
+                src={src}
+                title={width ? undefined : props.title}
+                style={width ? { maxWidth: `${width}px`, width: "100%" } : props.style}
+              />
+            );
+          },
           a: ({ children, href, ...props }) => (
             <a
               href={href}

@@ -268,7 +268,7 @@ def player_dashboard(_: AccessContext = Depends(require_player)) -> dict:
             key=lambda row: row["title"],
         )
 
-    player_character_priority = ("Vezemir", "Varkh Nimalis", "Raziel", "Morthak", "Mira Valen")
+    player_character_priority = ("Vezemir", "Varkh Nimalis", "Raziel", "Morthak")
     characters = [
         row
         for row in by_type("character")
@@ -385,7 +385,7 @@ if FRONTEND_DIST.exists():
 def frontend_root():
     index = FRONTEND_DIST / "index.html"
     if index.exists():
-        return FileResponse(index)
+        return FileResponse(index, headers={"Cache-Control": "no-store"})
     return {
         "message": "Frontend ainda não foi buildado. Rode npm install e npm run build em omnisvera-agent/frontend."
     }
@@ -397,5 +397,5 @@ def frontend_fallback(request: Request, full_path: str):
         raise HTTPException(status_code=404, detail="Endpoint não encontrado.")
     index = FRONTEND_DIST / "index.html"
     if index.exists():
-        return FileResponse(index)
+        return FileResponse(index, headers={"Cache-Control": "no-store"})
     return {"message": "Omnisvera Companion backend ativo; frontend dist ausente."}
