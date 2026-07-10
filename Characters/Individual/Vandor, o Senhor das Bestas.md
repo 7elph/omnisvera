@@ -10,8 +10,8 @@ visibility: Mestre
 spoiler_level: heavy
 gm_secret: true
 created_by: IA
-thumbnail:
-cover:
+thumbnail: zz_media/thumbnails/th_senhor_das_bestas.PNG
+cover: zz_media/characters/senhor_das_bestas.png
 location: "[[Floresta de Avenor]]"
 territory: "[[Floresta de Avenor]]"
 faction: "[[Clã Sanguinallis]]"

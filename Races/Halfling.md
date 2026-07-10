@@ -23,7 +23,7 @@ hooks:
   - Comunidades pequenas e viajantes curiosos
 rumors: []
 thumbnail: zz_media/thumbnails/th_halfling.png
-cover: zz_media/thumbnails/th_halfling.png
+cover: zz_media/races/halfling.png
 chapters: []
 tags:
   - raca

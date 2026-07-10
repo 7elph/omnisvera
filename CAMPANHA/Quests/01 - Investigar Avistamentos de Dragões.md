@@ -19,8 +19,8 @@ danger_level: C
 info: O Conclave dos Errantes tem interesse em investigar relatos de dragões nas regiões ao sul de Nimalia.
 chapters:
   - 01 - Ecos do Mundo Perdido
-thumbnail: zz_media/covers/banner_earthropo.png
-cover: zz_media/covers/banner_earthropo.png
+thumbnail: zz_media/thumbnails/th_retrato_avistamento.PNG
+cover: zz_media/covers/quest_avistamento.png
 tags:
   - quest
   - story

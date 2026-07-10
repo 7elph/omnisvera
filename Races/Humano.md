@@ -23,7 +23,7 @@ hooks:
   - Presença importante, mas não majoritária em Nimalia
 rumors: []
 thumbnail: zz_media/thumbnails/th_humano.png
-cover: zz_media/thumbnails/th_humano.png
+cover: zz_media/races/humano.png
 chapters: []
 tags:
   - raca

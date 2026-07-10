@@ -23,7 +23,7 @@ hooks:
   - Ruína de Leth'valora
 rumors: []
 thumbnail: zz_media/thumbnails/th_elf.png
-cover: zz_media/thumbnails/th_elf.png
+cover: zz_media/races/elf.png
 chapters: []
 tags:
   - raca

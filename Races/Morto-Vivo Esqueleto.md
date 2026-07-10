@@ -26,8 +26,8 @@ hooks:
   - mortos-vivos conscientes
   - magia arcana
 rumors: []
-thumbnail:
-cover:
+thumbnail: zz_media/thumbnails/th_morthak.PNG
+cover: zz_media/characters/morthak.jpg
 chapters: []
 tags:
   - raca

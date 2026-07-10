@@ -24,7 +24,7 @@ hooks:
   - Presságios urbanos
 rumors: []
 thumbnail: zz_media/thumbnails/th_kenku.png
-cover: zz_media/thumbnails/th_kenku.png
+cover: zz_media/races/kenku.png
 chapters: []
 tags:
   - raca

@@ -10,8 +10,8 @@ visibility: Mestre
 spoiler_level: heavy
 gm_secret: true
 created_by: Sage
-thumbnail:
-cover:
+thumbnail: zz_media/characters/dragao_colar_dourado.png
+cover: zz_media/characters/dragao_colar_dourado.png
 location: Desconhecida
 territory: "[[Floresta de Avenor]]"
 faction: Nenhuma

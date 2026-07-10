@@ -12,7 +12,7 @@ leader:
 location: "[[Nimalis]]"
 territory: "[[Nimalia|Reino de Nimalia]]"
 faction:
-thumbnail: zz_media/faction/coroa_de_nimalia.png
+thumbnail: zz_media/thumbnails/th_coroa_de_nimalia.PNG
 cover: zz_media/faction/coroa_de_nimalia.png
 info: Casas nobres ativas do Reino de Nimalia.
 description: Estrutura social e política das casas nobres de Nimalia, especialmente ligadas à corte, ao Bairro Nobre e à Coroa.

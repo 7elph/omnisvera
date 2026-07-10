@@ -8,7 +8,7 @@ spoiler_level: none
 gm_secret: false
 campaign_status: Ativo
 thumbnail: zz_media/thumbnails/th_vezemir.png
-cover: zz_media/thumbnails/th_vezemir.png
+cover: zz_media/characters/vezemir.png
 status: Vivo
 location: "[[Floresta de Avenor]]"
 territory: "[[Floresta de Avenor]]"

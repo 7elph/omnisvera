@@ -8,7 +8,7 @@ spoiler_level: none
 gm_secret: false
 campaign_status: Ativo
 thumbnail: zz_media/thumbnails/th_varkh.png
-cover: zz_media/thumbnails/th_varkh.png
+cover: zz_media/characters/varkh.jpeg
 status: Vivo
 location: "[[Nimalis]]"
 territory: "[[Nimalia]]"

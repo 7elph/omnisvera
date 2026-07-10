@@ -17,7 +17,7 @@ faction:
 danger_level: D
 chapters:
   - 01 - Ecos do Mundo Perdido
-thumbnail: zz_media/misc/remedios_falsos.png
+thumbnail: zz_media/thumbnails/th_remedios_falsos.PNG
 cover: zz_media/misc/remedios_falsos.png
 tags:
   - rumor

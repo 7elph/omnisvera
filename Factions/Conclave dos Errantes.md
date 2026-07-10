@@ -11,7 +11,7 @@ campaign_status: Ativa
 leader:
 location: "[[Nimalis]]"
 territory: "[[Nimalia|Reino de Nimalia]]"
-thumbnail: zz_media/faction/conclave_dos_errantes.png
+thumbnail: zz_media/thumbnails/th_conclave_dos_errantes.PNG
 cover: zz_media/faction/conclave_dos_errantes.png
 info: Rede de aventureiros, investigadores e errantes de Earthropo.
 description: Organização flexível que reúne aventureiros, escoltas, exploradores e pessoas sem bandeira fixa.

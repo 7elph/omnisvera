@@ -10,8 +10,8 @@ visibility: Mestre
 spoiler_level: heavy
 gm_secret: true
 created_by: IA
-thumbnail:
-cover:
+thumbnail: zz_media/thumbnails/th_malakar.PNG
+cover: zz_media/characters/malakar.png
 location: "[[Fortaleza de Gharok]]"
 territory: "[[EARTHROPO/EARTHROPO|Earthropo]]"
 faction: "[[Clã Sanguinallis]]"

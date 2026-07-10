@@ -21,7 +21,7 @@ hooks:
   - "[[03 - Explorar a Passagem Sob a Estrada]]"
 chapters:
   - 01 - Ecos do Mundo Perdido
-thumbnail: zz_media/faction/guarda_real_nimalia.png
+thumbnail: zz_media/thumbnails/th_guarda_real_nimalia.PNG
 cover: zz_media/faction/guarda_real_nimalia.png
 tags:
   - rumor

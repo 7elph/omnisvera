@@ -25,7 +25,7 @@ hooks:
   - Relações humanas e élficas em Avenor
 rumors: []
 thumbnail: zz_media/thumbnails/th_vezemir.png
-cover: zz_media/thumbnails/th_vezemir.png
+cover: zz_media/characters/vezemir.png
 chapters: []
 tags:
   - raca

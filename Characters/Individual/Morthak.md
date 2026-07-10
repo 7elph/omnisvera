@@ -7,7 +7,7 @@ visibility: Público
 spoiler_level: none
 gm_secret: false
 campaign_status: Ativo
-thumbnail: zz_media/characters/morthak.jpg
+thumbnail: zz_media/thumbnails/th_morthak.PNG
 cover: zz_media/characters/morthak.jpg
 status: Vivo
 location: "[[Nimalis]]"

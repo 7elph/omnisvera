@@ -9,7 +9,7 @@ visibility: Público
 spoiler_level: none
 gm_secret: false
 thumbnail: zz_media/thumbnails/th_mira.png
-cover: zz_media/thumbnails/th_mira.png
+cover: zz_media/characters/mira.png
 location: "[[Leth'valora]]"
 territory: "[[Floresta de Avenor]]"
 faction: Nenhum

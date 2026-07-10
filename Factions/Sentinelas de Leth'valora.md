@@ -11,7 +11,7 @@ campaign_status: Cânone de trabalho
 leader:
 location: "[[Leth'valora]]"
 territory: "[[Floresta de Avenor]]"
-thumbnail: "zz_media/faction/sentinelas_de_leth_valora.png"
+thumbnail: "zz_media/thumbnails/th_sentinelas_de_leth_valora.PNG"
 cover: "zz_media/faction/sentinelas_de_leth_valora.png"
 info: Guarda local destruída de Leth'valora.
 description: Pequena força de defesa da vila de Leth'valora, destruída junto com a vila durante o ataque do dragão de colar dourado.

@@ -18,8 +18,8 @@ danger_level: C
 info: O Conclave dos Errantes ouviu relatos sobre ataques atribuídos a dragões nas regiões ao sul de Nimalia.
 chapters:
   - 01 - Ecos do Mundo Perdido
-thumbnail: zz_media/covers/banner_earthropo.png
-cover: zz_media/covers/banner_earthropo.png
+thumbnail: zz_media/thumbnails/th_retrato_avistamento.PNG
+cover: zz_media/covers/cover_o_dragao_da_missao.png
 tags:
   - rumor
   - story

@@ -8,7 +8,7 @@ spoiler_level: none
 gm_secret: false
 campaign_status: Ativo
 thumbnail: zz_media/thumbnails/th_raziel.png
-cover: zz_media/thumbnails/th_raziel.png
+cover: zz_media/characters/raziel.png
 status: Vivo
 location: "[[Ruínas de Valthor]]"
 territory: "[[EARTHROPO/EARTHROPO|Earthropo]]"

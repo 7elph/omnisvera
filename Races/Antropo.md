@@ -25,7 +25,7 @@ hooks:
   - Relação política com humanos, elfos, anões e dragonborns
 rumors: []
 thumbnail: zz_media/thumbnails/th_antropos.png
-cover: zz_media/thumbnails/th_antropos.png
+cover: zz_media/races/antropos.png
 chapters: []
 tags:
   - raca

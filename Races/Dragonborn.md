@@ -28,7 +28,7 @@ hooks:
   - Sopro elemental
 rumors: []
 thumbnail: zz_media/thumbnails/th_dragonborn.png
-cover: zz_media/thumbnails/th_dragonborn.png
+cover: zz_media/races/dragonborn.png
 chapters: []
 tags:
   - raca

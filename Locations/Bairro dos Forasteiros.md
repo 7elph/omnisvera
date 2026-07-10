@@ -13,8 +13,8 @@ territory: "[[Nimalia]]"
 region: Capital do Reino de Nimalia
 district: Bairro dos Forasteiros
 danger_level: Médio
-thumbnail: zz_media/maps/mapa_de_nimalis.png
-cover: zz_media/maps/mapa_de_nimalis.png
+thumbnail: zz_media/locations/bairro_dos_forasteiros.png
+cover: zz_media/locations/bairro_dos_forasteiros.png
 info: Região pobre e instável de Nimalis.
 description: Bairro de abrigo temporário, favelas, trabalhadores sem renda estável e recém-chegados.
 chapters: []
@@ -35,7 +35,7 @@ tags:
 # Bairro dos Forasteiros
 
 > [!NOTE|clean no-i right]+ Bairro dos Forasteiros
-> ![[zz_media/maps/mapa_de_nimalis.png|400]]
+> ![[zz_media/locations/bairro_dos_forasteiros.png|400]]
 
 > [!world]- SINOPSE PÚBLICA
 > O Bairro dos Forasteiros acolhe quem chega a [[Nimalis]] sem renda, proteção ou lugar fixo. É abrigo temporário, favela, rumor e sobrevivência difícil no mesmo espaço.

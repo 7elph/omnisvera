@@ -11,7 +11,7 @@ campaign_status: Ativa
 leader:
 location: "[[Nimalis]]"
 territory: "[[EARTHROPO/EARTHROPO|Earthropo]]"
-thumbnail: zz_media/faction/guilda_dos_mercadores.png
+thumbnail: zz_media/thumbnails/th_guilda_dos_mercadores.PNG
 cover: zz_media/faction/guilda_dos_mercadores.png
 info: Guilda econômica que organiza comércio, rotas, vendas e contratos em Earthropo.
 description: Rede mercantil de alcance amplo, com influência em mercados, portos, caravanas e disputas econômicas.

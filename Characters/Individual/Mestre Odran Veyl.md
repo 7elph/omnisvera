@@ -9,7 +9,7 @@ visibility: Público
 spoiler_level: none
 gm_secret: false
 thumbnail: zz_media/thumbnails/th_mestre_odran.png
-cover: zz_media/thumbnails/th_mestre_odran.png
+cover: zz_media/characters/mestre_odran.jpeg
 location: "[[O Frasco Afogado]]"
 territory: "[[Nimalia]]"
 faction:
