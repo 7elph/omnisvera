@@ -168,6 +168,22 @@ export default function ChatVault({
               onOpenNote={onOpenNote}
               onUnknownNote={onUnknownNote}
             />
+            {message.result.teorias && message.result.teorias.length > 0 && (
+              <div className="grounded-note theory-note">
+                <strong>Teoria do Arquivo</strong>
+                {message.result.teorias.slice(0, 2).map((item, index) => (
+                  <p key={`${message.id}-theory-${index}`}>{item.teoria}</p>
+                ))}
+              </div>
+            )}
+            {message.result.informacoes_insuficientes && message.result.informacoes_insuficientes.length > 0 && (
+              <div className="grounded-note missing-note">
+                <strong>O Arquivo não tem certeza</strong>
+                {message.result.informacoes_insuficientes.slice(0, 2).map((item, index) => (
+                  <p key={`${message.id}-missing-${index}`}>{item}</p>
+                ))}
+              </div>
+            )}
             <div className="chat-runtime">
               <span className={runtimeClass(message.result)}>{runtimeLabel(message.result)}</span>
               {message.result.model && <span>{message.result.model}</span>}

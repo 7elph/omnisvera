@@ -142,3 +142,19 @@ def iter_markdown_notes(root: Path) -> tuple[list[VaultNote], int]:
         except Exception:
             skipped += 1
     return notes, skipped
+
+
+def markdown_signature(root: Path) -> tuple[int, str | None]:
+    count = 0
+    latest: str | None = None
+    for path in root.rglob("*.md"):
+        if _is_ignored(path, root):
+            continue
+        try:
+            updated_at = datetime.fromtimestamp(path.stat().st_mtime, timezone.utc).isoformat()
+        except OSError:
+            continue
+        count += 1
+        if latest is None or updated_at > latest:
+            latest = updated_at
+    return count, latest

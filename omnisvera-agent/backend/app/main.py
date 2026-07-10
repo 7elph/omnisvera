@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from pathlib import Path
 import re
+import threading
+import time
 import unicodedata
 
 from fastapi import Depends, FastAPI, Header, HTTPException, Query, Request
@@ -25,13 +27,15 @@ from .schemas import (
     SearchResult,
 )
 from .search import search_notes
-from .vault_index import all_notes_for_search, get_note, init_db, list_notes, rebuild_index, resolve_note, row_to_note
-from .vault_reader import iter_markdown_notes
+from .vault_index import all_notes_for_search, get_note, index_signature, init_db, list_notes, rebuild_index, resolve_note, row_to_note
+from .vault_reader import iter_markdown_notes, markdown_signature
 
 
 settings = get_settings()
 app = FastAPI(title="Omnisvera Companion", version="0.2.0")
 FRONTEND_DIST = Path(__file__).resolve().parents[2] / "frontend" / "dist"
+_INDEX_REFRESH_LOCK = threading.Lock()
+_LAST_INDEX_REFRESH_CHECK = 0.0
 MEDIA_ALIASES = {
     "zz_media/characters/dukeofd.png": "zz_media/characters/augustus.png",
     "zz_media/thumbnails/th_dukeofd.png": "zz_media/thumbnails/th_augustus.png",
@@ -49,6 +53,30 @@ app.add_middleware(
 
 def _provided_token(x_omnisvera_token: str | None, token: str | None) -> str | None:
     return x_omnisvera_token or token
+
+
+def maybe_refresh_index() -> None:
+    global _LAST_INDEX_REFRESH_CHECK
+    if not settings.auto_refresh_index:
+        return
+    now = time.monotonic()
+    if now - _LAST_INDEX_REFRESH_CHECK < settings.auto_refresh_interval_seconds:
+        return
+    with _INDEX_REFRESH_LOCK:
+        now = time.monotonic()
+        if now - _LAST_INDEX_REFRESH_CHECK < settings.auto_refresh_interval_seconds:
+            return
+        _LAST_INDEX_REFRESH_CHECK = now
+        vault_sig = markdown_signature(settings.vault_path)
+        db_sig = index_signature(settings.database_path)
+        if vault_sig == db_sig:
+            return
+        notes, skipped = iter_markdown_notes(settings.vault_path)
+        indexed = rebuild_index(settings.database_path, notes)
+        print(
+            f"[Omnisvera Companion] Índice atualizado automaticamente: "
+            f"{indexed} notas, {skipped} arquivos ignorados."
+        )
 
 
 def _media_lookup_key(value: str) -> str:
@@ -182,6 +210,11 @@ async def health(access: AccessContext = Depends(require_any)) -> HealthResponse
         database_path=str(settings.database_path),
         ollama_base_url=settings.ollama_base_url,
         ollama_model=settings.ollama_model,
+        embedding_model=settings.embedding_model,
+        rag_mode=settings.rag_mode,
+        semantic_index_path=str(settings.semantic_index_path),
+        auto_refresh_index=settings.auto_refresh_index,
+        auto_refresh_interval_seconds=settings.auto_refresh_interval_seconds,
         ollama_accessible=await check_ollama(settings.ollama_base_url),
         access_mode=access.mode,
         player_mode_available=bool(settings.player_token),
@@ -198,11 +231,13 @@ def rebuild(_: AccessContext = Depends(require_master)) -> RebuildResponse:
 # Legacy endpoints: kept as GM-only so old frontend/bookmarks do not bypass safety.
 @app.get("/notes", response_model=list[NoteSummary])
 def notes(_: AccessContext = Depends(require_master)) -> list[dict]:
+    maybe_refresh_index()
     return list_notes(settings.database_path, access_mode="gm")
 
 
 @app.get("/notes/{note_id}", response_model=NoteDetail)
 def note(note_id: int, _: AccessContext = Depends(require_master)) -> dict:
+    maybe_refresh_index()
     item = get_note(settings.database_path, note_id, access_mode="gm")
     if item is None:
         raise HTTPException(status_code=404, detail="Nota não encontrada")
@@ -211,11 +246,13 @@ def note(note_id: int, _: AccessContext = Depends(require_master)) -> dict:
 
 @app.post("/search", response_model=list[SearchResult])
 def search(request: SearchRequest, _: AccessContext = Depends(require_master)) -> list[dict]:
+    maybe_refresh_index()
     return search_notes(settings.database_path, request.query, request.limit, access_mode="gm")
 
 
 @app.post("/chat", response_model=ChatResponse)
 async def chat(request: ChatRequest, _: AccessContext = Depends(require_master)) -> dict:
+    maybe_refresh_index()
     return await answer_question(
         settings.database_path,
         settings.ollama_base_url,
@@ -223,16 +260,23 @@ async def chat(request: ChatRequest, _: AccessContext = Depends(require_master))
         request.question,
         request.limit,
         access_mode="gm",
+        embedding_model=settings.embedding_model,
+        semantic_index_path=settings.semantic_index_path,
+        rag_mode=settings.rag_mode,
+        context_limit=settings.rag_context_limit,
+        context_chars=settings.rag_context_chars,
     )
 
 
 @app.get("/gm/notes", response_model=list[NoteSummary])
 def gm_notes(_: AccessContext = Depends(require_master)) -> list[dict]:
+    maybe_refresh_index()
     return list_notes(settings.database_path, access_mode="gm")
 
 
 @app.get("/gm/notes/{note_id}", response_model=NoteDetail)
 def gm_note(note_id: int, _: AccessContext = Depends(require_master)) -> dict:
+    maybe_refresh_index()
     item = get_note(settings.database_path, note_id, access_mode="gm")
     if item is None:
         raise HTTPException(status_code=404, detail="Nota não encontrada")
@@ -241,11 +285,13 @@ def gm_note(note_id: int, _: AccessContext = Depends(require_master)) -> dict:
 
 @app.post("/gm/search", response_model=list[SearchResult])
 def gm_search(request: SearchRequest, _: AccessContext = Depends(require_master)) -> list[dict]:
+    maybe_refresh_index()
     return search_notes(settings.database_path, request.query, request.limit, access_mode="gm")
 
 
 @app.get("/gm/resolve", response_model=NoteSummary)
 def gm_resolve(target: str, _: AccessContext = Depends(require_master)) -> dict:
+    maybe_refresh_index()
     item = resolve_note(settings.database_path, target, access_mode="gm")
     if item is None:
         raise HTTPException(status_code=404, detail="Nota não encontrada")
@@ -254,6 +300,7 @@ def gm_resolve(target: str, _: AccessContext = Depends(require_master)) -> dict:
 
 @app.post("/gm/chat", response_model=ChatResponse)
 async def gm_chat(request: ChatRequest, _: AccessContext = Depends(require_master)) -> dict:
+    maybe_refresh_index()
     return await answer_question(
         settings.database_path,
         settings.ollama_base_url,
@@ -261,16 +308,23 @@ async def gm_chat(request: ChatRequest, _: AccessContext = Depends(require_maste
         request.question,
         request.limit,
         access_mode="gm",
+        embedding_model=settings.embedding_model,
+        semantic_index_path=settings.semantic_index_path,
+        rag_mode=settings.rag_mode,
+        context_limit=settings.rag_context_limit,
+        context_chars=settings.rag_context_chars,
     )
 
 
 @app.get("/player/notes", response_model=list[NoteSummary])
 def player_notes(_: AccessContext = Depends(require_player)) -> list[dict]:
+    maybe_refresh_index()
     return list_notes(settings.database_path, access_mode="player")
 
 
 @app.get("/player/notes/{note_id}", response_model=NoteDetail)
 def player_note(note_id: int, _: AccessContext = Depends(require_player)) -> dict:
+    maybe_refresh_index()
     item = get_note(settings.database_path, note_id, access_mode="player")
     if item is None:
         raise HTTPException(status_code=404, detail="Nota não encontrada ou não liberada para jogadores")
@@ -279,11 +333,13 @@ def player_note(note_id: int, _: AccessContext = Depends(require_player)) -> dic
 
 @app.post("/player/search", response_model=list[SearchResult])
 def player_search(request: SearchRequest, _: AccessContext = Depends(require_player)) -> list[dict]:
+    maybe_refresh_index()
     return search_notes(settings.database_path, request.query, request.limit, access_mode="player")
 
 
 @app.get("/player/resolve", response_model=NoteSummary)
 def player_resolve(target: str, _: AccessContext = Depends(require_player)) -> dict:
+    maybe_refresh_index()
     item = resolve_note(settings.database_path, target, access_mode="player")
     if item is None:
         raise HTTPException(status_code=404, detail="Nota não encontrada ou não liberada para jogadores")
@@ -292,6 +348,7 @@ def player_resolve(target: str, _: AccessContext = Depends(require_player)) -> d
 
 @app.post("/player/chat", response_model=ChatResponse)
 async def player_chat(request: ChatRequest, _: AccessContext = Depends(require_player)) -> dict:
+    maybe_refresh_index()
     return await answer_question(
         settings.database_path,
         settings.ollama_base_url,
@@ -299,6 +356,11 @@ async def player_chat(request: ChatRequest, _: AccessContext = Depends(require_p
         request.question,
         request.limit,
         access_mode="player",
+        embedding_model=settings.embedding_model,
+        semantic_index_path=settings.semantic_index_path,
+        rag_mode=settings.rag_mode,
+        context_limit=settings.rag_context_limit,
+        context_chars=settings.rag_context_chars,
     )
 
 
@@ -324,6 +386,7 @@ def _section(
 
 @app.get("/player/dashboard", response_model=PlayerDashboardResponse)
 def player_dashboard(_: AccessContext = Depends(require_player)) -> dict:
+    maybe_refresh_index()
     rows = [row for row in all_notes_for_search(settings.database_path) if is_player_safe_row(row)]
 
     def is_active(row) -> bool:

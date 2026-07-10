@@ -11,6 +11,11 @@ class HealthResponse(BaseModel):
     database_path: str
     ollama_base_url: str
     ollama_model: str
+    embedding_model: str | None = None
+    rag_mode: str | None = None
+    semantic_index_path: str | None = None
+    auto_refresh_index: bool = False
+    auto_refresh_interval_seconds: int | None = None
     ollama_accessible: bool
     access_mode: str | None = None
     player_mode_available: bool = False
@@ -64,6 +69,10 @@ class ChatResponse(BaseModel):
     insufficient_context: bool
     warning: str | None = None
     suggested_questions: list[str] = Field(default_factory=list)
+    fatos_confirmados: list[dict[str, Any]] = Field(default_factory=list)
+    teorias: list[dict[str, Any]] = Field(default_factory=list)
+    informacoes_insuficientes: list[str] = Field(default_factory=list)
+    fontes_usadas: list[str] = Field(default_factory=list)
     ollama_used: bool = False
     ollama_attempted: bool = False
     model: str | None = None

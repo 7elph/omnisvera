@@ -92,6 +92,10 @@ export type ChatResult = {
   insufficient_context: boolean;
   warning?: string | null;
   suggested_questions?: string[];
+  fatos_confirmados?: Array<{ fato: string; fonte: string }>;
+  teorias?: Array<{ teoria: string; base: string[] }>;
+  informacoes_insuficientes?: string[];
+  fontes_usadas?: string[];
   ollama_used?: boolean;
   ollama_attempted?: boolean;
   model?: string | null;

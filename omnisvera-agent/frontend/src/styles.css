@@ -287,6 +287,44 @@ textarea {
   color: #d9b275;
 }
 
+.grounded-note {
+  border-radius: 14px;
+  display: grid;
+  gap: 0.25rem;
+  padding: 0.7rem 0.85rem;
+}
+
+.grounded-note strong {
+  font-size: 0.78rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.grounded-note p {
+  color: #d8c8aa;
+  font-size: 0.9rem;
+  line-height: 1.45;
+  margin: 0;
+}
+
+.theory-note {
+  background: rgba(84, 64, 105, 0.18);
+  border: 1px solid rgba(172, 142, 221, 0.24);
+}
+
+.theory-note strong {
+  color: #cbb7ef;
+}
+
+.missing-note {
+  background: rgba(104, 78, 34, 0.18);
+  border: 1px solid rgba(213, 168, 91, 0.22);
+}
+
+.missing-note strong {
+  color: #dfbe84;
+}
+
 .user-bubble {
   align-self: start;
   background: #d6a858;

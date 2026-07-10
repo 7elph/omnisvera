@@ -23,16 +23,27 @@ Variáveis de ambiente:
 ```powershell
 $env:OMNISVERA_VAULT_PATH="C:\Users\delib\Desktop\OMNISVERA"
 $env:OLLAMA_BASE_URL="http://localhost:11434"
-$env:OLLAMA_MODEL="qwen2.5:1.5b"
+$env:OLLAMA_MODEL="omnisvera-local:latest"
 ```
 
 Se o modelo acima não estiver instalado, use um modelo local existente. No notebook atual do Sage, os modelos preparados são:
 
 ```powershell
-$env:OLLAMA_MODEL="omnisvera-fast:latest"
-# ou
 $env:OLLAMA_MODEL="omnisvera-local:latest"
+# mais inteligente, recomendado para o chat
+
+$env:OLLAMA_MODEL="omnisvera-fast:latest"
+# mais rÃ¡pido, bom como fallback em mesa
 ```
+
+O backend pode atualizar o Ã­ndice SQLite automaticamente quando arquivos `.md` mudam:
+
+```powershell
+$env:OMNISVERA_AUTO_REFRESH_INDEX="true"
+$env:OMNISVERA_AUTO_REFRESH_INTERVAL_SECONDS="12"
+```
+
+Isso atualiza o corpo das notas no app apÃ³s salvar no Obsidian. O Ã­ndice semÃ¢ntico `.local-index/vault.jsonl` continua manual para evitar recalcular embeddings a cada salvamento.
 
 Se `OMNISVERA_VAULT_PATH` não for definido, o backend assume a raiz do repositório acima de `omnisvera-agent/`.
 

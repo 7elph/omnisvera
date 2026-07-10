@@ -166,6 +166,13 @@ def all_notes_for_search(database_path: Path) -> list[sqlite3.Row]:
         return conn.execute("SELECT * FROM notes").fetchall()
 
 
+def index_signature(database_path: Path) -> tuple[int, str | None]:
+    init_db(database_path)
+    with connect(database_path) as conn:
+        row = conn.execute("SELECT COUNT(*) AS count, MAX(updated_at) AS latest FROM notes").fetchone()
+    return int(row["count"] or 0), row["latest"]
+
+
 def _normalize_lookup(value: str) -> str:
     clean = (
         value.strip()

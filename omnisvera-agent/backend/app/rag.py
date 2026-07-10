@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Any
 
 from .access import AccessMode, PLAYER_BLOCKED_LOOKUP_TERMS, is_player_safe_row, normalize_text, sanitize_player_text
+from .hybrid_retrieval import hybrid_search
 from .ollama_client import chat_with_ollama
 from .search import search_notes
 from .vault_index import all_notes_for_search, get_note, get_notes_by_ids
@@ -158,8 +159,12 @@ def _direct_entity_target(question: str) -> tuple[str, str] | None:
             candidates.append((normalized.removeprefix(prefix).strip(), "where"))
     if normalized.startswith("quem "):
         target = re.sub(r"^quem\s+", "", normalized).strip()
-        target = re.sub(r"^(e|eh|foi|sao|sao os|e a|e o|\?)\s*", "", target).strip()
-        candidates.append((target, "who"))
+        target = re.sub(r"^(sao os|sao as|e a|e o|e|eh|foi|sao|\?)\s+", "", target).strip()
+        if not re.match(
+            r"^(esta|estao|está|estão|est\S*|sta|stao|usa|usando|tem|carrega|transporta|levou|leva|criou|fez|sabe|controla|mandou|matou|roubou|quer|pode)\b",
+            target,
+        ):
+            candidates.append((target, "who"))
     if normalized.startswith("o que ") or normalized.startswith("que "):
         target = re.sub(r"^(o que|que)\s+", "", normalized).strip()
         target = re.sub(r"^(e|eh|sao|sao os|sao as|sao o|sao a|\?)\s*", "", target).strip()
@@ -375,7 +380,16 @@ def _find_direct_entity_note(
     best_lookup = normalize_text(f"{best.get('title', '')} {_basename(best.get('path', ''))} {' '.join(best.get('aliases') or [])}")
     best_entity_score = _entity_candidate_score(best, target, kind)
     best_type = normalize_text(best.get("type"))
+    target_terms = _target_tokens(target)
+    lookup_terms = _target_tokens(best_lookup)
+    strong_name_match = bool(target_terms and target_terms.issubset(lookup_terms))
+    if len(target_terms) >= 2:
+        distinctive_terms = {term for term in target_terms if term not in {"nimalia", "nimalis", "reino", "mare", "baixa"}}
+        if distinctive_terms and not distinctive_terms.issubset(lookup_terms):
+            return None
     if kind in {"who", "what", "where"} and target_norm not in best_lookup and best_entity_score < 40:
+        return None
+    if kind in {"who", "what", "where", "age"} and target_norm not in best_lookup and not strong_name_match and len(target_terms) >= 2:
         return None
     if kind == "where" and best_type not in {"location", "territory", "map", "character", "faction"}:
         return None
@@ -1423,6 +1437,10 @@ def _with_chat_meta(
     result = dict(result)
     result.setdefault("warning", None)
     result.setdefault("suggested_questions", [])
+    result.setdefault("fatos_confirmados", [])
+    result.setdefault("teorias", [])
+    result.setdefault("informacoes_insuficientes", [])
+    result.setdefault("fontes_usadas", [])
     result["ollama_used"] = ollama_used
     result["ollama_attempted"] = bool(ollama_attempted if ollama_attempted is not None else ollama_used)
     result["model"] = model
@@ -1629,6 +1647,319 @@ Regras:
     return _with_chat_meta(result, ollama_used=True, model=ollama_model, retrieval_mode=retrieval_mode)
 
 
+def _context_from_hybrid_results(
+    results: list[dict[str, Any]],
+    *,
+    max_chars: int = 5200,
+) -> str:
+    chunks: list[str] = []
+    total = 0
+    for index, result in enumerate(results, start=1):
+        excerpt = str(result.get("excerpt") or "").strip()
+        if not excerpt:
+            continue
+        chunk = (
+            f"[{index}] Caminho: {result.get('path')}\n"
+            f"Título: {result.get('title')}\n"
+            f"Tipo: {result.get('type')}\n"
+            f"Visibilidade: {result.get('visibility')}\n"
+            f"Trecho liberado:\n{excerpt}\n"
+        )
+        if total + len(chunk) > max_chars:
+            remaining = max_chars - total
+            if remaining > 450:
+                chunks.append(chunk[:remaining].rsplit("\n", 1)[0].strip())
+            break
+        chunks.append(chunk)
+        total += len(chunk)
+    return "\n---\n".join(chunks)
+
+
+def _grounded_fallback() -> dict[str, Any]:
+    return {
+        "fatos_confirmados": [],
+        "teorias": [],
+        "informacoes_insuficientes": [
+            "Não foi possível produzir uma resposta confiável com as informações disponíveis."
+        ],
+        "fontes_usadas": [],
+        "resposta_ao_jogador": "Não encontrei informações suficientes no que já foi revelado.",
+    }
+
+
+def _extract_json_object(text: str) -> dict[str, Any] | None:
+    clean = text.strip()
+    clean = re.sub(r"^```(?:json)?\s*", "", clean, flags=re.IGNORECASE)
+    clean = re.sub(r"\s*```$", "", clean)
+    start = clean.find("{")
+    end = clean.rfind("}")
+    if start < 0 or end <= start:
+        return None
+    try:
+        data = json.loads(clean[start : end + 1])
+    except json.JSONDecodeError:
+        return None
+    return data if isinstance(data, dict) else None
+
+
+def _coerce_string_list(value: Any) -> list[str]:
+    if not isinstance(value, list):
+        return []
+    return [str(item).strip() for item in value if str(item).strip()]
+
+
+def _validate_grounded_payload(data: dict[str, Any] | None, allowed_paths: set[str]) -> dict[str, Any] | None:
+    if not isinstance(data, dict):
+        return None
+
+    facts: list[dict[str, str]] = []
+    for item in data.get("fatos_confirmados") or []:
+        if not isinstance(item, dict):
+            continue
+        fact = str(item.get("fato") or "").strip()
+        source = str(item.get("fonte") or "").strip()
+        if fact and source in allowed_paths:
+            facts.append({"fato": fact, "fonte": source})
+
+    theories: list[dict[str, Any]] = []
+    for item in data.get("teorias") or []:
+        if not isinstance(item, dict):
+            continue
+        theory = str(item.get("teoria") or "").strip()
+        bases = [path for path in _coerce_string_list(item.get("base")) if path in allowed_paths]
+        if theory and bases:
+            theories.append({"teoria": theory, "base": bases})
+
+    missing = _coerce_string_list(data.get("informacoes_insuficientes"))
+    sources = [path for path in _coerce_string_list(data.get("fontes_usadas")) if path in allowed_paths]
+    if not sources:
+        sources = sorted({item["fonte"] for item in facts} | {path for item in theories for path in item["base"]})
+
+    answer = str(data.get("resposta_ao_jogador") or "").strip()
+    if not answer and facts:
+        answer = " ".join(item["fato"] for item in facts[:3])
+    if not answer:
+        return None
+
+    answer = _plain_wikilinks(_clean_answer(answer))
+    return {
+        "fatos_confirmados": facts,
+        "teorias": theories,
+        "informacoes_insuficientes": missing,
+        "fontes_usadas": sources,
+        "resposta_ao_jogador": answer,
+    }
+
+
+def _asks_hidden_actor(question: str) -> bool:
+    normalized = normalize_text(question)
+    return "quem" in normalized and any(
+        term in normalized
+        for term in (
+            "culpado",
+            "responsavel",
+            "por tras",
+            "por trás",
+            "usando",
+            "distribui",
+            "distribuindo",
+            "adulterado",
+            "falsific",
+        )
+    )
+
+
+def _mentions_overconfident_culprit(payload: dict[str, Any]) -> bool:
+    text = normalize_text(
+        " ".join(
+            [
+                str(payload.get("resposta_ao_jogador") or ""),
+                " ".join(str(item.get("fato") or "") for item in payload.get("fatos_confirmados") or [] if isinstance(item, dict)),
+                " ".join(str(item.get("teoria") or "") for item in payload.get("teorias") or [] if isinstance(item, dict)),
+            ]
+        )
+    )
+    return any(
+        pattern in text
+        for pattern in (
+            "esta usando",
+            "esta distribuindo",
+            "e o culpado",
+            "e a culpada",
+            "responsavel pelos",
+            "responsavel pelas",
+        )
+    )
+
+
+def _guard_hidden_actor_answer(payload: dict[str, Any], question: str, source_paths: set[str]) -> dict[str, Any]:
+    if not _asks_hidden_actor(question):
+        return payload
+
+    normalized = normalize_text(question)
+    payload_answer = normalize_text(payload.get("resposta_ao_jogador"))
+    if not _mentions_overconfident_culprit(payload) and any(
+        term in payload_answer
+        for term in (
+            "nao ha confirmacao",
+            "nao esta confirmado",
+            "ainda nao foi revelado",
+            "nao foi revelado",
+        )
+    ):
+        return payload
+
+    if "remedio" in normalized or "remedios" in normalized or "adulterado" in normalized:
+        answer = (
+            "Ainda não há confirmação liberada sobre quem está por trás dos remédios adulterados. "
+            "O que se sabe é que há frascos falsos circulando, sinais ligados aos métodos de Odran e indícios de adulteração. "
+            "Isso aponta para uma investigação, não para um culpado fechado."
+        )
+    else:
+        answer = (
+            "Ainda não há confirmação liberada sobre quem está por trás disso. "
+            "O Arquivo vê pistas e suspeitas, mas nenhuma fonte revelada fecha um culpado."
+        )
+
+    return {
+        "fatos_confirmados": [],
+        "teorias": [
+            {
+                "teoria": "Há pistas investigáveis, mas o responsável ainda não foi confirmado nas informações liberadas.",
+                "base": sorted(source_paths)[:3],
+            }
+        ]
+        if source_paths
+        else [],
+        "informacoes_insuficientes": ["Quem está por trás ainda não foi revelado."],
+        "fontes_usadas": sorted(source_paths)[:5],
+        "resposta_ao_jogador": answer,
+    }
+
+
+async def _grounded_json_response(
+    *,
+    ollama_base_url: str,
+    ollama_model: str,
+    question: str,
+    context: str,
+    allowed_paths: set[str],
+    access_mode: AccessMode,
+) -> tuple[dict[str, Any], bool, bool]:
+    if not context.strip() or not allowed_paths:
+        return _grounded_fallback(), False, False
+
+    player_rules = (
+        "\nModo jogador: não revele bastidores, conteúdo de mestre, pendências editoriais ou informação não liberada."
+        "\nNão use a palavra nota/arquivo/vault/frontmatter na resposta ao jogador."
+        if access_mode == "player"
+        else "\nModo mestre: pode usar bastidores apenas se eles estiverem no contexto fornecido."
+    )
+    prompt = f"""Você responderá usando somente o CONTEXTO AUTORIZADO abaixo.
+
+PERGUNTA:
+{question}
+
+CONTEXTO AUTORIZADO:
+{context}
+
+CAMINHOS DE FONTE PERMITIDOS:
+{json.dumps(sorted(allowed_paths), ensure_ascii=False)}
+
+Responda apenas com JSON válido neste formato exato:
+{{
+  "fatos_confirmados": [
+    {{"fato": "texto", "fonte": "caminho da nota"}}
+  ],
+  "teorias": [
+    {{"teoria": "texto", "base": ["caminho da nota"]}}
+  ],
+  "informacoes_insuficientes": [
+    "texto"
+  ],
+  "fontes_usadas": [
+    "caminho da nota"
+  ],
+  "resposta_ao_jogador": "texto final"
+}}
+
+Regras:
+- Fato só pode ser afirmado se estiver literalmente sustentado pelo contexto.
+- Inferência deve ficar em "teorias".
+- Informação ausente deve ficar em "informacoes_insuficientes".
+- Não invente nomes, relações, locais, datas, idades, poderes ou eventos.
+- Nunca afirme que uma ação do jogador já aconteceu.
+- Ações sugeridas são intenções possíveis, não eventos canônicos.
+- Use somente caminhos da lista permitida como fonte.
+- A resposta ao jogador deve soar como uma entidade de Omnisvera, natural e curta.
+{PLAYER_TONE_RULES if access_mode == "player" else ""}
+{player_rules}"""
+
+    try:
+        raw = await chat_with_ollama(
+            ollama_base_url,
+            ollama_model,
+            [
+                {"role": "system", "content": SYSTEM_PROMPT},
+                {"role": "user", "content": prompt},
+            ],
+            options={
+                "num_ctx": 4096,
+                "num_predict": 620,
+                "temperature": 0.12,
+                "repeat_penalty": 1.12,
+            },
+            response_format="json",
+        )
+    except Exception:
+        return _grounded_fallback(), False, True
+
+    payload = _validate_grounded_payload(_extract_json_object(raw), allowed_paths)
+    if payload:
+        return payload, True, True
+
+    repair_prompt = f"""Converta a resposta abaixo em JSON válido, sem adicionar informação.
+
+Resposta original:
+{raw}
+
+Use exatamente este contrato e somente fontes permitidas:
+{{
+  "fatos_confirmados": [],
+  "teorias": [],
+  "informacoes_insuficientes": [],
+  "fontes_usadas": [],
+  "resposta_ao_jogador": ""
+}}
+
+Fontes permitidas:
+{json.dumps(sorted(allowed_paths), ensure_ascii=False)}
+
+Responda somente o JSON."""
+    try:
+        repaired = await chat_with_ollama(
+            ollama_base_url,
+            ollama_model,
+            [
+                {"role": "system", "content": "Você corrige respostas para JSON válido sem criar conteúdo novo."},
+                {"role": "user", "content": repair_prompt},
+            ],
+            options={
+                "num_ctx": 4096,
+                "num_predict": 520,
+                "temperature": 0.0,
+            },
+            response_format="json",
+        )
+    except Exception:
+        return _grounded_fallback(), False, True
+
+    payload = _validate_grounded_payload(_extract_json_object(repaired), allowed_paths)
+    if payload:
+        return payload, True, True
+    return _grounded_fallback(), False, True
+
+
 async def answer_question(
     database_path: Path,
     ollama_base_url: str,
@@ -1636,6 +1967,12 @@ async def answer_question(
     question: str,
     limit: int = 6,
     access_mode: AccessMode = "gm",
+    *,
+    embedding_model: str = "nomic-embed-text",
+    semantic_index_path: Path | None = None,
+    rag_mode: str = "hybrid",
+    context_limit: int = 8,
+    context_chars: int = 5200,
 ) -> dict:
     if _looks_like_rumor_overview(question):
         rumor_answer = _answer_index_overview(
@@ -1742,6 +2079,98 @@ async def answer_question(
             access_mode,
             "direct_entity",
         )
+
+    semantic_index = semantic_index_path or Path(".local-index/vault.jsonl")
+    try:
+        hybrid_results = await hybrid_search(
+            database_path,
+            query=question,
+            ollama_base_url=ollama_base_url,
+            embedding_model=embedding_model,
+            semantic_index_path=semantic_index,
+            limit=max(3, min(context_limit, max(limit, 8))),
+            access_mode=access_mode,
+            rag_mode=rag_mode,
+        )
+    except Exception:
+        hybrid_results = []
+
+    if not hybrid_results:
+        lexical_results = search_notes(database_path, question, limit=max(limit, 12), access_mode=access_mode)
+        operational_results = [
+            item
+            for item in lexical_results
+            if not item["path"].startswith("Workflow/")
+            and not item["path"].startswith("Templates/")
+            and not item["path"].startswith("omnisvera-agent/")
+            and "INDICE_" not in item["path"]
+        ]
+        if operational_results:
+            lexical_results = operational_results
+        lexical_results = _rerank_results(question, lexical_results)[: max(3, min(limit, 8))]
+        hybrid_results = [
+            {
+                "id": item["id"],
+                "path": item["path"],
+                "title": item["title"],
+                "aliases": item.get("aliases") or [],
+                "type": item.get("type"),
+                "visibility": item.get("visibility"),
+                "excerpt": item.get("excerpt") or "",
+                "lexical_score": float(item.get("score") or 0),
+                "semantic_score": 0.0,
+                "exact_score": 0.0,
+                "final_score": float(item.get("score") or 0),
+            }
+            for item in lexical_results
+        ]
+        effective_rag_mode = "lexical:fallback"
+    else:
+        effective_rag_mode = rag_mode
+
+    note_ids = list(dict.fromkeys(int(item["id"]) for item in hybrid_results if item.get("id") is not None))
+    notes_used = get_notes_by_ids(database_path, note_ids, access_mode=access_mode)
+    context = _context_from_hybrid_results(hybrid_results, max_chars=context_chars)
+    allowed_paths = {str(item.get("path")) for item in hybrid_results if item.get("path")}
+    insufficient = len(notes_used) == 0 or len(context.strip()) < 180
+    warning = None
+    if insufficient:
+        warning = "Contexto insuficiente: vou responder apenas com o que já foi revelado."
+
+    payload, ollama_used, ollama_attempted = await _grounded_json_response(
+        ollama_base_url=ollama_base_url,
+        ollama_model=ollama_model,
+        question=question,
+        context=context,
+        allowed_paths=allowed_paths,
+        access_mode=access_mode,
+    )
+    payload = _guard_hidden_actor_answer(payload, question, allowed_paths)
+    answer = payload["resposta_ao_jogador"]
+    if _looks_like_bad_ai_answer(answer, access_mode):
+        payload = _grounded_fallback()
+        answer = payload["resposta_ao_jogador"]
+        ollama_used = False
+
+    source_paths = set(payload.get("fontes_usadas") or [])
+    if source_paths:
+        notes_used = [note for note in notes_used if note["path"] in source_paths]
+    return {
+        "answer": _clean_answer(answer),
+        "notes_used": notes_used,
+        "note_paths": [note["path"] for note in notes_used],
+        "insufficient_context": insufficient or not bool(payload.get("fatos_confirmados") or payload.get("teorias")),
+        "warning": warning,
+        "suggested_questions": _suggested_questions_for_notes(question, notes_used, access_mode),
+        "fatos_confirmados": payload.get("fatos_confirmados") or [],
+        "teorias": payload.get("teorias") or [],
+        "informacoes_insuficientes": payload.get("informacoes_insuficientes") or [],
+        "fontes_usadas": payload.get("fontes_usadas") or [],
+        "ollama_used": ollama_used,
+        "ollama_attempted": ollama_attempted,
+        "model": ollama_model,
+        "retrieval_mode": f"rag:{effective_rag_mode}",
+    }
 
     results = search_notes(database_path, question, limit=max(limit, 12), access_mode=access_mode)
     operational_results = [
