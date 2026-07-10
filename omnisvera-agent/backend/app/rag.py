@@ -26,6 +26,14 @@ Regras obrigatórias:
 - Não inclua bibliografia no texto: o aplicativo já mostra as notas usadas separadamente."""
 
 
+PLAYER_TONE_RULES = """Tom para jogadores:
+- Fale como um guia/narrador de Omnisvera, não como catálogo do Obsidian.
+- Não diga "nota", "arquivo", "frontmatter", "vault" ou "em Omnisvera" quando estiver explicando uma pessoa, lugar ou facção.
+- Não use blocos de bastidor como "Como apresentar em jogo" ou "Uso em Mesa" para jogador.
+- Prefira respostas orgânicas: o que se sabe, por que importa e quais pistas continuam abertas.
+- Mantenha segredos fora da resposta, mesmo quando eles existirem em notas do mestre."""
+
+
 def _plain_wikilinks(text: str) -> str:
     text = re.sub(r"\[\[[^|\]]+\|([^\]]+)\]\]", r"\1", text)
 
@@ -507,6 +515,62 @@ def _answer_from_sections(title: str, blocks: list[tuple[str, list[str]]]) -> st
     return "\n\n".join(output).strip() or f"Não encontrei informação suficiente sobre {title} no contexto liberado."
 
 
+def _answer_as_guide(title: str, blocks: list[tuple[str, list[str]]]) -> str:
+    """Format answers as in-world guidance, avoiding technical vault labels."""
+    output: list[str] = []
+    for heading, lines in blocks:
+        body = _join_nonempty(lines)
+        if not body:
+            continue
+        output.append(f"### {heading}\n{body}")
+    return "\n\n".join(output).strip() or f"Ainda não há informação segura suficiente sobre {title} no contexto liberado."
+
+
+def _compact_sentence(text: Any) -> str:
+    cleaned = _clean_value(text)
+    if not cleaned:
+        return ""
+    cleaned = cleaned.strip()
+    return cleaned if cleaned.endswith((".", "!", "?")) else f"{cleaned}."
+
+
+def _field_sentence(prefix: str, value: Any) -> str:
+    cleaned = _clean_value(value)
+    return f"{prefix} {cleaned}." if cleaned else ""
+
+
+def _public_identity_line(title: str, note_type: str, frontmatter: dict, is_player: bool = False) -> str:
+    subtype = normalize_text(frontmatter.get("subtype"))
+    if note_type == "character":
+        if is_player:
+            return f"{title} é um dos personagens jogadores da campanha."
+        if subtype == "antagonist":
+            return f"{title} é uma figura perigosa ligada aos conflitos atuais."
+        if subtype == "creature":
+            return f"{title} é uma criatura ou entidade relevante para a campanha."
+        return f"{title} é uma figura importante nas histórias em andamento."
+    if note_type == "location":
+        role = normalize_text(frontmatter.get("role") or frontmatter.get("subtype"))
+        if role == "capital":
+            return f"{title} é uma capital importante para a campanha."
+        return f"{title} é um lugar importante para as cenas e investigações."
+    if note_type == "territory":
+        return f"{title} é uma região ampla que ajuda a situar viagens, conflitos e fronteiras."
+    if note_type == "faction":
+        return f"{title} é uma força organizada que influencia política, comércio ou conflitos."
+    if note_type == "item":
+        return f"{title} é um objeto importante ligado à campanha."
+    if note_type == "rumor":
+        return f"O rumor sobre {title} ainda circula sem uma resposta definitiva."
+    if note_type == "quest":
+        return f"{title} aponta para uma missão ou linha de investigação ativa."
+    if note_type == "race":
+        return f"{title} é uma raça disponível ou relevante para o cenário."
+    if note_type == "class":
+        return f"{title} é uma classe ou caminho mecânico disponível para jogo."
+    return f"{title} é um elemento relevante do cenário."
+
+
 def _rich_direct_entity_answer(note: dict, question: str, access_mode: AccessMode) -> dict:
     frontmatter = note.get("frontmatter") or {}
     content = sanitize_player_text(note["content"]) if access_mode == "player" else note["content"]
@@ -540,20 +604,21 @@ def _rich_direct_entity_answer(note: dict, question: str, access_mode: AccessMod
 
     if query_kind == "where":
         if note_type in {"location", "territory", "map"}:
+            territory = frontmatter.get("territory")
+            parent = frontmatter.get("parent_location") or frontmatter.get("location")
             lines = [
-                f"- {title} é {_note_kind_label(note.get('type'))} em Omnisvera.",
-                _field_line("Território", frontmatter.get("territory")),
-                _field_line("Localização superior", frontmatter.get("parent_location") or frontmatter.get("location")),
+                _field_sentence(f"{title} fica em", territory or parent),
+                _field_sentence("A área ligada a ele é", parent if territory else ""),
             ]
             if summary:
-                lines.append(f"- {summary}")
+                lines.append(_compact_sentence(summary))
         else:
             location = fields.get("localizacao atual") or frontmatter.get("location")
             territory = fields.get("territorio") or frontmatter.get("territory")
             lines = [
-                f"- {title} está ligado a {_clean_value(location or territory) or 'local não definido no contexto liberado'}."
+                f"{title} está ligado a {_clean_value(location or territory) or 'um local ainda não definido no contexto liberado'}."
             ]
-        answer = _answer_from_sections(title, [("Onde fica", lines)])
+        answer = _answer_as_guide(title, [("Onde fica", lines)])
     elif note_type == "character":
         subtype = normalize_text(frontmatter.get("subtype"))
         role = normalize_text(frontmatter.get("role"))
@@ -565,82 +630,96 @@ def _rich_direct_entity_answer(note: dict, question: str, access_mode: AccessMod
         faction = fields.get("afiliacao") or frontmatter.get("faction")
         associates = fields.get("associados conhecidos") or frontmatter.get("related_characters")
 
-        answer = _answer_from_sections(
+        profile_bits = []
+        if race:
+            profile_bits.append(_clean_value(race))
+        if char_class:
+            profile_bits.append(_clean_value(char_class))
+        identity_lines = [_compact_sentence(public_info or summary or _public_identity_line(title, note_type, frontmatter, is_player))]
+        if profile_bits:
+            identity_lines.append(f"No que está liberado, aparece como {' / '.join(profile_bits)}.")
+        if reputation:
+            identity_lines.append(f"A reputação que acompanha seu nome é: {_clean_value(reputation)}.")
+        relation_lines = [
+            f"Atualmente: {_clean_value(location)}." if _clean_value(location) else "",
+            f"Vínculo conhecido: {_clean_value(faction)}." if _clean_value(faction) else "",
+            f"Relações importantes: {_clean_value(associates)}." if _clean_value(associates) else "",
+        ]
+        story_lines = [line for line in (_compact_sentence(table_use),) if line] if access_mode != "player" else []
+
+        answer = _answer_as_guide(
             title,
             [
                 (
-                    "Resposta curta",
-                    [
-                        f"- {title} é {'um personagem jogador' if is_player else 'um personagem'} de Omnisvera.",
-                        _field_line("Raça", race),
-                        _field_line("Classe", char_class),
-                        _field_line("Reputação pública", reputation),
-                        f"- {summary}" if summary and not public_info else "",
-                    ],
+                    "O que se sabe",
+                    identity_lines,
                 ),
-                ("O que está liberado", [f"- {public_info}"] if public_info else []),
-                ("Em jogo", [f"- {table_use}"] if table_use else []),
                 (
-                    "Ligações úteis",
-                    [
-                        _field_line("Localização", location),
-                        _field_line("Facção", faction),
-                        _field_line("Associados", associates),
-                    ],
+                    "Ligações conhecidas",
+                    relation_lines,
                 ),
-                ("Rumores ou ganchos", [f"- {item}" for item in (rumors, hooks) if item]),
+                ("Como entra na história", story_lines),
+                ("Pistas abertas", [_compact_sentence(item) for item in (rumors, hooks) if item]),
             ],
         )
     else:
-        kind_label = _note_kind_label(note.get("type"))
-        short_lines = [f"- {title} é uma nota de {kind_label} em Omnisvera."]
+        short_lines = [_compact_sentence(public_info or summary or _public_identity_line(title, note_type, frontmatter))]
         if note_type == "item":
             short_lines.extend(
                 [
-                    _field_line("Tipo", frontmatter.get("item_type") or frontmatter.get("item_category")),
-                    _field_line("Portador", frontmatter.get("owner")),
+                    _field_sentence("Tipo:", frontmatter.get("item_type") or frontmatter.get("item_category")),
+                    _field_sentence("Portador conhecido:", frontmatter.get("owner")),
                 ]
             )
         elif note_type in {"location", "territory"}:
+            known_text = normalize_text(" ".join(short_lines))
+            territory = frontmatter.get("territory")
+            parent_location = frontmatter.get("parent_location") or frontmatter.get("location")
+            role_value = frontmatter.get("role") or frontmatter.get("subtype")
             short_lines.extend(
                 [
-                    _field_line("Território", frontmatter.get("territory")),
-                    _field_line("Localização superior", frontmatter.get("parent_location") or frontmatter.get("location")),
-                    _field_line("Função", frontmatter.get("role") or frontmatter.get("subtype")),
+                    _field_sentence("Fica em", territory)
+                    if territory and normalize_text(_clean_value(territory)) not in known_text
+                    else "",
+                    _field_sentence("Está ligado a", parent_location)
+                    if parent_location and normalize_text(_clean_value(parent_location)) not in known_text
+                    else "",
+                    _field_sentence("Sua função conhecida é", role_value)
+                    if role_value and not (public_info or summary) and access_mode != "player"
+                    else "",
                 ]
             )
         elif note_type == "faction":
             short_lines.extend(
                 [
-                    _field_line("Status", frontmatter.get("status") or frontmatter.get("campaign_status")),
-                    _field_line("Atuação", frontmatter.get("location") or frontmatter.get("territory")),
-                    _field_line("Liderança", frontmatter.get("leader")),
+                    _field_sentence("Status conhecido:", frontmatter.get("status") or frontmatter.get("campaign_status")),
+                    _field_sentence("Atua principalmente em", frontmatter.get("location") or frontmatter.get("territory")),
+                    _field_sentence("Liderança conhecida:", frontmatter.get("leader")),
                 ]
             )
         elif note_type in {"race", "class"}:
             short_lines.extend(
                 [
-                    _field_line("Status", frontmatter.get("status") or frontmatter.get("work_status")),
-                    _field_line("Sistema", frontmatter.get("ruleset") or frontmatter.get("source_system")),
+                    _field_sentence("Status:", frontmatter.get("status") or frontmatter.get("work_status")),
+                    _field_sentence("Sistema:", frontmatter.get("ruleset") or frontmatter.get("source_system")),
                 ]
             )
         elif note_type in {"quest", "rumor"}:
             short_lines.extend(
                 [
-                    _field_line("Status", frontmatter.get("quest_status") or frontmatter.get("status")),
-                    _field_line("Local", frontmatter.get("location") or frontmatter.get("territory")),
+                    _field_sentence("Status:", frontmatter.get("quest_status") or frontmatter.get("status")),
+                    _field_sentence("Local ligado:", frontmatter.get("location") or frontmatter.get("territory")),
                 ]
             )
-        if summary:
-            short_lines.append(f"- {summary}")
 
-        answer = _answer_from_sections(
+        story_lines = [_compact_sentence(table_use)] if table_use and access_mode != "player" else []
+
+        answer = _answer_as_guide(
             title,
             [
-                ("Resposta curta", short_lines),
-                ("O que está liberado", [f"- {public_info}"] if public_info else []),
-                ("Em jogo", [f"- {table_use}"] if table_use else []),
-                ("Rumores ou ganchos", [f"- {item}" for item in (rumors, hooks) if item]),
+                ("O que se sabe", short_lines),
+                ("Como entra na história", story_lines),
+                ("Pistas abertas", [_compact_sentence(item) for item in (rumors, hooks) if item]),
             ],
         )
 
@@ -1170,11 +1249,11 @@ def _rich_answer_index_overview(
         heading = label
         helper = []
 
-    answer = _answer_from_sections(
+    answer = _answer_as_guide(
         heading,
         [
             (heading, action_lines),
-            ("Como usar em jogo", helper),
+            ("Lembrete", helper),
             ("Estado das notas", context_lines if access_mode != "player" else []),
         ],
     )
@@ -1367,12 +1446,17 @@ Se houver informação pública e segredo do mestre misturados no contexto, sepa
     user_prompt += """
 
 Formato desejado:
-- Responda como assistente de mesa, não como índice técnico.
-- Quando fizer sentido, use seções curtas: "Resposta curta", "Em jogo", "Pistas" e "Próximas perguntas".
+- Responda como guia/narrador de Omnisvera, não como índice técnico.
+- Não diga "nota", "arquivo", "frontmatter", "vault" ou "em Omnisvera" ao explicar uma pessoa, lugar, facção, item, raça ou classe.
+- No modo jogador, não use blocos como "Como apresentar em jogo", "Uso em Mesa" ou bastidores de mestre.
+- Quando fizer sentido, use seções curtas como "O que se sabe", "Ligações conhecidas", "Pistas abertas" e "Próximas perguntas".
 - Não liste caminhos de arquivo dentro da resposta.
 - Não comece com "com base no contexto"; responda direto.
 - Se a pergunta for sobre uma entidade, mantenha o foco nela e cite relações apenas como apoio.
 - Se a pergunta for de jogador, prefira linguagem player-safe e não antecipe segredo."""
+
+    if access_mode == "player":
+        user_prompt += f"\n\n{PLAYER_TONE_RULES}"
 
     answer = await chat_with_ollama(
         ollama_base_url,
