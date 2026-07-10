@@ -346,14 +346,6 @@ def player_dashboard(_: AccessContext = Depends(require_player)) -> dict:
                 limit=10,
                 prompt="Quais lugares conhecemos?",
             ),
-            _section(
-                "maps",
-                "Mapas",
-                "Mapas liberados para navegação de campanha.",
-                maps,
-                limit=6,
-                prompt="Quais mapas estão disponíveis?",
-            ),
         ],
     }
 
