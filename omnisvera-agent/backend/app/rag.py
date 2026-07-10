@@ -5,7 +5,7 @@ import re
 from pathlib import Path
 from typing import Any
 
-from .access import AccessMode, is_player_safe_row, normalize_text, sanitize_player_text
+from .access import AccessMode, PLAYER_BLOCKED_LOOKUP_TERMS, is_player_safe_row, normalize_text, sanitize_player_text
 from .ollama_client import chat_with_ollama
 from .search import search_notes
 from .vault_index import all_notes_for_search, get_note, get_notes_by_ids
@@ -109,7 +109,7 @@ def _looks_like_rumor_overview(question: str) -> bool:
 
 def _looks_like_quest_overview(question: str) -> bool:
     lowered = normalize_text(question)
-    has_quest = any(term in lowered for term in ("quest", "quests", "missao", "missoes"))
+    has_quest = any(term in lowered for term in ("quest", "quests", "missao", "missoes", "miss"))
     asks_list = any(term in lowered for term in ("quais", "lista", "liste", "ativas", "ativos", "tem", "existem"))
     return has_quest and asks_list
 
@@ -517,7 +517,7 @@ def _answer_player_characters(database_path: Path, access_mode: AccessMode) -> d
     if not rows:
         return None
 
-    priority = ("vezemir", "varkh", "raziel", "morthak", "mira")
+    priority = ("vezemir", "varkh", "raziel", "morthak")
 
     def rank(item: tuple[Any, dict]) -> tuple[int, str]:
         row, _frontmatter = item
@@ -820,6 +820,9 @@ async def answer_question(
     extracted = _direct_entity_target(question)
     if extracted and access_mode == "player":
         target, _kind = extracted
+        normalized_target = normalize_text(target)
+        if any(normalize_text(term) in normalized_target for term in PLAYER_BLOCKED_LOOKUP_TERMS):
+            return _blocked_player_entity_answer(target)
         exact_row = _find_exact_row(database_path, target, access_mode=access_mode)
         if exact_row is not None and not is_player_safe_row(exact_row):
             return _blocked_player_entity_answer(target)
