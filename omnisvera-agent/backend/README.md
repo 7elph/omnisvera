@@ -67,3 +67,35 @@ uvicorn app.main:app --host 0.0.0.0 --port 8787
 3. Rodar `POST /index/rebuild`.
 4. Subir frontend.
 5. Abrir o IP do notebook no celular.
+
+## RAG Watchdog
+
+O backend possui um verificador contínuo de qualidade do chat:
+
+```powershell
+$env:OMNISVERA_PLAYER_TOKEN="player-token-aqui"
+$env:OMNISVERA_MASTER_TOKEN="master-token-aqui" # opcional, necessário só para --auto-rebuild
+python .\rag_watchdog.py
+```
+
+Para deixar rodando em loop:
+
+```powershell
+.\start_rag_watchdog.ps1 -IntervalSeconds 300
+```
+
+Para rodar em loop e reconstruir o índice quando o vault mudar:
+
+```powershell
+.\start_rag_watchdog.ps1 -IntervalSeconds 300 -AutoRebuild
+```
+
+O watchdog não altera notas do vault e não edita código automaticamente. Ele:
+
+- testa perguntas de regressão;
+- verifica fontes esperadas;
+- detecta termos técnicos vazando para jogadores;
+- detecta respostas repetidas ou longas demais;
+- reconstrói o índice apenas se `-AutoRebuild` for usado;
+- gera relatório em `Workflow/_audit/App_RAG/RAG_WATCHDOG_REPORT.md`;
+- registra histórico em `omnisvera-agent/backend/data/rag_watchdog_runs.jsonl`.
