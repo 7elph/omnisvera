@@ -143,7 +143,7 @@ def _direct_entity_target(question: str) -> tuple[str, str] | None:
         candidates.append((target, "who"))
     if normalized.startswith("o que ") or normalized.startswith("que "):
         target = re.sub(r"^(o que|que)\s+", "", normalized).strip()
-        target = re.sub(r"^(e|eh|\?)\s*", "", target).strip()
+        target = re.sub(r"^(e|eh|sao|sao os|sao as|sao o|sao a|\?)\s*", "", target).strip()
         candidates.append((target, "what"))
     if normalized.startswith("qual "):
         target = re.sub(r"^qual\s+(?:e|eh|foi)?\s*", "", normalized).strip()
@@ -171,6 +171,46 @@ def _row_lookup(row: Any) -> str:
 
 def _without_initial_article(value: str) -> str:
     return re.sub(r"^(o|a|os|as|um|uma)\s+", "", normalize_text(value)).strip()
+
+
+def _target_tokens(value: str) -> set[str]:
+    return {
+        token
+        for token in re.findall(r"[a-z0-9]+", normalize_text(value))
+        if len(token) >= 3 or token.isdigit()
+    }
+
+
+def _find_blocked_player_entity_row(database_path: Path, target: str) -> Any | None:
+    target_norm = normalize_text(target)
+    target_without_article = _without_initial_article(target)
+    tokens = _target_tokens(target)
+    if not target_norm or not tokens:
+        return None
+
+    for row in all_notes_for_search(database_path):
+        if is_player_safe_row(row):
+            continue
+        title = normalize_text(row["title"])
+        stem = normalize_text(_basename(row["path"]))
+        aliases: list[str] = []
+        try:
+            aliases = [normalize_text(alias) for alias in json.loads(row["aliases"] or "[]")]
+        except Exception:
+            pass
+        candidates = {title, stem, *aliases}
+        candidates_without_article = {_without_initial_article(candidate) for candidate in candidates}
+        if target_norm in candidates or target_without_article in candidates_without_article:
+            return row
+
+        candidate_tokens: set[str] = set()
+        for candidate in candidates:
+            candidate_tokens.update(_target_tokens(candidate))
+        has_anchor = any(len(token) >= 4 and token in candidate_tokens for token in tokens)
+        if has_anchor and tokens.issubset(candidate_tokens):
+            return row
+
+    return None
 
 
 def _find_exact_row(database_path: Path, target: str, access_mode: AccessMode | None = None) -> Any | None:
@@ -826,6 +866,10 @@ async def answer_question(
         exact_row = _find_exact_row(database_path, target, access_mode=access_mode)
         if exact_row is not None and not is_player_safe_row(exact_row):
             return _blocked_player_entity_answer(target)
+        if exact_row is None:
+            blocked_row = _find_blocked_player_entity_row(database_path, target)
+            if blocked_row is not None:
+                return _blocked_player_entity_answer(target)
 
     direct_note = _find_direct_entity_note(database_path, question, access_mode)
     if direct_note:
