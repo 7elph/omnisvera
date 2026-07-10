@@ -115,8 +115,17 @@ export default function PlayerPanel({
       {error && <p className="warning-text">{error}</p>}
       {loading && <p className="muted">Carregando painel dos jogadores...</p>}
 
-      {!loading && sections.map((section) => (
+      {!loading && sections.map((section) => {
+        const sectionCover = mediaUrlFromVaultPath(section.cover);
+
+        return (
         <div key={section.title} className={`dashboard-section section-${section.kind || "default"}`}>
+          {sectionCover && (
+            <div className="section-cover">
+              <img src={sectionCover} alt="" loading="lazy" />
+              <span />
+            </div>
+          )}
           <div className="section-heading">
             <span>{SECTION_ICONS[section.kind || ""] || "•"}</span>
             <div>
@@ -133,7 +142,8 @@ export default function PlayerPanel({
             {section.items.length === 0 && <p className="muted">Nada liberado nesta seção ainda.</p>}
           </div>
         </div>
-      ))}
+        );
+      })}
     </section>
   );
 }

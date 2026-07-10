@@ -309,12 +309,14 @@ def _section(
     rows: list,
     *,
     limit: int = 8,
+    cover: str | None = None,
     prompt: str | None = None,
 ) -> dict:
     return {
         "kind": kind,
         "title": title,
         "description": description,
+        "cover": cover,
         "prompt": prompt,
         "items": [sanitize_player_summary(row_to_note(row)) for row in rows[:limit]],
     }
@@ -411,6 +413,7 @@ def player_dashboard(_: AccessContext = Depends(require_player)) -> dict:
                 "Objetivos e caminhos que já podem aparecer em jogo.",
                 quests,
                 limit=6,
+                cover="zz_media/covers/cover_missoes_ativas.png",
                 prompt="Quais missões estão ativas?",
             ),
             _section(

@@ -639,6 +639,33 @@ textarea {
   padding: 0 1rem;
 }
 
+.section-cover {
+  border-radius: 20px;
+  display: grid;
+  margin: 0 1rem 0.85rem;
+  min-height: 160px;
+  overflow: hidden;
+  position: relative;
+}
+
+.section-cover img,
+.section-cover span {
+  grid-area: 1 / 1;
+}
+
+.section-cover img {
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.76;
+  width: 100%;
+}
+
+.section-cover span {
+  background:
+    linear-gradient(90deg, rgba(18, 11, 6, 0.92), rgba(18, 11, 6, 0.3)),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.55));
+}
+
 .section-now .play-grid {
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
 }
@@ -733,6 +760,45 @@ textarea {
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+.unknown-note {
+  overflow: hidden;
+  position: relative;
+}
+
+.unknown-hero {
+  border: 1px solid #473424;
+  border-radius: 22px;
+  display: grid;
+  margin-bottom: 1rem;
+  min-height: min(56vh, 430px);
+  overflow: hidden;
+}
+
+.unknown-hero img,
+.unknown-hero span {
+  grid-area: 1 / 1;
+}
+
+.unknown-hero img {
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
+}
+
+.unknown-hero span {
+  background:
+    radial-gradient(circle at 50% 38%, rgba(192, 210, 200, 0.03), rgba(12, 15, 16, 0.35)),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.02), rgba(10, 7, 5, 0.78));
+}
+
+.unknown-message {
+  color: #f3ead7;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1.25rem, 5vw, 2rem);
+  line-height: 1.2;
+  margin: 0.4rem 0 0.75rem;
 }
 
 .muted,

@@ -5,6 +5,7 @@ import { getAccessMode, mediaUrlFromVaultPath, resolveNote, searchNotes } from "
 type RenderedNoteProps = {
   content: string;
   onOpenNote?: (id: number) => void;
+  onUnknownNote?: (target: string) => void;
 };
 
 function normalizeMediaTarget(target: string) {
@@ -244,12 +245,15 @@ function transformObsidianMarkdown(content: string) {
   return removeEmptySections(transformed);
 }
 
-export default function RenderedNote({ content, onOpenNote }: RenderedNoteProps) {
+export default function RenderedNote({ content, onOpenNote, onUnknownNote }: RenderedNoteProps) {
   async function handleLink(event: React.MouseEvent<HTMLAnchorElement>, href?: string) {
     if (!href?.startsWith("omnisvera://note/")) return;
     event.preventDefault();
-    if (!onOpenNote) return;
     const target = decodeURIComponent(href.replace("omnisvera://note/", ""));
+    if (!onOpenNote) {
+      onUnknownNote?.(target);
+      return;
+    }
     try {
       const note = await resolveNote(target);
       if (note) {
@@ -259,8 +263,13 @@ export default function RenderedNote({ content, onOpenNote }: RenderedNoteProps)
 
       const fallbackTarget = target.split("|")[0].split("#")[0].split("/").pop()?.replace(/\.md$/i, "") || target;
       const fallback = await searchNotes(fallbackTarget, 3);
-      if (fallback[0]) onOpenNote(fallback[0].id);
+      if (fallback[0]) {
+        onOpenNote(fallback[0].id);
+        return;
+      }
+      onUnknownNote?.(target);
     } catch {
+      onUnknownNote?.(target);
       return;
     }
   }

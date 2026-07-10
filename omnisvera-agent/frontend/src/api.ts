@@ -98,6 +98,7 @@ export type DashboardSection = {
   kind?: string | null;
   title: string;
   description?: string | null;
+  cover?: string | null;
   prompt?: string | null;
   items: NoteSummary[];
 };

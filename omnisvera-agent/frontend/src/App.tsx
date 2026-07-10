@@ -12,6 +12,7 @@ export default function App() {
   const initialMode = getAccessMode();
   const [page, setPage] = useState<Page>(initialMode === "player" ? "player" : "session");
   const [selectedNoteId, setSelectedNoteId] = useState<number | null>(null);
+  const [unknownTarget, setUnknownTarget] = useState<string | null>(null);
   const [noteHistory, setNoteHistory] = useState<number[]>([]);
   const [chatSeed, setChatSeed] = useState("");
   const [status, setStatus] = useState<string>("verificando...");
@@ -71,7 +72,15 @@ export default function App() {
 
   function openNote(id: number) {
     setNoteHistory((current) => (selectedNoteId ? [...current.slice(-12), selectedNoteId] : current));
+    setUnknownTarget(null);
     setSelectedNoteId(id);
+    setPage("note");
+  }
+
+  function openUnknownNote(target: string) {
+    setNoteHistory((current) => (selectedNoteId ? [...current.slice(-12), selectedNoteId] : current));
+    setSelectedNoteId(null);
+    setUnknownTarget(target);
     setPage("note");
   }
 
@@ -152,7 +161,7 @@ export default function App() {
       {page === "player" && mode === "player" && (
         <PlayerPanel key={`player-${authVersion}`} onOpenNote={openNote} onAskPrompt={askPrompt} />
       )}
-      {page === "chat" && <ChatVault onOpenNote={openNote} initialQuestion={chatSeed} />}
+      {page === "chat" && <ChatVault onOpenNote={openNote} onUnknownNote={openUnknownNote} initialQuestion={chatSeed} />}
       {page === "search" && <SearchNotes onOpenNote={openNote} />}
       {page === "note" && (
         <>
@@ -161,7 +170,12 @@ export default function App() {
               Voltar
             </button>
           )}
-          <NoteView noteId={selectedNoteId} onOpenNote={openNote} />
+          <NoteView
+            noteId={selectedNoteId}
+            unknownTarget={unknownTarget}
+            onOpenNote={openNote}
+            onUnknownNote={openUnknownNote}
+          />
         </>
       )}
     </main>

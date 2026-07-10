@@ -33,9 +33,11 @@ function SourceCard({ note, onOpenNote }: { note: NoteSummary; onOpenNote: (id: 
 
 export default function ChatVault({
   onOpenNote,
+  onUnknownNote,
   initialQuestion,
 }: {
   onOpenNote: (id: number) => void;
+  onUnknownNote?: (target: string) => void;
   initialQuestion?: string;
 }) {
   const [question, setQuestion] = useState("");
@@ -96,9 +98,9 @@ export default function ChatVault({
     <section className="panel chat-panel">
       <div className="chat-header">
         <div>
-          <p className="eyebrow">Consulta do Vault</p>
-          <h2>Chat com Omnisvera</h2>
-          <p>Respostas com fontes do vault, respeitando o modo atual e o filtro player-safe.</p>
+          <p className="eyebrow">Arquivo Vivo</p>
+          <h2>Fale com Omnisvera</h2>
+          <p>A entidade responde apenas com lembranças já reveladas ao grupo.</p>
         </div>
         {messages.length > 0 && (
           <button className="secondary-button" onClick={() => setMessages([])}>
@@ -144,7 +146,11 @@ export default function ChatVault({
           <article key={message.id} className="chat-message">
             <div className="user-bubble">{message.question}</div>
             {message.result.warning && <p className="warning-text">{message.result.warning}</p>}
-            <RenderedNote content={message.result.answer || "Sem resposta."} onOpenNote={onOpenNote} />
+            <RenderedNote
+              content={message.result.answer || "Sem resposta."}
+              onOpenNote={onOpenNote}
+              onUnknownNote={onUnknownNote}
+            />
             {message.result.suggested_questions && message.result.suggested_questions.length > 0 && (
               <div className="message-suggestions">
                 <span>Continuar com:</span>
@@ -157,7 +163,7 @@ export default function ChatVault({
             )}
             {message.result.notes_used.length > 0 && (
               <div className="source-list">
-                <p className="eyebrow">Fontes usadas</p>
+                <p className="eyebrow">Ecos consultados</p>
                 <div className="source-grid">
                   {message.result.notes_used.map((note) => (
                     <SourceCard key={`${message.id}-${note.id}`} note={note} onOpenNote={onOpenNote} />

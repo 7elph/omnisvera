@@ -70,6 +70,7 @@ class DashboardSection(BaseModel):
     kind: str | None = None
     title: str
     description: str | None = None
+    cover: str | None = None
     prompt: str | None = None
     items: list[NoteSummary] = Field(default_factory=list)
 
