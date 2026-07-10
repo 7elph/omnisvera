@@ -5,9 +5,9 @@ NoteStatus: Complete
 type: character
 status: Desaparecido
 campaign_status: Ativo
-visibility: Jogadores
-spoiler_level: heavy
-gm_secret: true
+visibility: Público
+spoiler_level: none
+gm_secret: false
 thumbnail: zz_media/thumbnails/th_elarion.png
 cover: zz_media/characters/elarion.png
 location: "[[Leth'valora]]"
@@ -51,7 +51,7 @@ tags:
 
 **Títulos:** Capitão, Guardião de [[Leth'valora]]
 **Reputação Pública:** Herói de guerra e veterano respeitado
-**Raça:** [[Meio-Elfo]]
+**Raça:** [[Elfo]]
 **Classe:** Capitão
 **Idade:** Desconhecida
 **Status:** Desaparecido
@@ -152,7 +152,7 @@ A verdadeira força não está no poder, mas no controle dele.
 
 ## Relações
 - [[Mira Valen]]
-- [[Elarion Vaelthor]]
+- [[Vezemir]]
 - [[Padre Oric]]
 - [[Dragão de Colar Dourado]]
 - [[General Cassian Valerius]]
@@ -164,7 +164,7 @@ A verdadeira força não está no poder, mas no controle dele.
 
 ## Aparência
 
-Um [[Meio-Elfo]] dragonborn.
+Elfo de porte austero, postura militar e presença silenciosa. Sua aparência deve transmitir idade, disciplina e uma tristeza que ele raramente verbaliza.
 
 ## Papel na Campanha
 
@@ -212,6 +212,4 @@ E talvez o único que conheça a verdade sobre quem o Bastardo de Ferro realment
 - Como entra em cena:
 - Ganchos:
 - Consequências possíveis:
-
-
 

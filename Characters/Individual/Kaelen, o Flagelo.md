@@ -3,6 +3,7 @@ obsidianUIMode: preview
 NoteIcon: magicitem
 NoteStatus: Draft
 type: character
+subtype: antagonist
 status: Em desenvolvimento
 campaign_status: Em revisão
 visibility: Mestre
@@ -76,16 +77,18 @@ Onde Malakar representa trono e controle, Kaelen representa inveja armada, bruta
 - Caminha sobre as terras sob as quais Raziel renasceu sem saber disso
 - É o primeiro alvo na rota de vingança de Raziel
 
-### Pendente de confirmação do Sage
-- Idade e aparência
-- Origem e como se tornou general do clã
-- Poderes e habilidades específicas
-- Natureza de sua hemomancia em comparação com Raziel
-- Motivação profunda para inveja de Raziel
-- Estado atual após trezentos anos
-- Se ainda é general do clã
-- Relação com o Sangue Antigo
-- Destino final no arco de Raziel
+### Cânone operacional atual
+- Kaelen continua ativo como ameaça ligada ao [[Clã Sanguinallis]].
+- Seu papel é militar: patrulha, escavação, ocupação e violência direta.
+- Sua inveja de [[Raziel]] nasce do controle superior que Raziel demonstrava sobre a hemomancia.
+- Ele ainda não sabe tudo sobre o retorno de Raziel.
+- Funciona como primeiro antagonista forte do arco de vingança, antes de Vandor e Malakar.
+
+### Pendências restantes
+- Definir visual definitivo.
+- Definir estatísticas apenas quando entrar em cena mecanicamente.
+- Definir se continua formalmente general ou se atua como remanescente militar.
+- Definir destino final conforme escolhas de Raziel e do grupo.
 
 ## Situação Atual
 

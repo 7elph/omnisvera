@@ -5,9 +5,9 @@ NoteStatus: Complete
 type: character
 status: Desaparecido
 campaign_status: Ativo
-visibility: Mestre
-spoiler_level: heavy
-gm_secret: true
+visibility: Público
+spoiler_level: none
+gm_secret: false
 thumbnail: zz_media/thumbnails/th_oric.png
 cover: zz_media/thumbnails/th_oric.png
 location: Desconhecida
@@ -164,5 +164,4 @@ Reconhecido por desvendar segredos considerados impossíveis.
 - Como entra em cena:
 - Ganchos:
 - Consequências possíveis:
-
 

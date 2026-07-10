@@ -3,6 +3,7 @@ obsidianUIMode: preview
 NoteIcon: magicitem
 NoteStatus: Draft
 type: character
+subtype: antagonist
 status: Em desenvolvimento
 campaign_status: Em revisão
 visibility: Mestre
@@ -73,16 +74,19 @@ Malakar é o centro político da traição de [[Raziel]]. Sua ameaça não vem a
 - Ainda ocupa o domínio onde a traição começou
 - É o terceiro alvo na rota de vingança de Raziel
 
-### Pendente de confirmação do Sage
-- Idade e aparência
-- Origem e como se tornou lorde do clã
-- Poderes e habilidades específicas
-- Motivação real para a traição além do medo do trono
-- Estado atual após trezentos anos
-- Se ainda é lorde do clã ou se o clã mudou
-- Natureza do "trono de ossos" mencionado
-- Relação com o Sangue Antigo
-- Destino final no arco de Raziel
+### Cânone operacional atual
+- Malakar é a figura política central da traição contra [[Raziel]].
+- Seu medo principal era perder domínio, trono e narrativa oficial.
+- Ele deve permanecer distante no começo da campanha.
+- Sua presença entra primeiro por brasões, registros, ordens, servos e mentiras preservadas.
+- Seu confronto direto pertence a uma etapa futura do arco de Raziel.
+
+### Pendências restantes
+- Definir visual definitivo.
+- Definir estado atual após trezentos anos: governante, adormecido, substituído ou transformado.
+- Definir estatísticas apenas quando entrar em cena mecanicamente.
+- Definir a natureza exata do trono, juramento ou relíquia que sustenta seu poder.
+- Definir destino final conforme escolhas de Raziel e do grupo.
 
 ## Situação Atual
 

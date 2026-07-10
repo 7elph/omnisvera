@@ -5,9 +5,9 @@ NoteStatus: Active
 type: character
 status: Falecida
 campaign_status: Ativo
-visibility: Mestre
-spoiler_level: heavy
-gm_secret: true
+visibility: Público
+spoiler_level: none
+gm_secret: false
 thumbnail: zz_media/thumbnails/th_mira.png
 cover: zz_media/thumbnails/th_mira.png
 location: "[[Leth'valora]]"
@@ -158,4 +158,3 @@ Percorria trilhas entre a vila e regiões vizinhas, transportando notícias, enc
 - Como entra em cena:
 - Ganchos:
 - Consequências possíveis:
-

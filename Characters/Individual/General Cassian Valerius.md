@@ -5,9 +5,9 @@ NoteStatus: New
 type: character
 status: Vivo
 campaign_status: Ativo
-visibility: Mestre
-spoiler_level: heavy
-gm_secret: true
+visibility: Público
+spoiler_level: none
+gm_secret: false
 thumbnail: zz_media/thumbnails/th_cassian.png
 cover: zz_media/characters/cassian.png
 religion: "[[Igreja das Chamas]]"

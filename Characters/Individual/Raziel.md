@@ -3,7 +3,7 @@ obsidianUIMode: preview
 NoteIcon: magicitem
 NoteStatus: Active
 type: character
-visibility: Jogadores
+visibility: Público
 spoiler_level: none
 gm_secret: false
 campaign_status: Ativo
@@ -18,6 +18,11 @@ race: Vampiro
 level: 1
 alignment: Caótico Neutro
 role: player
+subtype: player_character
+work_status: Em desenvolvimento
+canon_status: Working Canon
+created_by: Sage
+requires_review: true
 chapter:
   - 00 - As Crônicas de Névoa de Sangue
 chapters:
@@ -31,7 +36,6 @@ tags:
   - origem-raziel
   - vampiro
   - hemomante
-  - sangue-antigo
   - sanguinallis
   - earthropo
   - character
@@ -83,9 +87,19 @@ SORT file.name ASC
 - Seu despertar é recente para o mundo atual, mas seu corpo e suas memórias pertencem a outra era.
 - Detalhes sobre a origem real de sua transformação e entidades associadas ficam no [[CAMPANHA/ESTADO_DA_CAMPANHA|Estado da Campanha]].
 
+## Cânone Atual Player-Safe
+
+- Raziel é um personagem jogador.
+- Sua raça/condição é [[Vampiro]].
+- Sua classe é [[Hemomante]].
+- Ele pertenceu ao [[Clã Sanguinallis]] e foi traído por figuras importantes dessa linhagem.
+- Ele despertou em um mundo diferente daquele que conhecia.
+- Sua vingança existe, mas a verdade completa da traição deve surgir em jogo por fragmentos.
+- Seus poderes mais dramáticos não estão totalmente disponíveis no nível 1.
+
 ## História
 
-> <h4>"Algumas dívidas sobrevivem ao sangue, à pedra e ao tempo."</h4>
+> _"Algumas dívidas sobrevivem ao sangue, à pedra e ao tempo."_
 
 Raziel vem de uma linhagem vampírica antiga, associada ao [[Clã Sanguinallis]] e a domínios esquecidos de Earthropo.
 
@@ -152,10 +166,10 @@ Determinação, domínio próprio, resistência ao sofrimento e conhecimento de 
 Orgulho, obsessão por vingança e dificuldade de separar justiça, dever e crueldade.
 
 **Medos:**
-A definir com o jogador.
+Perder o domínio de si, ser usado novamente por uma linhagem que o traiu e descobrir que sua vingança pode não bastar para encerrar o passado.
 
 **Crenças:**
-A definir com o jogador.
+Dívidas de sangue não desaparecem. Lealdade vale mais que imortalidade. Quem controla a própria fome controla o próprio destino.
 
 ---
 
@@ -235,7 +249,8 @@ Névoa de Sangue, Asas Escarlates, regeneração dramática e manifestações so
 
 #### Idiomas
 
-- A definir com o jogador.
+- Comum.
+- Uma forma antiga ou cerimonial ligada ao [[Clã Sanguinallis]], se o Sage liberar em mesa.
 
 #### Habilidades especiais
 
@@ -274,8 +289,6 @@ Seu papel é:
 
 ## Pendências do Sage
 
-- Definir medos e crenças com o jogador.
-- Definir idiomas.
 - Definir quais detalhes sobre seus inimigos antigos Raziel lembra com clareza.
 - Definir quando o grupo descobrirá a extensão real da camada sobrenatural de bastidor ligada ao retorno de Raziel.
 - Definir quais efeitos das [[Adagas de Espectro Fantasma]] ficam ativos em nível baixo.
@@ -296,7 +309,7 @@ Seu papel é:
 
 - Como apresentar: silêncio, olhar antigo, sangue reagindo, controle frio e violência contida.
 - O que os jogadores sabem: Raziel é um vampiro hemomante de passado antigo e vingança pessoal.
-- O que manter em aberto no [[CAMPANHA/ESTADO_DA_CAMPANHA]]: custo da transformação, entidade/força de bastidor e verdade completa da traição.
+- O que manter em aberto no [[CAMPANHA/ESTADO_DA_CAMPANHA]]: custo da transformação, forças de bastidor e verdade completa da traição.
 - Como entra em cena: leitura de ruínas, reação ao sangue, anomalia diante de DORN-7 ou pista sobre Gharok/Valthor.
 - Ganchos: inimigos antigos, nomes esquecidos, prata, sangue, ruínas e sinais de Sanguinallis.
 - Consequências possíveis: usar poder em público pode atrair medo, caçada, interesse da Coroa ou atenção religiosa.

@@ -5,7 +5,7 @@ NoteStatus: Active
 type: character
 status: Vivo
 campaign_status: Ativo
-visibility: Jogadores
+visibility: Público
 spoiler_level: none
 gm_secret: false
 thumbnail: zz_media/thumbnails/th_mestre_odran.png
@@ -57,7 +57,7 @@ tags:
 **Idade:** Desconhecida
 **Status:** Desaparecido
 **Localização:** [[O Frasco Afogado]]
-**Território:** [[Nimalia]]]
+**Território:** [[Nimalia]]
 **Associados Conhecidos:** [[Varkh Nimalis]]
 
 ## Aparições

@@ -3,7 +3,7 @@ obsidianUIMode: preview
 NoteIcon: magicitem
 NoteStatus: Active
 type: character
-visibility: Jogadores
+visibility: Público
 spoiler_level: none
 gm_secret: false
 campaign_status: Ativo
@@ -164,7 +164,7 @@ DORN-7 pode reagir a ele com leitura fria e técnica:
 | [[Mago]] | classe inicial |
 | [[Morto-Vivo Esqueleto]] | raça/condição jogável |
 | [[Unidade DORN-7]] | identifica Morthak como morto ativo fora de registro |
-| [[Conclave dos Errantes]] | possível vínculo sigiloso; detalhes ficam com o mestre |
+| [[Conclave dos Errantes]] | possível ponto de contato futuro; detalhes não são públicos |
 | [[Raziel]] | outro personagem ligado a não-vida, mas por natureza diferente |
 | [[Varkh Nimalis]] | pode comparar alquimia, corpo e cura corrompida |
 | [[Vezemir]] | pode gerar tensão entre instinto protetor e desconfiança |
@@ -180,7 +180,7 @@ DORN-7 pode reagir a ele com leitura fria e técnica:
 
 - Como apresentar: figura encapuzada, ossos sob tecido escuro e brilho arcano nos olhos.
 - O que os jogadores sabem: ele é jogador, começa como Mago e possui natureza de morto-vivo esqueleto.
-- O que apenas o mestre sabe: origem real, motivo da consciência, vínculo sigiloso e custo futuro da necromancia.
+- O que apenas o mestre sabe: origem real, motivo da consciência e custo futuro da necromancia.
 - Como entra em cena: atraído pela ativação de DORN-7, seguindo uma sensação arcana que ele não entende por completo.
 - Ganchos: símbolos sagrados, caçadores de mortos-vivos, grimórios proibidos, memória perdida, medo público.
 - Consequências possíveis: revelar sua natureza em público pode causar pânico, perseguição ou interesse de facções.
@@ -188,14 +188,14 @@ DORN-7 pode reagir a ele com leitura fria e técnica:
 ## Encaminhamento para o Estado da Campanha
 
 > [!warning]
-> Origem verdadeira, vínculo com necromancia, possíveis criadores, pactos, maldições e consequências futuras de Morthak ficam em [[CAMPANHA/ESTADO_DA_CAMPANHA]].
+> Origem verdadeira, vínculo com necromancia, forças antigas, pactos, maldições e consequências futuras de Morthak ficam em [[CAMPANHA/ESTADO_DA_CAMPANHA]].
 
 ## Pendências do Sage
 
 - Confirmar gênero, idade aparente e voz de Morthak.
 - Definir quem executou o Despertar do Último Suspiro.
 - Definir qual magia proibida Morthak estudou antes de morrer.
-- Definir qual é o vínculo sigiloso de Morthak com o [[Conclave dos Errantes]].
+- Definir como o [[Conclave dos Errantes]] se aproxima de Morthak em jogo, se isso for revelado.
 - Definir se ele esconde a aparência em público.
 - Definir magias iniciais do [[Mago]].
 - Definir se Necromante será classe futura, especialização de Mago ou trilha narrativa.

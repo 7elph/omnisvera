@@ -3,7 +3,7 @@ obsidianUIMode: preview
 NoteIcon: magicitem
 NoteStatus: Active
 type: character
-visibility: Jogadores
+visibility: Público
 spoiler_level: none
 gm_secret: false
 campaign_status: Ativo
@@ -83,7 +83,7 @@ SORT file.name ASC
 
 ## História
 
-> <h4>"Alquimia não é transformar chumbo em ouro. É transformar problema em saída."</h4>
+> _"Alquimia não é transformar chumbo em ouro. É transformar problema em saída."_
 
 
 Varkh Nimalis nasceu em [[Maré Baixa]], no extremo sul da capital do Reino de [[Nimalia]]. Cresceu entre passarelas de madeira, telhados remendados, contrabandistas, trabalhadores do porto e negócios que ninguém registrava em papel.
@@ -114,14 +114,14 @@ Odran também transmitiu parte de seu código moral. Não aceitava covardia, nã
 
 ---
 
-### O Lado Assassino
+### A Lâmina e a Fuga
 Odran percebeu que Varkh era leve, rápido, preciso e atento às rotas de fuga. Não o treinou para a crueldade, mas para sobreviver.
 
 Varkh aprendeu a usar adagas, espada curta e arco curto. Também transformou sua alquimia em ferramenta de combate, infiltração, falsificação e fuga.
 
-Sua reputação tornou-se ambígua. Dependendo de quem conta a história, o corvo mascarado é médico, ladrão, protetor, falsificador ou assassino de aluguel.
+Sua reputação tornou-se ambígua. Dependendo de quem conta a história, o corvo mascarado é médico, ladrão, protetor, falsificador ou alguém que sabe fazer pessoas perigosas desaparecerem por uma noite.
 
-A verdade permanece menos simples: Varkh aceita serviços. Às vezes rouba documentos, entrega frascos, assusta pessoas perigosas ou protege quem não pode pagar. Quando não encontra outra saída, sua lâmina fala por ele.
+A verdade permanece menos simples: Varkh aceita serviços. Às vezes rouba documentos, entrega frascos, assusta pessoas perigosas ou protege quem não pode pagar. Quando não encontra outra saída, sua lâmina fala por ele, mas a nota pública não precisa definir todos os pecados do corvo.
 
 ---
 
@@ -147,6 +147,9 @@ Não busca glória ou redenção. Busca respostas, bons ingredientes, moedas no 
 ## Entrada no Capítulo 01
 
 - **[[02 - Remédios Falsos da Maré Baixa]]:** Remédios falsos circulam em Nimalia usando o símbolo e os métodos de [[Mestre Odran Veyl|Odran]].
+- Varkh reconhece que a marca nos frascos aponta primeiro para Odran.
+- Ele também percebe sinais de adulteração: fórmula copiada, método corrompido ou rótulo perfeito demais.
+- Isso dá a ele motivo pessoal para investigar sem confirmar imediatamente quem está por trás.
 
 ---
 
@@ -175,7 +178,14 @@ Tudo possui algum valor. Problemas podem ser transformados em saídas, e ainda e
 
 ## Relações
 
-[[Mestre Odran Veyl]]
+| Nota | Relação |
+|---|---|
+| [[Mestre Odran Veyl]] | mentor e referência pública de sua alquimia |
+| [[O Frasco Afogado]] | antigo ponto de aprendizado e investigação |
+| [[Conclave dos Errantes]] | facção atual, útil para rotas, contatos e trabalho sujo |
+| [[Remédios Falsos de Maré Baixa]] | pista inicial do Capítulo 01 |
+| [[Nimalis]] | cidade de origem |
+| [[Maré Baixa]] | região que moldou sua reputação |
 
 ## Equipamentos importantes
 
@@ -276,13 +286,21 @@ Varkh é um kenku corvo de porte médio, com penas negras de reflexos azulados e
 
 ## Links relevantes
 
-_Pendente de consolidação pelo Sage._
+- [[Alquimista]]
+- [[Antropo]]
+- [[Kenku]]
+- [[Mestre Odran Veyl]]
+- [[O Frasco Afogado]]
+- [[Remédios Falsos de Maré Baixa]]
+- [[Conclave dos Errantes]]
+- [[Maré Baixa]]
+- [[Nimalis]]
 
 ## Uso em Mesa
 
-- Como apresentar:
-- O que os jogadores sabem:
-- O que manter em aberto:
-- Como entra em cena:
-- Ganchos:
-- Consequências possíveis:
+- Como apresentar: capuz, máscara de médico da peste, frascos no cinto e fala feita de vozes emprestadas.
+- O que os jogadores sabem: Varkh é um alquimista de rua de Maré Baixa, ligado a Odran e ao rastro dos remédios falsos.
+- O que manter em aberto: quem falsificou os remédios, o quanto a Guilda sabe e o que Odran realmente escondeu.
+- Como entra em cena: reconhecendo marcas, rótulos, cheiros e erros alquímicos que outros personagens ignorariam.
+- Ganchos: limpar o nome de Odran, seguir o falsificador, negociar com contatos do porto e decidir até onde vai para proteger Maré Baixa.
+- Consequências possíveis: revelar demais pode atrair Guarda Real, Guilda, falsificadores ou antigos contatos criminosos.

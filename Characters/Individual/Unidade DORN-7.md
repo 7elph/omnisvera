@@ -3,6 +3,7 @@ obsidianUIMode: preview
 NoteIcon: magicitem
 NoteStatus: Draft
 type: character
+subtype: creature
 status: Inativa
 campaign_status: Planejado
 visibility: Mestre

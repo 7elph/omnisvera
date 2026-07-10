@@ -3,7 +3,7 @@ obsidianUIMode: preview
 NoteIcon: magicitem
 NoteStatus: Active
 type: character
-visibility: Jogadores
+visibility: Público
 spoiler_level: none
 gm_secret: false
 campaign_status: Ativo
@@ -83,7 +83,7 @@ SORT file.name ASC
 
 ## História
 
-> <h4>"A honra não se herda. Se conquista."</h4>
+> _"A honra não se herda. Se conquista."_
 
 
 Vezemir foi encontrado ainda bebê nas ruínas de uma [[Antiga Estrada Esquecida]] próxima à uma vila élfica de [[Leth'valora]]. Rejeitado por parte dos elfos devido à sua ascendência mestiça, foi adotado pelo veterano [[Elarion Vaelthor]], antigo capitão das [[Sentinelas de Leth'valora]].
@@ -293,13 +293,24 @@ Com 2,02 m de altura, Vezemir é alto e musculoso. Possui cabelos e pele muito c
 
 ## Links relevantes
 
-_Pendente de consolidação pelo Sage._
+- [[Guerreiro]]
+- [[Meio-Elfo]]
+- [[Grisalma]]
+- [[Muralha de Dorn]]
+- [[O Medalhão]]
+- [[Elarion Vaelthor]]
+- [[Mira Valen]]
+- [[Padre Oric]]
+- [[Dragão de Colar Dourado]]
+- [[Conclave dos Errantes]]
+- [[Floresta de Avenor]]
+- [[Leth'valora]]
 
 ## Uso em Mesa
 
-- Como apresentar:
-- O que os jogadores sabem:
-- O que manter em aberto:
-- Como entra em cena:
-- Ganchos:
-- Consequências possíveis:
+- Como apresentar: guerreiro alto, silencioso, armadura pesada, escudo imenso e olhar de quem sobreviveu a uma vila destruída.
+- O que os jogadores sabem: Vezemir é um meio-elfo guerreiro, marcado pela queda de Leth'valora e pela caça ao dragão de colar dourado.
+- O que manter em aberto: a natureza completa de sua magia instável, o real significado de suas relíquias e o motivo do dragão reconhecê-lo.
+- Como entra em cena: percebendo sinais antigos em Avenor, ruínas, rastros de dragão ou símbolos ligados às Sentinelas.
+- Ganchos: proteger inocentes, encontrar pistas do dragão, lidar com memórias de Leth'valora e decidir se vingança ainda é justiça.
+- Consequências possíveis: agir por fúria pode colocar aliados em risco; conter-se pode deixar pistas escaparem.

@@ -10,9 +10,9 @@ canon_status: Working Canon
 created_by: Sage
 campaign_status: Ativo
 requires_review: true
-visibility: Mestre
-spoiler_level: heavy
-gm_secret: true
+visibility: Público
+spoiler_level: none
+gm_secret: false
 thumbnail: zz_media/thumbnails/th_dukeofd.png
 cover: zz_media/characters/dukeofd.png
 religion: "[[Igreja das Chamas]]"
@@ -114,7 +114,7 @@ E todos, até os que o odeiam, sabem que Nimalia ainda respira sob sua sombra.
 
 ## História Pública
 
-> <h4>“Um reino não sobrevive porque todos concordam. Sobrevive porque alguém mantém suas muralhas de pé.”</h4>
+> _“Um reino não sobrevive porque todos concordam. Sobrevive porque alguém mantém suas muralhas de pé.”_
 
 Augustus nasceu dentro da alta linhagem da [[Coroa de Nimalia]], em uma época em que o reino ainda se orgulhava de parecer invulnerável.
 
@@ -415,6 +415,10 @@ A Coroa mantém olhos em portos, templos, mercados, fortalezas, casas nobres e r
 - Dizem que nenhum traidor consegue mentir diante do Leão de Nimalia.
 - Dizem que ele já venceu batalhas sem desembainhar a espada.
 
+## Encaminhamento para o Estado da Campanha
+
+> [!warning]
+> Segredos sobre Augustus, a Coroa, sucessão, arquivos restritos, possíveis verdades ocultas e consequências futuras ficam em [[CAMPANHA/ESTADO_DA_CAMPANHA]].
 
 ---
 

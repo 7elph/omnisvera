@@ -3,6 +3,7 @@ obsidianUIMode: preview
 NoteIcon: magicitem
 NoteStatus: Active
 type: character
+subtype: creature
 status: Desconhecido
 campaign_status: Ativo
 visibility: Mestre
@@ -59,7 +60,9 @@ Dragão verde colossal, marcado pelo colar dourado que o diferencia de outros dr
 
 ## Origem
 
-_Pendente de consolidação pelo Sage._
+A origem exata permanece segredo do mestre. O cânone operacional atual é que a criatura atacou [[Leth'valora]], usava um colar dourado incomum e demonstrou algum reconhecimento de [[Vezemir]] durante a destruição da vila.
+
+Para a mesa, isso basta: o dragão é uma ameaça real, ligada ao trauma de Vezemir, mas o motivo do ataque ainda não deve ser explicado cedo.
 
 ## Habitat
 
@@ -77,7 +80,11 @@ Ameaça extrema.
 
 ## Capacidades narrativas
 
--
+- voo e presença predatória;
+- ameaça dracônica de escala alta;
+- destruição de assentamentos;
+- reconhecimento ou reação específica a [[Vezemir]];
+- vínculo misterioso com o colar dourado.
 
 ## Mecânicas Pendentes
 
@@ -90,7 +97,7 @@ Mistério central da história de [[Vezemir]] e uma das pontas narrativas ligada
 
 ## Segredos
 
-_Pendente de revisão do Mestre._
+Segredos sobre o colar dourado, a razão do ataque e possíveis conexões com forças antigas ficam no [[CAMPANHA/ESTADO_DA_CAMPANHA|Estado da Campanha]].
 
 ## Relações
 
@@ -113,9 +120,9 @@ Dragão verde de grande porte, identificado pelo colar dourado. Detalhes visuais
 
 ## Uso em Mesa
 
-- Como apresentar:
-- O que os jogadores sabem:
-- O que manter em aberto:
-- Como entra em cena:
-- Ganchos:
-- Consequências possíveis:
+- Como apresentar: primeiro por rastros, sobreviventes, cinzas antigas e medo; a presença direta deve ser rara.
+- O que os jogadores sabem: um dragão de colar dourado destruiu Leth'valora e matou Mira.
+- O que manter em aberto: motivo do ataque, natureza do colar e por que a criatura reconheceu Vezemir.
+- Como entra em cena: rumor de avistamento, marca de garra, testemunha quebrada ou criatura menor fugindo de algo maior.
+- Ganchos: caçar pistas, proteger vilas, rastrear o colar, decidir entre vingança e proteção.
+- Consequências possíveis: enfrentar o dragão cedo demais deve parecer suicídio, não boss fight casual.

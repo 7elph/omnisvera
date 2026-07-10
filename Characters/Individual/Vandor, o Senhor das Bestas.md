@@ -3,6 +3,7 @@ obsidianUIMode: preview
 NoteIcon: magicitem
 NoteStatus: Draft
 type: character
+subtype: antagonist
 status: Em desenvolvimento
 campaign_status: Em revisão
 visibility: Mestre
@@ -76,16 +77,19 @@ Enquanto Kaelen representa força militar e Malakar representa trono, Vandor rep
 - É o segundo alvo na rota de vingança de Raziel
 - Aprenderá que nenhuma criatura selvagem pode obedecer a um mestre cujo sangue está prestes a ser fervido
 
-### Pendente de confirmação do Sage
-- Idade e aparência
-- Origem e como se tornou general do clã
-- Poderes e habilidades específicas
-- Natureza de seu controle sobre feras
-- Motivação profunda para medo de Raziel
-- Estado atual após trezentos anos
-- Se ainda é general do clã
-- Relação com o Sangue Antigo
-- Destino final no arco de Raziel
+### Cânone operacional atual
+- Vandor continua ligado à [[Floresta de Avenor]] e às feras que um dia marcharam sob seu comando.
+- Seu papel é territorial e predatório: rastros, matilhas, medo e caça prolongada.
+- Seu medo de [[Raziel]] nasce do fato de que Raziel conseguia impor silêncio onde Vandor dependia de domínio.
+- Ele funciona como ponte entre o arco de Raziel e as feridas abertas de Avenor.
+- Deve aparecer antes de Malakar, mas depois que o grupo já entender que o passado de Raziel ainda deixou agentes ativos.
+
+### Pendências restantes
+- Definir visual definitivo.
+- Definir estatísticas apenas quando entrar em cena mecanicamente.
+- Definir se Vandor controla feras, corrompe feras ou apenas as atrai.
+- Definir estado atual após trezentos anos.
+- Definir destino final conforme escolhas de Raziel e do grupo.
 
 ## Situação Atual
 
