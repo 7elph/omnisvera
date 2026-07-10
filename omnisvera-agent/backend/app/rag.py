@@ -207,7 +207,8 @@ def _find_blocked_player_entity_row(database_path: Path, target: str) -> Any | N
         for candidate in candidates:
             candidate_tokens.update(_target_tokens(candidate))
         has_anchor = any(len(token) >= 4 and token in candidate_tokens for token in tokens)
-        if has_anchor and tokens.issubset(candidate_tokens):
+        can_block_by_tokens = len(tokens) >= 2 or any(token.isdigit() for token in tokens)
+        if can_block_by_tokens and has_anchor and tokens.issubset(candidate_tokens):
             return row
 
     return None
@@ -252,6 +253,24 @@ def _find_exact_row(database_path: Path, target: str, access_mode: AccessMode | 
 
 
 def _blocked_player_entity_answer(target: str) -> dict:
+    clean_target = re.sub(r"^(sao|sao os|sao as|e|eh)\s+", "", normalize_text(target)).strip().title()
+    return {
+        "answer": (
+            f"**{clean_target}** ainda não está liberado no modo jogador.\n\n"
+            "Para evitar spoiler, não vou completar essa resposta usando nota lateral, rumor indireto ou associação solta. "
+            "Se isso aparecer em jogo, o app pode revelar depois que o Mestre liberar a informação."
+        ),
+        "notes_used": [],
+        "note_paths": [],
+        "insufficient_context": False,
+        "warning": "Informação protegida no modo jogador.",
+        "suggested_questions": [
+            "Quais rumores estão ativos?",
+            "Quais missões estão ativas?",
+            "O que aconteceu até agora?",
+        ],
+    }
+
     clean_target = target.strip().title()
     return {
         "answer": (
@@ -360,6 +379,7 @@ def _first_useful_sentence(content: str) -> str:
     text = _plain_wikilinks(text)
     text = re.sub(r"^#.*$", "", text, flags=re.MULTILINE)
     text = re.sub(r"^##.*$", "", text, flags=re.MULTILINE)
+    text = re.sub(r"^\s*---+\s*$", "", text, flags=re.MULTILINE)
     text = re.sub(r"^>\s*\[![^\n]+$", "", text, flags=re.MULTILINE)
     text = re.sub(r"^>\s*!\S.*$", "", text, flags=re.MULTILINE)
     text = re.sub(r"^>\s*[_\"“].*$", "", text, flags=re.MULTILINE)
@@ -433,7 +453,210 @@ def _append_if(lines: list[str], label: str, value: Any) -> None:
         lines.append(f"{label}: {cleaned}.")
 
 
+def _first_section_paragraph(content: str, headings: tuple[str, ...], max_chars: int = 360) -> str:
+    cleaned = _plain_wikilinks(_strip_code_blocks(content))
+    lines = cleaned.splitlines()
+    wanted = {normalize_text(heading) for heading in headings}
+    captured: list[str] = []
+    inside = False
+
+    for line in lines:
+        heading = re.match(r"^\s*#{2,4}\s+(.+?)\s*$", line)
+        if heading:
+            if inside:
+                break
+            inside = normalize_text(heading.group(1)) in wanted
+            continue
+        if inside:
+            stripped = line.strip()
+            if stripped == "---":
+                break
+            if not stripped or stripped.startswith("> [!") or stripped.startswith("```"):
+                continue
+            if re.match(r"^\*\*[^*:\n]+:\*\*\s*", stripped):
+                continue
+            stripped = re.sub(r"^>\s?", "", stripped).strip()
+            stripped = re.sub(r"^[-*]\s+", "", stripped).strip()
+            if stripped:
+                captured.append(stripped)
+            if len(" ".join(captured)) >= max_chars:
+                break
+
+    text = re.sub(r"\s+", " ", " ".join(captured)).strip()
+    if len(text) <= max_chars:
+        return text
+    return text[:max_chars].rsplit(".", 1)[0].strip() + "..."
+
+
+def _field_line(label: str, value: Any) -> str:
+    cleaned = _clean_value(value)
+    return f"- **{label}:** {cleaned}" if cleaned else ""
+
+
+def _join_nonempty(lines: list[str]) -> str:
+    return "\n".join(line for line in lines if line and line.strip()).strip()
+
+
+def _answer_from_sections(title: str, blocks: list[tuple[str, list[str]]]) -> str:
+    output: list[str] = []
+    for heading, lines in blocks:
+        body = _join_nonempty(lines)
+        if not body:
+            continue
+        output.append(f"### {heading}\n{body}")
+    return "\n\n".join(output).strip() or f"Não encontrei informação suficiente sobre {title} no contexto liberado."
+
+
+def _rich_direct_entity_answer(note: dict, question: str, access_mode: AccessMode) -> dict:
+    frontmatter = note.get("frontmatter") or {}
+    content = sanitize_player_text(note["content"]) if access_mode == "player" else note["content"]
+    fields = _labeled_fields(content)
+    title = _plain_wikilinks(str(note["title"]))
+    note_type = normalize_text(note.get("type"))
+    tags = [normalize_text(tag) for tag in note.get("tags") or []]
+    query_kind = (_direct_entity_target(question) or ("", "about"))[1]
+
+    summary = _first_useful_sentence(content)
+    public_info = _first_section_paragraph(
+        content,
+        (
+            "Conhecimento Público",
+            "O que os jogadores sabem",
+            "Resumo",
+            "Descrição",
+        ),
+    )
+    table_use = _first_section_paragraph(
+        content,
+        (
+            "Uso em Mesa",
+            "Função em jogo",
+            "Entrada no Capítulo 01",
+            "Como usar em mesa",
+        ),
+    )
+    rumors = _first_section_paragraph(content, ("Rumores", "Rumores Públicos", "Boatos"), max_chars=260)
+    hooks = _first_section_paragraph(content, ("Ganchos", "Ganchos de aventura", "Possíveis Ganchos"), max_chars=260)
+
+    if query_kind == "where":
+        if note_type in {"location", "territory", "map"}:
+            lines = [
+                f"- {title} é {_note_kind_label(note.get('type'))} em Omnisvera.",
+                _field_line("Território", frontmatter.get("territory")),
+                _field_line("Localização superior", frontmatter.get("parent_location") or frontmatter.get("location")),
+            ]
+            if summary:
+                lines.append(f"- {summary}")
+        else:
+            location = fields.get("localizacao atual") or frontmatter.get("location")
+            territory = fields.get("territorio") or frontmatter.get("territory")
+            lines = [
+                f"- {title} está ligado a {_clean_value(location or territory) or 'local não definido no contexto liberado'}."
+            ]
+        answer = _answer_from_sections(title, [("Onde fica", lines)])
+    elif note_type == "character":
+        subtype = normalize_text(frontmatter.get("subtype"))
+        role = normalize_text(frontmatter.get("role"))
+        is_player = subtype == "player_character" or role == "player" or "jogador" in tags
+        race = fields.get("raca") or frontmatter.get("race")
+        char_class = fields.get("classe") or frontmatter.get("class")
+        reputation = fields.get("reputacao publica")
+        location = fields.get("localizacao atual") or frontmatter.get("location")
+        faction = fields.get("afiliacao") or frontmatter.get("faction")
+        associates = fields.get("associados conhecidos") or frontmatter.get("related_characters")
+
+        answer = _answer_from_sections(
+            title,
+            [
+                (
+                    "Resposta curta",
+                    [
+                        f"- {title} é {'um personagem jogador' if is_player else 'um personagem'} de Omnisvera.",
+                        _field_line("Raça", race),
+                        _field_line("Classe", char_class),
+                        _field_line("Reputação pública", reputation),
+                        f"- {summary}" if summary and not public_info else "",
+                    ],
+                ),
+                ("O que está liberado", [f"- {public_info}"] if public_info else []),
+                ("Em jogo", [f"- {table_use}"] if table_use else []),
+                (
+                    "Ligações úteis",
+                    [
+                        _field_line("Localização", location),
+                        _field_line("Facção", faction),
+                        _field_line("Associados", associates),
+                    ],
+                ),
+                ("Rumores ou ganchos", [f"- {item}" for item in (rumors, hooks) if item]),
+            ],
+        )
+    else:
+        kind_label = _note_kind_label(note.get("type"))
+        short_lines = [f"- {title} é uma nota de {kind_label} em Omnisvera."]
+        if note_type == "item":
+            short_lines.extend(
+                [
+                    _field_line("Tipo", frontmatter.get("item_type") or frontmatter.get("item_category")),
+                    _field_line("Portador", frontmatter.get("owner")),
+                ]
+            )
+        elif note_type in {"location", "territory"}:
+            short_lines.extend(
+                [
+                    _field_line("Território", frontmatter.get("territory")),
+                    _field_line("Localização superior", frontmatter.get("parent_location") or frontmatter.get("location")),
+                    _field_line("Função", frontmatter.get("role") or frontmatter.get("subtype")),
+                ]
+            )
+        elif note_type == "faction":
+            short_lines.extend(
+                [
+                    _field_line("Status", frontmatter.get("status") or frontmatter.get("campaign_status")),
+                    _field_line("Atuação", frontmatter.get("location") or frontmatter.get("territory")),
+                    _field_line("Liderança", frontmatter.get("leader")),
+                ]
+            )
+        elif note_type in {"race", "class"}:
+            short_lines.extend(
+                [
+                    _field_line("Status", frontmatter.get("status") or frontmatter.get("work_status")),
+                    _field_line("Sistema", frontmatter.get("ruleset") or frontmatter.get("source_system")),
+                ]
+            )
+        elif note_type in {"quest", "rumor"}:
+            short_lines.extend(
+                [
+                    _field_line("Status", frontmatter.get("quest_status") or frontmatter.get("status")),
+                    _field_line("Local", frontmatter.get("location") or frontmatter.get("territory")),
+                ]
+            )
+        if summary:
+            short_lines.append(f"- {summary}")
+
+        answer = _answer_from_sections(
+            title,
+            [
+                ("Resposta curta", short_lines),
+                ("O que está liberado", [f"- {public_info}"] if public_info else []),
+                ("Em jogo", [f"- {table_use}"] if table_use else []),
+                ("Rumores ou ganchos", [f"- {item}" for item in (rumors, hooks) if item]),
+            ],
+        )
+
+    return {
+        "answer": answer,
+        "notes_used": [note],
+        "note_paths": [note["path"]],
+        "insufficient_context": False,
+        "warning": None,
+        "suggested_questions": _suggested_questions_for_notes(question, [note], access_mode),
+    }
+
+
 def _direct_entity_answer(note: dict, question: str, access_mode: AccessMode) -> dict:
+    return _rich_direct_entity_answer(note, question, access_mode)
+
     frontmatter = note.get("frontmatter") or {}
     content = sanitize_player_text(note["content"]) if access_mode == "player" else note["content"]
     fields = _labeled_fields(content)
@@ -539,7 +762,85 @@ def _direct_entity_answer(note: dict, question: str, access_mode: AccessMode) ->
     }
 
 
+def _rich_answer_player_characters(database_path: Path, access_mode: AccessMode) -> dict | None:
+    rows = []
+    for row in all_notes_for_search(database_path):
+        if row["type"] != "character":
+            continue
+        if access_mode == "player" and not is_player_safe_row(row):
+            continue
+        frontmatter = _frontmatter(row)
+        tags = normalize_text(row["tags"])
+        subtype = normalize_text(frontmatter.get("subtype"))
+        role = normalize_text(frontmatter.get("role"))
+        if subtype != "player_character" and role != "player" and "jogador" not in tags:
+            continue
+        rows.append((row, frontmatter))
+
+    if not rows:
+        return None
+
+    priority = ("vezemir", "varkh", "raziel", "morthak")
+
+    def rank(item: tuple[Any, dict]) -> tuple[int, str]:
+        row, _frontmatter = item
+        lookup = normalize_text(f"{row['path']} {row['title']}")
+        for index, name in enumerate(priority):
+            if name in lookup:
+                return (index, lookup)
+        return (len(priority), lookup)
+
+    rows.sort(key=rank)
+    note_ids: list[int] = []
+    character_lines: list[str] = []
+    for row, frontmatter in rows[:8]:
+        note = get_note(database_path, row["id"], access_mode=access_mode)
+        if not note:
+            continue
+        note_ids.append(row["id"])
+        content = sanitize_player_text(note["content"]) if access_mode == "player" else note["content"]
+        fields = _labeled_fields(content)
+        title = _plain_wikilinks(row["title"])
+        race = _clean_value(fields.get("raca") or frontmatter.get("race"))
+        char_class = _clean_value(fields.get("classe") or frontmatter.get("class"))
+        reputation = _clean_value(fields.get("reputacao publica") or frontmatter.get("role"))
+        parts = [part for part in (race, char_class) if part]
+        profile = " / ".join(parts) if parts else "perfil ainda não detalhado"
+        suffix = f" — {reputation}" if reputation else ""
+        character_lines.append(f"- **{title}**: {profile}{suffix}.")
+
+    answer = _answer_from_sections(
+        "Personagens jogadores",
+        [
+            ("Grupo atual", character_lines),
+            (
+                "Uso rápido",
+                [
+                    "- Esses são os protagonistas liberados para consulta no modo jogador.",
+                    "- Para detalhes, pergunte por um nome específico: “Quem é Varkh?” ou “O que sabemos sobre Raziel?”.",
+                ],
+            ),
+        ],
+    )
+
+    return {
+        "answer": answer,
+        "notes_used": get_notes_by_ids(database_path, note_ids, access_mode=access_mode),
+        "note_paths": [row["path"] for row, _frontmatter in rows[:8]],
+        "insufficient_context": False,
+        "warning": None,
+        "suggested_questions": [
+            "O que aconteceu até agora?",
+            "Quais missões estão ativas?",
+            "Quais rumores estão ativos?",
+            "O que sabemos sobre Nimalis?",
+        ],
+    }
+
+
 def _answer_player_characters(database_path: Path, access_mode: AccessMode) -> dict | None:
+    return _rich_answer_player_characters(database_path, access_mode)
+
     rows = []
     for row in all_notes_for_search(database_path):
         if row["type"] != "character":
@@ -597,7 +898,68 @@ def _answer_player_characters(database_path: Path, access_mode: AccessMode) -> d
     }
 
 
+def _rich_answer_campaign_recap(database_path: Path, access_mode: AccessMode) -> dict | None:
+    wanted_paths = [
+        "EARTHROPO/01 - Ecos do Mundo Perdido.md",
+        "CAMPANHA/Quests/02 - Investigar Remédios Falsos de Maré Baixa.md",
+        "CAMPANHA/Quests/03 - Explorar a Passagem Sob a Estrada.md",
+        "CAMPANHA/Rumors/02 - Remédios Falsos da Maré Baixa.md",
+        "CAMPANHA/Rumors/03 - Caravana Acidentada na Estrada de Avenor.md",
+    ]
+    rows_by_path = {row["path"]: row for row in all_notes_for_search(database_path)}
+    notes: list[dict] = []
+    for path in wanted_paths:
+        row = rows_by_path.get(path)
+        if not row:
+            continue
+        if access_mode == "player" and not is_player_safe_row(row):
+            continue
+        note = get_note(database_path, row["id"], access_mode=access_mode)
+        if note:
+            notes.append(note)
+
+    if not notes:
+        return None
+
+    chapter = next((note for note in notes if normalize_text(note.get("type")) == "story"), None)
+    quests = [note for note in notes if normalize_text(note.get("type")) == "quest"]
+    rumors = [note for note in notes if normalize_text(note.get("type")) == "rumor"]
+
+    story_lines: list[str] = []
+    if chapter:
+        summary = _first_useful_sentence(chapter["content"])
+        if summary:
+            story_lines.append(f"- {summary}")
+
+    quest_lines = [f"- **{note['title']}**" for note in quests[:3]]
+    clue_lines: list[str] = []
+    for note in rumors[:3]:
+        summary = _first_useful_sentence(note["content"])
+        if summary:
+            clue_lines.append(f"- {summary}")
+
+    answer = _answer_from_sections(
+        "Resumo da campanha",
+        [
+            ("Até agora", story_lines),
+            ("Pistas em aberto", clue_lines),
+            ("O que dá para fazer", quest_lines),
+            ("Importante", ["- Mistérios maiores continuam não confirmados no modo jogador."]),
+        ],
+    )
+    return {
+        "answer": answer,
+        "notes_used": notes,
+        "note_paths": [note["path"] for note in notes],
+        "insufficient_context": False,
+        "warning": None,
+        "suggested_questions": _suggested_questions_for_notes("O que aconteceu até agora?", notes, access_mode),
+    }
+
+
 def _answer_campaign_recap(database_path: Path, access_mode: AccessMode) -> dict | None:
+    return _rich_answer_campaign_recap(database_path, access_mode)
+
     wanted_paths = [
         "EARTHROPO/01 - Ecos do Mundo Perdido.md",
         "CAMPANHA/Quests/02 - Investigar Remédios Falsos de Maré Baixa.md",
@@ -745,6 +1107,89 @@ def _suggested_questions_for_notes(question: str, notes: list[dict], access_mode
     return suggestions[:5]
 
 
+def _rich_answer_index_overview(
+    database_path: Path,
+    *,
+    folder: str,
+    note_type: str,
+    label: str,
+    access_mode: AccessMode,
+) -> dict | None:
+    rows = []
+    for row in all_notes_for_search(database_path):
+        path = row["path"]
+        if not path.startswith(folder) or "INDICE_" in path:
+            continue
+        if row["type"] != note_type:
+            continue
+        if access_mode == "player" and not is_player_safe_row(row):
+            continue
+        frontmatter = _frontmatter(row)
+        status = str(frontmatter.get("status") or "").lower()
+        if status in {"arquivado", "deprecated", "non canon", "non-canon"}:
+            continue
+        rows.append((row, frontmatter))
+
+    if not rows:
+        return None
+
+    rows.sort(key=lambda item: item[0]["path"])
+    note_ids: list[int] = []
+    action_lines: list[str] = []
+    context_lines: list[str] = []
+
+    for row, frontmatter in rows[:10]:
+        note = get_note(database_path, row["id"], access_mode=access_mode)
+        if not note:
+            continue
+        content = sanitize_player_text(note["content"]) if access_mode == "player" else note["content"]
+        summary = _first_useful_sentence(content)
+        if access_mode == "player" and not summary:
+            continue
+        note_ids.append(row["id"])
+        title = _plain_wikilinks(str(frontmatter.get("name") or row["title"]))
+        status = _clean_value(frontmatter.get("quest_status") or frontmatter.get("status") or "em aberto")
+        location = _clean_value(frontmatter.get("location") or frontmatter.get("territory"))
+        location_text = f" em {location}" if location else ""
+        action_lines.append(f"- **{title}**{location_text}: {summary}")
+        context_lines.append(f"- Status: **{status}** — fonte: {title}.")
+
+    if note_type == "quest":
+        heading = "Missões ativas"
+        helper = [
+            "- Use isto como lista de próximos passos possíveis; nem toda missão precisa ser resolvida agora.",
+            "- Se quiser, pergunte por uma missão específica para ver o que já está liberado.",
+        ]
+    elif note_type == "rumor":
+        heading = "Rumores liberados"
+        helper = [
+            "- Rumor não é verdade confirmada: trate como pista, suspeita ou boato de mesa.",
+            "- Se uma resposta parecer incompleta, é porque a verdade ainda está protegida ou não foi revelada.",
+        ]
+    else:
+        heading = label
+        helper = []
+
+    answer = _answer_from_sections(
+        heading,
+        [
+            (heading, action_lines),
+            ("Como usar em jogo", helper),
+            ("Estado das notas", context_lines if access_mode != "player" else []),
+        ],
+    )
+
+    notes_used = get_notes_by_ids(database_path, note_ids, access_mode=access_mode)
+    return {
+        "answer": answer,
+        "notes_used": notes_used,
+        "note_paths": [note["path"] for note in notes_used],
+        "insufficient_context": False,
+        "warning": None,
+        "suggested_questions": _suggested_questions_for_notes(label, notes_used, access_mode),
+    }
+
+
 def _answer_index_overview(
     database_path: Path,
     *,
@@ -753,6 +1198,14 @@ def _answer_index_overview(
     label: str,
     access_mode: AccessMode,
 ) -> dict | None:
+    return _rich_answer_index_overview(
+        database_path,
+        folder=folder,
+        note_type=note_type,
+        label=label,
+        access_mode=access_mode,
+    )
+
     rows = []
     for row in all_notes_for_search(database_path):
         path = row["path"]
@@ -910,6 +1363,16 @@ Faça síntese, não transcrição.
 Evite repetir a mesma informação.
 Comece com a resposta direta em 2 a 6 frases ou bullets.
 Se houver informação pública e segredo do mestre misturados no contexto, separe em linhas curtas."""
+
+    user_prompt += """
+
+Formato desejado:
+- Responda como assistente de mesa, não como índice técnico.
+- Quando fizer sentido, use seções curtas: "Resposta curta", "Em jogo", "Pistas" e "Próximas perguntas".
+- Não liste caminhos de arquivo dentro da resposta.
+- Não comece com "com base no contexto"; responda direto.
+- Se a pergunta for sobre uma entidade, mantenha o foco nela e cite relações apenas como apoio.
+- Se a pergunta for de jogador, prefira linguagem player-safe e não antecipe segredo."""
 
     answer = await chat_with_ollama(
         ollama_base_url,

@@ -232,6 +232,30 @@ textarea {
   padding: 0.75rem;
 }
 
+.message-suggestions {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.message-suggestions span {
+  color: #b8a58b;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.message-suggestions button {
+  background: #1a130f;
+  border: 1px solid #463321;
+  border-radius: 999px;
+  color: #f8d28a;
+  font-size: 0.82rem;
+  padding: 0.38rem 0.65rem;
+}
+
 .user-bubble {
   align-self: start;
   background: #d6a858;

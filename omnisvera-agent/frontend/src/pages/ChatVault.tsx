@@ -145,6 +145,16 @@ export default function ChatVault({
             <div className="user-bubble">{message.question}</div>
             {message.result.warning && <p className="warning-text">{message.result.warning}</p>}
             <RenderedNote content={message.result.answer || "Sem resposta."} onOpenNote={onOpenNote} />
+            {message.result.suggested_questions && message.result.suggested_questions.length > 0 && (
+              <div className="message-suggestions">
+                <span>Continuar com:</span>
+                {message.result.suggested_questions.map((prompt) => (
+                  <button key={`${message.id}-${prompt}`} onClick={() => ask(prompt)} disabled={loading}>
+                    {prompt}
+                  </button>
+                ))}
+              </div>
+            )}
             {message.result.notes_used.length > 0 && (
               <div className="source-list">
                 <p className="eyebrow">Fontes usadas</p>
