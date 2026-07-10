@@ -19,7 +19,7 @@ primary_attribute: Destreza
 level:
 danger_level: Baixo
 thumbnail: zz_media/thumbnails/th_ladrao.png
-cover: zz_media/thumbnails/th_ladrao.png
+cover: zz_media/class/ladrao.png
 chapters: []
 tags:
   - classe

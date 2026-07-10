@@ -13,8 +13,8 @@ requires_review: true
 visibility: Público
 spoiler_level: none
 gm_secret: false
-thumbnail: zz_media/thumbnails/th_dukeofd.png
-cover: zz_media/characters/dukeofd.png
+thumbnail: zz_media/thumbnails/th_augustus.png
+cover: zz_media/characters/augustus.png
 religion: "[[Igreja das Chamas]]"
 location: "[[Nimalis]]"
 territory: "[[Nimalia]]"
@@ -60,7 +60,7 @@ tags:
 # AUGUSTUS TERRA DECIMUS
 
 > [!NOTE|clean no-i right]+ Augustus Terra Decimus
-> ![[zz_media/characters/dukeofd.png|400]]
+> ![[zz_media/characters/augustus.png|400]]
 
 ## Visão Geral
 

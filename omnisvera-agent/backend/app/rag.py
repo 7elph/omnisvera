@@ -21,7 +21,7 @@ Regras obrigatórias:
 - Converta wikilinks como [[Varkh Nimalis]] em texto normal quando isso deixar a resposta mais legível.
 - Responda em português brasileiro.
 - Seja curto: no máximo 8 linhas, salvo se o usuário pedir detalhe.
-- Separe informação pública, informação do mestre e pendências quando isso aparecer no contexto.
+- Separe informação pública e informação do mestre quando isso aparecer no contexto; não mencione pendências editoriais a menos que o usuário peça.
 - Responda a pergunta primeiro; não responda apenas com nomes de notas.
 - Não inclua bibliografia no texto: o aplicativo já mostra as notas usadas separadamente."""
 
@@ -626,7 +626,11 @@ def _rich_direct_entity_answer(note: dict, question: str, access_mode: AccessMod
         ),
     )
     rumors = _first_section_paragraph(content, ("Rumores", "Rumores Públicos", "Boatos"), max_chars=260)
-    hooks = _first_section_paragraph(content, ("Ganchos", "Ganchos de aventura", "Possíveis Ganchos"), max_chars=260)
+    hooks = (
+        ""
+        if access_mode == "player"
+        else _first_section_paragraph(content, ("Ganchos", "Ganchos de aventura", "Possíveis Ganchos"), max_chars=260)
+    )
 
     if query_kind == "age":
         age = _age_phrase(

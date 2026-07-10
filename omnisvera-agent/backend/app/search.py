@@ -1,11 +1,10 @@
 from __future__ import annotations
 
 import re
-import json
 from pathlib import Path
 
 from .access import AccessMode, is_player_safe_row, normalize_text, sanitize_player_text
-from .vault_index import all_notes_for_search
+from .vault_index import all_notes_for_search, row_to_note
 
 
 STOPWORDS = {
@@ -115,16 +114,10 @@ def search_notes(database_path: Path, query: str, limit: int = 10, access_mode: 
                 score += 8
             score += min(haystacks["content"].count(term), 8)
         if score:
+            note = row_to_note(row)
             results.append(
                 {
-                    "id": row["id"],
-                    "path": row["path"],
-                    "title": row["title"],
-                    "aliases": json.loads(row["aliases"] or "[]"),
-                    "type": row["type"],
-                    "visibility": row["visibility"],
-                    "tags": json.loads(row["tags"] or "[]"),
-                    "updated_at": row["updated_at"],
+                    **note,
                     "score": score,
                     "excerpt": _excerpt(content, terms),
                 }

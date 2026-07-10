@@ -27,9 +27,13 @@ export function setAccessMode(mode: AccessMode) {
 export function mediaUrlFromVaultPath(path?: string | null) {
   if (!path) return "";
   const clean = path
+    .trim()
+    .replace(/^["']|["']$/g, "")
     .replace(/^\[\[/, "")
     .replace(/\]\]$/, "")
     .split("|")[0]
+    .replace(/^\/media\//, "")
+    .split("?")[0]
     .trim()
     .replace(/^\/+/, "");
   if (!clean) return "";

@@ -1,6 +1,6 @@
 # Omnisvera Companion — RAG Watchdog
 
-- Atualizado em: 2026-07-10T09:52:32-03:00
+- Atualizado em: 2026-07-10T14:02:50-03:00
 - Base URL: `http://127.0.0.1:8787`
 - Casos testados: 8
 - OK: 8

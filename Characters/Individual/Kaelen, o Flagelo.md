@@ -10,8 +10,8 @@ visibility: Mestre
 spoiler_level: heavy
 gm_secret: true
 created_by: IA
-thumbnail: zz_media/thumbnails/th_kaelen.png
-cover: zz_media/thumbnails/th_kaelen.png
+thumbnail: zz_media/thumbnails/th_kaelen.PNG
+cover: zz_media/characters/kaelen.png
 location: "[[Campos de Earthropo]]"
 territory: "[[EARTHROPO/EARTHROPO|Earthropo]]"
 faction: "[[Clã Sanguinallis]]"

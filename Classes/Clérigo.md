@@ -18,7 +18,7 @@ primary_attribute: Sabedoria
 level:
 danger_level: Baixo
 thumbnail: zz_media/thumbnails/th_clerigo.png
-cover: zz_media/thumbnails/th_clerigo.png
+cover: zz_media/class/clerigo.png
 chapters: []
 tags:
   - classe

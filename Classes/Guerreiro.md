@@ -19,7 +19,7 @@ primary_attribute: Força
 level:
 danger_level: Baixo
 thumbnail: zz_media/thumbnails/th_guerreiro.png
-cover: zz_media/thumbnails/th_guerreiro.png
+cover: zz_media/class/guerreiro.png
 chapters: []
 tags:
   - classe

@@ -132,6 +132,37 @@ function removeEmptySections(content: string) {
   return kept.join("\n").replace(/\n{3,}/g, "\n\n").trim();
 }
 
+function stripSectionsByTitle(content: string, blockedTitles: RegExp[]) {
+  const lines = content.split("\n");
+  const kept: string[] = [];
+  for (let index = 0; index < lines.length; index += 1) {
+    const line = lines[index];
+    const heading = line.match(/^(#{2,6})\s+(.+?)\s*$/);
+    if (!heading) {
+      kept.push(line);
+      continue;
+    }
+
+    const level = heading[1].length;
+    const title = heading[2].trim();
+    if (!blockedTitles.some((pattern) => pattern.test(title))) {
+      kept.push(line);
+      continue;
+    }
+
+    index += 1;
+    while (index < lines.length) {
+      const nextHeading = lines[index].match(/^(#{2,6})\s+(.+?)\s*$/);
+      if (nextHeading && nextHeading[1].length <= level) {
+        index -= 1;
+        break;
+      }
+      index += 1;
+    }
+  }
+  return kept.join("\n");
+}
+
 function normalizeMarkdownImageSrc(src?: string) {
   if (!src) return src;
   if (/^(https?:|data:|blob:)/i.test(src)) return src;
@@ -146,6 +177,21 @@ function transformObsidianMarkdown(content: string) {
   let transformed = content;
 
   transformed = stripCalloutBlocksByTitle(transformed, [/template aplicado/i]);
+  if (isPlayerMode) {
+    transformed = stripSectionsByTitle(transformed, [
+      /^pend[eê]ncias?/i,
+      /^pendencias?/i,
+      /^uso em mesa/i,
+      /^como usar/i,
+      /^como apresentar/i,
+      /^fun[cç][aã]o em jogo/i,
+      /^ganchos?/i,
+      /^poss[ií]veis ganchos/i,
+      /^templates?/i,
+      /^template aplicado/i,
+      /^notas t[eé]cnicas?/i,
+    ]);
+  }
 
   transformed = transformed.replace(/<h([1-6])[^>]*>([\s\S]*?)<\/h\1>/gi, (_match, level, inner) => {
     const hashes = "#".repeat(Number(level));

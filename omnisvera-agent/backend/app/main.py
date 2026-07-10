@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 from pathlib import Path
+import re
+import unicodedata
 
 from fastapi import Depends, FastAPI, Header, HTTPException, Query, Request
 from fastapi.middleware.cors import CORSMiddleware
@@ -30,6 +32,11 @@ from .vault_reader import iter_markdown_notes
 settings = get_settings()
 app = FastAPI(title="Omnisvera Companion", version="0.2.0")
 FRONTEND_DIST = Path(__file__).resolve().parents[2] / "frontend" / "dist"
+MEDIA_ALIASES = {
+    "zz_media/characters/dukeofd.png": "zz_media/characters/augustus.png",
+    "zz_media/thumbnails/th_dukeofd.png": "zz_media/thumbnails/th_augustus.png",
+    "zz_media/characters/prop.png": "zz_media/characters/prop_augustus.png",
+}
 
 app.add_middleware(
     CORSMiddleware,
@@ -42,6 +49,82 @@ app.add_middleware(
 
 def _provided_token(x_omnisvera_token: str | None, token: str | None) -> str | None:
     return x_omnisvera_token or token
+
+
+def _media_lookup_key(value: str) -> str:
+    value = unicodedata.normalize("NFKD", value)
+    value = "".join(char for char in value if not unicodedata.combining(char))
+    value = value.lower().replace("\\", "/")
+    value = re.sub(r"[_\-\s]+", "_", value)
+    return value
+
+
+def _resolve_media_file(media_path: str) -> Path | None:
+    if not media_path.startswith("zz_media/"):
+        return None
+
+    media_path = MEDIA_ALIASES.get(media_path, media_path)
+    media_root = (settings.vault_path / "zz_media").resolve()
+    requested = (settings.vault_path / media_path).resolve()
+
+    try:
+        requested.relative_to(media_root)
+    except ValueError:
+        return None
+
+    if requested.exists() and requested.is_file():
+        return requested
+
+    requested_name = Path(media_path).name
+    requested_stem = Path(requested_name).stem
+    wanted_keys = {
+        _media_lookup_key(media_path),
+        _media_lookup_key(requested_name),
+        _media_lookup_key(requested_stem),
+    }
+    if requested_stem.startswith("th_"):
+        wanted_keys.add(_media_lookup_key(requested_stem.removeprefix("th_")))
+    else:
+        wanted_keys.add(_media_lookup_key(f"th_{requested_stem}"))
+
+    candidates: list[tuple[int, Path]] = []
+    for candidate in media_root.rglob("*"):
+        if not candidate.is_file():
+            continue
+        rel = candidate.relative_to(settings.vault_path).as_posix()
+        name = candidate.name
+        stem = candidate.stem
+        candidate_keys = {
+            _media_lookup_key(rel),
+            _media_lookup_key(name),
+            _media_lookup_key(stem),
+        }
+        if stem.startswith("th_"):
+            candidate_keys.add(_media_lookup_key(stem.removeprefix("th_")))
+        else:
+            candidate_keys.add(_media_lookup_key(f"th_{stem}"))
+        if not wanted_keys & candidate_keys:
+            continue
+
+        score = 0
+        if _media_lookup_key(rel) == _media_lookup_key(media_path):
+            score += 100
+        if _media_lookup_key(name) == _media_lookup_key(requested_name):
+            score += 80
+        if _media_lookup_key(stem) == _media_lookup_key(requested_stem):
+            score += 60
+        if "/thumbnails/" in rel:
+            score += 5 if requested_stem.startswith("th_") else 0
+        if any(part in media_path for part in ("characters/", "locations/", "faction/", "items/", "class/", "races/")):
+            requested_folder = media_path.split("/", 2)[1]
+            if f"zz_media/{requested_folder}/" in rel:
+                score += 15
+        candidates.append((score, candidate))
+
+    if not candidates:
+        return None
+    candidates.sort(key=lambda item: (item[0], -len(item[1].as_posix())), reverse=True)
+    return candidates[0][1]
 
 
 def require_master(
@@ -352,18 +435,8 @@ def player_dashboard(_: AccessContext = Depends(require_player)) -> dict:
 
 @app.get("/media/{media_path:path}", response_model=None)
 def vault_media(media_path: str, _: AccessContext = Depends(require_any)):
-    if not media_path.startswith("zz_media/"):
-        raise HTTPException(status_code=404, detail="Mídia não encontrada.")
-
-    requested = (settings.vault_path / media_path).resolve()
-    media_root = (settings.vault_path / "zz_media").resolve()
-
-    try:
-        requested.relative_to(media_root)
-    except ValueError as exc:
-        raise HTTPException(status_code=404, detail="Mídia não encontrada.") from exc
-
-    if not requested.exists() or not requested.is_file():
+    requested = _resolve_media_file(media_path)
+    if requested is None:
         raise HTTPException(status_code=404, detail="Mídia não encontrada.")
 
     return FileResponse(requested)
