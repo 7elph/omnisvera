@@ -1,11 +1,12 @@
 from __future__ import annotations
 
 import json
+import re
 import sqlite3
 from pathlib import Path
 from typing import Any
 
-from .access import AccessMode, is_player_safe_row, sanitize_player_note, sanitize_player_summary
+from .access import AccessMode, is_player_safe_row, normalize_text, sanitize_player_note, sanitize_player_summary
 from .vault_reader import VaultNote
 
 
@@ -166,37 +167,91 @@ def all_notes_for_search(database_path: Path) -> list[sqlite3.Row]:
 
 
 def _normalize_lookup(value: str) -> str:
-    return (
+    clean = (
         value.strip()
         .replace("\\", "/")
-        .replace(".md", "")
+        .replace("’", "'")
+        .replace("‘", "'")
+        .replace("`", "'")
+        .replace("´", "'")
         .split("#", 1)[0]
-        .lower()
     )
+    if clean.lower().endswith(".md"):
+        clean = clean[:-3]
+    clean = normalize_text(clean)
+    clean = re.sub(r"\s+", " ", clean)
+    return clean.strip().strip("/")
+
+
+def _lookup_variants(value: str) -> set[str]:
+    base = _normalize_lookup(value)
+    if not base:
+        return set()
+
+    variants = {base}
+    if "/" in base:
+        variants.add(base.split("/")[-1])
+
+    expanded: set[str] = set()
+    for item in variants:
+        expanded.add(item)
+        expanded.add(re.sub(r"^(o|a|os|as|um|uma)\s+", "", item).strip())
+        expanded.add(re.sub(r"[-_]+", " ", item).strip())
+        expanded.add(re.sub(r"['’´`]+", "", item).strip())
+        expanded.add(re.sub(r"[^a-z0-9/]+", "", item).strip())
+
+    return {item for item in expanded if item}
 
 
 def resolve_note(database_path: Path, target: str, access_mode: AccessMode = "gm") -> dict[str, Any] | None:
-    wanted = _normalize_lookup(target.split("|", 1)[0])
-    if not wanted:
+    wanted_variants = _lookup_variants(target.split("|", 1)[0])
+    if not wanted_variants:
         return None
 
     init_db(database_path)
     with connect(database_path) as conn:
         rows = conn.execute("SELECT * FROM notes").fetchall()
 
+    matches: list[sqlite3.Row] = []
     for row in rows:
         if not _row_allowed(row, access_mode):
             continue
 
-        path = _normalize_lookup(row["path"])
-        title = _normalize_lookup(row["title"])
-        stem = _normalize_lookup(Path(row["path"]).stem)
+        path = row["path"]
+        title = row["title"]
+        stem = Path(row["path"]).stem
         aliases = json.loads(row["aliases"] or "[]")
-        candidates = {path, title, stem}
-        candidates.update(_normalize_lookup(str(alias)) for alias in aliases)
+        candidates: set[str] = set()
+        for value in [path, title, stem, *aliases]:
+            candidates.update(_lookup_variants(str(value)))
 
-        if wanted in candidates or wanted == path.split("/")[-1]:
-            note = row_to_note(row)
-            return sanitize_player_summary(note) if access_mode == "player" else note
+        if wanted_variants & candidates:
+            matches.append(row)
 
-    return None
+    if not matches:
+        return None
+
+    def rank(row: sqlite3.Row) -> tuple[int, str]:
+        path = row["path"]
+        note_type = _normalize_lookup(row["type"] or "")
+        title_variants = _lookup_variants(row["title"])
+        stem_variants = _lookup_variants(Path(path).stem)
+        path_variants = _lookup_variants(path)
+        score = 0
+        if not path.startswith(("Workflow/", "Templates/", "omnisvera-agent/")):
+            score += 120
+        else:
+            score -= 80
+        if note_type in {"character", "location", "territory", "faction", "item", "race", "class", "quest", "rumor", "story"}:
+            score += 50
+        if wanted_variants & title_variants:
+            score += 30
+        if wanted_variants & stem_variants:
+            score += 25
+        if wanted_variants & path_variants:
+            score += 10
+        return (score, path)
+
+    matches.sort(key=rank, reverse=True)
+    note = row_to_note(matches[0])
+    return sanitize_player_summary(note) if access_mode == "player" else note

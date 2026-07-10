@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { mediaUrlFromVaultPath, NoteSummary, playerDashboard, PlayerDashboard } from "../api";
 
 const SECTION_ICONS: Record<string, string> = {
@@ -67,8 +67,6 @@ export default function PlayerPanel({
   }, []);
 
   const sections = dashboard?.sections || [];
-  const diary = sections.find((section) => section.kind === "diary");
-  const featured = useMemo(() => diary?.items[0], [diary]);
   const counts = {
     quests: sections.find((section) => section.kind === "quests")?.items.length || 0,
     rumors: sections.find((section) => section.kind === "rumors")?.items.length || 0,
@@ -91,12 +89,6 @@ export default function PlayerPanel({
             <span><strong>{counts.places}</strong><em>lugares</em></span>
           </div>
         </div>
-        {featured && (
-          <button className="featured-card" onClick={() => onOpenNote(featured.id)}>
-            <span>Começar por aqui</span>
-            <strong>{featured.title}</strong>
-          </button>
-        )}
       </div>
 
       <div className="player-prompts">

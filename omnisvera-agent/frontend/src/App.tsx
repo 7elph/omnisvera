@@ -89,12 +89,7 @@ export default function App() {
   return (
     <main className="app-shell">
       <header className="hero">
-        <div>
-          <p className="eyebrow">Omnisvera Companion</p>
-          <h1>Omnisvera</h1>
-          <p>{status}</p>
-        </div>
-        {mode === "gm" && <button onClick={onRebuild}>Atualizar índice</button>}
+        <h1>OMNISVERA</h1>
       </header>
 
       <section className="token-bar">
@@ -127,6 +122,7 @@ export default function App() {
           type="password"
         />
         <button onClick={saveToken}>Salvar token</button>
+        {mode === "gm" && <button onClick={onRebuild}>Atualizar índice</button>}
       </section>
 
       <nav className="tabs">

@@ -1,6 +1,6 @@
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { mediaUrlFromVaultPath, resolveNote } from "../api";
+import { mediaUrlFromVaultPath, resolveNote, searchNotes } from "../api";
 
 type RenderedNoteProps = {
   content: string;
@@ -83,8 +83,19 @@ export default function RenderedNote({ content, onOpenNote }: RenderedNoteProps)
     event.preventDefault();
     if (!onOpenNote) return;
     const target = decodeURIComponent(href.replace("omnisvera://note/", ""));
-    const note = await resolveNote(target);
-    if (note) onOpenNote(note.id);
+    try {
+      const note = await resolveNote(target);
+      if (note) {
+        onOpenNote(note.id);
+        return;
+      }
+
+      const fallbackTarget = target.split("|")[0].split("#")[0].split("/").pop()?.replace(/\.md$/i, "") || target;
+      const fallback = await searchNotes(fallbackTarget, 3);
+      if (fallback[0]) onOpenNote(fallback[0].id);
+    } catch {
+      return;
+    }
   }
 
   return (

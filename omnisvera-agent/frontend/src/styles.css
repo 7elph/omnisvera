@@ -439,7 +439,7 @@ textarea {
   border-radius: 22px 22px 0 0;
   display: grid;
   gap: 1rem;
-  grid-template-columns: minmax(0, 1fr) minmax(220px, 320px);
+  grid-template-columns: 1fr;
   padding: 1.2rem;
 }
 
