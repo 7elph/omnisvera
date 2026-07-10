@@ -65,6 +65,7 @@ class ChatResponse(BaseModel):
     warning: str | None = None
     suggested_questions: list[str] = Field(default_factory=list)
     ollama_used: bool = False
+    ollama_attempted: bool = False
     model: str | None = None
     retrieval_mode: str | None = None
 

@@ -93,6 +93,7 @@ export type ChatResult = {
   warning?: string | null;
   suggested_questions?: string[];
   ollama_used?: boolean;
+  ollama_attempted?: boolean;
   model?: string | null;
   retrieval_mode?: string | null;
 };

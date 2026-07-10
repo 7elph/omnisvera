@@ -277,6 +277,11 @@ textarea {
   color: #aad08d;
 }
 
+.chat-runtime .runtime-filtered {
+  border-color: rgba(126, 173, 219, 0.28);
+  color: #9fc5e8;
+}
+
 .chat-runtime .runtime-fallback {
   border-color: rgba(217, 168, 80, 0.25);
   color: #d9b275;

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { chatVault, ChatResult, mediaUrlFromVaultPath, NoteSummary } from "../api";
+import { chatVault, ChatResult, getAccessMode, mediaUrlFromVaultPath, NoteSummary } from "../api";
 import RenderedNote from "../components/RenderedNote";
 
 type ChatMessage = {
@@ -18,17 +18,30 @@ const DEFAULT_PLAYER_PROMPTS = [
 
 function SourceCard({ note, onOpenNote }: { note: NoteSummary; onOpenNote: (id: number) => void }) {
   const image = mediaUrlFromVaultPath(note.thumbnail || note.cover);
+  const isPlayer = getAccessMode() === "player";
 
   return (
     <button className={`source-card ${image ? "has-image" : ""}`} onClick={() => onOpenNote(note.id)}>
       {image && <img src={image} alt="" loading="lazy" />}
       <span>
         <strong>{note.title}</strong>
-        <small>{note.type || "nota"} · {note.visibility || "liberado"}</small>
-        <em>{note.path}</em>
+        <small>{note.type || "registro"} · {note.visibility || "liberado"}</small>
+        {!isPlayer && <em>{note.path}</em>}
       </span>
     </button>
   );
+}
+
+function runtimeLabel(result: ChatResult) {
+  if (result.ollama_used) return "Ollama respondeu";
+  if (result.ollama_attempted) return "Ollama filtrado";
+  return "Resposta segura do índice";
+}
+
+function runtimeClass(result: ChatResult) {
+  if (result.ollama_used) return "runtime-ok";
+  if (result.ollama_attempted) return "runtime-filtered";
+  return "runtime-fallback";
 }
 
 export default function ChatVault({
@@ -79,6 +92,7 @@ export default function ChatVault({
             warning: "Backend indisponível.",
             suggested_questions: DEFAULT_PLAYER_PROMPTS,
             ollama_used: false,
+            ollama_attempted: false,
             model: null,
             retrieval_mode: "offline",
           },
@@ -155,9 +169,7 @@ export default function ChatVault({
               onUnknownNote={onUnknownNote}
             />
             <div className="chat-runtime">
-              <span className={message.result.ollama_used ? "runtime-ok" : "runtime-fallback"}>
-                {message.result.ollama_used ? "Ollama respondeu" : "Resposta segura do índice"}
-              </span>
+              <span className={runtimeClass(message.result)}>{runtimeLabel(message.result)}</span>
               {message.result.model && <span>{message.result.model}</span>}
               {message.result.retrieval_mode && <span>{message.result.retrieval_mode}</span>}
             </div>

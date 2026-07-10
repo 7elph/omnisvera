@@ -694,27 +694,37 @@ def _rich_direct_entity_answer(note: dict, question: str, access_mode: AccessMod
         if reputation:
             identity_lines.append(f"A reputação que acompanha seu nome é: {_clean_value(reputation)}.")
         relation_lines = [
-            f"Atualmente: {_clean_value(location)}." if _clean_value(location) else "",
-            f"Vínculo conhecido: {_clean_value(faction)}." if _clean_value(faction) else "",
-            f"Relações importantes: {_clean_value(associates)}." if _clean_value(associates) else "",
+            f"Hoje, está ligado a {_clean_value(location)}." if _clean_value(location) else "",
+            f"Seu vínculo conhecido passa por {_clean_value(faction)}." if _clean_value(faction) else "",
+            f"Entre os nomes associados a ele estão {_clean_value(associates)}." if _clean_value(associates) else "",
         ]
         story_lines = [line for line in (_compact_sentence(table_use),) if line] if access_mode != "player" else []
 
-        answer = _answer_as_guide(
-            title,
-            [
-                (
-                    "O que se sabe",
-                    identity_lines,
-                ),
-                (
-                    "Ligações conhecidas",
-                    relation_lines,
-                ),
-                ("Como entra na história", story_lines),
-                ("Pistas abertas", [_compact_sentence(item) for item in (rumors, hooks) if item]),
-            ],
-        )
+        if access_mode == "player":
+            answer = "\n\n".join(
+                part
+                for part in (
+                    " ".join(line for line in identity_lines if line),
+                    " ".join(line for line in relation_lines if line),
+                )
+                if part.strip()
+            )
+        else:
+            answer = _answer_as_guide(
+                title,
+                [
+                    (
+                        "O que se sabe",
+                        identity_lines,
+                    ),
+                    (
+                        "Liga??es conhecidas",
+                        relation_lines,
+                    ),
+                    ("Como entra na hist?ria", story_lines),
+                    ("Pistas abertas", [_compact_sentence(item) for item in (rumors, hooks) if item]),
+                ],
+            )
     else:
         short_lines = [_compact_sentence(public_info or summary or _public_identity_line(title, note_type, frontmatter))]
         if note_type == "item":
@@ -1408,11 +1418,13 @@ def _with_chat_meta(
     ollama_used: bool,
     model: str,
     retrieval_mode: str,
+    ollama_attempted: bool | None = None,
 ) -> dict:
     result = dict(result)
     result.setdefault("warning", None)
     result.setdefault("suggested_questions", [])
     result["ollama_used"] = ollama_used
+    result["ollama_attempted"] = bool(ollama_attempted if ollama_attempted is not None else ollama_used)
     result["model"] = model
     result["retrieval_mode"] = retrieval_mode
     return result
@@ -1452,6 +1464,15 @@ def _looks_like_bad_ai_answer(answer: str, access_mode: AccessMode) -> bool:
     return False
 
 
+def _looks_like_bad_relation_rewrite(answer: str) -> bool:
+    normalized = normalize_text(answer)
+    bad_patterns = (
+        r"(descoberto|encontrado|criado|nascido)\s+por\s+(floresta|nimalia|nimalis|reino|mare|mar[eé]|bairro|porto)",
+        r"(floresta|cidade|capital|reino|bairro|porto)\s+(descobriu|criou|encontrou)\s+",
+    )
+    return any(re.search(pattern, normalized) for pattern in bad_patterns)
+
+
 def _is_short_fact_question(question: str) -> bool:
     normalized = normalize_text(question)
     return any(term in normalized for term in ("quantos anos", "idade", "nivel", "qual e a classe", "qual e a raca"))
@@ -1475,6 +1496,45 @@ def _has_new_proper_names(base_answer: str, answer: str) -> bool:
     base_names = _proper_names(base_answer) | allowed
     answer_names = _proper_names(answer)
     return bool(answer_names - base_names)
+
+
+def _strip_chat_heading_noise(answer: str) -> str:
+    noisy_headings = (
+        "o que se sabe",
+        "visão geral",
+        "visao geral",
+        "resposta",
+        "ligações conhecidas",
+        "ligacoes conhecidas",
+        "gênero e classe",
+        "genero e classe",
+        "idade, altura e nível",
+        "idade altura e nivel",
+        "status e afiliação",
+        "status e afiliacao",
+        "reputação pública",
+        "reputacao publica",
+        "importância",
+        "importancia",
+    )
+    pattern = "|".join(re.escape(heading) for heading in noisy_headings)
+    answer = re.sub(rf"(?im)^\s*#{{1,6}}\s*(?:{pattern})\s*$", "", answer)
+    answer = re.sub(rf"(?im)^\s*\*\*(?:{pattern})\*\*\s*$", "", answer)
+    answer = re.sub(r"\n{3,}", "\n\n", answer).strip()
+    return answer
+
+
+def _strip_redundant_title_heading(answer: str, result: dict) -> str:
+    titles = []
+    for note in result.get("notes_used") or []:
+        title = _short_note_title(note.get("title") or "")
+        if title:
+            titles.append(re.escape(title))
+    if not titles:
+        return answer
+    pattern = "|".join(titles)
+    answer = re.sub(rf"(?im)^\s*#{{1,6}}\s*(?:{pattern})\s*$", "", answer)
+    return re.sub(r"\n{3,}", "\n\n", answer).strip()
 
 
 def _must_preserve_numbers(question: str, base_answer: str) -> list[str]:
@@ -1543,22 +1603,26 @@ Regras:
             },
         )
     except Exception:
-        return _with_chat_meta(result, ollama_used=False, model=ollama_model, retrieval_mode=f"{retrieval_mode}:fallback")
+        return _with_chat_meta(result, ollama_used=False, model=ollama_model, retrieval_mode=f"{retrieval_mode}:fallback", ollama_attempted=True)
 
     cleaned = _plain_wikilinks(_clean_answer(polished))
     cleaned = re.sub(r"(?im)^\s*#{1,6}\s*(o\s+)?arquivo vivo(?: de omnisvera)?\s*$", "", cleaned).strip()
     cleaned = re.sub(r"(?im)^\s*(o\s+)?arquivo vivo(?: de omnisvera)?\s*:\s*", "", cleaned).strip()
     cleaned = re.sub(r"(?im)^\s*#{1,6}\s*resposta\s*$", "", cleaned).strip()
+    cleaned = _strip_chat_heading_noise(cleaned)
+    cleaned = _strip_redundant_title_heading(cleaned, result)
     if _looks_like_bad_ai_answer(cleaned, access_mode):
-        return _with_chat_meta(result, ollama_used=False, model=ollama_model, retrieval_mode=f"{retrieval_mode}:fallback")
+        return _with_chat_meta(result, ollama_used=False, model=ollama_model, retrieval_mode=f"{retrieval_mode}:fallback", ollama_attempted=True)
+    if _looks_like_bad_relation_rewrite(cleaned):
+        return _with_chat_meta(result, ollama_used=False, model=ollama_model, retrieval_mode=f"{retrieval_mode}:fallback", ollama_attempted=True)
     if _is_short_fact_question(question) and len(cleaned) > 320:
-        return _with_chat_meta(result, ollama_used=False, model=ollama_model, retrieval_mode=f"{retrieval_mode}:fallback")
+        return _with_chat_meta(result, ollama_used=False, model=ollama_model, retrieval_mode=f"{retrieval_mode}:fallback", ollama_attempted=True)
     if len(cleaned) > max(900, int(len(base_answer) * 1.35) + 160):
-        return _with_chat_meta(result, ollama_used=False, model=ollama_model, retrieval_mode=f"{retrieval_mode}:fallback")
+        return _with_chat_meta(result, ollama_used=False, model=ollama_model, retrieval_mode=f"{retrieval_mode}:fallback", ollama_attempted=True)
     if _has_new_proper_names(base_answer, cleaned):
-        return _with_chat_meta(result, ollama_used=False, model=ollama_model, retrieval_mode=f"{retrieval_mode}:fallback")
+        return _with_chat_meta(result, ollama_used=False, model=ollama_model, retrieval_mode=f"{retrieval_mode}:fallback", ollama_attempted=True)
     if numbers_to_preserve and any(number not in cleaned for number in numbers_to_preserve):
-        return _with_chat_meta(result, ollama_used=False, model=ollama_model, retrieval_mode=f"{retrieval_mode}:fallback")
+        return _with_chat_meta(result, ollama_used=False, model=ollama_model, retrieval_mode=f"{retrieval_mode}:fallback", ollama_attempted=True)
 
     result = dict(result)
     result["answer"] = cleaned
