@@ -139,6 +139,16 @@ def _looks_like_campaign_recap(question: str) -> bool:
 def _direct_entity_target(question: str) -> tuple[str, str] | None:
     normalized = normalize_text(question)
     candidates: list[tuple[str, str]] = []
+    age_patterns = (
+        r"^quantos\s+anos\s+(?:tem|possui|tinha)\s+(.+)$",
+        r"^qual\s+(?:e|eh)?\s*a?\s*idade\s+(?:de|do|da|dos|das)?\s*(.+)$",
+        r"^idade\s+(?:de|do|da|dos|das)?\s*(.+)$",
+        r"^(.+?)\s+(?:tem|possui|tinha)\s+quantos\s+anos\??$",
+    )
+    for pattern in age_patterns:
+        match = re.match(pattern, normalized)
+        if match:
+            candidates.append((match.group(1).strip(), "age"))
     for prefix in ("o que sabemos sobre", "o que se sabe sobre", "me fala sobre", "fale sobre", "resuma", "resume"):
         if normalized.startswith(prefix + " "):
             candidates.append((normalized.removeprefix(prefix).strip(), "about"))
@@ -330,6 +340,13 @@ def _entity_candidate_score(item: dict, target: str, kind: str) -> int:
             score += 20
         else:
             score -= 60
+    elif kind == "age":
+        if note_type == "character":
+            score += 90
+        elif note_type == "item":
+            score -= 70
+        else:
+            score -= 20
     elif kind == "about":
         if note_type in {"character", "location", "territory", "faction", "item", "quest", "rumor"}:
             score += 35
@@ -539,6 +556,15 @@ def _field_sentence(prefix: str, value: Any) -> str:
     return f"{prefix} {cleaned}." if cleaned else ""
 
 
+def _age_phrase(value: Any) -> str:
+    cleaned = _clean_value(value)
+    if not cleaned:
+        return ""
+    if re.fullmatch(r"\d+", cleaned):
+        return f"{cleaned} anos"
+    return cleaned
+
+
 def _public_identity_line(title: str, note_type: str, frontmatter: dict, is_player: bool = False) -> str:
     subtype = normalize_text(frontmatter.get("subtype"))
     if note_type == "character":
@@ -575,7 +601,7 @@ def _rich_direct_entity_answer(note: dict, question: str, access_mode: AccessMod
     frontmatter = note.get("frontmatter") or {}
     content = sanitize_player_text(note["content"]) if access_mode == "player" else note["content"]
     fields = _labeled_fields(content)
-    title = _plain_wikilinks(str(note["title"]))
+    title = _short_note_title(frontmatter.get("name") or note["title"])
     note_type = normalize_text(note.get("type"))
     tags = [normalize_text(tag) for tag in note.get("tags") or []]
     query_kind = (_direct_entity_target(question) or ("", "about"))[1]
@@ -602,7 +628,26 @@ def _rich_direct_entity_answer(note: dict, question: str, access_mode: AccessMod
     rumors = _first_section_paragraph(content, ("Rumores", "Rumores Públicos", "Boatos"), max_chars=260)
     hooks = _first_section_paragraph(content, ("Ganchos", "Ganchos de aventura", "Possíveis Ganchos"), max_chars=260)
 
-    if query_kind == "where":
+    if query_kind == "age":
+        age = _age_phrase(
+            fields.get("idade")
+            or fields.get("idade aparente")
+            or frontmatter.get("age")
+            or frontmatter.get("idade")
+        )
+        if age:
+            answer = _answer_as_guide(title, [("O que se sabe", [f"{title} tem {age}."])])
+        else:
+            answer = _answer_as_guide(
+                title,
+                [
+                    (
+                        "O que se sabe",
+                        [f"A idade de {title} ainda não aparece claramente no material liberado."],
+                    )
+                ],
+            )
+    elif query_kind == "where":
         if note_type in {"location", "territory", "map"}:
             territory = frontmatter.get("territory")
             parent = frontmatter.get("parent_location") or frontmatter.get("location")
