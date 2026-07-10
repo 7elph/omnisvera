@@ -57,28 +57,10 @@ function unknownMessageFor(kind: string) {
   return "Essa informação ainda não foi revelada.";
 }
 
-function usefulPlayerText(content: string) {
-  return content
-    .replace(/^---[\s\S]*?---/, "")
-    .replace(/```[\s\S]*?```/g, "")
-    .replace(/!\[\[[^\]]+\]\]/g, "")
-    .replace(/!\[[^\]]*\]\([^)]+\)/g, "")
-    .replace(/^#{1,6}\s+.*$/gm, "")
-    .replace(/^>\s?.*$/gm, "")
-    .replace(/^\s*\*\*[^*:\n]+:\*\*.*$/gm, "")
-    .replace(/<[^>]+>/g, "")
-    .replace(/\s+/g, " ")
-    .trim();
-}
-
 function shouldShowUnknownPlayerPage(note: NoteDetail) {
   if (getAccessMode() !== "player") return false;
-  const type = String(note.type || "").toLowerCase();
-  if (!["character", "location", "territory", "faction"].includes(type)) return false;
-  const role = String(note.frontmatter.role || "").toLowerCase();
-  if (role === "player") return false;
-  const text = usefulPlayerText(note.content);
-  return text.length < 180;
+  const status = String(note.status || note.frontmatter.status || "").toLowerCase();
+  return ["velado", "hidden", "oculto", "não revelado", "nao revelado"].includes(status);
 }
 
 function UnknownKnowledgeView({

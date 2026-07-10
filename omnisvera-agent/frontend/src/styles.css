@@ -627,6 +627,49 @@ textarea {
   padding: 0.35rem 0.65rem;
 }
 
+.player-actions {
+  background:
+    radial-gradient(circle at top right, rgba(214, 168, 88, 0.16), transparent 32%),
+    linear-gradient(135deg, rgba(26, 19, 15, 0.94), rgba(12, 9, 7, 0.98));
+  border: 1px solid #3f3023;
+  border-radius: 20px;
+  display: grid;
+  gap: 1rem;
+  margin: 0 1rem 1.1rem;
+  padding: 1rem;
+}
+
+.player-actions h3,
+.player-actions p {
+  margin: 0;
+}
+
+.player-actions p:not(.eyebrow) {
+  color: #b8a58b;
+}
+
+.action-grid {
+  display: grid;
+  gap: 0.65rem;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+}
+
+.action-grid button {
+  background: #241a14;
+  border: 1px solid #57402a;
+  border-radius: 15px;
+  color: #f3ead7;
+  font-weight: 800;
+  min-height: 54px;
+  padding: 0.7rem;
+  text-align: left;
+}
+
+.action-grid button:hover {
+  border-color: #d6a858;
+  color: #ffd489;
+}
+
 .section-heading {
   align-items: center;
   display: grid;

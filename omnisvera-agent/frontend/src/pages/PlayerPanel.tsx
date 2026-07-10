@@ -112,6 +112,34 @@ export default function PlayerPanel({
         ))}
       </div>
 
+      <div className="player-actions">
+        <div>
+          <p className="eyebrow">Ações do jogador</p>
+          <h3>O que você quer fazer agora?</h3>
+          <p>Escolha uma intenção e o Arquivo Vivo ajuda a transformar isso em próximo passo sem abrir spoiler.</p>
+        </div>
+        <div className="action-grid">
+          <button onClick={() => onAskPrompt("Quero investigar uma pista ativa. O que posso fazer sem spoiler?")}>
+            Investigar pista
+          </button>
+          <button onClick={() => onAskPrompt("Quero falar com alguém. Quais personagens ou facções conhecidas fazem sentido procurar?")}>
+            Falar com alguém
+          </button>
+          <button onClick={() => onAskPrompt("Quero seguir uma missão ativa. Quais opções estão abertas para o grupo?")}>
+            Seguir missão
+          </button>
+          <button onClick={() => onAskPrompt("Quero procurar rumores. O que está circulando e pode virar ação?")}>
+            Procurar rumores
+          </button>
+          <button onClick={() => onAskPrompt("Quero revisar lugares conhecidos. Para onde o grupo pode ir agora?")}>
+            Escolher destino
+          </button>
+          <button onClick={() => onAskPrompt("Quero formular uma teoria com o que já sabemos. Quais peças estão conectadas?")}>
+            Montar teoria
+          </button>
+        </div>
+      </div>
+
       {error && <p className="warning-text">{error}</p>}
       {loading && <p className="muted">Carregando painel dos jogadores...</p>}
 

@@ -422,6 +422,7 @@ def player_dashboard(_: AccessContext = Depends(require_player)) -> dict:
                 "Boatos, pistas e fios soltos conhecidos pelos jogadores.",
                 rumors,
                 limit=6,
+                cover="zz_media/covers/cover_rumores.png",
                 prompt="Quais rumores estão ativos?",
             ),
             _section(
