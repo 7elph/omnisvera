@@ -22,13 +22,15 @@ Valores aceitos:
 
 | Função | Variável | Padrão |
 |---|---|---|
-| Chat local | `OLLAMA_MODEL` | `omnisvera-local:latest` |
+| Chat local | `OLLAMA_MODEL` | `qwen3:4b` |
 | Embeddings | `OMNISVERA_EMBEDDING_MODEL` | `nomic-embed-text` |
 | Ollama | `OLLAMA_BASE_URL` | `http://localhost:11434` |
 
 O backend chama o Ollama apenas em `localhost`. O celular conversa com o backend, não com o Ollama diretamente.
 
-Use `omnisvera-local:latest` quando quiser respostas melhores. Use `omnisvera-fast:latest` quando a prioridade for velocidade.
+Use `qwen3:4b` como equilíbrio principal entre qualidade e velocidade. Use `omnisvera-fast:latest` quando a prioridade absoluta for velocidade e `omnisvera-local:latest` apenas quando a latência maior for aceitável.
+
+No notebook atual, consultas exatas e listas estruturadas usam um caminho verificado sem geração para responder imediatamente. O Qwen 3 fica reservado para perguntas abertas. Seu raciocínio é mantido fora da resposta do jogador e possui limite de tempo e de geração para não travar o aplicativo.
 
 ## Índice semântico
 

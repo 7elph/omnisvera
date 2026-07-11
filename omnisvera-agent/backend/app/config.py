@@ -56,7 +56,7 @@ def get_settings() -> Settings:
     return Settings(
         vault_path=vault_path,
         ollama_base_url=os.getenv("OLLAMA_BASE_URL", "http://localhost:11434").rstrip("/"),
-        ollama_model=os.getenv("OLLAMA_MODEL", "omnisvera-local:latest"),
+        ollama_model=os.getenv("OLLAMA_MODEL", "qwen3:4b"),
         embedding_model=os.getenv("OMNISVERA_EMBEDDING_MODEL", "nomic-embed-text"),
         database_path=database_path,
         semantic_index_path=Path(

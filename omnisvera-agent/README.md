@@ -80,13 +80,13 @@ Os endpoints do backend também são separados:
 Por padrão, o script usa:
 
 ```txt
-omnisvera-fast:latest
+qwen3:4b
 ```
 
 Também pode usar:
 
 ```powershell
-.\start_companion.ps1 -Model "omnisvera-local:latest"
+.\start_companion.ps1 -Model "qwen3:4b"
 ```
 
 ## Aviso de segurança

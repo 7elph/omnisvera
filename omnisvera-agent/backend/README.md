@@ -23,13 +23,13 @@ Variáveis de ambiente:
 ```powershell
 $env:OMNISVERA_VAULT_PATH="C:\Users\delib\Desktop\OMNISVERA"
 $env:OLLAMA_BASE_URL="http://localhost:11434"
-$env:OLLAMA_MODEL="omnisvera-local:latest"
+$env:OLLAMA_MODEL="qwen3:4b"
 ```
 
 Se o modelo acima não estiver instalado, use um modelo local existente. No notebook atual do Sage, os modelos preparados são:
 
 ```powershell
-$env:OLLAMA_MODEL="omnisvera-local:latest"
+$env:OLLAMA_MODEL="qwen3:4b"
 # mais inteligente, recomendado para o chat
 
 $env:OLLAMA_MODEL="omnisvera-fast:latest"

@@ -1575,6 +1575,20 @@ async def _polish_response_with_ollama(
     if not base_answer or _should_skip_ollama_polish(result):
         return _with_chat_meta(result, ollama_used=False, model=ollama_model, retrieval_mode=retrieval_mode)
 
+    # Qwen 3 is the strongest local model available, but its deliberate
+    # reasoning is expensive on this notebook. Exact entities and structured
+    # lists are already assembled from verified vault data, so return those
+    # immediately and reserve the model for genuinely open questions.
+    if ollama_model.strip().lower().startswith("qwen3") and (
+        retrieval_mode == "direct_entity" or retrieval_mode.startswith("structured:")
+    ):
+        return _with_chat_meta(
+            result,
+            ollama_used=False,
+            model=ollama_model,
+            retrieval_mode=f"{retrieval_mode}:verified_fast_path",
+        )
+
     mode_rule = (
         "Modo jogador: seja player-safe; não revele bastidores, segredos do mestre, pendências editoriais ou instruções de mesa."
         if access_mode == "player"
@@ -2137,14 +2151,22 @@ async def answer_question(
     if insufficient:
         warning = "Contexto insuficiente: vou responder apenas com o que já foi revelado."
 
-    payload, ollama_used, ollama_attempted = await _grounded_json_response(
-        ollama_base_url=ollama_base_url,
-        ollama_model=ollama_model,
-        question=question,
-        context=context,
-        allowed_paths=allowed_paths,
-        access_mode=access_mode,
-    )
+    if _asks_hidden_actor(question):
+        # The player-safe answer is deterministic because no revealed source
+        # confirms a culprit. Asking the model here only adds latency and risks
+        # turning a suspicion into canon.
+        payload = _guard_hidden_actor_answer(_grounded_fallback(), question, allowed_paths)
+        ollama_used = False
+        ollama_attempted = False
+    else:
+        payload, ollama_used, ollama_attempted = await _grounded_json_response(
+            ollama_base_url=ollama_base_url,
+            ollama_model=ollama_model,
+            question=question,
+            context=context,
+            allowed_paths=allowed_paths,
+            access_mode=access_mode,
+        )
     payload = _guard_hidden_actor_answer(payload, question, allowed_paths)
     answer = payload["resposta_ao_jogador"]
     if _looks_like_bad_ai_answer(answer, access_mode):

@@ -1,6 +1,6 @@
 param(
   [string]$VaultPath = (Resolve-Path "$PSScriptRoot\..").Path,
-  [string]$Model = "omnisvera-local:latest",
+  [string]$Model = "qwen3:4b",
   [string]$AccessToken = "",
   [string]$MasterToken = "",
   [string]$PlayerToken = "",
