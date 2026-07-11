@@ -22,15 +22,22 @@ Valores aceitos:
 
 | Função | Variável | Padrão |
 |---|---|---|
-| Chat local | `OLLAMA_MODEL` | `qwen3:4b` |
-| Embeddings | `OMNISVERA_EMBEDDING_MODEL` | `nomic-embed-text` |
+| Chat rápido | `OMNISVERA_FAST_MODEL` | `omnisvera-fast:latest` |
+| Chat fundamentado | `OMNISVERA_QUALITY_MODEL` | `omnisvera-fast:latest` |
+| Embeddings | `OMNISVERA_EMBED_MODEL` | `nomic-embed-text` |
+| Modo de resposta | `OMNISVERA_RESPONSE_MODE` | `fast` |
 | Ollama | `OLLAMA_BASE_URL` | `http://localhost:11434` |
 
 O backend chama o Ollama apenas em `localhost`. O celular conversa com o backend, não com o Ollama diretamente.
 
-Use `qwen3:4b` como equilíbrio principal entre qualidade e velocidade. Use `omnisvera-fast:latest` quando a prioridade absoluta for velocidade e `omnisvera-local:latest` apenas quando a latência maior for aceitável.
+O benchmark local mostrou que `qwen3:4b` não conclui o contrato JSON no tempo aceitável desse notebook. O perfil padrão usa extração fundamentada e `omnisvera-fast:latest`; o backend valida caminhos e evidências antes de aceitar qualquer afirmação. Para experimentar análise mais lenta, configure `OMNISVERA_QUALITY_MODEL=qwen3:4b` e `OMNISVERA_RESPONSE_MODE=grounded`.
 
-No notebook atual, consultas exatas e listas estruturadas usam um caminho verificado sem geração para responder imediatamente. O Qwen 3 fica reservado para perguntas abertas. Seu raciocínio é mantido fora da resposta do jogador e possui limite de tempo e de geração para não travar o aplicativo.
+Consultas exatas e listas estruturadas continuam determinísticas. No modo `fast`, perguntas abertas usam trechos recuperados com evidência literal. No modo `grounded`, o modelo recebe o contrato JSON rigoroso e toda afirmação sem evidência é descartada.
+
+```powershell
+$env:OMNISVERA_RESPONSE_MODE="fast"       # recomendado no notebook atual
+$env:OMNISVERA_RESPONSE_MODE="grounded"   # usa o modelo de qualidade configurado
+```
 
 ## Índice semântico
 

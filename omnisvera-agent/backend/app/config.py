@@ -15,7 +15,10 @@ class Settings:
     vault_path: Path
     ollama_base_url: str
     ollama_model: str
+    fast_model: str
+    quality_model: str
     embedding_model: str
+    response_mode: str
     database_path: Path
     semantic_index_path: Path
     rag_mode: str
@@ -36,6 +39,13 @@ def _rag_mode(value: str) -> str:
     return "hybrid"
 
 
+def _response_mode(value: str) -> str:
+    normalized = value.strip().lower()
+    if normalized in {"fast", "grounded"}:
+        return normalized
+    return "fast"
+
+
 def _safe_int(name: str, default: int) -> int:
     try:
         value = int(os.getenv(name, str(default)))
@@ -53,11 +63,24 @@ def get_settings() -> Settings:
             str(backend_root / "data" / "omnisvera_companion.sqlite3"),
         )
     ).resolve()
+    fast_model = os.getenv("OMNISVERA_FAST_MODEL", "omnisvera-fast:latest")
+    # The benchmark on the campaign notebook found no larger installed model
+    # that was both more faithful and responsive. A different quality model can
+    # still be selected explicitly without changing code.
+    quality_model = os.getenv("OMNISVERA_QUALITY_MODEL", fast_model)
+    response_mode = _response_mode(os.getenv("OMNISVERA_RESPONSE_MODE", "fast"))
+    selected_model = quality_model if response_mode == "grounded" else fast_model
     return Settings(
         vault_path=vault_path,
         ollama_base_url=os.getenv("OLLAMA_BASE_URL", "http://localhost:11434").rstrip("/"),
-        ollama_model=os.getenv("OLLAMA_MODEL", "qwen3:4b"),
-        embedding_model=os.getenv("OMNISVERA_EMBEDDING_MODEL", "nomic-embed-text"),
+        ollama_model=os.getenv("OLLAMA_MODEL", selected_model),
+        fast_model=fast_model,
+        quality_model=quality_model,
+        embedding_model=os.getenv(
+            "OMNISVERA_EMBED_MODEL",
+            os.getenv("OMNISVERA_EMBEDDING_MODEL", "nomic-embed-text"),
+        ),
+        response_mode=response_mode,
         database_path=database_path,
         semantic_index_path=Path(
             os.getenv(
@@ -66,8 +89,8 @@ def get_settings() -> Settings:
             )
         ).resolve(),
         rag_mode=_rag_mode(os.getenv("OMNISVERA_RAG_MODE", "hybrid")),
-        rag_context_limit=_safe_int("OMNISVERA_RAG_CONTEXT_LIMIT", 8),
-        rag_context_chars=_safe_int("OMNISVERA_RAG_CONTEXT_CHARS", 5200),
+        rag_context_limit=min(8, _safe_int("OMNISVERA_RAG_CONTEXT_LIMIT", 6)),
+        rag_context_chars=min(5200, _safe_int("OMNISVERA_RAG_CONTEXT_CHARS", 3600)),
         auto_refresh_index=os.getenv("OMNISVERA_AUTO_REFRESH_INDEX", "true").lower()
         in {"1", "true", "yes", "sim"},
         auto_refresh_interval_seconds=_safe_int("OMNISVERA_AUTO_REFRESH_INTERVAL_SECONDS", 12),

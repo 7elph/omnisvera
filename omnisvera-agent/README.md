@@ -80,13 +80,19 @@ Os endpoints do backend também são separados:
 Por padrão, o script usa:
 
 ```txt
-qwen3:4b
+omnisvera-fast:latest
 ```
 
-Também pode usar:
+O perfil recomendado para o notebook é:
 
 ```powershell
-.\start_companion.ps1 -Model "qwen3:4b"
+.\start_companion.ps1 -ResponseMode fast
+```
+
+Para testar uma resposta fundamentada mais lenta:
+
+```powershell
+.\start_companion.ps1 -ResponseMode grounded -QualityModel "qwen3:4b"
 ```
 
 ## Aviso de segurança

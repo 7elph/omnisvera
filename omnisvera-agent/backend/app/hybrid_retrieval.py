@@ -342,6 +342,12 @@ async def hybrid_search(
                 for path, (similarity, text) in best_by_path.items():
                     row = rows_by_path[path]
                     content = sanitize_player_text(row["content"]) if access_mode == "player" else row["content"]
+                    lexical_excerpt = _excerpt(str(content or ""), terms, max_chars=520)
+                    semantic_has_query = any(term in normalize_text(text) for term in terms)
+                    if lexical_excerpt and (len(text) < 140 or not semantic_has_query):
+                        text = lexical_excerpt
+                    elif lexical_excerpt and normalize_text(lexical_excerpt) not in normalize_text(text):
+                        text = _clean_excerpt(f"{text} {lexical_excerpt}", max_chars=620)
                     exact = _exact_score(row, query, terms)
                     lexical = _lexical_score(row, content, query, terms)
                     semantic = max(0.0, similarity)

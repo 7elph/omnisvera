@@ -1,8 +1,38 @@
 from __future__ import annotations
 
+import time
 from typing import Any
 
 import httpx
+
+
+_MODEL_CACHE: dict[str, Any] = {"base_url": "", "expires": 0.0, "names": set()}
+
+
+async def available_ollama_models(base_url: str) -> set[str]:
+    now = time.monotonic()
+    if _MODEL_CACHE["base_url"] == base_url and float(_MODEL_CACHE["expires"]) > now:
+        return set(_MODEL_CACHE["names"])
+    try:
+        async with httpx.AsyncClient(timeout=3.0) as client:
+            response = await client.get(f"{base_url}/api/tags")
+            response.raise_for_status()
+            data = response.json()
+        names = {str(item.get("name") or "").strip() for item in data.get("models") or []}
+        names.discard("")
+    except Exception:
+        names = set()
+    _MODEL_CACHE.update({"base_url": base_url, "expires": now + 60.0, "names": names})
+    return names
+
+
+async def resolve_ollama_model(base_url: str, preferred: str, fallback: str) -> str:
+    names = await available_ollama_models(base_url)
+    if not names or preferred in names:
+        return preferred
+    if fallback in names:
+        return fallback
+    return preferred
 
 
 async def check_ollama(base_url: str) -> bool:
@@ -49,7 +79,7 @@ async def chat_with_ollama(
         payload["think"] = True
     if response_format is not None:
         payload["format"] = response_format
-    request_timeout = 70.0 if is_qwen3 else 180.0
+    request_timeout = 70.0 if is_qwen3 else 30.0
     try:
         async with httpx.AsyncClient(timeout=request_timeout) as client:
             response = await client.post(f"{base_url}/api/chat", json=payload)

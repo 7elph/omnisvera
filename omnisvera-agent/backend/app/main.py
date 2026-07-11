@@ -210,7 +210,10 @@ async def health(access: AccessContext = Depends(require_any)) -> HealthResponse
         database_path=str(settings.database_path),
         ollama_base_url=settings.ollama_base_url,
         ollama_model=settings.ollama_model,
+        fast_model=settings.fast_model,
+        quality_model=settings.quality_model,
         embedding_model=settings.embedding_model,
+        response_mode=settings.response_mode,
         rag_mode=settings.rag_mode,
         semantic_index_path=str(settings.semantic_index_path),
         auto_refresh_index=settings.auto_refresh_index,
@@ -265,6 +268,8 @@ async def chat(request: ChatRequest, _: AccessContext = Depends(require_master))
         rag_mode=settings.rag_mode,
         context_limit=settings.rag_context_limit,
         context_chars=settings.rag_context_chars,
+        response_mode=settings.response_mode,
+        fallback_model=settings.fast_model,
     )
 
 
@@ -313,6 +318,8 @@ async def gm_chat(request: ChatRequest, _: AccessContext = Depends(require_maste
         rag_mode=settings.rag_mode,
         context_limit=settings.rag_context_limit,
         context_chars=settings.rag_context_chars,
+        response_mode=settings.response_mode,
+        fallback_model=settings.fast_model,
     )
 
 
@@ -361,6 +368,8 @@ async def player_chat(request: ChatRequest, _: AccessContext = Depends(require_p
         rag_mode=settings.rag_mode,
         context_limit=settings.rag_context_limit,
         context_chars=settings.rag_context_chars,
+        response_mode=settings.response_mode,
+        fallback_model=settings.fast_model,
     )
 
 

@@ -11,7 +11,10 @@ class HealthResponse(BaseModel):
     database_path: str
     ollama_base_url: str
     ollama_model: str
+    fast_model: str | None = None
+    quality_model: str | None = None
     embedding_model: str | None = None
+    response_mode: str | None = None
     rag_mode: str | None = None
     semantic_index_path: str | None = None
     auto_refresh_index: bool = False

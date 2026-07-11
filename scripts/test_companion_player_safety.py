@@ -1,0 +1,95 @@
+from __future__ import annotations
+
+import asyncio
+import sys
+from pathlib import Path
+
+
+ROOT = Path(__file__).resolve().parents[1]
+BACKEND = ROOT / "omnisvera-agent" / "backend"
+if str(BACKEND) not in sys.path:
+    sys.path.insert(0, str(BACKEND))
+
+from app.access import PLAYER_BLOCKED_LOOKUP_TERMS, is_player_safe, normalize_text, sanitize_player_text  # noqa: E402
+from app.config import get_settings  # noqa: E402
+from app.rag import answer_question  # noqa: E402
+from app.vault_index import get_note, resolve_note  # noqa: E402
+
+
+def _access_rules() -> None:
+    assert not is_player_safe("Secret.md", "gm", {"visibility": "gm"})
+    assert not is_player_safe("Secret.md", "mestre", {"visibility": "mestre"})
+    assert not is_player_safe("Secret.md", "Jogadores", {"visibility": "Jogadores", "gm_secret": True})
+    assert not is_player_safe(
+        "Secret.md",
+        "Jogadores",
+        {"visibility": "Jogadores", "spoiler_level": "heavy"},
+    )
+    assert is_player_safe("Public.md", "Público", {"visibility": "Público", "gm_secret": False})
+
+
+def _section_sanitization() -> None:
+    text = "# Pessoa\n\nInformação pública.\n\n## Segredos do Mestre\n\nO nome secreto.\n\n## Relações\n\nContato público."
+    sanitized = sanitize_player_text(text)
+    assert "Informação pública" in sanitized
+    assert "Contato público" in sanitized
+    assert "O nome secreto" not in sanitized
+
+
+async def _runtime_checks() -> None:
+    settings = get_settings()
+    gm_state = resolve_note(settings.database_path, "Estado da Campanha", access_mode="gm")
+    player_state = resolve_note(settings.database_path, "Estado da Campanha", access_mode="player")
+    assert gm_state is not None
+    assert player_state is None
+
+    short = resolve_note(settings.database_path, "Maré Baixa", access_mode="player")
+    assert short is not None
+    detail = get_note(settings.database_path, short["id"], access_mode="player")
+    assert detail is not None and detail.get("content") is not None
+    assert resolve_note(settings.database_path, "Lugar Inexistente de Teste", access_mode="player") is None
+
+    fallback = await answer_question(
+        settings.database_path,
+        "http://127.0.0.1:1",
+        "modelo-inexistente",
+        "Quem está relacionado aos remédios falsos?",
+        access_mode="player",
+        embedding_model=settings.embedding_model,
+        semantic_index_path=settings.semantic_index_path,
+        rag_mode="lexical",
+        response_mode="grounded",
+        fallback_model="modelo-inexistente",
+    )
+    assert fallback.get("answer")
+    assert all("Workflow/" not in path for path in fallback.get("note_paths") or [])
+    assert all(
+        not any(normalize_text(term) in normalize_text(question) for term in PLAYER_BLOCKED_LOOKUP_TERMS)
+        for question in fallback.get("suggested_questions") or []
+    )
+
+    blocked = await answer_question(
+        settings.database_path,
+        settings.ollama_base_url,
+        settings.fast_model,
+        "Qual é a verdadeira origem do Véu Cinzento?",
+        access_mode="player",
+        embedding_model=settings.embedding_model,
+        semantic_index_path=settings.semantic_index_path,
+        rag_mode="hybrid",
+        response_mode="fast",
+        fallback_model=settings.fast_model,
+    )
+    assert blocked.get("note_paths") == []
+    assert "protegida" in normalize_text(blocked.get("warning"))
+
+
+def main() -> None:
+    _access_rules()
+    _section_sanitization()
+    asyncio.run(_runtime_checks())
+    print("player safety and fallback: PASS")
+
+
+if __name__ == "__main__":
+    main()

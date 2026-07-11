@@ -1,6 +1,10 @@
 param(
   [string]$VaultPath = (Resolve-Path "$PSScriptRoot\..").Path,
-  [string]$Model = "qwen3:4b",
+  [string]$FastModel = "omnisvera-fast:latest",
+  [string]$QualityModel = "omnisvera-fast:latest",
+  [string]$EmbedModel = "nomic-embed-text",
+  [ValidateSet("fast", "grounded")]
+  [string]$ResponseMode = "fast",
   [string]$AccessToken = "",
   [string]$MasterToken = "",
   [string]$PlayerToken = "",
@@ -61,7 +65,11 @@ if (-not $NoBuild) {
 
 $env:OMNISVERA_VAULT_PATH = $VaultPath
 $env:OLLAMA_BASE_URL = "http://localhost:11434"
-$env:OLLAMA_MODEL = $Model
+$env:OMNISVERA_FAST_MODEL = $FastModel
+$env:OMNISVERA_QUALITY_MODEL = $QualityModel
+$env:OMNISVERA_EMBED_MODEL = $EmbedModel
+$env:OMNISVERA_RESPONSE_MODE = $ResponseMode
+$env:OLLAMA_MODEL = if ($ResponseMode -eq "grounded") { $QualityModel } else { $FastModel }
 $env:OMNISVERA_ACCESS_TOKEN = $MasterToken
 $env:OMNISVERA_MASTER_TOKEN = $MasterToken
 $env:OMNISVERA_PLAYER_TOKEN = $PlayerToken
@@ -74,7 +82,10 @@ $localIps = Get-NetIPAddress -AddressFamily IPv4 |
 Write-Host ""
 Write-Host "Omnisvera Companion" -ForegroundColor Yellow
 Write-Host "Vault: $VaultPath"
-Write-Host "Modelo Ollama: $Model"
+Write-Host "Modo de resposta: $ResponseMode"
+Write-Host "Modelo rápido: $FastModel"
+Write-Host "Modelo fundamentado: $QualityModel"
+Write-Host "Modelo de embeddings: $EmbedModel"
 Write-Host "Token do Mestre: $MasterToken" -ForegroundColor Cyan
 Write-Host "Token dos Jogadores: $PlayerToken" -ForegroundColor Green
 Write-Host "Local: http://127.0.0.1:$Port"
