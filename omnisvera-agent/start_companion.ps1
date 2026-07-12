@@ -8,6 +8,7 @@ param(
   [string]$AccessToken = "",
   [string]$MasterToken = "",
   [string]$PlayerToken = "",
+  [string]$TokenFile = "",
   [int]$Port = 8787,
   [switch]$NoBuild,
   [switch]$NoRebuild
@@ -32,6 +33,25 @@ $Backend = Join-Path $PSScriptRoot "backend"
 $Frontend = Join-Path $PSScriptRoot "frontend"
 $Venv = Join-Path $Backend ".venv"
 
+if (-not $TokenFile) {
+  $TokenFile = Join-Path $Backend "data\access_tokens.json"
+}
+
+if (Test-Path $TokenFile) {
+  try {
+    $savedTokens = Get-Content $TokenFile -Raw | ConvertFrom-Json
+    if (-not $MasterToken -and $savedTokens.master_token) {
+      $MasterToken = [string]$savedTokens.master_token
+    }
+    if (-not $PlayerToken -and $savedTokens.player_token) {
+      $PlayerToken = [string]$savedTokens.player_token
+    }
+  }
+  catch {
+    Write-Warning "Arquivo local de tokens inválido; novas credenciais serão geradas."
+  }
+}
+
 if ($AccessToken -and -not $MasterToken) {
   $MasterToken = $AccessToken
 }
@@ -43,6 +63,15 @@ if (-not $MasterToken) {
 if (-not $PlayerToken) {
   $PlayerToken = New-Token
 }
+
+$tokenDirectory = Split-Path $TokenFile -Parent
+if (-not (Test-Path $tokenDirectory)) {
+  New-Item -ItemType Directory -Path $tokenDirectory -Force | Out-Null
+}
+@{
+  master_token = $MasterToken
+  player_token = $PlayerToken
+} | ConvertTo-Json | Set-Content -Path $TokenFile -Encoding UTF8
 
 if (-not (Test-Path $Venv)) {
   python -m venv $Venv

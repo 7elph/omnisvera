@@ -10,22 +10,31 @@ type Page = "chat" | "search" | "note" | "session" | "player";
 
 export default function App() {
   const initialMode = getAccessMode();
+  const initialToken = getAccessToken();
   const [page, setPage] = useState<Page>(initialMode === "player" ? "player" : "session");
   const [selectedNoteId, setSelectedNoteId] = useState<number | null>(null);
   const [unknownTarget, setUnknownTarget] = useState<string | null>(null);
   const [noteHistory, setNoteHistory] = useState<number[]>([]);
   const [chatSeed, setChatSeed] = useState("");
-  const [status, setStatus] = useState<string>("verificando...");
-  const [tokenDraft, setTokenDraft] = useState<string>(getAccessToken());
+  const [status, setStatus] = useState<string>("");
+  const [tokenDraft, setTokenDraft] = useState<string>(initialToken);
   const [mode, setMode] = useState<AccessMode>(initialMode);
   const [authVersion, setAuthVersion] = useState(0);
+  const [authenticated, setAuthenticated] = useState(false);
 
   useEffect(() => {
+    const token = getAccessToken();
+    if (!token) {
+      setAuthenticated(false);
+      setStatus("token necessário");
+      return;
+    }
     health()
       .then((data) => {
         const detectedMode: AccessMode = data.access_mode === "player" ? "player" : "gm";
         setMode(detectedMode);
         setAccessMode(detectedMode);
+        setAuthenticated(true);
         setPage((current) => {
           if (current === "session" && detectedMode === "player") return "player";
           if (current === "player" && detectedMode === "gm") return "session";
@@ -35,7 +44,10 @@ export default function App() {
           `${data.access_mode === "player" ? "Jogador" : "Mestre"} · Ollama ${data.ollama_accessible ? "ok" : "offline"} · ${data.ollama_model}`,
         );
       })
-      .catch(() => setStatus("backend indisponível"));
+      .catch(() => {
+        setAuthenticated(false);
+        setStatus("token inválido ou backend indisponível");
+      });
   }, []);
 
   useEffect(() => {
@@ -76,6 +88,7 @@ export default function App() {
   }, []);
 
   function saveToken() {
+    setAuthenticated(false);
     setAccessToken(tokenDraft);
     setAccessMode(mode);
     setStatus("token salvo; verificando backend...");
@@ -84,13 +97,17 @@ export default function App() {
         const detectedMode: AccessMode = data.access_mode === "player" ? "player" : "gm";
         setMode(detectedMode);
         setAccessMode(detectedMode);
+        setAuthenticated(true);
         setPage(detectedMode === "player" ? "player" : "session");
         setStatus(
           `${data.access_mode === "player" ? "Jogador" : "Mestre"} · Ollama ${data.ollama_accessible ? "ok" : "offline"} · ${data.ollama_model}`,
         );
         setAuthVersion((current) => current + 1);
       })
-      .catch(() => setStatus("backend indisponível ou token inválido"));
+      .catch(() => {
+        setAuthenticated(false);
+        setStatus("backend indisponível ou token inválido");
+      });
   }
 
   async function onRebuild() {
@@ -194,13 +211,21 @@ export default function App() {
         </button>
       </nav>
 
-      {page === "session" && mode === "gm" && <SessionPanel onOpenNote={openNote} onAskPrompt={askPrompt} />}
-      {page === "player" && mode === "player" && (
+      {!authenticated && (
+        <section className="panel">
+          <div className="chat-header">
+            <h2>Token necessário</h2>
+            <p>Digite o token de acesso no campo acima e clique em "Salvar token" para começar.</p>
+          </div>
+        </section>
+      )}
+      {authenticated && page === "session" && mode === "gm" && <SessionPanel key={`session-${authVersion}`} onOpenNote={openNote} onAskPrompt={askPrompt} />}
+      {authenticated && page === "player" && mode === "player" && (
         <PlayerPanel key={`player-${authVersion}`} onOpenNote={openNote} onAskPrompt={askPrompt} />
       )}
-      {page === "chat" && <ChatVault onOpenNote={openNote} onUnknownNote={openUnknownNote} initialQuestion={chatSeed} />}
-      {page === "search" && <SearchNotes onOpenNote={openNote} />}
-      {page === "note" && (
+      {authenticated && page === "chat" && <ChatVault onOpenNote={openNote} onUnknownNote={openUnknownNote} initialQuestion={chatSeed} />}
+      {authenticated && page === "search" && <SearchNotes onOpenNote={openNote} />}
+      {authenticated && page === "note" && (
         <>
           {noteHistory.length > 0 && (
             <button className="back-button" onClick={goBackNote}>
