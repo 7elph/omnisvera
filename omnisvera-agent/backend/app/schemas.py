@@ -95,3 +95,29 @@ class DashboardSection(BaseModel):
 class PlayerDashboardResponse(BaseModel):
     mode: str = "player"
     sections: list[DashboardSection] = Field(default_factory=list)
+
+
+class PlayerActionCreate(BaseModel):
+    character_note_id: int
+    action_type: str
+    target_note_id: int
+    intent: str = Field(min_length=3, max_length=1200)
+
+
+class PlayerActionUpdate(BaseModel):
+    status: str
+    gm_response: str | None = Field(default=None, max_length=2400)
+
+
+class PlayerActionRecord(BaseModel):
+    id: int
+    character_path: str
+    character_title: str
+    action_type: str
+    target_path: str
+    target_title: str
+    intent: str
+    status: str
+    gm_response: str | None = None
+    created_at: str
+    updated_at: str

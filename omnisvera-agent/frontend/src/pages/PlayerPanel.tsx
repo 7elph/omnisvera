@@ -1,5 +1,15 @@
 import { useEffect, useMemo, useState } from "react";
-import { listNotes, mediaUrlFromVaultPath, NoteSummary, playerDashboard, PlayerDashboard } from "../api";
+import {
+  listNotes,
+  listPlayerActions,
+  mediaUrlFromVaultPath,
+  NoteSummary,
+  PlayerAction,
+  PlayerActionType,
+  playerDashboard,
+  PlayerDashboard,
+  submitPlayerAction,
+} from "../api";
 
 const SECTION_ICONS: Record<string, string> = {
   diary: "✦",
@@ -19,7 +29,24 @@ const SECTION_LABELS: Record<string, string> = {
   maps: "Mapa",
 };
 
-type PlayerActionKey = "investigate" | "talk" | "mission" | "rumor" | "destination" | "theory";
+type PlayerActionKey = PlayerActionType;
+
+const ACTION_LABELS: Record<PlayerActionType, string> = {
+  investigate: "Investigar pista",
+  talk: "Falar com alguém",
+  mission: "Seguir missão",
+  rumor: "Procurar rumores",
+  destination: "Escolher destino",
+  theory: "Montar teoria",
+};
+
+const ACTION_STATUS: Record<PlayerAction["status"], string> = {
+  submitted: "Enviada",
+  in_review: "Em análise",
+  answered: "Respondida",
+  canonized: "Canonizada pelo Mestre",
+  rejected: "Não realizada",
+};
 
 const PLAYER_ACTIONS: Array<{
   key: PlayerActionKey;
@@ -117,8 +144,13 @@ export default function PlayerPanel({
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
   const [knownNotes, setKnownNotes] = useState<NoteSummary[]>([]);
+  const [actions, setActions] = useState<PlayerAction[]>([]);
   const [selectedAction, setSelectedAction] = useState<PlayerActionKey | null>(null);
   const [selectedTargetId, setSelectedTargetId] = useState("");
+  const [selectedCharacterId, setSelectedCharacterId] = useState("");
+  const [actionIntent, setActionIntent] = useState("");
+  const [submittingAction, setSubmittingAction] = useState(false);
+  const [actionFeedback, setActionFeedback] = useState("");
 
   useEffect(() => {
     let active = true;
@@ -129,10 +161,15 @@ export default function PlayerPanel({
         setError("");
       }
       try {
-        const [dashboardData, notesData] = await Promise.all([playerDashboard(), listNotes()]);
+        const [dashboardData, notesData, actionData] = await Promise.all([
+          playerDashboard(),
+          listNotes(),
+          listPlayerActions(),
+        ]);
         if (!active) return;
         setDashboard(dashboardData);
         setKnownNotes(notesData);
+        setActions(actionData);
         setError("");
       } catch {
         if (!active || !initial) return;
@@ -169,6 +206,37 @@ export default function PlayerPanel({
       .slice(0, 40);
   }, [actionDefinition, knownNotes]);
   const selectedTarget = actionOptions.find((note) => String(note.id) === selectedTargetId) || null;
+  const playerCharacters = useMemo(
+    () => knownNotes
+      .filter((note) => note.type === "character")
+      .filter((note) =>
+        note.tags.some((tag) => ["jogador", "player", "personagem-jogador"].includes(tag.toLowerCase()))
+        || ["Vezemir", "Varkh Nimalis", "Raziel", "Morthak"].includes(note.title),
+      )
+      .sort((left, right) => left.title.localeCompare(right.title, "pt-BR")),
+    [knownNotes],
+  );
+
+  async function sendAction() {
+    if (!selectedAction || !selectedTarget || !selectedCharacterId || actionIntent.trim().length < 3) return;
+    setSubmittingAction(true);
+    setActionFeedback("");
+    try {
+      const created = await submitPlayerAction({
+        character_note_id: Number(selectedCharacterId),
+        action_type: selectedAction,
+        target_note_id: selectedTarget.id,
+        intent: actionIntent.trim(),
+      });
+      setActions((current) => [created, ...current]);
+      setActionIntent("");
+      setActionFeedback("Ação enviada ao Mestre. Ela ainda não aconteceu no cânone.");
+    } catch (error) {
+      setActionFeedback(error instanceof Error ? error.message : "Não foi possível enviar a ação.");
+    } finally {
+      setSubmittingAction(false);
+    }
+  }
 
   return (
     <section className="panel player-home">
@@ -215,6 +283,8 @@ export default function PlayerPanel({
               onClick={() => {
                 setSelectedAction(action.key);
                 setSelectedTargetId("");
+                setActionIntent("");
+                setActionFeedback("");
               }}
             >
               {action.label}
@@ -231,6 +301,15 @@ export default function PlayerPanel({
               <button className="secondary-button" onClick={() => setSelectedAction(null)}>Fechar</button>
             </div>
             <label>
+              Quem age
+              <select value={selectedCharacterId} onChange={(event) => setSelectedCharacterId(event.target.value)}>
+                <option value="">Escolha seu personagem...</option>
+                {playerCharacters.map((character) => (
+                  <option key={character.id} value={character.id}>{character.title}</option>
+                ))}
+              </select>
+            </label>
+            <label>
               Foco da ação
               <select value={selectedTargetId} onChange={(event) => setSelectedTargetId(event.target.value)}>
                 <option value="">Escolha uma opção liberada...</option>
@@ -240,16 +319,59 @@ export default function PlayerPanel({
               </select>
             </label>
             {selectedTarget?.description && <p className="action-target-preview">{selectedTarget.description}</p>}
-            <button
-              className="action-launch"
-              disabled={!selectedTarget}
-              onClick={() => selectedTarget && onAskPrompt(actionPrompt(actionDefinition.key, selectedTarget))}
-            >
-              Preparar próximo passo
-            </button>
-            <small>Nenhuma ação será registrada como acontecida; o Arquivo apenas ajuda a preparar a intenção.</small>
+            <label>
+              O que você pretende fazer?
+              <textarea
+                value={actionIntent}
+                maxLength={1200}
+                placeholder="Descreva a intenção, abordagem ou pergunta do personagem."
+                onChange={(event) => setActionIntent(event.target.value)}
+              />
+            </label>
+            <div className="action-submit-row">
+              <button
+                className="secondary-button"
+                disabled={!selectedTarget}
+                onClick={() => selectedTarget && onAskPrompt(actionPrompt(actionDefinition.key, selectedTarget))}
+              >
+                Consultar o Arquivo
+              </button>
+              <button
+                className="action-launch"
+                disabled={!selectedTarget || !selectedCharacterId || actionIntent.trim().length < 3 || submittingAction}
+                onClick={() => void sendAction()}
+              >
+                {submittingAction ? "Enviando..." : "Enviar ao Mestre"}
+              </button>
+            </div>
+            {actionFeedback && <p className="action-feedback">{actionFeedback}</p>}
+            <small>A intenção fica pendente até o Mestre responder. Nada é canonizado automaticamente.</small>
           </div>
         )}
+      </div>
+
+      <div className="player-action-history">
+        <div className="section-heading">
+          <span>✎</span>
+          <div>
+            <h3>Ações enviadas</h3>
+            <p>Intenções do grupo e respostas recebidas do Mestre.</p>
+          </div>
+        </div>
+        <div className="action-history-list">
+          {actions.slice(0, 12).map((action) => (
+            <article key={action.id} className={`action-history-card status-${action.status}`}>
+              <header>
+                <strong>{action.character_title} · {ACTION_LABELS[action.action_type]}</strong>
+                <span>{ACTION_STATUS[action.status]}</span>
+              </header>
+              <small>Alvo: {action.target_title}</small>
+              <p>{action.intent}</p>
+              {action.gm_response && <blockquote>{action.gm_response}</blockquote>}
+            </article>
+          ))}
+          {actions.length === 0 && <p className="muted">Nenhuma ação foi enviada ainda.</p>}
+        </div>
       </div>
 
       {error && <p className="warning-text">{error}</p>}

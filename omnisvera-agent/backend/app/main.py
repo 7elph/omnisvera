@@ -14,6 +14,14 @@ from fastapi.staticfiles import StaticFiles
 from .access import AccessContext, is_player_safe_row, sanitize_player_summary
 from .config import get_settings
 from .ollama_client import check_ollama
+from .player_actions import (
+    ACTION_STATUSES,
+    ACTION_TYPES,
+    create_player_action,
+    init_player_actions,
+    list_player_actions,
+    update_player_action,
+)
 from .rag import answer_question
 from .schemas import (
     ChatRequest,
@@ -21,6 +29,9 @@ from .schemas import (
     HealthResponse,
     NoteDetail,
     NoteSummary,
+    PlayerActionCreate,
+    PlayerActionRecord,
+    PlayerActionUpdate,
     PlayerDashboardResponse,
     RebuildResponse,
     SearchRequest,
@@ -197,6 +208,7 @@ def require_any(
 @app.on_event("startup")
 def startup() -> None:
     init_db(settings.database_path)
+    init_player_actions(settings.database_path)
     if settings.rebuild_on_startup:
         notes, _ = iter_markdown_notes(settings.vault_path)
         rebuild_index(settings.database_path, notes)
@@ -374,6 +386,74 @@ async def player_chat(request: ChatRequest, _: AccessContext = Depends(require_p
         fallback_model=settings.fast_model,
         conversation_paths=request.context_paths,
     )
+
+
+def _is_player_character(note: dict) -> bool:
+    frontmatter = note.get("frontmatter") or {}
+    subtype = str(frontmatter.get("subtype") or "").strip().lower()
+    role = str(frontmatter.get("role") or "").strip().lower()
+    tags = {str(tag).strip().lower() for tag in note.get("tags") or []}
+    return subtype == "player_character" or role == "player" or bool(
+        tags & {"jogador", "player", "personagem-jogador"}
+    )
+
+
+@app.get("/player/actions", response_model=list[PlayerActionRecord])
+def player_actions(_: AccessContext = Depends(require_player)) -> list[dict]:
+    return list_player_actions(settings.database_path)
+
+
+@app.post("/player/actions", response_model=PlayerActionRecord)
+def submit_player_action(
+    request: PlayerActionCreate,
+    _: AccessContext = Depends(require_player),
+) -> dict:
+    if request.action_type not in ACTION_TYPES:
+        raise HTTPException(status_code=400, detail="Tipo de ação inválido.")
+    character = get_note(settings.database_path, request.character_note_id, access_mode="player")
+    if character is None or not _is_player_character(character):
+        raise HTTPException(status_code=400, detail="Personagem jogador inválido ou não liberado.")
+    target = get_note(settings.database_path, request.target_note_id, access_mode="player")
+    if target is None:
+        raise HTTPException(status_code=400, detail="Alvo inválido ou não liberado aos jogadores.")
+    intent = request.intent.strip()
+    if len(intent) < 3:
+        raise HTTPException(status_code=400, detail="Descreva melhor a intenção da ação.")
+    return create_player_action(
+        settings.database_path,
+        character_path=character["path"],
+        character_title=character["title"],
+        action_type=request.action_type,
+        target_path=target["path"],
+        target_title=target["title"],
+        intent=intent,
+    )
+
+
+@app.get("/gm/actions", response_model=list[PlayerActionRecord])
+def gm_actions(_: AccessContext = Depends(require_master)) -> list[dict]:
+    return list_player_actions(settings.database_path, limit=250)
+
+
+@app.patch("/gm/actions/{action_id}", response_model=PlayerActionRecord)
+def review_player_action(
+    action_id: int,
+    request: PlayerActionUpdate,
+    _: AccessContext = Depends(require_master),
+) -> dict:
+    if request.status not in ACTION_STATUSES:
+        raise HTTPException(status_code=400, detail="Estado de ação inválido.")
+    if request.status in {"answered", "canonized"} and not (request.gm_response or "").strip():
+        raise HTTPException(status_code=400, detail="Inclua uma resposta antes de concluir a ação.")
+    result = update_player_action(
+        settings.database_path,
+        action_id,
+        status=request.status,
+        gm_response=request.gm_response,
+    )
+    if result is None:
+        raise HTTPException(status_code=404, detail="Ação não encontrada.")
+    return result
 
 
 def _section(

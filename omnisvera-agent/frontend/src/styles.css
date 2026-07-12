@@ -748,7 +748,9 @@ textarea {
   text-transform: uppercase;
 }
 
-.action-builder select {
+.action-builder select,
+.action-builder textarea,
+.gm-action-card textarea {
   background: #18110d;
   border: 1px solid #5a422c;
   border-radius: 12px;
@@ -758,6 +760,12 @@ textarea {
   padding: 0.65rem 0.75rem;
   text-transform: none;
   width: 100%;
+}
+
+.action-builder textarea,
+.gm-action-card textarea {
+  min-height: 110px;
+  resize: vertical;
 }
 
 .action-target-preview {
@@ -783,6 +791,118 @@ textarea {
 
 .action-builder small {
   color: #8f816e;
+}
+
+.action-submit-row,
+.gm-action-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.action-feedback {
+  background: rgba(111, 151, 91, 0.12);
+  border: 1px solid rgba(151, 194, 126, 0.35);
+  border-radius: 10px;
+  color: #cce7bd !important;
+  padding: 0.65rem 0.75rem;
+}
+
+.player-action-history,
+.gm-action-inbox {
+  background: rgba(15, 11, 9, 0.72);
+  border: 1px solid #3f3023;
+  border-radius: 20px;
+  margin: 0 1rem 1.1rem;
+  padding: 1rem 0;
+}
+
+.action-history-list,
+.gm-action-list {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 0.9rem;
+  padding: 0 1rem;
+}
+
+.action-history-card,
+.gm-action-card {
+  background: linear-gradient(135deg, rgba(38, 27, 20, 0.92), rgba(18, 13, 10, 0.96));
+  border: 1px solid #4b3827;
+  border-left: 4px solid #a56c2a;
+  border-radius: 14px;
+  padding: 0.85rem;
+}
+
+.action-history-card header,
+.gm-action-card header {
+  align-items: start;
+  display: flex;
+  gap: 0.75rem;
+  justify-content: space-between;
+}
+
+.action-history-card header span,
+.gm-action-card header > span {
+  background: #2b2119;
+  border: 1px solid #57402a;
+  border-radius: 999px;
+  color: #ffd489;
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  white-space: nowrap;
+}
+
+.action-history-card p,
+.gm-action-card p {
+  color: #e8dcc8;
+  margin: 0.6rem 0;
+  white-space: pre-wrap;
+}
+
+.action-history-card small,
+.gm-action-card small {
+  color: #ad9c83;
+  display: block;
+  margin-top: 0.2rem;
+}
+
+.action-history-card blockquote {
+  background: rgba(214, 168, 88, 0.08);
+  border-left: 3px solid #d6a858;
+  color: #f3ead7;
+  margin: 0.7rem 0 0;
+  padding: 0.65rem 0.75rem;
+}
+
+.status-answered,
+.status-canonized {
+  border-left-color: #83b36e;
+}
+
+.status-rejected {
+  border-left-color: #9b5a52;
+  opacity: 0.86;
+}
+
+.gm-action-inbox {
+  margin: 1rem 0;
+}
+
+.gm-action-card {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.gm-action-controls button {
+  background: #2b2119;
+  border: 1px solid #57402a;
+  color: #f3ead7;
+}
+
+.gm-action-controls .danger-button {
+  border-color: #70423c;
+  color: #ffb5a9;
 }
 
 .section-heading {

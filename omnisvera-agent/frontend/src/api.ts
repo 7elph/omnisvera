@@ -116,6 +116,23 @@ export type PlayerDashboard = {
   sections: DashboardSection[];
 };
 
+export type PlayerActionType = "investigate" | "talk" | "mission" | "rumor" | "destination" | "theory";
+export type PlayerActionStatus = "submitted" | "in_review" | "answered" | "canonized" | "rejected";
+
+export type PlayerAction = {
+  id: number;
+  character_path: string;
+  character_title: string;
+  action_type: PlayerActionType;
+  target_path: string;
+  target_title: string;
+  intent: string;
+  status: PlayerActionStatus;
+  gm_response?: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
 export async function health() {
   const response = await fetch(`${API_BASE}/health`, { headers: authHeaders() });
   if (!response.ok) throw new Error("Falha ao consultar /health");
@@ -170,5 +187,45 @@ export async function chatVault(question: string, limit = 6, contextPaths: strin
 export async function playerDashboard(): Promise<PlayerDashboard> {
   const response = await fetch(`${API_BASE}/player/dashboard`, { headers: authHeaders() });
   if (!response.ok) throw new Error("Falha ao carregar painel dos jogadores");
+  return response.json();
+}
+
+export async function listPlayerActions(): Promise<PlayerAction[]> {
+  const response = await fetch(scoped("/actions"), { headers: authHeaders() });
+  if (!response.ok) throw new Error("Falha ao carregar ações");
+  return response.json();
+}
+
+export async function submitPlayerAction(payload: {
+  character_note_id: number;
+  action_type: PlayerActionType;
+  target_note_id: number;
+  intent: string;
+}): Promise<PlayerAction> {
+  const response = await fetch(`${API_BASE}/player/actions`, {
+    method: "POST",
+    headers: authHeaders({ "Content-Type": "application/json" }),
+    body: JSON.stringify(payload),
+  });
+  if (!response.ok) {
+    const detail = await response.json().catch(() => null);
+    throw new Error(detail?.detail || "Falha ao enviar ação");
+  }
+  return response.json();
+}
+
+export async function updatePlayerAction(
+  actionId: number,
+  payload: { status: PlayerActionStatus; gm_response?: string | null },
+): Promise<PlayerAction> {
+  const response = await fetch(`${API_BASE}/gm/actions/${actionId}`, {
+    method: "PATCH",
+    headers: authHeaders({ "Content-Type": "application/json" }),
+    body: JSON.stringify(payload),
+  });
+  if (!response.ok) {
+    const detail = await response.json().catch(() => null);
+    throw new Error(detail?.detail || "Falha ao atualizar ação");
+  }
   return response.json();
 }

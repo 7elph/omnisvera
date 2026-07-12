@@ -1,5 +1,13 @@
 import { useEffect, useState } from "react";
-import { mediaUrlFromVaultPath, searchNotes, SearchResult } from "../api";
+import {
+  listPlayerActions,
+  mediaUrlFromVaultPath,
+  PlayerAction,
+  PlayerActionStatus,
+  searchNotes,
+  SearchResult,
+  updatePlayerAction,
+} from "../api";
 
 const QUICK_SEARCHES = [
   "Sessão 01 Roteiro de Mesa",
@@ -23,6 +31,23 @@ const GM_PROMPTS = [
   "Quais pistas apontam para remédios falsos?",
 ];
 
+const ACTION_LABELS: Record<PlayerAction["action_type"], string> = {
+  investigate: "Investigar pista",
+  talk: "Falar com alguém",
+  mission: "Seguir missão",
+  rumor: "Procurar rumores",
+  destination: "Escolher destino",
+  theory: "Montar teoria",
+};
+
+const ACTION_STATUS: Record<PlayerActionStatus, string> = {
+  submitted: "Enviada",
+  in_review: "Em análise",
+  answered: "Respondida",
+  canonized: "Canonizada",
+  rejected: "Rejeitada",
+};
+
 function SessionCard({ note, onOpenNote }: { note: SearchResult; onOpenNote: (id: number) => void }) {
   const image = mediaUrlFromVaultPath(note.thumbnail || note.cover);
 
@@ -44,6 +69,10 @@ export default function SessionPanel({
   onAskPrompt: (prompt: string) => void;
 }) {
   const [items, setItems] = useState<SearchResult[]>([]);
+  const [actions, setActions] = useState<PlayerAction[]>([]);
+  const [responseDrafts, setResponseDrafts] = useState<Record<number, string>>({});
+  const [actionError, setActionError] = useState("");
+  const [updatingAction, setUpdatingAction] = useState<number | null>(null);
 
   useEffect(() => {
     Promise.all(QUICK_SEARCHES.map((query) => searchNotes(query, 1))).then((groups) => {
@@ -56,6 +85,41 @@ export default function SessionPanel({
       setItems(flattened);
     });
   }, []);
+
+  useEffect(() => {
+    let active = true;
+    async function refreshActions() {
+      try {
+        const current = await listPlayerActions();
+        if (active) setActions(current);
+      } catch {
+        if (active) setActionError("Não foi possível carregar as ações dos jogadores.");
+      }
+    }
+    void refreshActions();
+    const timer = window.setInterval(() => void refreshActions(), 10_000);
+    return () => {
+      active = false;
+      window.clearInterval(timer);
+    };
+  }, []);
+
+  async function reviewAction(action: PlayerAction, status: PlayerActionStatus) {
+    setUpdatingAction(action.id);
+    setActionError("");
+    try {
+      const updated = await updatePlayerAction(action.id, {
+        status,
+        gm_response: responseDrafts[action.id] ?? action.gm_response ?? "",
+      });
+      setActions((current) => current.map((item) => (item.id === updated.id ? updated : item)));
+      setResponseDrafts((current) => ({ ...current, [updated.id]: updated.gm_response || "" }));
+    } catch (error) {
+      setActionError(error instanceof Error ? error.message : "Não foi possível atualizar a ação.");
+    } finally {
+      setUpdatingAction(null);
+    }
+  }
 
   return (
     <section className="panel">
@@ -74,6 +138,45 @@ export default function SessionPanel({
           </button>
         ))}
       </div>
+
+      <section className="gm-action-inbox">
+        <div className="section-heading">
+          <span>✉</span>
+          <div>
+            <p className="eyebrow">Central de Ações</p>
+            <h3>Intenções dos jogadores</h3>
+            <p>Responder aqui não altera o vault. Canonizar apenas registra sua decisão no Companion.</p>
+          </div>
+        </div>
+        {actionError && <p className="warning-text">{actionError}</p>}
+        <div className="gm-action-list">
+          {actions.map((action) => (
+            <article key={action.id} className={`gm-action-card status-${action.status}`}>
+              <header>
+                <div>
+                  <strong>{action.character_title} · {ACTION_LABELS[action.action_type]}</strong>
+                  <small>Alvo: {action.target_title}</small>
+                </div>
+                <span>{ACTION_STATUS[action.status]}</span>
+              </header>
+              <p>{action.intent}</p>
+              <textarea
+                value={responseDrafts[action.id] ?? action.gm_response ?? ""}
+                maxLength={2400}
+                placeholder="Resposta, consequência ou orientação do Mestre..."
+                onChange={(event) => setResponseDrafts((current) => ({ ...current, [action.id]: event.target.value }))}
+              />
+              <div className="gm-action-controls">
+                <button disabled={updatingAction === action.id} onClick={() => void reviewAction(action, "in_review")}>Analisar</button>
+                <button disabled={updatingAction === action.id} onClick={() => void reviewAction(action, "answered")}>Responder</button>
+                <button disabled={updatingAction === action.id} onClick={() => void reviewAction(action, "canonized")}>Canonizar</button>
+                <button className="danger-button" disabled={updatingAction === action.id} onClick={() => void reviewAction(action, "rejected")}>Rejeitar</button>
+              </div>
+            </article>
+          ))}
+          {actions.length === 0 && <p className="muted">Nenhuma ação aguardando o Mestre.</p>}
+        </div>
+      </section>
 
       <div className="cards">
         {items.map((note) => (
