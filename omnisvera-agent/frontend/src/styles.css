@@ -507,6 +507,8 @@ textarea {
   overflow-x: auto;
   width: 100%;
 }
+.note-table-scroll { max-width: 100%; overflow-x: auto; border-radius: 12px; -webkit-overflow-scrolling: touch; }
+.note-table-scroll table { min-width: 520px; margin: 0; }
 
 .rendered-note th,
 .rendered-note td {

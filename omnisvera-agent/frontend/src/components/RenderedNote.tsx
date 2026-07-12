@@ -317,6 +317,7 @@ export default function RenderedNote({ content, onOpenNote, onUnknownNote }: Ren
               {children}
             </a>
           ),
+          table: ({ children }) => <div className="note-table-scroll"><table>{children}</table></div>,
         }}
       >
         {transformObsidianMarkdown(content)}
