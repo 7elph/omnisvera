@@ -266,6 +266,16 @@ export default function PlayerPanel({
   }, [actionDefinition, knownNotes]);
   const selectedTarget = actionOptions.find((note) => String(note.id) === selectedTargetId) || null;
   const unreadEvents = feed.filter((event) => !event.read_at);
+  const activeQuest = personalQuests.find((quest) => ["in_progress", "accepted", "available"].includes(quest.status));
+  const activeQuestNote = activeQuest
+    ? knownNotes.find((note) => note.path === activeQuest.note_path)
+    : sections.find((section) => section.kind === "quests")?.items[0];
+  const latestRumor = sections.find((section) => section.kind === "rumors")?.items[0];
+  const pendingAction = actions.find((action) => ["submitted", "in_review"].includes(action.status));
+  const pendingTarget = pendingAction ? knownNotes.find((note) => note.title === pendingAction.target_title) : null;
+  const nextDestination = pendingAction?.action_type === "destination"
+    ? pendingTarget
+    : sections.find((section) => section.kind === "places")?.items[0];
   const playerCharacters = useMemo(
     () => knownNotes
       .filter((note) => note.type === "character")
@@ -352,6 +362,33 @@ export default function PlayerPanel({
           </div>
         </div>
       </div>
+
+      <section className="session-focus">
+        <header>
+          <div><p className="eyebrow">Agora na campanha</p><h3>Seu próximo passo</h3></div>
+          <button
+            disabled={!activeQuestNote && !pendingTarget}
+            onClick={() => {
+              const target = pendingTarget || activeQuestNote;
+              if (target) onOpenNote(target.id);
+            }}
+          >Continuar aventura</button>
+        </header>
+        <div className="session-focus-grid">
+          <button disabled={!activeQuestNote} onClick={() => activeQuestNote && onOpenNote(activeQuestNote.id)}>
+            <span>⚑</span><small>Missão atual</small><strong>{activeQuestNote?.title || "Nenhuma missão assumida"}</strong>
+          </button>
+          <button disabled={!latestRumor} onClick={() => latestRumor && onOpenNote(latestRumor.id)}>
+            <span>?</span><small>Último rumor</small><strong>{latestRumor?.title || "Nenhum rumor revelado"}</strong>
+          </button>
+          <button disabled={!nextDestination} onClick={() => nextDestination && onOpenNote(nextDestination.id)}>
+            <span>⌖</span><small>Destino em foco</small><strong>{nextDestination?.title || "Destino ainda indefinido"}</strong>
+          </button>
+          <button disabled={!pendingAction} onClick={() => pendingTarget && onOpenNote(pendingTarget.id)}>
+            <span>✎</span><small>Ação com o Mestre</small><strong>{pendingAction ? ACTION_STATUS[pendingAction.status] : "Nenhuma ação pendente"}</strong>
+          </button>
+        </div>
+      </section>
 
       <div className="player-prompts">
         <span>Perguntas rápidas:</span>

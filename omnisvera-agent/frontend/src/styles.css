@@ -1027,6 +1027,15 @@ textarea {
   margin: 0 1rem 1.1rem;
 }
 
+.session-focus { margin: 0 1rem 1rem; padding: 1rem; border: 1px solid rgba(211,177,94,.28); border-radius: 18px; background: linear-gradient(135deg,rgba(57,38,23,.72),rgba(14,12,11,.96)); }
+.session-focus > header { display: flex; align-items: center; justify-content: space-between; gap: .8rem; margin-bottom: .8rem; }
+.session-focus h3 { margin: .1rem 0 0; }
+.session-focus-grid { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: .6rem; }
+.session-focus-grid button { min-height: 96px; display: grid; align-content: start; justify-items: start; gap: .24rem; padding: .75rem; color: #f3ead7; background: rgba(8,8,8,.45); border: 1px solid rgba(255,255,255,.08); text-align: left; }
+.session-focus-grid button > span { color: #e4b65c; font-size: 1.1rem; }
+.session-focus-grid small { color: #a99579; font-size: .67rem; letter-spacing: .08em; text-transform: uppercase; }
+.session-focus-grid strong { font-size: .83rem; line-height: 1.25; }
+
 .player-news-panel,
 .player-quest-progress,
 .player-inventory-panel,
@@ -1283,6 +1292,9 @@ textarea {
   .quest-progress-controls textarea { grid-column: auto; }
   .gm-quest-list article { grid-template-columns: 1fr; }
   .inventory-controls { grid-template-columns: 1fr; }
+  .session-focus { margin: 0 .3rem 1rem; }
+  .session-focus > header { align-items: stretch; flex-direction: column; }
+  .session-focus-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
 }
 
 .player-action-history,
