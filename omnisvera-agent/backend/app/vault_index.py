@@ -100,6 +100,20 @@ def _first_string(*values: Any) -> str | None:
 
 def row_to_note(row: sqlite3.Row, include_content: bool = False) -> dict[str, Any]:
     frontmatter = _json_dict(row["frontmatter"])
+    if str(row["type"] or "").strip().lower() == "character":
+        status = _first_string(
+            frontmatter.get("status"),
+            frontmatter.get("campaign_status"),
+            frontmatter.get("NoteStatus"),
+        )
+    else:
+        status = _first_string(
+            frontmatter.get("quest_status"),
+            frontmatter.get("campaign_status"),
+            frontmatter.get("handout_status"),
+            frontmatter.get("status"),
+            frontmatter.get("NoteStatus"),
+        )
     data: dict[str, Any] = {
         "id": row["id"],
         "path": row["path"],
@@ -110,13 +124,7 @@ def row_to_note(row: sqlite3.Row, include_content: bool = False) -> dict[str, An
         "tags": json.loads(row["tags"] or "[]"),
         "cover": _first_string(frontmatter.get("cover"), frontmatter.get("thumbnail"), frontmatter.get("portrait")),
         "thumbnail": _first_string(frontmatter.get("thumbnail"), frontmatter.get("portrait"), frontmatter.get("cover")),
-        "status": _first_string(
-            frontmatter.get("quest_status"),
-            frontmatter.get("campaign_status"),
-            frontmatter.get("handout_status"),
-            frontmatter.get("status"),
-            frontmatter.get("NoteStatus"),
-        ),
+        "status": status,
         "description": _first_string(frontmatter.get("description"), frontmatter.get("info"), frontmatter.get("summary")),
         "updated_at": row["updated_at"],
     }

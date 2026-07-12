@@ -136,6 +136,20 @@ async def _runtime_checks() -> None:
     assert orphan_followup.get("retrieval_mode") == "conversation_needs_context"
     assert orphan_followup.get("note_paths") == []
 
+    mira = await answer_question(
+        settings.database_path,
+        settings.ollama_base_url,
+        settings.fast_model,
+        "Quem é Mira Valen?",
+        access_mode="player",
+        response_mode="fast",
+    )
+    mira_answer = normalize_text(mira.get("answer"))
+    assert "mira valen faleceu" in mira_answer
+    assert "ultimo local conhecido" in mira_answer
+    assert "local tambem foi destruido" in mira_answer
+    assert "atualmente, mira valen" not in mira_answer
+
 
 def main() -> None:
     _access_rules()

@@ -616,6 +616,40 @@ def _age_phrase(value: Any) -> str:
     return cleaned
 
 
+def _character_is_deceased(frontmatter: dict[str, Any], fields: dict[str, str], tags: list[str]) -> bool:
+    values = (
+        frontmatter.get("status"),
+        frontmatter.get("life_status"),
+        fields.get("status"),
+        fields.get("situacao atual"),
+        *tags,
+    )
+    deceased_terms = {"falecido", "falecida", "morto", "morta", "dead", "deceased"}
+    return any(normalize_text(value) in deceased_terms for value in values if value)
+
+
+def _meaningful_relation(value: Any) -> str:
+    cleaned = _clean_value(value)
+    return "" if normalize_text(cleaned) in {"nenhum", "nenhuma", "none", "sem faccao", "sem faccao conhecida"} else cleaned
+
+
+def _death_location_was_destroyed(content: str, location: Any) -> bool:
+    location_text = normalize_text(_clean_value(location))
+    if not location_text:
+        return False
+    content_text = normalize_text(_plain_wikilinks(content))
+    return location_text in content_text and any(
+        marker in content_text
+        for marker in (
+            f"destruicao de {location_text}",
+            f"destruicao da vila de {location_text}",
+            f"destruiu {location_text}",
+            f"{location_text} foi destruida",
+            f"{location_text} foi destruido",
+        )
+    )
+
+
 def _public_identity_line(title: str, note_type: str, frontmatter: dict, is_player: bool = False) -> str:
     subtype = normalize_text(frontmatter.get("subtype"))
     if note_type == "character":
@@ -656,6 +690,7 @@ def _rich_direct_entity_answer(note: dict, question: str, access_mode: AccessMod
     note_type = normalize_text(note.get("type"))
     tags = [normalize_text(tag) for tag in note.get("tags") or []]
     query_kind = (_direct_entity_target(question) or ("", "about"))[1]
+    deceased = note_type == "character" and _character_is_deceased(frontmatter, fields, tags)
 
     summary = _first_useful_sentence(content)
     public_info = _first_section_paragraph(
@@ -716,7 +751,11 @@ def _rich_direct_entity_answer(note: dict, question: str, access_mode: AccessMod
             location = fields.get("localizacao atual") or frontmatter.get("location")
             territory = fields.get("territorio") or frontmatter.get("territory")
             location_text = _clean_value(location or territory)
-            if not location_text:
+            if deceased:
+                lines = [f"{title} faleceu."]
+                if location_text:
+                    lines.append(f"Seu último local conhecido foi {location_text}.")
+            elif not location_text:
                 lines = [f"A localização atual de {title} ainda não foi revelada com clareza."]
             elif normalize_text(location_text).startswith(("em ", "no ", "na ", "nos ", "nas ")):
                 lines = [f"{title} está {_lower_initial(location_text)}."]
@@ -741,23 +780,34 @@ def _rich_direct_entity_answer(note: dict, question: str, access_mode: AccessMod
             profile_bits.append(_clean_value(char_class))
         identity_lines = [_compact_sentence(public_info or summary or _public_identity_line(title, note_type, frontmatter, is_player))]
         if len(profile_bits) == 2:
-            identity_lines.append(f"É {_clean_value(race).lower()} e {_clean_value(char_class).lower()}.")
+            identity_lines.append(
+                f"{'Era' if deceased else 'É'} {_clean_value(race).lower()} e {_clean_value(char_class).lower()}."
+            )
         elif profile_bits:
-            identity_lines.append(f"É {_clean_value(profile_bits[0]).lower()}.")
+            identity_lines.append(f"{'Era' if deceased else 'É'} {_clean_value(profile_bits[0]).lower()}.")
         if reputation:
-            identity_lines.append(f"Sua reputação é a de {_lower_initial(reputation).rstrip('.')}.")
+            identity_lines.append(
+                f"{'Era conhecida em vida' if deceased else 'É conhecida'} como {_clean_value(reputation).rstrip('.')}."
+            )
 
         current_links: list[str] = []
-        if _clean_value(location):
+        if _clean_value(location) and not deceased:
             location_text = _clean_value(location)
             if normalize_text(location_text).startswith(("em ", "no ", "na ", "nos ", "nas ")):
                 current_links.append(f"está {_lower_initial(location_text)}")
             else:
                 current_links.append(f"está em {location_text}")
-        if _clean_value(faction):
-            current_links.append(f"mantém vínculo com {_clean_value(faction)}")
+        faction_text = _meaningful_relation(faction)
+        if faction_text and not deceased:
+            current_links.append(f"mantém vínculo com {faction_text}")
         relation_lines = [
-            f"Atualmente, {title} {' e '.join(current_links)}." if current_links else "",
+            (
+                f"{title} faleceu."
+                + (f" Seu último local conhecido foi {_clean_value(location)}." if _clean_value(location) else "")
+                + (" O local também foi destruído no ataque." if _death_location_was_destroyed(content, location) else "")
+                if deceased
+                else (f"Atualmente, {title} {' e '.join(current_links)}." if current_links else "")
+            ),
             f"Entre os nomes ligados à sua história estão {_clean_value(associates)}." if _clean_value(associates) else "",
         ]
         story_lines = [line for line in (_compact_sentence(table_use),) if line] if access_mode != "player" else []
