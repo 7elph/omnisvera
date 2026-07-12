@@ -1002,10 +1002,162 @@ textarea {
   gap: 0.55rem;
 }
 
+.player-live-state {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 1rem;
+  margin: 0 1rem 1.1rem;
+}
+
+.player-news-panel,
+.player-quest-progress,
+.gm-quest-panel {
+  padding: 1rem;
+  border: 1px solid rgba(211, 177, 94, 0.24);
+  border-radius: 18px;
+  background: linear-gradient(145deg, rgba(17, 20, 24, 0.92), rgba(10, 12, 15, 0.96));
+}
+
+.live-panel-heading {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin-bottom: 0.8rem;
+}
+
+.live-panel-heading h3,
+.live-panel-heading p {
+  margin: 0;
+}
+
+.live-panel-heading > div {
+  flex: 1;
+}
+
+.unread-badge {
+  display: grid;
+  place-items: center;
+  min-width: 27px;
+  height: 27px;
+  padding: 0 0.35rem;
+  border-radius: 999px;
+  color: #1a1209;
+  background: #e4b968;
+  font-size: 0.78rem;
+  font-weight: 900;
+}
+
+.player-timeline,
+.personal-quest-list,
+.gm-quest-list {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.timeline-event,
+.personal-quest-list button {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  width: 100%;
+  padding: 0.7rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  color: inherit;
+  background: rgba(255, 255, 255, 0.025);
+  text-align: left;
+}
+
+.timeline-event.unread {
+  border-color: rgba(228, 185, 104, 0.46);
+  background: rgba(228, 185, 104, 0.08);
+}
+
+.timeline-dot {
+  width: 9px;
+  height: 9px;
+  flex: 0 0 9px;
+  border-radius: 999px;
+  background: #756b5e;
+}
+
+.timeline-event.unread .timeline-dot {
+  background: #e4b968;
+  box-shadow: 0 0 10px rgba(228, 185, 104, 0.65);
+}
+
+.timeline-event span:not(.timeline-dot),
+.personal-quest-list button > span {
+  display: grid;
+  flex: 1;
+  gap: 0.18rem;
+}
+
+.timeline-event small,
+.personal-quest-list small {
+  color: var(--muted);
+}
+
+.quest-status {
+  padding: 0.24rem 0.45rem;
+  border-radius: 999px;
+  color: #d9c59e;
+  background: rgba(255, 255, 255, 0.07);
+  font-size: 0.68rem;
+  white-space: nowrap;
+}
+
+.quest-status.status-in_progress,
+.quest-status.status-accepted { color: #f0cf89; background: rgba(207, 153, 63, 0.12); }
+.quest-status.status-completed { color: #9bd0a7; background: rgba(76, 153, 91, 0.13); }
+.quest-status.status-failed { color: #e59a91; background: rgba(179, 67, 55, 0.13); }
+
+.gm-quest-panel {
+  margin: 1rem 0;
+}
+
+.quest-progress-controls {
+  display: grid;
+  grid-template-columns: 0.7fr 1.2fr 0.75fr auto;
+  gap: 0.65rem;
+}
+
+.quest-progress-controls textarea {
+  grid-column: 1 / -1;
+  min-height: 76px;
+}
+
+.gm-quest-list {
+  margin-top: 0.8rem;
+}
+
+.gm-quest-list article {
+  display: grid;
+  grid-template-columns: minmax(180px, 0.45fr) 1fr;
+  gap: 0.7rem;
+  padding: 0.7rem;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 11px;
+}
+
+.gm-quest-list span {
+  display: grid;
+}
+
+.gm-quest-list small,
+.gm-quest-list p {
+  margin: 0;
+  color: var(--muted);
+}
+
 @media (max-width: 700px) {
   .discovery-controls {
     grid-template-columns: 1fr;
   }
+  .player-live-state { grid-template-columns: 1fr; }
+  .quest-progress-controls { grid-template-columns: 1fr; }
+  .quest-progress-controls textarea { grid-column: auto; }
+  .gm-quest-list article { grid-template-columns: 1fr; }
 }
 
 .player-action-history,

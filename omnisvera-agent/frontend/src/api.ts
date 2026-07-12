@@ -157,6 +157,29 @@ export type PlayerDiscovery = {
   created_at: string;
 };
 
+export type PlayerEvent = {
+  id: number;
+  profile_id: string;
+  kind: string;
+  title: string;
+  message: string;
+  note_path?: string | null;
+  created_at: string;
+  read_at?: string | null;
+};
+
+export type PlayerQuestStatus = "available" | "accepted" | "in_progress" | "completed" | "failed" | "archived";
+
+export type PlayerQuest = {
+  id: number;
+  profile_id: string;
+  note_path: string;
+  note_title: string;
+  status: PlayerQuestStatus;
+  progress?: string | null;
+  updated_at: string;
+};
+
 export async function getPlayerProfile(): Promise<PlayerProfile> {
   const response = await fetch(`${API_BASE}/player/profile`, { headers: authHeaders() });
   if (!response.ok) throw new Error("Falha ao carregar perfil do jogador");
@@ -191,6 +214,48 @@ export async function revokePlayerDiscovery(discoveryId: number): Promise<void> 
     headers: authHeaders(),
   });
   if (!response.ok) throw new Error("Falha ao revogar descoberta");
+}
+
+export async function listPlayerFeed(): Promise<PlayerEvent[]> {
+  const response = await fetch(`${API_BASE}/player/feed`, { headers: authHeaders() });
+  if (!response.ok) throw new Error("Falha ao carregar novidades");
+  return response.json();
+}
+
+export async function markPlayerFeedRead(eventIds: number[]): Promise<void> {
+  const response = await fetch(`${API_BASE}/player/feed/read`, {
+    method: "POST",
+    headers: authHeaders({ "Content-Type": "application/json" }),
+    body: JSON.stringify({ event_ids: eventIds }),
+  });
+  if (!response.ok) throw new Error("Falha ao marcar novidades como lidas");
+}
+
+export async function listPlayerQuests(): Promise<PlayerQuest[]> {
+  const response = await fetch(`${API_BASE}/player/quests`, { headers: authHeaders() });
+  if (!response.ok) throw new Error("Falha ao carregar missões pessoais");
+  return response.json();
+}
+
+export async function listGmQuests(): Promise<PlayerQuest[]> {
+  const response = await fetch(`${API_BASE}/gm/quests`, { headers: authHeaders() });
+  if (!response.ok) throw new Error("Falha ao carregar progresso de missões");
+  return response.json();
+}
+
+export async function updatePlayerQuest(payload: {
+  profile_id: string;
+  note_id: number;
+  status: PlayerQuestStatus;
+  progress?: string;
+}): Promise<PlayerQuest> {
+  const response = await fetch(`${API_BASE}/gm/quests`, {
+    method: "POST",
+    headers: authHeaders({ "Content-Type": "application/json" }),
+    body: JSON.stringify(payload),
+  });
+  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao atualizar missão");
+  return response.json();
 }
 
 export async function health() {

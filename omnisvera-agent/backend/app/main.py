@@ -28,6 +28,15 @@ from .player_discoveries import (
     reveal_discovery,
     revoke_discovery,
 )
+from .player_progress import (
+    QUEST_STATUSES,
+    add_event,
+    init_player_progress,
+    list_events,
+    list_quests,
+    mark_events_read,
+    upsert_quest,
+)
 from .rag import answer_question
 from .schemas import (
     ChatRequest,
@@ -41,7 +50,11 @@ from .schemas import (
     PlayerDashboardResponse,
     PlayerDiscoveryCreate,
     PlayerDiscoveryRecord,
+    PlayerEventReadRequest,
+    PlayerEventRecord,
     PlayerProfileResponse,
+    PlayerQuestRecord,
+    PlayerQuestUpdate,
     RebuildResponse,
     SearchRequest,
     SearchResult,
@@ -90,6 +103,13 @@ def _individual_player(provided: str | None) -> AccessContext | None:
     return None
 
 
+def _profile_id_for_character(character_path: str) -> str:
+    for profile_id, profile in settings.player_profiles.items():
+        if profile.get("character_path") == character_path:
+            return profile_id
+    return "group"
+
+
 def _personalize_player_question(question: str, access: AccessContext) -> str:
     if not access.character_title:
         return question
@@ -105,6 +125,75 @@ def _personalize_player_question(question: str, access: AccessContext) -> str:
     if any(phrase in normalized for phrase in identity_phrases):
         return f"Quem é {access.character_title}?"
     return question
+
+
+def _personal_player_answer(question: str, access: AccessContext) -> dict | None:
+    if access.mode != "player" or not access.character_title:
+        return None
+    normalized = _media_lookup_key(question).replace("_", " ")
+    personal_terms = (
+        "o que devo fazer",
+        "o que fazer agora",
+        "minhas missoes",
+        "minha missao",
+        "qual pista recebi",
+        "minhas pistas",
+        "minhas novidades",
+        "o que mudou",
+        "resposta do mestre",
+    )
+    if not any(term in normalized for term in personal_terms):
+        return None
+
+    quests = list_quests(settings.database_path, profile_id=access.profile_id)
+    events = list_events(settings.database_path, profile_id=access.profile_id, limit=12)
+    actions = list_player_actions(settings.database_path, character_path=access.character_path, limit=12)
+    active_quests = [quest for quest in quests if quest["status"] in {"accepted", "in_progress", "available"}]
+    unread = [event for event in events if not event.get("read_at")]
+    pending = [action for action in actions if action["status"] in {"submitted", "in_review"}]
+
+    paragraphs: list[str] = []
+    if active_quests:
+        lines = [f"- **{quest['note_title']}** — {(quest.get('progress') or quest['status']).strip()}" for quest in active_quests[:4]]
+        paragraphs.append("### Seus caminhos atuais\n" + "\n".join(lines))
+    if unread:
+        lines = [f"- **{event['title']}**: {event['message']}" for event in unread[:4]]
+        paragraphs.append("### Novidades\n" + "\n".join(lines))
+    if pending:
+        lines = [f"- **{action['target_title']}**: sua intenção ainda está {('em análise' if action['status'] == 'in_review' else 'aguardando o Mestre')}." for action in pending[:3]]
+        paragraphs.append("### Ações pendentes\n" + "\n".join(lines))
+    if not paragraphs:
+        paragraphs.append(
+            f"{access.character_title} não possui uma nova resposta ou missão pessoal registrada agora. "
+            "Você ainda pode consultar as missões e rumores públicos ou enviar uma nova intenção ao Mestre."
+        )
+
+    paths: list[str] = []
+    for item in [*active_quests, *unread]:
+        path = item.get("note_path")
+        if path and path not in paths:
+            paths.append(path)
+    notes_used = []
+    for path in paths[:6]:
+        note = resolve_note(settings.database_path, path, access_mode="player")
+        if note:
+            notes_used.append(note)
+    return {
+        "answer": "\n\n".join(paragraphs),
+        "notes_used": notes_used,
+        "note_paths": [note["path"] for note in notes_used],
+        "insufficient_context": not bool(active_quests or unread or pending),
+        "warning": None,
+        "suggested_questions": ["Quais missões estão ativas?", "Quais rumores estão ativos?", "Quem sou eu?"],
+        "fatos_confirmados": [],
+        "teorias": [],
+        "informacoes_insuficientes": [],
+        "fontes_usadas": [note["path"] for note in notes_used],
+        "ollama_used": False,
+        "ollama_attempted": False,
+        "model": settings.ollama_model,
+        "retrieval_mode": "personal_state",
+    }
 
 
 def maybe_refresh_index() -> None:
@@ -257,6 +346,7 @@ def startup() -> None:
     init_db(settings.database_path)
     init_player_actions(settings.database_path)
     init_player_discoveries(settings.database_path)
+    init_player_progress(settings.database_path)
     if settings.rebuild_on_startup:
         notes, _ = iter_markdown_notes(settings.vault_path)
         rebuild_index(settings.database_path, notes)
@@ -422,6 +512,9 @@ def player_resolve(target: str, _: AccessContext = Depends(require_player)) -> d
 async def player_chat(request: ChatRequest, access: AccessContext = Depends(require_player)) -> dict:
     maybe_refresh_index()
     question = _personalize_player_question(request.question, access)
+    personal_answer = _personal_player_answer(question, access)
+    if personal_answer is not None:
+        return personal_answer
     context_paths = list(request.context_paths)
     if access.character_path and access.character_path not in context_paths:
         context_paths.insert(0, access.character_path)
@@ -430,6 +523,14 @@ async def player_chat(request: ChatRequest, access: AccessContext = Depends(requ
             path = discovery["note_path"]
             if path not in context_paths:
                 context_paths.append(path)
+        for quest in list_quests(settings.database_path, profile_id=access.profile_id):
+            path = quest["note_path"]
+            if path not in context_paths:
+                context_paths.append(path)
+        for action in list_player_actions(settings.database_path, character_path=access.character_path, limit=8):
+            if action["status"] in {"answered", "canonized"} and action["target_path"] not in context_paths:
+                context_paths.append(action["target_path"])
+    context_paths = context_paths[:10]
     return await answer_question(
         settings.database_path,
         settings.ollama_base_url,
@@ -513,7 +614,7 @@ def submit_player_action(
     intent = request.intent.strip()
     if len(intent) < 3:
         raise HTTPException(status_code=400, detail="Descreva melhor a intenção da ação.")
-    return create_player_action(
+    result = create_player_action(
         settings.database_path,
         character_path=character["path"],
         character_title=character["title"],
@@ -522,6 +623,16 @@ def submit_player_action(
         target_title=target["title"],
         intent=intent,
     )
+    add_event(
+        settings.database_path,
+        profile_id=access.profile_id or _profile_id_for_character(character["path"]),
+        kind="action_submitted",
+        title=f"Ação enviada: {target['title']}",
+        message=intent,
+        note_path=target["path"],
+        unread=False,
+    )
+    return result
 
 
 @app.get("/player/discoveries", response_model=list[PlayerDiscoveryRecord])
@@ -529,6 +640,30 @@ def player_discoveries(access: AccessContext = Depends(require_player)) -> list[
     if access.profile_id is None:
         return []
     return list_discoveries(settings.database_path, profile_id=access.profile_id)
+
+
+@app.get("/player/feed", response_model=list[PlayerEventRecord])
+def player_feed(access: AccessContext = Depends(require_player)) -> list[dict]:
+    return list_events(settings.database_path, profile_id=access.profile_id)
+
+
+@app.post("/player/feed/read")
+def player_feed_read(
+    request: PlayerEventReadRequest,
+    access: AccessContext = Depends(require_player),
+) -> dict:
+    return {
+        "updated": mark_events_read(
+            settings.database_path,
+            profile_id=access.profile_id,
+            event_ids=request.event_ids,
+        )
+    }
+
+
+@app.get("/player/quests", response_model=list[PlayerQuestRecord])
+def player_quests(access: AccessContext = Depends(require_player)) -> list[dict]:
+    return list_quests(settings.database_path, profile_id=access.profile_id)
 
 
 @app.get("/gm/actions", response_model=list[PlayerActionRecord])
@@ -551,12 +686,21 @@ def gm_reveal_discovery(
     note = get_note(settings.database_path, request.note_id, access_mode="player")
     if note is None:
         raise HTTPException(status_code=400, detail="A nota não está liberada para jogadores.")
-    return reveal_discovery(
+    result = reveal_discovery(
         settings.database_path,
         profile_id=request.profile_id,
         note_path=note["path"],
         note_title=note["title"],
     )
+    add_event(
+        settings.database_path,
+        profile_id=request.profile_id,
+        kind="discovery",
+        title="Nova descoberta",
+        message=f"{note['title']} foi revelado para você.",
+        note_path=note["path"],
+    )
+    return result
 
 
 @app.delete("/gm/discoveries/{discovery_id}", status_code=204)
@@ -586,6 +730,65 @@ def review_player_action(
     )
     if result is None:
         raise HTTPException(status_code=404, detail="Ação não encontrada.")
+    profile_id = _profile_id_for_character(result["character_path"])
+    if request.status in {"answered", "canonized", "rejected"}:
+        status_label = {
+            "answered": "Resposta do Mestre",
+            "canonized": "Ação canonizada",
+            "rejected": "Ação não realizada",
+        }[request.status]
+        add_event(
+            settings.database_path,
+            profile_id=profile_id,
+            kind=f"action_{request.status}",
+            title=status_label,
+            message=(request.gm_response or f"Atualização sobre {result['target_title']}.").strip(),
+            note_path=result["target_path"],
+        )
+    return result
+
+
+@app.get("/gm/quests", response_model=list[PlayerQuestRecord])
+def gm_quests(_: AccessContext = Depends(require_master)) -> list[dict]:
+    return list_quests(settings.database_path)
+
+
+@app.post("/gm/quests", response_model=PlayerQuestRecord)
+def gm_update_quest(
+    request: PlayerQuestUpdate,
+    _: AccessContext = Depends(require_master),
+) -> dict:
+    if request.profile_id != "group" and request.profile_id not in settings.player_profiles:
+        raise HTTPException(status_code=400, detail="Perfil de jogador inválido.")
+    if request.status not in QUEST_STATUSES:
+        raise HTTPException(status_code=400, detail="Estado de missão inválido.")
+    note = get_note(settings.database_path, request.note_id, access_mode="player")
+    if note is None or note.get("type") != "quest":
+        raise HTTPException(status_code=400, detail="Escolha uma missão liberada aos jogadores.")
+    result = upsert_quest(
+        settings.database_path,
+        profile_id=request.profile_id,
+        note_path=note["path"],
+        note_title=note["title"],
+        status=request.status,
+        progress=request.progress,
+    )
+    status_label = {
+        "available": "Missão disponível",
+        "accepted": "Missão aceita",
+        "in_progress": "Missão atualizada",
+        "completed": "Missão concluída",
+        "failed": "Missão falhou",
+        "archived": "Missão arquivada",
+    }[request.status]
+    add_event(
+        settings.database_path,
+        profile_id=request.profile_id,
+        kind="quest_update",
+        title=status_label,
+        message=(request.progress or note["title"]).strip(),
+        note_path=note["path"],
+    )
     return result
 
 

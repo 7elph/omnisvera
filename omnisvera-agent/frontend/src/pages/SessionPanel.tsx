@@ -1,21 +1,26 @@
 import { useEffect, useState } from "react";
 import {
   listGmDiscoveries,
+  listGmQuests,
   listNotes,
   listPlayerActions,
   mediaUrlFromVaultPath,
   PlayerAction,
   PlayerActionStatus,
   PlayerDiscovery,
+  PlayerQuest,
+  PlayerQuestStatus,
   NoteSummary,
   revealPlayerDiscovery,
   revokePlayerDiscovery,
+  updatePlayerQuest,
   searchNotes,
   SearchResult,
   updatePlayerAction,
 } from "../api";
 
 const PLAYER_PROFILES = [
+  { id: "group", title: "Todo o grupo" },
   { id: "vezemir", title: "Vezemir" },
   { id: "varkh", title: "Varkh Nimalis" },
   { id: "raziel", title: "Raziel" },
@@ -91,6 +96,12 @@ export default function SessionPanel({
   const [discoveryProfile, setDiscoveryProfile] = useState("vezemir");
   const [discoveryNoteId, setDiscoveryNoteId] = useState("");
   const [discoveryFeedback, setDiscoveryFeedback] = useState("");
+  const [questProgress, setQuestProgress] = useState<PlayerQuest[]>([]);
+  const [questProfile, setQuestProfile] = useState("group");
+  const [questNoteId, setQuestNoteId] = useState("");
+  const [questStatus, setQuestStatus] = useState<PlayerQuestStatus>("available");
+  const [questSummary, setQuestSummary] = useState("");
+  const [questFeedback, setQuestFeedback] = useState("");
 
   useEffect(() => {
     Promise.all(QUICK_SEARCHES.map((query) => searchNotes(query, 1))).then((groups) => {
@@ -105,9 +116,10 @@ export default function SessionPanel({
   }, []);
 
   useEffect(() => {
-    Promise.all([listGmDiscoveries(), listNotes()])
-      .then(([discoveryData, noteData]) => {
+    Promise.all([listGmDiscoveries(), listGmQuests(), listNotes()])
+      .then(([discoveryData, questData, noteData]) => {
         setDiscoveries(discoveryData);
+        setQuestProgress(questData);
         setAvailableNotes(
           noteData
             .filter((note) => ["Jogadores", "Público"].includes(String(note.visibility || "")))
@@ -135,6 +147,23 @@ export default function SessionPanel({
       setDiscoveries((current) => current.filter((item) => item.id !== id));
     } catch {
       setDiscoveryFeedback("Não foi possível revogar a descoberta.");
+    }
+  }
+
+  async function saveQuestProgress() {
+    if (!questNoteId) return;
+    setQuestFeedback("");
+    try {
+      const updated = await updatePlayerQuest({
+        profile_id: questProfile,
+        note_id: Number(questNoteId),
+        status: questStatus,
+        progress: questSummary,
+      });
+      setQuestProgress((current) => [updated, ...current.filter((item) => item.id !== updated.id)]);
+      setQuestFeedback("Progresso salvo e enviado para a timeline do jogador.");
+    } catch (error) {
+      setQuestFeedback(error instanceof Error ? error.message : "Não foi possível atualizar a missão.");
     }
   }
 
@@ -241,7 +270,7 @@ export default function SessionPanel({
         </div>
         <div className="discovery-controls">
           <select value={discoveryProfile} onChange={(event) => setDiscoveryProfile(event.target.value)}>
-            {PLAYER_PROFILES.map((profile) => <option key={profile.id} value={profile.id}>{profile.title}</option>)}
+            {PLAYER_PROFILES.filter((profile) => profile.id !== "group").map((profile) => <option key={profile.id} value={profile.id}>{profile.title}</option>)}
           </select>
           <select value={discoveryNoteId} onChange={(event) => setDiscoveryNoteId(event.target.value)}>
             <option value="">Escolha uma nota liberada...</option>
@@ -258,6 +287,53 @@ export default function SessionPanel({
             </article>
           ))}
           {discoveries.length === 0 && <p className="muted">Nenhuma descoberta individual revelada.</p>}
+        </div>
+      </section>
+
+      <section className="gm-quest-panel">
+        <div className="section-heading">
+          <span>⚑</span>
+          <div>
+            <p className="eyebrow">Progresso de campanha</p>
+            <h3>Atualizar missão</h3>
+            <p>Vincula uma missão pública ao grupo ou a um personagem e registra a mudança na timeline.</p>
+          </div>
+        </div>
+        <div className="quest-progress-controls">
+          <select value={questProfile} onChange={(event) => setQuestProfile(event.target.value)}>
+            {PLAYER_PROFILES.map((profile) => <option key={profile.id} value={profile.id}>{profile.title}</option>)}
+          </select>
+          <select value={questNoteId} onChange={(event) => setQuestNoteId(event.target.value)}>
+            <option value="">Escolha uma missão...</option>
+            {availableNotes.filter((note) => note.type === "quest").map((note) => (
+              <option key={note.id} value={note.id}>{note.title}</option>
+            ))}
+          </select>
+          <select value={questStatus} onChange={(event) => setQuestStatus(event.target.value as PlayerQuestStatus)}>
+            <option value="available">Disponível</option>
+            <option value="accepted">Aceita</option>
+            <option value="in_progress">Em andamento</option>
+            <option value="completed">Concluída</option>
+            <option value="failed">Falhou</option>
+            <option value="archived">Arquivada</option>
+          </select>
+          <textarea
+            value={questSummary}
+            maxLength={1200}
+            placeholder="Objetivo conhecido, avanço ou orientação do Mestre..."
+            onChange={(event) => setQuestSummary(event.target.value)}
+          />
+          <button disabled={!questNoteId} onClick={() => void saveQuestProgress()}>Salvar progresso</button>
+        </div>
+        {questFeedback && <p className="action-feedback">{questFeedback}</p>}
+        <div className="gm-quest-list">
+          {questProgress.map((quest) => (
+            <article key={quest.id}>
+              <span><strong>{quest.note_title}</strong><small>{quest.profile_id} · {quest.status}</small></span>
+              <p>{quest.progress || "Sem resumo."}</p>
+            </article>
+          ))}
+          {questProgress.length === 0 && <p className="muted">Nenhum progresso personalizado registrado.</p>}
         </div>
       </section>
 

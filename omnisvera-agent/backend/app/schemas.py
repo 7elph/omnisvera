@@ -153,3 +153,35 @@ class PlayerDiscoveryRecord(BaseModel):
     note_path: str
     note_title: str
     created_at: str
+
+
+class PlayerEventRecord(BaseModel):
+    id: int
+    profile_id: str
+    kind: str
+    title: str
+    message: str
+    note_path: str | None = None
+    created_at: str
+    read_at: str | None = None
+
+
+class PlayerEventReadRequest(BaseModel):
+    event_ids: list[int] = Field(default_factory=list)
+
+
+class PlayerQuestUpdate(BaseModel):
+    profile_id: str = "group"
+    note_id: int
+    status: str
+    progress: str | None = Field(default=None, max_length=1200)
+
+
+class PlayerQuestRecord(BaseModel):
+    id: int
+    profile_id: str
+    note_path: str
+    note_title: str
+    status: str
+    progress: str | None = None
+    updated_at: str

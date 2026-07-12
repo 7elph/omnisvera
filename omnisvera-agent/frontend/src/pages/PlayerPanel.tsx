@@ -4,12 +4,17 @@ import {
   listNotes,
   listPlayerActions,
   listPlayerDiscoveries,
+  listPlayerFeed,
+  listPlayerQuests,
+  markPlayerFeedRead,
   mediaUrlFromVaultPath,
   NoteSummary,
   PlayerAction,
   PlayerActionType,
   PlayerDiscovery,
+  PlayerEvent,
   PlayerProfile,
+  PlayerQuest,
   playerDashboard,
   PlayerDashboard,
   submitPlayerAction,
@@ -64,6 +69,15 @@ const ACTION_STATUS: Record<PlayerAction["status"], string> = {
   answered: "Respondida",
   canonized: "Canonizada pelo Mestre",
   rejected: "Não realizada",
+};
+
+const QUEST_STATUS: Record<PlayerQuest["status"], string> = {
+  available: "Disponível",
+  accepted: "Aceita",
+  in_progress: "Em andamento",
+  completed: "Concluída",
+  failed: "Falhou",
+  archived: "Arquivada",
 };
 
 function profileValue(value?: string | number | null) {
@@ -175,6 +189,8 @@ export default function PlayerPanel({
   const [actions, setActions] = useState<PlayerAction[]>([]);
   const [profile, setProfile] = useState<PlayerProfile | null>(null);
   const [discoveries, setDiscoveries] = useState<PlayerDiscovery[]>([]);
+  const [feed, setFeed] = useState<PlayerEvent[]>([]);
+  const [personalQuests, setPersonalQuests] = useState<PlayerQuest[]>([]);
   const [selectedAction, setSelectedAction] = useState<PlayerActionKey | null>(null);
   const [selectedTargetId, setSelectedTargetId] = useState("");
   const [selectedCharacterId, setSelectedCharacterId] = useState("");
@@ -191,12 +207,14 @@ export default function PlayerPanel({
         setError("");
       }
       try {
-        const [dashboardData, notesData, actionData, profileData, discoveryData] = await Promise.all([
+        const [dashboardData, notesData, actionData, profileData, discoveryData, feedData, questData] = await Promise.all([
           playerDashboard(),
           listNotes(),
           listPlayerActions(),
           getPlayerProfile(),
           listPlayerDiscoveries(),
+          listPlayerFeed(),
+          listPlayerQuests(),
         ]);
         if (!active) return;
         setDashboard(dashboardData);
@@ -204,6 +222,8 @@ export default function PlayerPanel({
         setActions(actionData);
         setProfile(profileData);
         setDiscoveries(discoveryData);
+        setFeed(feedData);
+        setPersonalQuests(questData);
         setError("");
       } catch {
         if (!active || !initial) return;
@@ -240,6 +260,7 @@ export default function PlayerPanel({
       .slice(0, 40);
   }, [actionDefinition, knownNotes]);
   const selectedTarget = actionOptions.find((note) => String(note.id) === selectedTargetId) || null;
+  const unreadEvents = feed.filter((event) => !event.read_at);
   const playerCharacters = useMemo(
     () => knownNotes
       .filter((note) => note.type === "character")
@@ -276,6 +297,17 @@ export default function PlayerPanel({
       setActionFeedback(error instanceof Error ? error.message : "Não foi possível enviar a ação.");
     } finally {
       setSubmittingAction(false);
+    }
+  }
+
+  async function markAllRead() {
+    if (!unreadEvents.length) return;
+    try {
+      await markPlayerFeedRead(unreadEvents.map((event) => event.id));
+      const now = new Date().toISOString();
+      setFeed((current) => current.map((event) => ({ ...event, read_at: event.read_at || now })));
+    } catch {
+      setActionFeedback("Não foi possível marcar as novidades como lidas.");
     }
   }
 
@@ -329,6 +361,57 @@ export default function PlayerPanel({
           </button>
         ))}
       </div>
+
+      <section className="player-live-state">
+        <div className="player-news-panel">
+          <div className="live-panel-heading">
+            <div>
+              <p className="eyebrow">Novidades</p>
+              <h3>O que mudou para você</h3>
+            </div>
+            {unreadEvents.length > 0 && <span className="unread-badge">{unreadEvents.length}</span>}
+            {unreadEvents.length > 0 && <button onClick={() => void markAllRead()}>Marcar como lidas</button>}
+          </div>
+          <div className="player-timeline">
+            {feed.slice(0, 8).map((event) => {
+              const note = knownNotes.find((item) => item.path === event.note_path);
+              return (
+                <button
+                  key={event.id}
+                  className={event.read_at ? "timeline-event" : "timeline-event unread"}
+                  disabled={!note}
+                  onClick={() => note && onOpenNote(note.id)}
+                >
+                  <span className="timeline-dot" />
+                  <span><strong>{event.title}</strong><small>{event.message}</small></span>
+                </button>
+              );
+            })}
+            {feed.length === 0 && <p className="muted">Nenhuma novidade pessoal ainda.</p>}
+          </div>
+        </div>
+
+        <div className="player-quest-progress">
+          <div className="live-panel-heading">
+            <div>
+              <p className="eyebrow">Jornada</p>
+              <h3>Suas missões</h3>
+            </div>
+          </div>
+          <div className="personal-quest-list">
+            {personalQuests.filter((quest) => quest.status !== "archived").slice(0, 6).map((quest) => {
+              const note = knownNotes.find((item) => item.path === quest.note_path);
+              return (
+                <button key={quest.id} disabled={!note} onClick={() => note && onOpenNote(note.id)}>
+                  <span><strong>{quest.note_title}</strong><small>{quest.progress || "Sem nova orientação."}</small></span>
+                  <b className={`quest-status status-${quest.status}`}>{QUEST_STATUS[quest.status]}</b>
+                </button>
+              );
+            })}
+            {personalQuests.length === 0 && <p className="muted">Nenhuma missão foi vinculada ao seu perfil.</p>}
+          </div>
+        </div>
+      </section>
 
       <div className="player-actions">
         <div>
