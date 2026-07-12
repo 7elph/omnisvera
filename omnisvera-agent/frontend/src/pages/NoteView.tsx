@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { EditableNote, getAccessMode, getEditableNote, getNote, mediaUrlFromVaultPath, NoteDetail, saveEditableNote } from "../api";
 import RenderedNote from "../components/RenderedNote";
 
@@ -112,7 +112,28 @@ export default function NoteView({
   const [note, setNote] = useState<NoteDetail | null>(null);
   const [loading, setLoading] = useState(false);
   const [editing, setEditing] = useState<EditableNote | null>(null);
+  const editingRef = useRef<EditableNote | null>(null);
+  const [editorOriginal, setEditorOriginal] = useState("");
   const [editorFeedback, setEditorFeedback] = useState("");
+  const [savingEditor, setSavingEditor] = useState(false);
+  const [discardArmed, setDiscardArmed] = useState(false);
+  const editorDirty = Boolean(editing && editing.content !== editorOriginal);
+
+  useEffect(() => { editingRef.current = editing; }, [editing]);
+
+  useEffect(() => {
+    setEditing(null);
+    setEditorOriginal("");
+    setEditorFeedback("");
+    setDiscardArmed(false);
+  }, [noteId]);
+
+  useEffect(() => {
+    if (!editorDirty) return;
+    const protectDraft = (event: BeforeUnloadEvent) => { event.preventDefault(); event.returnValue = ""; };
+    window.addEventListener("beforeunload", protectDraft);
+    return () => window.removeEventListener("beforeunload", protectDraft);
+  }, [editorDirty]);
 
   useEffect(() => {
     if (!noteId) {
@@ -134,31 +155,54 @@ export default function NoteView({
     }
 
     void refresh(true);
-    const timer = window.setInterval(() => void refresh(false), 15_000);
+    const timer = window.setInterval(() => {
+      if (!editingRef.current) void refresh(false);
+    }, 15_000);
     return () => {
       active = false;
       window.clearInterval(timer);
     };
-  }, [noteId, editing]);
+  }, [noteId]);
 
   async function openEditor() {
     if (!note) return;
     setEditorFeedback("");
-    try { setEditing(await getEditableNote(note.path)); }
+    try {
+      const editable = await getEditableNote(note.path);
+      setEditing(editable);
+      setEditorOriginal(editable.content);
+      setDiscardArmed(false);
+    }
     catch (error) { setEditorFeedback(error instanceof Error ? error.message : "Não foi possível abrir o editor."); }
   }
 
   async function saveEditor() {
     if (!editing || !noteId) return;
+    setSavingEditor(true);
     setEditorFeedback("Salvando e reindexando...");
     try {
       const saved = await saveEditableNote(editing);
       setEditing(null);
+      setEditorOriginal("");
       setNote(await getNote(noteId));
       setEditorFeedback(`Salvo com backup automático às ${new Date(saved.updated_at).toLocaleTimeString("pt-BR")}.`);
     } catch (error) {
       setEditorFeedback(error instanceof Error ? error.message : "Não foi possível salvar.");
+    } finally {
+      setSavingEditor(false);
     }
+  }
+
+  function cancelEditor() {
+    if (editorDirty && !discardArmed) {
+      setDiscardArmed(true);
+      setEditorFeedback("Há alterações não salvas. Clique novamente para descartar.");
+      return;
+    }
+    setEditing(null);
+    setEditorOriginal("");
+    setDiscardArmed(false);
+    setEditorFeedback("Rascunho descartado; a nota original não foi alterada.");
   }
 
   if (unknownTarget && !noteId) {
@@ -211,18 +255,35 @@ export default function NoteView({
       {!isPlayer && <p className="note-path">{note.path}</p>}
       {!isPlayer && (
         <div className="note-editor-toolbar">
-          <button onClick={() => void openEditor()}>{editing ? "Recarregar original" : "Editar Markdown"}</button>
+          <button disabled={Boolean(editing)} onClick={() => void openEditor()}>{editing ? "Editor aberto" : "Editar Markdown"}</button>
           {editorFeedback && <span>{editorFeedback}</span>}
         </div>
       )}
       {editing && !isPlayer && (
         <section className="note-editor">
-          <textarea value={editing.content} spellCheck={false} onChange={(event) => setEditing({ ...editing, content: event.target.value })} />
-          <div>
-            <button className="secondary-button" onClick={() => setEditing(null)}>Cancelar</button>
-            <button onClick={() => void saveEditor()}>Salvar nota</button>
-          </div>
-          <small>O Companion valida o YAML, impede sobrescrita concorrente e cria backup local antes de salvar.</small>
+          <header>
+            <div><strong>Editor Markdown</strong><small>{editing.path}</small></div>
+            <span className={editorDirty ? "editor-state dirty" : "editor-state"}>{editorDirty ? "Alterações não salvas" : "Sem alterações"}</span>
+          </header>
+          <textarea
+            value={editing.content}
+            spellCheck={false}
+            onChange={(event) => { setEditing({ ...editing, content: event.target.value }); setDiscardArmed(false); }}
+            onKeyDown={(event) => {
+              if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "s") {
+                event.preventDefault();
+                if (editorDirty && !savingEditor) void saveEditor();
+              }
+            }}
+          />
+          <footer>
+            <small>{editing.content.length.toLocaleString("pt-BR")} caracteres · Ctrl+S para salvar</small>
+            <div>
+              <button className="secondary-button" onClick={cancelEditor}>{discardArmed ? "Confirmar descarte" : "Cancelar"}</button>
+              <button disabled={!editorDirty || savingEditor} onClick={() => void saveEditor()}>{savingEditor ? "Salvando..." : "Salvar nota"}</button>
+            </div>
+          </footer>
+          <small className="editor-safety-note">YAML validado · conflito de versão protegido · backup automático antes de salvar</small>
         </section>
       )}
       {cover && <RenderedNote content={`![[${cover}]]`} onOpenNote={onOpenNote} onUnknownNote={onUnknownNote} />}
