@@ -160,6 +160,9 @@ def _direct_entity_target(question: str) -> tuple[str, str] | None:
     for prefix in ("onde fica", "onde esta", "onde esta localizado", "onde fica localizado"):
         if normalized.startswith(prefix + " "):
             candidates.append((normalized.removeprefix(prefix).strip(), "where"))
+    capability_match = re.match(r"^o que\s+(.+?)\s+pode\s+fazer(?:\s+agora)?\??$", normalized)
+    if capability_match:
+        candidates.append((capability_match.group(1).strip(), "about"))
     if normalized.startswith("quem "):
         target = re.sub(r"^quem\s+", "", normalized).strip()
         target = re.sub(r"^(sao os|sao as|e a|e o|e|eh|foi|sao|\?)\s+", "", target).strip()
