@@ -35,6 +35,20 @@ const SECTION_LABELS: Record<string, string> = {
 
 type PlayerActionKey = PlayerActionType;
 
+function ActionIcon({ type }: { type: PlayerActionType }) {
+  const common = { fill: "none", stroke: "currentColor", strokeWidth: 1.8, strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      {type === "investigate" && <><circle {...common} cx="10.5" cy="10.5" r="5.5" /><path {...common} d="m15 15 5 5M8 10.5l1.5 1.5 3-3.5" /></>}
+      {type === "talk" && <><path {...common} d="M4 5.5h11a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H9l-4 3v-3H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2Z" /><path {...common} d="M9 18h6l4 3v-4a2 2 0 0 0 2-2V10" /></>}
+      {type === "mission" && <><path {...common} d="M6 3h10a2 2 0 0 1 2 2v16l-5-3-5 3V5a2 2 0 0 1 2-2Z" /><path {...common} d="m9.5 10 1.7 1.7 3.5-4" /></>}
+      {type === "rumor" && <><path {...common} d="M12 4a6 6 0 0 0-6 6c0 4 3 4.5 3 7a3 3 0 0 0 6 0" /><path {...common} d="M10 10a2 2 0 0 1 4 0c0 2-2 2-2 4M17.5 6.5c1 1 1.5 2.2 1.5 3.5" /></>}
+      {type === "destination" && <><circle {...common} cx="12" cy="12" r="9" /><path {...common} d="m15.5 8.5-2.2 4.8-4.8 2.2 2.2-4.8 4.8-2.2Z" /></>}
+      {type === "theory" && <><circle {...common} cx="5" cy="12" r="2.5" /><circle {...common} cx="18" cy="6" r="2.5" /><circle {...common} cx="18" cy="18" r="2.5" /><path {...common} d="m7.3 11 8.4-4M7.3 13l8.4 4" /></>}
+    </svg>
+  );
+}
+
 const ACTION_LABELS: Record<PlayerActionType, string> = {
   investigate: "Investigar pista",
   talk: "Falar com alguém",
@@ -293,7 +307,6 @@ export default function PlayerPanel({
           )}
           <span className="version-pill">Home Jogável v4 · player-safe</span>
           <h2>Omnisvera em jogo</h2>
-          <p>Missões, rumores, personagens e lugares liberados — sem abrir bastidores do mestre.</p>
           <div className="player-stats" aria-label="Resumo do painel dos jogadores">
             <span><strong>{loading || counts.quests === null ? "…" : counts.quests}</strong><em>missões</em></span>
             <span><strong>{loading || counts.rumors === null ? "…" : counts.rumors}</strong><em>rumores</em></span>
@@ -321,7 +334,7 @@ export default function PlayerPanel({
         <div>
           <p className="eyebrow">Ações do jogador</p>
           <h3>O que você quer fazer agora?</h3>
-          <p>Escolha uma intenção e o Arquivo Vivo ajuda a transformar isso em próximo passo sem abrir spoiler.</p>
+          <p>Escolha o próximo movimento do seu personagem.</p>
         </div>
         <div className="action-grid">
           {PLAYER_ACTIONS.map((action) => (
@@ -335,7 +348,12 @@ export default function PlayerPanel({
                 setActionFeedback("");
               }}
             >
-              {action.label}
+              <span className={`action-icon action-icon-${action.key}`}><ActionIcon type={action.key} /></span>
+              <span className="action-card-copy">
+                <strong>{action.label}</strong>
+                <small>{action.description.split(" e ")[0].replace(/[.,;:]$/, "")}.</small>
+              </span>
+              <span className="action-arrow">›</span>
             </button>
           ))}
         </div>
