@@ -134,6 +134,13 @@ def _looks_like_player_character_overview(question: str) -> bool:
     return has_character and asks_list
 
 
+def _looks_like_player_current_activity(question: str) -> bool:
+    lowered = normalize_text(question)
+    has_group = any(term in lowered for term in ("personagens jogadores", "jogadores", "grupo", "party"))
+    asks_now = any(term in lowered for term in ("fazendo agora", "fazem agora", "o que estao fazendo", "onde estao", "situacao atual"))
+    return has_group and asks_now
+
+
 def _looks_like_campaign_recap(question: str) -> bool:
     lowered = normalize_text(question)
     has_recap = any(term in lowered for term in ("aconteceu", "ate agora", "resumo", "recap", "diario", "historia"))
@@ -2605,6 +2612,16 @@ async def answer_question(
                 quest_answer,
                 access_mode,
                 "structured:quests",
+            )
+
+    if not action_kind and _looks_like_player_current_activity(question):
+        current_answer = _answer_campaign_recap(database_path, access_mode)
+        if current_answer:
+            return _with_chat_meta(
+                current_answer,
+                ollama_used=False,
+                model=ollama_model,
+                retrieval_mode="structured:player_current_activity",
             )
 
     if not action_kind and _looks_like_player_character_overview(question):
