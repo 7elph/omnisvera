@@ -291,7 +291,21 @@ def _find_exact_row(database_path: Path, target: str, access_mode: AccessMode | 
 
 
 def _blocked_player_entity_answer(target: str) -> dict:
-    clean_target = re.sub(r"^(sao|sao os|sao as|e|eh)\s+", "", normalize_text(target)).strip().title()
+    normalized_target = normalize_text(target)
+    protected_names = {
+        "estado da campanha": "Estado da Campanha",
+        "sangue antigo": "Sangue Antigo",
+        "criadores": "Criadores",
+        "grande fratura": "Grande Fratura",
+        "fraturamento": "Fraturamento",
+        "eclipse de obsidiana": "Eclipse de Obsidiana",
+        "anciao primordial": "Ancião Primordial",
+        "veu cinzento": "Véu Cinzento",
+    }
+    clean_target = next(
+        (label for key, label in protected_names.items() if key in normalized_target),
+        _plain_wikilinks(target).strip().title(),
+    )
     return {
         "answer": (
             f"**{clean_target}** ainda não está liberado no modo jogador.\n\n"
@@ -1767,6 +1781,7 @@ _QUERY_GENERIC_TERMS = {
 _EXTRACTIVE_NOISE_TERMS = (
     "a consulta abaixo",
     "frontmatter",
+    "onde pode ser ouvido",
     "pendência",
     "pendencia",
     "template",
@@ -1777,15 +1792,20 @@ _EXTRACTIVE_NOISE_TERMS = (
 
 
 def _extractive_grounded_payload(question: str, results: list[dict[str, Any]]) -> dict[str, Any]:
-    query_terms = _grounding_tokens(question) - _QUERY_GENERIC_TERMS
+    all_query_terms = _grounding_tokens(question)
+    query_terms = all_query_terms - _QUERY_GENERIC_TERMS
+    if not query_terms:
+        query_terms = all_query_terms
     candidates: list[tuple[float, str, str]] = []
     for rank, item in enumerate(results[:6]):
         path = str(item.get("path") or "")
         excerpt = str(item.get("excerpt") or "").strip()
         if not path or not excerpt:
             continue
+        result_title = str(item.get("title") or Path(path).stem)
+        is_exact_result = float(item.get("exact_score") or 0.0) >= 900.0
         cleaned = re.sub(r"[#>*_]+", " ", excerpt)
-        for label in (str(item.get("title") or ""), Path(path).stem):
+        for label in (result_title, Path(path).stem):
             if label:
                 cleaned = re.sub(re.escape(label), " ", cleaned, flags=re.IGNORECASE)
         cleaned = re.sub(
@@ -1803,9 +1823,16 @@ def _extractive_grounded_payload(question: str, results: list[dict[str, Any]]) -
                 continue
             sentence_terms = _grounding_tokens(sentence)
             overlap = query_terms & sentence_terms
-            if not overlap:
+            if not overlap and not is_exact_result:
                 continue
-            score = (len(overlap) * 3.0) + (len(overlap) / max(1, len(query_terms))) - (rank * 0.2)
+            if is_exact_result and not overlap:
+                sentence = f"{result_title} {sentence}" if normalize_text(sentence).startswith("e ") else f"{result_title}: {sentence}"
+            score = (
+                (len(overlap) * 3.0)
+                + (len(overlap) / max(1, len(query_terms)))
+                + (20.0 if is_exact_result else 0.0)
+                - (rank * 0.2)
+            )
             candidates.append((score, path, sentence))
 
     candidates.sort(key=lambda item: item[0], reverse=True)
@@ -1843,7 +1870,12 @@ def _extractive_grounded_payload(question: str, results: list[dict[str, Any]]) -
 
     missing: list[str] = []
     best_overlap = len(query_terms & _grounding_tokens(facts[0]["fato"]))
-    if len(query_terms) >= 2 and best_overlap < 2:
+    primary_path = facts[0]["fonte"]
+    primary_result = next((item for item in results if item.get("path") == primary_path), {})
+    primary_type = normalize_text(primary_result.get("type"))
+    asks_for_place = normalize_text(question).startswith(("que lugar", "qual lugar", "onde fica"))
+    place_answered = asks_for_place and primary_type in {"location", "territory", "map"}
+    if len(query_terms) >= 2 and best_overlap < 2 and best_score < 5.5 and not place_answered:
         missing.append("A relação exata perguntada ainda não aparece de forma explícita nas informações reveladas.")
     return {
         "fatos_confirmados": facts,
@@ -2118,6 +2150,74 @@ def _guard_hidden_actor_answer(payload: dict[str, Any], question: str, source_pa
     }
 
 
+def _player_action_kind(question: str) -> str | None:
+    normalized = normalize_text(question)
+    if not normalized.startswith("acao "):
+        return None
+    for kind, terms in (
+        ("investigate", ("investigar pista", "investigar")),
+        ("talk", ("falar com alguem", "conversar")),
+        ("mission", ("seguir missao", "seguir uma missao")),
+        ("rumor", ("procurar rumores", "seguir rumor")),
+        ("destination", ("escolher destino", "viajar para")),
+        ("theory", ("montar teoria", "formular teoria")),
+    ):
+        if any(term in normalized for term in terms):
+            return kind
+    return None
+
+
+def _player_action_target(question: str) -> str:
+    match = re.match(r"^\s*Ação\s*[—-]\s*[^:]+:\s*(.+?)(?:\.\s|$)", question, flags=re.IGNORECASE)
+    return match.group(1).strip() if match else ""
+
+
+def _decorate_player_action_answer(answer: str, kind: str | None) -> str:
+    if not kind:
+        return answer
+    guidance = {
+        "investigate": (
+            "revisar o que já foi confirmado sobre a pista",
+            "procurar uma testemunha, registro ou vestígio físico",
+            "comparar duas fontes antes de acusar alguém",
+        ),
+        "talk": (
+            "decidir o que você realmente quer descobrir ou negociar",
+            "escolher entre uma abordagem aberta ou discreta",
+            "preparar uma pergunta direta e algo que possa oferecer em troca",
+        ),
+        "mission": (
+            "confirmar o objetivo público e o destino conhecido",
+            "dividir funções e separar os recursos necessários",
+            "combinar uma condição de recuo antes de partir",
+        ),
+        "rumor": (
+            "descobrir quem repetiu o rumor primeiro",
+            "buscar uma segunda fonte independente",
+            "tratar o boato como hipótese até encontrar evidência",
+        ),
+        "destination": (
+            "revisar a rota e os perigos já conhecidos",
+            "separar provisões e identificar um contato no caminho",
+            "definir o que o grupo pretende alcançar ao chegar",
+        ),
+        "theory": (
+            "separar fatos confirmados de suposições",
+            "ligar apenas nomes, lugares e acontecimentos que compartilhem evidências",
+            "escolher uma pista capaz de confirmar ou derrubar a teoria",
+        ),
+    }.get(kind)
+    if not guidance:
+        return answer
+    steps = "\n".join(f"- {item.capitalize()}." for item in guidance)
+    return (
+        f"{answer.strip()}\n\n"
+        "### Próximo passo possível\n"
+        f"{steps}\n\n"
+        "> Isso ainda é uma intenção do jogador. Nada foi tratado como acontecimento canônico."
+    ).strip()
+
+
 async def _grounded_json_response(
     *,
     ollama_base_url: str,
@@ -2222,7 +2322,11 @@ async def answer_question(
     response_mode: str = "grounded",
     fallback_model: str = "omnisvera-fast:latest",
 ) -> dict:
-    if _looks_like_rumor_overview(question):
+    action_kind = _player_action_kind(question) if access_mode == "player" else None
+    action_target = _player_action_target(question) if action_kind else ""
+    retrieval_question = action_target or question
+
+    if not action_kind and _looks_like_rumor_overview(question):
         rumor_answer = _answer_index_overview(
             database_path,
             folder="CAMPANHA/Rumors/",
@@ -2241,7 +2345,7 @@ async def answer_question(
                 "structured:rumors",
             )
 
-    if _looks_like_quest_overview(question):
+    if not action_kind and _looks_like_quest_overview(question):
         quest_answer = _answer_index_overview(
             database_path,
             folder="CAMPANHA/Quests/",
@@ -2260,7 +2364,7 @@ async def answer_question(
                 "structured:quests",
             )
 
-    if _looks_like_player_character_overview(question):
+    if not action_kind and _looks_like_player_character_overview(question):
         character_answer = _answer_player_characters(database_path, access_mode)
         if character_answer:
             return await _polish_response_with_ollama(
@@ -2273,7 +2377,7 @@ async def answer_question(
                 "structured:player_characters",
             )
 
-    if _looks_like_campaign_recap(question):
+    if not action_kind and _looks_like_campaign_recap(question):
         recap_answer = _answer_campaign_recap(database_path, access_mode)
         if recap_answer:
             return await _polish_response_with_ollama(
@@ -2332,7 +2436,7 @@ async def answer_question(
     try:
         hybrid_results = await hybrid_search(
             database_path,
-            query=question,
+            query=retrieval_question,
             ollama_base_url=ollama_base_url,
             embedding_model=embedding_model,
             semantic_index_path=semantic_index,
@@ -2344,7 +2448,7 @@ async def answer_question(
         hybrid_results = []
 
     if not hybrid_results:
-        lexical_results = search_notes(database_path, question, limit=max(limit, 12), access_mode=access_mode)
+        lexical_results = search_notes(database_path, retrieval_question, limit=max(limit, 12), access_mode=access_mode)
         operational_results = [
             item
             for item in lexical_results
@@ -2355,7 +2459,7 @@ async def answer_question(
         ]
         if operational_results:
             lexical_results = operational_results
-        lexical_results = _rerank_results(question, lexical_results)[: max(3, min(limit, 8))]
+        lexical_results = _rerank_results(retrieval_question, lexical_results)[: max(3, min(limit, 8))]
         hybrid_results = [
             {
                 "id": item["id"],
@@ -2387,6 +2491,13 @@ async def answer_question(
         if operational_results:
             hybrid_results = operational_results
 
+    if action_target:
+        exact_action_results = [
+            item for item in hybrid_results if float(item.get("exact_score") or 0.0) >= 900.0
+        ]
+        if exact_action_results:
+            hybrid_results = exact_action_results[:1]
+
     note_ids = list(dict.fromkeys(int(item["id"]) for item in hybrid_results if item.get("id") is not None))
     notes_used = get_notes_by_ids(database_path, note_ids, access_mode=access_mode)
     context = _context_from_hybrid_results(hybrid_results, max_chars=context_chars)
@@ -2406,7 +2517,7 @@ async def answer_question(
         ollama_attempted = False
         effective_model = ollama_model
     else:
-        extractive_payload = _extractive_grounded_payload(question, hybrid_results)
+        extractive_payload = _extractive_grounded_payload(retrieval_question, hybrid_results)
         if response_mode == "fast" or not extractive_payload.get("fatos_confirmados"):
             payload = extractive_payload
             ollama_used = False
@@ -2432,6 +2543,8 @@ async def answer_question(
         payload = _grounded_fallback()
         answer = payload["resposta_ao_jogador"]
         ollama_used = False
+    if access_mode == "player":
+        answer = _decorate_player_action_answer(answer, action_kind)
 
     source_paths = set(payload.get("fontes_usadas") or [])
     if source_paths:

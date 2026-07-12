@@ -12,7 +12,12 @@ if str(BACKEND) not in sys.path:
 
 from app.access import PLAYER_BLOCKED_LOOKUP_TERMS, is_player_safe, normalize_text, sanitize_player_text  # noqa: E402
 from app.config import get_settings  # noqa: E402
-from app.rag import answer_question  # noqa: E402
+from app.rag import (  # noqa: E402
+    _decorate_player_action_answer,
+    _player_action_kind,
+    _player_action_target,
+    answer_question,
+)
 from app.vault_index import get_note, resolve_note  # noqa: E402
 
 
@@ -34,6 +39,15 @@ def _section_sanitization() -> None:
     assert "Informação pública" in sanitized
     assert "Contato público" in sanitized
     assert "O nome secreto" not in sanitized
+
+
+def _player_action_rules() -> None:
+    question = "Ação — Investigar pista: Remédios Falsos da Maré Baixa. O que já sabemos?"
+    assert _player_action_kind(question) == "investigate"
+    assert _player_action_target(question) == "Remédios Falsos da Maré Baixa"
+    answer = _decorate_player_action_answer("Há uma pista confirmada.", "investigate")
+    assert "Próximo passo possível" in answer
+    assert "Nada foi tratado como acontecimento canônico" in answer
 
 
 async def _runtime_checks() -> None:
@@ -87,6 +101,7 @@ async def _runtime_checks() -> None:
 def main() -> None:
     _access_rules()
     _section_sanitization()
+    _player_action_rules()
     asyncio.run(_runtime_checks())
     print("player safety and fallback: PASS")
 

@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { mediaUrlFromVaultPath, NoteSummary, playerDashboard, PlayerDashboard } from "../api";
+import { useEffect, useMemo, useState } from "react";
+import { listNotes, mediaUrlFromVaultPath, NoteSummary, playerDashboard, PlayerDashboard } from "../api";
 
 const SECTION_ICONS: Record<string, string> = {
   diary: "✦",
@@ -18,6 +18,65 @@ const SECTION_LABELS: Record<string, string> = {
   places: "Lugar",
   maps: "Mapa",
 };
+
+type PlayerActionKey = "investigate" | "talk" | "mission" | "rumor" | "destination" | "theory";
+
+const PLAYER_ACTIONS: Array<{
+  key: PlayerActionKey;
+  label: string;
+  description: string;
+  noteTypes: string[];
+}> = [
+  {
+    key: "investigate",
+    label: "Investigar pista",
+    description: "Escolha uma missão ou rumor e transforme a informação conhecida em linhas de investigação.",
+    noteTypes: ["quest", "rumor"],
+  },
+  {
+    key: "talk",
+    label: "Falar com alguém",
+    description: "Escolha uma pessoa ou facção conhecida e prepare uma abordagem antes da conversa.",
+    noteTypes: ["character", "faction"],
+  },
+  {
+    key: "mission",
+    label: "Seguir missão",
+    description: "Escolha uma missão liberada e organize objetivo, recursos e primeiro movimento.",
+    noteTypes: ["quest"],
+  },
+  {
+    key: "rumor",
+    label: "Procurar rumores",
+    description: "Escolha um boato e descubra como verificá-lo sem tratá-lo como verdade.",
+    noteTypes: ["rumor"],
+  },
+  {
+    key: "destination",
+    label: "Escolher destino",
+    description: "Escolha um lugar conhecido e revise rota, motivo e preparação para a viagem.",
+    noteTypes: ["location", "territory", "map"],
+  },
+  {
+    key: "theory",
+    label: "Montar teoria",
+    description: "Escolha um mistério liberado e separe fatos, conexões possíveis e lacunas.",
+    noteTypes: ["rumor", "quest", "lore", "story"],
+  },
+];
+
+function actionPrompt(action: PlayerActionKey, note: NoteSummary) {
+  const target = note.title;
+  const prompts: Record<PlayerActionKey, string> = {
+    investigate: `Ação — Investigar pista: ${target}. Resuma o que já foi confirmado e ajude a escolher uma abordagem de investigação sem revelar a solução.`,
+    talk: `Ação — Falar com alguém: ${target}. O que já sabemos, o que faria sentido perguntar e como preparar uma abordagem sem afirmar que a conversa já aconteceu?`,
+    mission: `Ação — Seguir missão: ${target}. Qual é o objetivo público, o que o grupo deve preparar e qual pode ser o primeiro passo?`,
+    rumor: `Ação — Procurar rumores: ${target}. O que foi revelado e como o grupo pode verificar esse boato sem assumi-lo como verdade?`,
+    destination: `Ação — Escolher destino: ${target}. O que sabemos sobre o lugar, por que ir até lá e que preparação pública faz sentido?`,
+    theory: `Ação — Montar teoria: ${target}. Separe fatos confirmados, conexões possíveis e o que ainda falta descobrir.`,
+  };
+  return prompts[action];
+}
 
 function NoteTile({
   note,
@@ -57,6 +116,9 @@ export default function PlayerPanel({
   const [dashboard, setDashboard] = useState<PlayerDashboard | null>(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
+  const [knownNotes, setKnownNotes] = useState<NoteSummary[]>([]);
+  const [selectedAction, setSelectedAction] = useState<PlayerActionKey | null>(null);
+  const [selectedTargetId, setSelectedTargetId] = useState("");
 
   useEffect(() => {
     setLoading(true);
@@ -71,6 +133,7 @@ export default function PlayerPanel({
         setError("Não consegui carregar o painel dos jogadores. Confira o modo e o token.");
       })
       .finally(() => setLoading(false));
+    listNotes().then(setKnownNotes).catch(() => setKnownNotes([]));
   }, []);
 
   const sections = dashboard?.sections || [];
@@ -80,6 +143,16 @@ export default function PlayerPanel({
     characters: sections.find((section) => section.kind === "characters")?.items.length ?? null,
     places: sections.find((section) => section.kind === "places")?.items.length ?? null,
   };
+  const actionDefinition = PLAYER_ACTIONS.find((item) => item.key === selectedAction) || null;
+  const actionOptions = useMemo(() => {
+    if (!actionDefinition) return [];
+    return knownNotes
+      .filter((note) => actionDefinition.noteTypes.includes(String(note.type || "").toLowerCase()))
+      .filter((note) => !note.path.includes("INDICE_") && !note.title.toLowerCase().startsWith("índice"))
+      .sort((left, right) => left.title.localeCompare(right.title, "pt-BR"))
+      .slice(0, 40);
+  }, [actionDefinition, knownNotes]);
+  const selectedTarget = actionOptions.find((note) => String(note.id) === selectedTargetId) || null;
 
   return (
     <section className="panel player-home">
@@ -119,25 +192,48 @@ export default function PlayerPanel({
           <p>Escolha uma intenção e o Arquivo Vivo ajuda a transformar isso em próximo passo sem abrir spoiler.</p>
         </div>
         <div className="action-grid">
-          <button onClick={() => onAskPrompt("Quero investigar uma pista ativa. O que posso fazer sem spoiler?")}>
-            Investigar pista
-          </button>
-          <button onClick={() => onAskPrompt("Quero falar com alguém. Quais personagens ou facções conhecidas fazem sentido procurar?")}>
-            Falar com alguém
-          </button>
-          <button onClick={() => onAskPrompt("Quero seguir uma missão ativa. Quais opções estão abertas para o grupo?")}>
-            Seguir missão
-          </button>
-          <button onClick={() => onAskPrompt("Quero procurar rumores. O que está circulando e pode virar ação?")}>
-            Procurar rumores
-          </button>
-          <button onClick={() => onAskPrompt("Quero revisar lugares conhecidos. Para onde o grupo pode ir agora?")}>
-            Escolher destino
-          </button>
-          <button onClick={() => onAskPrompt("Quero formular uma teoria com o que já sabemos. Quais peças estão conectadas?")}>
-            Montar teoria
-          </button>
+          {PLAYER_ACTIONS.map((action) => (
+            <button
+              key={action.key}
+              className={selectedAction === action.key ? "active" : ""}
+              onClick={() => {
+                setSelectedAction(action.key);
+                setSelectedTargetId("");
+              }}
+            >
+              {action.label}
+            </button>
+          ))}
         </div>
+        {actionDefinition && (
+          <div className="action-builder">
+            <div className="action-builder-heading">
+              <div>
+                <strong>{actionDefinition.label}</strong>
+                <p>{actionDefinition.description}</p>
+              </div>
+              <button className="secondary-button" onClick={() => setSelectedAction(null)}>Fechar</button>
+            </div>
+            <label>
+              Foco da ação
+              <select value={selectedTargetId} onChange={(event) => setSelectedTargetId(event.target.value)}>
+                <option value="">Escolha uma opção liberada...</option>
+                {actionOptions.map((note) => (
+                  <option key={note.id} value={note.id}>{note.title}</option>
+                ))}
+              </select>
+            </label>
+            {selectedTarget?.description && <p className="action-target-preview">{selectedTarget.description}</p>}
+            <button
+              className="action-launch"
+              disabled={!selectedTarget}
+              onClick={() => selectedTarget && onAskPrompt(actionPrompt(actionDefinition.key, selectedTarget))}
+            >
+              Preparar próximo passo
+            </button>
+            <small>Nenhuma ação será registrada como acontecida; o Arquivo apenas ajuda a preparar a intenção.</small>
+          </div>
+        )}
       </div>
 
       {error && <p className="warning-text">{error}</p>}
