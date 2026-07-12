@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { chatVault, ChatResult, getAccessMode, mediaUrlFromVaultPath, NoteSummary } from "../api";
 import RenderedNote from "../components/RenderedNote";
 
@@ -57,6 +57,7 @@ export default function ChatVault({
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [loading, setLoading] = useState(false);
   const [lastSeed, setLastSeed] = useState("");
+  const threadEndRef = useRef<HTMLDivElement | null>(null);
   const isPlayer = getAccessMode() === "player";
 
   const latestSuggestions = useMemo(() => {
@@ -113,13 +114,17 @@ export default function ChatVault({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialQuestion]);
 
+  useEffect(() => {
+    if (messages.length) threadEndRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
+  }, [messages, loading]);
+
   return (
     <section className="panel chat-panel">
       <div className="chat-header">
         <div>
           <p className="eyebrow">Arquivo Vivo</p>
           <h2>Fale com Omnisvera</h2>
-          <p>A entidade responde apenas com lembranças já reveladas ao grupo.</p>
+          <p>A entidade responde apenas com lembranças já reveladas ao grupo.{messages.length ? ` Mantendo o fio de ${messages.length} troca(s).` : ""}</p>
         </div>
         {messages.length > 0 && (
           <button className="secondary-button" onClick={() => setMessages([])}>
@@ -203,18 +208,22 @@ export default function ChatVault({
                 ))}
               </div>
             )}
+            {message.result.notes_used[0] && (
+              <button className="chat-primary-source" onClick={() => onOpenNote(message.result.notes_used[0].id)}>Abrir registro principal · {message.result.notes_used[0].title}</button>
+            )}
             {message.result.notes_used.length > 0 && (
-              <div className="source-list">
-                <p className="eyebrow">Ecos consultados</p>
+              <details className="source-list chat-sources">
+                <summary>{message.result.notes_used.length} fonte(s) consultada(s)</summary>
                 <div className="source-grid">
                   {message.result.notes_used.map((note) => (
                     <SourceCard key={`${message.id}-${note.id}`} note={note} onOpenNote={onOpenNote} />
                   ))}
                 </div>
-              </div>
+              </details>
             )}
           </article>
         ))}
+        <div ref={threadEndRef} />
       </div>
     </section>
   );

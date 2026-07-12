@@ -240,6 +240,10 @@ textarea {
   gap: 1rem;
   margin-top: 1rem;
 }
+.chat-primary-source { width: 100%; margin-top: .7rem; padding: .58rem .75rem; color: #d7c198; background: rgba(214,168,88,.08); border: 1px solid rgba(214,168,88,.22); text-align: left; }
+.chat-sources { margin-top: .65rem; padding: .7rem; border: 1px solid rgba(255,255,255,.07); border-radius: 12px; background: rgba(0,0,0,.15); }
+.chat-sources summary { cursor: pointer; color: #bba783; font-size: .78rem; font-weight: 700; }
+.chat-sources[open] summary { margin-bottom: .7rem; }
 
 .chat-message {
   background: rgba(13, 11, 9, 0.48);
@@ -1087,12 +1091,18 @@ textarea {
 .editor-safety-note { padding-top: .55rem; border-top: 1px solid rgba(255,255,255,.07); }
 
 @media (max-width: 700px) {
+  .gm-command-summary { grid-template-columns: repeat(2,minmax(0,1fr)); }
   .note-editor header,
   .note-editor footer { align-items: stretch; flex-direction: column; }
   .note-editor footer > div { width: 100%; }
   .note-editor footer button { flex: 1; }
   .note-editor textarea { min-height: 58vh; font-size: 12px; }
 }
+
+.gm-command-summary { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: .6rem; margin: 1rem 0; }
+.gm-command-summary a { display: grid; gap: .15rem; padding: .8rem; border: 1px solid rgba(211,177,94,.2); border-radius: 14px; color: inherit; background: rgba(255,255,255,.025); text-decoration: none; }
+.gm-command-summary strong { color: #e2b65f; font-size: 1.35rem; }
+.gm-command-summary span { color: var(--muted); font-size: .72rem; }
 
 .character-sheet-page { display: grid; gap: 1rem; }
 .character-sheet-shell { display: grid; gap: .85rem; }
@@ -1623,6 +1633,7 @@ textarea {
 }
 
 @media (max-width: 640px) {
+  .gm-command-summary { grid-template-columns: repeat(2,minmax(0,1fr)); }
   body { padding-bottom: 78px; }
   .app-shell { padding: .55rem; }
   .hero { margin: .45rem 0; padding: .8rem 1rem; }

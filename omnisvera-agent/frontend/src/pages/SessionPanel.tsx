@@ -236,6 +236,13 @@ export default function SessionPanel({
         </div>
       </div>
 
+      <nav className="gm-command-summary" aria-label="Resumo operacional">
+        <a href="#gm-actions"><strong>{actions.filter((action) => ["submitted", "in_review"].includes(action.status)).length}</strong><span>Ações pendentes</span></a>
+        <a href="#gm-quests"><strong>{questProgress.filter((quest) => ["accepted", "in_progress"].includes(quest.status)).length}</strong><span>Missões em curso</span></a>
+        <a href="#gm-discoveries"><strong>{discoveries.length}</strong><span>Descobertas liberadas</span></a>
+        <a href="#gm-inventory"><strong>{inventory.length}</strong><span>Itens vinculados</span></a>
+      </nav>
+
       <div className="prompt-chips">
         {GM_PROMPTS.map((prompt) => (
           <button key={prompt} onClick={() => onAskPrompt(prompt)}>
@@ -244,7 +251,7 @@ export default function SessionPanel({
         ))}
       </div>
 
-      <section className="gm-action-inbox">
+      <section id="gm-actions" className="gm-action-inbox">
         <div className="section-heading">
           <span>✉</span>
           <div>
@@ -283,7 +290,7 @@ export default function SessionPanel({
         </div>
       </section>
 
-      <section className="gm-discovery-panel">
+      <section id="gm-discoveries" className="gm-discovery-panel">
         <div className="section-heading">
           <span>✧</span>
           <div>
@@ -314,7 +321,7 @@ export default function SessionPanel({
         </div>
       </section>
 
-      <section className="gm-quest-panel">
+      <section id="gm-quests" className="gm-quest-panel">
         <div className="section-heading">
           <span>⚑</span>
           <div>
@@ -361,7 +368,7 @@ export default function SessionPanel({
         </div>
       </section>
 
-      <section className="gm-inventory-panel">
+      <section id="gm-inventory" className="gm-inventory-panel">
         <div className="section-heading"><span>⚔</span><div><p className="eyebrow">Ficha rápida</p><h3>Inventário dos personagens</h3><p>Vincule itens player-safe sem alterar a ficha Markdown.</p></div></div>
         <div className="inventory-controls">
           <select value={inventoryProfile} onChange={(event) => setInventoryProfile(event.target.value)}>
