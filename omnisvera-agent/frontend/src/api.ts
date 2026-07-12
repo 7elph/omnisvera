@@ -157,11 +157,11 @@ export async function searchNotes(query: string, limit = 10): Promise<SearchResu
   return response.json();
 }
 
-export async function chatVault(question: string, limit = 6): Promise<ChatResult> {
+export async function chatVault(question: string, limit = 6, contextPaths: string[] = []): Promise<ChatResult> {
   const response = await fetch(scoped("/chat"), {
     method: "POST",
     headers: authHeaders({ "Content-Type": "application/json" }),
-    body: JSON.stringify({ question, limit }),
+    body: JSON.stringify({ question, limit, context_paths: contextPaths.slice(-4) }),
   });
   if (!response.ok) throw new Error("Falha no chat");
   return response.json();

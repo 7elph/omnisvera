@@ -63,6 +63,7 @@ class SearchResult(NoteSummary):
 class ChatRequest(BaseModel):
     question: str
     limit: int = 4
+    context_paths: list[str] = Field(default_factory=list)
 
 
 class ChatResponse(BaseModel):

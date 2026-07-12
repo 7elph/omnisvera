@@ -57,6 +57,7 @@ export default function ChatVault({
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [loading, setLoading] = useState(false);
   const [lastSeed, setLastSeed] = useState("");
+  const isPlayer = getAccessMode() === "player";
 
   const latestSuggestions = useMemo(() => {
     const latest = messages.at(-1)?.result.suggested_questions || [];
@@ -69,7 +70,8 @@ export default function ChatVault({
     setLoading(true);
     setQuestion("");
     try {
-      const data = await chatVault(clean);
+      const contextPaths = messages.at(-1)?.result.note_paths || [];
+      const data = await chatVault(clean, 6, contextPaths);
       setMessages((current) => [
         ...current.slice(-8),
         {
@@ -184,11 +186,13 @@ export default function ChatVault({
                 ))}
               </div>
             )}
-            <div className="chat-runtime">
-              <span className={runtimeClass(message.result)}>{runtimeLabel(message.result)}</span>
-              {message.result.model && <span>{message.result.model}</span>}
-              {message.result.retrieval_mode && <span>{message.result.retrieval_mode}</span>}
-            </div>
+            {!isPlayer && (
+              <div className="chat-runtime">
+                <span className={runtimeClass(message.result)}>{runtimeLabel(message.result)}</span>
+                {message.result.model && <span>{message.result.model}</span>}
+                {message.result.retrieval_mode && <span>{message.result.retrieval_mode}</span>}
+              </div>
+            )}
             {message.result.suggested_questions && message.result.suggested_questions.length > 0 && (
               <div className="message-suggestions">
                 <span>Continuar com:</span>

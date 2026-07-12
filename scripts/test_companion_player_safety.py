@@ -97,6 +97,45 @@ async def _runtime_checks() -> None:
     assert blocked.get("note_paths") == []
     assert "protegida" in normalize_text(blocked.get("warning"))
 
+    followup = await answer_question(
+        settings.database_path,
+        settings.ollama_base_url,
+        settings.fast_model,
+        "E quantos anos ele tem?",
+        access_mode="player",
+        embedding_model=settings.embedding_model,
+        semantic_index_path=settings.semantic_index_path,
+        rag_mode="hybrid",
+        response_mode="fast",
+        fallback_model=settings.fast_model,
+        conversation_paths=["Characters/Individual/Varkh Nimalis.md"],
+    )
+    assert followup.get("retrieval_mode") == "conversation_followup"
+    assert "30 anos" in str(followup.get("answer"))
+    assert followup.get("note_paths") == ["Characters/Individual/Varkh Nimalis.md"]
+
+    where_followup = await answer_question(
+        settings.database_path,
+        settings.ollama_base_url,
+        settings.fast_model,
+        "E onde ele está?",
+        access_mode="player",
+        response_mode="fast",
+        conversation_paths=["Characters/Individual/Varkh Nimalis.md"],
+    )
+    assert "esta em viagem" in normalize_text(where_followup.get("answer"))
+
+    orphan_followup = await answer_question(
+        settings.database_path,
+        settings.ollama_base_url,
+        settings.fast_model,
+        "E ela?",
+        access_mode="player",
+        response_mode="fast",
+    )
+    assert orphan_followup.get("retrieval_mode") == "conversation_needs_context"
+    assert orphan_followup.get("note_paths") == []
+
 
 def main() -> None:
     _access_rules()

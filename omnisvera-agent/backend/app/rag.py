@@ -715,9 +715,13 @@ def _rich_direct_entity_answer(note: dict, question: str, access_mode: AccessMod
         else:
             location = fields.get("localizacao atual") or frontmatter.get("location")
             territory = fields.get("territorio") or frontmatter.get("territory")
-            lines = [
-                f"{title} está ligado a {_clean_value(location or territory) or 'um local ainda não definido no contexto liberado'}."
-            ]
+            location_text = _clean_value(location or territory)
+            if not location_text:
+                lines = [f"A localização atual de {title} ainda não foi revelada com clareza."]
+            elif normalize_text(location_text).startswith(("em ", "no ", "na ", "nos ", "nas ")):
+                lines = [f"{title} está {_lower_initial(location_text)}."]
+            else:
+                lines = [f"{title} está em {location_text}."]
         answer = _answer_as_guide(title, [("Onde fica", lines)])
     elif note_type == "character":
         subtype = normalize_text(frontmatter.get("subtype"))
@@ -1622,11 +1626,12 @@ async def _polish_response_with_ollama(
     base_answer = _clean_answer(str(result.get("answer") or ""))
     if not base_answer or _should_skip_ollama_polish(result):
         return _with_chat_meta(result, ollama_used=False, model=ollama_model, retrieval_mode=retrieval_mode)
+    if result.get("insufficient_context") and not result.get("notes_used"):
+        return _with_chat_meta(result, ollama_used=False, model=ollama_model, retrieval_mode=retrieval_mode)
 
-    # Qwen 3 is the strongest local model available, but its deliberate
-    # reasoning is expensive on this notebook. Exact entities and structured
-    # lists are already assembled from verified vault data, so return those
-    # immediately and reserve the model for genuinely open questions.
+    # Exact entities and structured lists are already assembled from verified
+    # vault data. Rewriting them with the local model is slow on this notebook
+    # and frequently produces text that must be rejected.
     if retrieval_mode == "direct_entity" or retrieval_mode.startswith("structured:"):
         return _with_chat_meta(
             result,
@@ -2172,6 +2177,47 @@ def _player_action_target(question: str) -> str:
     return match.group(1).strip() if match else ""
 
 
+def _looks_like_conversation_followup(question: str) -> bool:
+    normalized = normalize_text(question)
+    words = normalized.split()
+    if len(words) > 16:
+        return False
+    return (
+        normalized.startswith(("e ", "mas ", "entao ", "onde ", "quando ", "como "))
+        or any(re.search(rf"\b{term}\b", normalized) for term in ("ele", "ela", "isso", "nisso", "dele", "dela"))
+        or normalized in {"por que?", "porque?", "e depois?", "o que mais?"}
+    )
+
+
+def _conversation_note(
+    database_path: Path,
+    paths: list[str],
+    access_mode: AccessMode,
+) -> dict[str, Any] | None:
+    wanted = [str(path).replace("\\", "/") for path in paths[-4:] if str(path).strip()]
+    if not wanted:
+        return None
+    rows = all_notes_for_search(database_path)
+    by_path = {str(row["path"]).replace("\\", "/"): row for row in rows}
+    for path in reversed(wanted):
+        row = by_path.get(path)
+        if row is None:
+            continue
+        note = get_note(database_path, int(row["id"]), access_mode=access_mode)
+        if note is not None:
+            return note
+    return None
+
+
+def _contextual_question(question: str, title: str) -> str:
+    normalized = normalize_text(question)
+    if "quantos anos" in normalized or "idade" in normalized:
+        return f"Quantos anos tem {title}?"
+    if "onde" in normalized or "localizacao" in normalized:
+        return f"Onde está {title}?"
+    return f"Quem é {title}?"
+
+
 def _decorate_player_action_answer(answer: str, kind: str | None) -> str:
     if not kind:
         return answer
@@ -2321,10 +2367,40 @@ async def answer_question(
     context_chars: int = 5200,
     response_mode: str = "grounded",
     fallback_model: str = "omnisvera-fast:latest",
+    conversation_paths: list[str] | None = None,
 ) -> dict:
     action_kind = _player_action_kind(question) if access_mode == "player" else None
     action_target = _player_action_target(question) if action_kind else ""
     retrieval_question = action_target or question
+
+    if not action_kind and _looks_like_conversation_followup(question):
+        previous_note = _conversation_note(database_path, conversation_paths or [], access_mode)
+        if previous_note is not None:
+            contextual_question = _contextual_question(question, str(previous_note.get("title") or ""))
+            followup_answer = _direct_entity_answer(previous_note, contextual_question, access_mode)
+            return _with_chat_meta(
+                followup_answer,
+                ollama_used=False,
+                model=ollama_model,
+                retrieval_mode="conversation_followup",
+            )
+        return _with_chat_meta(
+            {
+                "answer": "Não sei a quem ou ao que você está se referindo. Diga o nome novamente e eu continuo daí.",
+                "notes_used": [],
+                "note_paths": [],
+                "insufficient_context": True,
+                "warning": None,
+                "suggested_questions": [
+                    "Quem é Vezemir?",
+                    "O que sabemos sobre Nimalis?",
+                    "Quais missões estão ativas?",
+                ],
+            },
+            ollama_used=False,
+            model=ollama_model,
+            retrieval_mode="conversation_needs_context",
+        )
 
     if not action_kind and _looks_like_rumor_overview(question):
         rumor_answer = _answer_index_overview(

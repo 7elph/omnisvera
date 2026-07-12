@@ -270,6 +270,7 @@ async def chat(request: ChatRequest, _: AccessContext = Depends(require_master))
         context_chars=settings.rag_context_chars,
         response_mode=settings.response_mode,
         fallback_model=settings.fast_model,
+        conversation_paths=request.context_paths,
     )
 
 
@@ -320,6 +321,7 @@ async def gm_chat(request: ChatRequest, _: AccessContext = Depends(require_maste
         context_chars=settings.rag_context_chars,
         response_mode=settings.response_mode,
         fallback_model=settings.fast_model,
+        conversation_paths=request.context_paths,
     )
 
 
@@ -370,6 +372,7 @@ async def player_chat(request: ChatRequest, _: AccessContext = Depends(require_p
         context_chars=settings.rag_context_chars,
         response_mode=settings.response_mode,
         fallback_model=settings.fast_model,
+        conversation_paths=request.context_paths,
     )
 
 
