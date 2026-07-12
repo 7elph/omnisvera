@@ -422,8 +422,11 @@ export default function PlayerPanel({
           <div className="personal-inventory-list">
             {inventory.slice(0, 10).map((item) => {
               const note = knownNotes.find((entry) => entry.path === item.item_path);
-              return <button key={item.id} disabled={!note} onClick={() => note && onOpenNote(note.id)}>
-                <span><strong>{item.item_title}</strong><small>{item.notes || (item.equipped ? "Equipado" : "Guardado")}</small></span>
+              const noteId = item.note_id || note?.id;
+              const image = mediaUrlFromVaultPath(item.thumbnail || item.cover || note?.thumbnail || note?.cover);
+              return <button key={item.id} disabled={!noteId} onClick={() => noteId && onOpenNote(noteId)}>
+                {image ? <img className="inventory-item-image" src={image} alt={item.item_title} /> : <span className="inventory-item-placeholder" aria-hidden="true">&#9671;</span>}
+                <span className="inventory-item-copy"><strong>{item.item_title}</strong><small>{item.notes || (item.equipped ? "Equipado" : "Guardado")}</small></span>
                 <b>×{item.quantity}</b>
               </button>;
             })}

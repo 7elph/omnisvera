@@ -183,6 +183,7 @@ export type PlayerQuest = {
 export type EditableNote = { path: string; content: string; content_hash: string; updated_at: string };
 export type InventoryItem = {
   id: number; profile_id: string; item_path: string; item_title: string;
+  note_id?: number | null; thumbnail?: string | null; cover?: string | null;
   quantity: number; equipped: boolean; notes?: string | null; updated_at: string;
 };
 

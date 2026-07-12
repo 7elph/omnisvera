@@ -375,7 +375,14 @@ export default function SessionPanel({
         </div>
         {inventoryFeedback && <p className="action-feedback">{inventoryFeedback}</p>}
         <div className="gm-inventory-list">
-          {inventory.map((item) => <article key={item.id}><span><strong>{item.item_title}</strong><small>{item.profile_id}{item.equipped ? " · equipado" : ""}</small></span><b>×{item.quantity}</b></article>)}
+          {inventory.map((item) => {
+            const image = mediaUrlFromVaultPath(item.thumbnail || item.cover);
+            return <article key={item.id}>
+              {image ? <img className="inventory-item-image" src={image} alt={item.item_title} /> : <span className="inventory-item-placeholder" aria-hidden="true">&#9671;</span>}
+              <span className="inventory-item-copy"><strong>{item.item_title}</strong><small>{item.profile_id}{item.equipped ? " · equipado" : ""}</small></span>
+              <b>×{item.quantity}</b>
+            </article>;
+          })}
           {inventory.length === 0 && <p className="muted">Nenhum inventário personalizado.</p>}
         </div>
       </section>

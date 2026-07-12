@@ -813,9 +813,26 @@ def player_quests(access: AccessContext = Depends(require_player)) -> list[dict]
     return list_quests(settings.database_path, profile_id=access.profile_id)
 
 
+def _inventory_with_media(items: list[dict], *, access_mode: str) -> list[dict]:
+    enriched: list[dict] = []
+    for item in items:
+        record = dict(item)
+        note = resolve_note(settings.database_path, record["item_path"], access_mode=access_mode)
+        if note:
+            record["note_id"] = note.get("id")
+            record["thumbnail"] = note.get("thumbnail")
+            record["cover"] = note.get("cover")
+        enriched.append(record)
+    return enriched
+
+
 @app.get("/player/inventory", response_model=list[InventoryRecord])
 def player_inventory(access: AccessContext = Depends(require_player)) -> list[dict]:
-    return list_inventory(settings.database_path, access.profile_id or "group")
+    maybe_refresh_index()
+    return _inventory_with_media(
+        list_inventory(settings.database_path, access.profile_id or "group"),
+        access_mode="player",
+    )
 
 
 @app.get("/gm/character-sheets", response_model=list[CharacterSheetResponse])
@@ -982,10 +999,11 @@ def gm_update_quest(
 
 @app.get("/gm/inventory", response_model=list[InventoryRecord])
 def gm_inventory(_: AccessContext = Depends(require_master)) -> list[dict]:
+    maybe_refresh_index()
     items: list[dict] = []
     for profile_id in settings.player_profiles:
         items.extend(list_inventory(settings.database_path, profile_id))
-    return items
+    return _inventory_with_media(items, access_mode="gm")
 
 
 @app.post("/gm/inventory", response_model=InventoryRecord)

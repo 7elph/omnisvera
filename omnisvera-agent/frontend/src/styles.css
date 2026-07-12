@@ -1023,8 +1023,11 @@ textarea {
 .gm-inventory-list { display: grid; gap: 0.5rem; }
 .personal-inventory-list button,
 .gm-inventory-list article { display: flex; align-items: center; justify-content: space-between; gap: 0.7rem; padding: 0.65rem; border: 1px solid rgba(255,255,255,.08); border-radius: 11px; background: rgba(255,255,255,.025); color: inherit; text-align: left; }
-.personal-inventory-list span,
-.gm-inventory-list span { display: grid; gap: .15rem; }
+.inventory-item-copy { display: grid; flex: 1; min-width: 0; gap: .15rem; }
+.inventory-item-image,
+.inventory-item-placeholder { width: 52px; height: 52px; flex: 0 0 52px; border-radius: 10px; }
+.inventory-item-image { display: block; object-fit: cover; border: 1px solid rgba(211,177,94,.28); background: #090b0d; }
+.inventory-item-placeholder { display: grid; place-items: center; color: rgba(211,177,94,.7); border: 1px solid rgba(211,177,94,.18); background: radial-gradient(circle at 50% 40%, rgba(211,177,94,.12), rgba(255,255,255,.015)); font-size: 1.25rem; }
 .personal-inventory-list small,
 .gm-inventory-list small { color: var(--muted); }
 

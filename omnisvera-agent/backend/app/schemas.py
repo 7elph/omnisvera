@@ -213,6 +213,9 @@ class InventoryRecord(BaseModel):
     profile_id: str
     item_path: str
     item_title: str
+    note_id: int | None = None
+    thumbnail: str | None = None
+    cover: str | None = None
     quantity: int
     equipped: bool
     notes: str | None = None
