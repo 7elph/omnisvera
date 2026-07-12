@@ -460,12 +460,34 @@ def _is_player_character(note: dict) -> bool:
 
 @app.get("/player/profile", response_model=PlayerProfileResponse)
 def player_profile(access: AccessContext = Depends(require_player)) -> dict:
-    return {
+    maybe_refresh_index()
+    payload = {
         "profile_id": access.profile_id,
         "character_path": access.character_path,
         "character_title": access.character_title,
         "shared_access": access.profile_id is None,
     }
+    if not access.character_path:
+        return payload
+    summary = resolve_note(settings.database_path, access.character_path, access_mode="player")
+    if summary is None:
+        return payload
+    detail = get_note(settings.database_path, int(summary["id"]), access_mode="player")
+    frontmatter = (detail or {}).get("frontmatter") or {}
+    payload.update(
+        {
+            "character_note_id": summary["id"],
+            "thumbnail": summary.get("thumbnail"),
+            "cover": summary.get("cover"),
+            "character_class": frontmatter.get("class"),
+            "race": frontmatter.get("race"),
+            "level": frontmatter.get("level"),
+            "status": frontmatter.get("status") or summary.get("status"),
+            "location": frontmatter.get("location"),
+            "faction": frontmatter.get("faction"),
+        }
+    )
+    return payload
 
 
 @app.get("/player/actions", response_model=list[PlayerActionRecord])

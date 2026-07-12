@@ -52,6 +52,16 @@ const ACTION_STATUS: Record<PlayerAction["status"], string> = {
   rejected: "Não realizada",
 };
 
+function profileValue(value?: string | number | null) {
+  if (value === null || value === undefined || value === "") return "—";
+  return String(value)
+    .replace(/^['"]|['"]$/g, "")
+    .replace(/^\[\[/, "")
+    .replace(/\]\]$/, "")
+    .split("|")
+    .at(-1) || "—";
+}
+
 const PLAYER_ACTIONS: Array<{
   key: PlayerActionKey;
   label: string;
@@ -260,7 +270,27 @@ export default function PlayerPanel({
       <div className="player-hero">
         <div className="player-hero-main">
           <p className="eyebrow">Modo Jogador</p>
-          {profile?.character_title && <span className="profile-pill">Você joga como {profile.character_title}</span>}
+          {profile?.character_title && (
+            <button
+              className="player-profile-card"
+              disabled={!profile.character_note_id}
+              onClick={() => profile.character_note_id && onOpenNote(profile.character_note_id)}
+            >
+              {(profile.thumbnail || profile.cover) && (
+                <img src={mediaUrlFromVaultPath(profile.thumbnail || profile.cover)} alt="" />
+              )}
+              <span className="player-profile-info">
+                <small>Você joga como</small>
+                <strong>{profile.character_title}</strong>
+                <em>{profileValue(profile.race)} · {profileValue(profile.character_class)} · nível {profileValue(profile.level)}</em>
+                <span className="player-profile-stats">
+                  <b>{profileValue(profile.status)}</b>
+                  <b>{profileValue(profile.location)}</b>
+                  {profile.faction && <b>{profileValue(profile.faction)}</b>}
+                </span>
+              </span>
+            </button>
+          )}
           <span className="version-pill">Home Jogável v4 · player-safe</span>
           <h2>Omnisvera em jogo</h2>
           <p>Missões, rumores, personagens e lugares liberados — sem abrir bastidores do mestre.</p>

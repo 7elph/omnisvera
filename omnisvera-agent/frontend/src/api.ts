@@ -137,6 +137,15 @@ export type PlayerProfile = {
   profile_id?: string | null;
   character_path?: string | null;
   character_title?: string | null;
+  character_note_id?: number | null;
+  thumbnail?: string | null;
+  cover?: string | null;
+  character_class?: string | null;
+  race?: string | null;
+  level?: string | number | null;
+  status?: string | null;
+  location?: string | null;
+  faction?: string | null;
   shared_access: boolean;
 };
 

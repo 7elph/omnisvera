@@ -808,16 +808,65 @@ textarea {
   padding: 0.65rem 0.75rem;
 }
 
-.profile-pill {
-  display: inline-flex;
-  width: fit-content;
-  margin: 0 0 0.65rem;
-  padding: 0.35rem 0.7rem;
-  border: 1px solid rgba(211, 177, 94, 0.45);
+.player-profile-card {
+  display: flex;
+  align-items: center;
+  width: min(100%, 680px);
+  gap: 0.9rem;
+  margin: 0 0 1rem;
+  padding: 0.75rem;
+  border: 1px solid rgba(211, 177, 94, 0.42);
+  border-radius: 16px;
+  color: inherit;
+  background: linear-gradient(120deg, rgba(18, 15, 12, 0.94), rgba(25, 30, 35, 0.82));
+  text-align: left;
+  cursor: pointer;
+}
+
+.player-profile-card:disabled {
+  opacity: 1;
+  cursor: default;
+}
+
+.player-profile-card img {
+  width: 78px;
+  height: 78px;
+  flex: 0 0 78px;
+  border-radius: 13px;
+  object-fit: cover;
+  border: 1px solid rgba(234, 211, 154, 0.5);
+}
+
+.player-profile-info {
+  display: grid;
+  min-width: 0;
+  gap: 0.2rem;
+}
+
+.player-profile-info small,
+.player-profile-info em {
+  color: var(--muted);
+  font-style: normal;
+}
+
+.player-profile-info strong {
+  color: #f0dfb3;
+  font-size: 1.12rem;
+}
+
+.player-profile-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-top: 0.25rem;
+}
+
+.player-profile-stats b {
+  padding: 0.2rem 0.45rem;
   border-radius: 999px;
-  color: #ead39a;
-  background: rgba(20, 16, 11, 0.72);
-  font-size: 0.82rem;
+  background: rgba(255, 255, 255, 0.07);
+  font-size: 0.72rem;
+  font-weight: 500;
 }
 
 .player-discoveries,

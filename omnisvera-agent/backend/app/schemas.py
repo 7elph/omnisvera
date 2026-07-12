@@ -130,6 +130,15 @@ class PlayerProfileResponse(BaseModel):
     profile_id: str | None = None
     character_path: str | None = None
     character_title: str | None = None
+    character_note_id: int | None = None
+    thumbnail: str | None = None
+    cover: str | None = None
+    character_class: str | None = None
+    race: str | None = None
+    level: str | int | None = None
+    status: str | None = None
+    location: str | None = None
+    faction: str | None = None
     shared_access: bool = False
 
 
