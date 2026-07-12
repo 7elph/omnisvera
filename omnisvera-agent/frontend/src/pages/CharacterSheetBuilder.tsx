@@ -197,6 +197,22 @@ function SheetView({ sheet, readOnly, onChange }: { sheet: CharacterSheet; readO
   const [openStep, setOpenStep] = useState(sheet.steps.find((step) => step.status === "pending")?.key || sheet.steps[0]?.key || "");
   const [feedback, setFeedback] = useState("");
   const percent = Math.round((sheet.completion_count / sheet.total_steps) * 100);
+  const stepFields = (key: string) => sheet.steps.find((step) => step.key === key)?.fields || {};
+  const classFields = stepFields("character_class");
+  const attackFields = stepFields("attacks");
+  const armorFields = stepFields("armor");
+  const raceFields = stepFields("race");
+  const equipmentFields = stepFields("equipment");
+  const quickStats = [
+    ["Nível", classFields.level],
+    ["PV", classFields.hit_points],
+    ["CA", armorFields.armor_class],
+    ["BA", classFields.base_attack],
+    ["Ataque corpo a corpo", attackFields.melee_bonus],
+    ["Ataque à distância", attackFields.ranged_bonus],
+    ["Movimento", raceFields.movement],
+    ["Carga", equipmentFields.load_status],
+  ].filter(([, value]) => value !== null && value !== undefined && value !== "");
 
   async function saveStep(stepKey: string, fields: Record<string, string | number | null>) {
     const updated = await savePlayerCharacterSheetStep(stepKey, fields);
@@ -228,6 +244,10 @@ function SheetView({ sheet, readOnly, onChange }: { sheet: CharacterSheet; readO
         </div>
       </header>
       <div className="sheet-progress-bar"><span style={{ width: `${percent}%` }} /></div>
+      <section className="sheet-quick-summary">
+        <div><p className="eyebrow">Resumo mecânico</p><small>Atualizado conforme as etapas são salvas.</small></div>
+        <div>{quickStats.map(([label, value]) => <span key={String(label)}><small>{label}</small><strong>{String(value)}</strong></span>)}</div>
+      </section>
       {sheet.gm_feedback && <blockquote className="sheet-feedback"><strong>Retorno do Mestre</strong>{sheet.gm_feedback}</blockquote>}
 
       <div className="sheet-steps">
