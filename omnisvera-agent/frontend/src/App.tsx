@@ -22,6 +22,7 @@ export default function App() {
   const [mode, setMode] = useState<AccessMode>(initialMode);
   const [authVersion, setAuthVersion] = useState(0);
   const [authenticated, setAuthenticated] = useState(false);
+  const [accessPanelOpen, setAccessPanelOpen] = useState(!initialToken);
 
   useEffect(() => {
     const token = getAccessToken();
@@ -50,6 +51,10 @@ export default function App() {
         setStatus("token inválido ou backend indisponível");
       });
   }, []);
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+  }, [page, selectedNoteId]);
 
   useEffect(() => {
     let cancelled = false;
@@ -99,6 +104,7 @@ export default function App() {
         setMode(detectedMode);
         setAccessMode(detectedMode);
         setAuthenticated(true);
+        setAccessPanelOpen(false);
         setPage(detectedMode === "player" ? "player" : "session");
         setStatus(
           `${data.access_mode === "player" ? (data.player_character_title || "Jogador") : "Mestre"} · Ollama ${data.ollama_accessible ? "ok" : "offline"} · ${data.ollama_model}`,
@@ -152,20 +158,29 @@ export default function App() {
     setPage("chat");
   }
 
+  function navigate(next: Page) {
+    setPage(next);
+  }
+
   return (
     <main className="app-shell">
       <header className="hero">
         <h1>OMNISVERA</h1>
       </header>
 
-      <section className="token-bar">
+      {authenticated && !accessPanelOpen ? (
+        <section className="access-summary">
+          <span><b>{mode === "player" ? "Jogador" : "Mestre"}</b><small>{status}</small></span>
+          <button className="secondary-button" onClick={() => setAccessPanelOpen(true)}>Trocar acesso</button>
+        </section>
+      ) : <section className="token-bar">
         <div className="mode-switch">
           <button
             className={mode === "gm" ? "active" : ""}
             onClick={() => {
               setMode("gm");
               setAccessMode("gm");
-              setPage("session");
+              navigate("session");
             }}
           >
             Mestre
@@ -175,7 +190,7 @@ export default function App() {
             onClick={() => {
               setMode("player");
               setAccessMode("player");
-              setPage("player");
+              navigate("player");
             }}
           >
             Jogador
@@ -189,29 +204,27 @@ export default function App() {
         />
         <button onClick={saveToken}>Salvar token</button>
         {mode === "gm" && <button onClick={onRebuild}>Atualizar índice</button>}
-      </section>
+        {authenticated && <button className="secondary-button" onClick={() => setAccessPanelOpen(false)}>Fechar</button>}
+      </section>}
 
-      <nav className="tabs">
+      <nav className="tabs" aria-label="Navegação principal">
         {mode === "gm" ? (
-          <button className={page === "session" ? "active" : ""} onClick={() => setPage("session")}>
-            Sessão
+          <button className={page === "session" ? "active" : ""} onClick={() => navigate("session")}>
+            <span>⌂</span><small>Mesa</small>
           </button>
         ) : (
-          <button className={page === "player" ? "active" : ""} onClick={() => setPage("player")}>
-            Jogadores
+          <button className={page === "player" ? "active" : ""} onClick={() => navigate("player")}>
+            <span>⌂</span><small>Início</small>
           </button>
         )}
-        <button className={page === "chat" ? "active" : ""} onClick={() => setPage("chat")}>
-          Chat
+        <button className={page === "chat" ? "active" : ""} onClick={() => navigate("chat")}>
+          <span>✦</span><small>Chat</small>
         </button>
-        <button className={page === "sheet" ? "active" : ""} onClick={() => setPage("sheet")}>
-          Ficha
+        <button className={page === "sheet" ? "active" : ""} onClick={() => navigate("sheet")}>
+          <span>♜</span><small>{mode === "gm" ? "Fichas" : "Ficha"}</small>
         </button>
-        <button className={page === "search" ? "active" : ""} onClick={() => setPage("search")}>
-          Buscar
-        </button>
-        <button className={page === "note" ? "active" : ""} onClick={() => setPage("note")}>
-          Nota
+        <button className={page === "search" || page === "note" ? "active" : ""} onClick={() => navigate("search")}>
+          <span>⌕</span><small>Arquivo</small>
         </button>
       </nav>
 

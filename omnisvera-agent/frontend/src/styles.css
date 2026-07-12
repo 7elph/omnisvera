@@ -72,6 +72,21 @@ h2 {
   overflow-x: auto;
 }
 
+.access-summary {
+  align-items: center;
+  background: rgba(27, 21, 16, .92);
+  border: 1px solid #403124;
+  border-radius: 16px;
+  display: flex;
+  justify-content: space-between;
+  gap: .8rem;
+  margin: .7rem 0;
+  padding: .65rem .8rem;
+}
+
+.access-summary span { display: grid; gap: .1rem; }
+.access-summary small { color: #a99579; }
+
 .token-bar {
   background: #1b1510;
   border: 1px solid #403124;
@@ -102,6 +117,9 @@ h2 {
   flex: 1;
   min-width: max-content;
 }
+
+.tabs button span { display: none; }
+.tabs button small { color: inherit; font-size: inherit; font-weight: inherit; }
 
 .tabs button.active {
   background: #d6a858;
@@ -1579,6 +1597,14 @@ textarea {
 }
 
 @media (max-width: 640px) {
+  body { padding-bottom: 78px; }
+  .app-shell { padding: .55rem; }
+  .hero { margin: .45rem 0; padding: .8rem 1rem; }
+  .hero h1 { font-size: 1.45rem; letter-spacing: .03em; }
+
+  .access-summary { margin: .45rem 0; }
+  .access-summary small { display: none; }
+
   .hero {
     align-items: stretch;
     flex-direction: column;
@@ -1587,6 +1613,27 @@ textarea {
   .token-bar {
     flex-direction: column;
   }
+
+  .tabs {
+    background: rgba(20, 15, 12, .97);
+    border: 1px solid #403124;
+    border-radius: 18px 18px 0 0;
+    bottom: 0;
+    box-shadow: 0 -12px 35px rgba(0,0,0,.42);
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0,1fr));
+    left: 0;
+    margin: 0;
+    overflow: hidden;
+    padding: .42rem max(.45rem, env(safe-area-inset-right)) calc(.42rem + env(safe-area-inset-bottom)) max(.45rem, env(safe-area-inset-left));
+    position: fixed;
+    right: 0;
+    z-index: 100;
+  }
+
+  .tabs button { display: grid; gap: .1rem; justify-items: center; min-width: 0; padding: .45rem .2rem; }
+  .tabs button span { display: block; font-size: 1.05rem; line-height: 1; }
+  .tabs button small { font-size: .66rem; }
 
   .player-hero {
     grid-template-columns: 1fr;
