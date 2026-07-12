@@ -583,6 +583,11 @@ def _compact_sentence(text: Any) -> str:
     return cleaned if cleaned.endswith((".", "!", "?")) else f"{cleaned}."
 
 
+def _lower_initial(value: Any) -> str:
+    cleaned = _clean_value(value)
+    return cleaned[:1].lower() + cleaned[1:] if cleaned else ""
+
+
 def _field_sentence(prefix: str, value: Any) -> str:
     cleaned = _clean_value(value)
     return f"{prefix} {cleaned}." if cleaned else ""
@@ -717,14 +722,25 @@ def _rich_direct_entity_answer(note: dict, question: str, access_mode: AccessMod
         if char_class:
             profile_bits.append(_clean_value(char_class))
         identity_lines = [_compact_sentence(public_info or summary or _public_identity_line(title, note_type, frontmatter, is_player))]
-        if profile_bits:
-            identity_lines.append(f"No que está liberado, aparece como {' / '.join(profile_bits)}.")
+        if len(profile_bits) == 2:
+            identity_lines.append(f"É {_clean_value(race).lower()} e {_clean_value(char_class).lower()}.")
+        elif profile_bits:
+            identity_lines.append(f"É {_clean_value(profile_bits[0]).lower()}.")
         if reputation:
-            identity_lines.append(f"A reputação que acompanha seu nome é: {_clean_value(reputation)}.")
+            identity_lines.append(f"Sua reputação é a de {_lower_initial(reputation).rstrip('.')}.")
+
+        current_links: list[str] = []
+        if _clean_value(location):
+            location_text = _clean_value(location)
+            if normalize_text(location_text).startswith(("em ", "no ", "na ", "nos ", "nas ")):
+                current_links.append(f"está {_lower_initial(location_text)}")
+            else:
+                current_links.append(f"está em {location_text}")
+        if _clean_value(faction):
+            current_links.append(f"mantém vínculo com {_clean_value(faction)}")
         relation_lines = [
-            f"Hoje, está ligado a {_clean_value(location)}." if _clean_value(location) else "",
-            f"Seu vínculo conhecido passa por {_clean_value(faction)}." if _clean_value(faction) else "",
-            f"Entre os nomes associados a ele estão {_clean_value(associates)}." if _clean_value(associates) else "",
+            f"Atualmente, {title} {' e '.join(current_links)}." if current_links else "",
+            f"Entre os nomes ligados à sua história estão {_clean_value(associates)}." if _clean_value(associates) else "",
         ]
         story_lines = [line for line in (_compact_sentence(table_use),) if line] if access_mode != "player" else []
 
@@ -1805,7 +1821,10 @@ def _extractive_grounded_payload(question: str, results: list[dict[str, Any]]) -
         seen_sentences.add(normalized_sentence)
         evidence = sentence
         sentence = re.sub(r"^\d+\s*[-—]\s*", "", sentence).strip()
-        if normalize_text(sentence).startswith(("foi nessa", "organizacao que")):
+        if normalize_text(sentence).startswith("organizacao que"):
+            remainder = re.sub(r"^Organiza(?:ção|cao) que\s+", "", sentence, flags=re.IGNORECASE)
+            sentence = f"{Path(path).stem} é uma organização que {_lower_initial(remainder)}"
+        elif normalize_text(sentence).startswith("foi nessa"):
             sentence = f"{Path(path).stem}: {sentence}"
         facts.append({"fato": sentence, "fonte": path, "evidencia": evidence})
         if len(facts) >= (2 if best_score >= 6.0 and score >= 5.5 else 1):
@@ -1887,14 +1906,39 @@ def _claim_matches_evidence(claim: str, evidence: str) -> bool:
 
 
 def _safe_grounded_answer(facts: list[dict[str, Any]], theories: list[dict[str, Any]], missing: list[str]) -> str:
+    def sentence(value: Any) -> str:
+        text = re.sub(r"\s+", " ", str(value or "")).strip()
+        return text if not text or text.endswith((".", "!", "?")) else f"{text}."
+
+    fact_sentences = [sentence(item.get("fato")) for item in facts[:3] if sentence(item.get("fato"))]
+    natural_facts: list[str] = []
+    previous_subject = ""
+    for index, fact in enumerate(fact_sentences):
+        words = fact.split()
+        subject = normalize_text(" ".join(words[:2])) if len(words) >= 2 else ""
+        if index == 0:
+            natural_facts.append(fact)
+        elif subject and subject == previous_subject and len(words) > 2:
+            remainder = " ".join(words[2:])
+            natural_facts.append(f"Também {_lower_initial(remainder)}")
+        else:
+            natural_facts.append(f"Além disso, {_lower_initial(fact)}")
+        previous_subject = subject
+
     blocks: list[str] = []
-    if facts:
-        blocks.append(" ".join(str(item["fato"]).strip() for item in facts[:3]))
+    if natural_facts:
+        blocks.append(" ".join(natural_facts))
     if theories:
-        blocks.append("Como possibilidade, " + " ".join(str(item["teoria"]).strip() for item in theories[:2]))
+        theory_text = " ".join(sentence(item.get("teoria")) for item in theories[:2] if sentence(item.get("teoria")))
+        if theory_text:
+            blocks.append(f"Uma possibilidade é esta: {_lower_initial(theory_text)}")
     if missing:
-        blocks.append("Ainda não foi possível confirmar: " + "; ".join(missing[:2]))
-    return "\n\n".join(blocks).strip() or "Não encontrei informações suficientes no que já foi revelado."
+        missing_text = "; ".join(sentence(item).rstrip(".") for item in missing[:2] if sentence(item))
+        if missing_text:
+            blocks.append(f"Ainda assim, {_lower_initial(missing_text)}.")
+    return "\n\n".join(blocks).strip() or (
+        "Isso ainda não foi revelado com segurança. Por enquanto, não há informação confiável suficiente para responder."
+    )
 
 
 def _answer_is_represented(answer: str, facts: list[dict[str, Any]], theories: list[dict[str, Any]], missing: list[str]) -> bool:
