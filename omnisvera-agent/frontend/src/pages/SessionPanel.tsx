@@ -20,6 +20,9 @@ import {
   searchNotes,
   SearchResult,
   updatePlayerAction,
+  listGmIdeas,
+  reviewPlayerIdea,
+  PlayerIdea,
 } from "../api";
 
 const PLAYER_PROFILES = [
@@ -115,6 +118,7 @@ export default function SessionPanel({
   const [inventoryEquipped, setInventoryEquipped] = useState(false);
   const [inventoryNotes, setInventoryNotes] = useState("");
   const [inventoryFeedback, setInventoryFeedback] = useState("");
+  const [ideas, setIdeas] = useState<PlayerIdea[]>([]);
 
   useEffect(() => {
     Promise.all(QUICK_SEARCHES.map((query) => searchNotes(query, 1))).then((groups) => {
@@ -129,11 +133,12 @@ export default function SessionPanel({
   }, []);
 
   useEffect(() => {
-    Promise.all([listGmDiscoveries(), listGmQuests(), listGmInventory(), listNotes()])
-      .then(([discoveryData, questData, inventoryData, noteData]) => {
+    Promise.all([listGmDiscoveries(), listGmQuests(), listGmInventory(), listNotes(), listGmIdeas()])
+      .then(([discoveryData, questData, inventoryData, noteData, ideaData]) => {
         setDiscoveries(discoveryData);
         setQuestProgress(questData);
         setInventory(inventoryData);
+        setIdeas(ideaData);
         setAvailableNotes(
           noteData
             .filter((note) => ["Jogadores", "Público"].includes(String(note.visibility || "")))
@@ -142,6 +147,11 @@ export default function SessionPanel({
       })
       .catch(() => setDiscoveryFeedback("Não foi possível carregar as descobertas."));
   }, []);
+
+  async function setIdeaStatus(idea: PlayerIdea, status: string) {
+    const updated = await reviewPlayerIdea(idea.id, status, idea.gm_feedback || "");
+    setIdeas((current) => current.map((item) => item.id === updated.id ? updated : item));
+  }
 
   async function revealDiscovery() {
     if (!discoveryNoteId) return;
@@ -242,6 +252,21 @@ export default function SessionPanel({
         <a href="#gm-discoveries"><strong>{discoveries.length}</strong><span>Descobertas liberadas</span></a>
         <a href="#gm-inventory"><strong>{inventory.length}</strong><span>Itens vinculados</span></a>
       </nav>
+
+      <section className="gm-idea-inbox">
+        <div className="section-heading"><span>✦</span><div><p className="eyebrow">Caixa de Ideias</p><h3>NPCs propostos</h3><p>Aprovar mantém a proposta no Companion; não cria nota nem altera o cânone.</p></div></div>
+        <div className="gm-idea-list">
+          {ideas.map((idea) => <article key={idea.id}>
+            <header><strong>{idea.title}</strong><small>{idea.author} · {idea.status}</small></header>
+            <p>{idea.concept}</p>
+            {idea.appearance && <small><b>Aparência:</b> {idea.appearance}</small>}
+            {idea.motivation && <small><b>Motivação:</b> {idea.motivation}</small>}
+            {idea.world_connection && <small><b>Ligação:</b> {idea.world_connection}</small>}
+            <div><button onClick={() => void setIdeaStatus(idea, "reviewing")}>Revisar</button><button onClick={() => void setIdeaStatus(idea, "approved")}>Aprovar proposta</button><button className="danger-button" onClick={() => void setIdeaStatus(idea, "archived")}>Arquivar</button></div>
+          </article>)}
+          {!ideas.length && <p className="muted">Nenhuma ideia enviada.</p>}
+        </div>
+      </section>
 
       <div className="prompt-chips">
         {GM_PROMPTS.map((prompt) => (

@@ -222,6 +222,28 @@ class InventoryRecord(BaseModel):
     updated_at: str
 
 
+class PlayerIdeaCreate(BaseModel):
+    title: str = Field(min_length=2, max_length=120)
+    concept: str = Field(min_length=10, max_length=1800)
+    appearance: str | None = Field(default=None, max_length=1000)
+    motivation: str | None = Field(default=None, max_length=1000)
+    world_connection: str | None = Field(default=None, max_length=1000)
+
+
+class PlayerIdeaReview(BaseModel):
+    status: str
+    feedback: str | None = Field(default=None, max_length=1800)
+
+
+class PlayerIdeaRecord(PlayerIdeaCreate):
+    id: int
+    author: str
+    status: str
+    gm_feedback: str | None = None
+    created_at: str
+    updated_at: str
+
+
 class CharacterSheetStep(BaseModel):
     key: str
     title: str

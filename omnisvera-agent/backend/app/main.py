@@ -47,6 +47,7 @@ from .player_progress import (
     upsert_quest,
 )
 from .player_inventory import init_player_inventory, list_inventory, upsert_inventory
+from .player_ideas import create_idea, init_player_ideas, list_ideas, review_idea
 from .rag import answer_question
 from .schemas import (
     ChatRequest,
@@ -70,6 +71,9 @@ from .schemas import (
     PlayerEventReadRequest,
     PlayerEventRecord,
     PlayerProfileResponse,
+    PlayerIdeaCreate,
+    PlayerIdeaRecord,
+    PlayerIdeaReview,
     PlayerQuestRecord,
     PlayerQuestUpdate,
     RebuildResponse,
@@ -373,6 +377,7 @@ def startup() -> None:
     init_player_discoveries(settings.database_path)
     init_player_progress(settings.database_path)
     init_player_inventory(settings.database_path)
+    init_player_ideas(settings.database_path)
     init_character_creation(settings.database_path)
     if settings.rebuild_on_startup:
         notes, _ = iter_markdown_notes(settings.vault_path)
@@ -835,6 +840,19 @@ def player_inventory(access: AccessContext = Depends(require_player)) -> list[di
     )
 
 
+@app.post("/player/ideas", response_model=PlayerIdeaRecord)
+def player_submit_idea(request: PlayerIdeaCreate, access: AccessContext = Depends(require_player)) -> dict:
+    return create_idea(
+        settings.database_path,
+        author=access.character_title or access.profile_id or "Visitante",
+        title=request.title,
+        concept=request.concept,
+        appearance=request.appearance,
+        motivation=request.motivation,
+        world_connection=request.world_connection,
+    )
+
+
 @app.get("/gm/character-sheets", response_model=list[CharacterSheetResponse])
 def gm_character_sheets(_: AccessContext = Depends(require_master)) -> list[dict]:
     maybe_refresh_index()
@@ -1004,6 +1022,22 @@ def gm_inventory(_: AccessContext = Depends(require_master)) -> list[dict]:
     for profile_id in settings.player_profiles:
         items.extend(list_inventory(settings.database_path, profile_id))
     return _inventory_with_media(items, access_mode="gm")
+
+
+@app.get("/gm/ideas", response_model=list[PlayerIdeaRecord])
+def gm_ideas(_: AccessContext = Depends(require_master)) -> list[dict]:
+    return list_ideas(settings.database_path)
+
+
+@app.patch("/gm/ideas/{idea_id}", response_model=PlayerIdeaRecord)
+def gm_review_idea(idea_id: int, request: PlayerIdeaReview, _: AccessContext = Depends(require_master)) -> dict:
+    try:
+        result = review_idea(settings.database_path, idea_id, status=request.status, feedback=request.feedback)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    if not result:
+        raise HTTPException(status_code=404, detail="Ideia não encontrada.")
+    return result
 
 
 @app.post("/gm/inventory", response_model=InventoryRecord)

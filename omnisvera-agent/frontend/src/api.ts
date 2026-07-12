@@ -186,6 +186,11 @@ export type InventoryItem = {
   note_id?: number | null; thumbnail?: string | null; cover?: string | null;
   quantity: number; equipped: boolean; notes?: string | null; updated_at: string;
 };
+export type PlayerIdea = {
+  id: number; author: string; title: string; concept: string; appearance?: string | null;
+  motivation?: string | null; world_connection?: string | null; status: string;
+  gm_feedback?: string | null; created_at: string; updated_at: string;
+};
 
 export type CharacterSheetStep = {
   key: string;
@@ -320,6 +325,24 @@ export async function updateInventory(payload: { profile_id: string; note_id: nu
     method: "POST", headers: authHeaders({ "Content-Type": "application/json" }), body: JSON.stringify(payload),
   });
   if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao atualizar inventário");
+  return response.json();
+}
+
+export async function submitPlayerIdea(payload: { title: string; concept: string; appearance?: string; motivation?: string; world_connection?: string }): Promise<PlayerIdea> {
+  const response = await fetch(`${API_BASE}/player/ideas`, { method: "POST", headers: authHeaders({ "Content-Type": "application/json" }), body: JSON.stringify(payload) });
+  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao enviar ideia");
+  return response.json();
+}
+
+export async function listGmIdeas(): Promise<PlayerIdea[]> {
+  const response = await fetch(`${API_BASE}/gm/ideas`, { headers: authHeaders() });
+  if (!response.ok) throw new Error("Falha ao carregar ideias");
+  return response.json();
+}
+
+export async function reviewPlayerIdea(id: number, status: string, feedback?: string): Promise<PlayerIdea> {
+  const response = await fetch(`${API_BASE}/gm/ideas/${id}`, { method: "PATCH", headers: authHeaders({ "Content-Type": "application/json" }), body: JSON.stringify({ status, feedback }) });
+  if (!response.ok) throw new Error("Falha ao revisar ideia");
   return response.json();
 }
 

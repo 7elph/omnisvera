@@ -18,5 +18,6 @@ Desktop.ini
 .local-index/
 .local-proposals/
 .assistant-runtime/
+/omnisvera-agent/backend/data/cloudflare-tunnel/
 __pycache__/
 *.pyc

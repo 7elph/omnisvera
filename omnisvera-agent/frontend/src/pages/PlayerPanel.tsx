@@ -20,6 +20,7 @@ import {
   playerDashboard,
   PlayerDashboard,
   submitPlayerAction,
+  submitPlayerIdea,
 } from "../api";
 
 const SECTION_ICONS: Record<string, string> = {
@@ -206,6 +207,8 @@ export default function PlayerPanel({
   const [actionIntent, setActionIntent] = useState("");
   const [submittingAction, setSubmittingAction] = useState(false);
   const [actionFeedback, setActionFeedback] = useState("");
+  const [idea, setIdea] = useState({ title: "", concept: "", appearance: "", motivation: "", world_connection: "" });
+  const [ideaFeedback, setIdeaFeedback] = useState("");
 
   useEffect(() => {
     let active = true;
@@ -355,6 +358,16 @@ export default function PlayerPanel({
     }
   }
 
+  async function sendIdea() {
+    if (idea.title.trim().length < 2 || idea.concept.trim().length < 10) return;
+    setIdeaFeedback("Enviando proposta...");
+    try {
+      await submitPlayerIdea(idea);
+      setIdea({ title: "", concept: "", appearance: "", motivation: "", world_connection: "" });
+      setIdeaFeedback("Ideia entregue ao Mestre para revisão. Ela ainda não faz parte do cânone.");
+    } catch (error) { setIdeaFeedback(error instanceof Error ? error.message : "Não foi possível enviar."); }
+  }
+
   return (
     <section className="panel player-home">
       <div className="player-hero">
@@ -418,6 +431,19 @@ export default function PlayerPanel({
           </button>
         </div>
       </section>
+
+      <details className="player-idea-box">
+        <summary>✦ Caixa de Ideias · Propor um NPC</summary>
+        <div className="idea-form">
+          <input value={idea.title} placeholder="Nome ou título do NPC" onChange={(event) => setIdea({ ...idea, title: event.target.value })} />
+          <textarea value={idea.concept} placeholder="Quem é esse NPC? Qual é a ideia central?" onChange={(event) => setIdea({ ...idea, concept: event.target.value })} />
+          <input value={idea.appearance} placeholder="Aparência (opcional)" onChange={(event) => setIdea({ ...idea, appearance: event.target.value })} />
+          <input value={idea.motivation} placeholder="O que ele quer? (opcional)" onChange={(event) => setIdea({ ...idea, motivation: event.target.value })} />
+          <input value={idea.world_connection} placeholder="Ligação com Omnisvera (opcional)" onChange={(event) => setIdea({ ...idea, world_connection: event.target.value })} />
+          <button disabled={idea.title.trim().length < 2 || idea.concept.trim().length < 10} onClick={() => void sendIdea()}>Enviar ao Mestre</button>
+          {ideaFeedback && <p>{ideaFeedback}</p>}
+        </div>
+      </details>
 
       <div className="player-prompts">
         <span>Perguntas rápidas:</span>
