@@ -30,7 +30,14 @@ function stripDuplicateTitleHeading(content: string, title: string) {
 
 function inferUnknownKind(target: string, note?: NoteDetail | null) {
   const value = `${target} ${note?.path || ""} ${note?.type || ""}`.toLowerCase();
-  if (value.includes("character") || value.includes("characters/") || value.includes("personagem")) return "character";
+  if (
+    value.includes("character")
+    || value.includes("characters/")
+    || value.includes("personagem")
+    || value.includes("dragão")
+    || value.includes("dragao")
+    || value.includes("criatura")
+  ) return "character";
   if (
     value.includes("location")
     || value.includes("locations/")

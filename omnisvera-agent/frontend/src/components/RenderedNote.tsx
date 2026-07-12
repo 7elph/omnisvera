@@ -1,6 +1,6 @@
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { getAccessMode, mediaUrlFromVaultPath, resolveNote, searchNotes } from "../api";
+import { getAccessMode, mediaUrlFromVaultPath, resolveNote } from "../api";
 
 type RenderedNoteProps = {
   content: string;
@@ -278,13 +278,6 @@ export default function RenderedNote({ content, onOpenNote, onUnknownNote }: Ren
       const note = await resolveNote(target);
       if (note) {
         onOpenNote(note.id);
-        return;
-      }
-
-      const fallbackTarget = target.split("|")[0].split("#")[0].split("/").pop()?.replace(/\.md$/i, "") || target;
-      const fallback = await searchNotes(fallbackTarget, 3);
-      if (fallback[0]) {
-        onOpenNote(fallback[0].id);
         return;
       }
       onUnknownNote?.(target);
