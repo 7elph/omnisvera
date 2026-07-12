@@ -472,6 +472,7 @@ def player_dashboard(_: AccessContext = Depends(require_player)) -> dict:
                 "Resumo público do que o grupo já pode consultar.",
                 diary,
                 limit=3,
+                cover="zz_media/covers/banner_ecos_do_mundo_perdido.png",
                 prompt="O que aconteceu até agora?",
             ),
             _section(
@@ -480,6 +481,7 @@ def player_dashboard(_: AccessContext = Depends(require_player)) -> dict:
                 "Os protagonistas atuais da mesa.",
                 characters,
                 limit=8,
+                cover="zz_media/covers/cover_personagens.png",
                 prompt="Quem são os personagens jogadores?",
             ),
             _section(
@@ -506,6 +508,7 @@ def player_dashboard(_: AccessContext = Depends(require_player)) -> dict:
                 "Locais e territórios que o grupo pode consultar sem spoiler.",
                 locations,
                 limit=10,
+                cover="zz_media/maps/earthropo.png",
                 prompt="Quais lugares conhecemos?",
             ),
         ],

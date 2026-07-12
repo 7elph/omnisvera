@@ -117,11 +117,26 @@ export default function NoteView({
       setNote(null);
       return;
     }
+    let active = true;
     setLoading(true);
-    getNote(noteId)
-      .then(setNote)
-      .catch(() => setNote(null))
-      .finally(() => setLoading(false));
+
+    async function refresh(initial = false) {
+      try {
+        const current = await getNote(noteId as number);
+        if (active) setNote(current);
+      } catch {
+        if (active && initial) setNote(null);
+      } finally {
+        if (active && initial) setLoading(false);
+      }
+    }
+
+    void refresh(true);
+    const timer = window.setInterval(() => void refresh(false), 15_000);
+    return () => {
+      active = false;
+      window.clearInterval(timer);
+    };
   }, [noteId]);
 
   if (unknownTarget && !noteId) {

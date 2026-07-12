@@ -43,12 +43,20 @@ def init_db(database_path: Path) -> None:
 def rebuild_index(database_path: Path, notes: list[VaultNote]) -> int:
     init_db(database_path)
     with connect(database_path) as conn:
-        conn.execute("DELETE FROM notes")
         conn.executemany(
             """
             INSERT INTO notes (
                 path, title, aliases, type, visibility, tags, content, frontmatter, updated_at
             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ON CONFLICT(path) DO UPDATE SET
+                title = excluded.title,
+                aliases = excluded.aliases,
+                type = excluded.type,
+                visibility = excluded.visibility,
+                tags = excluded.tags,
+                content = excluded.content,
+                frontmatter = excluded.frontmatter,
+                updated_at = excluded.updated_at
             """,
             [
                 (
@@ -65,6 +73,13 @@ def rebuild_index(database_path: Path, notes: list[VaultNote]) -> int:
                 for note in notes
             ],
         )
+        conn.execute("CREATE TEMP TABLE IF NOT EXISTS current_note_paths (path TEXT PRIMARY KEY)")
+        conn.execute("DELETE FROM current_note_paths")
+        conn.executemany(
+            "INSERT INTO current_note_paths(path) VALUES (?)",
+            [(note.path,) for note in notes],
+        )
+        conn.execute("DELETE FROM notes WHERE path NOT IN (SELECT path FROM current_note_paths)")
     return len(notes)
 
 

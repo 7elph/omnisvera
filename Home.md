@@ -22,16 +22,16 @@ gm_secret: false
 > [![[zz_media/covers/banner_ecos_do_mundo_perdido.png|sban htiny ctr p+t]]](EARTHROPO/01%20-%20Ecos%20do%20Mundo%20Perdido.md)
 >
 > **MISSÕES**
-> [[#Quests|Missões abertas]]
+> [![[zz_media/covers/cover_missoes_ativas.png|sban htiny ctr p+t]]](#Quests)
 >
 > **RUMORES**
-> [[#Rumores|Rumores ativos]]
+> [![[zz_media/covers/cover_rumores.png|sban htiny ctr p+t]]](#Rumores)
 >
 > **PERSONAGENS**
-> [[#Personagens dos Jogadores|Personagens dos jogadores]]
+> [![[zz_media/covers/cover_personagens.png|sban htiny ctr p+t]]](#Personagens%20dos%20Jogadores)
 >
 > **MAPA**
-> [[MAPA DE EARTHROPO|Mapa de Earthropo]]
+> [![[zz_media/maps/earthropo.png|sban htiny ctr p+t]]](MAPA%20DE%20EARTHROPO.md)
 
 ---
 

@@ -121,19 +121,35 @@ export default function PlayerPanel({
   const [selectedTargetId, setSelectedTargetId] = useState("");
 
   useEffect(() => {
-    setLoading(true);
-    setError("");
-    playerDashboard()
-      .then((data) => {
-        setDashboard(data);
+    let active = true;
+
+    async function refresh(initial = false) {
+      if (initial) {
+        setLoading(true);
         setError("");
-      })
-      .catch(() => {
+      }
+      try {
+        const [dashboardData, notesData] = await Promise.all([playerDashboard(), listNotes()]);
+        if (!active) return;
+        setDashboard(dashboardData);
+        setKnownNotes(notesData);
+        setError("");
+      } catch {
+        if (!active || !initial) return;
         setDashboard(null);
+        setKnownNotes([]);
         setError("Não consegui carregar o painel dos jogadores. Confira o modo e o token.");
-      })
-      .finally(() => setLoading(false));
-    listNotes().then(setKnownNotes).catch(() => setKnownNotes([]));
+      } finally {
+        if (active && initial) setLoading(false);
+      }
+    }
+
+    void refresh(true);
+    const timer = window.setInterval(() => void refresh(false), 15_000);
+    return () => {
+      active = false;
+      window.clearInterval(timer);
+    };
   }, []);
 
   const sections = dashboard?.sections || [];
