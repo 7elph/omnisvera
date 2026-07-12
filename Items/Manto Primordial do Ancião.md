@@ -4,24 +4,24 @@ NoteIcon: items
 NoteStatus: Active
 type: item
 status: Ativo
-campaign_status: Em revisão
-visibility: Mestre
-spoiler_level: medium
-gm_secret: true
-item_type: Manto / armadura leve / relíquia primordial
-item_family: Relíquia
-item_category: Proteção narrativa
+campaign_status: Em jogo
+visibility: Jogadores
+spoiler_level: light
+gm_secret: false
+item_type: Manto / vestimenta comum
+item_family: Equipamento
+item_category: Vestimenta
 purchase_status: Não comprável
 source_system: Omnisvera / Old Dragon 2e
-base_item: "[[Armadura de couro batido]]"
-base_price: 25 PO
-base_armor_bonus: "+3"
-base_weight_kg: 15
+base_item: Manto comum
+base_price:
+base_armor_bonus: "0"
+base_weight_kg:
 owner: "[[Raziel]]"
 location: "[[Raziel]]"
 faction:
 level: 1
-danger_level: Alto
+danger_level: Baixo
 thumbnail: zz_media/items/manto_primordial.png
 cover: zz_media/items/manto_primordial.png
 chapters:
@@ -44,34 +44,36 @@ tags:
 > [!NOTE|clean no-i right]+ Retrato
 > ![[zz_media/items/manto_primordial.png|400]]
 
-> [!warning] Nota sensível
-> Esta nota cita o [[Ancião Primordial]] e deve permanecer como informação de mestre até o arco de [[Raziel]] revelar mais detalhes.
-
-> [!world]- SINOPSE DO MESTRE
-> O Manto Primordial do Ancião é uma relíquia ligada ao renascimento de [[Raziel]], às cavernas sob as [[Ruínas de Valthor]] e ao preço ainda desconhecido da dádiva do [[Ancião Primordial]].
+> [!world]- SINOPSE PÚBLICA
+> O Manto Primordial do Ancião é o manto escuro usado por [[Raziel]]. Sua aparência é incomum, mas no início da campanha funciona apenas como uma vestimenta comum.
 
 ## Visão Geral
 
-Armadura de couro batido extraplanar concedida a [[Raziel]] após seu encontro com o [[Ancião Primordial]] nas cavernas sob as [[Ruínas de Valthor]].
+Manto escuro pertencente a [[Raziel]]. A peça acompanha sua silhueta e reforça sua presença, mas não concede proteção, furtividade ou poder mágico enquanto suas propriedades não forem reveladas pelo Mestre.
 
 ## Aparência
 
-Manto escuro e silencioso, com textura de couro batido e sombra compactada. A peça parece absorver parte do som e da luz ao redor do portador.
+Manto escuro, longo e silencioso, de tecido pesado e aparência antiga. Em certas luzes, suas dobras parecem mais profundas do que deveriam, sem produzir efeito mecânico.
 
-## Regra em Uso Inicial
+## Regra em Uso
 
-Enquanto sua natureza primordial permanecer bloqueada, o manto usa [[Armadura de couro batido]] como item base: **+3 na CA**, sem penalidade de movimento, bônus máximo de DES +6, peso de referência 15 kg e preço de referência 25 PO.
+No início da campanha, o manto é uma **vestimenta comum**:
+
+- não concede bônus na Classe de Armadura;
+- não reduz dano;
+- não melhora furtividade ou movimento;
+- não ocupa o lugar de uma armadura;
+- propriedades futuras só passam a existir quando forem liberadas pelo Mestre.
 
 ## Propriedades Conhecidas
 
-- É tecido com fios de escuridão das cavernas abissais.
-- Absorve e esconde o som dos movimentos de Raziel.
-- Facilita esconder-se e mover-se silenciosamente em sombras.
-- Reduz o impacto de ataques dirigidos contra o portador enquanto ele permanece em áreas escuras.
+- É resistente como um manto de viagem bem conservado.
+- Protege apenas contra frio leve, poeira e exposição comum.
+- Sua aparência incomum é narrativa e não concede vantagem mecânica.
 
 ## História Conhecida
 
-O custo da dádiva e o vínculo entre o manto e o [[Ancião Primordial]] permanecem desconhecidos.
+A origem completa do manto permanece desconhecida. Qualquer propriedade além de uma vestimenta comum ainda não faz parte das regras disponíveis ao personagem.
 
 ## Relações
 
@@ -82,14 +84,14 @@ O custo da dádiva e o vínculo entre o manto e o [[Ancião Primordial]] permane
 
 ## Uso em Mesa
 
-- Como apresentar: silêncio antinatural, tecido escuro, movimento sem som e sensação de presença antiga.
-- O que os jogadores sabem: Raziel possui um manto incomum.
+- Como apresentar: tecido escuro, movimento discreto e aparência antiga.
+- O que os jogadores sabem: Raziel possui um manto incomum que funciona como vestimenta comum.
 - O que manter em aberto no [[ESTADO_DA_CAMPANHA]]: origem, preço e vínculo real com o Ancião.
 - Como entra em cena: furtividade, sombras, revelações do passado e sinais de que o presente de Raziel tem custo.
 - Ganchos: preço da dádiva, vontade do Ancião e reação do manto a ruínas antigas.
 
 ## Pendências do Sage
 
-- Confirmar quando o manto deixa de usar apenas a regra base de [[Armadura de couro batido]].
+- Confirmar se e quando o manto deixa de funcionar apenas como vestimenta comum.
 - Definir custo ou consequência do vínculo.
 - Decidir quando a origem do manto pode ser revelada.
