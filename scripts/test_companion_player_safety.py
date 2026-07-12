@@ -150,6 +150,22 @@ async def _runtime_checks() -> None:
     assert "local tambem foi destruido" in mira_answer
     assert "atualmente, mira valen" not in mira_answer
 
+    borders = await answer_question(
+        settings.database_path,
+        settings.ollama_base_url,
+        settings.fast_model,
+        "Quais são as fronteiras de Nimalia?",
+        access_mode="player",
+        response_mode="fast",
+    )
+    border_answer = normalize_text(borders.get("answer"))
+    assert borders.get("retrieval_mode") == "structured:nimalia_borders"
+    assert "floresta de avenor" in border_answer
+    assert "tracado exato permanece em aberto" in border_answer
+    assert "ruinas de valthor" in border_answer
+    assert "fortaleza de gharok" in border_answer
+    assert "Factions/Coroa de Nimalia.md" not in borders.get("note_paths", [])
+
 
 def main() -> None:
     _access_rules()

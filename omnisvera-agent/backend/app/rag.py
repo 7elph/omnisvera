@@ -9,7 +9,7 @@ from .access import AccessMode, PLAYER_BLOCKED_LOOKUP_TERMS, is_player_safe_row,
 from .hybrid_retrieval import hybrid_search
 from .ollama_client import chat_with_ollama, resolve_ollama_model
 from .search import search_notes
-from .vault_index import all_notes_for_search, get_note, get_notes_by_ids
+from .vault_index import all_notes_for_search, get_note, get_notes_by_ids, resolve_note
 
 
 SYSTEM_PROMPT = """Você é o Arquivo Vivo de Omnisvera, uma entidade local que responde aos jogadores a partir das memórias liberadas da campanha.
@@ -554,6 +554,27 @@ def _first_section_paragraph(content: str, headings: tuple[str, ...], max_chars:
     if len(text) <= max_chars:
         return text
     return text[:max_chars].rsplit(".", 1)[0].strip() + "..."
+
+
+def _section_list_items(content: str, headings: tuple[str, ...]) -> list[str]:
+    wanted = {normalize_text(heading) for heading in headings}
+    inside = False
+    items: list[str] = []
+    for line in _strip_code_blocks(content).splitlines():
+        heading = re.match(r"^\s*#{2,4}\s+(.+?)\s*$", line)
+        if heading:
+            if inside:
+                break
+            inside = normalize_text(heading.group(1)) in wanted
+            continue
+        if not inside:
+            continue
+        match = re.match(r"^\s*[-*]\s+(.+?)\s*$", line)
+        if match:
+            cleaned = _clean_value(match.group(1))
+            if cleaned:
+                items.append(cleaned)
+    return items
 
 
 def _field_line(label: str, value: Any) -> str:
@@ -2239,6 +2260,86 @@ def _looks_like_conversation_followup(question: str) -> bool:
     )
 
 
+def _looks_like_nimalia_borders(question: str) -> bool:
+    normalized = normalize_text(question)
+    return "nimalia" in normalized and any(
+        term in normalized
+        for term in ("fronteira", "fronteiras", "limite", "limites", "vizinha", "vizinhas", "ao redor")
+    )
+
+
+def _answer_nimalia_borders(database_path: Path, access_mode: AccessMode) -> dict[str, Any] | None:
+    notes: list[dict[str, Any]] = []
+    for target in ("Nimalia", "MAPA DE NIMALIA"):
+        summary = resolve_note(database_path, target, access_mode=access_mode)
+        if not summary:
+            continue
+        note = get_note(database_path, int(summary["id"]), access_mode=access_mode)
+        if note and note["path"] not in {item["path"] for item in notes}:
+            notes.append(note)
+    if not notes:
+        return None
+
+    territory_note = next((note for note in notes if note.get("type") == "territory"), notes[0])
+    territory_content = (
+        sanitize_player_text(territory_note["content"])
+        if access_mode == "player"
+        else territory_note["content"]
+    )
+    known_regions = _section_list_items(
+        territory_content,
+        ("Fronteiras e Regiões Conhecidas",),
+    )
+    combined = normalize_text(" ".join(note.get("content") or "" for note in notes))
+    known_text = normalize_text(" ".join(known_regions))
+
+    has_avenor = "avenor" in known_text and "fronteir" in combined
+    has_valthor = "valthor" in known_text and "sudeste" in combined
+    has_gharok = "gharok" in known_text and "norte" in combined
+    has_vale = "vale dourado" in known_text and "interior" in combined
+    boundaries_open = any(
+        marker in combined
+        for marker in ("bordas completas do reino em aberto", "bordas completas do reino | em aberto", "fronteiras exatas de nimalia no mapa")
+    )
+
+    paragraphs: list[str] = []
+    if boundaries_open:
+        paragraphs.append("As fronteiras completas de Nimalia ainda não foram fechadas no mapa.")
+    if has_avenor:
+        paragraphs.append(
+            "A única fronteira confirmada em conceito é com a Floresta de Avenor, mas o traçado exato permanece em aberto."
+        )
+
+    references: list[str] = []
+    if has_valthor:
+        references.append("as Ruínas de Valthor ficam a sudeste")
+    if has_gharok:
+        references.append("a Fortaleza de Gharok fica ao norte")
+    if references:
+        paragraphs.append(
+            "Como referências geográficas, "
+            + " e ".join(references)
+            + "; essas posições ainda não confirmam fronteiras políticas."
+        )
+    if has_vale:
+        paragraphs.append("Vale Dourado está no interior do reino, portanto não é uma fronteira externa confirmada.")
+    if not paragraphs:
+        return None
+
+    return {
+        "answer": "\n\n".join(paragraphs),
+        "notes_used": notes,
+        "note_paths": [note["path"] for note in notes],
+        "insufficient_context": boundaries_open,
+        "warning": "O desenho completo das fronteiras ainda não foi definido." if boundaries_open else None,
+        "suggested_questions": [
+            "O que sabemos sobre a Floresta de Avenor?",
+            "Onde ficam as Ruínas de Valthor?",
+            "O que existe ao norte de Nimalia?",
+        ],
+    }
+
+
 def _conversation_note(
     database_path: Path,
     paths: list[str],
@@ -2451,6 +2552,16 @@ async def answer_question(
             model=ollama_model,
             retrieval_mode="conversation_needs_context",
         )
+
+    if not action_kind and _looks_like_nimalia_borders(question):
+        border_answer = _answer_nimalia_borders(database_path, access_mode)
+        if border_answer:
+            return _with_chat_meta(
+                border_answer,
+                ollama_used=False,
+                model=ollama_model,
+                retrieval_mode="structured:nimalia_borders",
+            )
 
     if not action_kind and _looks_like_rumor_overview(question):
         rumor_answer = _answer_index_overview(
