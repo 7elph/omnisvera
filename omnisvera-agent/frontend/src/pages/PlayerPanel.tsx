@@ -63,6 +63,9 @@ const ACTION_LABELS: Record<PlayerActionType, string> = {
   rumor: "Procurar rumores",
   destination: "Escolher destino",
   theory: "Montar teoria",
+  item_use: "Usar item",
+  item_equip: "Equipar item",
+  item_give: "Entregar item",
 };
 
 const ACTION_STATUS: Record<PlayerAction["status"], string> = {
@@ -145,6 +148,9 @@ function actionPrompt(action: PlayerActionKey, note: NoteSummary) {
     rumor: `Ação — Procurar rumores: ${target}. O que foi revelado e como o grupo pode verificar esse boato sem assumi-lo como verdade?`,
     destination: `Ação — Escolher destino: ${target}. O que sabemos sobre o lugar, por que ir até lá e que preparação pública faz sentido?`,
     theory: `Ação — Montar teoria: ${target}. Separe fatos confirmados, conexões possíveis e o que ainda falta descobrir.`,
+    item_use: `Ação — Usar item: ${target}. Explique somente os efeitos públicos conhecidos e o que precisa ser confirmado pelo Mestre.`,
+    item_equip: `Ação — Equipar item: ${target}. Revise o uso conhecido sem afirmar que a troca já aconteceu.`,
+    item_give: `Ação — Entregar item: ${target}. Ajude a registrar intenção, destinatário e condições sem concluir a entrega.`,
   };
   return prompts[action];
 }
@@ -315,6 +321,29 @@ export default function PlayerPanel({
     }
   }
 
+  async function sendItemAction(item: InventoryItem, actionType: "item_use" | "item_equip" | "item_give") {
+    const note = knownNotes.find((entry) => entry.path === item.item_path);
+    if (!note || !selectedCharacterId) return;
+    const intent = {
+      item_use: `Quero usar ${item.item_title}.`,
+      item_equip: `Quero equipar ${item.item_title}.`,
+      item_give: `Quero entregar ${item.item_title}; vou informar o destinatário ao Mestre.`,
+    }[actionType];
+    setActionFeedback("");
+    try {
+      const created = await submitPlayerAction({
+        character_note_id: Number(selectedCharacterId),
+        action_type: actionType,
+        target_note_id: note.id,
+        intent,
+      });
+      setActions((current) => [created, ...current]);
+      setActionFeedback(`${ACTION_LABELS[actionType]} enviada ao Mestre. Nada mudou no cânone ainda.`);
+    } catch (error) {
+      setActionFeedback(error instanceof Error ? error.message : "Não foi possível enviar a ação do item.");
+    }
+  }
+
   async function markAllRead() {
     if (!unreadEvents.length) return;
     try {
@@ -461,11 +490,18 @@ export default function PlayerPanel({
               const note = knownNotes.find((entry) => entry.path === item.item_path);
               const noteId = item.note_id || note?.id;
               const image = mediaUrlFromVaultPath(item.thumbnail || item.cover || note?.thumbnail || note?.cover);
-              return <button key={item.id} disabled={!noteId} onClick={() => noteId && onOpenNote(noteId)}>
-                {image ? <img className="inventory-item-image" src={image} alt={item.item_title} /> : <span className="inventory-item-placeholder" aria-hidden="true">&#9671;</span>}
-                <span className="inventory-item-copy"><strong>{item.item_title}</strong><small>{item.notes || (item.equipped ? "Equipado" : "Guardado")}</small></span>
-                <b>×{item.quantity}</b>
-              </button>;
+              return <article className="inventory-play-card" key={item.id}>
+                <button className="inventory-main" disabled={!noteId} onClick={() => noteId && onOpenNote(noteId)}>
+                  {image ? <img className="inventory-item-image" src={image} alt={item.item_title} /> : <span className="inventory-item-placeholder" aria-hidden="true">&#9671;</span>}
+                  <span className="inventory-item-copy"><strong>{item.item_title}</strong><small>{item.notes || (item.equipped ? "Equipado" : "Guardado")}</small></span>
+                  <b>×{item.quantity}</b>
+                </button>
+                <div className="inventory-actions">
+                  <button disabled={!note || !selectedCharacterId} onClick={() => void sendItemAction(item, "item_use")}>Usar</button>
+                  <button disabled={!note || !selectedCharacterId} onClick={() => void sendItemAction(item, "item_equip")}>Equipar</button>
+                  <button disabled={!note || !selectedCharacterId} onClick={() => void sendItemAction(item, "item_give")}>Entregar</button>
+                </div>
+              </article>;
             })}
             {inventory.length === 0 && <p className="muted">Nenhum item foi vinculado ao seu perfil.</p>}
           </div>

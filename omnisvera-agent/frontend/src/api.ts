@@ -116,7 +116,7 @@ export type PlayerDashboard = {
   sections: DashboardSection[];
 };
 
-export type PlayerActionType = "investigate" | "talk" | "mission" | "rumor" | "destination" | "theory";
+export type PlayerActionType = "investigate" | "talk" | "mission" | "rumor" | "destination" | "theory" | "item_use" | "item_equip" | "item_give";
 export type PlayerActionStatus = "submitted" | "in_review" | "answered" | "canonized" | "rejected";
 
 export type PlayerAction = {

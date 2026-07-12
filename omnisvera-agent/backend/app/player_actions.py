@@ -7,7 +7,10 @@ from pathlib import Path
 from typing import Any
 
 
-ACTION_TYPES = {"investigate", "talk", "mission", "rumor", "destination", "theory"}
+ACTION_TYPES = {
+    "investigate", "talk", "mission", "rumor", "destination", "theory",
+    "item_use", "item_equip", "item_give",
+}
 ACTION_STATUSES = {"submitted", "in_review", "answered", "canonized", "rejected"}
 
 

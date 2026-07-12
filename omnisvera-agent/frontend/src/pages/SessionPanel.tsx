@@ -59,6 +59,9 @@ const ACTION_LABELS: Record<PlayerAction["action_type"], string> = {
   rumor: "Procurar rumores",
   destination: "Escolher destino",
   theory: "Montar teoria",
+  item_use: "Usar item",
+  item_equip: "Equipar item",
+  item_give: "Entregar item",
 };
 
 const ACTION_STATUS: Record<PlayerActionStatus, string> = {
