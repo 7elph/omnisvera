@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { AccessMode, getAccessMode, getAccessToken, health, rebuildIndex, resolveNote, setAccessMode, setAccessToken } from "./api";
 import ChatVault from "./pages/ChatVault";
+import CharacterSheetBuilder from "./pages/CharacterSheetBuilder";
 import NoteView from "./pages/NoteView";
 import PlayerPanel from "./pages/PlayerPanel";
 import SearchNotes from "./pages/SearchNotes";
 import SessionPanel from "./pages/SessionPanel";
 
-type Page = "chat" | "search" | "note" | "session" | "player";
+type Page = "chat" | "search" | "note" | "session" | "player" | "sheet";
 
 export default function App() {
   const initialMode = getAccessMode();
@@ -203,6 +204,9 @@ export default function App() {
         <button className={page === "chat" ? "active" : ""} onClick={() => setPage("chat")}>
           Chat
         </button>
+        <button className={page === "sheet" ? "active" : ""} onClick={() => setPage("sheet")}>
+          Ficha
+        </button>
         <button className={page === "search" ? "active" : ""} onClick={() => setPage("search")}>
           Buscar
         </button>
@@ -224,6 +228,7 @@ export default function App() {
         <PlayerPanel key={`player-${authVersion}`} onOpenNote={openNote} onAskPrompt={askPrompt} />
       )}
       {authenticated && page === "chat" && <ChatVault onOpenNote={openNote} onUnknownNote={openUnknownNote} initialQuestion={chatSeed} />}
+      {authenticated && page === "sheet" && <CharacterSheetBuilder key={`sheet-${authVersion}-${mode}`} mode={mode === "player" ? "player" : "gm"} />}
       {authenticated && page === "search" && <SearchNotes onOpenNote={openNote} />}
       {authenticated && page === "note" && (
         <>

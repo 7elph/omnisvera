@@ -12,6 +12,14 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
 from .access import AccessContext, is_player_safe_row, sanitize_player_summary
+from .character_creation import (
+    get_or_create_sheet,
+    init_character_creation,
+    list_sheets,
+    review_sheet,
+    submit_sheet,
+    update_sheet_step,
+)
 from .config import get_settings
 from .ollama_client import check_ollama
 from .note_editor import EditConflictError, read_editable_note, save_editable_note
@@ -43,6 +51,9 @@ from .rag import answer_question
 from .schemas import (
     ChatRequest,
     ChatResponse,
+    CharacterSheetResponse,
+    CharacterSheetReview,
+    CharacterSheetStepUpdate,
     EditableNoteResponse,
     EditableNoteUpdate,
     HealthResponse,
@@ -362,6 +373,7 @@ def startup() -> None:
     init_player_discoveries(settings.database_path)
     init_player_progress(settings.database_path)
     init_player_inventory(settings.database_path)
+    init_character_creation(settings.database_path)
     if settings.rebuild_on_startup:
         notes, _ = iter_markdown_notes(settings.vault_path)
         rebuild_index(settings.database_path, notes)
@@ -636,6 +648,96 @@ def player_profile(access: AccessContext = Depends(require_player)) -> dict:
     return payload
 
 
+def _ensure_profile_sheet(profile_id: str) -> dict:
+    profile = settings.player_profiles.get(profile_id)
+    if not profile:
+        raise HTTPException(status_code=404, detail="Perfil de jogador não encontrado.")
+    character_path = str(profile.get("character_path") or "")
+    summary = resolve_note(settings.database_path, character_path, access_mode="player")
+    if summary is None:
+        raise HTTPException(status_code=404, detail="Nota do personagem não encontrada ou não liberada.")
+    detail = get_note(settings.database_path, int(summary["id"]), access_mode="player")
+    if detail is None:
+        raise HTTPException(status_code=404, detail="Não foi possível ler a nota do personagem.")
+    frontmatter = detail.get("frontmatter") or {}
+
+    def reference_note(value: object, *, kind: str) -> dict | None:
+        target = str(value or "").strip()
+        if kind == "race" and "kenku" in target.lower():
+            target = "Kenku"
+        if not target:
+            return None
+        # Character creation may use the mechanical race/class source even when
+        # the reference note itself is GM-only. Only the extracted form fields
+        # are returned to the owner of that character.
+        reference = resolve_note(settings.database_path, target, access_mode="gm")
+        if reference is None:
+            return None
+        return get_note(settings.database_path, int(reference["id"]), access_mode="gm")
+
+    return get_or_create_sheet(
+        settings.database_path,
+        profile_id=profile_id,
+        character_path=character_path,
+        character_title=str(profile.get("character_title") or summary["title"]),
+        note=detail,
+        race_note=reference_note(frontmatter.get("race"), kind="race"),
+        class_note=reference_note(frontmatter.get("class"), kind="class"),
+    )
+
+
+@app.get("/player/character-sheet", response_model=CharacterSheetResponse)
+def player_character_sheet(access: AccessContext = Depends(require_player)) -> dict:
+    if not access.profile_id:
+        raise HTTPException(status_code=403, detail="Use o token individual do seu personagem para preencher a ficha.")
+    maybe_refresh_index()
+    return _ensure_profile_sheet(access.profile_id)
+
+
+@app.put("/player/character-sheet", response_model=CharacterSheetResponse)
+def save_player_character_sheet_step(
+    request: CharacterSheetStepUpdate,
+    access: AccessContext = Depends(require_player),
+) -> dict:
+    if not access.profile_id:
+        raise HTTPException(status_code=403, detail="Use o token individual do seu personagem para preencher a ficha.")
+    _ensure_profile_sheet(access.profile_id)
+    try:
+        result = update_sheet_step(
+            settings.database_path,
+            profile_id=access.profile_id,
+            step_key=request.step_key,
+            fields=dict(request.fields),
+        )
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+    if result is None:
+        raise HTTPException(status_code=404, detail="Ficha não encontrada.")
+    return result
+
+
+@app.post("/player/character-sheet/submit", response_model=CharacterSheetResponse)
+def submit_player_character_sheet(access: AccessContext = Depends(require_player)) -> dict:
+    if not access.profile_id:
+        raise HTTPException(status_code=403, detail="Use o token individual do seu personagem para entregar a ficha.")
+    _ensure_profile_sheet(access.profile_id)
+    try:
+        result = submit_sheet(settings.database_path, profile_id=access.profile_id)
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+    if result is None:
+        raise HTTPException(status_code=404, detail="Ficha não encontrada.")
+    add_event(
+        settings.database_path,
+        profile_id=access.profile_id,
+        kind="character_sheet_submitted",
+        title="Ficha entregue ao Mestre",
+        message="As dez etapas foram concluídas e a ficha aguarda revisão.",
+        unread=False,
+    )
+    return result
+
+
 @app.get("/player/actions", response_model=list[PlayerActionRecord])
 def player_actions(access: AccessContext = Depends(require_player)) -> list[dict]:
     return list_player_actions(settings.database_path, character_path=access.character_path)
@@ -714,6 +816,42 @@ def player_quests(access: AccessContext = Depends(require_player)) -> list[dict]
 @app.get("/player/inventory", response_model=list[InventoryRecord])
 def player_inventory(access: AccessContext = Depends(require_player)) -> list[dict]:
     return list_inventory(settings.database_path, access.profile_id or "group")
+
+
+@app.get("/gm/character-sheets", response_model=list[CharacterSheetResponse])
+def gm_character_sheets(_: AccessContext = Depends(require_master)) -> list[dict]:
+    maybe_refresh_index()
+    for profile_id in settings.player_profiles:
+        _ensure_profile_sheet(profile_id)
+    return list_sheets(settings.database_path)
+
+
+@app.patch("/gm/character-sheets/{profile_id}", response_model=CharacterSheetResponse)
+def gm_review_character_sheet(
+    profile_id: str,
+    request: CharacterSheetReview,
+    _: AccessContext = Depends(require_master),
+) -> dict:
+    _ensure_profile_sheet(profile_id)
+    try:
+        result = review_sheet(
+            settings.database_path,
+            profile_id=profile_id,
+            status=request.status,
+            feedback=request.feedback,
+        )
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+    if result is None:
+        raise HTTPException(status_code=404, detail="Ficha não encontrada.")
+    add_event(
+        settings.database_path,
+        profile_id=profile_id,
+        kind=f"character_sheet_{request.status}",
+        title="Ficha aprovada" if request.status == "approved" else "Ficha devolvida para ajustes",
+        message=(request.feedback or "O Mestre revisou sua ficha.").strip(),
+    )
+    return result
 
 
 @app.get("/gm/actions", response_model=list[PlayerActionRecord])

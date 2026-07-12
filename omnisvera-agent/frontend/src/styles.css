@@ -1057,6 +1057,70 @@ textarea {
   .note-editor textarea { min-height: 58vh; font-size: 12px; }
 }
 
+.character-sheet-page { display: grid; gap: 1rem; }
+.character-sheet-shell { display: grid; gap: .85rem; }
+.sheet-overview { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1rem; border: 1px solid rgba(211,177,94,.24); border-radius: 18px; background: radial-gradient(circle at 88% 20%, rgba(199,153,67,.13), transparent 38%), rgba(10,12,15,.78); }
+.sheet-overview h2 { margin: .15rem 0 .45rem; }
+.sheet-status { display: inline-flex; padding: .3rem .6rem; border: 1px solid rgba(255,255,255,.1); border-radius: 999px; color: var(--muted); font-size: .74rem; }
+.sheet-status.status-submitted { color: #efd28d; border-color: rgba(239,210,141,.3); }
+.sheet-status.status-approved { color: #aee0ba; border-color: rgba(93,184,116,.35); }
+.sheet-status.status-changes_requested { color: #f1a692; border-color: rgba(210,92,64,.35); }
+.sheet-progress-ring { --sheet-progress: 0deg; display: grid; place-content: center; width: 96px; height: 96px; flex: 0 0 96px; border-radius: 50%; background: radial-gradient(circle, #101318 57%, transparent 59%), conic-gradient(#d6aa58 var(--sheet-progress), rgba(255,255,255,.08) 0); text-align: center; }
+.sheet-progress-ring strong { font-size: 1.18rem; color: #f1d08c; }
+.sheet-progress-ring small { color: var(--muted); font-size: .66rem; }
+.sheet-progress-bar { overflow: hidden; height: 5px; border-radius: 999px; background: rgba(255,255,255,.07); }
+.sheet-progress-bar span { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #86652d, #e2b65f); transition: width .25s ease; }
+.sheet-feedback { display: grid; gap: .35rem; margin: 0; padding: .85rem 1rem; border-left: 3px solid #c8924d; background: rgba(200,146,77,.08); }
+.sheet-steps { display: grid; gap: .55rem; }
+.sheet-step { overflow: hidden; border: 1px solid rgba(255,255,255,.08); border-radius: 14px; background: rgba(8,10,13,.68); }
+.sheet-step.complete { border-color: rgba(79,156,99,.25); }
+.sheet-step.open { border-color: rgba(211,177,94,.34); }
+.sheet-step-heading { width: 100%; display: grid; grid-template-columns: 38px 1fr auto; align-items: center; gap: .75rem; padding: .8rem .9rem; border: 0; border-radius: 0; background: transparent; color: var(--text); text-align: left; }
+.sheet-step-heading > span:nth-child(2) { display: grid; gap: .1rem; }
+.sheet-step-heading small { color: var(--muted); font-size: .72rem; }
+.sheet-step-state { display: grid; place-content: center; width: 32px; height: 32px; border-radius: 50%; color: #f1c97b; background: rgba(198,139,54,.13); font-weight: 800; }
+.sheet-step.complete .sheet-step-state { color: #aee0ba; background: rgba(72,148,91,.15); }
+.sheet-step-summary { margin: 0; padding: 0 .95rem .7rem 3.7rem; color: var(--muted); font-size: .82rem; }
+.sheet-step-form { display: grid; gap: .8rem; padding: .9rem; border-top: 1px solid rgba(255,255,255,.07); background: rgba(255,255,255,.015); }
+.sheet-fields { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: .75rem; }
+.sheet-fields-attributes { grid-template-columns: repeat(3, minmax(0,1fr)); }
+.sheet-fields label { display: grid; align-content: start; gap: .3rem; min-width: 0; }
+.sheet-fields label > span { display: flex; align-items: center; justify-content: space-between; gap: .5rem; color: #dcd3c3; font-size: .78rem; font-weight: 700; }
+.sheet-fields label em { padding: .12rem .35rem; border-radius: 999px; color: #efad91; background: rgba(189,79,54,.12); font-size: .62rem; font-style: normal; font-weight: 600; }
+.sheet-fields input, .sheet-fields select, .sheet-fields textarea, .gm-sheet-review textarea { width: 100%; padding: .62rem .68rem; border: 1px solid rgba(211,177,94,.22); border-radius: 9px; outline: none; background: #0b0e12; color: #eee5d7; font: inherit; }
+.sheet-fields textarea, .gm-sheet-review textarea { resize: vertical; line-height: 1.45; }
+.sheet-fields input:focus, .sheet-fields select:focus, .sheet-fields textarea:focus, .gm-sheet-review textarea:focus { border-color: #d6aa58; box-shadow: 0 0 0 2px rgba(214,170,88,.1); }
+.sheet-fields input:disabled, .sheet-fields select:disabled, .sheet-fields textarea:disabled { opacity: .8; color: #d7cdbd; }
+.sheet-fields label > small { color: var(--muted); font-size: .68rem; }
+.sheet-save-row { display: flex; justify-content: flex-end; align-items: center; gap: .75rem; }
+.sheet-save-row span { color: var(--muted); font-size: .75rem; }
+.sheet-submit-panel { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: .8rem; padding: 1rem; border: 1px solid rgba(211,177,94,.25); border-radius: 14px; background: rgba(35,27,16,.42); }
+.sheet-submit-panel > div { display: grid; gap: .2rem; }
+.sheet-submit-panel small { color: var(--muted); }
+.sheet-submit-panel > p { grid-column: 1 / -1; margin: 0; color: #dfbd78; }
+.gm-sheet-roster { display: grid; gap: .85rem; }
+.gm-sheet-roster h2 { margin: .1rem 0; }
+.gm-sheet-roster p { margin: 0; color: var(--muted); }
+.gm-sheet-tabs { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: .55rem; }
+.gm-sheet-tabs button { display: grid; gap: .2rem; text-align: left; background: rgba(255,255,255,.025); }
+.gm-sheet-tabs button.active { border-color: #d6aa58; background: rgba(211,177,94,.11); }
+.gm-sheet-tabs small { color: var(--muted); }
+.gm-sheet-review { display: grid; grid-template-columns: 1fr auto; align-items: end; gap: .8rem; padding: 1rem; border: 1px solid rgba(255,255,255,.08); border-radius: 14px; }
+.gm-sheet-review label { display: grid; gap: .35rem; }
+.gm-sheet-review > div { display: flex; gap: .5rem; }
+
+@media (max-width: 760px) {
+  .sheet-overview { align-items: flex-start; }
+  .sheet-progress-ring { width: 78px; height: 78px; flex-basis: 78px; }
+  .sheet-fields, .sheet-fields-attributes { grid-template-columns: 1fr; }
+  .sheet-step-summary { padding-left: .95rem; }
+  .sheet-submit-panel, .gm-sheet-review { grid-template-columns: 1fr; }
+  .sheet-submit-panel button { width: 100%; }
+  .gm-sheet-tabs { grid-template-columns: repeat(2, minmax(0,1fr)); }
+  .gm-sheet-review > div { width: 100%; }
+  .gm-sheet-review button { flex: 1; }
+}
+
 .live-panel-heading {
   display: flex;
   align-items: center;

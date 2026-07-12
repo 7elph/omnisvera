@@ -217,3 +217,36 @@ class InventoryRecord(BaseModel):
     equipped: bool
     notes: str | None = None
     updated_at: str
+
+
+class CharacterSheetStep(BaseModel):
+    key: str
+    title: str
+    summary: str
+    status: str
+    fields: dict[str, Any] = Field(default_factory=dict)
+    missing_fields: list[str] = Field(default_factory=list)
+
+
+class CharacterSheetResponse(BaseModel):
+    profile_id: str
+    character_path: str
+    character_title: str
+    status: str
+    completion_count: int
+    total_steps: int
+    steps: list[CharacterSheetStep] = Field(default_factory=list)
+    submitted_at: str | None = None
+    reviewed_at: str | None = None
+    gm_feedback: str | None = None
+    updated_at: str
+
+
+class CharacterSheetStepUpdate(BaseModel):
+    step_key: str
+    fields: dict[str, Any] = Field(default_factory=dict)
+
+
+class CharacterSheetReview(BaseModel):
+    status: str
+    feedback: str | None = Field(default=None, max_length=2400)

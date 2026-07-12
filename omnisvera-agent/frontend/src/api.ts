@@ -186,6 +186,29 @@ export type InventoryItem = {
   quantity: number; equipped: boolean; notes?: string | null; updated_at: string;
 };
 
+export type CharacterSheetStep = {
+  key: string;
+  title: string;
+  summary: string;
+  status: "complete" | "pending";
+  fields: Record<string, string | number | null>;
+  missing_fields: string[];
+};
+
+export type CharacterSheet = {
+  profile_id: string;
+  character_path: string;
+  character_title: string;
+  status: "draft" | "submitted" | "approved" | "changes_requested";
+  completion_count: number;
+  total_steps: number;
+  steps: CharacterSheetStep[];
+  submitted_at?: string | null;
+  reviewed_at?: string | null;
+  gm_feedback?: string | null;
+  updated_at: string;
+};
+
 export async function getPlayerProfile(): Promise<PlayerProfile> {
   const response = await fetch(`${API_BASE}/player/profile`, { headers: authHeaders() });
   if (!response.ok) throw new Error("Falha ao carregar perfil do jogador");
@@ -296,6 +319,44 @@ export async function updateInventory(payload: { profile_id: string; note_id: nu
     method: "POST", headers: authHeaders({ "Content-Type": "application/json" }), body: JSON.stringify(payload),
   });
   if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao atualizar inventário");
+  return response.json();
+}
+
+export async function getPlayerCharacterSheet(): Promise<CharacterSheet> {
+  const response = await fetch(`${API_BASE}/player/character-sheet`, { headers: authHeaders() });
+  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao carregar ficha");
+  return response.json();
+}
+
+export async function savePlayerCharacterSheetStep(stepKey: string, fields: Record<string, string | number | null>): Promise<CharacterSheet> {
+  const response = await fetch(`${API_BASE}/player/character-sheet`, {
+    method: "PUT",
+    headers: authHeaders({ "Content-Type": "application/json" }),
+    body: JSON.stringify({ step_key: stepKey, fields }),
+  });
+  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao salvar etapa");
+  return response.json();
+}
+
+export async function submitPlayerCharacterSheet(): Promise<CharacterSheet> {
+  const response = await fetch(`${API_BASE}/player/character-sheet/submit`, { method: "POST", headers: authHeaders() });
+  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao entregar ficha");
+  return response.json();
+}
+
+export async function listGmCharacterSheets(): Promise<CharacterSheet[]> {
+  const response = await fetch(`${API_BASE}/gm/character-sheets`, { headers: authHeaders() });
+  if (!response.ok) throw new Error("Falha ao carregar fichas dos jogadores");
+  return response.json();
+}
+
+export async function reviewCharacterSheet(profileId: string, status: "approved" | "changes_requested", feedback?: string): Promise<CharacterSheet> {
+  const response = await fetch(`${API_BASE}/gm/character-sheets/${encodeURIComponent(profileId)}`, {
+    method: "PATCH",
+    headers: authHeaders({ "Content-Type": "application/json" }),
+    body: JSON.stringify({ status, feedback }),
+  });
+  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao revisar ficha");
   return response.json();
 }
 
