@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+import json
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -29,6 +30,7 @@ class Settings:
     access_token: str | None
     master_token: str | None
     player_token: str | None
+    player_profiles: dict[str, dict[str, str]]
     rebuild_on_startup: bool
 
 
@@ -70,6 +72,11 @@ def get_settings() -> Settings:
     quality_model = os.getenv("OMNISVERA_QUALITY_MODEL", fast_model)
     response_mode = _response_mode(os.getenv("OMNISVERA_RESPONSE_MODE", "fast"))
     selected_model = quality_model if response_mode == "grounded" else fast_model
+    try:
+        raw_profiles = json.loads(os.getenv("OMNISVERA_PLAYER_PROFILES_JSON", "{}"))
+        player_profiles = raw_profiles if isinstance(raw_profiles, dict) else {}
+    except json.JSONDecodeError:
+        player_profiles = {}
     return Settings(
         vault_path=vault_path,
         ollama_base_url=os.getenv("OLLAMA_BASE_URL", "http://localhost:11434").rstrip("/"),
@@ -97,6 +104,7 @@ def get_settings() -> Settings:
         access_token=os.getenv("OMNISVERA_ACCESS_TOKEN") or None,
         master_token=os.getenv("OMNISVERA_MASTER_TOKEN") or os.getenv("OMNISVERA_ACCESS_TOKEN") or None,
         player_token=os.getenv("OMNISVERA_PLAYER_TOKEN") or None,
+        player_profiles=player_profiles,
         rebuild_on_startup=os.getenv("OMNISVERA_REBUILD_ON_STARTUP", "false").lower()
         in {"1", "true", "yes", "sim"},
     )

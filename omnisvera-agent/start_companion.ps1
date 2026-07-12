@@ -32,6 +32,7 @@ $Root = Resolve-Path "$PSScriptRoot\.."
 $Backend = Join-Path $PSScriptRoot "backend"
 $Frontend = Join-Path $PSScriptRoot "frontend"
 $Venv = Join-Path $Backend ".venv"
+$PlayerProfiles = @{}
 
 if (-not $TokenFile) {
   $TokenFile = Join-Path $Backend "data\access_tokens.json"
@@ -45,6 +46,15 @@ if (Test-Path $TokenFile) {
     }
     if (-not $PlayerToken -and $savedTokens.player_token) {
       $PlayerToken = [string]$savedTokens.player_token
+    }
+    if ($savedTokens.player_profiles) {
+      foreach ($property in $savedTokens.player_profiles.PSObject.Properties) {
+        $PlayerProfiles[$property.Name] = @{
+          token = [string]$property.Value.token
+          character_path = [string]$property.Value.character_path
+          character_title = [string]$property.Value.character_title
+        }
+      }
     }
   }
   catch {
@@ -64,6 +74,22 @@ if (-not $PlayerToken) {
   $PlayerToken = New-Token
 }
 
+$ProfileDefinitions = @{
+  vezemir = @{ character_path = "Characters/Individual/Vezemir.md"; character_title = "Vezemir" }
+  varkh = @{ character_path = "Characters/Individual/Varkh Nimalis.md"; character_title = "Varkh Nimalis" }
+  raziel = @{ character_path = "Characters/Individual/Raziel.md"; character_title = "Raziel" }
+  morthak = @{ character_path = "Characters/Individual/Morthak.md"; character_title = "Morthak" }
+}
+foreach ($profileId in $ProfileDefinitions.Keys) {
+  if (-not $PlayerProfiles.ContainsKey($profileId) -or -not $PlayerProfiles[$profileId].token) {
+    $PlayerProfiles[$profileId] = @{
+      token = New-Token
+      character_path = $ProfileDefinitions[$profileId].character_path
+      character_title = $ProfileDefinitions[$profileId].character_title
+    }
+  }
+}
+
 $tokenDirectory = Split-Path $TokenFile -Parent
 if (-not (Test-Path $tokenDirectory)) {
   New-Item -ItemType Directory -Path $tokenDirectory -Force | Out-Null
@@ -71,7 +97,8 @@ if (-not (Test-Path $tokenDirectory)) {
 @{
   master_token = $MasterToken
   player_token = $PlayerToken
-} | ConvertTo-Json | Set-Content -Path $TokenFile -Encoding UTF8
+  player_profiles = $PlayerProfiles
+} | ConvertTo-Json -Depth 5 | Set-Content -Path $TokenFile -Encoding UTF8
 
 if (-not (Test-Path $Venv)) {
   python -m venv $Venv
@@ -102,6 +129,7 @@ $env:OLLAMA_MODEL = if ($ResponseMode -eq "grounded") { $QualityModel } else { $
 $env:OMNISVERA_ACCESS_TOKEN = $MasterToken
 $env:OMNISVERA_MASTER_TOKEN = $MasterToken
 $env:OMNISVERA_PLAYER_TOKEN = $PlayerToken
+$env:OMNISVERA_PLAYER_PROFILES_JSON = ($PlayerProfiles | ConvertTo-Json -Depth 5 -Compress)
 $env:OMNISVERA_REBUILD_ON_STARTUP = if ($NoRebuild) { "false" } else { "true" }
 
 $localIps = Get-NetIPAddress -AddressFamily IPv4 |
@@ -117,6 +145,10 @@ Write-Host "Modelo fundamentado: $QualityModel"
 Write-Host "Modelo de embeddings: $EmbedModel"
 Write-Host "Token do Mestre: $MasterToken" -ForegroundColor Cyan
 Write-Host "Token dos Jogadores: $PlayerToken" -ForegroundColor Green
+Write-Host "Acessos individuais:" -ForegroundColor Green
+foreach ($profileId in @("vezemir", "varkh", "raziel", "morthak")) {
+  Write-Host "  $($PlayerProfiles[$profileId].character_title): $($PlayerProfiles[$profileId].token)"
+}
 Write-Host "Local: http://127.0.0.1:$Port"
 foreach ($ip in $localIps) {
   Write-Host "Wi-Fi/LAN: http://$ip`:$Port"

@@ -1,13 +1,26 @@
 import { useEffect, useState } from "react";
 import {
+  listGmDiscoveries,
+  listNotes,
   listPlayerActions,
   mediaUrlFromVaultPath,
   PlayerAction,
   PlayerActionStatus,
+  PlayerDiscovery,
+  NoteSummary,
+  revealPlayerDiscovery,
+  revokePlayerDiscovery,
   searchNotes,
   SearchResult,
   updatePlayerAction,
 } from "../api";
+
+const PLAYER_PROFILES = [
+  { id: "vezemir", title: "Vezemir" },
+  { id: "varkh", title: "Varkh Nimalis" },
+  { id: "raziel", title: "Raziel" },
+  { id: "morthak", title: "Morthak" },
+];
 
 const QUICK_SEARCHES = [
   "Sessão 01 Roteiro de Mesa",
@@ -73,6 +86,11 @@ export default function SessionPanel({
   const [responseDrafts, setResponseDrafts] = useState<Record<number, string>>({});
   const [actionError, setActionError] = useState("");
   const [updatingAction, setUpdatingAction] = useState<number | null>(null);
+  const [discoveries, setDiscoveries] = useState<PlayerDiscovery[]>([]);
+  const [availableNotes, setAvailableNotes] = useState<NoteSummary[]>([]);
+  const [discoveryProfile, setDiscoveryProfile] = useState("vezemir");
+  const [discoveryNoteId, setDiscoveryNoteId] = useState("");
+  const [discoveryFeedback, setDiscoveryFeedback] = useState("");
 
   useEffect(() => {
     Promise.all(QUICK_SEARCHES.map((query) => searchNotes(query, 1))).then((groups) => {
@@ -85,6 +103,40 @@ export default function SessionPanel({
       setItems(flattened);
     });
   }, []);
+
+  useEffect(() => {
+    Promise.all([listGmDiscoveries(), listNotes()])
+      .then(([discoveryData, noteData]) => {
+        setDiscoveries(discoveryData);
+        setAvailableNotes(
+          noteData
+            .filter((note) => ["Jogadores", "Público"].includes(String(note.visibility || "")))
+            .sort((left, right) => left.title.localeCompare(right.title, "pt-BR")),
+        );
+      })
+      .catch(() => setDiscoveryFeedback("Não foi possível carregar as descobertas."));
+  }, []);
+
+  async function revealDiscovery() {
+    if (!discoveryNoteId) return;
+    setDiscoveryFeedback("");
+    try {
+      const created = await revealPlayerDiscovery(discoveryProfile, Number(discoveryNoteId));
+      setDiscoveries((current) => [created, ...current.filter((item) => item.id !== created.id)]);
+      setDiscoveryFeedback("Descoberta revelada ao jogador.");
+    } catch (error) {
+      setDiscoveryFeedback(error instanceof Error ? error.message : "Não foi possível revelar a descoberta.");
+    }
+  }
+
+  async function revokeDiscovery(id: number) {
+    try {
+      await revokePlayerDiscovery(id);
+      setDiscoveries((current) => current.filter((item) => item.id !== id));
+    } catch {
+      setDiscoveryFeedback("Não foi possível revogar a descoberta.");
+    }
+  }
 
   useEffect(() => {
     let active = true;
@@ -175,6 +227,37 @@ export default function SessionPanel({
             </article>
           ))}
           {actions.length === 0 && <p className="muted">Nenhuma ação aguardando o Mestre.</p>}
+        </div>
+      </section>
+
+      <section className="gm-discovery-panel">
+        <div className="section-heading">
+          <span>✧</span>
+          <div>
+            <p className="eyebrow">Conhecimento individual</p>
+            <h3>Revelar descoberta</h3>
+            <p>Libera uma nota já player-safe somente no painel pessoal escolhido.</p>
+          </div>
+        </div>
+        <div className="discovery-controls">
+          <select value={discoveryProfile} onChange={(event) => setDiscoveryProfile(event.target.value)}>
+            {PLAYER_PROFILES.map((profile) => <option key={profile.id} value={profile.id}>{profile.title}</option>)}
+          </select>
+          <select value={discoveryNoteId} onChange={(event) => setDiscoveryNoteId(event.target.value)}>
+            <option value="">Escolha uma nota liberada...</option>
+            {availableNotes.map((note) => <option key={note.id} value={note.id}>{note.title}</option>)}
+          </select>
+          <button disabled={!discoveryNoteId} onClick={() => void revealDiscovery()}>Revelar</button>
+        </div>
+        {discoveryFeedback && <p className="action-feedback">{discoveryFeedback}</p>}
+        <div className="gm-discovery-list">
+          {discoveries.map((discovery) => (
+            <article key={discovery.id}>
+              <span><strong>{discovery.note_title}</strong><small>{discovery.profile_id}</small></span>
+              <button className="danger-button" onClick={() => void revokeDiscovery(discovery.id)}>Revogar</button>
+            </article>
+          ))}
+          {discoveries.length === 0 && <p className="muted">Nenhuma descoberta individual revelada.</p>}
         </div>
       </section>
 

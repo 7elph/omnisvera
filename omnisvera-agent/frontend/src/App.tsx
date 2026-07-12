@@ -41,7 +41,7 @@ export default function App() {
           return current;
         });
         setStatus(
-          `${data.access_mode === "player" ? "Jogador" : "Mestre"} · Ollama ${data.ollama_accessible ? "ok" : "offline"} · ${data.ollama_model}`,
+          `${data.access_mode === "player" ? (data.player_character_title || "Jogador") : "Mestre"} · Ollama ${data.ollama_accessible ? "ok" : "offline"} · ${data.ollama_model}`,
         );
       })
       .catch(() => {
@@ -100,7 +100,7 @@ export default function App() {
         setAuthenticated(true);
         setPage(detectedMode === "player" ? "player" : "session");
         setStatus(
-          `${data.access_mode === "player" ? "Jogador" : "Mestre"} · Ollama ${data.ollama_accessible ? "ok" : "offline"} · ${data.ollama_model}`,
+          `${data.access_mode === "player" ? (data.player_character_title || "Jogador") : "Mestre"} · Ollama ${data.ollama_accessible ? "ok" : "offline"} · ${data.ollama_model}`,
         );
         setAuthVersion((current) => current + 1);
       })

@@ -22,6 +22,9 @@ class HealthResponse(BaseModel):
     ollama_accessible: bool
     access_mode: str | None = None
     player_mode_available: bool = False
+    player_profile_id: str | None = None
+    player_character_path: str | None = None
+    player_character_title: str | None = None
 
 
 class RebuildResponse(BaseModel):
@@ -121,3 +124,23 @@ class PlayerActionRecord(BaseModel):
     gm_response: str | None = None
     created_at: str
     updated_at: str
+
+
+class PlayerProfileResponse(BaseModel):
+    profile_id: str | None = None
+    character_path: str | None = None
+    character_title: str | None = None
+    shared_access: bool = False
+
+
+class PlayerDiscoveryCreate(BaseModel):
+    profile_id: str
+    note_id: int
+
+
+class PlayerDiscoveryRecord(BaseModel):
+    id: int
+    profile_id: str
+    note_path: str
+    note_title: str
+    created_at: str

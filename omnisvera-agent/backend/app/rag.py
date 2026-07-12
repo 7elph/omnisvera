@@ -808,7 +808,7 @@ def _rich_direct_entity_answer(note: dict, question: str, access_mode: AccessMod
             identity_lines.append(f"{'Era' if deceased else 'É'} {_clean_value(profile_bits[0]).lower()}.")
         if reputation:
             identity_lines.append(
-                f"{'Era conhecida em vida' if deceased else 'É conhecida'} como {_clean_value(reputation).rstrip('.')}."
+                f"{'Em vida, a reputação que acompanhava seu nome' if deceased else 'A reputação que acompanha seu nome'}: {_clean_value(reputation).rstrip('.')}."
             )
 
         current_links: list[str] = []
@@ -1542,6 +1542,7 @@ def _answer_index_overview(
 
 
 def _clean_answer(answer: str) -> str:
+    answer = re.sub(r"\bà\s+(um|uma)\b", r"a \1", answer, flags=re.IGNORECASE)
     answer = _dedupe_paragraphs(answer)
     if len(answer) <= 1800:
         return answer
@@ -1695,6 +1696,8 @@ async def _polish_response_with_ollama(
     retrieval_mode: str,
 ) -> dict:
     base_answer = _clean_answer(str(result.get("answer") or ""))
+    result = dict(result)
+    result["answer"] = base_answer
     if not base_answer or _should_skip_ollama_polish(result):
         return _with_chat_meta(result, ollama_used=False, model=ollama_model, retrieval_mode=retrieval_mode)
     if result.get("insufficient_context") and not result.get("notes_used"):

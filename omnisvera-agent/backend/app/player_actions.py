@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import sqlite3
+from contextlib import closing
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -18,7 +19,7 @@ def _connect(database_path: Path) -> sqlite3.Connection:
 
 
 def init_player_actions(database_path: Path) -> None:
-    with _connect(database_path) as connection:
+    with closing(_connect(database_path)) as connection, connection:
         connection.execute(
             """
             CREATE TABLE IF NOT EXISTS player_actions (
@@ -59,7 +60,7 @@ def create_player_action(
         raise ValueError("Tipo de ação inválido")
     now = datetime.now(timezone.utc).isoformat()
     init_player_actions(database_path)
-    with _connect(database_path) as connection:
+    with closing(_connect(database_path)) as connection, connection:
         cursor = connection.execute(
             """
             INSERT INTO player_actions (
@@ -76,13 +77,21 @@ def create_player_action(
     return _as_dict(row)
 
 
-def list_player_actions(database_path: Path, *, limit: int = 100) -> list[dict[str, Any]]:
+def list_player_actions(
+    database_path: Path, *, limit: int = 100, character_path: str | None = None
+) -> list[dict[str, Any]]:
     init_player_actions(database_path)
-    with _connect(database_path) as connection:
-        rows = connection.execute(
-            "SELECT * FROM player_actions ORDER BY updated_at DESC, id DESC LIMIT ?",
-            (max(1, min(limit, 500)),),
-        ).fetchall()
+    with closing(_connect(database_path)) as connection, connection:
+        if character_path:
+            rows = connection.execute(
+                "SELECT * FROM player_actions WHERE character_path = ? ORDER BY updated_at DESC, id DESC LIMIT ?",
+                (character_path, max(1, min(limit, 500))),
+            ).fetchall()
+        else:
+            rows = connection.execute(
+                "SELECT * FROM player_actions ORDER BY updated_at DESC, id DESC LIMIT ?",
+                (max(1, min(limit, 500)),),
+            ).fetchall()
     return [_as_dict(row) for row in rows]
 
 
@@ -98,7 +107,7 @@ def update_player_action(
     response = (gm_response or "").strip() or None
     now = datetime.now(timezone.utc).isoformat()
     init_player_actions(database_path)
-    with _connect(database_path) as connection:
+    with closing(_connect(database_path)) as connection, connection:
         existing = connection.execute("SELECT id FROM player_actions WHERE id = ?", (action_id,)).fetchone()
         if existing is None:
             return None

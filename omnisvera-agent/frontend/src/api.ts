@@ -133,6 +133,57 @@ export type PlayerAction = {
   updated_at: string;
 };
 
+export type PlayerProfile = {
+  profile_id?: string | null;
+  character_path?: string | null;
+  character_title?: string | null;
+  shared_access: boolean;
+};
+
+export type PlayerDiscovery = {
+  id: number;
+  profile_id: string;
+  note_path: string;
+  note_title: string;
+  created_at: string;
+};
+
+export async function getPlayerProfile(): Promise<PlayerProfile> {
+  const response = await fetch(`${API_BASE}/player/profile`, { headers: authHeaders() });
+  if (!response.ok) throw new Error("Falha ao carregar perfil do jogador");
+  return response.json();
+}
+
+export async function listPlayerDiscoveries(): Promise<PlayerDiscovery[]> {
+  const response = await fetch(`${API_BASE}/player/discoveries`, { headers: authHeaders() });
+  if (!response.ok) throw new Error("Falha ao carregar descobertas");
+  return response.json();
+}
+
+export async function listGmDiscoveries(): Promise<PlayerDiscovery[]> {
+  const response = await fetch(`${API_BASE}/gm/discoveries`, { headers: authHeaders() });
+  if (!response.ok) throw new Error("Falha ao carregar descobertas dos jogadores");
+  return response.json();
+}
+
+export async function revealPlayerDiscovery(profileId: string, noteId: number): Promise<PlayerDiscovery> {
+  const response = await fetch(`${API_BASE}/gm/discoveries`, {
+    method: "POST",
+    headers: authHeaders({ "Content-Type": "application/json" }),
+    body: JSON.stringify({ profile_id: profileId, note_id: noteId }),
+  });
+  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao revelar descoberta");
+  return response.json();
+}
+
+export async function revokePlayerDiscovery(discoveryId: number): Promise<void> {
+  const response = await fetch(`${API_BASE}/gm/discoveries/${discoveryId}`, {
+    method: "DELETE",
+    headers: authHeaders(),
+  });
+  if (!response.ok) throw new Error("Falha ao revogar descoberta");
+}
+
 export async function health() {
   const response = await fetch(`${API_BASE}/health`, { headers: authHeaders() });
   if (!response.ok) throw new Error("Falha ao consultar /health");

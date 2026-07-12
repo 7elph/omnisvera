@@ -1,11 +1,15 @@
 import { useEffect, useMemo, useState } from "react";
 import {
+  getPlayerProfile,
   listNotes,
   listPlayerActions,
+  listPlayerDiscoveries,
   mediaUrlFromVaultPath,
   NoteSummary,
   PlayerAction,
   PlayerActionType,
+  PlayerDiscovery,
+  PlayerProfile,
   playerDashboard,
   PlayerDashboard,
   submitPlayerAction,
@@ -145,6 +149,8 @@ export default function PlayerPanel({
   const [loading, setLoading] = useState(true);
   const [knownNotes, setKnownNotes] = useState<NoteSummary[]>([]);
   const [actions, setActions] = useState<PlayerAction[]>([]);
+  const [profile, setProfile] = useState<PlayerProfile | null>(null);
+  const [discoveries, setDiscoveries] = useState<PlayerDiscovery[]>([]);
   const [selectedAction, setSelectedAction] = useState<PlayerActionKey | null>(null);
   const [selectedTargetId, setSelectedTargetId] = useState("");
   const [selectedCharacterId, setSelectedCharacterId] = useState("");
@@ -161,15 +167,19 @@ export default function PlayerPanel({
         setError("");
       }
       try {
-        const [dashboardData, notesData, actionData] = await Promise.all([
+        const [dashboardData, notesData, actionData, profileData, discoveryData] = await Promise.all([
           playerDashboard(),
           listNotes(),
           listPlayerActions(),
+          getPlayerProfile(),
+          listPlayerDiscoveries(),
         ]);
         if (!active) return;
         setDashboard(dashboardData);
         setKnownNotes(notesData);
         setActions(actionData);
+        setProfile(profileData);
+        setDiscoveries(discoveryData);
         setError("");
       } catch {
         if (!active || !initial) return;
@@ -213,9 +223,16 @@ export default function PlayerPanel({
         note.tags.some((tag) => ["jogador", "player", "personagem-jogador"].includes(tag.toLowerCase()))
         || ["Vezemir", "Varkh Nimalis", "Raziel", "Morthak"].includes(note.title),
       )
+      .filter((note) => !profile?.character_path || note.path === profile.character_path)
       .sort((left, right) => left.title.localeCompare(right.title, "pt-BR")),
-    [knownNotes],
+    [knownNotes, profile],
   );
+
+  useEffect(() => {
+    if (!profile?.character_path) return;
+    const ownCharacter = knownNotes.find((note) => note.path === profile.character_path);
+    if (ownCharacter) setSelectedCharacterId(String(ownCharacter.id));
+  }, [knownNotes, profile]);
 
   async function sendAction() {
     if (!selectedAction || !selectedTarget || !selectedCharacterId || actionIntent.trim().length < 3) return;
@@ -243,6 +260,7 @@ export default function PlayerPanel({
       <div className="player-hero">
         <div className="player-hero-main">
           <p className="eyebrow">Modo Jogador</p>
+          {profile?.character_title && <span className="profile-pill">Você joga como {profile.character_title}</span>}
           <span className="version-pill">Home Jogável v4 · player-safe</span>
           <h2>Omnisvera em jogo</h2>
           <p>Missões, rumores, personagens e lugares liberados — sem abrir bastidores do mestre.</p>
@@ -302,7 +320,11 @@ export default function PlayerPanel({
             </div>
             <label>
               Quem age
-              <select value={selectedCharacterId} onChange={(event) => setSelectedCharacterId(event.target.value)}>
+              <select
+                value={selectedCharacterId}
+                disabled={Boolean(profile?.character_path)}
+                onChange={(event) => setSelectedCharacterId(event.target.value)}
+              >
                 <option value="">Escolha seu personagem...</option>
                 {playerCharacters.map((character) => (
                   <option key={character.id} value={character.id}>{character.title}</option>
@@ -349,6 +371,30 @@ export default function PlayerPanel({
           </div>
         )}
       </div>
+
+      {profile?.profile_id && (
+        <div className="player-discoveries">
+          <div className="section-heading">
+            <span>✧</span>
+            <div>
+              <h3>Suas descobertas</h3>
+              <p>Pistas e registros revelados especificamente para {profile.character_title}.</p>
+            </div>
+          </div>
+          <div className="discovery-grid">
+            {discoveries.map((discovery) => {
+              const note = knownNotes.find((item) => item.path === discovery.note_path);
+              return (
+                <button key={discovery.id} disabled={!note} onClick={() => note && onOpenNote(note.id)}>
+                  <strong>{discovery.note_title}</strong>
+                  <small>Descoberta pessoal</small>
+                </button>
+              );
+            })}
+            {discoveries.length === 0 && <p className="muted">O Mestre ainda não revelou descobertas individuais.</p>}
+          </div>
+        </div>
+      )}
 
       <div className="player-action-history">
         <div className="section-heading">

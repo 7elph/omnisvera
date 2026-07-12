@@ -22,6 +22,12 @@ from .player_actions import (
     list_player_actions,
     update_player_action,
 )
+from .player_discoveries import (
+    init_player_discoveries,
+    list_discoveries,
+    reveal_discovery,
+    revoke_discovery,
+)
 from .rag import answer_question
 from .schemas import (
     ChatRequest,
@@ -33,6 +39,9 @@ from .schemas import (
     PlayerActionRecord,
     PlayerActionUpdate,
     PlayerDashboardResponse,
+    PlayerDiscoveryCreate,
+    PlayerDiscoveryRecord,
+    PlayerProfileResponse,
     RebuildResponse,
     SearchRequest,
     SearchResult,
@@ -64,6 +73,38 @@ app.add_middleware(
 
 def _provided_token(x_omnisvera_token: str | None, token: str | None) -> str | None:
     return x_omnisvera_token or token
+
+
+def _individual_player(provided: str | None) -> AccessContext | None:
+    if not provided:
+        return None
+    for profile_id, profile in settings.player_profiles.items():
+        if provided != profile.get("token"):
+            continue
+        return AccessContext(
+            mode="player",
+            profile_id=profile_id,
+            character_path=profile.get("character_path") or None,
+            character_title=profile.get("character_title") or profile_id,
+        )
+    return None
+
+
+def _personalize_player_question(question: str, access: AccessContext) -> str:
+    if not access.character_title:
+        return question
+    normalized = _media_lookup_key(question).replace("_", " ")
+    identity_phrases = (
+        "quem sou eu",
+        "meu personagem",
+        "minha historia",
+        "minha origem",
+        "o que sabemos sobre mim",
+        "o que voce sabe sobre mim",
+    )
+    if any(phrase in normalized for phrase in identity_phrases):
+        return f"Quem é {access.character_title}?"
+    return question
 
 
 def maybe_refresh_index() -> None:
@@ -184,6 +225,9 @@ def require_player(
     provided = _provided_token(x_omnisvera_token, token)
     if settings.master_token and provided == settings.master_token:
         return AccessContext(mode="gm")
+    individual = _individual_player(provided)
+    if individual:
+        return individual
     if settings.player_token and provided == settings.player_token:
         return AccessContext(mode="player")
     if not settings.master_token and not settings.player_token:
@@ -198,6 +242,9 @@ def require_any(
     provided = _provided_token(x_omnisvera_token, token)
     if settings.master_token and provided == settings.master_token:
         return AccessContext(mode="gm")
+    individual = _individual_player(provided)
+    if individual:
+        return individual
     if settings.player_token and provided == settings.player_token:
         return AccessContext(mode="player")
     if not settings.master_token and not settings.player_token:
@@ -209,6 +256,7 @@ def require_any(
 def startup() -> None:
     init_db(settings.database_path)
     init_player_actions(settings.database_path)
+    init_player_discoveries(settings.database_path)
     if settings.rebuild_on_startup:
         notes, _ = iter_markdown_notes(settings.vault_path)
         rebuild_index(settings.database_path, notes)
@@ -232,7 +280,10 @@ async def health(access: AccessContext = Depends(require_any)) -> HealthResponse
         auto_refresh_interval_seconds=settings.auto_refresh_interval_seconds,
         ollama_accessible=await check_ollama(settings.ollama_base_url),
         access_mode=access.mode,
-        player_mode_available=bool(settings.player_token),
+        player_mode_available=bool(settings.player_token or settings.player_profiles),
+        player_profile_id=access.profile_id,
+        player_character_path=access.character_path,
+        player_character_title=access.character_title,
     )
 
 
@@ -368,13 +419,22 @@ def player_resolve(target: str, _: AccessContext = Depends(require_player)) -> d
 
 
 @app.post("/player/chat", response_model=ChatResponse)
-async def player_chat(request: ChatRequest, _: AccessContext = Depends(require_player)) -> dict:
+async def player_chat(request: ChatRequest, access: AccessContext = Depends(require_player)) -> dict:
     maybe_refresh_index()
+    question = _personalize_player_question(request.question, access)
+    context_paths = list(request.context_paths)
+    if access.character_path and access.character_path not in context_paths:
+        context_paths.insert(0, access.character_path)
+    if access.profile_id:
+        for discovery in list_discoveries(settings.database_path, profile_id=access.profile_id):
+            path = discovery["note_path"]
+            if path not in context_paths:
+                context_paths.append(path)
     return await answer_question(
         settings.database_path,
         settings.ollama_base_url,
         settings.ollama_model,
-        request.question,
+        question,
         request.limit,
         access_mode="player",
         embedding_model=settings.embedding_model,
@@ -384,7 +444,7 @@ async def player_chat(request: ChatRequest, _: AccessContext = Depends(require_p
         context_chars=settings.rag_context_chars,
         response_mode=settings.response_mode,
         fallback_model=settings.fast_model,
-        conversation_paths=request.context_paths,
+        conversation_paths=context_paths,
     )
 
 
@@ -398,21 +458,33 @@ def _is_player_character(note: dict) -> bool:
     )
 
 
+@app.get("/player/profile", response_model=PlayerProfileResponse)
+def player_profile(access: AccessContext = Depends(require_player)) -> dict:
+    return {
+        "profile_id": access.profile_id,
+        "character_path": access.character_path,
+        "character_title": access.character_title,
+        "shared_access": access.profile_id is None,
+    }
+
+
 @app.get("/player/actions", response_model=list[PlayerActionRecord])
-def player_actions(_: AccessContext = Depends(require_player)) -> list[dict]:
-    return list_player_actions(settings.database_path)
+def player_actions(access: AccessContext = Depends(require_player)) -> list[dict]:
+    return list_player_actions(settings.database_path, character_path=access.character_path)
 
 
 @app.post("/player/actions", response_model=PlayerActionRecord)
 def submit_player_action(
     request: PlayerActionCreate,
-    _: AccessContext = Depends(require_player),
+    access: AccessContext = Depends(require_player),
 ) -> dict:
     if request.action_type not in ACTION_TYPES:
         raise HTTPException(status_code=400, detail="Tipo de ação inválido.")
     character = get_note(settings.database_path, request.character_note_id, access_mode="player")
     if character is None or not _is_player_character(character):
         raise HTTPException(status_code=400, detail="Personagem jogador inválido ou não liberado.")
+    if access.character_path and character["path"] != access.character_path:
+        raise HTTPException(status_code=403, detail="Este acesso só pode agir pelo próprio personagem.")
     target = get_note(settings.database_path, request.target_note_id, access_mode="player")
     if target is None:
         raise HTTPException(status_code=400, detail="Alvo inválido ou não liberado aos jogadores.")
@@ -430,9 +502,48 @@ def submit_player_action(
     )
 
 
+@app.get("/player/discoveries", response_model=list[PlayerDiscoveryRecord])
+def player_discoveries(access: AccessContext = Depends(require_player)) -> list[dict]:
+    if access.profile_id is None:
+        return []
+    return list_discoveries(settings.database_path, profile_id=access.profile_id)
+
+
 @app.get("/gm/actions", response_model=list[PlayerActionRecord])
 def gm_actions(_: AccessContext = Depends(require_master)) -> list[dict]:
     return list_player_actions(settings.database_path, limit=250)
+
+
+@app.get("/gm/discoveries", response_model=list[PlayerDiscoveryRecord])
+def gm_discoveries(_: AccessContext = Depends(require_master)) -> list[dict]:
+    return list_discoveries(settings.database_path)
+
+
+@app.post("/gm/discoveries", response_model=PlayerDiscoveryRecord)
+def gm_reveal_discovery(
+    request: PlayerDiscoveryCreate,
+    _: AccessContext = Depends(require_master),
+) -> dict:
+    if request.profile_id not in settings.player_profiles:
+        raise HTTPException(status_code=400, detail="Perfil de jogador inválido.")
+    note = get_note(settings.database_path, request.note_id, access_mode="player")
+    if note is None:
+        raise HTTPException(status_code=400, detail="A nota não está liberada para jogadores.")
+    return reveal_discovery(
+        settings.database_path,
+        profile_id=request.profile_id,
+        note_path=note["path"],
+        note_title=note["title"],
+    )
+
+
+@app.delete("/gm/discoveries/{discovery_id}", status_code=204)
+def gm_revoke_discovery(
+    discovery_id: int,
+    _: AccessContext = Depends(require_master),
+) -> None:
+    if not revoke_discovery(settings.database_path, discovery_id):
+        raise HTTPException(status_code=404, detail="Descoberta não encontrada.")
 
 
 @app.patch("/gm/actions/{action_id}", response_model=PlayerActionRecord)

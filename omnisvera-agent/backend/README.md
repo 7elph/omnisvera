@@ -82,6 +82,17 @@ uvicorn app.main:app --host 0.0.0.0 --port 8787
 4. Subir frontend.
 5. Abrir o IP do notebook no celular.
 
+## Perfis individuais de jogador
+
+O launcher mantém um token coletivo e quatro tokens individuais no arquivo
+local `data/access_tokens.json`, ignorado pelo Git. Os perfis atuais são
+Vezemir, Varkh Nimalis, Raziel e Morthak.
+
+Com um token individual, o jogador age apenas pelo próprio personagem, recebe
+somente seu histórico de ações e possui uma área de descobertas particulares.
+O Mestre revela ou revoga essas descobertas pelo Painel da Sessão. O token
+coletivo permanece como acesso de compatibilidade para uma tela compartilhada.
+
 ## RAG Watchdog
 
 O backend possui um verificador contínuo de qualidade do chat:

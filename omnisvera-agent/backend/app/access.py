@@ -13,6 +13,9 @@ AccessMode = Literal["gm", "player"]
 @dataclass(frozen=True)
 class AccessContext:
     mode: AccessMode
+    profile_id: str | None = None
+    character_path: str | None = None
+    character_title: str | None = None
 
 
 PLAYER_VISIBILITIES = {"jogadores", "publico", "player", "players", "public"}
