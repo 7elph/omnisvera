@@ -155,7 +155,7 @@ foreach ($ip in $localIps) {
 }
 Write-Host ""
 Write-Host "Para acesso fora de casa, em outro terminal rode:" -ForegroundColor Yellow
-Write-Host "  .\start_ngrok_tunnel.ps1 -Port $Port"
+Write-Host "  .\start_cloudflare_tunnel.ps1 -Port $Port"
 Write-Host ""
 
 Push-Location $Backend
