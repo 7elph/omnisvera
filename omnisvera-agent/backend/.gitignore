@@ -8,4 +8,5 @@ data/*.sqlite3-journal
 data/*.jsonl
 data/rag_watchdog_state.json
 data/access_tokens.json
+data/editor_backups/
 !data/.gitkeep

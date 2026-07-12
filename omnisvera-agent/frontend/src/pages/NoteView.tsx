@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getAccessMode, getNote, mediaUrlFromVaultPath, NoteDetail } from "../api";
+import { EditableNote, getAccessMode, getEditableNote, getNote, mediaUrlFromVaultPath, NoteDetail, saveEditableNote } from "../api";
 import RenderedNote from "../components/RenderedNote";
 
 function normalizeTitle(value: string) {
@@ -111,6 +111,8 @@ export default function NoteView({
 }) {
   const [note, setNote] = useState<NoteDetail | null>(null);
   const [loading, setLoading] = useState(false);
+  const [editing, setEditing] = useState<EditableNote | null>(null);
+  const [editorFeedback, setEditorFeedback] = useState("");
 
   useEffect(() => {
     if (!noteId) {
@@ -137,7 +139,27 @@ export default function NoteView({
       active = false;
       window.clearInterval(timer);
     };
-  }, [noteId]);
+  }, [noteId, editing]);
+
+  async function openEditor() {
+    if (!note) return;
+    setEditorFeedback("");
+    try { setEditing(await getEditableNote(note.path)); }
+    catch (error) { setEditorFeedback(error instanceof Error ? error.message : "Não foi possível abrir o editor."); }
+  }
+
+  async function saveEditor() {
+    if (!editing || !noteId) return;
+    setEditorFeedback("Salvando e reindexando...");
+    try {
+      const saved = await saveEditableNote(editing);
+      setEditing(null);
+      setNote(await getNote(noteId));
+      setEditorFeedback(`Salvo com backup automático às ${new Date(saved.updated_at).toLocaleTimeString("pt-BR")}.`);
+    } catch (error) {
+      setEditorFeedback(error instanceof Error ? error.message : "Não foi possível salvar.");
+    }
+  }
 
   if (unknownTarget && !noteId) {
     return <UnknownKnowledgeView target={unknownTarget} />;
@@ -187,6 +209,22 @@ export default function NoteView({
       <p className="eyebrow">{isPlayer ? "Nota liberada" : note.path}</p>
       <h2>{note.title}</h2>
       {!isPlayer && <p className="note-path">{note.path}</p>}
+      {!isPlayer && (
+        <div className="note-editor-toolbar">
+          <button onClick={() => void openEditor()}>{editing ? "Recarregar original" : "Editar Markdown"}</button>
+          {editorFeedback && <span>{editorFeedback}</span>}
+        </div>
+      )}
+      {editing && !isPlayer && (
+        <section className="note-editor">
+          <textarea value={editing.content} spellCheck={false} onChange={(event) => setEditing({ ...editing, content: event.target.value })} />
+          <div>
+            <button className="secondary-button" onClick={() => setEditing(null)}>Cancelar</button>
+            <button onClick={() => void saveEditor()}>Salvar nota</button>
+          </div>
+          <small>O Companion valida o YAML, impede sobrescrita concorrente e cria backup local antes de salvar.</small>
+        </section>
+      )}
       {cover && <RenderedNote content={`![[${cover}]]`} onOpenNote={onOpenNote} onUnknownNote={onUnknownNote} />}
       <div className="metadata">
         {typeLabel && <span>{typeLabel}</span>}

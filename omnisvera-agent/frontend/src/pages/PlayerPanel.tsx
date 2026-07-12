@@ -5,6 +5,7 @@ import {
   listPlayerActions,
   listPlayerDiscoveries,
   listPlayerFeed,
+  listPlayerInventory,
   listPlayerQuests,
   markPlayerFeedRead,
   mediaUrlFromVaultPath,
@@ -13,6 +14,7 @@ import {
   PlayerActionType,
   PlayerDiscovery,
   PlayerEvent,
+  InventoryItem,
   PlayerProfile,
   PlayerQuest,
   playerDashboard,
@@ -191,6 +193,7 @@ export default function PlayerPanel({
   const [discoveries, setDiscoveries] = useState<PlayerDiscovery[]>([]);
   const [feed, setFeed] = useState<PlayerEvent[]>([]);
   const [personalQuests, setPersonalQuests] = useState<PlayerQuest[]>([]);
+  const [inventory, setInventory] = useState<InventoryItem[]>([]);
   const [selectedAction, setSelectedAction] = useState<PlayerActionKey | null>(null);
   const [selectedTargetId, setSelectedTargetId] = useState("");
   const [selectedCharacterId, setSelectedCharacterId] = useState("");
@@ -207,7 +210,7 @@ export default function PlayerPanel({
         setError("");
       }
       try {
-        const [dashboardData, notesData, actionData, profileData, discoveryData, feedData, questData] = await Promise.all([
+        const [dashboardData, notesData, actionData, profileData, discoveryData, feedData, questData, inventoryData] = await Promise.all([
           playerDashboard(),
           listNotes(),
           listPlayerActions(),
@@ -215,6 +218,7 @@ export default function PlayerPanel({
           listPlayerDiscoveries(),
           listPlayerFeed(),
           listPlayerQuests(),
+          listPlayerInventory(),
         ]);
         if (!active) return;
         setDashboard(dashboardData);
@@ -224,6 +228,7 @@ export default function PlayerPanel({
         setDiscoveries(discoveryData);
         setFeed(feedData);
         setPersonalQuests(questData);
+        setInventory(inventoryData);
         setError("");
       } catch {
         if (!active || !initial) return;
@@ -409,6 +414,20 @@ export default function PlayerPanel({
               );
             })}
             {personalQuests.length === 0 && <p className="muted">Nenhuma missão foi vinculada ao seu perfil.</p>}
+          </div>
+        </div>
+
+        <div className="player-inventory-panel">
+          <div className="live-panel-heading"><div><p className="eyebrow">Equipamento</p><h3>Inventário rápido</h3></div></div>
+          <div className="personal-inventory-list">
+            {inventory.slice(0, 10).map((item) => {
+              const note = knownNotes.find((entry) => entry.path === item.item_path);
+              return <button key={item.id} disabled={!note} onClick={() => note && onOpenNote(note.id)}>
+                <span><strong>{item.item_title}</strong><small>{item.notes || (item.equipped ? "Equipado" : "Guardado")}</small></span>
+                <b>×{item.quantity}</b>
+              </button>;
+            })}
+            {inventory.length === 0 && <p className="muted">Nenhum item foi vinculado ao seu perfil.</p>}
           </div>
         </div>
       </section>

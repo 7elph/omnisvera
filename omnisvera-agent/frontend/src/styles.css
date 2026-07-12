@@ -1011,12 +1011,34 @@ textarea {
 
 .player-news-panel,
 .player-quest-progress,
+.player-inventory-panel,
 .gm-quest-panel {
   padding: 1rem;
   border: 1px solid rgba(211, 177, 94, 0.24);
   border-radius: 18px;
   background: linear-gradient(145deg, rgba(17, 20, 24, 0.92), rgba(10, 12, 15, 0.96));
 }
+
+.personal-inventory-list,
+.gm-inventory-list { display: grid; gap: 0.5rem; }
+.personal-inventory-list button,
+.gm-inventory-list article { display: flex; align-items: center; justify-content: space-between; gap: 0.7rem; padding: 0.65rem; border: 1px solid rgba(255,255,255,.08); border-radius: 11px; background: rgba(255,255,255,.025); color: inherit; text-align: left; }
+.personal-inventory-list span,
+.gm-inventory-list span { display: grid; gap: .15rem; }
+.personal-inventory-list small,
+.gm-inventory-list small { color: var(--muted); }
+
+.gm-inventory-panel { margin: 1rem 0; padding: 1rem; border: 1px solid rgba(211,177,94,.24); border-radius: 18px; background: rgba(12,14,17,.92); }
+.inventory-controls { display: grid; grid-template-columns: .65fr 1.3fr 90px .55fr 1fr auto; gap: .6rem; align-items: center; }
+.inventory-equipped { display: flex; align-items: center; gap: .35rem; color: var(--muted); }
+.gm-inventory-list { margin-top: .8rem; grid-template-columns: repeat(auto-fit,minmax(210px,1fr)); }
+
+.note-editor-toolbar { display: flex; align-items: center; gap: .7rem; margin: .6rem 0; }
+.note-editor-toolbar span { color: var(--muted); font-size: .8rem; }
+.note-editor { display: grid; gap: .65rem; margin: .8rem 0 1rem; padding: .8rem; border: 1px solid rgba(211,177,94,.35); border-radius: 14px; background: rgba(7,9,11,.96); }
+.note-editor textarea { width: 100%; min-height: 60vh; resize: vertical; padding: .8rem; border: 1px solid #4b3827; border-radius: 10px; background: #0b0d10; color: #e8dfcf; font: 13px/1.5 Consolas, monospace; }
+.note-editor > div { display: flex; justify-content: flex-end; gap: .55rem; }
+.note-editor small { color: var(--muted); }
 
 .live-panel-heading {
   display: flex;
@@ -1158,6 +1180,7 @@ textarea {
   .quest-progress-controls { grid-template-columns: 1fr; }
   .quest-progress-controls textarea { grid-column: auto; }
   .gm-quest-list article { grid-template-columns: 1fr; }
+  .inventory-controls { grid-template-columns: 1fr; }
 }
 
 .player-action-history,

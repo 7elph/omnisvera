@@ -14,6 +14,7 @@ from fastapi.staticfiles import StaticFiles
 from .access import AccessContext, is_player_safe_row, sanitize_player_summary
 from .config import get_settings
 from .ollama_client import check_ollama
+from .note_editor import EditConflictError, read_editable_note, save_editable_note
 from .player_actions import (
     ACTION_STATUSES,
     ACTION_TYPES,
@@ -37,11 +38,16 @@ from .player_progress import (
     mark_events_read,
     upsert_quest,
 )
+from .player_inventory import init_player_inventory, list_inventory, upsert_inventory
 from .rag import answer_question
 from .schemas import (
     ChatRequest,
     ChatResponse,
+    EditableNoteResponse,
+    EditableNoteUpdate,
     HealthResponse,
+    InventoryRecord,
+    InventoryUpdate,
     NoteDetail,
     NoteSummary,
     PlayerActionCreate,
@@ -67,6 +73,7 @@ from .vault_reader import iter_markdown_notes, markdown_signature
 settings = get_settings()
 app = FastAPI(title="Omnisvera Companion", version="0.2.0")
 FRONTEND_DIST = Path(__file__).resolve().parents[2] / "frontend" / "dist"
+EDITOR_BACKUP_ROOT = Path(__file__).resolve().parents[1] / "data" / "editor_backups"
 _INDEX_REFRESH_LOCK = threading.Lock()
 _LAST_INDEX_REFRESH_CHECK = 0.0
 MEDIA_ALIASES = {
@@ -141,6 +148,9 @@ def _personal_player_answer(question: str, access: AccessContext) -> dict | None
         "minhas novidades",
         "o que mudou",
         "resposta do mestre",
+        "meu inventario",
+        "o que eu carrego",
+        "meus itens",
     )
     if not any(term in normalized for term in personal_terms):
         return None
@@ -148,6 +158,7 @@ def _personal_player_answer(question: str, access: AccessContext) -> dict | None
     quests = list_quests(settings.database_path, profile_id=access.profile_id)
     events = list_events(settings.database_path, profile_id=access.profile_id, limit=12)
     actions = list_player_actions(settings.database_path, character_path=access.character_path, limit=12)
+    inventory = list_inventory(settings.database_path, access.profile_id or "group")
     active_quests = [quest for quest in quests if quest["status"] in {"accepted", "in_progress", "available"}]
     unread = [event for event in events if not event.get("read_at")]
     pending = [action for action in actions if action["status"] in {"submitted", "in_review"}]
@@ -162,6 +173,9 @@ def _personal_player_answer(question: str, access: AccessContext) -> dict | None
     if pending:
         lines = [f"- **{action['target_title']}**: sua intenção ainda está {('em análise' if action['status'] == 'in_review' else 'aguardando o Mestre')}." for action in pending[:3]]
         paragraphs.append("### Ações pendentes\n" + "\n".join(lines))
+    if inventory and any(term in normalized for term in ("inventario", "carrego", "itens")):
+        lines = [f"- **{item['item_title']}** ×{item['quantity']}{' — equipado' if item['equipped'] else ''}" for item in inventory[:12]]
+        paragraphs.append("### Seu inventário\n" + "\n".join(lines))
     if not paragraphs:
         paragraphs.append(
             f"{access.character_title} não possui uma nova resposta ou missão pessoal registrada agora. "
@@ -347,6 +361,7 @@ def startup() -> None:
     init_player_actions(settings.database_path)
     init_player_discoveries(settings.database_path)
     init_player_progress(settings.database_path)
+    init_player_inventory(settings.database_path)
     if settings.rebuild_on_startup:
         notes, _ = iter_markdown_notes(settings.vault_path)
         rebuild_index(settings.database_path, notes)
@@ -478,6 +493,33 @@ async def gm_chat(request: ChatRequest, _: AccessContext = Depends(require_maste
     )
 
 
+@app.get("/gm/editor", response_model=EditableNoteResponse)
+def gm_editor_read(path: str, _: AccessContext = Depends(require_master)) -> dict:
+    try:
+        return read_editable_note(settings.vault_path, path)
+    except (ValueError, FileNotFoundError) as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.put("/gm/editor", response_model=EditableNoteResponse)
+def gm_editor_save(request: EditableNoteUpdate, _: AccessContext = Depends(require_master)) -> dict:
+    try:
+        result = save_editable_note(
+            settings.vault_path,
+            EDITOR_BACKUP_ROOT,
+            request.path,
+            request.content,
+            request.expected_hash,
+        )
+    except EditConflictError as error:
+        raise HTTPException(status_code=409, detail=str(error)) from error
+    except (ValueError, FileNotFoundError, UnicodeError) as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+    notes, _ = iter_markdown_notes(settings.vault_path)
+    rebuild_index(settings.database_path, notes)
+    return result
+
+
 @app.get("/player/notes", response_model=list[NoteSummary])
 def player_notes(_: AccessContext = Depends(require_player)) -> list[dict]:
     maybe_refresh_index()
@@ -530,6 +572,9 @@ async def player_chat(request: ChatRequest, access: AccessContext = Depends(requ
         for action in list_player_actions(settings.database_path, character_path=access.character_path, limit=8):
             if action["status"] in {"answered", "canonized"} and action["target_path"] not in context_paths:
                 context_paths.append(action["target_path"])
+        for item in list_inventory(settings.database_path, access.profile_id):
+            if item["item_path"] not in context_paths:
+                context_paths.append(item["item_path"])
     context_paths = context_paths[:10]
     return await answer_question(
         settings.database_path,
@@ -666,6 +711,11 @@ def player_quests(access: AccessContext = Depends(require_player)) -> list[dict]
     return list_quests(settings.database_path, profile_id=access.profile_id)
 
 
+@app.get("/player/inventory", response_model=list[InventoryRecord])
+def player_inventory(access: AccessContext = Depends(require_player)) -> list[dict]:
+    return list_inventory(settings.database_path, access.profile_id or "group")
+
+
 @app.get("/gm/actions", response_model=list[PlayerActionRecord])
 def gm_actions(_: AccessContext = Depends(require_master)) -> list[dict]:
     return list_player_actions(settings.database_path, limit=250)
@@ -787,6 +837,41 @@ def gm_update_quest(
         kind="quest_update",
         title=status_label,
         message=(request.progress or note["title"]).strip(),
+        note_path=note["path"],
+    )
+    return result
+
+
+@app.get("/gm/inventory", response_model=list[InventoryRecord])
+def gm_inventory(_: AccessContext = Depends(require_master)) -> list[dict]:
+    items: list[dict] = []
+    for profile_id in settings.player_profiles:
+        items.extend(list_inventory(settings.database_path, profile_id))
+    return items
+
+
+@app.post("/gm/inventory", response_model=InventoryRecord)
+def gm_update_inventory(request: InventoryUpdate, _: AccessContext = Depends(require_master)) -> dict:
+    if request.profile_id not in settings.player_profiles:
+        raise HTTPException(status_code=400, detail="Perfil de jogador inválido.")
+    note = get_note(settings.database_path, request.note_id, access_mode="player")
+    if note is None or note.get("type") != "item":
+        raise HTTPException(status_code=400, detail="Escolha um item liberado aos jogadores.")
+    result = upsert_inventory(
+        settings.database_path,
+        profile_id=request.profile_id,
+        item_path=note["path"],
+        item_title=note["title"],
+        quantity=request.quantity,
+        equipped=request.equipped,
+        notes=request.notes,
+    )
+    add_event(
+        settings.database_path,
+        profile_id=request.profile_id,
+        kind="inventory",
+        title="Inventário atualizado",
+        message=f"{note['title']} · quantidade {request.quantity}{' · equipado' if request.equipped else ''}.",
         note_path=note["path"],
     )
     return result

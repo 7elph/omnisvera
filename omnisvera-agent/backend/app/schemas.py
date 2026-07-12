@@ -185,3 +185,35 @@ class PlayerQuestRecord(BaseModel):
     status: str
     progress: str | None = None
     updated_at: str
+
+
+class EditableNoteResponse(BaseModel):
+    path: str
+    content: str
+    content_hash: str
+    updated_at: str
+
+
+class EditableNoteUpdate(BaseModel):
+    path: str
+    content: str = Field(max_length=500_000)
+    expected_hash: str
+
+
+class InventoryUpdate(BaseModel):
+    profile_id: str
+    note_id: int
+    quantity: int = Field(default=1, ge=0, le=999)
+    equipped: bool = False
+    notes: str | None = Field(default=None, max_length=500)
+
+
+class InventoryRecord(BaseModel):
+    id: int
+    profile_id: str
+    item_path: str
+    item_title: str
+    quantity: int
+    equipped: bool
+    notes: str | None = None
+    updated_at: str

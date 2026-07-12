@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import {
   listGmDiscoveries,
   listGmQuests,
+  listGmInventory,
   listNotes,
   listPlayerActions,
   mediaUrlFromVaultPath,
@@ -10,10 +11,12 @@ import {
   PlayerDiscovery,
   PlayerQuest,
   PlayerQuestStatus,
+  InventoryItem,
   NoteSummary,
   revealPlayerDiscovery,
   revokePlayerDiscovery,
   updatePlayerQuest,
+  updateInventory,
   searchNotes,
   SearchResult,
   updatePlayerAction,
@@ -102,6 +105,13 @@ export default function SessionPanel({
   const [questStatus, setQuestStatus] = useState<PlayerQuestStatus>("available");
   const [questSummary, setQuestSummary] = useState("");
   const [questFeedback, setQuestFeedback] = useState("");
+  const [inventory, setInventory] = useState<InventoryItem[]>([]);
+  const [inventoryProfile, setInventoryProfile] = useState("vezemir");
+  const [inventoryNoteId, setInventoryNoteId] = useState("");
+  const [inventoryQuantity, setInventoryQuantity] = useState(1);
+  const [inventoryEquipped, setInventoryEquipped] = useState(false);
+  const [inventoryNotes, setInventoryNotes] = useState("");
+  const [inventoryFeedback, setInventoryFeedback] = useState("");
 
   useEffect(() => {
     Promise.all(QUICK_SEARCHES.map((query) => searchNotes(query, 1))).then((groups) => {
@@ -116,10 +126,11 @@ export default function SessionPanel({
   }, []);
 
   useEffect(() => {
-    Promise.all([listGmDiscoveries(), listGmQuests(), listNotes()])
-      .then(([discoveryData, questData, noteData]) => {
+    Promise.all([listGmDiscoveries(), listGmQuests(), listGmInventory(), listNotes()])
+      .then(([discoveryData, questData, inventoryData, noteData]) => {
         setDiscoveries(discoveryData);
         setQuestProgress(questData);
+        setInventory(inventoryData);
         setAvailableNotes(
           noteData
             .filter((note) => ["Jogadores", "Público"].includes(String(note.visibility || "")))
@@ -165,6 +176,16 @@ export default function SessionPanel({
     } catch (error) {
       setQuestFeedback(error instanceof Error ? error.message : "Não foi possível atualizar a missão.");
     }
+  }
+
+  async function saveInventory() {
+    if (!inventoryNoteId) return;
+    setInventoryFeedback("");
+    try {
+      const updated = await updateInventory({ profile_id: inventoryProfile, note_id: Number(inventoryNoteId), quantity: inventoryQuantity, equipped: inventoryEquipped, notes: inventoryNotes });
+      setInventory((current) => [updated, ...current.filter((item) => item.id !== updated.id)]);
+      setInventoryFeedback("Inventário atualizado.");
+    } catch (error) { setInventoryFeedback(error instanceof Error ? error.message : "Não foi possível atualizar o inventário."); }
   }
 
   useEffect(() => {
@@ -334,6 +355,28 @@ export default function SessionPanel({
             </article>
           ))}
           {questProgress.length === 0 && <p className="muted">Nenhum progresso personalizado registrado.</p>}
+        </div>
+      </section>
+
+      <section className="gm-inventory-panel">
+        <div className="section-heading"><span>⚔</span><div><p className="eyebrow">Ficha rápida</p><h3>Inventário dos personagens</h3><p>Vincule itens player-safe sem alterar a ficha Markdown.</p></div></div>
+        <div className="inventory-controls">
+          <select value={inventoryProfile} onChange={(event) => setInventoryProfile(event.target.value)}>
+            {PLAYER_PROFILES.filter((profile) => profile.id !== "group").map((profile) => <option key={profile.id} value={profile.id}>{profile.title}</option>)}
+          </select>
+          <select value={inventoryNoteId} onChange={(event) => setInventoryNoteId(event.target.value)}>
+            <option value="">Escolha um item...</option>
+            {availableNotes.filter((note) => note.type === "item").map((note) => <option key={note.id} value={note.id}>{note.title}</option>)}
+          </select>
+          <input type="number" min="0" max="999" value={inventoryQuantity} onChange={(event) => setInventoryQuantity(Number(event.target.value))} />
+          <label className="inventory-equipped"><input type="checkbox" checked={inventoryEquipped} onChange={(event) => setInventoryEquipped(event.target.checked)} /> Equipado</label>
+          <input value={inventoryNotes} maxLength={500} placeholder="Observação pública..." onChange={(event) => setInventoryNotes(event.target.value)} />
+          <button disabled={!inventoryNoteId} onClick={() => void saveInventory()}>Atualizar item</button>
+        </div>
+        {inventoryFeedback && <p className="action-feedback">{inventoryFeedback}</p>}
+        <div className="gm-inventory-list">
+          {inventory.map((item) => <article key={item.id}><span><strong>{item.item_title}</strong><small>{item.profile_id}{item.equipped ? " · equipado" : ""}</small></span><b>×{item.quantity}</b></article>)}
+          {inventory.length === 0 && <p className="muted">Nenhum inventário personalizado.</p>}
         </div>
       </section>
 

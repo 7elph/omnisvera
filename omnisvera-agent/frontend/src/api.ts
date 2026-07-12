@@ -180,6 +180,12 @@ export type PlayerQuest = {
   updated_at: string;
 };
 
+export type EditableNote = { path: string; content: string; content_hash: string; updated_at: string };
+export type InventoryItem = {
+  id: number; profile_id: string; item_path: string; item_title: string;
+  quantity: number; equipped: boolean; notes?: string | null; updated_at: string;
+};
+
 export async function getPlayerProfile(): Promise<PlayerProfile> {
   const response = await fetch(`${API_BASE}/player/profile`, { headers: authHeaders() });
   if (!response.ok) throw new Error("Falha ao carregar perfil do jogador");
@@ -255,6 +261,41 @@ export async function updatePlayerQuest(payload: {
     body: JSON.stringify(payload),
   });
   if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao atualizar missão");
+  return response.json();
+}
+
+export async function getEditableNote(path: string): Promise<EditableNote> {
+  const response = await fetch(`${API_BASE}/gm/editor?path=${encodeURIComponent(path)}`, { headers: authHeaders() });
+  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao abrir editor");
+  return response.json();
+}
+
+export async function saveEditableNote(note: EditableNote): Promise<EditableNote> {
+  const response = await fetch(`${API_BASE}/gm/editor`, {
+    method: "PUT", headers: authHeaders({ "Content-Type": "application/json" }),
+    body: JSON.stringify({ path: note.path, content: note.content, expected_hash: note.content_hash }),
+  });
+  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao salvar nota");
+  return response.json();
+}
+
+export async function listPlayerInventory(): Promise<InventoryItem[]> {
+  const response = await fetch(`${API_BASE}/player/inventory`, { headers: authHeaders() });
+  if (!response.ok) throw new Error("Falha ao carregar inventário");
+  return response.json();
+}
+
+export async function listGmInventory(): Promise<InventoryItem[]> {
+  const response = await fetch(`${API_BASE}/gm/inventory`, { headers: authHeaders() });
+  if (!response.ok) throw new Error("Falha ao carregar inventários");
+  return response.json();
+}
+
+export async function updateInventory(payload: { profile_id: string; note_id: number; quantity: number; equipped: boolean; notes?: string }): Promise<InventoryItem> {
+  const response = await fetch(`${API_BASE}/gm/inventory`, {
+    method: "POST", headers: authHeaders({ "Content-Type": "application/json" }), body: JSON.stringify(payload),
+  });
+  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao atualizar inventário");
   return response.json();
 }
 
