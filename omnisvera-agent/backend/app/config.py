@@ -66,11 +66,8 @@ def get_settings() -> Settings:
         )
     ).resolve()
     fast_model = os.getenv("OMNISVERA_FAST_MODEL", "omnisvera-fast:latest")
-    # The benchmark on the campaign notebook found no larger installed model
-    # that was both more faithful and responsive. A different quality model can
-    # still be selected explicitly without changing code.
-    quality_model = os.getenv("OMNISVERA_QUALITY_MODEL", fast_model)
-    response_mode = _response_mode(os.getenv("OMNISVERA_RESPONSE_MODE", "fast"))
+    quality_model = os.getenv("OMNISVERA_QUALITY_MODEL", "qwen2:1.5b")
+    response_mode = _response_mode(os.getenv("OMNISVERA_RESPONSE_MODE", "grounded"))
     selected_model = quality_model if response_mode == "grounded" else fast_model
     try:
         raw_profiles = json.loads(os.getenv("OMNISVERA_PLAYER_PROFILES_JSON", "{}"))

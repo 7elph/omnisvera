@@ -52,6 +52,13 @@ async def chat_with_ollama(
     response_format: str | dict[str, Any] | None = None,
 ) -> str:
     is_qwen3 = model.strip().lower().startswith("qwen3")
+    normalized_model = model.strip().lower()
+    is_compact_local = (
+        is_qwen3
+        or normalized_model.startswith("qwen2:")
+        or normalized_model.startswith("omnisvera-fast")
+        or normalized_model.startswith("omnisvera-entity")
+    )
     default_options: dict[str, Any] = {
         "num_ctx": 4096,
         "num_predict": 420,
@@ -62,9 +69,11 @@ async def chat_with_ollama(
     if options:
         default_options.update(options)
     if is_qwen3:
-        # The 4B model runs at roughly 3 tokens/s on this notebook. Keep a
-        # bounded budget so open questions cannot freeze the UI indefinitely.
-        default_options["num_predict"] = min(int(default_options["num_predict"]), 190)
+        # With reasoning disabled, the token budget is spent on the answer
+        # instead of an internal chain that never reaches the player.
+        default_options["num_predict"] = min(int(default_options["num_predict"]), 240)
+    elif is_compact_local:
+        default_options["num_predict"] = min(int(default_options["num_predict"]), 220)
 
     payload: dict[str, Any] = {
         "model": model,
@@ -73,13 +82,14 @@ async def chat_with_ollama(
         "keep_alive": "15m",
         "options": default_options,
     }
-    # Keep Qwen's reasoning in the dedicated `thinking` field. Only the final
-    # answer in `content` is returned to the Companion/player.
+    # Qwen 3 can consume the entire small token budget in `thinking` and leave
+    # `content` empty. The RAG already validates evidence separately, so the
+    # Companion needs the concise final answer, not a visible reasoning trace.
     if is_qwen3:
-        payload["think"] = True
+        payload["think"] = False
     if response_format is not None:
         payload["format"] = response_format
-    request_timeout = 70.0 if is_qwen3 else 30.0
+    request_timeout = 90.0 if is_qwen3 or normalized_model.startswith("omnisvera-entity") else (65.0 if is_compact_local else 45.0)
     try:
         async with httpx.AsyncClient(timeout=request_timeout) as client:
             response = await client.post(f"{base_url}/api/chat", json=payload)

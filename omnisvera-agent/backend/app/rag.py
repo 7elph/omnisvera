@@ -445,6 +445,11 @@ def _find_direct_entity_note(
         return None
 
     target, kind = extracted
+    exact_row = _find_exact_row(database_path, target, access_mode=access_mode)
+    if exact_row is not None:
+        return get_note(database_path, int(exact_row["id"]), access_mode=access_mode)
+    if len(_target_tokens(target)) > 4:
+        return None
     results = search_notes(database_path, target, limit=16, access_mode=access_mode)
     if not results:
         return None
@@ -470,6 +475,42 @@ def _find_direct_entity_note(
         return None
 
     return get_note(database_path, best["id"], access_mode=access_mode)
+
+
+def _find_mentioned_entity_note(
+    database_path: Path,
+    question: str,
+    access_mode: AccessMode,
+) -> dict | None:
+    """Resolve one explicit entity name embedded in a conversational request."""
+    question_norm = normalize_text(question)
+    matches: list[tuple[int, Any]] = []
+    for row in all_notes_for_search(database_path):
+        if access_mode == "player" and not is_player_safe_row(row):
+            continue
+        values = [str(row["title"] or ""), _basename(str(row["path"] or ""))]
+        try:
+            values.extend(str(alias) for alias in json.loads(row["aliases"] or "[]"))
+        except Exception:
+            pass
+        best_length = 0
+        for value in values:
+            candidate = normalize_text(value)
+            if len(candidate) < 5:
+                continue
+            if re.search(rf"(?<![a-z0-9]){re.escape(candidate)}(?![a-z0-9])", question_norm):
+                best_length = max(best_length, len(candidate))
+        if best_length:
+            matches.append((best_length, row))
+    if not matches:
+        return None
+    matches.sort(key=lambda item: item[0], reverse=True)
+    longest = matches[0][0]
+    distinct = {str(row["path"]) for length, row in matches if length == longest}
+    if len(distinct) != 1:
+        return None
+    row = matches[0][1]
+    return get_note(database_path, int(row["id"]), access_mode=access_mode)
 
 
 def _frontmatter(row: Any) -> dict[str, Any]:
@@ -1667,12 +1708,25 @@ def _is_short_fact_question(question: str) -> bool:
     return any(term in normalized for term in ("quantos anos", "idade", "nivel", "qual e a classe", "qual e a raca"))
 
 
+def _requests_narrative_voice(question: str) -> bool:
+    normalized = normalize_text(question)
+    return any(
+        term in normalized
+        for term in ("conte-me", "conte me", "de forma natural", "narre", "como arquivo vivo", "com atmosfera")
+    )
+
+
 def _proper_names(text: str) -> set[str]:
     text = _plain_wikilinks(text)
+    sentence_words = {
+        "acredita", "alem", "assim", "atualmente", "como", "conhecido", "durante",
+        "ela", "ele", "embora", "entre", "essa", "esse", "esta", "este", "isso",
+        "nascido", "porque", "portanto", "seu", "sua", "tambem", "uma",
+    }
     return {
         name
         for name in re.findall(r"\b[A-ZÁÉÍÓÚÂÊÔÃÕÇ][A-Za-zÁÉÍÓÚÂÊÔÃÕÇáéíóúâêôãõç'’.-]{2,}\b", text)
-        if name.lower() not in {"visão", "geral", "resposta", "arquivo", "vivo", "omnisvera"}
+        if normalize_text(name) not in sentence_words | {"visao", "geral", "resposta", "arquivo", "vivo", "omnisvera"}
     }
 
 
@@ -1685,6 +1739,31 @@ def _has_new_proper_names(base_answer: str, answer: str) -> bool:
     base_names = _proper_names(base_answer) | allowed
     answer_names = _proper_names(answer)
     return bool(answer_names - base_names)
+
+
+def _ground_polished_rewrite(base_answer: str, answer: str) -> str:
+    """Keep only model sentences strongly supported by the verified base text."""
+    base_tokens = _grounding_tokens(base_answer)
+    if not base_tokens:
+        return ""
+    kept: list[str] = []
+    for candidate in re.split(r"(?<=[.!?])\s+|\n+", answer):
+        candidate = re.sub(r"\s+", " ", candidate).strip(" -*")
+        if len(candidate) < 24 or candidate.lower().startswith(("tarefa:", "resposta:")):
+            continue
+        candidate_tokens = _grounding_tokens(candidate)
+        if len(candidate_tokens) < 3:
+            continue
+        overlap = candidate_tokens & base_tokens
+        unsupported = candidate_tokens - base_tokens
+        if len(overlap) / len(candidate_tokens) < 0.90 or len(unsupported) > 1:
+            continue
+        if _has_new_proper_names(base_answer, candidate):
+            continue
+        kept.append(candidate if candidate.endswith((".", "!", "?")) else f"{candidate}.")
+        if len(kept) >= 3 or sum(len(item) for item in kept) >= 650:
+            break
+    return " ".join(kept).strip()
 
 
 def _strip_chat_heading_noise(answer: str) -> str:
@@ -1750,10 +1829,11 @@ async def _polish_response_with_ollama(
     if result.get("insufficient_context") and not result.get("notes_used"):
         return _with_chat_meta(result, ollama_used=False, model=ollama_model, retrieval_mode=retrieval_mode)
 
-    # Exact entities and structured lists are already assembled from verified
-    # vault data. Rewriting them with the local model is slow on this notebook
-    # and frequently produces text that must be rejected.
-    if retrieval_mode == "direct_entity" or retrieval_mode.startswith("structured:"):
+    # Structured lists are already concise and factual. Entity answers may use
+    # the local voice, but are grounded sentence by sentence below.
+    if retrieval_mode.startswith("structured:") or (
+        retrieval_mode == "direct_entity" and not _requests_narrative_voice(question)
+    ):
         return _with_chat_meta(
             result,
             ollama_used=False,
@@ -1801,7 +1881,7 @@ Regras:
                 {"role": "user", "content": polish_prompt},
             ],
             options={
-                "num_predict": 360,
+                "num_predict": 70,
                 "temperature": 0.35 if access_mode == "player" else 0.3,
                 "repeat_penalty": 1.18,
             },
@@ -1815,18 +1895,25 @@ Regras:
     cleaned = re.sub(r"(?im)^\s*#{1,6}\s*resposta\s*$", "", cleaned).strip()
     cleaned = _strip_chat_heading_noise(cleaned)
     cleaned = _strip_redundant_title_heading(cleaned, result)
-    if _looks_like_bad_ai_answer(cleaned, access_mode):
-        return _with_chat_meta(result, ollama_used=False, model=ollama_model, retrieval_mode=f"{retrieval_mode}:fallback", ollama_attempted=True)
-    if _looks_like_bad_relation_rewrite(cleaned):
-        return _with_chat_meta(result, ollama_used=False, model=ollama_model, retrieval_mode=f"{retrieval_mode}:fallback", ollama_attempted=True)
-    if _is_short_fact_question(question) and len(cleaned) > 320:
-        return _with_chat_meta(result, ollama_used=False, model=ollama_model, retrieval_mode=f"{retrieval_mode}:fallback", ollama_attempted=True)
-    if len(cleaned) > max(900, int(len(base_answer) * 1.35) + 160):
-        return _with_chat_meta(result, ollama_used=False, model=ollama_model, retrieval_mode=f"{retrieval_mode}:fallback", ollama_attempted=True)
-    if _has_new_proper_names(base_answer, cleaned):
-        return _with_chat_meta(result, ollama_used=False, model=ollama_model, retrieval_mode=f"{retrieval_mode}:fallback", ollama_attempted=True)
-    if numbers_to_preserve and any(number not in cleaned for number in numbers_to_preserve):
-        return _with_chat_meta(result, ollama_used=False, model=ollama_model, retrieval_mode=f"{retrieval_mode}:fallback", ollama_attempted=True)
+    if retrieval_mode == "direct_entity":
+        cleaned = _ground_polished_rewrite(base_answer, cleaned)
+        if not cleaned:
+            return _with_chat_meta(result, ollama_used=False, model=ollama_model, retrieval_mode=f"{retrieval_mode}:fallback", ollama_attempted=True)
+        retrieval_mode = f"{retrieval_mode}:grounded_rewrite"
+
+    invalid_rewrite = retrieval_mode != "direct_entity:grounded_rewrite" and (
+        _looks_like_bad_ai_answer(cleaned, access_mode)
+        or _looks_like_bad_relation_rewrite(cleaned)
+        or (_is_short_fact_question(question) and len(cleaned) > 320)
+        or len(cleaned) > max(900, int(len(base_answer) * 1.35) + 160)
+        or _has_new_proper_names(base_answer, cleaned)
+        or bool(numbers_to_preserve and any(number not in cleaned for number in numbers_to_preserve))
+    )
+    if invalid_rewrite:
+        cleaned = _ground_polished_rewrite(base_answer, cleaned)
+        if not cleaned:
+            return _with_chat_meta(result, ollama_used=False, model=ollama_model, retrieval_mode=f"{retrieval_mode}:fallback", ollama_attempted=True)
+        retrieval_mode = f"{retrieval_mode}:grounded_rewrite"
 
     result = dict(result)
     result["answer"] = cleaned
@@ -2202,7 +2289,19 @@ def _asks_hidden_actor(question: str) -> bool:
             "distribuindo",
             "adulterado",
             "falsific",
+            "secreto",
+            "secreta",
+            "oculto",
+            "oculta",
         )
+    )
+
+
+def _asks_relation_or_theory(question: str) -> bool:
+    normalized = normalize_text(question)
+    return any(
+        term in normalized
+        for term in ("ligacao", "relacao", "relacion", "entre", "suspeit", "teoria", "conexao")
     )
 
 
@@ -2532,7 +2631,7 @@ Responda somente o objeto JSON, sem Markdown e sem explicação externa."""
             ],
             options={
                 "num_ctx": 3072,
-                "num_predict": 360,
+                "num_predict": 180,
                 "temperature": 0.05,
                 "repeat_penalty": 1.12,
             },
@@ -2740,7 +2839,43 @@ async def answer_question(
                     retrieval_mode="blocked:private_related_match",
                 )
 
-    direct_note = _find_direct_entity_note(database_path, question, access_mode)
+    if access_mode == "player" and _asks_hidden_actor(question):
+        protected = _guard_hidden_actor_answer(_grounded_fallback(), question, set())
+        return _with_chat_meta(
+            {
+                "answer": protected["resposta_ao_jogador"],
+                "notes_used": [],
+                "note_paths": [],
+                "insufficient_context": False,
+                "warning": "Informação ainda não confirmada nas fontes liberadas.",
+                "suggested_questions": [
+                    "Quais rumores estão ativos?",
+                    "Quais missões estão ativas?",
+                    "O que aconteceu até agora?",
+                ],
+                "fatos_confirmados": protected.get("fatos_confirmados") or [],
+                "teorias": protected.get("teorias") or [],
+                "informacoes_insuficientes": protected.get("informacoes_insuficientes") or [],
+                "fontes_usadas": [],
+            },
+            ollama_used=False,
+            model=ollama_model,
+            retrieval_mode="blocked:hidden_actor",
+        )
+
+    normalized_question = normalize_text(question)
+    personal_memory_query = bool(priority_paths) and any(
+        term in normalized_question
+        for term in ("eu sei", "me lembro", "minha memoria", "minhas memorias", "meu passado", "minha historia")
+    )
+    direct_note = None if personal_memory_query else _find_direct_entity_note(database_path, question, access_mode)
+    if (
+        direct_note is None
+        and not personal_memory_query
+        and not _asks_hidden_actor(question)
+        and not _asks_relation_or_theory(question)
+    ):
+        direct_note = _find_mentioned_entity_note(database_path, question, access_mode)
     if direct_note:
         direct_answer = _direct_entity_answer(direct_note, question, access_mode)
         return await _polish_response_with_ollama(

@@ -1,10 +1,10 @@
 param(
   [string]$VaultPath = (Resolve-Path "$PSScriptRoot\..").Path,
   [string]$FastModel = "omnisvera-fast:latest",
-  [string]$QualityModel = "omnisvera-fast:latest",
+  [string]$QualityModel = "qwen2:1.5b",
   [string]$EmbedModel = "nomic-embed-text",
   [ValidateSet("fast", "grounded")]
-  [string]$ResponseMode = "fast",
+  [string]$ResponseMode = "grounded",
   [string]$AccessToken = "",
   [string]$MasterToken = "",
   [string]$PlayerToken = "",
