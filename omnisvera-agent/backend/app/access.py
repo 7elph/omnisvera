@@ -3,11 +3,14 @@ from __future__ import annotations
 import json
 import re
 import unicodedata
+from contextlib import contextmanager
+from contextvars import ContextVar
 from dataclasses import dataclass
 from typing import Any, Literal
 
 
 AccessMode = Literal["gm", "player"]
+_PLAYER_PROFILE: ContextVar[str | None] = ContextVar("omnisvera_player_profile", default=None)
 
 
 @dataclass(frozen=True)
@@ -137,6 +140,15 @@ def load_frontmatter(value: Any) -> dict[str, Any]:
         return {}
 
 
+@contextmanager
+def player_profile_scope(profile_id: str | None):
+    token = _PLAYER_PROFILE.set(normalize_text(profile_id) or None)
+    try:
+        yield
+    finally:
+        _PLAYER_PROFILE.reset(token)
+
+
 def is_player_safe(path: str, visibility: Any, frontmatter: dict[str, Any]) -> bool:
     normalized_path = path.replace("\\", "/")
     if normalized_path.startswith(BLOCKED_PLAYER_PATH_PREFIXES):
@@ -149,6 +161,14 @@ def is_player_safe(path: str, visibility: Any, frontmatter: dict[str, Any]) -> b
     effective_visibility = normalize_text(frontmatter.get("visibility") or visibility)
     if effective_visibility not in PLAYER_VISIBILITIES:
         return False
+
+    revealed_to = frontmatter.get("revealed_to")
+    if revealed_to:
+        values = revealed_to if isinstance(revealed_to, list) else [revealed_to]
+        allowed_profiles = {normalize_text(value) for value in values if normalize_text(value)}
+        current_profile = normalize_text(_PLAYER_PROFILE.get())
+        if not current_profile or current_profile not in allowed_profiles:
+            return False
 
     note_type = normalize_text(frontmatter.get("type"))
     if note_type in BLOCKED_PLAYER_TYPES:

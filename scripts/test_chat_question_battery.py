@@ -22,6 +22,10 @@ class Case:
 
 
 CASES = [
+    Case("O que é Omnisvera?", ("universo", "Earthropo"), ("Omnisvera",)),
+    Case("O que é Earthropo?", ("continente", "Nimalia"), ("Earthropo",)),
+    Case("Como funciona o dinheiro em Earthropo?", ("cobre", "prata", "ouro"), ("ECONOMIA",)),
+    Case("Qual é a data atual da campanha?", ("2100", "Aurora"), ("Calendário",)),
     Case("O que os personagens jogadores estão fazendo agora?", ("estrada", "remédios falsos"), ("Ecos do Mundo Perdido",)),
     Case("Quem são os personagens jogadores?", ("Vezemir", "Varkh", "Raziel", "Morthak")),
     Case("O que aconteceu até agora?", ("estrada", "Floresta de Avenor"), ("Ecos do Mundo Perdido",)),

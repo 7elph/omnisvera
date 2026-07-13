@@ -9,6 +9,7 @@ Fonte da verdade relacionada: [[OMNISVERA_SYSTEM_TAXONOMY]]
 | `visibility` | Define se a nota é do Mestre, Jogadores ou Público |
 | `spoiler_level` | Define intensidade do spoiler |
 | `gm_secret` | Define se o conteúdo é segredo do mestre |
+| `revealed_to` | Restringe uma nota player-safe a perfis individuais no Companion |
 
 ## Valores oficiais
 
@@ -39,6 +40,26 @@ AND gm_secret != true
 AND spoiler_level != "medium"
 AND spoiler_level != "heavy"
 ```
+
+## Revelação individual no Companion
+
+Uma nota pode continuar tecnicamente player-safe, mas aparecer apenas para personagens específicos:
+
+```yaml
+visibility: Jogadores
+spoiler_level: light
+gm_secret: false
+revealed_to:
+  - raziel
+```
+
+Regras:
+
+- o token coletivo não acessa a nota;
+- apenas tokens individuais listados em `revealed_to` podem buscar, abrir ou usar a nota no chat;
+- valores atuais de perfil: `vezemir`, `varkh`, `raziel` e `morthak`;
+- omitir `revealed_to` mantém o comportamento público normal;
+- `revealed_to` nunca libera uma nota com `gm_secret: true`, spoiler `medium/heavy` ou `visibility: Mestre`.
 
 ## Campos rejeitados
 

@@ -10,7 +10,7 @@ BACKEND = ROOT / "omnisvera-agent" / "backend"
 if str(BACKEND) not in sys.path:
     sys.path.insert(0, str(BACKEND))
 
-from app.access import PLAYER_BLOCKED_LOOKUP_TERMS, is_player_safe, normalize_text, sanitize_player_text  # noqa: E402
+from app.access import PLAYER_BLOCKED_LOOKUP_TERMS, is_player_safe, normalize_text, player_profile_scope, sanitize_player_text  # noqa: E402
 from app.config import get_settings  # noqa: E402
 from app.rag import (  # noqa: E402
     _decorate_player_action_answer,
@@ -31,6 +31,12 @@ def _access_rules() -> None:
         {"visibility": "Jogadores", "spoiler_level": "heavy"},
     )
     assert is_player_safe("Public.md", "Público", {"visibility": "Público", "gm_secret": False})
+    personal = {"visibility": "Jogadores", "gm_secret": False, "revealed_to": ["raziel"]}
+    assert not is_player_safe("Personal.md", "Jogadores", personal)
+    with player_profile_scope("raziel"):
+        assert is_player_safe("Personal.md", "Jogadores", personal)
+    with player_profile_scope("vezemir"):
+        assert not is_player_safe("Personal.md", "Jogadores", personal)
 
 
 def _section_sanitization() -> None:

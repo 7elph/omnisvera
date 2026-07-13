@@ -11,7 +11,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
-from .access import AccessContext, is_player_safe_row, sanitize_player_summary
+from .access import AccessContext, is_player_safe_row, player_profile_scope, sanitize_player_summary
 from .character_creation import (
     get_or_create_sheet,
     init_character_creation,
@@ -538,30 +538,34 @@ def gm_editor_save(request: EditableNoteUpdate, _: AccessContext = Depends(requi
 
 
 @app.get("/player/notes", response_model=list[NoteSummary])
-def player_notes(_: AccessContext = Depends(require_player)) -> list[dict]:
+def player_notes(access: AccessContext = Depends(require_player)) -> list[dict]:
     maybe_refresh_index()
-    return list_notes(settings.database_path, access_mode="player")
+    with player_profile_scope(access.profile_id):
+        return list_notes(settings.database_path, access_mode="player")
 
 
 @app.get("/player/notes/{note_id}", response_model=NoteDetail)
-def player_note(note_id: int, _: AccessContext = Depends(require_player)) -> dict:
+def player_note(note_id: int, access: AccessContext = Depends(require_player)) -> dict:
     maybe_refresh_index()
-    item = get_note(settings.database_path, note_id, access_mode="player")
+    with player_profile_scope(access.profile_id):
+        item = get_note(settings.database_path, note_id, access_mode="player")
     if item is None:
         raise HTTPException(status_code=404, detail="Nota não encontrada ou não liberada para jogadores")
     return item
 
 
 @app.post("/player/search", response_model=list[SearchResult])
-def player_search(request: SearchRequest, _: AccessContext = Depends(require_player)) -> list[dict]:
+def player_search(request: SearchRequest, access: AccessContext = Depends(require_player)) -> list[dict]:
     maybe_refresh_index()
-    return search_notes(settings.database_path, request.query, request.limit, access_mode="player")
+    with player_profile_scope(access.profile_id):
+        return search_notes(settings.database_path, request.query, request.limit, access_mode="player")
 
 
 @app.get("/player/resolve", response_model=NoteSummary)
-def player_resolve(target: str, _: AccessContext = Depends(require_player)) -> dict:
+def player_resolve(target: str, access: AccessContext = Depends(require_player)) -> dict:
     maybe_refresh_index()
-    item = resolve_note(settings.database_path, target, access_mode="player")
+    with player_profile_scope(access.profile_id):
+        item = resolve_note(settings.database_path, target, access_mode="player")
     if item is None:
         raise HTTPException(status_code=404, detail="Nota não encontrada ou não liberada para jogadores")
     return item
@@ -570,45 +574,38 @@ def player_resolve(target: str, _: AccessContext = Depends(require_player)) -> d
 @app.post("/player/chat", response_model=ChatResponse)
 async def player_chat(request: ChatRequest, access: AccessContext = Depends(require_player)) -> dict:
     maybe_refresh_index()
-    question = _personalize_player_question(request.question, access)
-    personal_answer = _personal_player_answer(question, access)
-    if personal_answer is not None:
-        return personal_answer
-    context_paths = list(request.context_paths)
-    if access.character_path and access.character_path not in context_paths:
-        context_paths.insert(0, access.character_path)
-    if access.profile_id:
-        for discovery in list_discoveries(settings.database_path, profile_id=access.profile_id):
-            path = discovery["note_path"]
-            if path not in context_paths:
-                context_paths.append(path)
-        for quest in list_quests(settings.database_path, profile_id=access.profile_id):
-            path = quest["note_path"]
-            if path not in context_paths:
-                context_paths.append(path)
-        for action in list_player_actions(settings.database_path, character_path=access.character_path, limit=8):
-            if action["status"] in {"answered", "canonized"} and action["target_path"] not in context_paths:
-                context_paths.append(action["target_path"])
-        for item in list_inventory(settings.database_path, access.profile_id):
-            if item["item_path"] not in context_paths:
-                context_paths.append(item["item_path"])
-    context_paths = context_paths[:10]
-    return await answer_question(
-        settings.database_path,
-        settings.ollama_base_url,
-        settings.ollama_model,
-        question,
-        request.limit,
-        access_mode="player",
-        embedding_model=settings.embedding_model,
-        semantic_index_path=settings.semantic_index_path,
-        rag_mode=settings.rag_mode,
-        context_limit=settings.rag_context_limit,
-        context_chars=settings.rag_context_chars,
-        response_mode=settings.response_mode,
-        fallback_model=settings.fast_model,
-        conversation_paths=context_paths,
-    )
+    with player_profile_scope(access.profile_id):
+        question = _personalize_player_question(request.question, access)
+        personal_answer = _personal_player_answer(question, access)
+        if personal_answer is not None:
+            return personal_answer
+        context_paths = list(request.context_paths)
+        if access.character_path and access.character_path not in context_paths:
+            context_paths.insert(0, access.character_path)
+        if access.profile_id:
+            for discovery in list_discoveries(settings.database_path, profile_id=access.profile_id):
+                path = discovery["note_path"]
+                if path not in context_paths:
+                    context_paths.append(path)
+            for quest in list_quests(settings.database_path, profile_id=access.profile_id):
+                path = quest["note_path"]
+                if path not in context_paths:
+                    context_paths.append(path)
+            for action in list_player_actions(settings.database_path, character_path=access.character_path, limit=8):
+                if action["status"] in {"answered", "canonized"} and action["target_path"] not in context_paths:
+                    context_paths.append(action["target_path"])
+            for item in list_inventory(settings.database_path, access.profile_id):
+                if item["item_path"] not in context_paths:
+                    context_paths.append(item["item_path"])
+        context_paths = context_paths[:10]
+        return await answer_question(
+            settings.database_path, settings.ollama_base_url, settings.ollama_model,
+            question, request.limit, access_mode="player", embedding_model=settings.embedding_model,
+            semantic_index_path=settings.semantic_index_path, rag_mode=settings.rag_mode,
+            context_limit=settings.rag_context_limit, context_chars=settings.rag_context_chars,
+            response_mode=settings.response_mode, fallback_model=settings.fast_model,
+            conversation_paths=context_paths,
+        )
 
 
 def _is_player_character(note: dict) -> bool:
@@ -834,10 +831,11 @@ def _inventory_with_media(items: list[dict], *, access_mode: str) -> list[dict]:
 @app.get("/player/inventory", response_model=list[InventoryRecord])
 def player_inventory(access: AccessContext = Depends(require_player)) -> list[dict]:
     maybe_refresh_index()
-    return _inventory_with_media(
-        list_inventory(settings.database_path, access.profile_id or "group"),
-        access_mode="player",
-    )
+    with player_profile_scope(access.profile_id):
+        return _inventory_with_media(
+            list_inventory(settings.database_path, access.profile_id or "group"),
+            access_mode="player",
+        )
 
 
 @app.post("/player/ideas", response_model=PlayerIdeaRecord)
@@ -1088,9 +1086,10 @@ def _section(
 
 
 @app.get("/player/dashboard", response_model=PlayerDashboardResponse)
-def player_dashboard(_: AccessContext = Depends(require_player)) -> dict:
+def player_dashboard(access: AccessContext = Depends(require_player)) -> dict:
     maybe_refresh_index()
-    rows = [row for row in all_notes_for_search(settings.database_path) if is_player_safe_row(row)]
+    with player_profile_scope(access.profile_id):
+        rows = [row for row in all_notes_for_search(settings.database_path) if is_player_safe_row(row)]
 
     def is_active(row) -> bool:
         status = str(row_to_note(row).get("status") or "").strip().lower()

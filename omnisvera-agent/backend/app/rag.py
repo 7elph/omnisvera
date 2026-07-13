@@ -132,6 +132,23 @@ def _looks_like_mission_access(question: str) -> bool:
     return any(term in lowered for term in ("conseguir missoes", "encontrar missoes", "pegar missoes", "receber missoes", "onde ha missoes"))
 
 
+def _looks_like_economy_overview(question: str) -> bool:
+    lowered = normalize_text(question)
+    return any(term in lowered for term in ("dinheiro", "economia", "moeda", "moedas")) and any(term in lowered for term in ("como funciona", "quais", "sistema", "conversao"))
+
+
+def _looks_like_current_date(question: str) -> bool:
+    lowered = normalize_text(question)
+    return "data" in lowered and any(term in lowered for term in ("atual", "agora", "campanha", "hoje"))
+
+
+def _answer_public_reference(database_path: Path, access_mode: AccessMode, target: str, answer: str, mode: str) -> dict | None:
+    note = resolve_note(database_path, target, access_mode=access_mode)
+    if not note:
+        return None
+    return {"answer": answer, "notes_used": [note], "note_paths": [note["path"]], "insufficient_context": False, "warning": None, "suggested_questions": [], "retrieval_mode": mode}
+
+
 def _answer_mission_access(database_path: Path, access_mode: AccessMode) -> dict | None:
     note = resolve_note(database_path, "Conclave dos Errantes", access_mode=access_mode)
     if not note:
@@ -2557,6 +2574,24 @@ async def answer_question(
     action_kind = _player_action_kind(question) if access_mode == "player" else None
     action_target = _player_action_target(question) if action_kind else ""
     retrieval_question = action_target or question
+
+    if not action_kind and _looks_like_economy_overview(question):
+        economy = _answer_public_reference(
+            database_path, access_mode, "ECONOMY",
+            "Em Earthropo, o padrão monetário usa **peças de cobre (PC), prata (PP), ouro (PO) e platina (PPL)**. Dez moedas de uma categoria equivalem a uma da categoria seguinte: 10 PC = 1 PP, 10 PP = 1 PO e 10 PO = 1 PPL. O padrão de Nimalia é amplamente aceito no continente.",
+            "structured:economy",
+        )
+        if economy:
+            return _with_chat_meta(economy, ollama_used=False, model=ollama_model, retrieval_mode="structured:economy")
+
+    if not action_kind and _looks_like_current_date(question):
+        current_date = _answer_public_reference(
+            database_path, access_mode, "CALENDAR",
+            "A data atual conhecida da campanha é **1º de Aurora de 2100 — Dia da Primeira Luz**, início do Capítulo 01.",
+            "structured:current_date",
+        )
+        if current_date:
+            return _with_chat_meta(current_date, ollama_used=False, model=ollama_model, retrieval_mode="structured:current_date")
 
     if not action_kind and _looks_like_mission_access(question):
         mission_access = _answer_mission_access(database_path, access_mode)
