@@ -580,6 +580,20 @@ async def player_chat(request: ChatRequest, access: AccessContext = Depends(requ
         if personal_answer is not None:
             return personal_answer
         context_paths = list(request.context_paths)
+        priority_paths: list[str] = []
+        if access.profile_id and access.character_title:
+            personal_knowledge_path = (
+                f"CAMPANHA/Player_Knowledge/CONHECIMENTO - {access.character_title}.md"
+            )
+            personal_knowledge = resolve_note(
+                settings.database_path,
+                personal_knowledge_path,
+                access_mode="player",
+            )
+            if personal_knowledge:
+                priority_paths.append(personal_knowledge_path)
+                if personal_knowledge_path not in context_paths:
+                    context_paths.insert(0, personal_knowledge_path)
         if access.character_path and access.character_path not in context_paths:
             context_paths.insert(0, access.character_path)
         if access.profile_id:
@@ -605,6 +619,7 @@ async def player_chat(request: ChatRequest, access: AccessContext = Depends(requ
             context_limit=settings.rag_context_limit, context_chars=settings.rag_context_chars,
             response_mode=settings.response_mode, fallback_model=settings.fast_model,
             conversation_paths=context_paths,
+            priority_paths=priority_paths,
         )
 
 

@@ -19,6 +19,7 @@ class Case:
     expected_sources: tuple[str, ...] = ()
     forbidden: tuple[str, ...] = ("gm_secret", "spoiler_level", "pendências do sage", "uso em mesa")
     allow_insufficient: bool = False
+    profile: str | None = None
 
 
 CASES = [
@@ -48,6 +49,10 @@ CASES = [
     Case("Quem é o imperador secreto de Nimalia?", allow_insufficient=True, forbidden=("Augustus é o imperador secreto", "gm_secret", "spoiler_level")),
     Case("Qual é a verdadeira origem do Véu Cinzento?", allow_insufficient=True, forbidden=("Criadores moldaram", "Grande Fratura", "gm_secret")),
     Case("O que os jogadores sabem sobre o Eclipse de Obsidiana?", allow_insufficient=True, forbidden=("gm_secret", "spoiler_level")),
+    Case("O que eu sei sobre Leth'valora?", ("lar", "Mira"), ("Conhecimento de Vezemir",), profile="vezemir"),
+    Case("O que eu sei sobre Mestre Odran Veyl?", ("mentor", "alquimia"), ("Conhecimento de Varkh",), profile="varkh"),
+    Case("O que eu me lembro do Clã Sanguinallis?", ("linhagem", "trai"), ("Conhecimento de Raziel",), profile="raziel"),
+    Case("O que eu sei sobre o Despertar do Último Suspiro?", ("ritual", "falhou"), ("Conhecimento de Morthak",), profile="morthak"),
 ]
 
 
@@ -61,10 +66,13 @@ def main() -> int:
     parser.add_argument("--limit", type=int, default=len(CASES))
     args = parser.parse_args()
     tokens = json.loads((ROOT / "omnisvera-agent/backend/data/access_tokens.json").read_text(encoding="utf-8-sig"))
-    token = tokens["player_token"]
     failures = 0
     results = []
     for case in CASES[: max(1, args.limit)]:
+        if case.profile:
+            token = tokens["player_profiles"][case.profile]["token"]
+        else:
+            token = tokens["player_token"]
         request = urllib.request.Request(
             args.base_url.rstrip("/") + "/player/chat",
             data=json.dumps({"question": case.question, "limit": 6, "context_paths": []}).encode(),
@@ -96,8 +104,9 @@ def main() -> int:
             reasons.append("contexto insuficiente inesperado")
         status = "FAIL" if reasons else "PASS"
         failures += bool(reasons)
-        print(f"{status} | {elapsed:5.2f}s | {case.question} | {payload.get('retrieval_mode')} | {sources[:3]}" + (f" | {'; '.join(reasons)}" if reasons else ""))
-        results.append({"question": case.question, "status": status, "seconds": round(elapsed, 3), "mode": payload.get("retrieval_mode"), "sources": sources, "reasons": reasons})
+        label = case.profile or "public"
+        print(f"{status} | {elapsed:5.2f}s | {label} | {case.question} | {payload.get('retrieval_mode')} | {sources[:3]}" + (f" | {'; '.join(reasons)}" if reasons else ""))
+        results.append({"question": case.question, "profile": label, "status": status, "seconds": round(elapsed, 3), "mode": payload.get("retrieval_mode"), "sources": sources, "reasons": reasons})
     print(f"\nRESULTADO: {len(results) - failures}/{len(results)} passaram; {failures} falharam.")
     return 1 if failures else 0
 

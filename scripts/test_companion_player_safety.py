@@ -69,6 +69,19 @@ async def _runtime_checks() -> None:
     assert detail is not None and detail.get("content") is not None
     assert resolve_note(settings.database_path, "Lugar Inexistente de Teste", access_mode="player") is None
 
+    personal_notes = {
+        "vezemir": "Conhecimento de Vezemir",
+        "varkh": "Conhecimento de Varkh Nimalis",
+        "raziel": "Conhecimento de Raziel",
+        "morthak": "Conhecimento de Morthak",
+    }
+    for owner, title in personal_notes.items():
+        assert resolve_note(settings.database_path, title, access_mode="player") is None
+        for viewer in personal_notes:
+            with player_profile_scope(viewer):
+                note = resolve_note(settings.database_path, title, access_mode="player")
+            assert (note is not None) == (viewer == owner)
+
     fallback = await answer_question(
         settings.database_path,
         "http://127.0.0.1:1",

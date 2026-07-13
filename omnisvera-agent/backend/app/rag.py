@@ -69,6 +69,7 @@ def _compact_markdown(content: str, max_chars: int = 850) -> str:
     text = _strip_code_blocks(content)
     text = re.sub(r"!\[\[[^\]]+\]\]", "", text)
     text = re.sub(r"!\[[^\]]*\]\([^)]+\)", "", text)
+    text = re.sub(r"(?m)^\s*#{1,6}\s+.*$", "", text)
     text = re.sub(r"(?im)^\s*(esta nota|este arquivo|este documento)\b.*$", "", text)
     text = re.sub(r"## Liga[çc][ãa]o com Quests[\s\S]*$", "", text, flags=re.IGNORECASE)
     text = re.sub(r"## Dataview[\s\S]*$", "", text, flags=re.IGNORECASE)
@@ -1962,14 +1963,12 @@ def _extractive_grounded_payload(question: str, results: list[dict[str, Any]]) -
 
     candidates.sort(key=lambda item: item[0], reverse=True)
     facts: list[dict[str, str]] = []
-    seen_paths: set[str] = set()
     seen_sentences: set[str] = set()
     best_score = candidates[0][0] if candidates else 0.0
     for score, path, sentence in candidates:
         normalized_sentence = normalize_text(sentence)
-        if path in seen_paths or normalized_sentence in seen_sentences:
+        if normalized_sentence in seen_sentences:
             continue
-        seen_paths.add(path)
         seen_sentences.add(normalized_sentence)
         evidence = sentence
         sentence = re.sub(r"^\d+\s*[-—]\s*", "", sentence).strip()
@@ -2570,6 +2569,7 @@ async def answer_question(
     response_mode: str = "grounded",
     fallback_model: str = "omnisvera-fast:latest",
     conversation_paths: list[str] | None = None,
+    priority_paths: list[str] | None = None,
 ) -> dict:
     action_kind = _player_action_kind(question) if access_mode == "player" else None
     action_target = _player_action_target(question) if action_kind else ""
@@ -2811,6 +2811,39 @@ async def answer_question(
         ]
         if operational_results:
             hybrid_results = operational_results
+
+    priority_results: list[dict[str, Any]] = []
+    for priority_path in priority_paths or []:
+        summary = resolve_note(database_path, priority_path, access_mode=access_mode)
+        if summary is None:
+            continue
+        note = get_note(database_path, int(summary["id"]), access_mode=access_mode)
+        if note is None:
+            continue
+        excerpt = _compact_markdown(str(note.get("content") or ""), max_chars=1800)
+        if not excerpt:
+            continue
+        priority_results.append(
+            {
+                "id": summary["id"],
+                "path": summary["path"],
+                "title": summary["title"],
+                "aliases": summary.get("aliases") or [],
+                "type": summary.get("type"),
+                "visibility": summary.get("visibility"),
+                "excerpt": excerpt,
+                "lexical_score": 0.0,
+                "semantic_score": 0.0,
+                "exact_score": 1000.0,
+                "final_score": 1000.0,
+            }
+        )
+    if priority_results:
+        priority_path_set = {str(item["path"]) for item in priority_results}
+        hybrid_results = priority_results + [
+            item for item in hybrid_results if str(item.get("path") or "") not in priority_path_set
+        ]
+        hybrid_results = hybrid_results[: max(3, min(context_limit, max(limit, 8)))]
 
     if action_target:
         exact_action_results = [
