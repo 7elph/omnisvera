@@ -2,45 +2,55 @@
 obsidianUIMode: preview
 NoteIcon: news
 NoteStatus: Active
-tags: home
-cover: zz_media/covers/banner_earthropo.png
+type: lore
+status: Ativo
+campaign_status: Em andamento
+visibility: Jogadores
+spoiler_level: none
+gm_secret: false
+description: Rumores, pistas e descobertas atualmente liberados aos jogadores.
+cover: zz_media/covers/cover_rumores.png
+tags:
+  - home
+  - lore
+  - rumores
+  - campanha
 ---
 
 # Rumores e Descobertas
 
-Esta página acompanha os fios narrativos que já pertencem à campanha. Ela não representa um jornal oficial de Nimalia e não transforma ideias futuras em acontecimentos já ocorridos.
+Esta página acompanha apenas informações já liberadas. Rumores continuam sendo possibilidades, não respostas confirmadas.
 
-## Caminhos dos personagens
+## Situação Atual
 
-### O Bastardo de Ferro
+Uma caravana comercial sofreu um acidente em uma estrada secundária entre [[Nimalis]] e a [[Floresta de Avenor]]. Entre os destroços existem remédios adulterados e sinais de uma estrutura antiga sob a estrada.
 
-[[Vezemir]] continua sua busca pelo dragão verde de colar dourado responsável pela destruição de [[Leth'valora]] e pela morte de [[Mira Valen]]. As relíquias que carrega ainda guardam perguntas sobre sua origem e sobre os [[Guardiões do Véu Cinzento]].
+## Caminhos dos Personagens
 
-### O Corvo da Maré Baixa
+- **[[Vezemir]]:** procura o dragão de colar dourado responsável pela destruição de [[Leth'valora]] e pela morte de [[Mira Valen]].
+- **[[Varkh Nimalis]]:** investiga remédios falsos que imitam os símbolos e métodos de [[Mestre Odran Veyl]].
+- **[[Raziel]]:** despertou após séculos de aprisionamento e tenta compreender o mundo atual enquanto persegue lembranças de sua antiga traição.
+- **[[Morthak]]:** retornou como morto-vivo consciente após o ritual chamado Despertar do Último Suspiro e procura entender sua morte e sua memória perdida.
 
-Alguém está usando o símbolo e os métodos de Mestre Odran Veyl para distribuir remédios falsos. [[Varkh Nimalis]] deixou [[Maré Baixa]] seguindo esse rastro, sem saber até onde ele se estende.
+## Rumores Liberados
 
-### O Espectro da Névoa de Sangue
+- Dragões teriam sido vistos ao sul de Nimalia.
+- Remédios falsificados circulam a partir de Maré Baixa.
+- O Frasco Afogado está silencioso.
+- A Guarda Real estaria fechando algumas rotas.
+- Uma passagem antiga existe sob a estrada de Avenor.
 
-Depois de mais de trezentos anos aprisionado, [[Raziel]] despertou nas cavernas sob as [[Ruínas de Valthor]]. O mundo que conhecia desapareceu, mas os nomes daqueles que o traíram permanecem.
+## Missões Conhecidas
 
----
+- [[Investigar Avistamentos de Dragões]]
+- [[Investigar Remédios Falsos de Maré Baixa]]
+- [[Explorar a Passagem Sob a Estrada]]
 
-## Lugares no horizonte
-
-- **[[Nimalis]]:** ponto de referência inicial do reino e lar de [[Maré Baixa]].
-- **[[Floresta de Avenor]]:** fronteira viva de Nimalia, marcada por trilhas antigas, ruínas e pela história de Vezemir.
-- **[[Leth'valora]]:** vila élfica destruída pelo dragão de colar dourado.
-- **[[Ruínas de Valthor]]:** ruínas do sudeste de Earthropo, ligadas ao retorno de Raziel.
-
----
-
-## Perguntas que movem a campanha
+## Perguntas em Aberto
 
 - Quem está falsificando os métodos de Odran?
 - Onde está o dragão que destruiu Leth'valora?
-- O que o Ancião Primordial deseja de Raziel?
-- Por que as relíquias de Vezemir reagem a forças que ele não compreende?
-- O que fará esses três viajantes seguirem o mesmo caminho?
+- O que existe sob a estrada?
+- Por que os quatro viajantes foram reunidos pelo mesmo incidente?
 
-As respostas surgirão durante a campanha. Até lá, rumores devem permanecer rumores.
+As respostas surgirão durante a campanha.

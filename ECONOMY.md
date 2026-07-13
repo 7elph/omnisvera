@@ -2,7 +2,13 @@
 obsidianUIMode: preview
 NoteIcon: lore
 NoteStatus: Draft
+type: lore
 status: Cânone de trabalho
+campaign_status: Ativo
+visibility: Jogadores
+spoiler_level: none
+gm_secret: false
+description: Moedas, preços de referência e comércio conhecido em Earthropo.
 tags:
   - economy
   - currency

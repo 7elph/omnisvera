@@ -2,8 +2,14 @@
 obsidianUIMode: preview
 NoteIcon: lore
 NoteStatus: Active
+type: lore
 cover: zz_media/covers/omnisvera_1.png
 status: Cânone confirmado
+campaign_status: Ativo
+visibility: Público
+spoiler_level: none
+gm_secret: false
+description: Visão pública do universo de Omnisvera e da campanha em Earthropo.
 tags:
   - home
   - lore
@@ -28,9 +34,8 @@ Omnisvera é o universo onde se passam as Crônicas de Earthropo.
 ## Campanha atual
 
 - [[EARTHROPO|Crônicas de Earthropo]]
-- [[Workflow/CANON|Cânone de Omnisvera]]
-- [[TIMELINE|Linha do Tempo]]
-- [[LORE|Lore]]
+- [[CAMPANHA/DIARIO_PUBLICO|Diário Público da Campanha]]
+- [[LATEST_NEWS|Rumores e Descobertas]]
 - [[MAPA DE EARTHROPO|Mapa de Earthropo]]
 
 Esta nota define somente a escala do cenário. Ela não revela informações cosmológicas que os jogadores ainda não devem conhecer.

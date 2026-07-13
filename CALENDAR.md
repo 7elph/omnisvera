@@ -5,7 +5,7 @@ NoteStatus: In progress
 type: lore
 status: Em revisão
 campaign_status: Em revisão
-visibility: Mestre
+visibility: Jogadores
 spoiler_level: light
 gm_secret: false
 thumbnail: zz_media/covers/banner_earthropo.png
@@ -29,7 +29,7 @@ tags:
 
 **2100**
 
-O ano 2100 é o presente operacional da campanha e deve permanecer alinhado com [[TIMELINE]].
+O ano 2100 é o presente conhecido da campanha.
 
 ## Data Atual de Jogo
 
@@ -37,14 +37,12 @@ O ano 2100 é o presente operacional da campanha e deve permanecer alinhado com 
 
 Esta é a data operacional inicial da campanha e da primeira sessão de [[01 - Ecos do Mundo Perdido]].
 
-Por enquanto, essa data funciona como âncora de mesa. Se o Sage quiser mudar o clima, estação ou pressão de calendário antes da sessão, ajustar aqui, em [[TIMELINE]] e no [[CAMPANHA/ESTADO_DA_CAMPANHA|Estado da Campanha]].
+Essa data funciona como âncora pública para o início da campanha.
 
-## Relação com a Timeline
+## Relação com a campanha
 
-- A [[TIMELINE]] define a escala histórica.
-- Este calendário define a estrutura de jogo para dias, meses, estações e feriados.
-- Se houver conflito, registrar em pendências e não resolver inventando lore nova.
-- Eventos secretos ou revelações históricas devem ficar no [[CAMPANHA/ESTADO_DA_CAMPANHA|Estado da Campanha]] até serem usados.
+- Este calendário registra dias, meses, estações e feriados conhecidos.
+- Datas confirmadas em jogo também aparecem no [[CAMPANHA/DIARIO_PUBLICO|Diário Público da Campanha]].
 
 ## Estrutura do Ano
 
@@ -112,28 +110,6 @@ Por enquanto, essa data funciona como âncora de mesa. Se o Sage quiser mudar o 
 |---|---|---|---|
 | 1º de Aurora de 2100 | Início do Capítulo 01 — Ecos do Mundo Perdido | [[01 - Ecos do Mundo Perdido]] | Ativo |
 
-## Eventos Secretos do Mestre
+## O que ainda pode mudar
 
-As antigas seções chamadas “Verdade Esquecida” devem ser tratadas como segredo do mestre até confirmação. Não exibir em material de jogador sem revisão.
-
-Possíveis eventos secretos:
-
-- enfraquecimento do Véu em datas específicas;
-- memória antiga ligada aos Criadores;
-- constelações que não deveriam existir;
-- registros contraditórios preservados por templos ou ruínas.
-
-## Pendências de Sincronização
-
-- Confirmar se nomes dos meses são definitivos.
-- Confirmar se dias da semana são diegéticos ou apenas ferramenta de mesa.
-- Validar feriados ligados à [[Igreja das Chamas]].
-- Confirmar se 1º de Aurora de 2100 permanece como data oficial da primeira sessão.
-- Sincronizar eventos futuros com [[CAMPANHA/ESTADO_DA_CAMPANHA]].
-
-## Uso em Mesa
-
-- Usar o calendário para marcar viagem, prazos, festivais e consequências.
-- Não transformar feriados em lore obrigatória sem necessidade de sessão.
-- Registrar datas reveladas aos jogadores como parte de capítulos `story`.
-- Se uma data revelar segredo de campanha, registrar o bastidor no [[CAMPANHA/ESTADO_DA_CAMPANHA|Estado da Campanha]].
+Os nomes de dias, meses e feriados funcionam como calendário de campanha, mas detalhes culturais podem ser ampliados conforme forem apresentados em jogo.
