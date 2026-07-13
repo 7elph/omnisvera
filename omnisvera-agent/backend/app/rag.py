@@ -127,6 +127,25 @@ def _looks_like_quest_overview(question: str) -> bool:
     return has_quest and asks_list
 
 
+def _looks_like_mission_access(question: str) -> bool:
+    lowered = normalize_text(question)
+    return any(term in lowered for term in ("conseguir missoes", "encontrar missoes", "pegar missoes", "receber missoes", "onde ha missoes"))
+
+
+def _answer_mission_access(database_path: Path, access_mode: AccessMode) -> dict | None:
+    note = resolve_note(database_path, "Conclave dos Errantes", access_mode=access_mode)
+    if not note:
+        return None
+    return {
+        "answer": "Aventureiros podem procurar o **Conclave dos Errantes**. A facção funciona como uma rede de aventureiros, investigadores, escoltas e exploradores, aceitando contratos, reunindo rumores e encaminhando missões independentes.",
+        "notes_used": [note],
+        "note_paths": [note["path"]],
+        "insufficient_context": False,
+        "warning": None,
+        "suggested_questions": ["O que é o Conclave dos Errantes?", "Quais missões estão ativas?", "Quais rumores estão ativos?"],
+    }
+
+
 def _looks_like_player_character_overview(question: str) -> bool:
     lowered = normalize_text(question)
     has_character = any(term in lowered for term in ("personagens", "jogadores", "grupo", "party"))
@@ -2263,6 +2282,8 @@ def _player_action_target(question: str) -> str:
 
 def _looks_like_conversation_followup(question: str) -> bool:
     normalized = normalize_text(question)
+    if re.match(r"^onde\s+(?:fica|esta|estao|se encontra|se localiza)\s+\S+", normalized):
+        return False
     words = normalized.split()
     if len(words) > 16:
         return False
@@ -2536,6 +2557,11 @@ async def answer_question(
     action_kind = _player_action_kind(question) if access_mode == "player" else None
     action_target = _player_action_target(question) if action_kind else ""
     retrieval_question = action_target or question
+
+    if not action_kind and _looks_like_mission_access(question):
+        mission_access = _answer_mission_access(database_path, access_mode)
+        if mission_access:
+            return _with_chat_meta(mission_access, ollama_used=False, model=ollama_model, retrieval_mode="structured:mission_access")
 
     if not action_kind and _looks_like_conversation_followup(question):
         previous_note = _conversation_note(database_path, conversation_paths or [], access_mode)
