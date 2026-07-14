@@ -1667,6 +1667,8 @@ select {
 .modal-backdrop { align-items: center; background: rgba(4,3,2,.82); display: flex; inset: 0; justify-content: center; padding: 1rem; position: fixed; z-index: 300; }
 .curation-modal { background: linear-gradient(145deg,#241a14,#12100e); border: 1px solid #6a4c2e; border-radius: 22px; box-shadow: 0 24px 80px rgba(0,0,0,.65); display: grid; gap: .85rem; max-height: calc(100vh - 2rem); max-width: 680px; overflow-y: auto; padding: 1rem; width: calc(100% - 2rem); }
 .curation-modal.wide { max-width: 860px; }
+.curation-modal-header { background: linear-gradient(180deg,#241a14 82%,rgba(36,26,20,0)); margin: -1rem -1rem 0; padding: 1rem 1rem .75rem; position: sticky; top: -1rem; z-index: 3; }
+.curation-modal .modal-notice { margin: 0; position: sticky; top: 4.9rem; z-index: 2; }
 .curation-modal label { color: #d7c2a1; display: grid; font-size: .82rem; font-weight: 750; gap: .3rem; }
 .curation-modal textarea { min-height: 92px; }
 .curation-modal .ideal-response-editor { min-height: 220px; }
@@ -1698,7 +1700,7 @@ select {
 .curation-checks input { width: auto; }
 .raw-response-box { background: #0d0b09; border: 1px solid #403124; border-radius: 14px; padding: .7rem; }
 .raw-response-box pre { color: #cdbda7; font: .75rem/1.45 ui-monospace,monospace; max-height: 180px; overflow: auto; white-space: pre-wrap; }
-.curation-actions { background: linear-gradient(180deg,rgba(18,16,14,.3),#12100e 35%); bottom: -.95rem; display: flex; flex-wrap: wrap; gap: .55rem; padding: .85rem 0 .15rem; position: sticky; }
+.curation-actions { background: linear-gradient(180deg,rgba(18,16,14,.3),#12100e 35%); bottom: -.95rem; display: flex; flex-wrap: wrap; gap: .55rem; padding: .85rem 0 .15rem; position: sticky; z-index: 3; }
 
 @media (max-width: 640px) {
   .gm-command-summary { grid-template-columns: repeat(2,minmax(0,1fr)); }

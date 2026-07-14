@@ -84,6 +84,10 @@ export default function ModelCurationPanel() {
     return examples.filter((item) => `${item.instruction} ${item.ideal_response} ${item.category}`.toLocaleLowerCase("pt-BR").includes(term));
   }, [examples, query]);
 
+  const approvalBlockingFlags = ["hallucination_detected", "leak_detected", "incorrect_source_detected"]
+    .filter((key) => Boolean(form.flags[key]));
+  const approvalBlocked = form.contains_secret || approvalBlockingFlags.length > 0;
+
   async function openExample(id: string) {
     setBusy(true);
     setNotice("");
@@ -143,11 +147,11 @@ export default function ModelCurationPanel() {
           quality: form.quality,
           reason: "Revisão confirmada no painel de curadoria",
         });
-        setNotice("Exemplo aprovado. O contador considera somente aprovados.");
+        setNotice("Exemplo aprovado. Você voltou à fila de revisão.");
         setSelected(null);
       } else {
-        setSelected(await getTrainingExample(updated.example.id));
-        setNotice("Alterações salvas; o exemplo continua pendente.");
+        setNotice("Alterações salvas. O exemplo continua pendente e você voltou à fila.");
+        setSelected(null);
       }
       await refresh();
     } catch (error) {
@@ -300,10 +304,11 @@ export default function ModelCurationPanel() {
       {selected && (
         <div className="modal-backdrop" role="presentation" onMouseDown={() => !busy && setSelected(null)}>
           <section className="curation-modal wide" role="dialog" aria-modal="true" aria-label="Revisar exemplo" onMouseDown={(event) => event.stopPropagation()}>
-            <div className="chat-header">
+            <div className="chat-header curation-modal-header">
               <div><p className="eyebrow">Exemplo {selected.review_status}</p><h2>Revisar resposta</h2></div>
-              <button className="secondary-button" onClick={() => setSelected(null)} disabled={busy}>Fechar</button>
+              <button className="secondary-button" onClick={() => setSelected(null)} disabled={busy}>Voltar à fila</button>
             </div>
+            {notice && <p className="curation-notice modal-notice" role="status" aria-live="polite">{notice}</p>}
             <label>Pergunta<textarea value={selected.instruction} readOnly /></label>
             <div className="curation-form-row">
               <label>Categoria<input value={form.category} onChange={(event) => setForm({ ...form, category: event.target.value })} /></label>
@@ -336,9 +341,15 @@ export default function ModelCurationPanel() {
                 <h4>Resposta bruta (somente mestre)</h4><pre>{selected.interaction.raw_model_response || "Não disponível."}</pre>
               </details>
             )}
+            {approvalBlocked && (
+              <p className="danger-note approval-blocker" role="status">
+                Para aprovar, corrija a resposta e desmarque: {[...approvalBlockingFlags.map((key) => FLAG_LABELS[key]), ...(form.contains_secret ? ["Contém segredo"] : [])].join(", ")}.
+                Você ainda pode salvar e voltar à fila.
+              </p>
+            )}
             <div className="curation-actions">
-              <button className="secondary-button" onClick={() => void save(false)} disabled={busy}>Salvar pendente</button>
-              <button onClick={() => void save(true)} disabled={busy || !form.ideal_response.trim() || form.contains_secret}>Validar e aprovar</button>
+              <button className="secondary-button" onClick={() => void save(false)} disabled={busy}>{busy ? "Salvando..." : "Salvar e voltar"}</button>
+              <button onClick={() => void save(true)} disabled={busy || !form.ideal_response.trim() || approvalBlocked}>{busy ? "Validando..." : "Validar, aprovar e voltar"}</button>
               {selected.review_status !== "approved" && <button className="danger-button" onClick={reject} disabled={busy}>Rejeitar</button>}
               <button className="secondary-button" onClick={duplicate} disabled={busy}>Duplicar variação</button>
               {selected.review_status === "pending" && <button className="danger-button subtle" onClick={remove} disabled={busy}>Excluir pendente</button>}
