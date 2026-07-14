@@ -20,6 +20,7 @@ Desktop.ini
 .assistant-runtime/
 /omnisvera-agent/backend/data/cloudflare-tunnel/
 /omnisvera-model/artifacts/
+/omnisvera-model/dist/
 /omnisvera-model/checkpoints/
 /omnisvera-model/cache/
 /omnisvera-model/data/raw/

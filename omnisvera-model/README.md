@@ -92,6 +92,15 @@ Configs não baixam pesos automaticamente (`allow_model_download: false`). Em m�
 
 ## 7. Smoke técnico
 
+Prepare o ZIP experimental para Google Colab sem iniciar treinamento:
+
+```powershell
+python -m omnisvera_model prepare-colab --output omnisvera-model/dist/omnisvera-smoke.zip --acknowledgement I_UNDERSTAND_THIS_IS_EXPERIMENTAL_NOT_FOR_PRODUCTION
+```
+
+O pacote contém somente exemplos aprovados e sanitizados, configuração smoke,
+schemas, frozen eval e `colab/runner.py`. O diretório `dist/` permanece fora do Git.
+
 Somente quando pesos e dependências já existirem localmente:
 
 ```powershell
