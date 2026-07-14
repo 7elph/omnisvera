@@ -1,10 +1,12 @@
 from __future__ import annotations
 
 from pathlib import Path
+from datetime import datetime, timezone
 import re
 import threading
 import time
 import unicodedata
+import uuid
 
 from fastapi import Depends, FastAPI, Header, HTTPException, Query, Request
 from fastapi.middleware.cors import CORSMiddleware
@@ -49,6 +51,21 @@ from .player_progress import (
 from .player_inventory import init_player_inventory, list_inventory, upsert_inventory
 from .player_ideas import create_idea, init_player_ideas, list_ideas, review_idea
 from .rag import answer_question
+from .training_curation import (
+    approve_example,
+    capture_interaction,
+    delete_pending,
+    duplicate_example,
+    get_example as get_training_example,
+    list_examples as list_training_examples,
+    mark_flag,
+    purge_unreviewed,
+    record_unreviewed_interaction,
+    reject_example,
+    sanitized_report,
+    stats as training_stats,
+    update_example,
+)
 from .schemas import (
     ChatRequest,
     ChatResponse,
@@ -79,6 +96,10 @@ from .schemas import (
     RebuildResponse,
     SearchRequest,
     SearchResult,
+    TrainingDecisionRequest,
+    TrainingExamplePatch,
+    TrainingFlagRequest,
+    TrainingInteractionCapture,
 )
 from .search import search_notes
 from .vault_index import all_notes_for_search, get_note, index_signature, init_db, list_notes, rebuild_index, resolve_note, row_to_note
@@ -336,6 +357,18 @@ def require_master(
     return AccessContext(mode="gm")
 
 
+def require_training_admin(
+    x_omnisvera_token: str | None = Header(default=None),
+    token: str | None = Query(default=None),
+) -> AccessContext:
+    if not settings.master_token:
+        raise HTTPException(
+            status_code=503,
+            detail="Configure OMNISVERA_MASTER_TOKEN para habilitar a curadoria administrativa.",
+        )
+    return require_master(x_omnisvera_token, token)
+
+
 def require_player(
     x_omnisvera_token: str | None = Header(default=None),
     token: str | None = Query(default=None),
@@ -379,6 +412,8 @@ def startup() -> None:
     init_player_inventory(settings.database_path)
     init_player_ideas(settings.database_path)
     init_character_creation(settings.database_path)
+    if settings.training_capture_mode != "off":
+        purge_unreviewed(settings.unreviewed_retention_days)
     if settings.rebuild_on_startup:
         notes, _ = iter_markdown_notes(settings.vault_path)
         rebuild_index(settings.database_path, notes)
@@ -496,7 +531,8 @@ def gm_resolve(target: str, _: AccessContext = Depends(require_master)) -> dict:
 @app.post("/gm/chat", response_model=ChatResponse)
 async def gm_chat(request: ChatRequest, _: AccessContext = Depends(require_master)) -> dict:
     maybe_refresh_index()
-    return await answer_question(
+    started = time.perf_counter()
+    result = await answer_question(
         settings.database_path,
         settings.ollama_base_url,
         settings.ollama_model,
@@ -512,6 +548,185 @@ async def gm_chat(request: ChatRequest, _: AccessContext = Depends(require_maste
         fallback_model=settings.fast_model,
         conversation_paths=request.context_paths,
     )
+    trace = result.pop("_training_trace", {}) or {}
+    interaction_id = str(uuid.uuid4())
+    created_at = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+    response_time_ms = round((time.perf_counter() - started) * 1000)
+    result.update(
+        {
+            "interaction_id": interaction_id,
+            "created_at": created_at,
+            "response_time_ms": response_time_ms,
+            "raw_model_response": str(trace.get("raw_ollama") or "") or None,
+            "validator_rejections": trace.get("rejected_claims") or [],
+        }
+    )
+    if settings.training_capture_mode == "master_session":
+        record_unreviewed_interaction(
+            {
+                "interaction_id": interaction_id,
+                "created_at": created_at,
+                "session_id": None,
+                "user_profile": "gm",
+                "question": request.question,
+                "raw_model_response": result.get("raw_model_response"),
+                "final_response": result.get("answer") or "",
+                "verified_facts": result.get("fatos_confirmados") or [],
+                "theories": result.get("teorias") or [],
+                "insufficient_information": result.get("informacoes_insuficientes") or [],
+                "retrieved_sources": result.get("notes_used") or [],
+                "retrieval_mode": result.get("retrieval_mode"),
+                "model": result.get("model"),
+                "ollama_used": result.get("ollama_used"),
+                "response_time_ms": response_time_ms,
+                "validator_rejections": result.get("validator_rejections") or [],
+                "warning": result.get("warning"),
+            }
+        )
+    return result
+
+
+def _training_error(error: ValueError) -> HTTPException:
+    message = str(error)
+    status = 404 if "não encontrado" in message.casefold() else 400
+    return HTTPException(status_code=status, detail=message)
+
+
+@app.post("/gm/training/interactions/capture")
+def gm_training_capture(
+    request: TrainingInteractionCapture,
+    _: AccessContext = Depends(require_training_admin),
+) -> dict:
+    if settings.training_capture_mode == "off":
+        raise HTTPException(status_code=409, detail="A captura de treinamento está desativada.")
+    try:
+        return capture_interaction(request.model_dump(), settings.vault_path, actor="Sage")
+    except ValueError as error:
+        raise _training_error(error) from error
+
+
+@app.get("/gm/training/examples")
+def gm_training_examples(
+    status: str | None = None,
+    access_profile: str | None = None,
+    category: str | None = None,
+    flag: str | None = None,
+    model: str | None = None,
+    persona_id: str | None = None,
+    quality: int | None = None,
+    date_from: str | None = None,
+    date_to: str | None = None,
+    _: AccessContext = Depends(require_training_admin),
+) -> list[dict]:
+    return list_training_examples(
+        status=status,
+        access_profile=access_profile,
+        category=category,
+        flag=flag,
+        model=model,
+        persona_id=persona_id,
+        quality=quality,
+        date_from=date_from,
+        date_to=date_to,
+    )
+
+
+@app.get("/gm/training/examples/{example_id}")
+def gm_training_example(example_id: str, _: AccessContext = Depends(require_training_admin)) -> dict:
+    try:
+        return get_training_example(example_id)
+    except ValueError as error:
+        raise _training_error(error) from error
+
+
+@app.patch("/gm/training/examples/{example_id}")
+def gm_training_example_update(
+    example_id: str,
+    request: TrainingExamplePatch,
+    _: AccessContext = Depends(require_training_admin),
+) -> dict:
+    try:
+        return update_example(example_id, request.model_dump(exclude_none=True), actor="Sage")
+    except ValueError as error:
+        raise _training_error(error) from error
+
+
+@app.post("/gm/training/examples/{example_id}/approve")
+def gm_training_example_approve(
+    example_id: str,
+    request: TrainingDecisionRequest,
+    _: AccessContext = Depends(require_training_admin),
+) -> dict:
+    try:
+        return approve_example(
+            example_id,
+            request.reviewer,
+            request.reason,
+            request.ideal_response,
+            request.quality,
+        )
+    except ValueError as error:
+        raise _training_error(error) from error
+
+
+@app.post("/gm/training/examples/{example_id}/reject")
+def gm_training_example_reject(
+    example_id: str,
+    request: TrainingDecisionRequest,
+    _: AccessContext = Depends(require_training_admin),
+) -> dict:
+    try:
+        return reject_example(example_id, request.reviewer, request.reason)
+    except ValueError as error:
+        raise _training_error(error) from error
+
+
+@app.post("/gm/training/examples/{example_id}/mark-{flag}")
+def gm_training_example_flag(
+    example_id: str,
+    flag: str,
+    request: TrainingFlagRequest,
+    _: AccessContext = Depends(require_training_admin),
+) -> dict:
+    try:
+        return mark_flag(example_id, flag, request.reviewer, request.detail)
+    except ValueError as error:
+        raise _training_error(error) from error
+
+
+@app.delete("/gm/training/examples/{example_id}", status_code=204)
+def gm_training_example_delete(example_id: str, _: AccessContext = Depends(require_training_admin)) -> None:
+    try:
+        delete_pending(example_id, "Sage")
+    except ValueError as error:
+        raise _training_error(error) from error
+
+
+@app.post("/gm/training/examples/{example_id}/duplicate")
+def gm_training_example_duplicate(
+    example_id: str, _: AccessContext = Depends(require_training_admin)
+) -> dict:
+    try:
+        return duplicate_example(example_id, "Sage")
+    except ValueError as error:
+        raise _training_error(error) from error
+
+
+@app.get("/gm/training/coverage")
+@app.get("/gm/training/stats")
+def gm_training_stats(_: AccessContext = Depends(require_training_admin)) -> dict:
+    return training_stats()
+
+
+@app.get("/gm/training/export-sanitized")
+def gm_training_export(_: AccessContext = Depends(require_training_admin)) -> dict:
+    return sanitized_report()
+
+
+@app.post("/gm/training/retention/purge")
+def gm_training_retention(_: AccessContext = Depends(require_training_admin)) -> dict:
+    removed = purge_unreviewed(settings.unreviewed_retention_days)
+    return {"removed": removed, "retention_days": settings.unreviewed_retention_days}
 
 
 @app.get("/gm/editor", response_model=EditableNoteResponse)

@@ -36,6 +36,8 @@ class Settings:
     player_token: str | None
     player_profiles: dict[str, dict[str, str]]
     rebuild_on_startup: bool
+    training_capture_mode: str
+    unreviewed_retention_days: int
 
 
 def _rag_mode(value: str) -> str:
@@ -55,6 +57,11 @@ def _response_mode(value: str) -> str:
 def _model_mode(value: str) -> str:
     normalized = value.strip().lower()
     return normalized if normalized in {"baseline", "candidate", "production"} else "baseline"
+
+
+def _training_capture_mode(value: str) -> str:
+    normalized = value.strip().lower()
+    return normalized if normalized in {"off", "manual", "master_session"} else "manual"
 
 
 def _safe_int(name: str, default: int) -> int:
@@ -133,4 +140,8 @@ def get_settings() -> Settings:
         player_profiles=player_profiles,
         rebuild_on_startup=os.getenv("OMNISVERA_REBUILD_ON_STARTUP", "false").lower()
         in {"1", "true", "yes", "sim"},
+        training_capture_mode=_training_capture_mode(
+            os.getenv("OMNISVERA_TRAINING_CAPTURE_MODE", "manual")
+        ),
+        unreviewed_retention_days=_safe_int("OMNISVERA_UNREVIEWED_RETENTION_DAYS", 30),
     )

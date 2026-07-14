@@ -88,6 +88,70 @@ class ChatResponse(BaseModel):
     ollama_attempted: bool = False
     model: str | None = None
     retrieval_mode: str | None = None
+    interaction_id: str | None = None
+    created_at: str | None = None
+    response_time_ms: int | None = None
+    raw_model_response: str | None = None
+    validator_rejections: list[dict[str, Any]] = Field(default_factory=list)
+
+
+class TrainingInteractionCapture(BaseModel):
+    interaction_id: str | None = None
+    session_id: str | None = None
+    user_profile: str = "gm"
+    player_id: str | None = None
+    character_id: str | None = None
+    persona_id: str | None = None
+    question: str = Field(min_length=2, max_length=5000)
+    raw_model_response: str | None = Field(default=None, max_length=20_000)
+    final_response: str = Field(max_length=20_000)
+    verified_facts: list[dict[str, Any]] = Field(default_factory=list)
+    theories: list[dict[str, Any]] = Field(default_factory=list)
+    insufficient_information: list[str] = Field(default_factory=list)
+    retrieved_sources: list[dict[str, Any]] = Field(default_factory=list)
+    retrieval_mode: str | None = None
+    model: str | None = None
+    ollama_used: bool = False
+    response_time_ms: int = Field(default=0, ge=0)
+    validator_rejections: list[dict[str, Any]] = Field(default_factory=list)
+    warning: str | None = Field(default=None, max_length=2000)
+    feedback_action: str
+    reason: str | None = Field(default=None, max_length=3000)
+    category: str | None = None
+    persona_id_override: str | None = None
+
+
+class TrainingExamplePatch(BaseModel):
+    category: str | None = None
+    source_type: str | None = None
+    persona_id: str | None = None
+    ideal_response: str | None = Field(default=None, max_length=20_000)
+    facts_expected: list[str] | None = None
+    theories_allowed: list[str] | None = None
+    insufficient_information_expected: bool | None = None
+    requires_rag: bool | None = None
+    contains_canon: bool | None = None
+    contains_secret: bool | None = None
+    notes: str | None = Field(default=None, max_length=5000)
+    quality: int | None = Field(default=None, ge=1, le=5)
+    hallucination_detected: bool | None = None
+    leak_detected: bool | None = None
+    incomplete_detected: bool | None = None
+    artificial_detected: bool | None = None
+    incorrect_source_detected: bool | None = None
+    reason: str | None = Field(default=None, max_length=3000)
+
+
+class TrainingDecisionRequest(BaseModel):
+    reviewer: str = Field(default="Sage", min_length=2, max_length=120)
+    reason: str | None = Field(default=None, max_length=3000)
+    ideal_response: str | None = Field(default=None, max_length=20_000)
+    quality: int | None = Field(default=None, ge=1, le=5)
+
+
+class TrainingFlagRequest(BaseModel):
+    reviewer: str = Field(default="Sage", min_length=2, max_length=120)
+    detail: str | None = Field(default=None, max_length=3000)
 
 
 class DashboardSection(BaseModel):

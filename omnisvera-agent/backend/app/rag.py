@@ -1881,6 +1881,7 @@ async def _polish_response_with_ollama(
 
     result = dict(result)
     result["answer"] = _clean_answer(composed["answer"])
+    result["_training_trace"] = composed.get("trace") or {}
     structured = card_as_payload(card, result["answer"])
     result.update({key: value for key, value in structured.items() if key != "resposta_ao_jogador"})
     suffix = "narrative_card" if composed["used"] else "factual_fallback"
@@ -2722,6 +2723,7 @@ async def answer_question(
     if insufficient:
         warning = "Contexto insuficiente: vou responder apenas com o que já foi revelado."
 
+    training_trace: dict[str, Any] = {}
     if _asks_hidden_actor(question):
         # The player-safe answer is deterministic because no revealed source
         # confirms a culprit. Asking the model here only adds latency and risks
@@ -2753,6 +2755,7 @@ async def answer_question(
                 access_mode=access_mode,
                 intent=f"rag:{effective_rag_mode}",
             )
+            training_trace = composed.get("trace") or {}
             payload = card_as_payload(card, composed["answer"])
             ollama_used = bool(composed["used"])
             ollama_attempted = bool(composed["attempted"])
@@ -2786,6 +2789,7 @@ async def answer_question(
         "ollama_attempted": ollama_attempted,
         "model": effective_model,
         "retrieval_mode": f"rag:{effective_rag_mode}:{response_mode}",
+        "_training_trace": training_trace,
     }
 
     results = search_notes(database_path, question, limit=max(limit, 12), access_mode=access_mode)

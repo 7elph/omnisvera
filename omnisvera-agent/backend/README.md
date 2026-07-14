@@ -28,6 +28,8 @@ $env:OMNISVERA_QUALITY_MODEL="llama-3.2-omnisvera-3b"
 $env:OMNISVERA_EMBED_MODEL="nomic-embed-text"
 $env:OMNISVERA_RESPONSE_MODE="grounded"
 $env:OMNISVERA_MODEL_MODE="baseline" # baseline, candidate ou production
+$env:OMNISVERA_TRAINING_CAPTURE_MODE="manual" # off, manual ou master_session
+$env:OMNISVERA_UNREVIEWED_RETENTION_DAYS="30"
 ```
 
 No modo `baseline`, `qwen2:1.5b` compõe respostas narrativas a partir de cartões
@@ -96,6 +98,16 @@ uvicorn app.main:app --host 0.0.0.0 --port 8787
 - `GET /notes/{id}`
 - `POST /search`
 - `POST /chat`
+- `POST /gm/training/interactions/capture`
+- `GET /gm/training/examples`
+- `PATCH /gm/training/examples/{id}`
+- `POST /gm/training/examples/{id}/approve`
+- `POST /gm/training/examples/{id}/reject`
+- `GET /gm/training/stats`
+
+Os endpoints de curadoria exigem `OMNISVERA_MASTER_TOKEN`; sem o token configurado,
+o backend nega o painel por padrão. O guia operacional completo está em
+`omnisvera-model/CURATION_FOR_SAGE.md`.
 
 ## Fluxo inicial
 
