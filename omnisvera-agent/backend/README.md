@@ -24,29 +24,51 @@ Variáveis de ambiente:
 $env:OMNISVERA_VAULT_PATH="C:\Users\delib\Desktop\OMNISVERA"
 $env:OLLAMA_BASE_URL="http://localhost:11434"
 $env:OMNISVERA_FAST_MODEL="omnisvera-fast:latest"
-$env:OMNISVERA_QUALITY_MODEL="omnisvera-fast:latest"
+$env:OMNISVERA_QUALITY_MODEL="qwen2:1.5b"
 $env:OMNISVERA_EMBED_MODEL="nomic-embed-text"
-$env:OMNISVERA_RESPONSE_MODE="fast"
+$env:OMNISVERA_RESPONSE_MODE="grounded"
 ```
 
-Se o modelo acima não estiver instalado, use um modelo local existente. No notebook atual do Sage, os modelos preparados são:
+O modelo `qwen2:1.5b` compõe respostas narrativas a partir de cartões factuais
+validados. Respostas diretas e cartões muito curtos continuam determinísticos;
+`omnisvera-fast:latest` permanece como fallback. Os modelos instalados só devem
+ser trocados depois de um benchmark de fidelidade, não apenas por fluência.
 
-```powershell
-$env:OMNISVERA_QUALITY_MODEL="qwen3:4b"
-# opcional: mais lento e recomendado apenas para testes fundamentados
-
-$env:OMNISVERA_FAST_MODEL="omnisvera-fast:latest"
-# mais rÃ¡pido, bom como fallback em mesa
-```
-
-O backend pode atualizar o Ã­ndice SQLite automaticamente quando arquivos `.md` mudam:
+O backend pode atualizar o índice SQLite automaticamente quando arquivos `.md` mudam:
 
 ```powershell
 $env:OMNISVERA_AUTO_REFRESH_INDEX="true"
 $env:OMNISVERA_AUTO_REFRESH_INTERVAL_SECONDS="12"
 ```
 
-Isso atualiza o corpo das notas no app apÃ³s salvar no Obsidian. O Ã­ndice semÃ¢ntico `.local-index/vault.jsonl` continua manual para evitar recalcular embeddings a cada salvamento.
+Isso atualiza o corpo das notas no app após salvar no Obsidian. O índice semântico
+`.local-index/vault.jsonl` continua manual para evitar recalcular embeddings a cada salvamento.
+
+## Diagnóstico da voz narrativa
+
+O modo `grounded` monta um cartão factual autorizado antes de chamar o Ollama.
+O modelo só reescreve os fatos; nomes, números, relações, causas, motivações e
+eventos novos são rejeitados por afirmação. Se a resposta não sobreviver à
+validação, o backend monta uma resposta natural determinística.
+
+Para registrar um diagnóstico local player-safe, sem expor o trace na API:
+
+```powershell
+$env:OMNISVERA_NARRATIVE_TRACE_PATH="C:\caminho\local\narrative-trace.jsonl"
+```
+
+O trace contém pergunta, intenção, fontes liberadas, cartão factual, prompt,
+resposta bruta, afirmações rejeitadas, resposta final e tempos por etapa. Ele só
+é escrito para o modo jogador e deve ficar em diretório ignorado pelo Git, como
+`.local-index/`.
+
+Testes principais:
+
+```powershell
+python ..\..\scripts\test_narrative_composer.py
+python ..\..\scripts\test_narrative_quality.py
+python ..\..\scripts\test_chat_question_battery.py
+```
 
 Se `OMNISVERA_VAULT_PATH` não for definido, o backend assume a raiz do repositório acima de `omnisvera-agent/`.
 

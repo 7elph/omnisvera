@@ -7,6 +7,7 @@ from typing import Any
 
 from .access import AccessMode, PLAYER_BLOCKED_LOOKUP_TERMS, is_player_safe_row, normalize_text, sanitize_player_text
 from .hybrid_retrieval import hybrid_search
+from .narrative_composer import build_factual_card, card_as_payload, compose_narrative
 from .ollama_client import chat_with_ollama, resolve_ollama_model
 from .search import search_notes
 from .vault_index import all_notes_for_search, get_note, get_notes_by_ids, resolve_note
@@ -117,7 +118,10 @@ def _context_from_notes(
 def _looks_like_rumor_overview(question: str) -> bool:
     lowered = normalize_text(question)
     has_rumor = "rumor" in lowered or "rumores" in lowered
-    asks_list = any(term in lowered for term in ("quais", "lista", "liste", "ativos", "ativas", "tem", "existem"))
+    asks_list = any(
+        term in lowered
+        for term in ("quais", "lista", "liste", "ativos", "ativas", "tem", "existem", "circula", "circulam")
+    )
     return has_rumor and asks_list
 
 
@@ -1712,7 +1716,10 @@ def _requests_narrative_voice(question: str) -> bool:
     normalized = normalize_text(question)
     return any(
         term in normalized
-        for term in ("conte-me", "conte me", "de forma natural", "narre", "como arquivo vivo", "com atmosfera")
+        for term in (
+            "conte-me", "conte me", "conte sobre", "fale sobre", "de forma natural", "naturalmente",
+            "narre", "explique", "descreva", "o que se sabe", "como arquivo vivo", "com atmosfera",
+        )
     )
 
 
@@ -1841,83 +1848,37 @@ async def _polish_response_with_ollama(
             retrieval_mode=f"{retrieval_mode}:verified_fast_path",
         )
 
-    mode_rule = (
-        "Modo jogador: seja player-safe; não revele bastidores, segredos do mestre, pendências editoriais ou instruções de mesa."
-        if access_mode == "player"
-        else "Modo mestre: pode citar bastidores se estiverem no contexto, mas priorize utilidade de mesa."
-    )
-    numbers_to_preserve = _must_preserve_numbers(question, base_answer)
-
-    polish_prompt = f"""Pergunta:
-{question}
-
-Resposta-base factual, já verificada pelo sistema:
-{base_answer}
-
-Tarefa:
-Reescreva a resposta-base como o Arquivo Vivo de Omnisvera: natural, direta e com atmosfera.
-
-Regras:
-- Use somente a resposta-base. Não use conhecimento externo.
-- Não acrescente nomes, lugares, números, poderes, relações, classes ou eventos que não estejam na resposta-base.
-- Preserve a resposta direta logo no começo.
-- Se a pergunta for factual curta, como idade ou localização, responda curto.
-- Se a resposta-base parecer uma ficha, transforme em uma resposta orgânica; não reproduza a ficha inteira.
-- Não diga "nota", "arquivo", "frontmatter", "vault", "markdown" ou "com base no contexto".
-- Não liste caminhos de arquivo.
-- Não use títulos técnicos como "Uso em Mesa", "Como apresentar" ou "Pendências".
-- Não crie cabeçalho como "Arquivo Vivo", "Resposta" ou ficha completa antes da resposta.
-- Não repita frases.
-- {mode_rule}
-- Responda em português brasileiro.
-- Tamanho ideal: 1 a 3 parágrafos curtos, ou bullets se a pergunta pedir lista."""
-
     try:
-        polished = await chat_with_ollama(
-            ollama_base_url,
-            ollama_model,
-            [
-                {"role": "system", "content": SYSTEM_PROMPT},
-                {"role": "user", "content": polish_prompt},
-            ],
-            options={
-                "num_predict": 70,
-                "temperature": 0.35 if access_mode == "player" else 0.3,
-                "repeat_penalty": 1.18,
-            },
+        card = build_factual_card(question, result)
+        composed = await compose_narrative(
+            question=question,
+            card=card,
+            ollama_base_url=ollama_base_url,
+            model=ollama_model,
+            access_mode=access_mode,
+            intent=retrieval_mode,
         )
     except Exception:
-        return _with_chat_meta(result, ollama_used=False, model=ollama_model, retrieval_mode=f"{retrieval_mode}:fallback", ollama_attempted=True)
-
-    cleaned = _plain_wikilinks(_clean_answer(polished))
-    cleaned = re.sub(r"(?im)^\s*#{1,6}\s*(o\s+)?arquivo vivo(?: de omnisvera)?\s*$", "", cleaned).strip()
-    cleaned = re.sub(r"(?im)^\s*(o\s+)?arquivo vivo(?: de omnisvera)?\s*:\s*", "", cleaned).strip()
-    cleaned = re.sub(r"(?im)^\s*#{1,6}\s*resposta\s*$", "", cleaned).strip()
-    cleaned = _strip_chat_heading_noise(cleaned)
-    cleaned = _strip_redundant_title_heading(cleaned, result)
-    if retrieval_mode == "direct_entity":
-        cleaned = _ground_polished_rewrite(base_answer, cleaned)
-        if not cleaned:
-            return _with_chat_meta(result, ollama_used=False, model=ollama_model, retrieval_mode=f"{retrieval_mode}:fallback", ollama_attempted=True)
-        retrieval_mode = f"{retrieval_mode}:grounded_rewrite"
-
-    invalid_rewrite = retrieval_mode != "direct_entity:grounded_rewrite" and (
-        _looks_like_bad_ai_answer(cleaned, access_mode)
-        or _looks_like_bad_relation_rewrite(cleaned)
-        or (_is_short_fact_question(question) and len(cleaned) > 320)
-        or len(cleaned) > max(900, int(len(base_answer) * 1.35) + 160)
-        or _has_new_proper_names(base_answer, cleaned)
-        or bool(numbers_to_preserve and any(number not in cleaned for number in numbers_to_preserve))
-    )
-    if invalid_rewrite:
-        cleaned = _ground_polished_rewrite(base_answer, cleaned)
-        if not cleaned:
-            return _with_chat_meta(result, ollama_used=False, model=ollama_model, retrieval_mode=f"{retrieval_mode}:fallback", ollama_attempted=True)
-        retrieval_mode = f"{retrieval_mode}:grounded_rewrite"
+        return _with_chat_meta(
+            result,
+            ollama_used=False,
+            model=ollama_model,
+            retrieval_mode=f"{retrieval_mode}:fallback",
+            ollama_attempted=True,
+        )
 
     result = dict(result)
-    result["answer"] = cleaned
-    return _with_chat_meta(result, ollama_used=True, model=ollama_model, retrieval_mode=retrieval_mode)
+    result["answer"] = _clean_answer(composed["answer"])
+    structured = card_as_payload(card, result["answer"])
+    result.update({key: value for key, value in structured.items() if key != "resposta_ao_jogador"})
+    suffix = "narrative_card" if composed["used"] else "factual_fallback"
+    return _with_chat_meta(
+        result,
+        ollama_used=bool(composed["used"]),
+        ollama_attempted=bool(composed["attempted"]),
+        model=str(composed["model"]),
+        retrieval_mode=f"{retrieval_mode}:{suffix}",
+    )
 
 
 def _context_from_hybrid_results(
@@ -2305,6 +2266,66 @@ def _asks_relation_or_theory(question: str) -> bool:
     )
 
 
+def _explicit_relation_targets(question: str) -> tuple[str, str] | None:
+    patterns = (
+        r"^\s*como\s+(.+?)\s+se\s+relaciona\s+com\s+(.+?)[?.!]*\s*$",
+        r"^\s*qual(?:\s+é|\s+e)?\s+a\s+rela(?:ção|cao)\s+entre\s+(.+?)\s+e\s+(.+?)[?.!]*\s*$",
+        r"^\s*que\s+liga(?:ção|cao)\s+existe\s+entre\s+(.+?)\s+e\s+(.+?)[?.!]*\s*$",
+    )
+    for pattern in patterns:
+        match = re.match(pattern, question, flags=re.IGNORECASE)
+        if match:
+            return match.group(1).strip(), match.group(2).strip()
+    return None
+
+
+def _answer_explicit_relation(database_path: Path, question: str, access_mode: AccessMode) -> dict | None:
+    targets = _explicit_relation_targets(question)
+    if not targets:
+        return None
+    left, right = targets
+    resolved: list[tuple[dict, str]] = []
+    for target, other in ((left, right), (right, left)):
+        summary = resolve_note(database_path, target, access_mode=access_mode)
+        if summary is not None:
+            resolved.append((summary, other))
+    summaries = [summary for summary, _other in resolved]
+    evidence: list[str] = []
+    for summary, other in resolved:
+        note = get_note(database_path, int(summary["id"]), access_mode=access_mode)
+        if not note:
+            continue
+        content = sanitize_player_text(note["content"]) if access_mode == "player" else note["content"]
+        for sentence in re.split(r"(?<=[.!?])\s+|\n+", _compact_markdown(content, max_chars=2200)):
+            sentence = _plain_wikilinks(re.sub(r"\s+", " ", sentence)).strip(" -*")
+            if normalize_text(other) in normalize_text(sentence) and 20 <= len(sentence) <= 340:
+                evidence.append(sentence)
+                break
+    if evidence:
+        answer = " ".join(_compact_sentence(item) for item in evidence[:2])
+        insufficient = False
+        missing: list[str] = []
+    else:
+        answer = (
+            f"Ainda não há informação revelada suficiente para confirmar uma ligação entre {left} e {right}. "
+            "Se essa relação existir, ela ainda não aparece de forma explícita no que foi liberado."
+        )
+        insufficient = True
+        missing = [f"A relação entre {left} e {right} ainda não foi confirmada."]
+    return {
+        "answer": answer,
+        "notes_used": summaries,
+        "note_paths": [note["path"] for note in summaries],
+        "insufficient_context": insufficient,
+        "warning": None,
+        "suggested_questions": _suggested_questions_for_notes(question, summaries, access_mode),
+        "fatos_confirmados": [],
+        "teorias": [],
+        "informacoes_insuficientes": missing,
+        "fontes_usadas": [note["path"] for note in summaries],
+    }
+
+
 def _mentions_overconfident_culprit(payload: dict[str, Any]) -> bool:
     text = normalize_text(
         " ".join(
@@ -2399,12 +2420,19 @@ def _looks_like_conversation_followup(question: str) -> bool:
     normalized = normalize_text(question)
     if re.match(r"^onde\s+(?:fica|esta|estao|se encontra|se localiza)\s+\S+", normalized):
         return False
+    # An explicit proper name makes the question self-contained. Treating
+    # "Como Vezemir..." as a follow-up used to discard the named entities.
+    if re.search(r"\b[A-ZÁÉÍÓÚÂÊÔÃÕÇ][a-záéíóúâêôãõç'’.-]{2,}\b", question[1:]):
+        return False
     words = normalized.split()
     if len(words) > 16:
         return False
     return (
         normalized.startswith(("e ", "mas ", "entao ", "onde ", "quando ", "como "))
-        or any(re.search(rf"\b{term}\b", normalized) for term in ("ele", "ela", "isso", "nisso", "dele", "dela"))
+        or any(
+            re.search(rf"\b{term}\b", normalized)
+            for term in ("ele", "ela", "isso", "nisso", "dele", "dela", "esse lugar", "este lugar", "essa pessoa")
+        )
         or normalized in {"por que?", "porque?", "e depois?", "o que mais?"}
     )
 
@@ -2700,6 +2728,31 @@ async def answer_question(
     if not action_kind and _looks_like_conversation_followup(question):
         previous_note = _conversation_note(database_path, conversation_paths or [], access_mode)
         if previous_note is not None:
+            if any(
+                term in normalize_text(question)
+                for term in ("nao sabemos", "ainda nao", "desconhecido", "nao foi revelado")
+            ):
+                content = sanitize_player_text(previous_note["content"]) if access_mode == "player" else previous_note["content"]
+                known = _first_useful_sentence(content)
+                answer = (
+                    f"Sobre {_plain_wikilinks(str(previous_note['title']))}, o que ainda não foi revelado permanece em aberto. "
+                    + (f"Por enquanto, é possível confirmar apenas isto: {known}" if known else "Ainda não há outro detalhe confirmado.")
+                )
+                return _with_chat_meta(
+                    {
+                        "answer": answer,
+                        "notes_used": [previous_note],
+                        "note_paths": [previous_note["path"]],
+                        "insufficient_context": True,
+                        "warning": None,
+                        "suggested_questions": _suggested_questions_for_notes(question, [previous_note], access_mode),
+                        "informacoes_insuficientes": ["Os detalhes ainda não revelados permanecem em aberto."],
+                        "fontes_usadas": [previous_note["path"]],
+                    },
+                    ollama_used=False,
+                    model=ollama_model,
+                    retrieval_mode="conversation_followup:unknown",
+                )
             contextual_question = _contextual_question(question, str(previous_note.get("title") or ""))
             followup_answer = _direct_entity_answer(previous_note, contextual_question, access_mode)
             return _with_chat_meta(
@@ -2863,6 +2916,15 @@ async def answer_question(
             retrieval_mode="blocked:hidden_actor",
         )
 
+    relation_answer = _answer_explicit_relation(database_path, question, access_mode)
+    if relation_answer is not None:
+        return _with_chat_meta(
+            relation_answer,
+            ollama_used=False,
+            model=ollama_model,
+            retrieval_mode="structured:explicit_relation",
+        )
+
     normalized_question = normalize_text(question)
     personal_memory_query = bool(priority_paths) and any(
         term in normalized_question
@@ -3013,19 +3075,24 @@ async def answer_question(
             ollama_attempted = False
             effective_model = ollama_model
         else:
-            payload, ollama_used, ollama_attempted, effective_model = await _grounded_json_response(
-                ollama_base_url=ollama_base_url,
-                ollama_model=ollama_model,
+            card_seed = {
+                **extractive_payload,
+                "answer": extractive_payload.get("resposta_ao_jogador") or "",
+                "notes_used": notes_used,
+            }
+            card = build_factual_card(retrieval_question, card_seed, hybrid_results)
+            composed = await compose_narrative(
                 question=question,
-                context=context,
-                allowed_paths=allowed_paths,
-                evidence_by_path=evidence_by_path,
+                card=card,
+                ollama_base_url=ollama_base_url,
+                model=ollama_model,
                 access_mode=access_mode,
-                response_mode=response_mode,
-                fallback_model=fallback_model,
+                intent=f"rag:{effective_rag_mode}",
             )
-            if not payload.get("fatos_confirmados") and not payload.get("teorias") and not ollama_used:
-                payload = extractive_payload
+            payload = card_as_payload(card, composed["answer"])
+            ollama_used = bool(composed["used"])
+            ollama_attempted = bool(composed["attempted"])
+            effective_model = str(composed["model"])
     payload = _guard_hidden_actor_answer(payload, question, allowed_paths)
     answer = payload["resposta_ao_jogador"]
     if _looks_like_bad_ai_answer(answer, access_mode):
