@@ -5,3 +5,4 @@ safetensors>=0.5
 sentencepiece>=0.2
 torch>=2.5
 transformers>=4.47
+bitsandbytes>=0.45; platform_system != "Windows"

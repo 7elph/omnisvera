@@ -1,0 +1,22 @@
+{
+  "experiment_name": "omnisvera-3b-full-v0.1.0",
+  "training_mode": "full",
+  "base_model": "meta-llama/Llama-3.2-3B-Instruct",
+  "base_model_revision": "main",
+  "license_acknowledged": false,
+  "seed": 7331,
+  "epochs": 2,
+  "batch_size": 1,
+  "gradient_accumulation": 32,
+  "learning_rate": 0.000005,
+  "warmup_ratio": 0.05,
+  "sequence_length": 1536,
+  "precision": "bf16",
+  "checkpoint_interval": 100,
+  "eval_interval": 100,
+  "early_stopping_patience": 3,
+  "experimental_only": false,
+  "allow_model_download": false,
+  "save_total_limit": 3,
+  "requires_confirmation": "I_UNDERSTAND_FULL_TRAINING_REQUIRES_PRODUCTION_HARDWARE"
+}
