@@ -169,6 +169,20 @@ async def _runtime_checks() -> None:
     assert "local tambem foi destruido" in mira_answer
     assert "atualmente, mira valen" not in mira_answer
 
+    vezemir_gm = await answer_question(
+        settings.database_path,
+        settings.ollama_base_url,
+        settings.fast_model,
+        "Quem é Vezemir?",
+        access_mode="gm",
+        response_mode="fast",
+    )
+    vezemir_answer = str(vezemir_gm.get("answer") or "")
+    assert "Vezemir" in vezemir_answer
+    assert "meio-elfo" in normalize_text(vezemir_answer)
+    assert "??" not in vezemir_answer
+    assert "hist?ria" not in vezemir_answer
+
     borders = await answer_question(
         settings.database_path,
         settings.ollama_base_url,
@@ -183,6 +197,8 @@ async def _runtime_checks() -> None:
     assert "tracado exato permanece em aberto" in border_answer
     assert "ruinas de valthor" in border_answer
     assert "fortaleza de gharok" in border_answer
+    assert border_answer.count("mapa politico de nimalia") == 1
+    assert borders.get("warning") is None
     assert "Factions/Coroa de Nimalia.md" not in borders.get("note_paths", [])
 
 

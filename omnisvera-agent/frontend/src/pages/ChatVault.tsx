@@ -298,7 +298,7 @@ export default function ChatVault({
             {!isPlayer && (
               <div className="chat-runtime">
                 <span className={runtimeClass(message.result)}>{runtimeLabel(message.result)}</span>
-                {message.result.model && <span>{message.result.model}</span>}
+                {message.result.model && (message.result.ollama_used || message.result.ollama_attempted) && <span>{message.result.model}</span>}
                 {message.result.retrieval_mode && <span>{message.result.retrieval_mode}</span>}
               </div>
             )}

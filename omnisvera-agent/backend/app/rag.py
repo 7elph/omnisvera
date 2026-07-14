@@ -935,31 +935,18 @@ def _rich_direct_entity_answer(note: dict, question: str, access_mode: AccessMod
         ]
         story_lines = [line for line in (_compact_sentence(table_use),) if line] if access_mode != "player" else []
 
-        if access_mode == "player":
-            answer = "\n\n".join(
-                part
-                for part in (
-                    " ".join(line for line in identity_lines if line),
-                    " ".join(line for line in relation_lines if line),
-                )
-                if part.strip()
-            )
-        else:
-            answer = _answer_as_guide(
-                title,
-                [
-                    (
-                        "O que se sabe",
-                        identity_lines,
-                    ),
-                    (
-                        "Liga??es conhecidas",
-                        relation_lines,
-                    ),
-                    ("Como entra na hist?ria", story_lines),
-                    ("Pistas abertas", [_compact_sentence(item) for item in (rumors, hooks) if item]),
-                ],
-            )
+        answer_parts = [
+            " ".join(line for line in identity_lines if line),
+            " ".join(line for line in relation_lines if line),
+        ]
+        if access_mode != "player":
+            campaign_lines = [line for line in story_lines if line]
+            clue_lines = [_compact_sentence(item) for item in (rumors, hooks) if item]
+            if campaign_lines:
+                answer_parts.append("**Presença na campanha**\n\n" + " ".join(campaign_lines))
+            if clue_lines:
+                answer_parts.append("**Pistas abertas**\n\n" + " ".join(clue_lines))
+        answer = "\n\n".join(part for part in answer_parts if part.strip())
     else:
         short_lines = [_compact_sentence(public_info or summary or _public_identity_line(title, note_type, frontmatter))]
         if note_type == "item":
@@ -2138,12 +2125,14 @@ def _answer_nimalia_borders(database_path: Path, access_mode: AccessMode) -> dic
     )
 
     paragraphs: list[str] = []
-    if boundaries_open:
-        paragraphs.append("As fronteiras completas de Nimalia ainda não foram fechadas no mapa.")
-    if has_avenor:
+    if boundaries_open and has_avenor:
         paragraphs.append(
-            "A única fronteira confirmada em conceito é com a Floresta de Avenor, mas o traçado exato permanece em aberto."
+            "O mapa político de Nimalia ainda não está completo. A única fronteira confirmada em conceito é com a Floresta de Avenor, mas o traçado exato permanece em aberto."
         )
+    elif boundaries_open:
+        paragraphs.append("O mapa político de Nimalia ainda não está completo; as fronteiras exatas permanecem em aberto.")
+    elif has_avenor:
+        paragraphs.append("A fronteira conhecida com a Floresta de Avenor ainda não possui traçado exato no mapa.")
 
     references: list[str] = []
     if has_valthor:
@@ -2166,7 +2155,7 @@ def _answer_nimalia_borders(database_path: Path, access_mode: AccessMode) -> dic
         "notes_used": notes,
         "note_paths": [note["path"] for note in notes],
         "insufficient_context": boundaries_open,
-        "warning": "O desenho completo das fronteiras ainda não foi definido." if boundaries_open else None,
+        "warning": None,
         "suggested_questions": [
             "O que sabemos sobre a Floresta de Avenor?",
             "Onde ficam as Ruínas de Valthor?",
