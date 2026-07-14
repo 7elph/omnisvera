@@ -19,5 +19,8 @@ Desktop.ini
 .local-proposals/
 .assistant-runtime/
 /omnisvera-agent/backend/data/cloudflare-tunnel/
+/omnisvera-model/artifacts/
+/omnisvera-model/checkpoints/
+/omnisvera-model/cache/
 __pycache__/
 *.pyc

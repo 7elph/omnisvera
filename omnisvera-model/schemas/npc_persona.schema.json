@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Omnisvera NPC Persona",
+  "type": "object",
+  "required": ["id", "name", "voice", "knowledge_scope", "forbidden_knowledge"],
+  "properties": {
+    "id": {"type": "string", "pattern": "^[a-z0-9_-]+$"},
+    "name": {"type": "string", "minLength": 1},
+    "voice": {"type": "string", "minLength": 1},
+    "knowledge_scope": {"type": "array", "items": {"type": "string"}},
+    "forbidden_knowledge": {"type": "array", "items": {"type": "string"}},
+    "attitudes": {"type": "object", "additionalProperties": {"type": "string"}},
+    "speech_examples": {"type": "array", "items": {"type": "string"}},
+    "can_propose_actions": {"type": "boolean", "default": true},
+    "can_confirm_canon": {"type": "boolean", "const": false}
+  },
+  "additionalProperties": false
+}
