@@ -6,8 +6,9 @@ import NoteView from "./pages/NoteView";
 import PlayerPanel from "./pages/PlayerPanel";
 import SearchNotes from "./pages/SearchNotes";
 import SessionPanel from "./pages/SessionPanel";
+import ModelCurationPanel from "./pages/ModelCurationPanel";
 
-type Page = "chat" | "search" | "note" | "session" | "player" | "sheet";
+type Page = "chat" | "search" | "note" | "session" | "player" | "sheet" | "curation";
 
 export default function App() {
   const initialMode = getAccessMode();
@@ -223,6 +224,11 @@ export default function App() {
         <button className={page === "sheet" ? "active" : ""} onClick={() => navigate("sheet")}>
           <span>♜</span><small>{mode === "gm" ? "Fichas" : "Ficha"}</small>
         </button>
+        {mode === "gm" && (
+          <button className={page === "curation" ? "active" : ""} onClick={() => navigate("curation")}>
+            <span>⚗</span><small>Curadoria</small>
+          </button>
+        )}
         <button className={page === "search" || page === "note" ? "active" : ""} onClick={() => navigate("search")}>
           <span>⌕</span><small>Arquivo</small>
         </button>
@@ -242,6 +248,7 @@ export default function App() {
       )}
       {authenticated && page === "chat" && <ChatVault onOpenNote={openNote} onUnknownNote={openUnknownNote} initialQuestion={chatSeed} />}
       {authenticated && page === "sheet" && <CharacterSheetBuilder key={`sheet-${authVersion}-${mode}`} mode={mode === "player" ? "player" : "gm"} />}
+      {authenticated && page === "curation" && mode === "gm" && <ModelCurationPanel key={`curation-${authVersion}`} />}
       {authenticated && page === "search" && <SearchNotes onOpenNote={openNote} />}
       {authenticated && page === "note" && (
         <>
