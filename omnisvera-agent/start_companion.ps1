@@ -1,7 +1,11 @@
 param(
   [string]$VaultPath = (Resolve-Path "$PSScriptRoot\..").Path,
-  [string]$FastModel = "omnisvera-fast:latest",
-  [string]$QualityModel = "qwen2:1.5b",
+  [string]$FastModel = "qwen2:1.5b",
+  [string]$QualityModel = "llama-3.2-omnisvera-3b",
+  [string]$CandidateModel = "llama-3.2-omnisvera-3b",
+  [string]$ProductionModel = "llama-3.2-omnisvera-3b",
+  [ValidateSet("baseline", "candidate", "production")]
+  [string]$ModelMode = "baseline",
   [string]$EmbedModel = "nomic-embed-text",
   [ValidateSet("fast", "grounded")]
   [string]$ResponseMode = "grounded",
@@ -123,9 +127,11 @@ $env:OMNISVERA_VAULT_PATH = $VaultPath
 $env:OLLAMA_BASE_URL = "http://localhost:11434"
 $env:OMNISVERA_FAST_MODEL = $FastModel
 $env:OMNISVERA_QUALITY_MODEL = $QualityModel
+$env:OMNISVERA_CANDIDATE_MODEL = $CandidateModel
+$env:OMNISVERA_PRODUCTION_MODEL = $ProductionModel
+$env:OMNISVERA_MODEL_MODE = $ModelMode
 $env:OMNISVERA_EMBED_MODEL = $EmbedModel
 $env:OMNISVERA_RESPONSE_MODE = $ResponseMode
-$env:OLLAMA_MODEL = if ($ResponseMode -eq "grounded") { $QualityModel } else { $FastModel }
 $env:OMNISVERA_ACCESS_TOKEN = $MasterToken
 $env:OMNISVERA_MASTER_TOKEN = $MasterToken
 $env:OMNISVERA_PLAYER_TOKEN = $PlayerToken

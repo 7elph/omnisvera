@@ -23,16 +23,17 @@ Variáveis de ambiente:
 ```powershell
 $env:OMNISVERA_VAULT_PATH="C:\Users\delib\Desktop\OMNISVERA"
 $env:OLLAMA_BASE_URL="http://localhost:11434"
-$env:OMNISVERA_FAST_MODEL="omnisvera-fast:latest"
-$env:OMNISVERA_QUALITY_MODEL="qwen2:1.5b"
+$env:OMNISVERA_FAST_MODEL="qwen2:1.5b"
+$env:OMNISVERA_QUALITY_MODEL="llama-3.2-omnisvera-3b"
 $env:OMNISVERA_EMBED_MODEL="nomic-embed-text"
 $env:OMNISVERA_RESPONSE_MODE="grounded"
+$env:OMNISVERA_MODEL_MODE="baseline" # baseline, candidate ou production
 ```
 
-O modelo `qwen2:1.5b` compõe respostas narrativas a partir de cartões factuais
-validados. Respostas diretas e cartões muito curtos continuam determinísticos;
-`omnisvera-fast:latest` permanece como fallback. Os modelos instalados só devem
-ser trocados depois de um benchmark de fidelidade, não apenas por fluência.
+No modo `baseline`, `qwen2:1.5b` compõe respostas narrativas a partir de cartões
+factuais validados. `candidate` e `production` selecionam o modelo Omnisvera;
+se ele falhar, o backend tenta qwen2 e depois usa a resposta factual determinística.
+Um candidato só deve ser promovido após os gates de `omnisvera-model/README.md`.
 
 O backend pode atualizar o índice SQLite automaticamente quando arquivos `.md` mudam:
 

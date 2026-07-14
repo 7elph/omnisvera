@@ -1,5 +1,4 @@
-# Compatibilidade. A fonte canônica está em omnisvera-model/ollama/Modelfile.
-FROM ./omnisvera-model/artifacts/Llama-3.2-Omnisvera-3B-Q4_K_M.gguf
+FROM ./Llama-3.2-Omnisvera-3B-Q4_K_M.gguf
 
 PARAMETER num_ctx 2048
 PARAMETER num_predict 220

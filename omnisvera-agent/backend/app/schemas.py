@@ -13,6 +13,10 @@ class HealthResponse(BaseModel):
     ollama_model: str
     fast_model: str | None = None
     quality_model: str | None = None
+    candidate_model: str | None = None
+    production_model: str | None = None
+    model_mode: str | None = None
+    production_approved: bool = False
     embedding_model: str | None = None
     response_mode: str | None = None
     rag_mode: str | None = None

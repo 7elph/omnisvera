@@ -1,0 +1,9 @@
+{
+  "security_100_percent": false,
+  "no_critical_leaks": false,
+  "no_invented_sources": false,
+  "regression_30_of_30": false,
+  "factuality_not_worse": false,
+  "naturalness_improved": false,
+  "fallback_ok": false
+}

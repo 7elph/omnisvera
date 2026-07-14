@@ -1,0 +1,18 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "title":"Omnisvera Model Registry 1.0",
+  "type":"object",
+  "required":["schema_version","production_model","models"],
+  "properties":{
+    "schema_version":{"const":"1.0"},
+    "production_model":{"type":["string","null"]},
+    "models":{"type":"object","additionalProperties":{"type":"object","required":["status"],"properties":{
+      "status":{"enum":["experimental","candidate","approved","rejected","archived"]},
+      "base_model":{"type":["string","null"]},"adapter":{"type":["string","null"]},
+      "dataset_version":{"type":["string","null"]},"frozen_eval_version":{"type":["string","null"]},
+      "quantization":{"type":["string","null"]},"size_bytes":{"type":["integer","null"]},
+      "metrics":{"type":["object","null"]},"artifacts":{"type":["array","null"]},
+      "hashes":{"type":["object","null"]},"rollback_target":{"type":["string","null"]}
+    }}}
+  }
+}

@@ -18,6 +18,10 @@ class Settings:
     ollama_model: str
     fast_model: str
     quality_model: str
+    candidate_model: str
+    production_model: str
+    model_mode: str
+    production_approved: bool
     embedding_model: str
     response_mode: str
     database_path: Path
@@ -48,12 +52,25 @@ def _response_mode(value: str) -> str:
     return "fast"
 
 
+def _model_mode(value: str) -> str:
+    normalized = value.strip().lower()
+    return normalized if normalized in {"baseline", "candidate", "production"} else "baseline"
+
+
 def _safe_int(name: str, default: int) -> int:
     try:
         value = int(os.getenv(name, str(default)))
     except ValueError:
         return default
     return max(1, value)
+
+
+def _production_is_approved(vault_path: Path, model: str) -> bool:
+    path=vault_path / "omnisvera-model" / "artifacts" / "model_registry.json"
+    try: registry=json.loads(path.read_text(encoding="utf-8"))
+    except (OSError,json.JSONDecodeError): return False
+    record=(registry.get("models") or {}).get(model) or {}
+    return registry.get("production_model") == model and record.get("status") == "approved"
 
 
 def get_settings() -> Settings:
@@ -65,10 +82,18 @@ def get_settings() -> Settings:
             str(backend_root / "data" / "omnisvera_companion.sqlite3"),
         )
     ).resolve()
-    fast_model = os.getenv("OMNISVERA_FAST_MODEL", "omnisvera-fast:latest")
-    quality_model = os.getenv("OMNISVERA_QUALITY_MODEL", "qwen2:1.5b")
+    fast_model = os.getenv("OMNISVERA_FAST_MODEL", "qwen2:1.5b")
+    quality_model = os.getenv("OMNISVERA_QUALITY_MODEL", "llama-3.2-omnisvera-3b")
+    candidate_model = os.getenv("OMNISVERA_CANDIDATE_MODEL", quality_model)
+    production_model = os.getenv("OMNISVERA_PRODUCTION_MODEL", quality_model)
+    model_mode = _model_mode(os.getenv("OMNISVERA_MODEL_MODE", "baseline"))
+    production_approved = _production_is_approved(vault_path, production_model)
     response_mode = _response_mode(os.getenv("OMNISVERA_RESPONSE_MODE", "grounded"))
-    selected_model = quality_model if response_mode == "grounded" else fast_model
+    selected_model = {
+        "baseline": fast_model,
+        "candidate": candidate_model,
+        "production": production_model if production_approved else fast_model,
+    }[model_mode]
     try:
         raw_profiles = json.loads(os.getenv("OMNISVERA_PLAYER_PROFILES_JSON", "{}"))
         player_profiles = raw_profiles if isinstance(raw_profiles, dict) else {}
@@ -77,9 +102,13 @@ def get_settings() -> Settings:
     return Settings(
         vault_path=vault_path,
         ollama_base_url=os.getenv("OLLAMA_BASE_URL", "http://localhost:11434").rstrip("/"),
-        ollama_model=os.getenv("OLLAMA_MODEL", selected_model),
+        ollama_model=selected_model,
         fast_model=fast_model,
         quality_model=quality_model,
+        candidate_model=candidate_model,
+        production_model=production_model,
+        model_mode=model_mode,
+        production_approved=production_approved,
         embedding_model=os.getenv(
             "OMNISVERA_EMBED_MODEL",
             os.getenv("OMNISVERA_EMBEDDING_MODEL", "nomic-embed-text"),

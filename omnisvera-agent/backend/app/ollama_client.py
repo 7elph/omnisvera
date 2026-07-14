@@ -101,6 +101,23 @@ async def chat_with_ollama(
     return str(message.get("content") or "").strip()
 
 
+async def chat_with_fallback(
+    base_url: str,
+    preferred_model: str,
+    fallback_model: str,
+    messages: list[dict[str, str]],
+    options: dict[str, Any] | None = None,
+    response_format: str | dict[str, Any] | None = None,
+) -> tuple[str, str, bool]:
+    """Tenta o modelo selecionado e volta ao baseline sem expor Ollama na rede."""
+    selected = await resolve_ollama_model(base_url, preferred_model, fallback_model)
+    answer = await chat_with_ollama(base_url, selected, messages, options, response_format)
+    if answer or selected == fallback_model:
+        return answer, selected, False
+    fallback_answer = await chat_with_ollama(base_url, fallback_model, messages, options, response_format)
+    return fallback_answer, fallback_model, True
+
+
 async def embed_with_ollama(
     base_url: str,
     model: str,

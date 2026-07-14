@@ -18,7 +18,7 @@ from .grounded_response import (
 )
 from .hybrid_retrieval import hybrid_search
 from .narrative_composer import build_factual_card, card_as_payload, compose_narrative
-from .ollama_client import chat_with_ollama, resolve_ollama_model
+from .ollama_client import chat_with_fallback, chat_with_ollama, resolve_ollama_model
 from .search import search_notes
 from .vault_index import all_notes_for_search, get_note, get_notes_by_ids, resolve_note
 
@@ -1837,6 +1837,7 @@ async def _polish_response_with_ollama(
     result: dict,
     access_mode: AccessMode,
     retrieval_mode: str,
+    fallback_model: str | None = None,
 ) -> dict:
     base_answer = _clean_answer(str(result.get("answer") or ""))
     result = dict(result)
@@ -1865,6 +1866,7 @@ async def _polish_response_with_ollama(
             card=card,
             ollama_base_url=ollama_base_url,
             model=ollama_model,
+            fallback_model=fallback_model or ollama_model,
             access_mode=access_mode,
             intent=retrieval_mode,
         )
@@ -2305,9 +2307,10 @@ Inferência deve aparecer somente como teoria. Quando faltar evidência, declare
 Responda somente o objeto JSON, sem Markdown e sem explicação externa."""
 
     try:
-        raw = await chat_with_ollama(
+        raw, effective_model, _ = await chat_with_fallback(
             ollama_base_url,
             effective_model,
+            fallback_model,
             [
                 {"role": "system", "content": SYSTEM_PROMPT},
                 {"role": "user", "content": prompt},
@@ -2461,6 +2464,7 @@ async def answer_question(
                 rumor_answer,
                 access_mode,
                 "structured:rumors",
+                fallback_model,
             )
 
     if not action_kind and _looks_like_quest_overview(question):
@@ -2480,6 +2484,7 @@ async def answer_question(
                 quest_answer,
                 access_mode,
                 "structured:quests",
+                fallback_model,
             )
 
     if not action_kind and _looks_like_player_current_activity(question):
@@ -2503,6 +2508,7 @@ async def answer_question(
                 character_answer,
                 access_mode,
                 "structured:player_characters",
+                fallback_model,
             )
 
     if not action_kind and _looks_like_campaign_recap(question):
@@ -2516,6 +2522,7 @@ async def answer_question(
                 recap_answer,
                 access_mode,
                 "structured:campaign_recap",
+                fallback_model,
             )
 
     extracted = _direct_entity_target(question)
@@ -2603,6 +2610,7 @@ async def answer_question(
             direct_answer,
             access_mode,
             "direct_entity",
+            fallback_model,
         )
 
     semantic_index = semantic_index_path or Path(".local-index/vault.jsonl")
@@ -2741,6 +2749,7 @@ async def answer_question(
                 card=card,
                 ollama_base_url=ollama_base_url,
                 model=ollama_model,
+                fallback_model=fallback_model,
                 access_mode=access_mode,
                 intent=f"rag:{effective_rag_mode}",
             )
