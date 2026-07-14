@@ -97,6 +97,7 @@ class ColabPackageTests(unittest.TestCase):
                 config = json.loads(archive.read("config/experimental-colab.json"))
                 requirements = archive.read("requirements-colab.txt").decode("utf-8")
                 runner = archive.read("colab/runner.py").decode("utf-8")
+                training = archive.read("omnisvera_model/training.py").decode("utf-8")
                 archive.extractall(root / "unpacked")
             self.assertEqual(5, config["epochs"])
             self.assertEqual(4, config["gradient_accumulation_steps"])
@@ -105,6 +106,9 @@ class ColabPackageTests(unittest.TestCase):
             self.assertFalse(manifest["production_eligible"])
             self.assertNotIn("torchao==", requirements)
             self.assertIn('"uninstall", "-y", "torchao"', runner)
+            self.assertIn("enable_input_require_grads", training)
+            self.assertIn('gradient_checkpointing_kwargs={"use_reentrant": False}', training)
+            self.assertIn("backward_preflight(model", training)
             dry_run = subprocess.run(
                 [sys.executable, str(root / "unpacked/colab/runner.py"), "--package-root", str(root / "unpacked"), "--dry-run"],
                 capture_output=True,

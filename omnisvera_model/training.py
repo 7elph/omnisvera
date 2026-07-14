@@ -14,6 +14,97 @@ SMOKE_ACK = "I_UNDERSTAND_THIS_IS_EXPERIMENTAL_NOT_FOR_PRODUCTION"
 FULL_ACK = "I_UNDERSTAND_FULL_TRAINING_REQUIRES_PRODUCTION_HARDWARE"
 
 
+def trainable_parameter_report(model: Any) -> dict[str, Any]:
+    total = 0
+    trainable = 0
+    trainable_lora: list[str] = []
+    frozen_base = True
+    for name, parameter in model.named_parameters():
+        count = int(parameter.numel())
+        total += count
+        if bool(parameter.requires_grad):
+            trainable += count
+            if "lora_" in name.casefold():
+                trainable_lora.append(name)
+            else:
+                frozen_base = False
+    if trainable == 0:
+        raise RuntimeError("LoRA inválido: nenhum parâmetro treinável")
+    if not trainable_lora:
+        raise RuntimeError("LoRA inválido: nenhum parâmetro LoRA possui requires_grad=True")
+    return {
+        "total_parameters": total,
+        "trainable_parameters": trainable,
+        "trainable_percent": round((trainable / total * 100) if total else 0.0, 6),
+        "trainable_lora_tensors": len(trainable_lora),
+        "base_parameters_frozen": frozen_base,
+    }
+
+
+def configure_gradient_checkpointing(model: Any, enabled: bool) -> dict[str, Any]:
+    report = {
+        "gradient_checkpointing": bool(enabled),
+        "input_require_grads_enabled": False,
+        "use_reentrant": False if enabled else None,
+        "use_cache": getattr(getattr(model, "config", None), "use_cache", None),
+    }
+    if not enabled:
+        return report
+    if getattr(model, "config", None) is not None:
+        model.config.use_cache = False
+        report["use_cache"] = False
+    if hasattr(model, "enable_input_require_grads"):
+        model.enable_input_require_grads()
+        report["input_require_grads_enabled"] = True
+    if not hasattr(model, "gradient_checkpointing_enable"):
+        raise RuntimeError("modelo não suporta gradient_checkpointing_enable")
+    model.gradient_checkpointing_enable(
+        gradient_checkpointing_kwargs={"use_reentrant": False}
+    )
+    return report
+
+
+def backward_preflight(model: Any, batch: dict[str, Any]) -> dict[str, Any]:
+    trainable_parameters = [parameter for _, parameter in model.named_parameters() if bool(parameter.requires_grad)]
+    if not trainable_parameters:
+        raise RuntimeError("backward preflight: nenhum parâmetro treinável")
+    device = getattr(trainable_parameters[0], "device", None)
+    prepared_batch = {
+        key: value.to(device) if device is not None and hasattr(value, "to") else value
+        for key, value in batch.items()
+    }
+    model.train()
+    model.zero_grad(set_to_none=True)
+    outputs = model(**prepared_batch)
+    loss = getattr(outputs, "loss", None)
+    if loss is None and isinstance(outputs, dict):
+        loss = outputs.get("loss")
+    if loss is None:
+        raise RuntimeError("backward preflight: forward não produziu loss")
+    if not bool(getattr(loss, "requires_grad", False)):
+        raise RuntimeError("backward preflight: loss.requires_grad=False")
+    if getattr(loss, "grad_fn", None) is None:
+        raise RuntimeError("backward preflight: loss.grad_fn é nulo")
+    loss.backward()
+    lora_with_gradient = [
+        name
+        for name, parameter in model.named_parameters()
+        if "lora_" in name.casefold() and bool(parameter.requires_grad) and getattr(parameter, "grad", None) is not None
+    ]
+    if not lora_with_gradient:
+        raise RuntimeError("backward preflight: nenhum parâmetro LoRA recebeu gradiente")
+    loss_value = float(loss.detach().float().item()) if hasattr(loss, "detach") else None
+    model.zero_grad(set_to_none=True)
+    return {
+        "passed": True,
+        "loss_requires_grad": True,
+        "loss_has_grad_fn": True,
+        "lora_tensors_with_gradient": len(lora_with_gradient),
+        "loss": loss_value,
+        "optimizer_step_performed": False,
+    }
+
+
 def train(config_path: Path, dataset_dir: Path | None = None, output_dir: Path | None = None,
           resume: str | None = None, acknowledgement: str | None = None,
           preflight_only: bool = False) -> dict[str, Any]:
@@ -78,15 +169,24 @@ def train(config_path: Path, dataset_dir: Path | None = None, output_dir: Path |
         except ImportError as exc:
             raise RuntimeError("QLoRA exige bitsandbytes") from exc
     model = AutoModelForCausalLM.from_pretrained(config["base_model"], **model_kwargs)
+    gradient_checkpointing = bool(config.get("gradient_checkpointing", True))
     if mode in {"lora", "qlora"}:
         from peft import LoraConfig, get_peft_model, prepare_model_for_kbit_training
         if mode == "qlora":
-            model = prepare_model_for_kbit_training(model)
+            model = prepare_model_for_kbit_training(
+                model,
+                use_gradient_checkpointing=gradient_checkpointing,
+                gradient_checkpointing_kwargs={"use_reentrant": False},
+            )
         model = get_peft_model(model, LoraConfig(
             r=int(config["lora_rank"]), lora_alpha=int(config["lora_alpha"]),
             lora_dropout=float(config["lora_dropout"]), bias="none", task_type="CAUSAL_LM",
             target_modules=config.get("target_modules") or ["q_proj","k_proj","v_proj","o_proj","gate_proj","up_proj","down_proj"],
         ))
+    parameter_report = trainable_parameter_report(model) if mode in {"lora", "qlora"} else {}
+    checkpointing_report = configure_gradient_checkpointing(model, gradient_checkpointing)
+    model_setup_report = {**parameter_report, **checkpointing_report}
+    write_json(output / "model_setup_report.json", model_setup_report)
     save_strategy = str(config.get("save_strategy") or "steps")
     evaluation_strategy = str(config.get("evaluation_strategy") or "steps")
     load_best = bool(config.get("load_best_model_at_end", True))
@@ -100,7 +200,8 @@ def train(config_path: Path, dataset_dir: Path | None = None, output_dir: Path |
         logging_strategy=str(config.get("logging_strategy") or "steps"),
         save_strategy=save_strategy, eval_strategy=evaluation_strategy, load_best_model_at_end=load_best,
         report_to="none", bf16=precision == "bf16", fp16=precision == "fp16",
-        gradient_checkpointing=bool(config.get("gradient_checkpointing", True)),
+        gradient_checkpointing=gradient_checkpointing,
+        gradient_checkpointing_kwargs={"use_reentrant": False} if gradient_checkpointing else None,
         save_total_limit=int(config.get("save_total_limit", 3)),
         metric_for_best_model="eval_loss", greater_is_better=False,
     )
@@ -116,10 +217,16 @@ def train(config_path: Path, dataset_dir: Path | None = None, output_dir: Path |
     callbacks = []
     if load_best and evaluation_strategy != "no" and int(config.get("early_stopping_patience", 0)) > 0:
         callbacks.append(EarlyStoppingCallback(early_stopping_patience=int(config["early_stopping_patience"])))
+    train_dataset = prepare(dataset / "train.jsonl")
+    eval_dataset = prepare(dataset / "eval.jsonl")
+    data_collator = DataCollatorForLanguageModeling(tokenizer=tokenizer, mlm=False)
+    backward_report = backward_preflight(model, data_collator([train_dataset[0]]))
+    write_json(output / "backward_preflight.json", backward_report)
+    print(json.dumps({"model_setup": model_setup_report, "backward_preflight": backward_report}, ensure_ascii=False, indent=2))
     trainer = Trainer(
-        model=model, args=args, train_dataset=prepare(dataset / "train.jsonl"),
-        eval_dataset=prepare(dataset / "eval.jsonl"),
-        data_collator=DataCollatorForLanguageModeling(tokenizer=tokenizer, mlm=False),
+        model=model, args=args, train_dataset=train_dataset,
+        eval_dataset=eval_dataset,
+        data_collator=data_collator,
         callbacks=callbacks,
     )
     started = time.monotonic()
@@ -143,6 +250,8 @@ def train(config_path: Path, dataset_dir: Path | None = None, output_dir: Path |
         "elapsed_seconds": round(time.monotonic() - started, 2),
         "global_step": int(trainer.state.global_step),
         "expected_optimizer_updates": int(config.get("expected_optimizer_updates") or 0),
+        "model_setup": model_setup_report,
+        "backward_preflight": backward_report,
         "loss_by_epoch": loss_by_epoch,
         "log_history": history,
     })
