@@ -102,8 +102,8 @@ export default function ChatVault({
     setLoading(true);
     setQuestion("");
     try {
-      const contextPaths = messages.at(-1)?.result.note_paths || [];
-      const data = await chatVault(clean, 6, contextPaths, sessionIdRef.current);
+      const contextNoteIds = (messages.at(-1)?.result.notes_used || []).map((note) => note.id);
+      const data = await chatVault(clean, 6, contextNoteIds, sessionIdRef.current);
       setMessages((current) => [
         ...current.slice(-8),
         {

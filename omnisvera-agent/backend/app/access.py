@@ -251,6 +251,50 @@ def sanitize_player_summary(note: dict[str, Any]) -> dict[str, Any]:
     return note
 
 
+def sanitize_player_chat_transport(result: dict[str, Any]) -> dict[str, Any]:
+    """Remove internal filesystem paths and admin traces from player chat."""
+    safe = dict(result)
+    path_to_title: dict[str, str] = {}
+    safe_notes: list[dict[str, Any]] = []
+    for item in result.get("notes_used") or []:
+        note = sanitize_player_summary(dict(item))
+        path = str(note.get("path") or "")
+        title = str(note.get("title") or "Fonte liberada")
+        if path:
+            path_to_title[path] = title
+        note["path"] = ""
+        safe_notes.append(note)
+    safe["notes_used"] = safe_notes
+    safe["note_paths"] = []
+
+    safe_facts: list[dict[str, Any]] = []
+    for item in result.get("fatos_confirmados") or []:
+        fact = dict(item)
+        source = str(fact.get("fonte") or "")
+        if source:
+            fact["fonte"] = path_to_title.get(source, "Fonte liberada")
+        safe_facts.append(fact)
+    safe["fatos_confirmados"] = safe_facts
+
+    safe_theories: list[dict[str, Any]] = []
+    for item in result.get("teorias") or []:
+        theory = dict(item)
+        bases = theory.get("base") or theory.get("fontes") or []
+        if bases:
+            public_bases = [path_to_title.get(str(value), "Fonte liberada") for value in bases]
+            if "base" in theory:
+                theory["base"] = public_bases
+            if "fontes" in theory:
+                theory["fontes"] = public_bases
+        safe_theories.append(theory)
+    safe["teorias"] = safe_theories
+    safe["fontes_usadas"] = list(dict.fromkeys(path_to_title.values()))
+    safe["raw_model_response"] = None
+    safe["validator_rejections"] = []
+    safe["behavioral_trace"] = None
+    return safe
+
+
 def sanitize_player_note(note: dict[str, Any]) -> dict[str, Any]:
     note = sanitize_player_summary(note)
     if "content" in note:

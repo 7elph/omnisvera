@@ -13,7 +13,13 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
-from .access import AccessContext, is_player_safe_row, player_profile_scope, sanitize_player_summary
+from .access import (
+    AccessContext,
+    is_player_safe_row,
+    player_profile_scope,
+    sanitize_player_chat_transport,
+    sanitize_player_summary,
+)
 from .character_creation import (
     get_or_create_sheet,
     init_character_creation,
@@ -485,9 +491,19 @@ def search(request: SearchRequest, _: AccessContext = Depends(require_master)) -
     return search_notes(settings.database_path, request.query, request.limit, access_mode="gm")
 
 
+def _chat_context_paths(request: ChatRequest, access_mode: str) -> list[str]:
+    paths = list(request.context_paths)
+    for note_id in request.context_note_ids[-4:]:
+        context_note = get_note(settings.database_path, note_id, access_mode=access_mode)
+        if context_note and context_note["path"] not in paths:
+            paths.append(context_note["path"])
+    return paths
+
+
 @app.post("/chat", response_model=ChatResponse)
 async def chat(request: ChatRequest, _: AccessContext = Depends(require_master)) -> dict:
     maybe_refresh_index()
+    context_paths = _chat_context_paths(request, "gm")
     return await answer_question(
         settings.database_path,
         settings.ollama_base_url,
@@ -502,7 +518,7 @@ async def chat(request: ChatRequest, _: AccessContext = Depends(require_master))
         context_chars=settings.rag_context_chars,
         response_mode=settings.response_mode,
         fallback_model=settings.fast_model,
-        conversation_paths=request.context_paths,
+        conversation_paths=context_paths,
     )
 
 
@@ -540,6 +556,7 @@ def gm_resolve(target: str, _: AccessContext = Depends(require_master)) -> dict:
 async def gm_chat(request: ChatRequest, _: AccessContext = Depends(require_master)) -> dict:
     maybe_refresh_index()
     started = time.perf_counter()
+    context_paths = _chat_context_paths(request, "gm")
     result = await answer_question(
         settings.database_path,
         settings.ollama_base_url,
@@ -554,7 +571,7 @@ async def gm_chat(request: ChatRequest, _: AccessContext = Depends(require_maste
         context_chars=settings.rag_context_chars,
         response_mode=settings.response_mode,
         fallback_model=settings.fast_model,
-        conversation_paths=request.context_paths,
+        conversation_paths=context_paths,
     )
     trace = result.pop("_training_trace", {}) or {}
     interaction_id = str(uuid.uuid4())
@@ -578,7 +595,7 @@ async def gm_chat(request: ChatRequest, _: AccessContext = Depends(require_maste
             },
         }
     )
-    if settings.training_capture_mode == "master_session":
+    if settings.training_capture_mode == "master_session" and request.capture_for_training:
         record_unreviewed_interaction(
             {
                 "interaction_id": interaction_id,
@@ -848,8 +865,11 @@ async def player_chat(request: ChatRequest, access: AccessContext = Depends(requ
         question = _personalize_player_question(request.question, access)
         personal_answer = _personal_player_answer(question, access)
         if personal_answer is not None:
-            return personal_answer
-        context_paths = list(request.context_paths)
+            return sanitize_player_chat_transport(personal_answer)
+        # Player clients continue conversations with opaque note IDs. Incoming
+        # IDs are resolved through the player access filter, so a guessed GM ID
+        # can never become context. Legacy paths remain accepted temporarily.
+        context_paths = _chat_context_paths(request, "player")
         priority_paths: list[str] = []
         if access.profile_id and access.character_title:
             personal_knowledge_path = (
@@ -882,7 +902,7 @@ async def player_chat(request: ChatRequest, access: AccessContext = Depends(requ
                 if item["item_path"] not in context_paths:
                     context_paths.append(item["item_path"])
         context_paths = context_paths[:10]
-        return await answer_question(
+        result = await answer_question(
             settings.database_path, settings.ollama_base_url, settings.ollama_model,
             question, request.limit, access_mode="player", embedding_model=settings.embedding_model,
             semantic_index_path=settings.semantic_index_path, rag_mode=settings.rag_mode,
@@ -891,6 +911,7 @@ async def player_chat(request: ChatRequest, access: AccessContext = Depends(requ
             conversation_paths=context_paths,
             priority_paths=priority_paths,
         )
+        return sanitize_player_chat_transport(result)
 
 
 def _is_player_character(note: dict) -> bool:

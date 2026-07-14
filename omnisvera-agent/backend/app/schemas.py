@@ -75,7 +75,9 @@ class ChatRequest(BaseModel):
     question: str
     limit: int = 4
     context_paths: list[str] = Field(default_factory=list)
+    context_note_ids: list[int] = Field(default_factory=list)
     session_id: str | None = Field(default=None, max_length=160)
+    capture_for_training: bool = True
 
 
 class ChatResponse(BaseModel):

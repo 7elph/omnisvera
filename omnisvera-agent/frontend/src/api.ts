@@ -539,11 +539,11 @@ export async function searchNotes(query: string, limit = 10): Promise<SearchResu
   return response.json();
 }
 
-export async function chatVault(question: string, limit = 6, contextPaths: string[] = [], sessionId?: string): Promise<ChatResult> {
+export async function chatVault(question: string, limit = 6, contextNoteIds: number[] = [], sessionId?: string): Promise<ChatResult> {
   const response = await fetch(scoped("/chat"), {
     method: "POST",
     headers: authHeaders({ "Content-Type": "application/json" }),
-    body: JSON.stringify({ question, limit, context_paths: contextPaths.slice(-4), session_id: sessionId || null }),
+    body: JSON.stringify({ question, limit, context_note_ids: contextNoteIds.slice(-4), session_id: sessionId || null }),
   });
   if (!response.ok) throw new Error("Falha no chat");
   return response.json();
