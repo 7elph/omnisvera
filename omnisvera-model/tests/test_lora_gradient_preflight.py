@@ -11,6 +11,7 @@ sys.path.insert(0, str(ROOT))
 from omnisvera_model.training import (  # noqa: E402
     backward_preflight,
     configure_gradient_checkpointing,
+    place_model_for_backward_preflight,
     trainable_parameter_report,
 )
 
@@ -63,9 +64,19 @@ class FakeModel:
         self.input_grads_enabled = False
         self.checkpointing_kwargs = None
         self.training = False
+        self.moved_to = None
 
     def named_parameters(self):
         return [("base_model.weight", self.base), ("base_model.q_proj.lora_A.default.weight", self.lora)]
+
+    def parameters(self):
+        return [self.base, self.lora]
+
+    def to(self, device):
+        self.moved_to = device
+        self.base.device = device
+        self.lora.device = device
+        return self
 
     def enable_input_require_grads(self):
         self.input_grads_enabled = True
@@ -91,6 +102,23 @@ class BrokenLossModel(FakeModel):
             grad_fn = None
 
         return FakeOutputs(BrokenLoss(self.lora))
+
+
+class FakeCuda:
+    def __init__(self, available: bool):
+        self.available = available
+
+    def is_available(self) -> bool:
+        return self.available
+
+
+class FakeTorch:
+    def __init__(self, cuda_available: bool):
+        self.cuda = FakeCuda(cuda_available)
+
+    @staticmethod
+    def device(name: str) -> str:
+        return name
 
 
 class LoraGradientPreflightTests(unittest.TestCase):
@@ -138,6 +166,26 @@ class LoraGradientPreflightTests(unittest.TestCase):
         model = BrokenLossModel()
         with self.assertRaisesRegex(RuntimeError, "loss.requires_grad=False"):
             backward_preflight(model, {"input_ids": object()})
+
+    def test_fp16_lora_moves_to_cuda_before_backward_preflight(self):
+        model = FakeModel()
+        report = place_model_for_backward_preflight(model, FakeTorch(True), "lora")
+        self.assertEqual("cuda", model.moved_to)
+        self.assertTrue(report["moved_to_cuda"])
+        self.assertEqual("cuda", report["preflight_device"])
+
+    def test_qlora_preserves_quantization_device_placement(self):
+        model = FakeModel()
+        report = place_model_for_backward_preflight(model, FakeTorch(True), "qlora")
+        self.assertIsNone(model.moved_to)
+        self.assertFalse(report["moved_to_cuda"])
+        self.assertTrue(report["placement_managed_by_quantization"])
+
+    def test_cpu_fallback_does_not_force_cuda(self):
+        model = FakeModel()
+        report = place_model_for_backward_preflight(model, FakeTorch(False), "lora")
+        self.assertIsNone(model.moved_to)
+        self.assertFalse(report["moved_to_cuda"])
 
 
 if __name__ == "__main__":

@@ -105,6 +105,30 @@ def backward_preflight(model: Any, batch: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def place_model_for_backward_preflight(model: Any, torch_module: Any, mode: str) -> dict[str, Any]:
+    """Place non-quantized models on CUDA before the real backward preflight.
+
+    Trainer normally performs this move during construction.  Our preflight runs
+    before Trainer exists, so leaving a 3B FP16 model on CPU makes the safety
+    check take many minutes while the Colab GPU remains idle.  Quantized models
+    keep the placement selected by their quantization loader.
+    """
+    parameters = list(model.parameters())
+    current_device = str(getattr(parameters[0], "device", "unknown")) if parameters else "unknown"
+    report = {
+        "preflight_device": current_device,
+        "moved_to_cuda": False,
+        "placement_managed_by_quantization": mode == "qlora",
+    }
+    if mode == "qlora" or not bool(torch_module.cuda.is_available()):
+        return report
+    target = torch_module.device("cuda")
+    model.to(target)
+    report["preflight_device"] = str(target)
+    report["moved_to_cuda"] = True
+    return report
+
+
 def train(config_path: Path, dataset_dir: Path | None = None, output_dir: Path | None = None,
           resume: str | None = None, acknowledgement: str | None = None,
           preflight_only: bool = False) -> dict[str, Any]:
@@ -183,9 +207,10 @@ def train(config_path: Path, dataset_dir: Path | None = None, output_dir: Path |
             lora_dropout=float(config["lora_dropout"]), bias="none", task_type="CAUSAL_LM",
             target_modules=config.get("target_modules") or ["q_proj","k_proj","v_proj","o_proj","gate_proj","up_proj","down_proj"],
         ))
+    placement_report = place_model_for_backward_preflight(model, torch, mode)
     parameter_report = trainable_parameter_report(model) if mode in {"lora", "qlora"} else {}
     checkpointing_report = configure_gradient_checkpointing(model, gradient_checkpointing)
-    model_setup_report = {**parameter_report, **checkpointing_report}
+    model_setup_report = {**parameter_report, **checkpointing_report, **placement_report}
     write_json(output / "model_setup_report.json", model_setup_report)
     save_strategy = str(config.get("save_strategy") or "steps")
     evaluation_strategy = str(config.get("evaluation_strategy") or "steps")
