@@ -105,6 +105,8 @@ export type ChatResult = {
   response_time_ms?: number | null;
   raw_model_response?: string | null;
   validator_rejections?: Array<Record<string, unknown>>;
+  behavior_memory_used?: boolean;
+  behavioral_trace?: Record<string, unknown> | null;
 };
 
 export type TrainingFeedbackAction = "good" | "correct" | "reject" | "hallucination" | "leak" | "incomplete" | "artificial" | "incorrect_source";
@@ -183,6 +185,35 @@ export type TrainingStats = {
   };
   training_blocked: boolean;
   warning: string;
+  behavior_memory: BehaviorMemoryStats;
+};
+
+export type BehaviorMemoryStats = {
+  enabled: boolean;
+  mode: string;
+  ab_mode: string;
+  approved_total: number;
+  eligible: number;
+  indexed: number;
+  excluded: Array<{ example_id: string; reason: string }>;
+  categories: Record<string, number>;
+  personas: Record<string, number>;
+  access_profiles: Record<string, number>;
+  last_updated_at?: string | null;
+  recent_responses_using_memory: number;
+  average_examples_per_response: number;
+  milestones: Array<{ target: number; stage: string; reached: boolean }>;
+  next_milestone: { target: number; stage: string; remaining: number };
+};
+
+export type TrainingBatchValidation = {
+  requested: number;
+  eligible: Array<{ id: string; instruction: string; category?: string; access_profile?: string; quality?: number }>;
+  blocked: Array<{ id: string; instruction: string; category?: string; access_profile?: string; quality?: number; reasons: string[] }>;
+  minimum_quality: number;
+  confirmation_required: string;
+  approved?: Array<{ id: string; category?: string; access_profile?: string }>;
+  approved_count?: number;
 };
 
 export type DashboardSection = {
@@ -508,11 +539,11 @@ export async function searchNotes(query: string, limit = 10): Promise<SearchResu
   return response.json();
 }
 
-export async function chatVault(question: string, limit = 6, contextPaths: string[] = []): Promise<ChatResult> {
+export async function chatVault(question: string, limit = 6, contextPaths: string[] = [], sessionId?: string): Promise<ChatResult> {
   const response = await fetch(scoped("/chat"), {
     method: "POST",
     headers: authHeaders({ "Content-Type": "application/json" }),
-    body: JSON.stringify({ question, limit, context_paths: contextPaths.slice(-4) }),
+    body: JSON.stringify({ question, limit, context_paths: contextPaths.slice(-4), session_id: sessionId || null }),
   });
   if (!response.ok) throw new Error("Falha no chat");
   return response.json();
@@ -549,6 +580,8 @@ export async function captureTrainingInteraction(payload: {
   response_time_ms?: number;
   validator_rejections?: Array<Record<string, unknown>>;
   warning?: string | null;
+  behavior_memory_used?: boolean;
+  behavioral_trace?: Record<string, unknown> | null;
   feedback_action: TrainingFeedbackAction;
   reason?: string;
   category?: string;
@@ -596,6 +629,26 @@ export async function exportTrainingReport(): Promise<Record<string, unknown>> {
 
 export async function getTrainingStats(): Promise<TrainingStats> {
   return trainingRequest("/stats");
+}
+
+export async function validateTrainingBatch(exampleIds: string[], minimumQuality = 4): Promise<TrainingBatchValidation> {
+  return trainingRequest("/examples/batch/validate", {
+    method: "POST",
+    body: JSON.stringify({ example_ids: exampleIds, reviewer: "Sage", minimum_quality: minimumQuality }),
+  });
+}
+
+export async function approveTrainingBatch(payload: {
+  example_ids: string[];
+  reviewed: boolean;
+  confirmation: string;
+  reason?: string;
+  minimum_quality?: number;
+}): Promise<TrainingBatchValidation> {
+  return trainingRequest("/examples/batch/approve", {
+    method: "POST",
+    body: JSON.stringify({ reviewer: "Sage", minimum_quality: 4, ...payload }),
+  });
 }
 
 export async function playerDashboard(): Promise<PlayerDashboard> {

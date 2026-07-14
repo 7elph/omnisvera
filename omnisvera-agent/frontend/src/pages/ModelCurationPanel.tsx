@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import {
+  approveTrainingBatch,
   approveTrainingExample,
   deleteTrainingExample,
   duplicateTrainingExample,
@@ -8,9 +9,11 @@ import {
   getTrainingStats,
   listTrainingExamples,
   rejectTrainingExample,
+  TrainingBatchValidation,
   TrainingExample,
   TrainingStats,
   updateTrainingExample,
+  validateTrainingBatch,
 } from "../api";
 
 const FLAG_LABELS: Record<string, string> = {
@@ -23,6 +26,13 @@ const FLAG_LABELS: Record<string, string> = {
 
 function statusLabel(value: string) {
   return ({ pending: "Pendente", approved: "Aprovado", rejected: "Rejeitado", captured: "Capturado" } as Record<string, string>)[value] || value;
+}
+
+function quickValidation(item: TrainingExample) {
+  const flags = item.curation?.flags || {};
+  if (item.contains_secret || flags.hallucination_detected || flags.leak_detected || flags.incorrect_source_detected) return "bloqueado";
+  if ((item.curation?.quality_5 || 0) >= 4 && item.ideal_response.trim()) return "pronto para lote";
+  return "revisão necessária";
 }
 
 export default function ModelCurationPanel() {
@@ -41,6 +51,10 @@ export default function ModelCurationPanel() {
   const [query, setQuery] = useState("");
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState("");
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [batchPreview, setBatchPreview] = useState<TrainingBatchValidation | null>(null);
+  const [batchReviewed, setBatchReviewed] = useState(false);
+  const [batchConfirmation, setBatchConfirmation] = useState("");
   const [form, setForm] = useState({
     category: "",
     source_type: "corrected_chat",
@@ -71,6 +85,7 @@ export default function ModelCurationPanel() {
     const [nextStats, nextExamples] = await Promise.all([getTrainingStats(), listTrainingExamples(filters)]);
     setStats(nextStats);
     setExamples(nextExamples);
+    setSelectedIds((current) => current.filter((id) => nextExamples.some((item) => item.id === id)));
   }
 
   useEffect(() => {
@@ -147,7 +162,7 @@ export default function ModelCurationPanel() {
           quality: form.quality,
           reason: "Revisão confirmada no painel de curadoria",
         });
-        setNotice("Exemplo aprovado. Você voltou à fila de revisão.");
+        setNotice("Exemplo aprovado e disponível para memória comportamental. Você voltou à fila de revisão.");
         setSelected(null);
       } else {
         setNotice("Alterações salvas. O exemplo continua pendente e você voltou à fila.");
@@ -220,6 +235,82 @@ export default function ModelCurationPanel() {
     }
   }
 
+  function toggleSelection(id: string) {
+    setSelectedIds((current) => current.includes(id) ? current.filter((value) => value !== id) : [...current, id]);
+    setBatchPreview(null);
+  }
+
+  async function previewBatch() {
+    if (!selectedIds.length || busy) return;
+    setBusy(true);
+    setNotice("");
+    try {
+      setBatchPreview(await validateTrainingBatch(selectedIds));
+      setBatchReviewed(false);
+      setBatchConfirmation("");
+    } catch (error) {
+      setNotice(error instanceof Error ? error.message : "Falha ao validar o lote.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function approveBatch() {
+    if (!batchPreview || busy) return;
+    setBusy(true);
+    setNotice("");
+    try {
+      const result = await approveTrainingBatch({
+        example_ids: batchPreview.eligible.map((item) => item.id),
+        reviewed: batchReviewed,
+        confirmation: batchConfirmation,
+        reason: "Lote revisado visualmente no Companion",
+      });
+      setNotice(`${result.approved_count || 0} exemplo(s) aprovado(s) e disponível(is) para memória comportamental.`);
+      setSelectedIds([]);
+      setBatchPreview(null);
+      setBatchReviewed(false);
+      setBatchConfirmation("");
+      await refresh();
+    } catch (error) {
+      setNotice(error instanceof Error ? error.message : "Falha ao aprovar o lote.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function quickApprove(item: TrainingExample) {
+    if (busy || !window.confirm(`Você revisou a resposta de “${item.instruction}” e deseja aprová-la?`)) return;
+    setBusy(true);
+    try {
+      await approveTrainingExample(item.id, {
+        ideal_response: item.ideal_response,
+        quality: item.curation?.quality_5 || 4,
+        reason: "Aprovação rápida revisada no Companion",
+      });
+      setNotice("Exemplo aprovado e disponível para memória comportamental.");
+      await refresh();
+    } catch (error) {
+      setNotice(error instanceof Error ? error.message : "Falha ao aprovar rapidamente.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function quickReject(item: TrainingExample) {
+    if (busy || !window.confirm(`Rejeitar “${item.instruction}”?`)) return;
+    setBusy(true);
+    try {
+      await rejectTrainingExample(item.id, "Rejeição rápida pelo painel de curadoria");
+      setNotice("Exemplo rejeitado; ele não será usado no treinamento nem na memória comportamental.");
+      await refresh();
+    } catch (error) {
+      setNotice(error instanceof Error ? error.message : "Falha ao rejeitar rapidamente.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
   return (
     <section className="panel curation-panel">
       <div className="chat-header">
@@ -245,6 +336,17 @@ export default function ModelCurationPanel() {
             <p><strong>{stats.approved}/{stats.minimum_approved}</strong> · {stats.progress_percent}%</p>
           </div>
           <p className="danger-note">{stats.warning}</p>
+          <div className="behavior-memory-card">
+            <div>
+              <p className="eyebrow">Influência comportamental {stats.behavior_memory.enabled ? "ativa" : "desativada"}</p>
+              <strong>{stats.behavior_memory.indexed} exemplos indexados</strong>
+              <small>{stats.behavior_memory.eligible} elegíveis · média de {stats.behavior_memory.average_examples_per_response} por resposta</small>
+            </div>
+            <div>
+              <strong>Próximo marco: {stats.behavior_memory.next_milestone.target}</strong>
+              <small>{stats.behavior_memory.next_milestone.remaining} aprovações para {stats.behavior_memory.next_milestone.stage}</small>
+            </div>
+          </div>
         </>
       )}
 
@@ -280,12 +382,44 @@ export default function ModelCurationPanel() {
       </div>
       {notice && <p className="curation-notice">{notice}</p>}
 
+      {status === "pending" && (
+        <div className="batch-toolbar">
+          <span><strong>{selectedIds.length}</strong> selecionado(s)</span>
+          <button className="secondary-button" onClick={() => void previewBatch()} disabled={!selectedIds.length || busy}>Revisar lote</button>
+          {selectedIds.length > 0 && <button className="text-button" onClick={() => setSelectedIds([])}>Limpar seleção</button>}
+        </div>
+      )}
+
+      {batchPreview && (
+        <section className="batch-review" aria-label="Revisão do lote">
+          <div><h3>Resumo do lote</h3><p>{batchPreview.eligible.length} elegíveis · {batchPreview.blocked.length} bloqueados</p></div>
+          {batchPreview.blocked.length > 0 && (
+            <details><summary>Ver bloqueios</summary>{batchPreview.blocked.map((item) => <p key={item.id}><strong>{item.instruction}</strong><br /><small>{item.reasons.join(", ")}</small></p>)}</details>
+          )}
+          <label className="batch-confirm"><input type="checkbox" checked={batchReviewed} onChange={(event) => setBatchReviewed(event.target.checked)} />Revisei visualmente os exemplos elegíveis.</label>
+          <label>Digite <strong>APROVAR LOTE</strong><input value={batchConfirmation} onChange={(event) => setBatchConfirmation(event.target.value)} autoComplete="off" /></label>
+          <div className="row">
+            <button onClick={() => void approveBatch()} disabled={busy || !batchReviewed || batchConfirmation !== "APROVAR LOTE" || !batchPreview.eligible.length}>Aprovar elegíveis</button>
+            <button className="secondary-button" onClick={() => setBatchPreview(null)} disabled={busy}>Cancelar</button>
+          </div>
+        </section>
+      )}
+
       <div className="curation-queue">
         {filtered.map((item) => (
-          <button key={item.id} className="curation-row" onClick={() => void openExample(item.id)}>
-            <span><strong>{item.instruction}</strong><small>{item.category} · {item.access_profile} · {item.curation?.model || "modelo não registrado"}</small></span>
-            <em>{statusLabel(item.review_status)}</em>
-          </button>
+          <div key={item.id} className={`curation-row ${selectedIds.includes(item.id) ? "selected" : ""}`}>
+            {item.review_status === "pending" && <input type="checkbox" checked={selectedIds.includes(item.id)} onChange={() => toggleSelection(item.id)} aria-label={`Selecionar ${item.instruction}`} />}
+            <button className="curation-open" onClick={() => void openExample(item.id)}>
+              <span><strong>{item.instruction}</strong><small>{item.category} · {item.access_profile} · qualidade {item.curation?.quality_5 || "?"} · {item.retrieved_context.length} fonte(s) · {quickValidation(item)}</small></span>
+              <em>{statusLabel(item.review_status)}</em>
+            </button>
+            {item.review_status === "pending" && (
+              <div className="curation-quick-actions">
+                {quickValidation(item) === "pronto para lote" && <button onClick={() => void quickApprove(item)} disabled={busy}>Aprovar</button>}
+                <button className="danger-button subtle" onClick={() => void quickReject(item)} disabled={busy}>Rejeitar</button>
+              </div>
+            )}
+          </div>
         ))}
         {!filtered.length && <p className="muted">Nenhum exemplo neste filtro.</p>}
       </div>

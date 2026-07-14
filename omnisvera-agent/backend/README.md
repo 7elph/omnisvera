@@ -28,7 +28,10 @@ $env:OMNISVERA_QUALITY_MODEL="llama-3.2-omnisvera-3b"
 $env:OMNISVERA_EMBED_MODEL="nomic-embed-text"
 $env:OMNISVERA_RESPONSE_MODE="grounded"
 $env:OMNISVERA_MODEL_MODE="baseline" # baseline, candidate ou production
-$env:OMNISVERA_TRAINING_CAPTURE_MODE="manual" # off, manual ou master_session
+$env:OMNISVERA_TRAINING_CAPTURE_MODE="master_session" # off, manual ou master_session
+$env:OMNISVERA_BEHAVIOR_MEMORY_ENABLED="true"
+$env:OMNISVERA_BEHAVIOR_MEMORY_MODE="sanitized" # off, metadata_only, sanitized ou raw_safe
+$env:OMNISVERA_BEHAVIOR_MEMORY_AB_MODE="behavioral" # baseline ou behavioral
 $env:OMNISVERA_UNREVIEWED_RETENTION_DAYS="30"
 ```
 

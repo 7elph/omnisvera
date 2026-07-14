@@ -103,7 +103,7 @@ export default function ChatVault({
     setQuestion("");
     try {
       const contextPaths = messages.at(-1)?.result.note_paths || [];
-      const data = await chatVault(clean, 6, contextPaths);
+      const data = await chatVault(clean, 6, contextPaths, sessionIdRef.current);
       setMessages((current) => [
         ...current.slice(-8),
         {
@@ -180,6 +180,8 @@ export default function ChatVault({
         response_time_ms: message.result.response_time_ms || 0,
         validator_rejections: message.result.validator_rejections || [],
         warning: message.result.warning,
+        behavior_memory_used: Boolean(message.result.behavior_memory_used),
+        behavioral_trace: message.result.behavioral_trace,
         feedback_action: action,
         reason: feedbackReason || undefined,
         category: feedbackCategory || undefined,
