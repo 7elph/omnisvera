@@ -1,0 +1,18 @@
+{
+  "minimum_approved": 1000,
+  "categories": {
+    "entities_descriptions": 180,
+    "entity_relations": 120,
+    "places_factions_territories": 120,
+    "quests_rumors_clues": 100,
+    "insufficient_information": 100,
+    "fact_vs_theory": 100,
+    "player_gm_safety": 120,
+    "natural_narrative": 100,
+    "personas_npcs": 40,
+    "adversarial": 20
+  },
+  "required_profiles": ["player", "gm", "system"],
+  "frozen_eval_minimum": 20,
+  "near_duplicate_threshold": 0.92
+}

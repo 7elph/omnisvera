@@ -1,18 +1,23 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "Omnisvera NPC Persona",
+  "$id": "https://omnisvera.local/schemas/persona-1.0.json",
+  "title": "Omnisvera Persona 1.0",
   "type": "object",
-  "required": ["id", "name", "voice", "knowledge_scope", "forbidden_knowledge"],
+  "additionalProperties": false,
+  "required": ["id", "name", "role", "voice", "vocabulary", "tone", "knowledge_policy", "access_profile", "forbidden_behaviors", "response_length"],
   "properties": {
-    "id": {"type": "string", "pattern": "^[a-z0-9_-]+$"},
-    "name": {"type": "string", "minLength": 1},
-    "voice": {"type": "string", "minLength": 1},
-    "knowledge_scope": {"type": "array", "items": {"type": "string"}},
-    "forbidden_knowledge": {"type": "array", "items": {"type": "string"}},
-    "attitudes": {"type": "object", "additionalProperties": {"type": "string"}},
-    "speech_examples": {"type": "array", "items": {"type": "string"}},
-    "can_propose_actions": {"type": "boolean", "default": true},
-    "can_confirm_canon": {"type": "boolean", "const": false}
-  },
-  "additionalProperties": false
+    "id": {"type":"string", "pattern":"^[a-z0-9_-]+$"},
+    "name": {"type":"string", "minLength":1},
+    "role": {"enum":["npc", "narrator", "archive"]},
+    "voice": {"type":"array", "items":{"type":"string"}},
+    "vocabulary": {"type":"array", "items":{"type":"string"}},
+    "tone": {"type":"array", "items":{"type":"string"}},
+    "knowledge_policy": {"const":"rag_only"},
+    "access_profile": {"enum":["player", "gm"]},
+    "forbidden_behaviors": {"type":"array", "items":{"type":"string"}},
+    "response_length": {
+      "type":"object", "additionalProperties":false, "required":["min", "max"],
+      "properties":{"min":{"type":"integer","minimum":0},"max":{"type":"integer","minimum":1}}
+    }
+  }
 }

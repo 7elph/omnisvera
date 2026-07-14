@@ -1,0 +1,20 @@
+{
+  "question": "Quem é Arven?",
+  "access_profile": "player",
+  "category": "entities_descriptions",
+  "retrieved_context": [{"path":"Public/Arven.md","text":"Arven é batedor."}],
+  "raw_response": "Arven é batedor.",
+  "final_response": "Arven é um batedor conhecido na região.",
+  "validated_facts": ["Arven é batedor."],
+  "theories": [],
+  "insufficient_information": false,
+  "source_note_ids": ["public_arven"],
+  "source_note_hashes": ["sha256-exemplo"],
+  "model": "qwen2:1.5b",
+  "elapsed_seconds": 3.2,
+  "rating": "boa",
+  "leakage": false,
+  "invention": false,
+  "contains_canon": false,
+  "contains_secret": false
+}

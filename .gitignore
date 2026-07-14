@@ -22,5 +22,14 @@ Desktop.ini
 /omnisvera-model/artifacts/
 /omnisvera-model/checkpoints/
 /omnisvera-model/cache/
+/omnisvera-model/data/raw/
+/omnisvera-model/data/captured/
+/omnisvera-model/data/candidates/
+/omnisvera-model/data/reviewed/
+/omnisvera-model/data/approved/
+/omnisvera-model/data/rejected/
+/omnisvera-model/data/train/
+/omnisvera-model/data/eval/
+/omnisvera-model/data/frozen_eval/
 __pycache__/
 *.pyc
