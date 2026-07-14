@@ -100,6 +100,89 @@ export type ChatResult = {
   ollama_attempted?: boolean;
   model?: string | null;
   retrieval_mode?: string | null;
+  interaction_id?: string | null;
+  created_at?: string | null;
+  response_time_ms?: number | null;
+  raw_model_response?: string | null;
+  validator_rejections?: Array<Record<string, unknown>>;
+};
+
+export type TrainingFeedbackAction = "good" | "correct" | "reject" | "hallucination" | "leak" | "incomplete" | "artificial" | "incorrect_source";
+
+export type TrainingExample = {
+  id: string;
+  schema_version: string;
+  created_at: string;
+  updated_at: string;
+  source_type: string;
+  category: string;
+  access_profile: "player" | "gm" | "system";
+  persona_id?: string | null;
+  instruction: string;
+  retrieved_context: Array<Record<string, unknown>>;
+  ideal_response: string;
+  facts_expected: string[];
+  theories_allowed: string[];
+  insufficient_information_expected: boolean;
+  requires_rag: boolean;
+  contains_canon: boolean;
+  contains_secret: boolean;
+  review_status: "captured" | "pending" | "approved" | "rejected";
+  reviewer?: string | null;
+  quality_score?: number | null;
+  notes?: string | null;
+  curation?: {
+    interaction_id?: string;
+    feedback_action?: TrainingFeedbackAction;
+    flags?: Record<string, boolean>;
+    quality_5?: number | null;
+    curator_notes?: string | null;
+    model?: string | null;
+    retrieval_mode?: string | null;
+  };
+  interaction?: TrainingInteraction | null;
+};
+
+export type TrainingInteraction = {
+  interaction_id: string;
+  created_at: string;
+  session_id?: string | null;
+  user_profile: "player" | "gm";
+  question: string;
+  raw_model_response?: string | null;
+  final_response: string;
+  verified_facts: Array<Record<string, unknown>>;
+  theories: Array<Record<string, unknown>>;
+  insufficient_information: string[];
+  retrieved_sources: Array<Record<string, unknown>>;
+  retrieval_mode?: string | null;
+  model?: string | null;
+  ollama_used: boolean;
+  response_time_ms: number;
+  validator_rejections: Array<Record<string, unknown>>;
+  warning?: string | null;
+  feedback_status: string;
+};
+
+export type TrainingStats = {
+  captured: number;
+  examples: number;
+  statuses: Record<string, number>;
+  categories: Record<string, number>;
+  profiles: Record<string, number>;
+  models: Record<string, number>;
+  flags: Record<string, number>;
+  approved: number;
+  minimum_approved: number;
+  progress_percent: number;
+  coverage: {
+    approved: number;
+    categories: Record<string, { current: number; target: number; missing: number }>;
+    profiles: Record<string, number>;
+    personas: Record<string, number>;
+  };
+  training_blocked: boolean;
+  warning: string;
 };
 
 export type DashboardSection = {
@@ -433,6 +516,86 @@ export async function chatVault(question: string, limit = 6, contextPaths: strin
   });
   if (!response.ok) throw new Error("Falha no chat");
   return response.json();
+}
+
+async function trainingRequest<T>(path: string, options: RequestInit = {}): Promise<T> {
+  const response = await fetch(`${API_BASE}/gm/training${path}`, {
+    ...options,
+    headers: authHeaders({ "Content-Type": "application/json", ...((options.headers as Record<string, string>) || {}) }),
+  });
+  if (!response.ok) {
+    const detail = await response.json().catch(() => null);
+    throw new Error(detail?.detail || "Falha na curadoria da IA");
+  }
+  if (response.status === 204) return undefined as T;
+  return response.json();
+}
+
+export async function captureTrainingInteraction(payload: {
+  interaction_id?: string | null;
+  created_at?: string | null;
+  session_id?: string | null;
+  user_profile: "player" | "gm";
+  question: string;
+  raw_model_response?: string | null;
+  final_response: string;
+  verified_facts?: Array<Record<string, unknown>>;
+  theories?: Array<Record<string, unknown>>;
+  insufficient_information?: string[];
+  retrieved_sources?: NoteSummary[];
+  retrieval_mode?: string | null;
+  model?: string | null;
+  ollama_used?: boolean;
+  response_time_ms?: number;
+  validator_rejections?: Array<Record<string, unknown>>;
+  warning?: string | null;
+  feedback_action: TrainingFeedbackAction;
+  reason?: string;
+  category?: string;
+  persona_id_override?: string | null;
+}): Promise<{ interaction: TrainingInteraction; example: TrainingExample; validation_errors: string[] }> {
+  return trainingRequest("/interactions/capture", { method: "POST", body: JSON.stringify(payload) });
+}
+
+export async function listTrainingExamples(filters: Record<string, string> = {}): Promise<TrainingExample[]> {
+  const query = new URLSearchParams(Object.entries(filters).filter(([, value]) => Boolean(value)));
+  return trainingRequest(`/examples${query.size ? `?${query}` : ""}`);
+}
+
+export async function getTrainingExample(id: string): Promise<TrainingExample> {
+  return trainingRequest(`/examples/${encodeURIComponent(id)}`);
+}
+
+export async function updateTrainingExample(id: string, payload: Record<string, unknown>): Promise<{ example: TrainingExample; validation_errors: string[] }> {
+  return trainingRequest(`/examples/${encodeURIComponent(id)}`, { method: "PATCH", body: JSON.stringify(payload) });
+}
+
+export async function approveTrainingExample(id: string, payload: { reviewer?: string; reason?: string; ideal_response?: string; quality?: number }): Promise<{ example: TrainingExample; validation_errors: string[] }> {
+  return trainingRequest(`/examples/${encodeURIComponent(id)}/approve`, { method: "POST", body: JSON.stringify({ reviewer: "Sage", ...payload }) });
+}
+
+export async function rejectTrainingExample(id: string, reason?: string): Promise<TrainingExample> {
+  return trainingRequest(`/examples/${encodeURIComponent(id)}/reject`, { method: "POST", body: JSON.stringify({ reviewer: "Sage", reason }) });
+}
+
+export async function markTrainingExample(id: string, flag: "hallucination" | "leak" | "incomplete" | "artificial" | "incorrect-source", detail?: string) {
+  return trainingRequest(`/examples/${encodeURIComponent(id)}/mark-${flag}`, { method: "POST", body: JSON.stringify({ reviewer: "Sage", detail }) });
+}
+
+export async function deleteTrainingExample(id: string): Promise<void> {
+  return trainingRequest(`/examples/${encodeURIComponent(id)}`, { method: "DELETE" });
+}
+
+export async function duplicateTrainingExample(id: string): Promise<TrainingExample> {
+  return trainingRequest(`/examples/${encodeURIComponent(id)}/duplicate`, { method: "POST", body: "{}" });
+}
+
+export async function exportTrainingReport(): Promise<Record<string, unknown>> {
+  return trainingRequest("/export-sanitized");
+}
+
+export async function getTrainingStats(): Promise<TrainingStats> {
+  return trainingRequest("/stats");
 }
 
 export async function playerDashboard(): Promise<PlayerDashboard> {
