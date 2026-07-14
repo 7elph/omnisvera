@@ -3,6 +3,7 @@ from __future__ import annotations
 import copy
 import hashlib
 import json
+import math
 import re
 import shutil
 import subprocess
@@ -19,7 +20,9 @@ from .paths import MODEL_ROOT, ROOT
 from .training import SMOKE_ACK
 
 
-CLASSIFICATION = "EXPERIMENTAL — SMOKE TEST — NÃO USAR EM PRODUÇÃO"
+SMOKE_CLASSIFICATION = "EXPERIMENTAL — SMOKE TEST — NÃO USAR EM PRODUÇÃO"
+EXPERIMENTAL_CLASSIFICATION = "EXPERIMENTAL — DATASET PEQUENO — NÃO USAR EM PRODUÇÃO"
+CLASSIFICATION = SMOKE_CLASSIFICATION
 PRIVATE_PATH_PATTERN = re.compile(
     r"(?:(?<![A-Za-z0-9])[A-Za-z]:[\\/]|/Users/|/home/|/content/drive/|file://)",
     re.IGNORECASE,
@@ -96,13 +99,13 @@ def _sanitize_approved(rows: list[dict[str, Any]]) -> tuple[list[dict[str, Any]]
     return eligible, excluded
 
 
-def _copy_runtime(destination: Path) -> None:
+def _copy_runtime(destination: Path, requirements_source: Path, requirements_name: str) -> None:
     package_target = destination / "omnisvera_model"
     package_target.mkdir(parents=True, exist_ok=True)
     for source in sorted((ROOT / "omnisvera_model").glob("*.py")):
         shutil.copy2(source, package_target / source.name)
     shutil.copy2(MODEL_ROOT / "colab" / "runner.py", destination / "colab" / "runner.py")
-    shutil.copy2(MODEL_ROOT / "requirements-train.txt", destination / "requirements-train.txt")
+    shutil.copy2(requirements_source, destination / requirements_name)
     for schema in sorted((MODEL_ROOT / "schemas").glob("*.json")):
         shutil.copy2(schema, destination / "schemas" / schema.name)
 
@@ -116,11 +119,13 @@ def _write_hashes(root: Path) -> dict[str, str]:
 
 
 def validate_colab_directory(root: Path) -> dict[str, Any]:
+    manifest = read_json(root / "manifest.json") if (root / "manifest.json").exists() else {}
     required = (
-        "EXPERIMENTAL_SMOKE_TEST_ONLY.txt",
+        str(manifest.get("classification_file") or "EXPERIMENTAL_SMOKE_TEST_ONLY.txt"),
         "manifest.json",
         "hashes.sha256.json",
-        "config/smoke-colab.json",
+        str(manifest.get("config_path") or "config/smoke-colab.json"),
+        str(manifest.get("requirements_file") or "requirements-train.txt"),
         "dataset/train.jsonl",
         "dataset/eval.jsonl",
         "dataset/manifest.json",
@@ -144,17 +149,18 @@ def validate_colab_directory(root: Path) -> dict[str, Any]:
             private_paths.append(relative)
         if TOKEN_VALUE_PATTERN.search(text):
             credentials.append(relative)
-    manifest = read_json(root / "manifest.json") if (root / "manifest.json").exists() else {}
     errors = []
     errors.extend(f"missing:{name}" for name in missing)
     errors.extend(f"hash:{name}" for name in hash_errors)
     errors.extend(f"markdown:{name}" for name in markdown)
     errors.extend(f"private_path:{name}" for name in private_paths)
     errors.extend(f"credential:{name}" for name in credentials)
-    if manifest.get("classification") != CLASSIFICATION:
+    if manifest.get("classification") not in {SMOKE_CLASSIFICATION, EXPERIMENTAL_CLASSIFICATION}:
         errors.append("classification")
     if not manifest.get("experimental_only") or manifest.get("production_eligible"):
         errors.append("production_gate")
+    if manifest.get("classification") == EXPERIMENTAL_CLASSIFICATION and int(manifest.get("expected_optimizer_updates") or 0) <= 1:
+        errors.append("optimizer_steps")
     return {
         "valid": not errors,
         "errors": errors,
@@ -164,12 +170,27 @@ def validate_colab_directory(root: Path) -> dict[str, Any]:
     }
 
 
-def prepare_colab_package(
+def _expected_optimizer_updates(train_examples: int, config: dict[str, Any]) -> int:
+    batch = int(config.get("per_device_train_batch_size") or config.get("batch_size") or 1)
+    accumulation = int(config.get("gradient_accumulation_steps") or config.get("gradient_accumulation") or 1)
+    epochs = int(config.get("epochs") or 1)
+    return math.ceil(train_examples / max(1, batch * accumulation)) * epochs
+
+
+def _prepare_colab_package(
     output: Path,
-    approved: Path | None = None,
-    config_path: Path | None = None,
-    frozen_eval_path: Path | None = None,
-    acknowledgement: str | None = None,
+    approved: Path | None,
+    config_path: Path,
+    frozen_eval_path: Path,
+    acknowledgement: str | None,
+    *,
+    classification: str,
+    package_version: str,
+    config_filename: str,
+    requirements_source: Path,
+    requirements_filename: str,
+    classification_filename: str,
+    command_name: str,
 ) -> dict[str, Any]:
     if acknowledgement != SMOKE_ACK:
         raise RuntimeError(f"prepare-colab exige --acknowledgement {SMOKE_ACK}")
@@ -177,14 +198,14 @@ def prepare_colab_package(
     eligible, excluded = _sanitize_approved(source_rows)
     if len(eligible) < 2:
         raise RuntimeError("smoke test exige pelo menos dois exemplos aprovados e elegíveis")
-    canonical_config = config_path or MODEL_ROOT / "config" / "smoke.json"
-    frozen_eval = frozen_eval_path or MODEL_ROOT / "evaluation" / "frozen_eval_v1.json"
+    canonical_config = config_path
+    frozen_eval = frozen_eval_path
     if not canonical_config.is_file() or not frozen_eval.is_file():
         raise FileNotFoundError("config de smoke ou frozen eval ausente")
     output = output.resolve()
     output.parent.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory(prefix="omnisvera-colab-") as temporary:
-        root = Path(temporary) / "omnisvera-smoke"
+        root = Path(temporary) / "omnisvera-colab"
         for folder in ("config", "dataset", "evaluation", "schemas", "colab"):
             (root / folder).mkdir(parents=True, exist_ok=True)
         sanitized_source = Path(temporary) / "approved_sanitized.jsonl"
@@ -192,36 +213,37 @@ def prepare_colab_package(
         dataset_report = build_dataset(
             sanitized_source,
             root / "dataset",
-            dataset_version="smoke-v0.1.0",
-            seed=7331,
+            dataset_version=package_version,
+            seed=int(read_json(canonical_config).get("seed") or 7331),
             experimental_ack=SMOKE_ACK,
         )
         config = read_json(canonical_config)
         config["allow_model_download"] = True
         config["license_acknowledged"] = True
         config["experimental_only"] = True
-        config["package_classification"] = CLASSIFICATION
-        write_json(root / "config" / "smoke-colab.json", config)
+        config["package_classification"] = classification
+        expected_updates = _expected_optimizer_updates(dataset_report["train"], config)
+        config["expected_optimizer_updates"] = expected_updates
+        write_json(root / "config" / config_filename, config)
         shutil.copy2(frozen_eval, root / "evaluation" / "frozen_eval_v1.json")
         frozen_manifest = frozen_eval.with_name(frozen_eval.stem + ".manifest.json")
         if frozen_manifest.exists():
             shutil.copy2(frozen_manifest, root / "evaluation" / frozen_manifest.name)
-        _copy_runtime(root)
-        (root / "EXPERIMENTAL_SMOKE_TEST_ONLY.txt").write_text(
-            CLASSIFICATION + "\n\nEste pacote não é elegível para promoção ou produção.\n",
+        _copy_runtime(root, requirements_source, requirements_filename)
+        (root / classification_filename).write_text(
+            classification + "\n\nEste pacote não é elegível para promoção ou produção.\n",
             encoding="utf-8",
         )
         (root / "README_COLAB.txt").write_text(
-            "Omnisvera smoke test experimental.\n"
-            "1. Instale requirements-train.txt.\n"
-            "2. Rode: python colab/runner.py --package-root . --dry-run\n"
-            "3. Para o smoke autorizado: python colab/runner.py --package-root . --execute\n"
-            "O runner exige HF_TOKEN no ambiente e nunca promove o resultado.\n",
+            "Omnisvera treinamento experimental com dataset pequeno.\n"
+            "1. Rode: python colab/runner.py --package-root . --dry-run\n"
+            "2. Para executar: python colab/runner.py --package-root . --execute\n"
+            "O runner prepara dependências, exige HF_TOKEN e nunca promove o resultado.\n",
             encoding="utf-8",
         )
         manifest = {
-            "package_version": "smoke-v0.1.0",
-            "classification": CLASSIFICATION,
+            "package_version": package_version,
+            "classification": classification,
             "experimental_only": True,
             "production_eligible": False,
             "training_started": False,
@@ -235,6 +257,10 @@ def prepare_colab_package(
             "frozen_eval_examples": dataset_report["frozen_eval"],
             "dataset_manifest_sha256": sha256_file(root / "dataset" / "manifest.json"),
             "runner": "colab/runner.py",
+            "config_path": f"config/{config_filename}",
+            "requirements_file": requirements_filename,
+            "classification_file": classification_filename,
+            "expected_optimizer_updates": expected_updates,
             "smoke_acknowledgement": SMOKE_ACK,
         }
         write_json(root / "manifest.json", manifest)
@@ -245,7 +271,7 @@ def prepare_colab_package(
         if output.exists():
             output.unlink()
         with zipfile.ZipFile(output, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=9) as archive:
-            archive.comment = CLASSIFICATION.encode("utf-8")
+            archive.comment = classification.encode("utf-8")
             for path in sorted(item for item in root.rglob("*") if item.is_file()):
                 archive.write(path, path.relative_to(root).as_posix())
     with zipfile.ZipFile(output, "r") as archive:
@@ -254,8 +280,8 @@ def prepare_colab_package(
     if bad_member:
         raise RuntimeError(f"ZIP corrompido em {bad_member}")
     return {
-        "command": "prepare-colab",
-        "classification": CLASSIFICATION,
+        "command": command_name,
+        "classification": classification,
         "approved": len(source_rows),
         "eligible": len(eligible),
         "excluded": excluded,
@@ -263,7 +289,54 @@ def prepare_colab_package(
         "size_bytes": output.stat().st_size,
         "sha256": sha256_file(output),
         "runner": "colab/runner.py",
+        "expected_optimizer_updates": expected_updates,
         "members": len(members),
         "validation": validation,
         "training_started": False,
     }
+
+
+def prepare_colab_package(
+    output: Path,
+    approved: Path | None = None,
+    config_path: Path | None = None,
+    frozen_eval_path: Path | None = None,
+    acknowledgement: str | None = None,
+) -> dict[str, Any]:
+    return _prepare_colab_package(
+        output,
+        approved,
+        config_path or MODEL_ROOT / "config" / "smoke.json",
+        frozen_eval_path or MODEL_ROOT / "evaluation" / "frozen_eval_v1.json",
+        acknowledgement,
+        classification=SMOKE_CLASSIFICATION,
+        package_version="smoke-v0.1.0",
+        config_filename="smoke-colab.json",
+        requirements_source=MODEL_ROOT / "requirements-train.txt",
+        requirements_filename="requirements-train.txt",
+        classification_filename="EXPERIMENTAL_SMOKE_TEST_ONLY.txt",
+        command_name="prepare-colab",
+    )
+
+
+def prepare_experimental_colab_package(
+    output: Path,
+    approved: Path | None = None,
+    config_path: Path | None = None,
+    frozen_eval_path: Path | None = None,
+    acknowledgement: str | None = None,
+) -> dict[str, Any]:
+    return _prepare_colab_package(
+        output,
+        approved,
+        config_path or MODEL_ROOT / "config" / "experimental-small.json",
+        frozen_eval_path or MODEL_ROOT / "evaluation" / "frozen_eval_v1.json",
+        acknowledgement,
+        classification=EXPERIMENTAL_CLASSIFICATION,
+        package_version="experimental-small-v0.1.0",
+        config_filename="experimental-colab.json",
+        requirements_source=MODEL_ROOT / "requirements-colab-experimental.txt",
+        requirements_filename="requirements-colab.txt",
+        classification_filename="EXPERIMENTAL_SMALL_DATASET_ONLY.txt",
+        command_name="prepare-colab-experimental",
+    )

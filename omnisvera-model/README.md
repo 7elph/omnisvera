@@ -101,6 +101,14 @@ python -m omnisvera_model prepare-colab --output omnisvera-model/dist/omnisvera-
 O pacote contém somente exemplos aprovados e sanitizados, configuração smoke,
 schemas, frozen eval e `colab/runner.py`. O diretório `dist/` permanece fora do Git.
 
+Para o treinamento experimental de cinco épocas com dataset pequeno:
+
+```powershell
+python -m omnisvera_model prepare-colab-experimental --output omnisvera-model/dist/omnisvera-experimental.zip --acknowledgement I_UNDERSTAND_THIS_IS_EXPERIMENTAL_NOT_FOR_PRODUCTION
+```
+
+Esse caminho continua inelegível para produção e não reduz o gate de 1.000 exemplos.
+
 Somente quando pesos e dependências já existirem localmente:
 
 ```powershell

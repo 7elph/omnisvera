@@ -1,0 +1,8 @@
+# Testado estruturalmente para o runner Colab; torch vem do runtime CUDA.
+# torchao é removido pelo runner porque LoRA FP16 não depende dele.
+transformers==4.57.1
+peft==0.18.0
+accelerate==1.11.0
+datasets==4.4.1
+safetensors==0.6.2
+sentencepiece==0.2.1

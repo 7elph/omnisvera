@@ -12,7 +12,12 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 
-from omnisvera_model.colab import CLASSIFICATION, prepare_colab_package  # noqa: E402
+from omnisvera_model.colab import (  # noqa: E402
+    CLASSIFICATION,
+    EXPERIMENTAL_CLASSIFICATION,
+    prepare_colab_package,
+    prepare_experimental_colab_package,
+)
 from omnisvera_model.io import write_jsonl  # noqa: E402
 from omnisvera_model.schema import new_example  # noqa: E402
 from omnisvera_model.training import SMOKE_ACK  # noqa: E402
@@ -76,6 +81,40 @@ class ColabPackageTests(unittest.TestCase):
             )
             self.assertEqual(0, dry_run.returncode, dry_run.stderr)
             self.assertIn('"training_started": false', dry_run.stdout)
+
+    def test_experimental_package_has_twenty_updates_and_fixed_bootstrap(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            source = root / "approved.jsonl"
+            output = root / "experimental.zip"
+            rows = [approved(f"case-{index}", f"Pergunta {index}?", f"Resposta {index}.") for index in range(18)]
+            write_jsonl(source, rows)
+            report = prepare_experimental_colab_package(output, approved=source, acknowledgement=SMOKE_ACK)
+            self.assertEqual(EXPERIMENTAL_CLASSIFICATION, report["classification"])
+            self.assertEqual(20, report["expected_optimizer_updates"])
+            with zipfile.ZipFile(output) as archive:
+                manifest = json.loads(archive.read("manifest.json"))
+                config = json.loads(archive.read("config/experimental-colab.json"))
+                requirements = archive.read("requirements-colab.txt").decode("utf-8")
+                runner = archive.read("colab/runner.py").decode("utf-8")
+                archive.extractall(root / "unpacked")
+            self.assertEqual(5, config["epochs"])
+            self.assertEqual(4, config["gradient_accumulation_steps"])
+            self.assertEqual(16, config["lora_rank"])
+            self.assertEqual(32, config["lora_alpha"])
+            self.assertFalse(manifest["production_eligible"])
+            self.assertNotIn("torchao==", requirements)
+            self.assertIn('"uninstall", "-y", "torchao"', runner)
+            dry_run = subprocess.run(
+                [sys.executable, str(root / "unpacked/colab/runner.py"), "--package-root", str(root / "unpacked"), "--dry-run"],
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            self.assertEqual(0, dry_run.returncode, dry_run.stderr)
+            payload = json.loads(dry_run.stdout)
+            self.assertEqual(20, payload["optimizer_steps_expected"])
+            self.assertFalse(payload["training_started"])
 
 
 if __name__ == "__main__":

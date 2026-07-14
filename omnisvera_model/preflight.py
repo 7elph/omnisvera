@@ -94,8 +94,8 @@ def run_preflight(config_path: Path, dataset_manifest: Path | None = None) -> di
 def validate_training_config(config: dict[str, Any]) -> list[str]:
     required = {
         "experiment_name", "training_mode", "base_model", "seed", "epochs", "batch_size",
-        "gradient_accumulation", "learning_rate", "warmup_ratio", "sequence_length",
-        "checkpoint_interval", "eval_interval", "early_stopping_patience", "experimental_only",
+        "gradient_accumulation", "learning_rate", "sequence_length",
+        "early_stopping_patience", "experimental_only",
     }
     errors = [f"campo ausente: {key}" for key in sorted(required - set(config))]
     if config.get("training_mode") not in {"lora", "qlora", "full"}:
@@ -104,4 +104,10 @@ def validate_training_config(config: dict[str, Any]) -> list[str]:
         for key in ("lora_rank", "lora_alpha", "lora_dropout"):
             if key not in config:
                 errors.append(f"campo LoRA ausente: {key}")
+    if "warmup_steps" not in config and "warmup_ratio" not in config:
+        errors.append("warmup_steps ou warmup_ratio é obrigatório")
+    if config.get("save_strategy", "steps") == "steps" and "checkpoint_interval" not in config:
+        errors.append("checkpoint_interval é obrigatório para save_strategy=steps")
+    if config.get("evaluation_strategy", "steps") == "steps" and "eval_interval" not in config:
+        errors.append("eval_interval é obrigatório para evaluation_strategy=steps")
     return errors
