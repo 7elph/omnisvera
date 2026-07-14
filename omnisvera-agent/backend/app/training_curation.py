@@ -347,7 +347,18 @@ def record_unreviewed_interaction(payload: dict[str, Any], actor: str = "master_
 
 
 def _all_candidates() -> list[dict[str, Any]]:
-    return read_jsonl(CANDIDATES_PATH)
+    directory = CANDIDATES_PATH.parent
+    paths = sorted(directory.glob("*.jsonl")) if directory.exists() else []
+    # The Companion override file is read last so an edited migrated example
+    # supersedes its immutable seed without creating a duplicate in the UI.
+    paths = [path for path in paths if path != CANDIDATES_PATH] + [CANDIDATES_PATH]
+    by_id: dict[str, dict[str, Any]] = {}
+    for path in paths:
+        for row in read_jsonl(path):
+            row_id = str(row.get("id") or "")
+            if row_id:
+                by_id[row_id] = row
+    return list(by_id.values())
 
 
 def _public_example(row: dict[str, Any]) -> dict[str, Any]:
@@ -552,7 +563,13 @@ def delete_pending(example_id: str, actor: str) -> None:
         if match.get("review_status") not in {"captured", "pending"}:
             raise ValueError("Somente candidatos não aprovados podem ser excluídos.")
         _audit(match, "delete_pending", actor)
-        _write_rows(CANDIDATES_PATH, [row for row in rows if row.get("id") != example_id])
+        candidate_files = sorted(CANDIDATES_PATH.parent.glob("*.jsonl"))
+        if CANDIDATES_PATH not in candidate_files:
+            candidate_files.append(CANDIDATES_PATH)
+        for path in candidate_files:
+            source_rows = read_jsonl(path)
+            if any(row.get("id") == example_id for row in source_rows):
+                _write_rows(path, [row for row in source_rows if row.get("id") != example_id])
 
 
 def duplicate_example(example_id: str, actor: str) -> dict[str, Any]:
