@@ -9,6 +9,8 @@ param(
   [string]$EmbedModel = "nomic-embed-text",
   [ValidateSet("fast", "grounded")]
   [string]$ResponseMode = "grounded",
+  [ValidateSet("off", "manual", "master_session")]
+  [string]$TrainingCaptureMode = "master_session",
   [string]$AccessToken = "",
   [string]$MasterToken = "",
   [string]$PlayerToken = "",
@@ -132,6 +134,10 @@ $env:OMNISVERA_PRODUCTION_MODEL = $ProductionModel
 $env:OMNISVERA_MODEL_MODE = $ModelMode
 $env:OMNISVERA_EMBED_MODEL = $EmbedModel
 $env:OMNISVERA_RESPONSE_MODE = $ResponseMode
+$env:OMNISVERA_TRAINING_CAPTURE_MODE = $TrainingCaptureMode
+$env:OMNISVERA_BEHAVIOR_MEMORY_ENABLED = "true"
+$env:OMNISVERA_BEHAVIOR_MEMORY_MODE = "sanitized"
+$env:OMNISVERA_BEHAVIOR_MEMORY_AB_MODE = "behavioral"
 $env:OMNISVERA_ACCESS_TOKEN = $MasterToken
 $env:OMNISVERA_MASTER_TOKEN = $MasterToken
 $env:OMNISVERA_PLAYER_TOKEN = $PlayerToken
@@ -149,6 +155,8 @@ Write-Host "Modo de resposta: $ResponseMode"
 Write-Host "Modelo rápido: $FastModel"
 Write-Host "Modelo fundamentado: $QualityModel"
 Write-Host "Modelo de embeddings: $EmbedModel"
+Write-Host "Captura de curadoria: $TrainingCaptureMode"
+Write-Host "Influência comportamental: ativa (sanitizada)"
 Write-Host "Token do Mestre: $MasterToken" -ForegroundColor Cyan
 Write-Host "Token dos Jogadores: $PlayerToken" -ForegroundColor Green
 Write-Host "Acessos individuais:" -ForegroundColor Green

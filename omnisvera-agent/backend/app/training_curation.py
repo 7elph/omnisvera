@@ -16,10 +16,12 @@ PROJECT_ROOT = Path(__file__).resolve().parents[3]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from omnisvera_model.dataset import coverage_report  # noqa: E402
+from omnisvera_model.dataset import coverage_report, find_conflicts, find_duplicates  # noqa: E402
 from omnisvera_model.io import read_json, read_jsonl, sha256_file, write_jsonl  # noqa: E402
 from omnisvera_model.paths import COVERAGE_CONFIG, DATA_ROOT, ensure_runtime_dirs  # noqa: E402
 from omnisvera_model.schema import new_example, utc_now, validate_example  # noqa: E402
+
+from .behavioral_memory import get_behavioral_memory, invalidate_behavioral_memory
 
 
 INTERACTIONS_PATH = DATA_ROOT / "captured" / "companion_interactions.jsonl"
@@ -218,6 +220,8 @@ def _interaction_from_payload(payload: dict[str, Any], actor: str) -> dict[str, 
         "response_time_ms": max(0, int(payload.get("response_time_ms") or 0)),
         "validator_rejections": payload.get("validator_rejections") or [],
         "warning": payload.get("warning"),
+        "behavior_memory_used": bool(payload.get("behavior_memory_used")),
+        "behavioral_trace": payload.get("behavioral_trace") or None,
         "feedback_status": "rejected" if action == "reject" else "pending",
         "feedback_action": action,
         "reason": payload.get("reason"),
@@ -242,6 +246,14 @@ def _candidate_from_interaction(
         "artificial_detected": action == "artificial",
         "incorrect_source_detected": action == "incorrect_source",
     }
+    has_reserved_source = any(
+        str(source.get("visibility") or "").casefold() in {"gm", "mestre", "oculto", "velado", "não revelado", "nao revelado"}
+        or any(marker in str(source.get("path") or "").casefold() for marker in _SECRET_MARKERS)
+        for source in interaction["retrieved_sources"]
+    )
+    answer_words = len(str(interaction.get("final_response") or "").split())
+    has_quality_warning = bool(interaction.get("validator_rejections") or interaction.get("warning"))
+    suggested_quality = 2 if has_quality_warning else 4 if answer_words >= 35 else 3
     row = new_example(
         id=str(uuid.uuid4()),
         source_type="real_chat",
@@ -256,13 +268,13 @@ def _candidate_from_interaction(
         insufficient_information_expected=bool(interaction["insufficient_information"]),
         requires_rag=bool(interaction["retrieved_sources"]),
         contains_canon=bool(facts),
-        contains_secret=bool(flags["leak_detected"]),
+        contains_secret=bool(flags["leak_detected"] or has_reserved_source),
         entity_ids=[],
         source_note_ids=source_ids,
         source_note_hashes=source_hashes,
         review_status="rejected" if action == "reject" else "pending",
         reviewer=interaction["captured_by"] if action == "reject" else None,
-        quality_score=None,
+        quality_score=0 if suggested_quality <= 2 else 1 if suggested_quality == 3 else 2,
     )
     _set_notes(
         row,
@@ -270,7 +282,9 @@ def _candidate_from_interaction(
             "interaction_id": interaction["interaction_id"],
             "feedback_action": action,
             "flags": flags,
-            "quality_5": None,
+            "quality_5": suggested_quality,
+            "quality_suggested": True,
+            "auto_captured": bool(payload.get("auto_captured")),
             "curator_notes": payload.get("reason"),
             "model": interaction.get("model"),
             "retrieval_mode": interaction.get("retrieval_mode"),
@@ -318,8 +332,21 @@ def capture_interaction(payload: dict[str, Any], vault_path: Path, actor: str = 
             None,
         )
         if existing and existing.get("candidate_id"):
-            candidate = get_example(str(existing["candidate_id"]))
-            return {"interaction": existing, "example": candidate, "validation_errors": []}
+            candidate_id = str(existing["candidate_id"])
+            action = str(payload.get("feedback_action") or "good")
+            interaction["candidate_id"] = candidate_id
+            if action == "reject":
+                candidate = reject_example(candidate_id, actor, payload.get("reason"))
+                interaction["feedback_status"] = "rejected"
+            elif action in {"hallucination", "leak", "incomplete", "artificial", "incorrect_source"}:
+                flag_name = "incorrect-source" if action == "incorrect_source" else action
+                candidate = mark_flag(candidate_id, flag_name, actor, payload.get("reason"))["example"]
+                interaction["feedback_status"] = "pending"
+            else:
+                candidate = get_example(candidate_id)
+                interaction["feedback_status"] = "pending"
+            _upsert(INTERACTIONS_PATH, interaction, key="interaction_id")
+            return {"interaction": interaction, "example": candidate, "validation_errors": []}
         candidate = _candidate_from_interaction(interaction, payload, vault_path)
         interaction["candidate_id"] = candidate["id"]
         _upsert(INTERACTIONS_PATH, interaction, key="interaction_id")
@@ -334,16 +361,19 @@ def capture_interaction(payload: dict[str, Any], vault_path: Path, actor: str = 
         }
 
 
-def record_unreviewed_interaction(payload: dict[str, Any], actor: str = "master_session") -> dict[str, Any]:
-    """Persist only recent master-session metadata; never creates a training example."""
+def record_unreviewed_interaction(
+    payload: dict[str, Any], vault_path: Path, actor: str = "master_session"
+) -> dict[str, Any]:
+    """Create a pending, prefilled candidate from a master session; never approves it."""
     payload = dict(payload)
     payload["feedback_action"] = "good"
-    interaction = _interaction_from_payload(payload, actor)
+    payload["auto_captured"] = True
+    captured = capture_interaction(payload, vault_path, actor=actor)
+    interaction = dict(captured["interaction"])
     interaction["feedback_status"] = "unreviewed"
-    interaction["candidate_id"] = None
     with _LOCK:
         _upsert(INTERACTIONS_PATH, interaction, key="interaction_id")
-    return interaction
+    return {"interaction": interaction, "example": captured["example"]}
 
 
 def _all_candidates() -> list[dict[str, Any]]:
@@ -465,6 +495,7 @@ def update_example(example_id: str, patch: dict[str, Any], actor: str = "Sage") 
             match, "edit", actor, patch.get("reason"),
             previous_ideal_hash=previous_ideal_hash, previous_status=previous_status,
         )
+        invalidate_behavioral_memory()
         return {"example": _public_example(match), "validation_errors": errors}
 
 
@@ -509,6 +540,7 @@ def approve_example(
         _upsert(CANDIDATES_PATH, match)
         _upsert(APPROVED_PATH, match)
         _audit(match, "approve", actor, reason)
+        invalidate_behavioral_memory()
         return {"example": _public_example(match), "validation_errors": []}
 
 
@@ -531,6 +563,7 @@ def reject_example(example_id: str, actor: str, reason: str | None = None) -> di
         _upsert(CANDIDATES_PATH, match)
         _upsert(REJECTED_PATH, match)
         _audit(match, "reject", actor, reason)
+        invalidate_behavioral_memory()
         return _public_example(match)
 
 
@@ -646,6 +679,132 @@ def purge_unreviewed(retention_days: int) -> int:
         return removed
 
 
+def _batch_key(row: dict[str, Any]) -> str:
+    instruction = " ".join(str(row.get("instruction") or "").casefold().split())
+    ideal = " ".join(str(row.get("ideal_response") or "").casefold().split())
+    return _digest(f"{instruction}\n{ideal}")
+
+
+def validate_batch(example_ids: list[str], minimum_quality: int = 4) -> dict[str, Any]:
+    unique_ids = list(dict.fromkeys(str(value) for value in example_ids if str(value).strip()))
+    rows = {str(row.get("id")): row for row in _all_candidates()}
+    selected_rows = [rows[example_id] for example_id in unique_ids if example_id in rows]
+    comparison_rows = [
+        row for row in rows.values() if row.get("review_status") == "approved"
+    ] + selected_rows
+    exact_groups, near_pairs = find_duplicates(comparison_rows)
+    conflicts = find_conflicts(comparison_rows)
+    extra_reasons: dict[str, list[str]] = {example_id: [] for example_id in unique_ids}
+    for group in exact_groups:
+        for example_id in set(group) & set(unique_ids):
+            extra_reasons[example_id].append("critical_duplicate")
+    for pair in near_pairs:
+        for example_id in {str(pair.get("left")), str(pair.get("right"))} & set(unique_ids):
+            extra_reasons[example_id].append("near_duplicate")
+    for conflict in conflicts:
+        for example_id in set(str(value) for value in conflict.get("ids") or []) & set(unique_ids):
+            extra_reasons[example_id].append("conflict")
+    approved_keys = {
+        _batch_key(row)
+        for row in rows.values()
+        if row.get("review_status") == "approved" and str(row.get("ideal_response") or "").strip()
+    }
+    selected_keys: set[str] = set()
+    eligible: list[dict[str, Any]] = []
+    blocked: list[dict[str, Any]] = []
+    for example_id in unique_ids:
+        row = rows.get(example_id)
+        reasons: list[str] = []
+        if row is None:
+            reasons.append("not_found")
+        else:
+            metadata = _notes(row)
+            flags = metadata.get("flags") or {}
+            if row.get("review_status") != "pending":
+                reasons.append("not_pending")
+            if row.get("contains_secret"):
+                reasons.append("contains_secret")
+            for flag in ("leak_detected", "hallucination_detected", "incorrect_source_detected"):
+                if flags.get(flag):
+                    reasons.append(flag)
+            if row.get("access_profile") not in {"player", "gm", "system"}:
+                reasons.append("invalid_access_profile")
+            if not str(row.get("ideal_response") or "").strip():
+                reasons.append("empty_ideal_response")
+            quality = int(metadata.get("quality_5") or 0)
+            if quality < minimum_quality:
+                reasons.append("quality_below_threshold")
+            errors = validate_example(row, strict_approval=True)
+            reasons.extend(f"schema:{error}" for error in errors)
+            key = _batch_key(row)
+            if key in approved_keys or key in selected_keys:
+                reasons.append("critical_duplicate")
+            selected_keys.add(key)
+            reasons.extend(extra_reasons.get(example_id) or [])
+        summary = {
+            "id": example_id,
+            "instruction": str((row or {}).get("instruction") or "")[:180],
+            "category": (row or {}).get("category"),
+            "access_profile": (row or {}).get("access_profile"),
+            "quality": (_notes(row).get("quality_5") if row else None),
+            "reasons": list(dict.fromkeys(reasons)),
+        }
+        (blocked if reasons else eligible).append(summary)
+    return {
+        "requested": len(unique_ids),
+        "eligible": eligible,
+        "blocked": blocked,
+        "minimum_quality": minimum_quality,
+        "confirmation_required": "APROVAR LOTE",
+    }
+
+
+def approve_batch(
+    example_ids: list[str], *, confirmation: str, reviewed: bool, actor: str = "Sage",
+    reason: str | None = None, minimum_quality: int = 4,
+) -> dict[str, Any]:
+    if confirmation.strip() != "APROVAR LOTE":
+        raise ValueError("Digite APROVAR LOTE para confirmar a revisão humana.")
+    if not reviewed:
+        raise ValueError("Confirme que os exemplos selecionados foram revisados visualmente.")
+    validation = validate_batch(example_ids, minimum_quality=minimum_quality)
+    approved: list[dict[str, Any]] = []
+    for summary in validation["eligible"]:
+        row = get_example(summary["id"])
+        quality = int((_notes(row).get("quality_5") or minimum_quality))
+        result = approve_example(
+            summary["id"], actor, reason or "Aprovação em lote revisada pelo Sage", quality=quality
+        )
+        approved.append(
+            {
+                "id": summary["id"],
+                "category": result["example"].get("category"),
+                "access_profile": result["example"].get("access_profile"),
+            }
+        )
+    invalidate_behavioral_memory()
+    return {**validation, "approved": approved, "approved_count": len(approved)}
+
+
+def behavior_memory_stats() -> dict[str, Any]:
+    data = get_behavioral_memory().stats()
+    approved = int(data.get("approved_total") or 0)
+    milestones = [
+        (25, "smoke"), (50, "experimental"), (100, "alpha_benchmark"),
+        (250, "candidate_alpha"), (500, "candidate_beta"), (1000, "production_candidate"),
+    ]
+    next_target, next_name = next(
+        ((target, name) for target, name in milestones if approved < target), milestones[-1]
+    )
+    data["milestones"] = [
+        {"target": target, "stage": name, "reached": approved >= target} for target, name in milestones
+    ]
+    data["next_milestone"] = {
+        "target": next_target, "stage": next_name, "remaining": max(0, next_target - approved)
+    }
+    return data
+
+
 def stats() -> dict[str, Any]:
     rows = _all_candidates()
     statuses = Counter(str(row.get("review_status") or "unknown") for row in rows)
@@ -676,4 +835,5 @@ def stats() -> dict[str, Any]:
         "coverage": coverage,
         "training_blocked": approved < minimum,
         "warning": "PENDENTES NÃO SÃO USADOS NO TREINAMENTO.",
+        "behavior_memory": behavior_memory_stats(),
     }

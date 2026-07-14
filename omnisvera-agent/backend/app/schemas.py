@@ -29,6 +29,10 @@ class HealthResponse(BaseModel):
     player_profile_id: str | None = None
     player_character_path: str | None = None
     player_character_title: str | None = None
+    training_capture_mode: str | None = None
+    behavior_memory_enabled: bool = False
+    behavior_memory_mode: str | None = None
+    behavior_memory_ab_mode: str | None = None
 
 
 class RebuildResponse(BaseModel):
@@ -71,6 +75,7 @@ class ChatRequest(BaseModel):
     question: str
     limit: int = 4
     context_paths: list[str] = Field(default_factory=list)
+    session_id: str | None = Field(default=None, max_length=160)
 
 
 class ChatResponse(BaseModel):
@@ -93,6 +98,8 @@ class ChatResponse(BaseModel):
     response_time_ms: int | None = None
     raw_model_response: str | None = None
     validator_rejections: list[dict[str, Any]] = Field(default_factory=list)
+    behavior_memory_used: bool = False
+    behavioral_trace: dict[str, Any] | None = None
 
 
 class TrainingInteractionCapture(BaseModel):
@@ -115,6 +122,8 @@ class TrainingInteractionCapture(BaseModel):
     response_time_ms: int = Field(default=0, ge=0)
     validator_rejections: list[dict[str, Any]] = Field(default_factory=list)
     warning: str | None = Field(default=None, max_length=2000)
+    behavior_memory_used: bool = False
+    behavioral_trace: dict[str, Any] | None = None
     feedback_action: str
     reason: str | None = Field(default=None, max_length=3000)
     category: str | None = None
@@ -152,6 +161,15 @@ class TrainingDecisionRequest(BaseModel):
 class TrainingFlagRequest(BaseModel):
     reviewer: str = Field(default="Sage", min_length=2, max_length=120)
     detail: str | None = Field(default=None, max_length=3000)
+
+
+class TrainingBatchRequest(BaseModel):
+    example_ids: list[str] = Field(min_length=1, max_length=100)
+    reviewer: str = Field(default="Sage", min_length=2, max_length=120)
+    reviewed: bool = False
+    confirmation: str = Field(default="", max_length=80)
+    reason: str | None = Field(default=None, max_length=3000)
+    minimum_quality: int = Field(default=4, ge=1, le=5)
 
 
 class DashboardSection(BaseModel):

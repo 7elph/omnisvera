@@ -52,7 +52,9 @@ from .player_inventory import init_player_inventory, list_inventory, upsert_inve
 from .player_ideas import create_idea, init_player_ideas, list_ideas, review_idea
 from .rag import answer_question
 from .training_curation import (
+    approve_batch,
     approve_example,
+    behavior_memory_stats,
     capture_interaction,
     delete_pending,
     duplicate_example,
@@ -65,6 +67,7 @@ from .training_curation import (
     sanitized_report,
     stats as training_stats,
     update_example,
+    validate_batch,
 )
 from .schemas import (
     ChatRequest,
@@ -97,6 +100,7 @@ from .schemas import (
     SearchRequest,
     SearchResult,
     TrainingDecisionRequest,
+    TrainingBatchRequest,
     TrainingExamplePatch,
     TrainingFlagRequest,
     TrainingInteractionCapture,
@@ -445,6 +449,10 @@ async def health(access: AccessContext = Depends(require_any)) -> HealthResponse
         player_profile_id=access.profile_id,
         player_character_path=access.character_path,
         player_character_title=access.character_title,
+        training_capture_mode=settings.training_capture_mode if access.mode == "gm" else None,
+        behavior_memory_enabled=settings.behavior_memory_enabled,
+        behavior_memory_mode=settings.behavior_memory_mode if access.mode == "gm" else None,
+        behavior_memory_ab_mode=settings.behavior_memory_ab_mode if access.mode == "gm" else None,
     )
 
 
@@ -559,6 +567,15 @@ async def gm_chat(request: ChatRequest, _: AccessContext = Depends(require_maste
             "response_time_ms": response_time_ms,
             "raw_model_response": str(trace.get("raw_ollama") or "") or None,
             "validator_rejections": trace.get("rejected_claims") or [],
+            "behavior_memory_used": bool(trace.get("behavior_memory_used")),
+            "behavioral_trace": {
+                "example_ids": trace.get("behavioral_example_ids") or [],
+                "categories": trace.get("behavioral_categories") or [],
+                "scores": trace.get("behavioral_scores") or [],
+                "mode": trace.get("behavioral_mode"),
+                "prompt_size_added": trace.get("behavioral_prompt_size_added") or 0,
+                "retrieval_time_ms": trace.get("behavioral_retrieval_time_ms") or 0,
+            },
         }
     )
     if settings.training_capture_mode == "master_session":
@@ -566,7 +583,7 @@ async def gm_chat(request: ChatRequest, _: AccessContext = Depends(require_maste
             {
                 "interaction_id": interaction_id,
                 "created_at": created_at,
-                "session_id": None,
+                "session_id": request.session_id,
                 "user_profile": "gm",
                 "question": request.question,
                 "raw_model_response": result.get("raw_model_response"),
@@ -581,7 +598,10 @@ async def gm_chat(request: ChatRequest, _: AccessContext = Depends(require_maste
                 "response_time_ms": response_time_ms,
                 "validator_rejections": result.get("validator_rejections") or [],
                 "warning": result.get("warning"),
-            }
+                "behavior_memory_used": result.get("behavior_memory_used"),
+                "behavioral_trace": result.get("behavioral_trace"),
+            },
+            settings.vault_path,
         )
     return result
 
@@ -716,6 +736,37 @@ def gm_training_example_duplicate(
 @app.get("/gm/training/stats")
 def gm_training_stats(_: AccessContext = Depends(require_training_admin)) -> dict:
     return training_stats()
+
+
+@app.post("/gm/training/examples/batch/validate")
+def gm_training_batch_validate(
+    request: TrainingBatchRequest,
+    _: AccessContext = Depends(require_training_admin),
+) -> dict:
+    return validate_batch(request.example_ids, minimum_quality=request.minimum_quality)
+
+
+@app.post("/gm/training/examples/batch/approve")
+def gm_training_batch_approve(
+    request: TrainingBatchRequest,
+    _: AccessContext = Depends(require_training_admin),
+) -> dict:
+    try:
+        return approve_batch(
+            request.example_ids,
+            confirmation=request.confirmation,
+            reviewed=request.reviewed,
+            actor=request.reviewer,
+            reason=request.reason,
+            minimum_quality=request.minimum_quality,
+        )
+    except ValueError as error:
+        raise _training_error(error) from error
+
+
+@app.get("/gm/training/behavior-memory")
+def gm_training_behavior_memory(_: AccessContext = Depends(require_training_admin)) -> dict:
+    return behavior_memory_stats()
 
 
 @app.get("/gm/training/export-sanitized")

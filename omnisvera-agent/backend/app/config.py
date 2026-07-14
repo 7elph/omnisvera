@@ -38,6 +38,11 @@ class Settings:
     rebuild_on_startup: bool
     training_capture_mode: str
     unreviewed_retention_days: int
+    behavior_memory_enabled: bool
+    behavior_memory_top_k: int
+    behavior_memory_min_score: float
+    behavior_memory_mode: str
+    behavior_memory_ab_mode: str
 
 
 def _rag_mode(value: str) -> str:
@@ -62,6 +67,23 @@ def _model_mode(value: str) -> str:
 def _training_capture_mode(value: str) -> str:
     normalized = value.strip().lower()
     return normalized if normalized in {"off", "manual", "master_session"} else "manual"
+
+
+def _behavior_memory_mode(value: str) -> str:
+    normalized = value.strip().lower()
+    return normalized if normalized in {"off", "metadata_only", "sanitized", "raw_safe"} else "sanitized"
+
+
+def _behavior_memory_ab_mode(value: str) -> str:
+    normalized = value.strip().lower()
+    return normalized if normalized in {"baseline", "behavioral"} else "behavioral"
+
+
+def _safe_float(name: str, default: float) -> float:
+    try:
+        return float(os.getenv(name, str(default)))
+    except ValueError:
+        return default
 
 
 def _safe_int(name: str, default: int) -> int:
@@ -144,4 +166,16 @@ def get_settings() -> Settings:
             os.getenv("OMNISVERA_TRAINING_CAPTURE_MODE", "manual")
         ),
         unreviewed_retention_days=_safe_int("OMNISVERA_UNREVIEWED_RETENTION_DAYS", 30),
+        behavior_memory_enabled=os.getenv("OMNISVERA_BEHAVIOR_MEMORY_ENABLED", "true").lower()
+        in {"1", "true", "yes", "sim"},
+        behavior_memory_top_k=min(3, _safe_int("OMNISVERA_BEHAVIOR_MEMORY_TOP_K", 3)),
+        behavior_memory_min_score=max(
+            0.0, min(1.0, _safe_float("OMNISVERA_BEHAVIOR_MEMORY_MIN_SCORE", 0.32))
+        ),
+        behavior_memory_mode=_behavior_memory_mode(
+            os.getenv("OMNISVERA_BEHAVIOR_MEMORY_MODE", "sanitized")
+        ),
+        behavior_memory_ab_mode=_behavior_memory_ab_mode(
+            os.getenv("OMNISVERA_BEHAVIOR_MEMORY_AB_MODE", "behavioral")
+        ),
     )

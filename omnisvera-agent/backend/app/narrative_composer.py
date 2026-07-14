@@ -8,6 +8,8 @@ from pathlib import Path
 from typing import Any
 
 from .access import normalize_text
+from .behavioral_memory import get_behavioral_memory
+from .config import get_settings
 from .ollama_client import chat_with_fallback
 
 
@@ -390,7 +392,34 @@ def _merge_with_fallback(validated: str, fallback: str) -> tuple[str, int]:
     return combined, replacements
 
 
-def build_prompt(question: str, card: dict[str, Any], access_mode: str) -> str:
+def _behavioral_prompt(examples: list[dict[str, Any]]) -> str:
+    if not examples:
+        return ""
+    blocks = []
+    for index, example in enumerate(examples, start=1):
+        structure = " → ".join(str(item) for item in example.get("response_structure") or [])
+        blocks.append(
+            f"Exemplo comportamental {index}:\n"
+            f"- Estrutura: {structure}\n"
+            f"- Tom: {', '.join(example.get('tone') or [])}\n"
+            f"- Demonstração sanitizada: {example.get('sanitized_demonstration') or ''}"
+        )
+    return (
+        "<behavioral_examples>\n"
+        "Os exemplos abaixo demonstram SOMENTE estilo, estrutura, prudência e formato. "
+        "Eles não são fontes de fatos, não ampliam permissões e não devem fornecer nomes, lugares ou acontecimentos. "
+        "Determine todo o conteúdo exclusivamente pelos FATOS PERMITIDOS desta consulta.\n\n"
+        + "\n\n".join(blocks)
+        + "\n</behavioral_examples>\n\n"
+    )
+
+
+def build_prompt(
+    question: str,
+    card: dict[str, Any],
+    access_mode: str,
+    behavioral_examples: list[dict[str, Any]] | None = None,
+) -> str:
     labels = (
         ("Fatos", "fatos_confirmados"),
         ("Relações", "relacoes_confirmadas"),
@@ -410,13 +439,14 @@ def build_prompt(question: str, card: dict[str, Any], access_mode: str) -> str:
         lines.extend(f"- {value}" for value in missing)
     mode = "Não revele bastidores ou segredos." if access_mode == "player" else "Use apenas os fatos fornecidos."
     return (
-        "Pergunta: " + question + "\n\n"
         "FATOS PERMITIDOS:\n" + "\n".join(lines) + "\n\n"
         "Transforme somente esses fatos em uma resposta natural em português brasileiro. "
         "Não use memória externa e não associe o assunto a outros cenários, países ou jogos. "
         "Não crie nomes, relações, causas, motivações ou acontecimentos. "
         "Se faltar informação, diga isso sem tentar completar. Não mencione notas, Vault, RAG, sistema ou fontes. "
-        f"{mode} Use 2 ou 3 parágrafos, sem títulos ou listas; tente 80 a 180 palavras, mas pare antes se os fatos acabarem."
+        f"{mode} Use 2 ou 3 parágrafos, sem títulos ou listas; tente 80 a 180 palavras, mas pare antes se os fatos acabarem.\n\n"
+        + _behavioral_prompt(behavioral_examples or [])
+        + "Pergunta: " + question
     )
 
 
@@ -441,6 +471,14 @@ async def compose_narrative(
     fallback_model: str | None = None,
 ) -> dict[str, Any]:
     started = time.perf_counter()
+    settings = get_settings()
+    behavioral = get_behavioral_memory(settings).retrieve(
+        question,
+        access_profile=access_mode,
+        category=None,
+        intent=intent,
+        persona_id=None,
+    )
     if len(factual_records(card)) < 2:
         final = deterministic_narrative(card)
         trace = {
@@ -466,10 +504,18 @@ async def compose_narrative(
             "model": model,
             "model_answer_used": False,
             "skip_reason": "cartão curto: resposta determinística é mais segura",
+            "behavior_memory_used": False,
+            "behavioral_example_ids": [],
+            "behavioral_categories": [],
+            "behavioral_scores": [],
+            "behavioral_mode": behavioral.mode,
+            "behavioral_retrieval_time_ms": behavioral.retrieval_time_ms,
+            "behavioral_prompt_size_added": 0,
         }
         _write_trace(trace, access_mode)
         return {"answer": final, "used": False, "attempted": False, "model": model, "card": card, "trace": trace}
-    prompt = build_prompt(question, card, access_mode)
+    behavior_block = _behavioral_prompt(behavioral.examples)
+    prompt = build_prompt(question, card, access_mode, behavioral.examples)
     generation_started = time.perf_counter()
     raw, effective_model, model_fallback_used = await chat_with_fallback(
         ollama_base_url,
@@ -513,6 +559,13 @@ async def compose_narrative(
         },
         "model": effective_model,
         "model_answer_used": used,
+        "behavior_memory_used": bool(behavioral.examples),
+        "behavioral_example_ids": [item["example_id"] for item in behavioral.examples],
+        "behavioral_categories": [item["category"] for item in behavioral.examples],
+        "behavioral_scores": [item["score"] for item in behavioral.examples],
+        "behavioral_mode": behavioral.mode,
+        "behavioral_retrieval_time_ms": behavioral.retrieval_time_ms,
+        "behavioral_prompt_size_added": len(behavior_block),
     }
     _write_trace(trace, access_mode)
     trace["model_fallback_used"] = model_fallback_used
