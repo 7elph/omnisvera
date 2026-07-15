@@ -57,14 +57,6 @@ const FIELD_DEFINITIONS: Record<string, FieldDefinition[]> = {
         { value: "Ordeiro", label: "Ordeiro" },
         { value: "Neutro", label: "Neutro" },
         { value: "Caótico", label: "Caótico" },
-        { value: "Ordeiro Bom", label: "Ordeiro Bom" },
-        { value: "Neutro Bom", label: "Neutro Bom" },
-        { value: "Caótico Bom", label: "Caótico Bom" },
-        { value: "Ordeiro Neutro", label: "Ordeiro Neutro" },
-        { value: "Caótico Neutro", label: "Caótico Neutro" },
-        { value: "Ordeiro Mau", label: "Ordeiro Mau" },
-        { value: "Neutro Mau", label: "Neutro Mau" },
-        { value: "Caótico Mau", label: "Caótico Mau" },
       ],
     },
   ],
@@ -119,6 +111,62 @@ function valueForInput(value: string | number | null | undefined) {
   return value === null || value === undefined ? "" : String(value);
 }
 
+function StepGuide({ step }: { step: CharacterSheetStep }) {
+  const guide = step.guide || {};
+  const sources = guide.sources || [];
+  if (!guide.instruction && !sources.length) return null;
+  return (
+    <aside className="sheet-rule-guide">
+      <div className="sheet-rule-intro">
+        <span className="sheet-rule-icon">✦</span>
+        <div><small>Como concluir esta etapa</small><p>{guide.instruction}</p></div>
+      </div>
+      {!!guide.calculations?.length && (
+        <div className="sheet-calculations">
+          {guide.calculations.map((calculation) => <strong key={calculation}>{calculation}</strong>)}
+        </div>
+      )}
+      {!!guide.checklist?.length && (
+        <ul className="sheet-rule-checklist">
+          {guide.checklist.map((item) => <li key={item}>{item}</li>)}
+        </ul>
+      )}
+      {sources.map((source) => {
+        const extraTables = (source.tables || []).slice(source.rules?.length ? 1 : 0);
+        return (
+          <details className="sheet-source-card" key={`${source.kind}-${source.title}`} open={step.key === "race" || step.key === "character_class"}>
+            <summary><span>{source.kind === "race" ? "Raça" : "Classe"}</span><strong>{source.title}</strong><b>consultar regras</b></summary>
+            <div className="sheet-source-content">
+              {source.intro && <p>{source.intro}</p>}
+              {!!source.rules?.length && (
+                <dl className="sheet-rule-list">
+                  {source.rules.map((rule) => <div key={`${rule.label}-${rule.value}`}><dt>{rule.label}</dt><dd>{rule.value}</dd></div>)}
+                </dl>
+              )}
+              {!!Object.keys(source.level_one || {}).length && (
+                <div className="sheet-level-one">
+                  <small>Progressão no nível atual</small>
+                  <div>{Object.entries(source.level_one || {}).map(([label, value]) => <span key={label}><b>{label}</b><strong>{value}</strong></span>)}</div>
+                </div>
+              )}
+              {extraTables.map((table, tableIndex) => (
+                <div className="sheet-reference-table" key={`${source.title}-table-${tableIndex}`}>
+                  <table><thead><tr>{table.headers.map((header) => <th key={header}>{header}</th>)}</tr></thead><tbody>{table.rows.map((row, rowIndex) => <tr key={rowIndex}>{row.map((cell, cellIndex) => <td key={`${cellIndex}-${cell}`}>{cell}</td>)}</tr>)}</tbody></table>
+                </div>
+              ))}
+              {!!source.abilities?.length && (
+                <div className="sheet-abilities">
+                  {source.abilities.map((ability) => <article key={ability.title}><strong>{ability.title}</strong><p>{ability.text}</p></article>)}
+                </div>
+              )}
+            </div>
+          </details>
+        );
+      })}
+    </aside>
+  );
+}
+
 function StepEditor({
   step,
   readOnly,
@@ -167,6 +215,7 @@ function StepEditor({
                 />
               ) : field.kind === "select" ? (
                 <select value={value} disabled={readOnly} onChange={(event) => setDraft({ ...draft, [field.key]: event.target.value })}>
+                  {value && !field.options?.some((option) => option.value === value) && <option value={value}>{value} — valor atual; confirme com o Mestre</option>}
                   {field.options?.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
                 </select>
               ) : (
@@ -260,7 +309,7 @@ function SheetView({ sheet, readOnly, onChange }: { sheet: CharacterSheet; readO
                 <span><strong>{step.title}</strong><small>{step.status === "complete" ? "Concluído" : `${step.missing_fields.length} campo(s) pendente(s)`}</small></span>
                 <b>{open ? "−" : "+"}</b>
               </button>
-              {open && <><p className="sheet-step-summary">{step.summary}</p><StepEditor step={step} readOnly={readOnly} onSave={(fields) => saveStep(step.key, fields)} /></>}
+              {open && <><p className="sheet-step-summary">{step.summary}</p><StepGuide step={step} /><StepEditor step={step} readOnly={readOnly} onSave={(fields) => saveStep(step.key, fields)} /></>}
             </section>
           );
         })}

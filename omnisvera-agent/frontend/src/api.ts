@@ -313,6 +313,20 @@ export type CharacterSheetStep = {
   status: "complete" | "pending";
   fields: Record<string, string | number | null>;
   missing_fields: string[];
+  guide: {
+    instruction?: string;
+    checklist?: string[];
+    calculations?: string[];
+    sources?: Array<{
+      kind: "race" | "class";
+      title: string;
+      intro?: string;
+      rules?: Array<{ label: string; value: string }>;
+      level_one?: Record<string, string>;
+      abilities?: Array<{ title: string; text: string }>;
+      tables?: Array<{ headers: string[]; rows: string[][] }>;
+    }>;
+  };
 };
 
 export type CharacterSheet = {

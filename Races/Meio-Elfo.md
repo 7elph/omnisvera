@@ -74,6 +74,22 @@ Para [[Vezemir]], a ficha foi montada pegando parte da base mecânica de Humano 
 > [!warning]
 > Não aplicar todos os traços de Humano e Elfo automaticamente a qualquer meio-elfo. Para [[Vezemir]], usar a ficha aprovada pelo Sage como referência final.
 
+### Configuração mecânica de Vezemir
+
+Esta é a combinação já registrada na ficha entregue de [[Vezemir]]. Ela resolve a criação desse personagem sem transformar a configuração em regra automática para todo meio-elfo.
+
+| Elemento | Regra de Vezemir |
+|---|---|
+| Movimento base | 9m |
+| Bônus racial de ataque | +1 |
+| Bônus racial de Classe de Armadura | +2 |
+| Idiomas | Comum escrito e Élfico falado |
+| Valores finais de atributos | FOR 13, DES 10, CON 16, INT 8, SAB 10, CAR 4 |
+| Alinhamento | Neutro |
+| Capacidades arcanas registradas | Força Arcana e Velocidade |
+
+Os bônus raciais de ataque e CA acima já fazem parte dos totais registrados na ficha de Vezemir. Não devem ser somados uma segunda vez durante a revisão no Companion.
+
 Não tratar Meio-Elfo como simples “humano com orelha élfica”. Em mesa, ele representa mistura de linhagem, cultura, memória e pertencimento dividido.
 
 ## Personagens Relacionados

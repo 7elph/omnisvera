@@ -339,6 +339,7 @@ class CharacterSheetStep(BaseModel):
     status: str
     fields: dict[str, Any] = Field(default_factory=dict)
     missing_fields: list[str] = Field(default_factory=list)
+    guide: dict[str, Any] = Field(default_factory=dict)
 
 
 class CharacterSheetResponse(BaseModel):

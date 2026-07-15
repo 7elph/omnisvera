@@ -80,28 +80,28 @@ No vault:
 > [!warning]
 > Tabela de mesa para Omnisvera. Ajustar se ficar forte/fraca demais durante jogo.
 
-| Nível | Reserva de Sangue | Técnicas Conhecidas | Técnicas Ativas por Cena | Marco |
-|---:|---:|---:|---:|---|
-| 1 | 3 | 2 | 1 | Despertar Hemomântico |
-| 2 | 4 | 2 | 1 | Sentido do Sangue |
-| 3 | 5 | 3 | 1 | Marca Rubra aprimorada |
-| 4 | 6 | 3 | 2 | Sangue Defensivo |
-| 5 | 7 | 4 | 2 | Técnica de Predador |
-| 6 | 8 | 4 | 2 | Reserva ampliada |
-| 7 | 9 | 5 | 2 | Névoa de Sangue |
-| 8 | 10 | 5 | 3 | Controle fino |
-| 9 | 11 | 6 | 3 | Técnica de caça |
-| 10 | 12 | 6 | 3 | Corpo rubro |
-| 11 | 13 | 7 | 3 | Sangue persistente |
-| 12 | 14 | 7 | 4 | Técnica avançada |
-| 13 | 15 | 8 | 4 | Predação sobrenatural |
-| 14 | 16 | 8 | 4 | Reserva superior |
-| 15 | 17 | 9 | 4 | Névoa predatória |
-| 16 | 18 | 9 | 5 | Domínio hemático |
-| 17 | 19 | 10 | 5 | Técnica maior |
-| 18 | 20 | 10 | 5 | Controle extremo |
-| 19 | 21 | 11 | 5 | Sangue terrível |
-| 20 | 22 | 12 | 6 | Mestre Hemomante |
+| Nível | XP | DV/PV | BA | JP | Reserva de Sangue | Técnicas Conhecidas | Técnicas Ativas por Cena | Marco |
+|---:|---:|---:|---:|---:|---:|---:|---:|---|
+| 1 | 0 | 1 | +1 | 15 | 3 | 2 | 1 | Despertar Hemomântico |
+| 2 | 1.500 | 2 | +1 | 15 | 4 | 2 | 1 | Sentido do Sangue |
+| 3 | 3.000 | 3 | +2 | 15 | 5 | 3 | 1 | Marca Rubra aprimorada |
+| 4 | 6.000 | 4 | +2 | 14 | 6 | 3 | 2 | Sangue Defensivo |
+| 5 | 12.000 | 5 | +2 | 14 | 7 | 4 | 2 | Técnica de Predador |
+| 6 | 24.000 | 6 | +3 | 14 | 8 | 4 | 2 | Reserva ampliada |
+| 7 | 48.000 | 7 | +3 | 13 | 9 | 5 | 2 | Névoa de Sangue |
+| 8 | 100.000 | 8 | +3 | 13 | 10 | 5 | 3 | Controle fino |
+| 9 | 200.000 | 9 | +4 | 13 | 11 | 6 | 3 | Técnica de caça |
+| 10 | 300.000 | +1 PV | +4 | 12 | 12 | 6 | 3 | Corpo rubro |
+| 11 | 400.000 | +1 PV | +4 | 12 | 13 | 7 | 3 | Sangue persistente |
+| 12 | 500.000 | +2 PV | +5 | 12 | 14 | 7 | 4 | Técnica avançada |
+| 13 | 600.000 | +2 PV | +5 | 11 | 15 | 8 | 4 | Predação sobrenatural |
+| 14 | 700.000 | +3 PV | +5 | 11 | 16 | 8 | 4 | Reserva superior |
+| 15 | 800.000 | +3 PV | +6 | 11 | 17 | 9 | 4 | Névoa predatória |
+| 16 | 900.000 | +4 PV | +6 | 10 | 18 | 9 | 5 | Domínio hemático |
+| 17 | 1.000.000 | +4 PV | +6 | 10 | 19 | 10 | 5 | Técnica maior |
+| 18 | 1.100.000 | +5 PV | +7 | 10 | 20 | 10 | 5 | Controle extremo |
+| 19 | 1.200.000 | +5 PV | +7 | 9 | 21 | 11 | 5 | Sangue terrível |
+| 20 | 1.300.000 | +6 PV | +7 | 9 | 22 | 12 | 6 | Mestre Hemomante |
 
 ## Reserva de Sangue
 
