@@ -8,6 +8,7 @@ from typing import Any
 
 from .curation import capture, review
 from .colab import prepare_colab_package, prepare_experimental_colab_package
+from .behavior_seed import install_seed
 from .dataset import build_dataset, coverage_report, migrate_legacy_dataset, validate_rows
 from .exporting import export_gguf, merge, ollama_command, quantize
 from .evaluation import evaluate_models
@@ -36,6 +37,7 @@ def build_parser() -> argparse.ArgumentParser:
     p = sub.add_parser("approve-example"); p.add_argument("--source", type=_path, required=True); p.add_argument("--id", required=True); p.add_argument("--reviewer", required=True); p.add_argument("--quality-score", type=int, default=2); p.add_argument("--ideal-response")
     p = sub.add_parser("build-dataset"); p.add_argument("--approved", type=_path); p.add_argument("--output", type=_path); p.add_argument("--version", default="v0.1.0"); p.add_argument("--seed", type=int, default=7331); p.add_argument("--experimental-ack")
     p = sub.add_parser("coverage-report"); p.add_argument("--approved", type=_path); p.add_argument("--output", type=_path)
+    p = sub.add_parser("install-behavior-seed"); p.add_argument("--output", type=_path)
     p = sub.add_parser("prepare-colab"); p.add_argument("--approved", type=_path); p.add_argument("--config", type=_path); p.add_argument("--frozen-eval", type=_path); p.add_argument("--output", type=_path, required=True); p.add_argument("--acknowledgement", required=True)
     p = sub.add_parser("prepare-colab-experimental"); p.add_argument("--approved", type=_path); p.add_argument("--config", type=_path); p.add_argument("--frozen-eval", type=_path); p.add_argument("--output", type=_path, required=True); p.add_argument("--acknowledgement", required=True)
     p = sub.add_parser("freeze-eval"); p.add_argument("--source", type=_path, default=MODEL_ROOT / "evaluation" / "frozen_eval_v1.json"); p.add_argument("--manifest", type=_path, default=MODEL_ROOT / "evaluation" / "frozen_eval_v1.manifest.json")
@@ -74,6 +76,7 @@ def main(argv: list[str] | None = None) -> int:
         report=coverage_report(args.approved); _print(report); 
         if args.output: write_json(args.output,report)
         return 0
+    if command == "install-behavior-seed": _print(install_seed(args.output)); return 0
     if command == "prepare-colab":
         _print(prepare_colab_package(args.output, args.approved, args.config, args.frozen_eval, args.acknowledgement)); return 0
     if command == "prepare-colab-experimental":
