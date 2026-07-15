@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import re
+from difflib import SequenceMatcher
 from pathlib import Path
 from typing import Any
 
@@ -128,11 +129,88 @@ def _context_from_notes(
 def _looks_like_rumor_overview(question: str) -> bool:
     lowered = normalize_text(question)
     has_rumor = "rumor" in lowered or "rumores" in lowered
+    targeted = any(
+        term in lowered
+        for term in (
+            " sobre ",
+            "desaparecimento",
+            "relacionad",
+            "a respeito de",
+            "acerca de",
+        )
+    )
     asks_list = any(
         term in lowered
         for term in ("quais", "lista", "liste", "ativos", "ativas", "tem", "existem", "circula", "circulam")
     )
-    return has_rumor and asks_list
+    return has_rumor and asks_list and not targeted
+
+
+def _targeted_rumor_subject(question: str) -> str | None:
+    normalized = normalize_text(question)
+    if "rumor" not in normalized and not normalized.startswith("o que se diz sobre"):
+        return None
+    match = re.search(r"\bsobre\s+(.+?)[?.!]*\s*$", question, flags=re.IGNORECASE)
+    if not match:
+        return None
+    subject = match.group(1).strip()
+    subject = re.sub(
+        r"^(?:o|a|os|as)\s+(?:desaparecimento|morte|origem|história|historia)\s+(?:de|do|da)\s+",
+        "",
+        subject,
+        flags=re.IGNORECASE,
+    )
+    subject = re.split(r",\s*(?:deixando|sem|usando|apenas)\b", subject, maxsplit=1, flags=re.IGNORECASE)[0]
+    return re.sub(r"^(?:o|a|os|as)\s+", "", subject, flags=re.IGNORECASE).strip()
+
+
+def _fact_theory_subject(question: str) -> str | None:
+    patterns = (
+        r"^quais\s+informa(?:ções|coes)\s+sobre\s+(.+?)\s+s(?:ão|ao)\s+confirmadas?.*$",
+        r"^o\s+que\s+(?:é|e)\s+fato\s+e\s+o\s+que\s+(?:é|e)\s+teoria\s+sobre\s+(.+?)[?.!]*$",
+    )
+    for pattern in patterns:
+        match = re.match(pattern, question.strip(), flags=re.IGNORECASE)
+        if match:
+            return match.group(1).strip(" ?.!\t\r\n")
+    return None
+
+
+def _route_targets(question: str) -> tuple[str, str] | None:
+    match = re.match(
+        r"^qual\s+seria\s+uma\s+rota(?:\s+conhecida)?\s+entre\s+(.+?)\s+e\s+(.+?)[?.!]*$",
+        question.strip(),
+        flags=re.IGNORECASE,
+    )
+    if not match:
+        return None
+    return match.group(1).strip(), match.group(2).strip()
+
+
+def _looks_like_campaign_territories(question: str) -> bool:
+    normalized = normalize_text(question)
+    return "territor" in normalized and "campanha atual" in normalized and any(
+        term in normalized for term in ("ligacoes", "importantes", "narrativas")
+    )
+
+
+def _looks_like_faction_conflicts(question: str) -> bool:
+    normalized = normalize_text(question)
+    return "faccoes" in normalized and "conflit" in normalized and any(
+        term in normalized for term in ("interesses", "atualmente", "quais")
+    )
+
+
+def _looks_like_known_chronology(question: str) -> bool:
+    normalized = normalize_text(question)
+    return "ordem cronologica" in normalized and "acontecimentos" in normalized
+
+
+def _looks_like_incomplete_chronology(question: str) -> bool:
+    normalized = normalize_text(question)
+    return "cronologia" in normalized and any(
+        term in normalized for term in ("teorias", "incompletas", "em aberto")
+    )
 
 
 def _looks_like_quest_overview(question: str) -> bool:
@@ -194,14 +272,69 @@ def _looks_like_player_current_activity(question: str) -> bool:
 
 def _looks_like_campaign_recap(question: str) -> bool:
     lowered = normalize_text(question)
-    has_recap = any(term in lowered for term in ("aconteceu", "ate agora", "resumo", "recap", "diario", "historia"))
-    asks_campaign = any(term in lowered for term in ("campanha", "sessao", "historia", "agora")) or "ate agora" in lowered
-    return has_recap and asks_campaign
+    return any(
+        term in lowered
+        for term in (
+            "o que aconteceu",
+            "ate agora",
+            "resumo da campanha",
+            "resumo da historia",
+            "recap da campanha",
+            "diario da campanha",
+        )
+    )
 
 
 def _direct_entity_target(question: str) -> tuple[str, str] | None:
     normalized = normalize_text(question)
     candidates: list[tuple[str, str]] = []
+    presentation_patterns = (
+        r"^apresente\s+(.+?)\s+(?:a|para)\s+(?:um|uma|o|a)\b",
+        r"^conte[-\s]+me\s+naturalmente\s+quem\s+(?:e|foi)\s+(.+)$",
+        r"^conte\s+(?:a\s+)?historia\s+de\s+(.+?)\s+como\b",
+        r"^resuma\s+(?:a\s+)?historia\s+de\s+(.+?)\s+em\b",
+        r"^explique\s+(.+?)\s+em\s+(?:dois|duas|tres|quatro|[0-9]+)\b",
+        r"^descreva\s+(.+?)\s+(?:usando|sem\s+criar|com\s+base)\b",
+        r"^como\s+(.+?)\s+(?:e|eh)\s+descrit[oa][?.!]*$",
+        r"^o\s+que\s+torna\s+(.+?)\s+relevante[s]?[?.!]*$",
+        r"^qual\s+(?:e\s+)?(?:a\s+)?importancia\s+(?:de|do|da)\s+(.+)$",
+        r"^o\s+que\s+ainda\s+permanece\s+desconhecido\s+sobre\s+(.+)$",
+    )
+    for pattern in presentation_patterns:
+        match = re.match(pattern, normalized)
+        if match:
+            candidates.append((match.group(1).strip(), "about"))
+    appearance_match = re.match(
+        r"^quem\s+(?:e|foi)\s+(.+?)\s+e\s+em\s+qual\s+parte\s+da\s+historia\s+(?:ele|ela)\s+aparece[?.!]*$",
+        normalized,
+    )
+    if appearance_match:
+        candidates.append((appearance_match.group(1).strip(), "appearance"))
+    role_match = re.match(
+        r"^quem\s+(?:e|foi)\s+(.+?)\s+e\s+qual\s+(?:e\s+)?(?:o\s+)?seu\s+papel\s+nos\s+acontecimentos\s+conhecidos[?.!]*$",
+        normalized,
+    )
+    if role_match:
+        candidates.append((role_match.group(1).strip(), "role"))
+    motivation_match = re.match(
+        r"^quais?\s+motivacoes?\s+(?:confirmadas?\s+)?(?:conduzem|movem|guiam)\s+(.+?)(?:\s+atualmente)?$",
+        normalized,
+    )
+    if motivation_match:
+        target = re.sub(r"\s+atualmente[?.!]*$", "", motivation_match.group(1).strip())
+        candidates.append((target, "motivation"))
+    history_match = re.match(
+        r"^quais?\s+acontecimentos?\s+historicos?\s+moldaram\s+(.+?)[?.!]*$",
+        normalized,
+    )
+    if history_match:
+        candidates.append((history_match.group(1).strip(), "history"))
+    danger_match = re.match(
+        r"^quais?\s+perigos(?:\s+confirmados)?\s+.+?\s+(?:perto|proximo|proxima)\s+(?:de|do|da)\s+(.+)$",
+        normalized,
+    )
+    if danger_match:
+        candidates.append((danger_match.group(1).strip(), "danger"))
     age_patterns = (
         r"^quantos\s+anos\s+(?:tem|possui|tinha)\s+(.+)$",
         r"^qual\s+(?:e|eh)?\s*a?\s*idade\s+(?:de|do|da|dos|das)?\s*(.+)$",
@@ -212,7 +345,17 @@ def _direct_entity_target(question: str) -> tuple[str, str] | None:
         match = re.match(pattern, normalized)
         if match:
             candidates.append((match.group(1).strip(), "age"))
-    for prefix in ("o que sabemos sobre", "o que se sabe sobre", "me fala sobre", "fale sobre", "resuma", "resume"):
+    for prefix in (
+        "o que sabemos sobre",
+        "o que se sabe sobre",
+        "o que e conhecido sobre",
+        "o que existe de confirmado sobre",
+        "me fala sobre",
+        "fale sobre",
+        "conte sobre",
+        "resuma",
+        "resume",
+    ):
         if normalized.startswith(prefix + " "):
             candidates.append((normalized.removeprefix(prefix).strip(), "about"))
     for prefix in ("onde fica", "onde esta", "onde esta localizado", "onde fica localizado"):
@@ -464,6 +607,34 @@ def _find_direct_entity_note(
         return get_note(database_path, int(exact_row["id"]), access_mode=access_mode)
     if len(_target_tokens(target)) > 4:
         return None
+    target_terms = _target_tokens(target)
+    fuzzy_rows: list[tuple[float, Any]] = []
+    if target_terms:
+        for row in all_notes_for_search(database_path):
+            if access_mode == "player" and not is_player_safe_row(row):
+                continue
+            aliases: list[str] = []
+            try:
+                aliases = json.loads(row["aliases"] or "[]")
+            except Exception:
+                pass
+            lookup_terms = _target_tokens(
+                " ".join([str(row["title"] or ""), _basename(str(row["path"] or "")), *(str(alias) for alias in aliases)])
+            )
+            if not lookup_terms:
+                continue
+            term_scores = [
+                max(SequenceMatcher(None, target_term, lookup_term).ratio() for lookup_term in lookup_terms)
+                for target_term in target_terms
+            ]
+            if term_scores and min(term_scores) >= 0.82:
+                fuzzy_rows.append((sum(term_scores) / len(term_scores), row))
+        fuzzy_rows.sort(key=lambda item: item[0], reverse=True)
+        if fuzzy_rows:
+            best_score, best_row = fuzzy_rows[0]
+            second_score = fuzzy_rows[1][0] if len(fuzzy_rows) > 1 else 0.0
+            if best_score >= 0.84 and best_score - second_score >= 0.06:
+                return get_note(database_path, int(best_row["id"]), access_mode=access_mode)
     results = search_notes(database_path, target, limit=16, access_mode=access_mode)
     if not results:
         return None
@@ -477,13 +648,19 @@ def _find_direct_entity_note(
     target_terms = _target_tokens(target)
     lookup_terms = _target_tokens(best_lookup)
     strong_name_match = bool(target_terms and target_terms.issubset(lookup_terms))
+    fuzzy_name_match = False
+    if target_terms and lookup_terms:
+        fuzzy_name_match = all(
+            max(SequenceMatcher(None, target_term, lookup_term).ratio() for lookup_term in lookup_terms) >= 0.82
+            for target_term in target_terms
+        )
     if len(target_terms) >= 2:
         distinctive_terms = {term for term in target_terms if term not in {"nimalia", "nimalis", "reino", "mare", "baixa"}}
-        if distinctive_terms and not distinctive_terms.issubset(lookup_terms):
+        if distinctive_terms and not distinctive_terms.issubset(lookup_terms) and not fuzzy_name_match:
             return None
     if kind in {"who", "what", "where"} and target_norm not in best_lookup and best_entity_score < 40:
         return None
-    if kind in {"who", "what", "where", "age"} and target_norm not in best_lookup and not strong_name_match and len(target_terms) >= 2:
+    if kind in {"who", "what", "where", "age"} and target_norm not in best_lookup and not strong_name_match and not fuzzy_name_match and len(target_terms) >= 2:
         return None
     if kind == "where" and best_type not in {"location", "territory", "map", "character", "faction"}:
         return None
@@ -860,6 +1037,69 @@ def _rich_direct_entity_answer(note: dict, question: str, access_mode: AccessMod
                     )
                 ],
             )
+    elif query_kind == "motivation":
+        motivation = _first_section_paragraph(
+            content,
+            ("Motivação", "Motivações", "Objetivos", "Objetivo Atual", "Situação Atual"),
+            max_chars=520,
+        )
+        if motivation:
+            answer = _answer_as_guide(title, [("O que o conduz", [_compact_sentence(motivation)])])
+        else:
+            answer = _answer_as_guide(
+                title,
+                [("O que o conduz", [f"As motivações atuais de {title} ainda não aparecem claramente no material liberado."])],
+            )
+    elif query_kind == "danger":
+        danger_items = _section_list_items(content, ("Perigos", "Ameaças", "Riscos", "Função no Mundo"))[:5]
+        overview = _first_section_paragraph(content, ("Visão Geral", "Descrição"), max_chars=360)
+        lines = [_compact_sentence(overview)] if overview else []
+        lines.extend(_compact_sentence(item) for item in danger_items)
+        answer = _answer_as_guide(
+            title,
+            [("Perigos conhecidos", lines or [f"Ainda não há perigos específicos confirmados para {title}."])],
+        )
+    elif query_kind in {"appearance", "role", "history"}:
+        identity = _first_section_paragraph(
+            content,
+            ("Conhecimento Público", "O que os jogadores sabem", "Visão Geral", "Resumo", "Descrição"),
+            max_chars=420,
+        )
+        if query_kind == "appearance":
+            detail = _first_section_paragraph(
+                content,
+                ("Aparições", "Entrada no Capítulo 01", "Situação Atual", "História Pública", "História"),
+                max_chars=520,
+            )
+            heading = "Onde entra na história"
+        elif query_kind == "role":
+            detail = _first_section_paragraph(
+                content,
+                ("Papel em Mesa", "Função em Jogo", "Papel Público", "Situação Atual", "Função no Mundo"),
+                max_chars=520,
+            )
+            heading = "Papel conhecido"
+        else:
+            detail = _first_section_paragraph(
+                content,
+                ("História Pública", "História", "Eventos Conhecidos", "Cronologia", "Origem"),
+                max_chars=620,
+            )
+            heading = "Acontecimentos conhecidos"
+        sections: list[tuple[str, list[str]]] = []
+        if identity:
+            sections.append(("Quem é", [_compact_sentence(identity)]))
+        sections.append(
+            (
+                heading,
+                [
+                    _compact_sentence(detail)
+                    if detail
+                    else f"Essa parte da trajetória de {title} ainda não está claramente definida no material disponível."
+                ],
+            )
+        )
+        answer = _answer_as_guide(title, sections)
     elif query_kind == "where":
         if note_type in {"location", "territory", "map"}:
             territory = frontmatter.get("territory")
@@ -1714,8 +1954,8 @@ def _requests_narrative_voice(question: str) -> bool:
     return any(
         term in normalized
         for term in (
-            "conte-me", "conte me", "conte sobre", "fale sobre", "de forma natural", "naturalmente",
-            "narre", "explique", "descreva", "o que se sabe", "como arquivo vivo", "com atmosfera",
+            "de forma natural", "naturalmente", "narre", "cronista", "paragrafos",
+            "como arquivo vivo", "com atmosfera",
         )
     )
 
@@ -1907,15 +2147,26 @@ def _asks_relation_or_theory(question: str) -> bool:
     normalized = normalize_text(question)
     return any(
         term in normalized
-        for term in ("ligacao", "relacao", "relacion", "entre", "suspeit", "teoria", "conexao")
+        for term in (
+            "ligacao", "relacao", "relacion", "entre", "suspeit", "teoria", "conexao",
+            "afetou", "conflito", "compare", "motivac", "papel", "importante para",
+            "em qual parte da historia", "acontecimentos historicos", "cronologia",
+        )
     )
 
 
 def _explicit_relation_targets(question: str) -> tuple[str, str] | None:
     patterns = (
         r"^\s*como\s+(.+?)\s+se\s+relaciona\s+com\s+(.+?)[?.!]*\s*$",
-        r"^\s*qual(?:\s+é|\s+e)?\s+a\s+rela(?:ção|cao)\s+entre\s+(.+?)\s+e\s+(.+?)[?.!]*\s*$",
+        r"^\s*como\s+(.+?)\s+est(?:á|a)\s+relacionad[oa]\s+(?:a|ao|à)\s+(.+?)[?.!]*\s*$",
+        r"^\s*qual(?:\s+é|\s+e)?\s+a\s+rela(?:ção|cao)(?:\s+conhecida)?\s+entre\s+(.+?)\s+e\s+(.+?)[?.!]*\s*$",
+        r"^\s*qual(?:\s+é|\s+e)?\s+a\s+liga(?:ção|cao)\s+(?:de|entre)\s+(.+?)\s+(?:com|e)\s+(.+?)[?.!]*\s*$",
         r"^\s*que\s+liga(?:ção|cao)\s+existe\s+entre\s+(.+?)\s+e\s+(.+?)[?.!]*\s*$",
+        r"^\s*como\s+a\s+morte\s+de\s+(.+?)\s+afetou\s+(.+?)[?.!]*\s*$",
+        r"^\s*por\s+que\s+(.+?)\s+e\s+(.+?)\s+entram\s+em\s+conflito[?.!]*\s*$",
+        r"^\s*quem\s+(?:é|e|foi)\s+(.+?)\s+e\s+por\s+que\s+.+?\s+importante\s+para\s+(.+?)[?.!]*\s*$",
+        r"^\s*quem\s+(?:é|e|foi)\s+(.+?)\s+e\s+qual\s+(?:é|e)?\s*(?:a\s+)?sua\s+liga(?:ção|cao)\s+com\s+(.+?)[?.!]*\s*$",
+        r"^\s*qual(?:\s+é|\s+e)?\s+(?:o\s+)?papel(?:\s+conhecido)?\s+(?:de|do|da)\s+(.+?)\s+em\s+(.+?)[?.!]*\s*$",
     )
     for pattern in patterns:
         match = re.match(pattern, question, flags=re.IGNORECASE)
@@ -1935,19 +2186,42 @@ def _answer_explicit_relation(database_path: Path, question: str, access_mode: A
         if summary is not None:
             resolved.append((summary, other))
     summaries = [summary for summary, _other in resolved]
-    evidence: list[str] = []
+    evidence: list[tuple[int, str]] = []
+    relation_terms = (
+        "adot", "criou", "ensin", "trein", "pupilo", "mentor", "companheir", "amig",
+        "sacrific", "morte", "salv", "impuls", "conflito", "inimig", "serv", "lider",
+        "protege", "trabalha", "pertence", "ligad",
+    )
     for summary, other in resolved:
         note = get_note(database_path, int(summary["id"]), access_mode=access_mode)
         if not note:
             continue
         content = sanitize_player_text(note["content"]) if access_mode == "player" else note["content"]
-        for sentence in re.split(r"(?<=[.!?])\s+|\n+", _compact_markdown(content, max_chars=2200)):
+        for sentence in re.split(r"(?<=[.!?])\s+|\n+", _compact_markdown(content, max_chars=12000)):
             sentence = _plain_wikilinks(re.sub(r"\s+", " ", sentence)).strip(" -*")
-            if normalize_text(other) in normalize_text(sentence) and 20 <= len(sentence) <= 340:
-                evidence.append(sentence)
-                break
+            normalized_sentence = normalize_text(sentence)
+            if normalize_text(other) not in normalized_sentence or not 20 <= len(sentence) <= 420:
+                continue
+            score = sum(25 for term in relation_terms if term in normalized_sentence)
+            if "associados conhecidos" in normalized_sentence or sentence.startswith("**"):
+                score -= 80
+            if sentence.endswith(":"):
+                score -= 40
+            score += min(len(sentence), 220) // 12
+            evidence.append((score, sentence))
     if evidence:
-        answer = " ".join(_compact_sentence(item) for item in evidence[:2])
+        evidence.sort(key=lambda item: item[0], reverse=True)
+        selected: list[str] = []
+        seen: set[str] = set()
+        for _score, sentence in evidence:
+            key = normalize_text(sentence)
+            if key in seen:
+                continue
+            seen.add(key)
+            selected.append(sentence)
+            if len(selected) == 2:
+                break
+        answer = " ".join(_compact_sentence(item) for item in selected)
         insufficient = False
         missing: list[str] = []
     else:
@@ -1968,6 +2242,544 @@ def _answer_explicit_relation(database_path: Path, question: str, access_mode: A
         "teorias": [],
         "informacoes_insuficientes": missing,
         "fontes_usadas": [note["path"] for note in summaries],
+    }
+
+
+def _answer_targeted_rumor(database_path: Path, question: str, access_mode: AccessMode) -> dict | None:
+    subject = _targeted_rumor_subject(question)
+    if not subject:
+        return None
+    summary = None
+    story_owner_title = ""
+    story_match = re.search(
+        r"relacionad[oa]\s+(?:a|à)\s+hist(?:ó|o)ria\s+(?:de|do|da)\s+(.+?)[?.!]*$",
+        subject,
+        flags=re.IGNORECASE,
+    )
+    if story_match:
+        owner = resolve_note(database_path, story_match.group(1).strip(), access_mode=access_mode)
+        owner_note = (
+            get_note(database_path, int(owner["id"]), access_mode=access_mode)
+            if owner is not None
+            else None
+        )
+        if owner_note is not None:
+            story_owner_title = _short_note_title(owner_note["title"])
+            owner_content = sanitize_player_text(owner_note["content"]) if access_mode == "player" else owner_note["content"]
+            for linked in re.findall(r"\[\[([^\]|#]+)(?:#[^\]|]+)?(?:\|[^\]]+)?\]\]", owner_content):
+                linked_summary = resolve_note(database_path, linked.strip(), access_mode=access_mode)
+                if linked_summary is None or normalize_text(linked_summary.get("type")) != "rumor":
+                    continue
+                summary = linked_summary
+                break
+    if summary is None:
+        subject_norm = normalize_text(subject)
+        rumor_candidates = []
+        for row in all_notes_for_search(database_path):
+            if normalize_text(row["type"]) != "rumor":
+                continue
+            if access_mode == "player" and not is_player_safe_row(row):
+                continue
+            lookup = normalize_text(f"{row['title']} {row['path']} {row['content']}")
+            if subject_norm and subject_norm in lookup:
+                rumor_candidates.append(row)
+        rumor_candidates.sort(key=lambda row: str(row["path"]))
+        if rumor_candidates:
+            summary = rumor_candidates[0]
+    if summary is None:
+        summary = resolve_note(database_path, subject, access_mode=access_mode)
+    if summary is None:
+        return _unknown_direct_entity_answer(subject)
+    note = get_note(database_path, int(summary["id"]), access_mode=access_mode)
+    if note is None:
+        return _unknown_direct_entity_answer(subject)
+    content = sanitize_player_text(note["content"]) if access_mode == "player" else note["content"]
+    items = _section_list_items(content, ("Rumores Públicos", "Rumores", "O que se diz"))[:5]
+    paragraph = _first_section_paragraph(
+        content,
+        ("Rumores Públicos", "Rumores", "O que se diz"),
+        max_chars=560,
+    )
+    title = _short_note_title(note["title"])
+    lines = [_compact_sentence(item) for item in items]
+    if paragraph and normalize_text(paragraph) not in {normalize_text(item) for item in lines}:
+        lines.insert(0, _compact_sentence(paragraph))
+    if lines:
+        answer = _answer_as_guide(f"Rumores sobre {title}", [("O que circula", lines)])
+        if story_owner_title:
+            answer = f"Na história de {story_owner_title}, este é o rumor registrado:\n\n{answer}"
+        insufficient = False
+        missing: list[str] = []
+    else:
+        answer = (
+            f"Não há um rumor específico registrado sobre {title} no material liberado. "
+            "Há referências gerais ao tema, mas nenhuma versão concreta pode ser repetida como rumor confirmado."
+        )
+        insufficient = True
+        missing = [f"Não há rumor específico registrado sobre {title}."]
+    return {
+        "answer": answer,
+        "notes_used": [note],
+        "note_paths": [note["path"]],
+        "insufficient_context": insufficient,
+        "warning": None,
+        "suggested_questions": _suggested_questions_for_notes(question, [note], access_mode),
+        "fatos_confirmados": [],
+        "teorias": [],
+        "informacoes_insuficientes": missing,
+        "fontes_usadas": [note["path"]],
+    }
+
+
+def _query_proper_terms(question: str) -> set[str]:
+    ignored = {
+        "apresente", "como", "compare", "conte", "crie", "descreva", "existem", "explique",
+        "finja", "ignore", "liste", "minha", "mostre", "qual", "quais", "quem", "resuma",
+        "separe", "usando", "somente", "jogador", "jogadores", "mestre",
+    }
+    return {
+        normalize_text(word)
+        for word in re.findall(
+            r"\b[A-ZÁÉÍÓÚÂÊÔÃÕÇ][A-Za-zÁÉÍÓÚÂÊÔÃÕÇáéíóúâêôãõç'’.-]{2,}\b",
+            question,
+        )
+        if normalize_text(word) not in ignored
+    }
+
+
+def _filter_results_by_query_entities(question: str, results: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    proper_terms = _query_proper_terms(question)
+    if not proper_terms:
+        return results
+    filtered: list[dict[str, Any]] = []
+    for item in results:
+        haystack = normalize_text(
+            " ".join(
+                [
+                    str(item.get("title") or ""),
+                    str(item.get("path") or ""),
+                    " ".join(str(alias) for alias in item.get("aliases") or []),
+                    str(item.get("excerpt") or ""),
+                ]
+            )
+        )
+        if all(term in haystack for term in proper_terms):
+            filtered.append(item)
+    return filtered
+
+
+def _comparison_targets(question: str) -> tuple[str, str] | None:
+    normalized = normalize_text(question)
+    match = re.match(
+        r"^compare\s+(.+?)\s+e\s+(.+?)(?:\s+sem\b|\s+usando\b|\s+apenas\b|$)",
+        normalized,
+    )
+    if not match:
+        match = re.match(
+            r"^(.+?)\s+e\s+(.+?)\s+sao\s+(?:o\s+mesmo\s+lugar|lugares\s+diferentes|nomes\s+relacionados)\b",
+            normalized,
+        )
+    if not match:
+        return None
+    return match.group(1).strip(), match.group(2).strip()
+
+
+def _comparison_summary(note: dict, access_mode: AccessMode) -> str:
+    frontmatter = note.get("frontmatter") or {}
+    content = sanitize_player_text(note["content"]) if access_mode == "player" else note["content"]
+    fields = _labeled_fields(content)
+    title = _short_note_title(frontmatter.get("name") or note["title"])
+    summary = _first_section_paragraph(
+        content,
+        ("Conhecimento Público", "O que os jogadores sabem", "Resumo", "Visão Geral", "Descrição"),
+    )
+    summary = _compact_sentence(
+        summary or _first_useful_sentence(content) or _public_identity_line(title, note.get("type"), frontmatter)
+    )
+    details: list[str] = []
+    race = _clean_value(fields.get("raca") or frontmatter.get("race"))
+    char_class = _clean_value(fields.get("classe") or frontmatter.get("class"))
+    if race and char_class:
+        details.append(f"É {race.lower()} e {char_class.lower()}.")
+    elif race or char_class:
+        details.append(f"É {(race or char_class).lower()}.")
+    return f"{title}: {summary} {' '.join(details)}".strip()
+
+
+def _answer_comparison(database_path: Path, question: str, access_mode: AccessMode) -> dict | None:
+    targets = _comparison_targets(question)
+    if not targets:
+        return None
+    summaries = [resolve_note(database_path, target, access_mode=access_mode) for target in targets]
+    notes = [
+        get_note(database_path, int(summary["id"]), access_mode=access_mode)
+        for summary in summaries
+        if summary is not None
+    ]
+    notes = [note for note in notes if note is not None]
+    missing_targets = [target for target, summary in zip(targets, summaries) if summary is None]
+    if missing_targets:
+        known = " ".join(_comparison_summary(note, access_mode) for note in notes)
+        missing = ", ".join(missing_targets)
+        answer = ((known + "\n\n") if known else "") + (
+            f"Ainda não há informação revelada suficiente sobre {missing} para fazer uma comparação confiável."
+        )
+        insufficient = True
+    else:
+        answer = "\n\n".join(_comparison_summary(note, access_mode) for note in notes)
+        answer += (
+            "\n\nA comparação acima se limita aos pontos confirmados; ela não pressupõe "
+            "motivações ou semelhanças não registradas."
+        )
+        insufficient = False
+    return {
+        "answer": answer,
+        "notes_used": notes,
+        "note_paths": [note["path"] for note in notes],
+        "insufficient_context": insufficient,
+        "warning": None,
+        "suggested_questions": _suggested_questions_for_notes(question, notes, access_mode),
+        "fatos_confirmados": [],
+        "teorias": [],
+        "informacoes_insuficientes": [f"Faltam informações sobre {target}." for target in missing_targets],
+        "fontes_usadas": [note["path"] for note in notes],
+    }
+
+
+def _looks_like_public_nimalia_king(question: str) -> bool:
+    normalized = normalize_text(question)
+    return "rei de nimalia" in normalized and any(
+        term in normalized for term in ("quem", "publicamente", "conhecido", "o que se sabe")
+    )
+
+
+def _answer_public_nimalia_king(database_path: Path, access_mode: AccessMode) -> dict | None:
+    summary = resolve_note(database_path, "Augustus Terra Decimus", access_mode=access_mode)
+    if summary is None:
+        return None
+    note = get_note(database_path, int(summary["id"]), access_mode=access_mode)
+    if note is None:
+        return None
+    return _direct_entity_answer(note, "Quem é Augustus Terra Decimus?", access_mode)
+
+
+def _unknown_direct_entity_answer(target: str) -> dict:
+    label = target.strip(" ?.!\t\r\n")
+    return {
+        "answer": (
+            f"Ainda não há informação revelada suficiente sobre {label} para responder com segurança. "
+            "Se esse nome pertence a alguém ou a algum lugar de Omnisvera, ele ainda não aparece claramente "
+            "no material disponível para esta consulta."
+        ),
+        "notes_used": [],
+        "note_paths": [],
+        "insufficient_context": True,
+        "warning": None,
+        "suggested_questions": [],
+        "fatos_confirmados": [],
+        "teorias": [],
+        "informacoes_insuficientes": [f"Não há informação confirmada disponível sobre {label}."],
+        "fontes_usadas": [],
+    }
+
+
+def _answer_priority_memory(
+    database_path: Path,
+    question: str,
+    priority_paths: list[str] | None,
+    access_mode: AccessMode,
+) -> dict | None:
+    if not priority_paths:
+        return None
+    normalized_question = normalize_text(question)
+    if not any(
+        term in normalized_question
+        for term in ("eu sei", "me lembro", "minha memoria", "minhas memorias", "meu passado", "minha historia")
+    ):
+        return None
+    query_terms = _query_proper_terms(question)
+    notes: list[dict] = []
+    selected: list[str] = []
+    seen: set[str] = set()
+    for priority_path in priority_paths:
+        summary = resolve_note(database_path, priority_path, access_mode=access_mode)
+        if summary is None:
+            continue
+        note = get_note(database_path, int(summary["id"]), access_mode=access_mode)
+        if note is None:
+            continue
+        notes.append(note)
+        content = sanitize_player_text(note["content"]) if access_mode == "player" else note["content"]
+        for raw_line in content.splitlines():
+            line = _plain_wikilinks(re.sub(r"^\s*(?:[-*+]\s+|>\s*)", "", raw_line)).strip()
+            if not line or line.startswith(("#", "---", "```")) or len(line) < 18:
+                continue
+            normalized_line = normalize_text(line)
+            if query_terms and not all(term in normalized_line for term in query_terms):
+                continue
+            if normalized_line in seen:
+                continue
+            seen.add(normalized_line)
+            selected.append(_compact_sentence(line))
+            if len(selected) >= 3:
+                break
+        if selected:
+            break
+    if not notes:
+        return None
+    if selected:
+        answer = " ".join(selected)
+        insufficient = False
+        missing: list[str] = []
+    else:
+        answer = "Essa lembrança não aparece com clareza no conhecimento já liberado para seu personagem."
+        insufficient = True
+        missing = ["A memória consultada ainda não está registrada de forma explícita."]
+    return {
+        "answer": answer,
+        "notes_used": notes[:1],
+        "note_paths": [note["path"] for note in notes[:1]],
+        "insufficient_context": insufficient,
+        "warning": None,
+        "suggested_questions": [],
+        "fatos_confirmados": [],
+        "teorias": [],
+        "informacoes_insuficientes": missing,
+        "fontes_usadas": [note["path"] for note in notes[:1]],
+    }
+
+
+def _answer_known_route(database_path: Path, question: str, access_mode: AccessMode) -> dict | None:
+    targets = _route_targets(question)
+    if not targets:
+        return None
+    normalized_targets = [normalize_text(target) for target in targets]
+    evidence: list[tuple[dict, str]] = []
+    for row in all_notes_for_search(database_path):
+        if access_mode == "player" and not is_player_safe_row(row):
+            continue
+        path = str(row["path"] or "")
+        if path.startswith(("Workflow/", "Templates/")) or "/_audit/" in path:
+            continue
+        content = sanitize_player_text(str(row["content"] or "")) if access_mode == "player" else str(row["content"] or "")
+        for sentence in re.split(r"(?<=[.!?])\s+|\n+", _compact_markdown(content, max_chars=12000)):
+            plain = _compact_sentence(_plain_wikilinks(sentence.strip(" -*")))
+            normalized_sentence = normalize_text(plain)
+            matches = []
+            for target in normalized_targets:
+                if target.startswith("nimal"):
+                    matches.append("nimal" in normalized_sentence)
+                else:
+                    matches.append(target in normalized_sentence)
+            if all(matches) and 25 <= len(plain) <= 420:
+                evidence.append((dict(row), plain))
+                break
+    if evidence:
+        row, sentence = evidence[0]
+        note = get_note(database_path, int(row["id"]), access_mode=access_mode)
+        notes = [note] if note is not None else []
+        answer = (
+            f"A ligação conhecida entre {targets[0]} e {targets[1]} passa pela estrada mencionada nas fontes: "
+            f"{sentence} O traçado completo ainda não está fechado como rota cartográfica detalhada."
+        )
+        insufficient = False
+    else:
+        notes = []
+        answer = (
+            f"Ainda não há uma rota detalhada confirmada entre {targets[0]} e {targets[1]}. "
+            "Posições gerais não bastam para inventar um caminho seguro."
+        )
+        insufficient = True
+    return {
+        "answer": answer,
+        "notes_used": notes,
+        "note_paths": [note["path"] for note in notes],
+        "insufficient_context": insufficient,
+        "warning": None,
+        "suggested_questions": [],
+        "fatos_confirmados": [],
+        "teorias": [],
+        "informacoes_insuficientes": [] if not insufficient else ["O traçado detalhado da rota não está confirmado."],
+        "fontes_usadas": [note["path"] for note in notes],
+    }
+
+
+def _answer_campaign_territories(database_path: Path, access_mode: AccessMode) -> dict | None:
+    chapter = resolve_note(database_path, "01 - Ecos do Mundo Perdido", access_mode=access_mode)
+    if chapter is None:
+        return None
+    chapter_note = get_note(database_path, int(chapter["id"]), access_mode=access_mode)
+    if chapter_note is None:
+        return None
+    content = sanitize_player_text(chapter_note["content"]) if access_mode == "player" else chapter_note["content"]
+    places: list[dict] = []
+    seen: set[int] = set()
+    for linked in re.findall(r"\[\[([^\]|#]+)(?:#[^\]|]+)?(?:\|[^\]]+)?\]\]", content):
+        summary = resolve_note(database_path, linked.strip(), access_mode=access_mode)
+        if summary is None or int(summary["id"]) in seen:
+            continue
+        if normalize_text(summary.get("type")) not in {"location", "territory", "map"}:
+            continue
+        seen.add(int(summary["id"]))
+        note = get_note(database_path, int(summary["id"]), access_mode=access_mode)
+        if note is not None:
+            places.append(note)
+        if len(places) == 8:
+            break
+    if not places:
+        return None
+    lines = []
+    for note in places:
+        note_content = sanitize_player_text(note["content"]) if access_mode == "player" else note["content"]
+        summary = _first_useful_sentence(note_content)
+        lines.append(f"{_short_note_title(note['title'])}: {summary}" if summary else _short_note_title(note["title"]))
+    return {
+        "answer": _answer_as_guide("Territórios ligados à campanha atual", [("Ligações confirmadas", lines)]),
+        "notes_used": [chapter_note, *places],
+        "note_paths": [chapter_note["path"], *(note["path"] for note in places)],
+        "insufficient_context": False,
+        "warning": None,
+        "suggested_questions": [],
+        "fatos_confirmados": [],
+        "teorias": [],
+        "informacoes_insuficientes": [],
+        "fontes_usadas": [chapter_note["path"], *(note["path"] for note in places)],
+    }
+
+
+def _answer_faction_conflicts(database_path: Path, access_mode: AccessMode) -> dict:
+    findings: list[tuple[dict, str]] = []
+    conflict_terms = ("conflit", "rival", "inimig", "disputa", "tensao", "tensão", "oposicao", "oposição")
+    for row in all_notes_for_search(database_path):
+        if normalize_text(row["type"]) != "faction":
+            continue
+        if access_mode == "player" and not is_player_safe_row(row):
+            continue
+        content = sanitize_player_text(str(row["content"] or "")) if access_mode == "player" else str(row["content"] or "")
+        for sentence in re.split(r"(?<=[.!?])\s+|\n+", _compact_markdown(content, max_chars=12000)):
+            plain = _compact_sentence(_plain_wikilinks(sentence.strip(" -*")))
+            normalized_sentence = normalize_text(plain)
+            if any(term in normalized_sentence for term in conflict_terms) and 30 <= len(plain) <= 420:
+                note = get_note(database_path, int(row["id"]), access_mode=access_mode)
+                if note is not None:
+                    findings.append((note, plain))
+                break
+        if len(findings) == 6:
+            break
+    notes = [note for note, _sentence in findings]
+    if findings:
+        lines = [f"{_short_note_title(note['title'])}: {sentence}" for note, sentence in findings]
+        answer = _answer_as_guide("Conflitos entre facções", [("O que está registrado", lines)])
+        insufficient = False
+        missing: list[str] = []
+    else:
+        answer = "Ainda não há conflitos entre facções descritos com clareza suficiente para montar uma lista confiável."
+        insufficient = True
+        missing = ["Os conflitos atuais entre facções não estão explicitamente documentados."]
+    return {
+        "answer": answer,
+        "notes_used": notes,
+        "note_paths": [note["path"] for note in notes],
+        "insufficient_context": insufficient,
+        "warning": None,
+        "suggested_questions": [],
+        "fatos_confirmados": [],
+        "teorias": [],
+        "informacoes_insuficientes": missing,
+        "fontes_usadas": [note["path"] for note in notes],
+    }
+
+
+def _answer_known_chronology(database_path: Path, access_mode: AccessMode) -> dict:
+    events: list[tuple[int, dict, str]] = []
+    seen: set[str] = set()
+    for row in all_notes_for_search(database_path):
+        if access_mode == "player" and not is_player_safe_row(row):
+            continue
+        path = str(row["path"] or "")
+        if path.startswith(("Workflow/", "Templates/")) or "/_audit/" in path:
+            continue
+        content = sanitize_player_text(str(row["content"] or "")) if access_mode == "player" else str(row["content"] or "")
+        for line in content.splitlines():
+            plain = _compact_sentence(_plain_wikilinks(line.strip(" -*|")))
+            years = re.findall(r"\b(?:1[0-9]{3}|20[0-9]{2}|21[0-9]{2})\b", plain)
+            if not years or len(plain) < 24 or len(plain) > 420:
+                continue
+            key = normalize_text(plain)
+            if key in seen:
+                continue
+            seen.add(key)
+            events.append((int(years[0]), dict(row), plain))
+    events.sort(key=lambda item: (item[0], item[2]))
+    selected = events[:12]
+    notes: list[dict] = []
+    note_ids: set[int] = set()
+    lines: list[str] = []
+    for year, row, sentence in selected:
+        lines.append(f"{year}: {sentence}")
+        row_id = int(row["id"])
+        if row_id not in note_ids:
+            note = get_note(database_path, row_id, access_mode=access_mode)
+            if note is not None:
+                notes.append(note)
+                note_ids.add(row_id)
+    if lines:
+        answer = _answer_as_guide("Cronologia conhecida", [("Em ordem", lines)])
+        insufficient = False
+        missing: list[str] = []
+    else:
+        answer = "Ainda não há acontecimentos públicos datados em quantidade suficiente para montar uma cronologia confiável."
+        insufficient = True
+        missing = ["Faltam eventos públicos com datas confirmadas."]
+    return {
+        "answer": answer,
+        "notes_used": notes,
+        "note_paths": [note["path"] for note in notes],
+        "insufficient_context": insufficient,
+        "warning": None,
+        "suggested_questions": [],
+        "fatos_confirmados": [],
+        "teorias": [],
+        "informacoes_insuficientes": missing,
+        "fontes_usadas": [note["path"] for note in notes],
+    }
+
+
+def _answer_incomplete_chronology(database_path: Path, access_mode: AccessMode) -> dict:
+    timeline = resolve_note(database_path, "TIMELINE", access_mode=access_mode)
+    if timeline is None:
+        return {
+            **_unknown_direct_entity_answer("a cronologia incompleta"),
+            "answer": "Não há uma cronologia de bastidor disponível para este perfil de acesso.",
+        }
+    note = get_note(database_path, int(timeline["id"]), access_mode=access_mode)
+    if note is None:
+        return _unknown_direct_entity_answer("a cronologia incompleta")
+    content = sanitize_player_text(note["content"]) if access_mode == "player" else note["content"]
+    uncertainty_terms = ("pode", "aproximad", "em aberto", "incomplet", "teoria", "a definir", "não confirm", "nao confirm")
+    lines: list[str] = []
+    for raw_line in content.splitlines():
+        plain = _compact_sentence(_plain_wikilinks(raw_line.strip(" -*|>")))
+        if 25 <= len(plain) <= 420 and any(term in normalize_text(plain) for term in uncertainty_terms):
+            lines.append(plain)
+        if len(lines) == 10:
+            break
+    answer = (
+        _answer_as_guide("Pontos incompletos da cronologia", [("Ainda em aberto", lines)])
+        if lines
+        else "A cronologia existe, mas seus pontos teóricos não estão marcados de forma explícita o bastante para uma lista segura."
+    )
+    return {
+        "answer": answer,
+        "notes_used": [note],
+        "note_paths": [note["path"]],
+        "insufficient_context": not bool(lines),
+        "warning": None,
+        "suggested_questions": [],
+        "fatos_confirmados": [],
+        "teorias": [],
+        "informacoes_insuficientes": [] if lines else ["Os pontos teóricos não estão explicitamente marcados."],
+        "fontes_usadas": [note["path"]],
     }
 
 
@@ -2454,6 +3266,31 @@ async def answer_question(
             retrieval_mode="structured:insufficient_exact_information",
         )
 
+    blocked_lookup_term = next(
+        (
+            term
+            for term in PLAYER_BLOCKED_LOOKUP_TERMS
+            if normalize_text(term) in normalized_security_question
+        ),
+        None,
+    )
+    if access_mode == "player" and blocked_lookup_term:
+        return _with_chat_meta(
+            _blocked_player_entity_answer(blocked_lookup_term),
+            ollama_used=False,
+            model=ollama_model,
+            retrieval_mode="blocked:player_sensitive_term",
+        )
+
+    fact_theory_subject = _fact_theory_subject(question)
+    if fact_theory_subject and resolve_note(database_path, fact_theory_subject, access_mode=access_mode) is None:
+        return _with_chat_meta(
+            _unknown_direct_entity_answer(fact_theory_subject),
+            ollama_used=False,
+            model=ollama_model,
+            retrieval_mode="structured:unknown_fact_theory_subject",
+        )
+
     action_kind = _player_action_kind(question) if access_mode == "player" else None
     action_target = _player_action_target(question) if action_kind else ""
     retrieval_question = action_target or question
@@ -2545,6 +3382,60 @@ async def answer_question(
                 retrieval_mode="structured:nimalia_borders",
             )
 
+    if not action_kind:
+        route_answer = _answer_known_route(database_path, question, access_mode)
+        if route_answer:
+            return _with_chat_meta(
+                route_answer,
+                ollama_used=False,
+                model=ollama_model,
+                retrieval_mode="structured:known_route",
+            )
+
+    if not action_kind and _looks_like_campaign_territories(question):
+        territory_answer = _answer_campaign_territories(database_path, access_mode)
+        if territory_answer:
+            return _with_chat_meta(
+                territory_answer,
+                ollama_used=False,
+                model=ollama_model,
+                retrieval_mode="structured:campaign_territories",
+            )
+
+    if not action_kind and _looks_like_faction_conflicts(question):
+        return _with_chat_meta(
+            _answer_faction_conflicts(database_path, access_mode),
+            ollama_used=False,
+            model=ollama_model,
+            retrieval_mode="structured:faction_conflicts",
+        )
+
+    if not action_kind and _looks_like_known_chronology(question):
+        return _with_chat_meta(
+            _answer_known_chronology(database_path, access_mode),
+            ollama_used=False,
+            model=ollama_model,
+            retrieval_mode="structured:known_chronology",
+        )
+
+    if not action_kind and _looks_like_incomplete_chronology(question):
+        return _with_chat_meta(
+            _answer_incomplete_chronology(database_path, access_mode),
+            ollama_used=False,
+            model=ollama_model,
+            retrieval_mode="structured:incomplete_chronology",
+        )
+
+    if not action_kind:
+        targeted_rumor = _answer_targeted_rumor(database_path, question, access_mode)
+        if targeted_rumor:
+            return _with_chat_meta(
+                targeted_rumor,
+                ollama_used=False,
+                model=ollama_model,
+                retrieval_mode="structured:targeted_rumor",
+            )
+
     if not action_kind and _looks_like_rumor_overview(question):
         rumor_answer = _answer_index_overview(
             database_path,
@@ -2623,6 +3514,16 @@ async def answer_question(
                 fallback_model,
             )
 
+    if not action_kind and _looks_like_public_nimalia_king(question):
+        king_answer = _answer_public_nimalia_king(database_path, access_mode)
+        if king_answer:
+            return _with_chat_meta(
+                king_answer,
+                ollama_used=False,
+                model=ollama_model,
+                retrieval_mode="structured:public_nimalia_king",
+            )
+
     extracted = _direct_entity_target(question)
     if extracted and access_mode == "player":
         target, _kind = extracted
@@ -2676,6 +3577,15 @@ async def answer_question(
             retrieval_mode="blocked:hidden_actor",
         )
 
+    comparison_answer = _answer_comparison(database_path, question, access_mode)
+    if comparison_answer is not None:
+        return _with_chat_meta(
+            comparison_answer,
+            ollama_used=False,
+            model=ollama_model,
+            retrieval_mode="structured:comparison",
+        )
+
     relation_answer = _answer_explicit_relation(database_path, question, access_mode)
     if relation_answer is not None:
         return _with_chat_meta(
@@ -2690,6 +3600,15 @@ async def answer_question(
         term in normalized_question
         for term in ("eu sei", "me lembro", "minha memoria", "minhas memorias", "meu passado", "minha historia")
     )
+    if personal_memory_query:
+        memory_answer = _answer_priority_memory(database_path, question, priority_paths, access_mode)
+        if memory_answer is not None:
+            return _with_chat_meta(
+                memory_answer,
+                ollama_used=False,
+                model=ollama_model,
+                retrieval_mode="structured:personal_memory",
+            )
     direct_note = None if personal_memory_query else _find_direct_entity_note(database_path, question, access_mode)
     if (
         direct_note is None
@@ -2709,6 +3628,21 @@ async def answer_question(
             access_mode,
             "direct_entity",
             fallback_model,
+        )
+    if extracted and not personal_memory_query and not _asks_relation_or_theory(question):
+        target, _query_kind = extracted
+        immediate_unknown_kinds = {"about", "who", "where", "age", "motivation", "danger", "appearance", "role", "history"}
+        proper_named_what = _query_kind == "what" and bool(_query_proper_terms(question))
+        if _query_kind not in immediate_unknown_kinds and not proper_named_what:
+            target = ""
+    else:
+        target = ""
+    if target:
+        return _with_chat_meta(
+            _unknown_direct_entity_answer(target),
+            ollama_used=False,
+            model=ollama_model,
+            retrieval_mode="structured:unknown_entity",
         )
 
     semantic_index = semantic_index_path or Path(".local-index/vault.jsonl")
@@ -2809,6 +3743,9 @@ async def answer_question(
         ]
         if exact_action_results:
             hybrid_results = exact_action_results[:1]
+
+    if not _query_requests_technical_context(question):
+        hybrid_results = _filter_results_by_query_entities(question, hybrid_results)
 
     note_ids = list(dict.fromkeys(int(item["id"]) for item in hybrid_results if item.get("id") is not None))
     notes_used = get_notes_by_ids(database_path, note_ids, access_mode=access_mode)

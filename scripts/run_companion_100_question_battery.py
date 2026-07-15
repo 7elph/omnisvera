@@ -5,6 +5,7 @@ import json
 import os
 import re
 import time
+import unicodedata
 import urllib.error
 import urllib.request
 from collections import Counter
@@ -51,7 +52,25 @@ MOJIBAKE_MARKERS = ("Ã", "Â", "â€", "ï¿½", "Liga??", "hist?ria", "inform
 
 
 def _normalize(value: str) -> str:
+    value = unicodedata.normalize("NFKD", value)
+    value = "".join(char for char in value if not unicodedata.combining(char))
     return re.sub(r"\s+", " ", value.casefold()).strip()
+
+
+def _question_proper_terms(question: str) -> set[str]:
+    ignored = {
+        "apresente", "como", "compare", "conte", "conte-me", "crie", "descreva", "existem", "explique",
+        "finja", "ignore", "liste", "minha", "mostre", "organize", "qual", "quais", "quem", "resuma",
+        "separe", "usando", "somente", "jogador", "jogadores", "mestre", "omnisvera",
+    }
+    return {
+        _normalize(word)
+        for word in re.findall(
+            r"\b[A-ZÁÉÍÓÚÂÊÔÃÕÇ][A-Za-zÁÉÍÓÚÂÊÔÃÕÇáéíóúâêôãõç'’.-]{2,}\b",
+            question,
+        )
+        if _normalize(word) not in ignored
+    }
 
 
 def _load_cases(path: Path) -> tuple[dict[str, Any], list[dict[str, Any]]]:
@@ -96,6 +115,8 @@ def _evaluate(case: dict[str, Any], payload: dict[str, Any]) -> list[str]:
         reasons.append("resposta curta ou vazia")
     if any(marker in answer for marker in MOJIBAKE_MARKERS):
         reasons.append("mojibake")
+    if any(marker in normalized for marker in ("associados conhecidos:**", "relacao exata perguntada")):
+        reasons.append("fragmento editorial ou metadado cru")
 
     profile = case["profile"]
     policy = case["policy"]
@@ -129,6 +150,21 @@ def _evaluate(case: dict[str, Any], payload: dict[str, Any]) -> list[str]:
         explicitly_blocked = str(payload.get("retrieval_mode") or "").startswith("blocked:")
         if not explicitly_blocked and not payload.get("notes_used") and not payload.get("insufficient_context") and not payload.get("informacoes_insuficientes"):
             reasons.append("sem fonte e sem declarar limite")
+
+    retrieval_mode = str(payload.get("retrieval_mode") or "")
+    compound_terms = ("relacao", "ligacao", "afetou", "conflito", "compare")
+    if retrieval_mode.startswith("direct_entity") and any(term in _normalize(case["question"]) for term in compound_terms):
+        reasons.append("pergunta composta tratada como entidade simples")
+
+    explicitly_limited = bool(payload.get("insufficient_context") or payload.get("informacoes_insuficientes"))
+    explicitly_limited = explicitly_limited or retrieval_mode.startswith("blocked:")
+    if case["policy"] != "grounded_alias" and not explicitly_limited:
+        proper_terms = _question_proper_terms(case["question"])
+        source_text = " ".join(str(note.get("title") or "") for note in payload.get("notes_used") or [])
+        supported_text = _normalize(answer + " " + source_text)
+        missing_terms = sorted(term for term in proper_terms if term not in supported_text)
+        if missing_terms:
+            reasons.append("entidade consultada ausente da resposta: " + ", ".join(missing_terms))
 
     sentences = [piece.strip() for piece in re.split(r"(?<=[.!?])\s+", normalized) if len(piece.strip()) > 18]
     if len(sentences) != len(set(sentences)):

@@ -109,6 +109,14 @@ def _clean_excerpt(text: str, max_chars: int = 520) -> str:
     text = re.sub(r"(?im)^>\s?", "", text)
     text = re.sub(r"<[^>]+>", "", text)
     text = _plain_wikilinks(text)
+    text = re.sub(r"(?im)^\s*#{1,6}\s+.*$", "", text)
+    text = re.sub(
+        r"(?im)^\s*\*\*(?:status|localiza[çc][ãa]o(?: atual)?|territ[oó]rio|fam[ií]lia|"
+        r"associados conhecidos|afilia[çc][õo]es?|ocupa[çc][ãa]o|apari[çc][õo]es|"
+        r"altura|alinhamento|origem|ra[çc]a|classe|n[ií]vel|inimigos conhecidos|posses):\*\*.*$",
+        "",
+        text,
+    )
     text = re.sub(r"(?im)^\s*(?:##+\s*)?(uso em mesa|como apresentar|pend[êe]ncias|template|dataview).*?$", "", text)
     text = re.sub(r"(?im)^\s*[-*]\s*$", "", text)
     text = re.sub(r"\s+", " ", text).strip()
@@ -126,6 +134,16 @@ def _excerpt(content: str, terms: list[str], max_chars: int = 520) -> str:
         return _clean_excerpt(clean, max_chars=max_chars)
     index = min(positions)
     start = max(index - 120, 0)
+    if start:
+        sentence_boundaries = [clean.rfind(mark, max(0, start - 100), index) for mark in (". ", "! ", "? ")]
+        boundary = max(sentence_boundaries)
+        if boundary >= 0:
+            start = boundary + 2
+        else:
+            while start < index and not clean[start].isspace():
+                start += 1
+            while start < index and clean[start].isspace():
+                start += 1
     end = min(start + max_chars, len(clean))
     return (clean[start:end].strip() + ("..." if end < len(clean) else "")).strip()
 
