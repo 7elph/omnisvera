@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { AccessMode, getAccessMode, getAccessToken, health, rebuildIndex, resolveNote, setAccessMode, setAccessToken } from "./api";
+import QuickCharacterSheet from "./components/QuickCharacterSheet";
 import ChatVault from "./pages/ChatVault";
-import CharacterSheetBuilder from "./pages/CharacterSheetBuilder";
+import PlayableCharacterSheet from "./pages/PlayableCharacterSheet";
 import NoteView from "./pages/NoteView";
 import PlayerPanel from "./pages/PlayerPanel";
 import SearchNotes from "./pages/SearchNotes";
@@ -247,7 +248,7 @@ export default function App() {
         <PlayerPanel key={`player-${authVersion}`} onOpenNote={openNote} onAskPrompt={askPrompt} />
       )}
       {authenticated && page === "chat" && <ChatVault onOpenNote={openNote} onUnknownNote={openUnknownNote} initialQuestion={chatSeed} />}
-      {authenticated && page === "sheet" && <CharacterSheetBuilder key={`sheet-${authVersion}-${mode}`} mode={mode === "player" ? "player" : "gm"} />}
+      {authenticated && page === "sheet" && <PlayableCharacterSheet key={`sheet-${authVersion}-${mode}`} mode={mode === "player" ? "player" : "gm"} />}
       {authenticated && page === "curation" && mode === "gm" && <ModelCurationPanel key={`curation-${authVersion}`} />}
       {authenticated && page === "search" && <SearchNotes onOpenNote={openNote} />}
       {authenticated && page === "note" && (
@@ -265,6 +266,7 @@ export default function App() {
           />
         </>
       )}
+      {authenticated && <QuickCharacterSheet hidden={page === "sheet"} onOpen={() => navigate("sheet")} />}
     </main>
   );
 }

@@ -343,6 +343,118 @@ export type CharacterSheet = {
   updated_at: string;
 };
 
+export type CharacterResource = {
+  key: string;
+  label: string;
+  current: number;
+  maximum: number;
+};
+
+export type CharacterAttack = {
+  id: string;
+  name: string;
+  attack_bonus?: number | null;
+  damage?: string | null;
+  range?: string | null;
+  notes?: string | null;
+};
+
+export type PlayableCharacterDefinition = {
+  id: string;
+  slug: string;
+  name: string;
+  portrait?: string | null;
+  cover?: string | null;
+  epithet?: string | null;
+  race?: string | null;
+  class_name?: string | null;
+  level?: number | null;
+  player_name?: string | null;
+  campaign?: string | null;
+  attributes?: Record<string, number | null> | null;
+  attribute_modifiers?: Record<string, number | null> | null;
+  abilities?: Record<string, string> | null;
+  attacks?: CharacterAttack[] | null;
+  attack_notes?: string | null;
+  defenses?: { armor_class?: number | null; saving_throw?: string | number | null; initiative?: number | null; initiative_configured?: boolean } | null;
+  progression?: { experience?: number | null; base_attack?: number | null; maximum_hp?: number | null } | null;
+  movement?: string | null;
+  base_equipment?: string[] | null;
+  public_description?: string | null;
+  history?: string | null;
+  relationships?: string | null;
+  physical_description?: string | null;
+  personality?: string | null;
+  goals?: string | null;
+  location?: string | null;
+  current_status?: string | null;
+  canonical_state?: string | null;
+  source_vault?: string | null;
+  definition_updated_at?: string | null;
+  gm_fields?: { notes?: string; private_state?: string } | null;
+};
+
+export type PlayableCharacterState = {
+  current_hp?: number | null;
+  maximum_hp?: number | null;
+  temporary_hp: number;
+  conditions: string[];
+  resources: CharacterResource[];
+  coins?: number | null;
+  location?: string | null;
+  session_notes: string;
+  updated_at: string;
+  version: number;
+};
+
+export type PlayableCharacter = {
+  access_level: "gm" | "owner" | "public";
+  definition: PlayableCharacterDefinition;
+  state?: PlayableCharacterState | null;
+  inventory: InventoryItem[];
+  permissions: {
+    view_private_mechanics: boolean;
+    edit_state: boolean;
+    edit_definition: boolean;
+    view_gm_fields: boolean;
+    revert_events: boolean;
+  };
+};
+
+export type PlayableCharacterSummary = {
+  id: string;
+  name: string;
+  portrait?: string | null;
+  epithet?: string | null;
+  race?: string | null;
+  class_name?: string | null;
+  level?: number | null;
+  current_hp?: number | null;
+  maximum_hp?: number | null;
+  armor_class?: number | null;
+  initiative?: number | null;
+  movement?: string | null;
+  conditions: string[];
+  resources: CharacterResource[];
+  access_level: "gm" | "owner" | "public";
+};
+
+export type CharacterEvent = {
+  id: number;
+  character_id: string;
+  session_id?: string | null;
+  actor_id: string;
+  actor_role: string;
+  event_type: string;
+  field: string;
+  before?: unknown;
+  after?: unknown;
+  reason?: string | null;
+  created_at: string;
+  reverted_at?: string | null;
+  reverted_by?: string | null;
+};
+
 export async function getPlayerProfile(): Promise<PlayerProfile> {
   const response = await fetch(`${API_BASE}/player/profile`, { headers: authHeaders() });
   if (!response.ok) throw new Error("Falha ao carregar perfil do jogador");
@@ -509,6 +621,62 @@ export async function reviewCharacterSheet(profileId: string, status: "approved"
     body: JSON.stringify({ status, feedback }),
   });
   if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao revisar ficha");
+  return response.json();
+}
+
+export async function listPlayableCharacters(): Promise<PlayableCharacterSummary[]> {
+  const response = await fetch(`${API_BASE}/characters`, { headers: authHeaders() });
+  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao carregar personagens");
+  return response.json();
+}
+
+export async function getPlayableCharacter(profileId: string): Promise<PlayableCharacter> {
+  const response = await fetch(`${API_BASE}/characters/${encodeURIComponent(profileId)}`, { headers: authHeaders() });
+  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao carregar ficha de jogo");
+  return response.json();
+}
+
+export async function applyCharacterStateAction(
+  profileId: string,
+  action: string,
+  payload: Record<string, unknown> = {},
+  reason?: string,
+): Promise<PlayableCharacter> {
+  const response = await fetch(`${API_BASE}/characters/${encodeURIComponent(profileId)}/actions`, {
+    method: "POST",
+    headers: authHeaders({ "Content-Type": "application/json" }),
+    body: JSON.stringify({ action, payload, reason }),
+  });
+  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao atualizar ficha");
+  return response.json();
+}
+
+export async function listCharacterEvents(profileId: string): Promise<CharacterEvent[]> {
+  const response = await fetch(`${API_BASE}/characters/${encodeURIComponent(profileId)}/events`, { headers: authHeaders() });
+  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao carregar histórico");
+  return response.json();
+}
+
+export async function updateCharacterDefinition(
+  profileId: string,
+  fields: Record<string, unknown>,
+  reason?: string,
+): Promise<PlayableCharacter> {
+  const response = await fetch(`${API_BASE}/gm/characters/${encodeURIComponent(profileId)}/definition`, {
+    method: "PATCH",
+    headers: authHeaders({ "Content-Type": "application/json" }),
+    body: JSON.stringify({ fields, reason }),
+  });
+  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao atualizar definição");
+  return response.json();
+}
+
+export async function revertCharacterEvent(profileId: string, eventId: number): Promise<PlayableCharacter> {
+  const response = await fetch(`${API_BASE}/gm/characters/${encodeURIComponent(profileId)}/events/${eventId}/revert`, {
+    method: "POST",
+    headers: authHeaders(),
+  });
+  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao reverter evento");
   return response.json();
 }
 

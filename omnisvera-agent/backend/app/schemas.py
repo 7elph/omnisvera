@@ -364,3 +364,120 @@ class CharacterSheetStepUpdate(BaseModel):
 class CharacterSheetReview(BaseModel):
     status: str
     feedback: str | None = Field(default=None, max_length=2400)
+
+
+class CharacterResource(BaseModel):
+    key: str
+    label: str
+    current: int = Field(ge=0)
+    maximum: int = Field(ge=0)
+
+
+class CharacterStateResponse(BaseModel):
+    current_hp: int | None = None
+    maximum_hp: int | None = None
+    temporary_hp: int = 0
+    conditions: list[str] = Field(default_factory=list)
+    resources: list[CharacterResource] = Field(default_factory=list)
+    coins: int | float | None = None
+    location: str | None = None
+    session_notes: str = ""
+    updated_at: str
+    version: int
+
+
+class CharacterDefinitionResponse(BaseModel):
+    id: str
+    slug: str
+    name: str
+    portrait: str | None = None
+    cover: str | None = None
+    epithet: str | None = None
+    race: str | None = None
+    class_name: str | None = None
+    level: int | None = None
+    player_name: str | None = None
+    campaign: str | None = None
+    attributes: dict[str, int | float | None] | None = None
+    attribute_modifiers: dict[str, int | None] | None = None
+    abilities: dict[str, str] | None = None
+    attacks: list[dict[str, Any]] | None = None
+    attack_notes: str | None = None
+    defenses: dict[str, Any] | None = None
+    progression: dict[str, Any] | None = None
+    movement: str | None = None
+    base_equipment: list[str] | None = None
+    public_description: str | None = None
+    history: str | None = None
+    relationships: str | None = None
+    physical_description: str | None = None
+    personality: str | None = None
+    goals: str | None = None
+    location: str | None = None
+    current_status: str | None = None
+    canonical_state: str | None = None
+    source_vault: str | None = None
+    definition_updated_at: str | None = None
+    gm_fields: dict[str, str] | None = None
+
+
+class CharacterPermissions(BaseModel):
+    view_private_mechanics: bool
+    edit_state: bool
+    edit_definition: bool
+    view_gm_fields: bool
+    revert_events: bool
+
+
+class PlayableCharacterResponse(BaseModel):
+    access_level: str
+    definition: CharacterDefinitionResponse
+    state: CharacterStateResponse | None = None
+    inventory: list[InventoryRecord] = Field(default_factory=list)
+    permissions: CharacterPermissions
+
+
+class PlayableCharacterSummary(BaseModel):
+    id: str
+    name: str
+    portrait: str | None = None
+    epithet: str | None = None
+    race: str | None = None
+    class_name: str | None = None
+    level: int | None = None
+    current_hp: int | None = None
+    maximum_hp: int | None = None
+    armor_class: int | None = None
+    initiative: int | None = None
+    movement: str | None = None
+    conditions: list[str] = Field(default_factory=list)
+    resources: list[CharacterResource] = Field(default_factory=list)
+    access_level: str
+
+
+class CharacterStateAction(BaseModel):
+    action: str
+    payload: dict[str, Any] = Field(default_factory=dict)
+    reason: str | None = Field(default=None, max_length=500)
+    session_id: str | None = Field(default=None, max_length=120)
+
+
+class CharacterDefinitionUpdate(BaseModel):
+    fields: dict[str, Any] = Field(default_factory=dict)
+    reason: str | None = Field(default=None, max_length=500)
+
+
+class CharacterEventResponse(BaseModel):
+    id: int
+    character_id: str
+    session_id: str | None = None
+    actor_id: str
+    actor_role: str
+    event_type: str
+    field: str
+    before: Any = None
+    after: Any = None
+    reason: str | None = None
+    created_at: str
+    reverted_at: str | None = None
+    reverted_by: str | None = None

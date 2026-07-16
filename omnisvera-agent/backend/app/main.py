@@ -28,6 +28,17 @@ from .character_creation import (
     submit_sheet,
     update_sheet_step,
 )
+from .character_play import (
+    apply_character_action,
+    build_character_definition,
+    compose_character_view,
+    get_or_create_state,
+    init_character_play,
+    list_character_events,
+    load_definition_overrides,
+    revert_character_event,
+    update_definition_overrides,
+)
 from .config import get_settings
 from .ollama_client import check_ollama
 from .note_editor import EditConflictError, read_editable_note, save_editable_note
@@ -78,6 +89,9 @@ from .training_curation import (
 from .schemas import (
     ChatRequest,
     ChatResponse,
+    CharacterDefinitionUpdate,
+    CharacterEventResponse,
+    CharacterStateAction,
     CharacterSheetResponse,
     CharacterSheetReview,
     CharacterSheetStepUpdate,
@@ -102,6 +116,8 @@ from .schemas import (
     PlayerIdeaReview,
     PlayerQuestRecord,
     PlayerQuestUpdate,
+    PlayableCharacterResponse,
+    PlayableCharacterSummary,
     RebuildResponse,
     SearchRequest,
     SearchResult,
@@ -422,6 +438,7 @@ def startup() -> None:
     init_player_inventory(settings.database_path)
     init_player_ideas(settings.database_path)
     init_character_creation(settings.database_path)
+    init_character_play(settings.database_path)
     if settings.training_capture_mode != "off":
         purge_unreviewed(settings.unreviewed_retention_days)
     if settings.rebuild_on_startup:
@@ -1193,6 +1210,208 @@ def gm_review_character_sheet(
     return result
 
 
+def _sheet_for_character(profile_id: str) -> dict:
+    if profile_id in settings.player_profiles:
+        return _ensure_profile_sheet(profile_id)
+    sheet = next((item for item in list_sheets(settings.database_path) if item["profile_id"] == profile_id), None)
+    if sheet is None:
+        raise HTTPException(status_code=404, detail="Ficha de personagem não encontrada.")
+    return sheet
+
+
+def _character_ids() -> list[str]:
+    ids = list(settings.player_profiles)
+    for sheet in list_sheets(settings.database_path):
+        if sheet["profile_id"] not in ids:
+            ids.append(sheet["profile_id"])
+    return ids
+
+
+def _character_access_level(access: AccessContext, profile_id: str) -> str:
+    if access.mode == "gm":
+        return "gm"
+    if access.profile_id == profile_id:
+        return "owner"
+    return "public"
+
+
+def _playable_character(profile_id: str, access: AccessContext) -> dict:
+    sheet = _sheet_for_character(profile_id)
+    summary = resolve_note(settings.database_path, sheet["character_path"], access_mode="gm")
+    if summary is None:
+        raise HTTPException(status_code=404, detail="Nota de origem do personagem não encontrada.")
+    note = get_note(settings.database_path, int(summary["id"]), access_mode="gm")
+    if note is None:
+        raise HTTPException(status_code=404, detail="Não foi possível carregar a definição do personagem.")
+    access_level = _character_access_level(access, profile_id)
+    inventory = _inventory_with_media(
+        list_inventory(settings.database_path, profile_id),
+        access_mode="gm" if access_level == "gm" else "player",
+    )
+    definition = build_character_definition(
+        profile_id=profile_id,
+        note=note,
+        sheet=sheet,
+        inventory=inventory,
+        overrides=load_definition_overrides(settings.database_path, profile_id),
+        access_level=access_level,
+    )
+    state = None
+    if access_level != "public":
+        state = get_or_create_state(
+            settings.database_path,
+            profile_id=profile_id,
+            sheet=sheet,
+            definition=definition,
+        )
+    return compose_character_view(
+        definition=definition,
+        state=state,
+        inventory=inventory if access_level != "public" else [],
+        access_level=access_level,
+    )
+
+
+def _character_summary(record: dict) -> dict:
+    definition = record["definition"]
+    state = record.get("state") or {}
+    defenses = definition.get("defenses") or {}
+    return {
+        "id": definition["id"],
+        "name": definition["name"],
+        "portrait": definition.get("portrait"),
+        "epithet": definition.get("epithet"),
+        "race": definition.get("race"),
+        "class_name": definition.get("class_name"),
+        "level": definition.get("level"),
+        "current_hp": state.get("current_hp"),
+        "maximum_hp": state.get("maximum_hp"),
+        "armor_class": defenses.get("armor_class") if state else None,
+        "initiative": defenses.get("initiative") if state else None,
+        "movement": definition.get("movement") if state else None,
+        "conditions": state.get("conditions") or [],
+        "resources": state.get("resources") or [],
+        "access_level": record["access_level"],
+    }
+
+
+@app.get("/characters", response_model=list[PlayableCharacterSummary])
+def playable_characters(access: AccessContext = Depends(require_any)) -> list[dict]:
+    maybe_refresh_index()
+    return [_character_summary(_playable_character(profile_id, access)) for profile_id in _character_ids()]
+
+
+@app.get("/characters/{profile_id}", response_model=PlayableCharacterResponse, response_model_exclude_none=True)
+def playable_character(profile_id: str, access: AccessContext = Depends(require_any)) -> dict:
+    maybe_refresh_index()
+    return _playable_character(profile_id, access)
+
+
+@app.post("/characters/{profile_id}/actions", response_model=PlayableCharacterResponse, response_model_exclude_none=True)
+def playable_character_action(
+    profile_id: str,
+    request: CharacterStateAction,
+    access: AccessContext = Depends(require_any),
+) -> dict:
+    access_level = _character_access_level(access, profile_id)
+    if access_level == "public":
+        raise HTTPException(status_code=403, detail="Você só pode alterar o próprio personagem.")
+    _playable_character(profile_id, access)
+    payload = dict(request.payload)
+    if request.action == "grant_item":
+        note_id = payload.get("note_id")
+        if note_id is None:
+            raise HTTPException(status_code=400, detail="Escolha um item do Arquivo.")
+        try:
+            note_id = int(note_id)
+        except (TypeError, ValueError) as error:
+            raise HTTPException(status_code=400, detail="Item inválido.") from error
+        note = get_note(settings.database_path, note_id, access_mode="gm")
+        if note is None or note.get("type") != "item":
+            raise HTTPException(status_code=400, detail="Item inválido.")
+        payload["item_path"] = note["path"]
+        payload["item_title"] = note["title"]
+    try:
+        apply_character_action(
+            settings.database_path,
+            character_id=profile_id,
+            actor_id="master" if access.mode == "gm" else str(access.profile_id),
+            actor_role="gm" if access.mode == "gm" else "player",
+            action=request.action,
+            payload=payload,
+            reason=request.reason,
+            session_id=request.session_id,
+        )
+    except PermissionError as error:
+        raise HTTPException(status_code=403, detail=str(error)) from error
+    except (TypeError, ValueError) as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+    return _playable_character(profile_id, access)
+
+
+@app.get("/characters/{profile_id}/events", response_model=list[CharacterEventResponse])
+def playable_character_events(
+    profile_id: str,
+    access: AccessContext = Depends(require_any),
+) -> list[dict]:
+    access_level = _character_access_level(access, profile_id)
+    if access_level == "public":
+        raise HTTPException(status_code=403, detail="Eventos disponíveis apenas ao proprietário e ao Mestre.")
+    events = list_character_events(settings.database_path, profile_id)
+    if access_level == "owner":
+        owner_visible_types = {
+            "damage",
+            "heal",
+            "set_hp",
+            "add_condition",
+            "remove_condition",
+            "consume_resource",
+            "equip_item",
+            "unequip_item",
+            "change_quantity",
+        }
+        events = [event for event in events if event["event_type"] in owner_visible_types]
+    return events
+
+
+@app.patch("/gm/characters/{profile_id}/definition", response_model=PlayableCharacterResponse, response_model_exclude_none=True)
+def gm_update_playable_character_definition(
+    profile_id: str,
+    request: CharacterDefinitionUpdate,
+    access: AccessContext = Depends(require_master),
+) -> dict:
+    _playable_character(profile_id, access)
+    try:
+        update_definition_overrides(
+            settings.database_path,
+            character_id=profile_id,
+            actor_id="master",
+            fields=dict(request.fields),
+            reason=request.reason,
+        )
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+    return _playable_character(profile_id, access)
+
+
+@app.post("/gm/characters/{profile_id}/events/{event_id}/revert", response_model=PlayableCharacterResponse, response_model_exclude_none=True)
+def gm_revert_playable_character_event(
+    profile_id: str,
+    event_id: int,
+    access: AccessContext = Depends(require_master),
+) -> dict:
+    try:
+        revert_character_event(
+            settings.database_path,
+            character_id=profile_id,
+            event_id=event_id,
+            actor_id="master",
+        )
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+    return _playable_character(profile_id, access)
+
+
 @app.get("/gm/actions", response_model=list[PlayerActionRecord])
 def gm_actions(_: AccessContext = Depends(require_master)) -> list[dict]:
     return list_player_actions(settings.database_path, limit=250)
@@ -1536,7 +1755,7 @@ def frontend_root():
 
 @app.get("/{full_path:path}", response_model=None)
 def frontend_fallback(request: Request, full_path: str):
-    if full_path.startswith(("health", "notes", "index", "search", "chat", "gm", "player", "media")):
+    if full_path.startswith(("health", "notes", "index", "search", "chat", "gm", "player", "characters", "media")):
         raise HTTPException(status_code=404, detail="Endpoint não encontrado.")
     index = FRONTEND_DIST / "index.html"
     if index.exists():
