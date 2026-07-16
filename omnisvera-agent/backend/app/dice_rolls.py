@@ -80,6 +80,8 @@ def init_dice_rolls(database_path: Path) -> None:
                 visibility TEXT NOT NULL,
                 source TEXT NOT NULL,
                 source_id TEXT,
+                scene_id INTEGER,
+                action_id INTEGER,
                 reason TEXT,
                 created_at TEXT NOT NULL,
                 voided_at TEXT,
@@ -105,6 +107,8 @@ def init_dice_rolls(database_path: Path) -> None:
                 visibility TEXT NOT NULL,
                 source TEXT NOT NULL,
                 source_id TEXT,
+                scene_id INTEGER,
+                action_id INTEGER,
                 target_value INTEGER,
                 target_hidden INTEGER NOT NULL DEFAULT 0,
                 reason TEXT,
@@ -126,8 +130,16 @@ def init_dice_rolls(database_path: Path) -> None:
         request_columns = {row[1] for row in connection.execute("PRAGMA table_info(dice_roll_requests)")}
         if "target_hidden" not in event_columns:
             connection.execute("ALTER TABLE dice_roll_events ADD COLUMN target_hidden INTEGER NOT NULL DEFAULT 0")
+        if "scene_id" not in event_columns:
+            connection.execute("ALTER TABLE dice_roll_events ADD COLUMN scene_id INTEGER")
+        if "action_id" not in event_columns:
+            connection.execute("ALTER TABLE dice_roll_events ADD COLUMN action_id INTEGER")
         if "target_hidden" not in request_columns:
             connection.execute("ALTER TABLE dice_roll_requests ADD COLUMN target_hidden INTEGER NOT NULL DEFAULT 0")
+        if "scene_id" not in request_columns:
+            connection.execute("ALTER TABLE dice_roll_requests ADD COLUMN scene_id INTEGER")
+        if "action_id" not in request_columns:
+            connection.execute("ALTER TABLE dice_roll_requests ADD COLUMN action_id INTEGER")
 
 
 def parse_formula(formula: str) -> ParsedFormula:
@@ -298,6 +310,8 @@ def create_roll(
     target_hidden: bool = False,
     source: str = "free",
     source_id: str | None = None,
+    scene_id: int | None = None,
+    action_id: int | None = None,
     reason: str | None = None,
     rng: Rng | None = None,
     target_hidden_authorized: bool = False,
@@ -328,14 +342,15 @@ def create_roll(
             INSERT INTO dice_roll_events(
               request_id,session_id,campaign_id,character_id,actor_id,actor_role,roll_type,label,
               formula,dice,modifier,individual_results_json,subtotal,total,target_value,target_hidden,outcome,
-              visibility,source,source_id,reason,created_at
-            ) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+              visibility,source,source_id,scene_id,action_id,reason,created_at
+            ) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
             """,
             (
                 request_id, session_id, campaign_id, character_id, actor_id, actor_role, roll_type,
                 clean_label, rolled["formula"], rolled["dice"], rolled["modifier"],
                 json.dumps(rolled["individual_results"]), rolled["subtotal"], rolled["total"],
-                target, int(bool(target_hidden)), outcome, visibility, source, source_id, clean_reason, _now(),
+                target, int(bool(target_hidden)), outcome, visibility, source, source_id,
+                scene_id, action_id, clean_reason, _now(),
             ),
         )
         row = connection.execute("SELECT * FROM dice_roll_events WHERE id=?", (cursor.lastrowid,)).fetchone()
@@ -396,6 +411,8 @@ def create_roll_request(
     spec: RollSpec,
     visibility: str,
     session_id: str | None = None,
+    scene_id: int | None = None,
+    action_id: int | None = None,
     target_value: int | None = None,
     target_hidden: bool = False,
     reason: str | None = None,
@@ -417,13 +434,14 @@ def create_roll_request(
             """
             INSERT INTO dice_roll_requests(
               request_id,session_id,campaign_id,character_id,requested_by,roll_type,label,formula,
-              visibility,source,source_id,target_value,target_hidden,reason,status,created_at,expires_at
-            ) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,'pending',?,?)
+              visibility,source,source_id,scene_id,action_id,target_value,target_hidden,reason,status,created_at,expires_at
+            ) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,'pending',?,?)
             """,
             (
                 request_id, session_id, campaign_id, character_id, requested_by, spec.roll_type,
                 spec.label, parse_formula(spec.formula).formula, visibility, spec.source, spec.source_id,
-                target, int(bool(target_hidden)), str(reason or "").strip()[:500] or None, now.isoformat(), expires.isoformat(),
+                scene_id, action_id, target, int(bool(target_hidden)), str(reason or "").strip()[:500] or None,
+                now.isoformat(), expires.isoformat(),
             ),
         )
         row = connection.execute("SELECT * FROM dice_roll_requests WHERE id=?", (cursor.lastrowid,)).fetchone()
@@ -510,6 +528,8 @@ def complete_roll_request(
             target_hidden=bool(request.get("target_hidden")),
             source="roll_request",
             source_id=str(request_id),
+            scene_id=request.get("scene_id"),
+            action_id=request.get("action_id"),
             reason=request.get("reason"),
             rng=rng,
             target_hidden_authorized=True,

@@ -494,6 +494,8 @@ class DiceRollCreate(BaseModel):
     hide_target: bool = False
     reason: str | None = Field(default=None, max_length=500)
     session_id: str | None = Field(default=None, max_length=120)
+    scene_id: int | None = Field(default=None, ge=1)
+    action_id: int | None = Field(default=None, ge=1)
 
 
 class CharacterRollCreate(BaseModel):
@@ -506,6 +508,8 @@ class CharacterRollCreate(BaseModel):
     hide_target: bool = False
     reason: str | None = Field(default=None, max_length=500)
     session_id: str | None = Field(default=None, max_length=120)
+    scene_id: int | None = Field(default=None, ge=1)
+    action_id: int | None = Field(default=None, ge=1)
 
 
 class DiceRollEventResponse(BaseModel):
@@ -530,6 +534,8 @@ class DiceRollEventResponse(BaseModel):
     visibility: str
     source: str
     source_id: str | None = None
+    scene_id: int | None = None
+    action_id: int | None = None
     reason: str | None = None
     created_at: str
     voided: bool = False
@@ -554,6 +560,8 @@ class DiceRollRequestCreate(BaseModel):
     hide_target: bool = False
     reason: str | None = Field(default=None, max_length=500)
     session_id: str | None = Field(default=None, max_length=120)
+    scene_id: int | None = Field(default=None, ge=1)
+    action_id: int | None = Field(default=None, ge=1)
     expires_in_hours: int = Field(default=24, ge=1, le=168)
 
 
@@ -570,6 +578,8 @@ class DiceRollRequestResponse(BaseModel):
     visibility: str
     source: str
     source_id: str | None = None
+    scene_id: int | None = None
+    action_id: int | None = None
     target_value: int | None = None
     target_hidden: bool = False
     reason: str | None = None
@@ -584,3 +594,112 @@ class DiceRollRequestResponse(BaseModel):
 
 class DiceRollRequestComplete(BaseModel):
     request_id: str = Field(min_length=8, max_length=120)
+
+
+class GameSessionCreate(BaseModel):
+    request_id: str = Field(min_length=8, max_length=120)
+    title: str = Field(min_length=1, max_length=180)
+    session_number: int | None = Field(default=None, ge=1, le=10_000)
+    private_notes: str | None = Field(default=None, max_length=2_000)
+
+
+class GameSessionStatusUpdate(BaseModel):
+    status: str
+
+
+class SceneCreate(BaseModel):
+    request_id: str = Field(min_length=8, max_length=120)
+    session_id: int | None = Field(default=None, ge=1)
+    title: str = Field(min_length=1, max_length=180)
+    location_name: str = Field(min_length=1, max_length=180)
+    location_source: str | None = Field(default=None, max_length=500)
+    public_description: str | None = Field(default=None, max_length=2_000)
+    objective: str | None = Field(default=None, max_length=500)
+    private_notes: str | None = Field(default=None, max_length=2_000)
+    visibility: str = "table"
+
+
+class SceneUpdate(BaseModel):
+    expected_version: int = Field(ge=1)
+    fields: dict[str, Any] = Field(default_factory=dict)
+
+
+class SceneStatusUpdate(BaseModel):
+    status: str
+    summary: str | None = Field(default=None, max_length=2_000)
+
+
+class SceneParticipantCreate(BaseModel):
+    participant_type: str
+    character_id: str | None = Field(default=None, max_length=120)
+    npc_name: str | None = Field(default=None, max_length=180)
+    npc_source: str | None = Field(default=None, max_length=500)
+    public_label: str = Field(min_length=1, max_length=180)
+    public_status: str | None = Field(default=None, max_length=180)
+    private_status: str | None = Field(default=None, max_length=500)
+    visible_to_players: bool = True
+
+
+class SceneParticipantUpdate(BaseModel):
+    fields: dict[str, Any] = Field(default_factory=dict)
+
+
+class SceneElementCreate(BaseModel):
+    request_id: str = Field(min_length=8, max_length=120)
+    element_type: str
+    title: str = Field(min_length=1, max_length=180)
+    public_description: str | None = Field(default=None, max_length=2_000)
+    private_description: str | None = Field(default=None, max_length=2_000)
+    status: str
+    visibility: str = "gm"
+
+
+class SceneElementUpdate(BaseModel):
+    fields: dict[str, Any] = Field(default_factory=dict)
+
+
+class SceneActionCreate(BaseModel):
+    request_id: str = Field(min_length=8, max_length=120)
+    character_id: str | None = Field(default=None, max_length=120)
+    action_type: str
+    description: str = Field(min_length=1, max_length=600)
+    target_label: str | None = Field(default=None, max_length=180)
+    visibility: str = "table"
+
+
+class SceneActionResolution(BaseModel):
+    resolution: str | None = Field(default=None, max_length=1_200)
+
+
+class SceneRollRequestCreate(BaseModel):
+    request_id: str = Field(min_length=8, max_length=120)
+    roll_type: str
+    source_id: str | None = Field(default=None, max_length=500)
+    formula: str | None = Field(default=None, max_length=32)
+    label: str | None = Field(default=None, max_length=160)
+    visibility: str = "owner"
+    target_value: int | None = Field(default=None, ge=1, le=100_000)
+    hide_target: bool = False
+    reason: str | None = Field(default=None, max_length=500)
+
+
+class SceneConsequenceCreate(BaseModel):
+    character_id: str = Field(min_length=1, max_length=120)
+    action_id: int | None = Field(default=None, ge=1)
+    action: str
+    payload: dict[str, Any] = Field(default_factory=dict)
+    title: str = Field(min_length=1, max_length=180)
+    public_text: str | None = Field(default=None, max_length=2_000)
+    private_text: str | None = Field(default=None, max_length=2_000)
+    visibility: str = "table"
+
+
+class SceneManualEventCreate(BaseModel):
+    title: str = Field(min_length=1, max_length=180)
+    public_text: str | None = Field(default=None, max_length=2_000)
+    private_text: str | None = Field(default=None, max_length=2_000)
+    visibility: str = "table"
+
+
+class SceneVoidRequest(BaseModel):
+    reason: str = Field(min_length=2, max_length=500)

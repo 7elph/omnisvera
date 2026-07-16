@@ -82,6 +82,32 @@ from .player_progress import (
 from .player_inventory import init_player_inventory, list_inventory, upsert_inventory
 from .player_ideas import create_idea, init_player_ideas, list_ideas, review_idea
 from .rag import answer_question
+from .scene_play import (
+    active_scene,
+    add_participant,
+    cancel_action,
+    change_scene_status,
+    change_session_status,
+    create_element,
+    create_scene,
+    create_session,
+    declare_action,
+    get_action,
+    get_scene,
+    init_scene_play,
+    link_completed_roll,
+    link_roll_request,
+    list_scenes,
+    list_sessions,
+    record_consequence,
+    record_manual_event,
+    resolve_action,
+    scene_view,
+    update_element,
+    update_participant,
+    update_scene,
+    void_event,
+)
 from .training_curation import (
     approve_batch,
     approve_example,
@@ -116,6 +142,8 @@ from .schemas import (
     DiceRollRequestCreate,
     DiceRollRequestResponse,
     DiceRollVoidRequest,
+    GameSessionCreate,
+    GameSessionStatusUpdate,
     EditableNoteResponse,
     EditableNoteUpdate,
     HealthResponse,
@@ -142,6 +170,19 @@ from .schemas import (
     RebuildResponse,
     SearchRequest,
     SearchResult,
+    SceneActionCreate,
+    SceneActionResolution,
+    SceneConsequenceCreate,
+    SceneCreate,
+    SceneElementCreate,
+    SceneElementUpdate,
+    SceneManualEventCreate,
+    SceneParticipantCreate,
+    SceneParticipantUpdate,
+    SceneRollRequestCreate,
+    SceneStatusUpdate,
+    SceneUpdate,
+    SceneVoidRequest,
     TrainingDecisionRequest,
     TrainingBatchRequest,
     TrainingExamplePatch,
@@ -461,6 +502,7 @@ def startup() -> None:
     init_character_creation(settings.database_path)
     init_character_play(settings.database_path)
     init_dice_rolls(settings.database_path)
+    init_scene_play(settings.database_path)
     if settings.training_capture_mode != "off":
         purge_unreviewed(settings.unreviewed_retention_days)
     if settings.rebuild_on_startup:
@@ -1491,6 +1533,8 @@ def free_dice_roll(request: DiceRollCreate, access: AccessContext = Depends(requ
             target_value=request.target_value,
             target_hidden=request.hide_target,
             source="free",
+            scene_id=request.scene_id,
+            action_id=request.action_id,
             reason=request.reason,
         )
     except PermissionError as error:
@@ -1536,6 +1580,8 @@ def character_dice_roll(
             target_hidden=request.hide_target,
             source=spec.source,
             source_id=spec.source_id,
+            scene_id=request.scene_id,
+            action_id=request.action_id,
             reason=request.reason,
         )
     except PermissionError as error:
@@ -1611,6 +1657,8 @@ def gm_create_roll_request(
             spec=spec,
             visibility=request.visibility,
             session_id=request.session_id,
+            scene_id=request.scene_id,
+            action_id=request.action_id,
             target_value=request.target_value,
             target_hidden=request.hide_target,
             reason=request.reason,
@@ -1657,7 +1705,369 @@ def finish_roll_request(
     visible = _visible_roll(record, access)
     if visible is None:
         raise HTTPException(status_code=403, detail="A rolagem foi registrada, mas seu resultado é reservado ao Mestre.")
+    if record.get("scene_id"):
+        link_completed_roll(
+            settings.database_path,
+            scene_id=int(record["scene_id"]),
+            action_id=int(record["action_id"]) if record.get("action_id") else None,
+            roll_id=int(record["id"]),
+            actor_id=actor_id,
+            actor_role=actor_role,
+            public_text=f"{record['label']}: {record['total']}",
+        )
     return visible
+
+
+def _scene_payload(scene_id: int, access: AccessContext) -> dict | None:
+    payload = scene_view(
+        settings.database_path,
+        scene_id,
+        access_mode=access.mode,
+        profile_id=access.profile_id,
+    )
+    if payload is None:
+        return None
+    enriched_participants: list[dict] = []
+    for participant in payload.get("participants", []):
+        record = dict(participant)
+        character_id = record.get("character_id")
+        if character_id:
+            try:
+                record["character"] = _character_summary(_playable_character(str(character_id), access))
+            except (HTTPException, ValueError):
+                record["character"] = None
+        enriched_participants.append(record)
+    payload["participants"] = enriched_participants
+    for event in payload.get("events", []):
+        if event.get("roll_id"):
+            roll = get_roll(settings.database_path, int(event["roll_id"]))
+            event["roll"] = _visible_roll(roll, access) if roll else None
+    return payload
+
+
+@app.post("/gm/sessions")
+def gm_create_game_session(request: GameSessionCreate, _: AccessContext = Depends(require_master)) -> dict:
+    try:
+        record, _created = create_session(
+            settings.database_path,
+            request_id=request.request_id,
+            campaign_id="omnisvera",
+            title=request.title,
+            session_number=request.session_number,
+            private_notes=request.private_notes,
+            created_by="master",
+        )
+        return record
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.get("/gm/sessions")
+def gm_list_game_sessions(_: AccessContext = Depends(require_master)) -> list[dict]:
+    return list_sessions(settings.database_path)
+
+
+@app.post("/gm/sessions/{session_id}/status")
+def gm_update_game_session_status(session_id: int, request: GameSessionStatusUpdate, _: AccessContext = Depends(require_master)) -> dict:
+    try:
+        return change_session_status(settings.database_path, session_id, request.status)
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.post("/gm/scenes")
+def gm_create_scene(request: SceneCreate, access: AccessContext = Depends(require_master)) -> dict:
+    try:
+        scene, _created = create_scene(
+            settings.database_path,
+            request_id=request.request_id,
+            campaign_id="omnisvera",
+            session_id=request.session_id,
+            title=request.title,
+            location_name=request.location_name,
+            location_source=request.location_source,
+            public_description=request.public_description,
+            objective=request.objective,
+            private_notes=request.private_notes,
+            visibility=request.visibility,
+            created_by="master",
+        )
+        return _scene_payload(int(scene["id"]), access) or scene
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.get("/scenes")
+def authorized_scenes(access: AccessContext = Depends(require_any)) -> list[dict]:
+    result: list[dict] = []
+    for scene in list_scenes(settings.database_path):
+        visible = _scene_payload(int(scene["id"]), access)
+        if visible is not None:
+            result.append(visible)
+    return result
+
+
+@app.get("/scenes/active")
+def authorized_active_scene(access: AccessContext = Depends(require_any)) -> dict | None:
+    scene = active_scene(settings.database_path)
+    return _scene_payload(int(scene["id"]), access) if scene else None
+
+
+@app.get("/scenes/{scene_id}")
+def authorized_scene(scene_id: int, access: AccessContext = Depends(require_any)) -> dict:
+    payload = _scene_payload(scene_id, access)
+    if payload is None:
+        raise HTTPException(status_code=404, detail="Cena não encontrada ou não revelada.")
+    return payload
+
+
+@app.patch("/gm/scenes/{scene_id}")
+def gm_edit_scene(scene_id: int, request: SceneUpdate, access: AccessContext = Depends(require_master)) -> dict:
+    try:
+        update_scene(settings.database_path, scene_id, expected_version=request.expected_version, fields=dict(request.fields))
+        return _scene_payload(scene_id, access) or {}
+    except RuntimeError as error:
+        raise HTTPException(status_code=409, detail=str(error)) from error
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.post("/gm/scenes/{scene_id}/status")
+def gm_set_scene_status(scene_id: int, request: SceneStatusUpdate, access: AccessContext = Depends(require_master)) -> dict:
+    try:
+        change_scene_status(settings.database_path, scene_id, request.status, summary=request.summary)
+        return _scene_payload(scene_id, access) or {}
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.post("/gm/scenes/{scene_id}/participants")
+def gm_add_scene_participant(scene_id: int, request: SceneParticipantCreate, access: AccessContext = Depends(require_master)) -> dict:
+    if request.character_id:
+        _playable_character(request.character_id, access)
+    try:
+        add_participant(
+            settings.database_path,
+            scene_id,
+            participant_type=request.participant_type,
+            character_id=request.character_id,
+            npc_name=request.npc_name,
+            npc_source=request.npc_source,
+            public_label=request.public_label,
+            public_status=request.public_status,
+            private_status=request.private_status,
+            visible_to_players=request.visible_to_players,
+        )
+        return _scene_payload(scene_id, access) or {}
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.patch("/gm/scene-participants/{participant_id}")
+def gm_edit_scene_participant(participant_id: int, request: SceneParticipantUpdate, _: AccessContext = Depends(require_master)) -> dict:
+    try:
+        return update_participant(settings.database_path, participant_id, dict(request.fields))
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.delete("/gm/scene-participants/{participant_id}")
+def gm_remove_scene_participant(participant_id: int, _: AccessContext = Depends(require_master)) -> dict:
+    try:
+        return update_participant(settings.database_path, participant_id, {"left_at": datetime.now(timezone.utc).isoformat()})
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.post("/gm/scenes/{scene_id}/elements")
+def gm_create_scene_element(scene_id: int, request: SceneElementCreate, access: AccessContext = Depends(require_master)) -> dict:
+    try:
+        create_element(
+            settings.database_path,
+            scene_id,
+            request_id=request.request_id,
+            element_type=request.element_type,
+            title=request.title,
+            public_description=request.public_description,
+            private_description=request.private_description,
+            status=request.status,
+            visibility=request.visibility,
+            created_by="master",
+        )
+        return _scene_payload(scene_id, access) or {}
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.patch("/gm/scene-elements/{element_id}")
+def gm_update_scene_element(element_id: int, request: SceneElementUpdate, _: AccessContext = Depends(require_master)) -> dict:
+    try:
+        return update_element(settings.database_path, element_id, fields=dict(request.fields))
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.post("/gm/scene-elements/{element_id}/reveal")
+def gm_reveal_scene_element(element_id: int, _: AccessContext = Depends(require_master)) -> dict:
+    try:
+        return update_element(settings.database_path, element_id, fields={}, reveal=True)
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.post("/scenes/{scene_id}/actions")
+def create_scene_action(scene_id: int, request: SceneActionCreate, access: AccessContext = Depends(require_any)) -> dict:
+    actor_id, actor_role = _roll_actor(access)
+    character_id = request.character_id
+    if actor_role != "gm":
+        if not access.profile_id:
+            raise HTTPException(status_code=403, detail="Use um acesso individual para declarar ações.")
+        character_id = access.profile_id
+    if character_id:
+        _playable_character(character_id, access)
+    try:
+        action, _created = declare_action(
+            settings.database_path,
+            scene_id,
+            request_id=request.request_id,
+            character_id=character_id,
+            actor_id=actor_id,
+            actor_role=actor_role,
+            action_type=request.action_type,
+            description=request.description,
+            target_label=request.target_label,
+            visibility=request.visibility,
+        )
+        return action
+    except PermissionError as error:
+        raise HTTPException(status_code=403, detail=str(error)) from error
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.post("/scenes/actions/{action_id}/cancel")
+def cancel_authorized_scene_action(action_id: int, access: AccessContext = Depends(require_any)) -> dict:
+    actor_id, actor_role = _roll_actor(access)
+    try:
+        return cancel_action(settings.database_path, action_id, actor_id=actor_id, actor_role=actor_role)
+    except PermissionError as error:
+        raise HTTPException(status_code=403, detail=str(error)) from error
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.post("/gm/scenes/actions/{action_id}/resolve")
+def gm_resolve_scene_action(action_id: int, request: SceneActionResolution, _: AccessContext = Depends(require_master)) -> dict:
+    try:
+        return resolve_action(settings.database_path, action_id, actor_id="master", resolution=request.resolution)
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.post("/gm/scenes/actions/{action_id}/reject")
+def gm_reject_scene_action(action_id: int, request: SceneActionResolution, _: AccessContext = Depends(require_master)) -> dict:
+    try:
+        return resolve_action(settings.database_path, action_id, actor_id="master", resolution=request.resolution, reject=True)
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.post("/gm/scenes/actions/{action_id}/request-roll")
+def gm_request_scene_action_roll(action_id: int, request: SceneRollRequestCreate, _: AccessContext = Depends(require_master)) -> dict:
+    action = get_action(settings.database_path, action_id)
+    if not action:
+        raise HTTPException(status_code=404, detail="Ação não encontrada")
+    character_id = action.get("character_id")
+    if not character_id:
+        raise HTTPException(status_code=400, detail="A ação não possui personagem para a rolagem")
+    character = _playable_character(str(character_id), AccessContext(mode="gm"))
+    try:
+        if request.roll_type == "free":
+            if not request.formula:
+                raise ValueError("Informe a fórmula")
+            spec = RollSpec("free", request.label or "Rolagem da cena", parse_formula(request.formula).formula, "scene_action", str(action_id))
+        else:
+            spec = resolve_character_roll(character["definition"], character["inventory"], request.roll_type, request.source_id)
+            if request.label:
+                spec = RollSpec(spec.roll_type, request.label, spec.formula, spec.source, spec.source_id, spec.target_value)
+        roll_request, _created = create_roll_request(
+            settings.database_path,
+            request_id=request.request_id,
+            campaign_id="omnisvera",
+            character_id=str(character_id),
+            requested_by="master",
+            spec=spec,
+            visibility=request.visibility,
+            session_id=str(get_scene(settings.database_path, int(action["scene_id"])).get("session_id") or "") or None,
+            scene_id=int(action["scene_id"]),
+            action_id=action_id,
+            target_value=request.target_value,
+            target_hidden=request.hide_target,
+            reason=request.reason,
+        )
+        link_roll_request(settings.database_path, action_id, int(roll_request["id"]))
+        return roll_request
+    except PermissionError as error:
+        raise HTTPException(status_code=403, detail=str(error)) from error
+    except (TypeError, ValueError) as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.post("/gm/scenes/{scene_id}/consequences")
+def gm_apply_scene_consequence(scene_id: int, request: SceneConsequenceCreate, access: AccessContext = Depends(require_master)) -> dict:
+    _playable_character(request.character_id, access)
+    payload = dict(request.payload)
+    if request.action == "grant_item" and payload.get("note_id") is not None:
+        note = get_note(settings.database_path, int(payload["note_id"]), access_mode="gm")
+        if note is None or note.get("type") != "item":
+            raise HTTPException(status_code=400, detail="Item inválido")
+        payload["item_path"] = note["path"]
+        payload["item_title"] = note["title"]
+    try:
+        result = apply_character_action(
+            settings.database_path,
+            character_id=request.character_id,
+            actor_id="master",
+            actor_role="gm",
+            action=request.action,
+            payload=payload,
+            reason=request.public_text or request.private_text,
+            session_id=str(scene_id),
+        )
+        event = record_consequence(
+            settings.database_path,
+            scene_id=scene_id,
+            action_id=request.action_id,
+            character_id=request.character_id,
+            character_event_id=int(result["event_id"]),
+            actor_id="master",
+            title=request.title,
+            public_text=request.public_text,
+            private_text=request.private_text,
+            visibility=request.visibility,
+        )
+        window_payload = _scene_payload(scene_id, access) or {}
+        return {"character_event": result, "scene_event": event, "scene": window_payload}
+    except PermissionError as error:
+        raise HTTPException(status_code=403, detail=str(error)) from error
+    except (TypeError, ValueError) as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.post("/gm/scenes/{scene_id}/events")
+def gm_create_scene_event(scene_id: int, request: SceneManualEventCreate, _: AccessContext = Depends(require_master)) -> dict:
+    try:
+        return record_manual_event(settings.database_path, scene_id=scene_id, actor_id="master", title=request.title, public_text=request.public_text, private_text=request.private_text, visibility=request.visibility)
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.post("/gm/scene-events/{event_id}/void")
+def gm_void_scene_event(event_id: int, request: SceneVoidRequest, _: AccessContext = Depends(require_master)) -> dict:
+    try:
+        return void_event(settings.database_path, event_id, actor_id="master", reason=request.reason)
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
 
 
 @app.get("/gm/actions", response_model=list[PlayerActionRecord])
@@ -2003,7 +2413,7 @@ def frontend_root():
 
 @app.get("/{full_path:path}", response_model=None)
 def frontend_fallback(request: Request, full_path: str):
-    if full_path.startswith(("health", "notes", "index", "search", "chat", "gm", "player", "characters", "rolls", "roll-requests", "media")):
+    if full_path.startswith(("health", "notes", "index", "search", "chat", "gm", "player", "characters", "rolls", "roll-requests", "scenes", "sessions", "media")):
         raise HTTPException(status_code=404, detail="Endpoint não encontrado.")
     index = FRONTEND_DIST / "index.html"
     if index.exists():

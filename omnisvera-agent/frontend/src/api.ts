@@ -478,6 +478,8 @@ export type DiceRollEvent = {
   visibility: DiceVisibility;
   source: string;
   source_id?: string | null;
+  scene_id?: number | null;
+  action_id?: number | null;
   reason?: string | null;
   created_at: string;
   voided: boolean;
@@ -499,6 +501,8 @@ export type DiceRollRequest = {
   visibility: DiceVisibility;
   source: string;
   source_id?: string | null;
+  scene_id?: number | null;
+  action_id?: number | null;
   target_value?: number | null;
   target_hidden: boolean;
   reason?: string | null;
@@ -509,6 +513,52 @@ export type DiceRollRequest = {
   completed_by?: string | null;
   completion_request_id?: string | null;
   roll_event_id?: number | null;
+};
+
+export type GameSession = {
+  id: number; request_id: string; campaign_id: string; title: string; session_number?: number | null;
+  status: string; started_at?: string | null; ended_at?: string | null; created_by: string;
+  private_notes?: string | null; created_at: string; version: number;
+};
+
+export type SceneParticipant = {
+  id: number; scene_id: number; participant_type: string; character_id?: string | null;
+  npc_name?: string | null; npc_source?: string | null; public_label: string;
+  public_status?: string | null; private_status?: string | null; visible_to_players: boolean;
+  joined_at: string; left_at?: string | null; character?: PlayableCharacterSummary | null;
+};
+
+export type SceneElement = {
+  id: number; request_id: string; scene_id: number; element_type: string; title: string;
+  public_description?: string | null; private_description?: string | null; status: string;
+  visibility: DiceVisibility; discovered_at?: string | null; discovered_by?: string | null;
+  created_by: string; created_at: string; version: number;
+};
+
+export type SceneAction = {
+  id: number; request_id: string; scene_id: number; character_id?: string | null;
+  actor_id: string; actor_role: "gm" | "player"; action_type: string; description: string;
+  target_label?: string | null; status: string; visibility: DiceVisibility;
+  requested_roll_id?: number | null; resulting_roll_id?: number | null; resolution?: string | null;
+  created_at: string; resolved_at?: string | null; resolved_by?: string | null; rejection_reason?: string | null;
+};
+
+export type SceneEvent = {
+  id: number; event_key?: string | null; scene_id: number; session_id?: number | null;
+  actor_id: string; actor_role: "gm" | "player"; event_type: string; title: string;
+  public_text?: string | null; private_text?: string | null; character_id?: string | null;
+  roll_id?: number | null; character_event_id?: number | null; action_id?: number | null;
+  visibility: DiceVisibility; created_at: string; voided: boolean; voided_at?: string | null;
+  voided_by?: string | null; void_reason?: string | null; roll?: DiceRollEvent | null;
+};
+
+export type GameScene = {
+  id: number; request_id: string; campaign_id: string; session_id?: number | null; title: string;
+  location_name: string; location_source?: string | null; public_description?: string | null;
+  objective?: string | null; private_notes?: string | null; resolution_summary?: string | null;
+  status: string; visibility: DiceVisibility; created_by: string; created_at: string;
+  activated_at?: string | null; closed_at?: string | null; order_index: number; version: number;
+  participants: SceneParticipant[]; elements: SceneElement[]; actions: SceneAction[]; events: SceneEvent[];
 };
 
 export function newDiceRequestId(prefix = "roll") {
@@ -813,6 +863,40 @@ export async function voidDiceRoll(rollId: number, reason: string): Promise<Dice
   if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao anular rolagem");
   return response.json();
 }
+
+async function sceneRequest<T>(path: string, init?: RequestInit): Promise<T> {
+  const response = await fetch(`${API_BASE}${path}`, {
+    ...init,
+    headers: authHeaders(init?.body ? { "Content-Type": "application/json" } : undefined),
+  });
+  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha na operação de cena");
+  return response.json();
+}
+
+export function newSceneRequestId(prefix = "scene") { return newDiceRequestId(prefix); }
+export async function listGameSessions(): Promise<GameSession[]> { return sceneRequest("/gm/sessions"); }
+export async function createGameSession(payload: { request_id: string; title: string; session_number?: number; private_notes?: string }): Promise<GameSession> { return sceneRequest("/gm/sessions", { method: "POST", body: JSON.stringify(payload) }); }
+export async function updateGameSessionStatus(id: number, status: string): Promise<GameSession> { return sceneRequest(`/gm/sessions/${id}/status`, { method: "POST", body: JSON.stringify({ status }) }); }
+export async function listScenes(): Promise<GameScene[]> { return sceneRequest("/scenes"); }
+export async function getActiveScene(): Promise<GameScene | null> { return sceneRequest("/scenes/active"); }
+export async function getScene(id: number): Promise<GameScene> { return sceneRequest(`/scenes/${id}`); }
+export async function createScene(payload: Record<string, unknown>): Promise<GameScene> { return sceneRequest("/gm/scenes", { method: "POST", body: JSON.stringify(payload) }); }
+export async function updateScene(id: number, expectedVersion: number, fields: Record<string, unknown>): Promise<GameScene> { return sceneRequest(`/gm/scenes/${id}`, { method: "PATCH", body: JSON.stringify({ expected_version: expectedVersion, fields }) }); }
+export async function updateSceneStatus(id: number, status: string, summary?: string): Promise<GameScene> { return sceneRequest(`/gm/scenes/${id}/status`, { method: "POST", body: JSON.stringify({ status, summary }) }); }
+export async function addSceneParticipant(sceneId: number, payload: Record<string, unknown>): Promise<GameScene> { return sceneRequest(`/gm/scenes/${sceneId}/participants`, { method: "POST", body: JSON.stringify(payload) }); }
+export async function updateSceneParticipant(participantId: number, fields: Record<string, unknown>): Promise<SceneParticipant> { return sceneRequest(`/gm/scene-participants/${participantId}`, { method: "PATCH", body: JSON.stringify({ fields }) }); }
+export async function removeSceneParticipant(participantId: number): Promise<SceneParticipant> { return sceneRequest(`/gm/scene-participants/${participantId}`, { method: "DELETE" }); }
+export async function createSceneElement(sceneId: number, payload: Record<string, unknown>): Promise<GameScene> { return sceneRequest(`/gm/scenes/${sceneId}/elements`, { method: "POST", body: JSON.stringify(payload) }); }
+export async function updateSceneElement(elementId: number, fields: Record<string, unknown>): Promise<SceneElement> { return sceneRequest(`/gm/scene-elements/${elementId}`, { method: "PATCH", body: JSON.stringify({ fields }) }); }
+export async function revealSceneElement(elementId: number): Promise<SceneElement> { return sceneRequest(`/gm/scene-elements/${elementId}/reveal`, { method: "POST" }); }
+export async function declareSceneAction(sceneId: number, payload: { request_id: string; character_id?: string; action_type: string; description: string; target_label?: string; visibility?: DiceVisibility }): Promise<SceneAction> { return sceneRequest(`/scenes/${sceneId}/actions`, { method: "POST", body: JSON.stringify(payload) }); }
+export async function cancelSceneAction(actionId: number): Promise<SceneAction> { return sceneRequest(`/scenes/actions/${actionId}/cancel`, { method: "POST" }); }
+export async function resolveSceneAction(actionId: number, resolution?: string): Promise<SceneAction> { return sceneRequest(`/gm/scenes/actions/${actionId}/resolve`, { method: "POST", body: JSON.stringify({ resolution }) }); }
+export async function rejectSceneAction(actionId: number, resolution: string): Promise<SceneAction> { return sceneRequest(`/gm/scenes/actions/${actionId}/reject`, { method: "POST", body: JSON.stringify({ resolution }) }); }
+export async function requestSceneActionRoll(actionId: number, payload: Record<string, unknown>): Promise<DiceRollRequest> { return sceneRequest(`/gm/scenes/actions/${actionId}/request-roll`, { method: "POST", body: JSON.stringify(payload) }); }
+export async function applySceneConsequence(sceneId: number, payload: Record<string, unknown>): Promise<{ character_event: Record<string, unknown>; scene_event: SceneEvent; scene: GameScene }> { return sceneRequest(`/gm/scenes/${sceneId}/consequences`, { method: "POST", body: JSON.stringify(payload) }); }
+export async function createSceneEvent(sceneId: number, payload: Record<string, unknown>): Promise<SceneEvent> { return sceneRequest(`/gm/scenes/${sceneId}/events`, { method: "POST", body: JSON.stringify(payload) }); }
+export async function voidSceneEvent(eventId: number, reason: string): Promise<SceneEvent> { return sceneRequest(`/gm/scene-events/${eventId}/void`, { method: "POST", body: JSON.stringify({ reason }) }); }
 
 export async function health() {
   const response = await fetch(`${API_BASE}/health`, { headers: authHeaders() });

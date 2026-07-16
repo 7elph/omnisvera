@@ -34,8 +34,21 @@ export default function QuickCharacterSheet({ hidden, onOpen }: { hidden?: boole
   useEffect(() => {
     void load();
     const refresh = () => void load();
+    const openCharacter = (event: Event) => {
+      const characterId = (event as CustomEvent<string>).detail;
+      if (!characterId) return;
+      setSelectedId(characterId);
+      setDetail(null);
+      setRollResult(null);
+      localStorage.setItem("omnisvera_selected_character", characterId);
+      setOpen(true);
+    };
     window.addEventListener("omnisvera-character-state", refresh);
-    return () => window.removeEventListener("omnisvera-character-state", refresh);
+    window.addEventListener("omnisvera-open-character", openCharacter);
+    return () => {
+      window.removeEventListener("omnisvera-character-state", refresh);
+      window.removeEventListener("omnisvera-open-character", openCharacter);
+    };
   }, []);
 
   useEffect(() => {

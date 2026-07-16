@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { AccessMode, getAccessMode, getAccessToken, health, rebuildIndex, resolveNote, setAccessMode, setAccessToken } from "./api";
 import DiceTray from "./components/DiceTray";
 import QuickCharacterSheet from "./components/QuickCharacterSheet";
+import QuickScenePanel from "./components/QuickScenePanel";
 import ChatVault from "./pages/ChatVault";
 import PlayableCharacterSheet from "./pages/PlayableCharacterSheet";
 import NoteView from "./pages/NoteView";
@@ -9,8 +10,9 @@ import PlayerPanel from "./pages/PlayerPanel";
 import SearchNotes from "./pages/SearchNotes";
 import SessionPanel from "./pages/SessionPanel";
 import ModelCurationPanel from "./pages/ModelCurationPanel";
+import ScenePanel from "./pages/ScenePanel";
 
-type Page = "chat" | "search" | "note" | "session" | "player" | "sheet" | "curation";
+type Page = "chat" | "search" | "note" | "session" | "player" | "sheet" | "scene" | "curation";
 
 export default function App() {
   const initialMode = getAccessMode();
@@ -226,6 +228,9 @@ export default function App() {
         <button className={page === "sheet" ? "active" : ""} onClick={() => navigate("sheet")}>
           <span>♜</span><small>{mode === "gm" ? "Fichas" : "Ficha"}</small>
         </button>
+        <button className={page === "scene" ? "active" : ""} onClick={() => navigate("scene")}>
+          <span>◈</span><small>Cena</small>
+        </button>
         {mode === "gm" && (
           <button className={page === "curation" ? "active" : ""} onClick={() => navigate("curation")}>
             <span>⚗</span><small>Curadoria</small>
@@ -250,6 +255,7 @@ export default function App() {
       )}
       {authenticated && page === "chat" && <ChatVault onOpenNote={openNote} onUnknownNote={openUnknownNote} initialQuestion={chatSeed} />}
       {authenticated && page === "sheet" && <PlayableCharacterSheet key={`sheet-${authVersion}-${mode}`} mode={mode === "player" ? "player" : "gm"} />}
+      {authenticated && page === "scene" && <ScenePanel key={`scene-${authVersion}-${mode}`} mode={mode === "player" ? "player" : "gm"} />}
       {authenticated && page === "curation" && mode === "gm" && <ModelCurationPanel key={`curation-${authVersion}`} />}
       {authenticated && page === "search" && <SearchNotes onOpenNote={openNote} />}
       {authenticated && page === "note" && (
@@ -268,6 +274,7 @@ export default function App() {
         </>
       )}
       {authenticated && <QuickCharacterSheet hidden={page === "sheet"} onOpen={() => navigate("sheet")} />}
+      {authenticated && <QuickScenePanel hidden={page === "scene"} mode={mode === "player" ? "player" : "gm"} onOpen={() => navigate("scene")} />}
       {authenticated && <DiceTray key={`dice-${authVersion}-${mode}`} mode={mode === "player" ? "player" : "gm"} />}
     </main>
   );
