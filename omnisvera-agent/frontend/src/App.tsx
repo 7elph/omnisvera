@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { AccessMode, getAccessMode, getAccessToken, health, rebuildIndex, resolveNote, setAccessMode, setAccessToken } from "./api";
+import DiceTray from "./components/DiceTray";
 import QuickCharacterSheet from "./components/QuickCharacterSheet";
 import ChatVault from "./pages/ChatVault";
 import PlayableCharacterSheet from "./pages/PlayableCharacterSheet";
@@ -267,6 +268,7 @@ export default function App() {
         </>
       )}
       {authenticated && <QuickCharacterSheet hidden={page === "sheet"} onOpen={() => navigate("sheet")} />}
+      {authenticated && <DiceTray key={`dice-${authVersion}-${mode}`} mode={mode === "player" ? "player" : "gm"} />}
     </main>
   );
 }

@@ -2,17 +2,20 @@ import { useEffect, useMemo, useState } from "react";
 import {
   applyCharacterStateAction,
   CharacterEvent,
+  DiceRollEvent,
   getPlayableCharacter,
   InventoryItem,
   listCharacterEvents,
   listNotes,
   listPlayableCharacters,
   mediaUrlFromVaultPath,
+  newDiceRequestId,
   NoteSummary,
   PlayableCharacter,
   PlayableCharacterDefinition,
   PlayableCharacterSummary,
   revertCharacterEvent,
+  rollCharacterAction,
   updateCharacterDefinition,
 } from "../api";
 import CharacterSheetBuilder from "./CharacterSheetBuilder";
@@ -122,18 +125,18 @@ function SummaryTab({ character }: { character: PlayableCharacter }) {
   </div>;
 }
 
-function MechanicsTab({ character }: { character: PlayableCharacter }) {
+function MechanicsTab({ character, rolling, onRoll }: { character: PlayableCharacter; rolling: string; onRoll: (rollType: string, sourceId?: string) => Promise<void> }) {
   const { definition } = character;
   const attributes = definition.attributes || {};
   return <div className="playable-tab-grid">
     <section className="sheet-card span-2"><h3>Atributos</h3><div className="attribute-grid">
-      {Object.entries(ATTRIBUTE_LABELS).map(([key, label]) => <article key={key}><small>{label}</small><strong>{shown(attributes[key], "—")}</strong><em>{signed(definition.attribute_modifiers?.[key])}</em></article>)}
+      {Object.entries(ATTRIBUTE_LABELS).map(([key, label]) => <article key={key}><small>{label}</small><strong>{shown(attributes[key], "—")}</strong><em>{signed(definition.attribute_modifiers?.[key])}</em><button disabled={definition.attribute_modifiers?.[key] == null || !!rolling} aria-label={`Rolar teste de ${label}`} onClick={() => void onRoll("attribute", key)}>Rolar teste</button></article>)}
     </div></section>
     <section className="sheet-card"><h3>Defesas</h3><dl className="definition-list">
       <div><dt>Classe de Armadura</dt><dd>{shown(definition.defenses?.armor_class)}</dd></div>
       <div><dt>Jogada de Proteção</dt><dd>{shown(definition.defenses?.saving_throw)}</dd></div>
       <div><dt>Iniciativa</dt><dd>{definition.defenses?.initiative_configured ? signed(definition.defenses.initiative) : "Não configurada"}</dd></div>
-    </dl></section>
+    </dl><button disabled={!definition.defenses?.saving_throw || !!rolling} onClick={() => void onRoll("saving_throw")}>Rolar proteção</button></section>
     <section className="sheet-card"><h3>Progressão</h3><dl className="definition-list">
       <div><dt>Nível</dt><dd>{shown(definition.level)}</dd></div>
       <div><dt>Experiência</dt><dd>{shown(definition.progression?.experience)}</dd></div>
@@ -144,7 +147,7 @@ function MechanicsTab({ character }: { character: PlayableCharacter }) {
   </div>;
 }
 
-function CombatTab({ character, mode, onAction }: { character: PlayableCharacter; mode: "player" | "gm"; onAction: (action: string, payload: Record<string, unknown>) => Promise<void> }) {
+function CombatTab({ character, mode, rolling, onAction, onRoll }: { character: PlayableCharacter; mode: "player" | "gm"; rolling: string; onAction: (action: string, payload: Record<string, unknown>) => Promise<void>; onRoll: (rollType: string, sourceId?: string) => Promise<void> }) {
   const [amount, setAmount] = useState(1);
   const [condition, setCondition] = useState("");
   const [busy, setBusy] = useState(false);
@@ -166,23 +169,23 @@ function CombatTab({ character, mode, onAction }: { character: PlayableCharacter
     </section>
     <section className="sheet-card"><h3>Condições</h3><div className="condition-cloud">{state?.conditions.map((item) => <button title="Remover condição" key={item} disabled={busy} onClick={() => void act("remove_condition", { condition: item })}>{item} ×</button>)}</div>{character.permissions.edit_state && <div className="inline-control"><input aria-label="Nova condição" value={condition} placeholder="Ex.: Caído" onChange={(event) => setCondition(event.target.value)} /><button disabled={!condition.trim() || busy} onClick={() => { void act("add_condition", { condition }); setCondition(""); }}>Adicionar</button></div>}</section>
     <section className="sheet-card span-2"><h3>Recursos</h3>{state?.resources.length ? <div className="resource-grid">{state.resources.map((resource) => <article key={resource.key}><span><strong>{resource.label}</strong><small>{resource.current} / {resource.maximum}</small></span><div><button disabled={busy || resource.current <= 0} onClick={() => void act("consume_resource", { resource_key: resource.key, amount: 1 })}>− Usar</button>{mode === "gm" && <button disabled={busy || resource.current >= resource.maximum} onClick={() => void act("restore_resource", { resource_key: resource.key, amount: 1 })}>+ Restaurar</button>}</div></article>)}</div> : <p className="sheet-empty">Nenhum recurso consumível confirmado para esta ficha.</p>}</section>
-    <section className="sheet-card span-2"><h3>Ataques</h3>{character.definition.attacks?.length ? <div className="attack-grid">{character.definition.attacks.map((attack) => <article key={attack.id}><span><strong>{attack.name}</strong><em>{signed(attack.attack_bonus)}</em></span><dl><div><dt>Dano</dt><dd>{shown(attack.damage, "Não configurado")}</dd></div><div><dt>Alcance</dt><dd>{shown(attack.range, "Não configurado")}</dd></div></dl><small>{attack.notes}</small></article>)}</div> : <p className="sheet-empty">Ataques ainda não configurados.</p>}<TextBlock value={character.definition.attack_notes} /></section>
+    <section className="sheet-card span-2"><h3>Ataques</h3>{character.definition.attacks?.length ? <div className="attack-grid">{character.definition.attacks.map((attack) => <article key={attack.id}><span><strong>{attack.name}</strong><em>{signed(attack.attack_bonus)}</em></span><dl><div><dt>Dano</dt><dd>{shown(attack.damage, "Não configurado")}</dd></div><div><dt>Alcance</dt><dd>{shown(attack.range, "Não configurado")}</dd></div></dl><small>{attack.notes}</small><button disabled={attack.attack_bonus == null || !!rolling} onClick={() => void onRoll("attack", attack.id)}>Rolar ataque</button></article>)}</div> : <p className="sheet-empty">Ataques ainda não configurados.</p>}<TextBlock value={character.definition.attack_notes} /></section>
     {error && <p className="warning-text span-2">{error}</p>}
   </div>;
 }
 
-function InventoryCard({ item, canEdit, isGm, busy, onAction }: { item: InventoryItem; canEdit: boolean; isGm: boolean; busy: boolean; onAction: (action: string, payload: Record<string, unknown>) => Promise<void> }) {
+function InventoryCard({ item, canEdit, isGm, busy, rolling, onAction, onRoll }: { item: InventoryItem; canEdit: boolean; isGm: boolean; busy: boolean; rolling: string; onAction: (action: string, payload: Record<string, unknown>) => Promise<void>; onRoll: (rollType: string, sourceId?: string) => Promise<void> }) {
   const [quantity, setQuantity] = useState(item.quantity);
   useEffect(() => setQuantity(item.quantity), [item.quantity]);
   const image = mediaUrlFromVaultPath(item.thumbnail || item.cover);
   return <article className={`sheet-inventory-card ${item.equipped ? "equipped" : ""}`}>
     {image ? <img src={image} alt={item.item_title} /> : <span className="inventory-item-placeholder" aria-hidden="true">◈</span>}
-    <div><strong>{item.item_title}</strong><small>{item.equipped ? "Equipado" : "Guardado"}</small>{item.notes && <p>{item.notes}</p>}</div>
-    {canEdit && <div className="inventory-card-actions"><button disabled={busy} onClick={() => void onAction(item.equipped ? "unequip_item" : "equip_item", { item_path: item.item_path })}>{item.equipped ? "Desequipar" : "Equipar"}</button><label>Qtd.<input type="number" min="0" max="999" value={quantity} onChange={(event) => setQuantity(Math.max(0, Number(event.target.value)))} /></label><button disabled={busy || quantity === item.quantity} className="secondary-button" onClick={() => void onAction("change_quantity", { item_path: item.item_path, quantity })}>Salvar</button>{isGm && <button disabled={busy} className="danger-button subtle" onClick={() => void onAction("remove_item", { item_path: item.item_path })}>Remover</button>}</div>}
+    <div><strong>{item.item_title}</strong><small>{item.equipped ? "Equipado" : "Guardado"}{item.damage_formula ? ` · Dano ${item.damage_formula}` : ""}</small>{item.notes && <p>{item.notes}</p>}</div>
+    {canEdit && <div className="inventory-card-actions">{item.damage_formula && <button disabled={busy || !!rolling} onClick={() => void onRoll("damage", item.item_path)}>Rolar dano</button>}<button disabled={busy} onClick={() => void onAction(item.equipped ? "unequip_item" : "equip_item", { item_path: item.item_path })}>{item.equipped ? "Desequipar" : "Equipar"}</button><label>Qtd.<input type="number" min="0" max="999" value={quantity} onChange={(event) => setQuantity(Math.max(0, Number(event.target.value)))} /></label><button disabled={busy || quantity === item.quantity} className="secondary-button" onClick={() => void onAction("change_quantity", { item_path: item.item_path, quantity })}>Salvar</button>{isGm && <button disabled={busy} className="danger-button subtle" onClick={() => void onAction("remove_item", { item_path: item.item_path })}>Remover</button>}</div>}
   </article>;
 }
 
-function InventoryTab({ character, mode, availableItems, onAction }: { character: PlayableCharacter; mode: "player" | "gm"; availableItems: NoteSummary[]; onAction: (action: string, payload: Record<string, unknown>) => Promise<void> }) {
+function InventoryTab({ character, mode, availableItems, rolling, onAction, onRoll }: { character: PlayableCharacter; mode: "player" | "gm"; availableItems: NoteSummary[]; rolling: string; onAction: (action: string, payload: Record<string, unknown>) => Promise<void>; onRoll: (rollType: string, sourceId?: string) => Promise<void> }) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [noteId, setNoteId] = useState("");
@@ -191,7 +194,7 @@ function InventoryTab({ character, mode, availableItems, onAction }: { character
   return <div className="inventory-tab">
     <section className="sheet-card"><h3>Recursos carregados</h3><dl className="definition-list"><div><dt>Moedas</dt><dd>{shown(character.state?.coins)}</dd></div></dl>{character.definition.base_equipment?.length ? <><h4>Equipamento-base confirmado</h4><div className="condition-cloud">{character.definition.base_equipment.map((item) => <span key={item}>{item}</span>)}</div></> : <p className="sheet-empty">Equipamento-base ainda não informado.</p>}</section>
     {mode === "gm" && <section className="sheet-card grant-item-form"><div><h3>Conceder item</h3><p>Adiciona ao estado do Companion sem editar a nota do personagem.</p></div><select aria-label="Item para conceder" value={noteId} onChange={(event) => setNoteId(event.target.value)}><option value="">Escolha um item...</option>{availableItems.map((item) => <option key={item.id} value={item.id}>{item.title}</option>)}</select><input aria-label="Quantidade do item" type="number" min="1" max="999" value={quantity} onChange={(event) => setQuantity(Math.max(1, Number(event.target.value)))} /><button disabled={!noteId || busy} onClick={() => void act("grant_item", { note_id: Number(noteId), quantity })}>Conceder</button></section>}
-    <div className="sheet-inventory-grid">{character.inventory.length ? character.inventory.map((item) => <InventoryCard key={item.id} item={item} canEdit={character.permissions.edit_state} isGm={mode === "gm"} busy={busy} onAction={act} />) : <p className="sheet-empty">Inventário vazio.</p>}</div>
+    <div className="sheet-inventory-grid">{character.inventory.length ? character.inventory.map((item) => <InventoryCard key={item.id} item={item} canEdit={character.permissions.edit_state} isGm={mode === "gm"} busy={busy} rolling={rolling} onAction={act} onRoll={onRoll} />) : <p className="sheet-empty">Inventário vazio.</p>}</div>
     {error && <p className="warning-text">{error}</p>}
   </div>;
 }
@@ -255,6 +258,9 @@ export default function PlayableCharacterSheet({ mode }: { mode: "player" | "gm"
   const [tab, setTab] = useState<CharacterTab>("summary");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [rolling, setRolling] = useState("");
+  const [rollResult, setRollResult] = useState<DiceRollEvent | null>(null);
+  const [rollError, setRollError] = useState("");
 
   useEffect(() => {
     setLoading(true);
@@ -292,24 +298,39 @@ export default function PlayableCharacterSheet({ mode }: { mode: "player" | "gm"
   async function action(actionName: string, payload: Record<string, unknown>) { await refresh(await applyCharacterStateAction(selectedId, actionName, payload)); }
   async function updateDefinition(fields: Record<string, unknown>) { await refresh(await updateCharacterDefinition(selectedId, fields, "Ajuste pela ficha de jogo")); }
   async function revert(eventId: number) { if (!window.confirm("Reverter esta alteração?")) return; await refresh(await revertCharacterEvent(selectedId, eventId)); }
+  async function roll(rollType: string, sourceId?: string) {
+    if (!selectedId || rolling) return;
+    const key = `${rollType}:${sourceId || "default"}`;
+    setRolling(key); setRollError("");
+    try {
+      const result = await rollCharacterAction(selectedId, {
+        request_id: newDiceRequestId("sheet"), roll_type: rollType, source_id: sourceId, visibility: "table",
+      });
+      setRollResult(result);
+      window.dispatchEvent(new CustomEvent("omnisvera-roll-created", { detail: result }));
+    } catch (reason) { setRollError(reason instanceof Error ? reason.message : "Não foi possível realizar a rolagem."); }
+    finally { setRolling(""); }
+  }
 
   const visibleTabs = useMemo(() => TAB_LABELS.filter((item) => item.key !== "gm" || mode === "gm"), [mode]);
 
   if (view === "creation") return <section className="playable-sheet-page"><div className="sheet-mode-switch"><button onClick={() => setView("play")}>Ficha de jogo</button><button className="active">Criação em 10 passos</button></div><CharacterSheetBuilder mode={mode} /></section>;
   return <section className="panel playable-sheet-page">
     <div className="sheet-mode-switch"><button className="active">Ficha de jogo</button><button onClick={() => setView("creation")}>Criação em 10 passos</button></div>
-    <header className="playable-roster-header"><div><p className="eyebrow">Personagens da campanha</p><h2>Ficha de jogo</h2><p>Definição vem do Vault; estado de mesa e histórico ficam no Companion.</p></div>{characters.length > 1 && <label>Personagem<select value={selectedId} onChange={(event) => { setSelectedId(event.target.value); localStorage.setItem("omnisvera_selected_character", event.target.value); setTab("summary"); }}>{characters.map((item) => <option key={item.id} value={item.id}>{item.name}{item.access_level === "owner" ? " · sua ficha" : ""}</option>)}</select></label>}</header>
+    <header className="playable-roster-header"><div><p className="eyebrow">Personagens da campanha</p><h2>Ficha de jogo</h2><p>Definição vem do Vault; estado de mesa e histórico ficam no Companion.</p></div><div className="roster-controls"><button onClick={() => window.dispatchEvent(new Event("omnisvera-open-dice-tray"))}>⚄ Bandeja de dados</button>{characters.length > 1 && <label>Personagem<select value={selectedId} onChange={(event) => { setSelectedId(event.target.value); localStorage.setItem("omnisvera_selected_character", event.target.value); setTab("summary"); setRollResult(null); }}>{characters.map((item) => <option key={item.id} value={item.id}>{item.name}{item.access_level === "owner" ? " · sua ficha" : ""}</option>)}</select></label>}</div></header>
     {loading && <p className="muted">Preparando ficha...</p>}
     {error && <p className="warning-text">{error}</p>}
     {!loading && character && <>
       <header className="character-identity-card"><Portrait character={character.definition} /><div className="character-identity-copy"><p className="eyebrow">{character.definition.campaign || "Omnisvera"}</p><h2>{character.definition.name}</h2>{character.definition.epithet && <h3>{character.definition.epithet}</h3>}<div className="identity-tags"><span>{shown(character.definition.race)}</span><span>{shown(character.definition.class_name)}</span><span>Nível {shown(character.definition.level)}</span>{character.definition.player_name && <span>Jogador: {character.definition.player_name}</span>}</div><p>{shown(character.state?.location || character.definition.location, "Localização não informada")} · {shown(character.definition.current_status, "Estado não informado")}</p></div><div className="always-visible-stats"><QuickStat label="PV" value={character.state?.maximum_hp === null || character.state?.maximum_hp === undefined ? "—" : `${character.state.current_hp}/${character.state.maximum_hp}`} accent /><QuickStat label="CA" value={character.definition.defenses?.armor_class} /><QuickStat label="Iniciativa" value={character.definition.defenses?.initiative_configured ? signed(character.definition.defenses?.initiative) : "N/C"} /><QuickStat label="Desloc." value={character.definition.movement} /></div></header>
+      {rollResult && <aside className="sheet-roll-result" aria-live="assertive"><span><small>{rollResult.label}</small><strong>{rollResult.individual_results.join(" + ")}{rollResult.modifier ? ` ${rollResult.modifier > 0 ? "+" : "−"} ${Math.abs(rollResult.modifier)}` : ""}</strong></span><b>{rollResult.total}</b><button aria-label="Fechar resultado" onClick={() => setRollResult(null)}>×</button></aside>}
+      {rollError && <p className="warning-text" role="alert">{rollError}</p>}
       {character.access_level === "public" ? <section className="sheet-card public-character-view"><h3>O que você conhece</h3><TextBlock value={character.definition.public_description} empty="Este personagem ainda não revelou mais informações a você." /></section> : <>
         <nav className="character-tabs" aria-label="Seções da ficha">{visibleTabs.map((item) => <button key={item.key} className={tab === item.key ? "active" : ""} onClick={() => setTab(item.key)}><span>{item.icon}</span><small>{item.label}</small></button>)}</nav>
         <div className="playable-tab-content">
           {tab === "summary" && <SummaryTab character={character} />}
-          {tab === "mechanics" && <MechanicsTab character={character} />}
-          {tab === "combat" && <CombatTab character={character} mode={mode} onAction={action} />}
-          {tab === "inventory" && <InventoryTab character={character} mode={mode} availableItems={availableItems} onAction={action} />}
+          {tab === "mechanics" && <MechanicsTab character={character} rolling={rolling} onRoll={roll} />}
+          {tab === "combat" && <CombatTab character={character} mode={mode} rolling={rolling} onAction={action} onRoll={roll} />}
+          {tab === "inventory" && <InventoryTab character={character} mode={mode} availableItems={availableItems} rolling={rolling} onAction={action} onRoll={roll} />}
           {tab === "abilities" && <AbilitiesTab character={character} />}
           {tab === "story" && <StoryTab character={character} />}
           {tab === "gm" && mode === "gm" && <GmTab character={character} events={events} onDefinition={updateDefinition} onAction={action} onRevert={revert} />}

@@ -297,7 +297,7 @@ export type PlayerQuest = {
 export type EditableNote = { path: string; content: string; content_hash: string; updated_at: string };
 export type InventoryItem = {
   id: number; profile_id: string; item_path: string; item_title: string;
-  note_id?: number | null; thumbnail?: string | null; cover?: string | null;
+  note_id?: number | null; thumbnail?: string | null; cover?: string | null; damage_formula?: string | null;
   quantity: number; equipped: boolean; notes?: string | null; updated_at: string;
 };
 export type PlayerIdea = {
@@ -454,6 +454,69 @@ export type CharacterEvent = {
   reverted_at?: string | null;
   reverted_by?: string | null;
 };
+
+export type DiceVisibility = "table" | "gm" | "owner" | "private";
+export type DiceRollEvent = {
+  id: number;
+  request_id: string;
+  session_id?: string | null;
+  campaign_id: string;
+  character_id?: string | null;
+  actor_id: string;
+  actor_role: "gm" | "player";
+  roll_type: string;
+  label: string;
+  formula: string;
+  dice: string;
+  modifier: number;
+  individual_results: number[];
+  subtotal: number;
+  total: number;
+  target_value?: number | null;
+  target_hidden: boolean;
+  outcome?: "success" | "failure" | null;
+  visibility: DiceVisibility;
+  source: string;
+  source_id?: string | null;
+  reason?: string | null;
+  created_at: string;
+  voided: boolean;
+  voided_at?: string | null;
+  voided_by?: string | null;
+  void_reason?: string | null;
+};
+
+export type DiceRollRequest = {
+  id: number;
+  request_id: string;
+  session_id?: string | null;
+  campaign_id: string;
+  character_id: string;
+  requested_by: string;
+  roll_type: string;
+  label: string;
+  formula: string;
+  visibility: DiceVisibility;
+  source: string;
+  source_id?: string | null;
+  target_value?: number | null;
+  target_hidden: boolean;
+  reason?: string | null;
+  status: string;
+  created_at: string;
+  expires_at: string;
+  completed_at?: string | null;
+  completed_by?: string | null;
+  completion_request_id?: string | null;
+  roll_event_id?: number | null;
+};
+
+export function newDiceRequestId(prefix = "roll") {
+  const suffix = typeof crypto !== "undefined" && "randomUUID" in crypto
+    ? crypto.randomUUID()
+    : `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+  return `${prefix}-${suffix}`;
+}
 
 export async function getPlayerProfile(): Promise<PlayerProfile> {
   const response = await fetch(`${API_BASE}/player/profile`, { headers: authHeaders() });
@@ -677,6 +740,77 @@ export async function revertCharacterEvent(profileId: string, eventId: number): 
     headers: authHeaders(),
   });
   if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao reverter evento");
+  return response.json();
+}
+
+export async function createFreeRoll(payload: {
+  request_id: string; formula: string; label?: string; visibility?: DiceVisibility;
+  character_id?: string; target_value?: number; hide_target?: boolean; reason?: string;
+}): Promise<DiceRollEvent> {
+  const response = await fetch(`${API_BASE}/rolls`, {
+    method: "POST",
+    headers: authHeaders({ "Content-Type": "application/json" }),
+    body: JSON.stringify(payload),
+  });
+  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao realizar rolagem");
+  return response.json();
+}
+
+export async function rollCharacterAction(profileId: string, payload: {
+  request_id: string; roll_type: string; source_id?: string; label?: string;
+  visibility?: DiceVisibility; target_value?: number; hide_target?: boolean; reason?: string;
+}): Promise<DiceRollEvent> {
+  const response = await fetch(`${API_BASE}/characters/${encodeURIComponent(profileId)}/rolls`, {
+    method: "POST",
+    headers: authHeaders({ "Content-Type": "application/json" }),
+    body: JSON.stringify(payload),
+  });
+  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao realizar rolagem da ficha");
+  return response.json();
+}
+
+export async function listRollHistory(limit = 30): Promise<DiceRollEvent[]> {
+  const response = await fetch(`${API_BASE}/rolls?limit=${Math.max(1, Math.min(limit, 100))}`, { headers: authHeaders() });
+  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao carregar histórico de rolagens");
+  return response.json();
+}
+
+export async function listPendingRollRequests(): Promise<DiceRollRequest[]> {
+  const response = await fetch(`${API_BASE}/roll-requests`, { headers: authHeaders() });
+  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao carregar solicitações de rolagem");
+  return response.json();
+}
+
+export async function completeRollRequest(rollRequestId: number, requestId: string): Promise<DiceRollEvent> {
+  const response = await fetch(`${API_BASE}/roll-requests/${rollRequestId}/complete`, {
+    method: "POST",
+    headers: authHeaders({ "Content-Type": "application/json" }),
+    body: JSON.stringify({ request_id: requestId }),
+  });
+  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao concluir solicitação");
+  return response.json();
+}
+
+export async function createRollRequest(payload: {
+  request_id: string; character_id: string; roll_type: string; source_id?: string; formula?: string;
+  label?: string; visibility?: DiceVisibility; target_value?: number; hide_target?: boolean; reason?: string;
+}): Promise<DiceRollRequest> {
+  const response = await fetch(`${API_BASE}/gm/roll-requests`, {
+    method: "POST",
+    headers: authHeaders({ "Content-Type": "application/json" }),
+    body: JSON.stringify(payload),
+  });
+  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao solicitar rolagem");
+  return response.json();
+}
+
+export async function voidDiceRoll(rollId: number, reason: string): Promise<DiceRollEvent> {
+  const response = await fetch(`${API_BASE}/gm/rolls/${rollId}/void`, {
+    method: "POST",
+    headers: authHeaders({ "Content-Type": "application/json" }),
+    body: JSON.stringify({ reason }),
+  });
+  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao anular rolagem");
   return response.json();
 }
 

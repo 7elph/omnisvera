@@ -304,6 +304,7 @@ class InventoryRecord(BaseModel):
     note_id: int | None = None
     thumbnail: str | None = None
     cover: str | None = None
+    damage_formula: str | None = None
     quantity: int
     equipped: bool
     notes: str | None = None
@@ -481,3 +482,105 @@ class CharacterEventResponse(BaseModel):
     created_at: str
     reverted_at: str | None = None
     reverted_by: str | None = None
+
+
+class DiceRollCreate(BaseModel):
+    request_id: str = Field(min_length=8, max_length=120)
+    formula: str = Field(min_length=3, max_length=32)
+    label: str | None = Field(default=None, max_length=160)
+    visibility: str = "table"
+    character_id: str | None = Field(default=None, max_length=120)
+    target_value: int | None = Field(default=None, ge=1, le=100_000)
+    hide_target: bool = False
+    reason: str | None = Field(default=None, max_length=500)
+    session_id: str | None = Field(default=None, max_length=120)
+
+
+class CharacterRollCreate(BaseModel):
+    request_id: str = Field(min_length=8, max_length=120)
+    roll_type: str
+    source_id: str | None = Field(default=None, max_length=500)
+    label: str | None = Field(default=None, max_length=160)
+    visibility: str = "table"
+    target_value: int | None = Field(default=None, ge=1, le=100_000)
+    hide_target: bool = False
+    reason: str | None = Field(default=None, max_length=500)
+    session_id: str | None = Field(default=None, max_length=120)
+
+
+class DiceRollEventResponse(BaseModel):
+    id: int
+    request_id: str
+    session_id: str | None = None
+    campaign_id: str
+    character_id: str | None = None
+    actor_id: str
+    actor_role: str
+    roll_type: str
+    label: str
+    formula: str
+    dice: str
+    modifier: int
+    individual_results: list[int]
+    subtotal: int
+    total: int
+    target_value: int | None = None
+    target_hidden: bool = False
+    outcome: str | None = None
+    visibility: str
+    source: str
+    source_id: str | None = None
+    reason: str | None = None
+    created_at: str
+    voided: bool = False
+    voided_at: str | None = None
+    voided_by: str | None = None
+    void_reason: str | None = None
+
+
+class DiceRollVoidRequest(BaseModel):
+    reason: str = Field(min_length=2, max_length=500)
+
+
+class DiceRollRequestCreate(BaseModel):
+    request_id: str = Field(min_length=8, max_length=120)
+    character_id: str = Field(min_length=1, max_length=120)
+    roll_type: str
+    source_id: str | None = Field(default=None, max_length=500)
+    formula: str | None = Field(default=None, max_length=32)
+    label: str | None = Field(default=None, max_length=160)
+    visibility: str = "owner"
+    target_value: int | None = Field(default=None, ge=1, le=100_000)
+    hide_target: bool = False
+    reason: str | None = Field(default=None, max_length=500)
+    session_id: str | None = Field(default=None, max_length=120)
+    expires_in_hours: int = Field(default=24, ge=1, le=168)
+
+
+class DiceRollRequestResponse(BaseModel):
+    id: int
+    request_id: str
+    session_id: str | None = None
+    campaign_id: str
+    character_id: str
+    requested_by: str
+    roll_type: str
+    label: str
+    formula: str
+    visibility: str
+    source: str
+    source_id: str | None = None
+    target_value: int | None = None
+    target_hidden: bool = False
+    reason: str | None = None
+    status: str
+    created_at: str
+    expires_at: str
+    completed_at: str | None = None
+    completed_by: str | None = None
+    completion_request_id: str | None = None
+    roll_event_id: int | None = None
+
+
+class DiceRollRequestComplete(BaseModel):
+    request_id: str = Field(min_length=8, max_length=120)

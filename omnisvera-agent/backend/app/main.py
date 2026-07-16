@@ -40,6 +40,20 @@ from .character_play import (
     update_definition_overrides,
 )
 from .config import get_settings
+from .dice_rolls import (
+    RollSpec,
+    can_view_roll,
+    complete_roll_request,
+    create_roll,
+    create_roll_request,
+    get_roll,
+    init_dice_rolls,
+    list_roll_requests,
+    list_rolls,
+    parse_formula,
+    resolve_character_roll,
+    void_roll,
+)
 from .ollama_client import check_ollama
 from .note_editor import EditConflictError, read_editable_note, save_editable_note
 from .player_actions import (
@@ -95,6 +109,13 @@ from .schemas import (
     CharacterSheetResponse,
     CharacterSheetReview,
     CharacterSheetStepUpdate,
+    CharacterRollCreate,
+    DiceRollCreate,
+    DiceRollEventResponse,
+    DiceRollRequestComplete,
+    DiceRollRequestCreate,
+    DiceRollRequestResponse,
+    DiceRollVoidRequest,
     EditableNoteResponse,
     EditableNoteUpdate,
     HealthResponse,
@@ -439,6 +460,7 @@ def startup() -> None:
     init_player_ideas(settings.database_path)
     init_character_creation(settings.database_path)
     init_character_play(settings.database_path)
+    init_dice_rolls(settings.database_path)
     if settings.training_capture_mode != "off":
         purge_unreviewed(settings.unreviewed_retention_days)
     if settings.rebuild_on_startup:
@@ -1147,6 +1169,14 @@ def _inventory_with_media(items: list[dict], *, access_mode: str) -> list[dict]:
             record["note_id"] = note.get("id")
             record["thumbnail"] = note.get("thumbnail")
             record["cover"] = note.get("cover")
+            detail = get_note(settings.database_path, int(note["id"]), access_mode=access_mode)
+            frontmatter = dict((detail or {}).get("frontmatter") or {})
+            candidate_formula = frontmatter.get("base_damage") or frontmatter.get("damage")
+            if candidate_formula:
+                try:
+                    record["damage_formula"] = parse_formula(str(candidate_formula)).formula
+                except ValueError:
+                    record["damage_formula"] = None
         enriched.append(record)
     return enriched
 
@@ -1410,6 +1440,224 @@ def gm_revert_playable_character_event(
     except ValueError as error:
         raise HTTPException(status_code=400, detail=str(error)) from error
     return _playable_character(profile_id, access)
+
+
+def _roll_actor(access: AccessContext) -> tuple[str, str]:
+    if access.mode == "gm":
+        return "master", "gm"
+    return access.profile_id or "shared-player", "player"
+
+
+def _visible_roll(record: dict, access: AccessContext) -> dict | None:
+    actor_id, _ = _roll_actor(access)
+    if not can_view_roll(record, access_mode=access.mode, profile_id=access.profile_id, actor_id=actor_id):
+        return None
+    visible = dict(record)
+    if access.mode != "gm" and visible.get("target_hidden"):
+        visible["target_value"] = None
+    return visible
+
+
+def _validate_player_target(access: AccessContext, target_value: int | None, visibility: str) -> None:
+    if access.mode != "gm" and target_value is not None and visibility != "private":
+        raise HTTPException(
+            status_code=403,
+            detail="Jogadores só podem definir dificuldade em uma simulação privada.",
+        )
+
+
+@app.post("/rolls", response_model=DiceRollEventResponse)
+def free_dice_roll(request: DiceRollCreate, access: AccessContext = Depends(require_any)) -> dict:
+    actor_id, actor_role = _roll_actor(access)
+    character_id = request.character_id
+    if character_id:
+        if _character_access_level(access, character_id) == "public":
+            raise HTTPException(status_code=403, detail="Você não pode rolar por este personagem.")
+        _playable_character(character_id, access)
+    _validate_player_target(access, request.target_value, request.visibility)
+    try:
+        record, _created = create_roll(
+            settings.database_path,
+            request_id=request.request_id,
+            campaign_id="omnisvera",
+            character_id=character_id,
+            actor_id=actor_id,
+            actor_role=actor_role,
+            roll_type="free",
+            label=request.label or "Rolagem livre",
+            formula=request.formula,
+            visibility=request.visibility,
+            session_id=request.session_id,
+            target_value=request.target_value,
+            target_hidden=request.hide_target,
+            source="free",
+            reason=request.reason,
+        )
+    except PermissionError as error:
+        raise HTTPException(status_code=403, detail=str(error)) from error
+    except (TypeError, ValueError) as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+    return record
+
+
+@app.post("/characters/{profile_id}/rolls", response_model=DiceRollEventResponse)
+def character_dice_roll(
+    profile_id: str,
+    request: CharacterRollCreate,
+    access: AccessContext = Depends(require_any),
+) -> dict:
+    access_level = _character_access_level(access, profile_id)
+    if access_level == "public":
+        raise HTTPException(status_code=403, detail="Você não pode rolar por este personagem.")
+    character = _playable_character(profile_id, access)
+    _validate_player_target(access, request.target_value, request.visibility)
+    try:
+        spec = resolve_character_roll(
+            character["definition"],
+            character["inventory"],
+            request.roll_type,
+            request.source_id,
+        )
+        actor_id, actor_role = _roll_actor(access)
+        target = request.target_value if request.target_value is not None else spec.target_value
+        record, _created = create_roll(
+            settings.database_path,
+            request_id=request.request_id,
+            campaign_id="omnisvera",
+            character_id=profile_id,
+            actor_id=actor_id,
+            actor_role=actor_role,
+            roll_type=spec.roll_type,
+            label=request.label or spec.label,
+            formula=spec.formula,
+            visibility=request.visibility,
+            session_id=request.session_id,
+            target_value=target,
+            target_hidden=request.hide_target,
+            source=spec.source,
+            source_id=spec.source_id,
+            reason=request.reason,
+        )
+    except PermissionError as error:
+        raise HTTPException(status_code=403, detail=str(error)) from error
+    except (TypeError, ValueError) as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+    return record
+
+
+@app.get("/rolls", response_model=list[DiceRollEventResponse])
+def dice_roll_history(
+    limit: int = Query(default=30, ge=1, le=100),
+    access: AccessContext = Depends(require_any),
+) -> list[dict]:
+    visible: list[dict] = []
+    for record in list_rolls(settings.database_path, limit=250):
+        filtered = _visible_roll(record, access)
+        if filtered is not None:
+            visible.append(filtered)
+        if len(visible) >= limit:
+            break
+    return visible
+
+
+@app.get("/rolls/{roll_id}", response_model=DiceRollEventResponse)
+def dice_roll_detail(roll_id: int, access: AccessContext = Depends(require_any)) -> dict:
+    record = get_roll(settings.database_path, roll_id)
+    visible = _visible_roll(record, access) if record else None
+    if visible is None:
+        raise HTTPException(status_code=404, detail="Rolagem não encontrada.")
+    return visible
+
+
+@app.post("/gm/rolls/{roll_id}/void", response_model=DiceRollEventResponse)
+def gm_void_dice_roll(
+    roll_id: int,
+    request: DiceRollVoidRequest,
+    _: AccessContext = Depends(require_master),
+) -> dict:
+    try:
+        return void_roll(settings.database_path, roll_id=roll_id, actor_id="master", reason=request.reason)
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.post("/gm/roll-requests", response_model=DiceRollRequestResponse)
+def gm_create_roll_request(
+    request: DiceRollRequestCreate,
+    _: AccessContext = Depends(require_master),
+) -> dict:
+    character = _playable_character(request.character_id, AccessContext(mode="gm"))
+    try:
+        if request.roll_type == "free":
+            if not request.formula:
+                raise ValueError("Informe a fórmula da rolagem livre")
+            parsed = parse_formula(request.formula)
+            spec = RollSpec("free", request.label or f"{character['definition']['name']} — Rolagem solicitada", parsed.formula, "gm_request")
+        else:
+            spec = resolve_character_roll(
+                character["definition"],
+                character["inventory"],
+                request.roll_type,
+                request.source_id,
+            )
+            if request.label:
+                spec = RollSpec(spec.roll_type, request.label, spec.formula, spec.source, spec.source_id, spec.target_value)
+        record, _created = create_roll_request(
+            settings.database_path,
+            request_id=request.request_id,
+            campaign_id="omnisvera",
+            character_id=request.character_id,
+            requested_by="master",
+            spec=spec,
+            visibility=request.visibility,
+            session_id=request.session_id,
+            target_value=request.target_value,
+            target_hidden=request.hide_target,
+            reason=request.reason,
+            expires_in_hours=request.expires_in_hours,
+        )
+    except (PermissionError, TypeError, ValueError) as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+    return record
+
+
+@app.get("/roll-requests", response_model=list[DiceRollRequestResponse])
+def pending_roll_requests(access: AccessContext = Depends(require_any)) -> list[dict]:
+    if access.mode == "gm":
+        return list_roll_requests(settings.database_path)
+    if not access.profile_id:
+        return []
+    requests = list_roll_requests(settings.database_path, character_id=access.profile_id)
+    return [
+        {**request, "target_value": None if request.get("target_hidden") else request.get("target_value")}
+        for request in requests
+        if request.get("visibility") != "gm"
+    ]
+
+
+@app.post("/roll-requests/{roll_request_id}/complete", response_model=DiceRollEventResponse)
+def finish_roll_request(
+    roll_request_id: int,
+    request: DiceRollRequestComplete,
+    access: AccessContext = Depends(require_any),
+) -> dict:
+    actor_id, actor_role = _roll_actor(access)
+    try:
+        record, _created = complete_roll_request(
+            settings.database_path,
+            request_id=roll_request_id,
+            completion_request_id=request.request_id,
+            actor_id=actor_id,
+            actor_role=actor_role,
+        )
+    except PermissionError as error:
+        raise HTTPException(status_code=403, detail=str(error)) from error
+    except (TypeError, ValueError) as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+    visible = _visible_roll(record, access)
+    if visible is None:
+        raise HTTPException(status_code=403, detail="A rolagem foi registrada, mas seu resultado é reservado ao Mestre.")
+    return visible
 
 
 @app.get("/gm/actions", response_model=list[PlayerActionRecord])
@@ -1755,7 +2003,7 @@ def frontend_root():
 
 @app.get("/{full_path:path}", response_model=None)
 def frontend_fallback(request: Request, full_path: str):
-    if full_path.startswith(("health", "notes", "index", "search", "chat", "gm", "player", "characters", "media")):
+    if full_path.startswith(("health", "notes", "index", "search", "chat", "gm", "player", "characters", "rolls", "roll-requests", "media")):
         raise HTTPException(status_code=404, detail="Endpoint não encontrado.")
     index = FRONTEND_DIST / "index.html"
     if index.exists():
