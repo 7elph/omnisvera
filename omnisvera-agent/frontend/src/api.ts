@@ -525,7 +525,7 @@ export type SceneParticipant = {
   id: number; scene_id: number; participant_type: string; character_id?: string | null;
   npc_name?: string | null; npc_source?: string | null; public_label: string;
   public_status?: string | null; private_status?: string | null; visible_to_players: boolean;
-  joined_at: string; left_at?: string | null; character?: PlayableCharacterSummary | null;
+  joined_at: string; left_at?: string | null; character?: PlayableCharacterSummary | null; npc?: NpcRecord | null;
 };
 
 export type SceneElement = {
@@ -612,7 +612,54 @@ export type ContractRecord = {
   created_at: string; published_at?: string | null; accepted_at?: string | null; started_at?: string | null;
   resolved_at?: string | null; version: number; objectives: ContractObjective[]; assignments: ContractAssignment[];
   scene_links: ContractSceneLink[]; rewards: ContractReward[]; events: ContractEvent[];
-  revealed_objective_count: number; assigned_character_ids: string[];
+  revealed_objective_count: number; assigned_character_ids: string[]; npcs?: NpcContractLink[];
+};
+
+export type NpcRelationship = {
+  id: number; npc_id: number; target_type: "character" | "npc" | "faction" | "group";
+  target_id?: string | null; target_label: string; public_label?: string | null; private_label?: string | null;
+  attitude_value?: number | null; trust_value?: number | null; fear_value?: number | null; respect_value?: number | null;
+  status: string; public_notes?: string | null; private_notes?: string | null; visible_to_players: boolean;
+  created_at: string; updated_at: string; version: number;
+};
+
+export type NpcMemory = {
+  id: number; npc_id: number; memory_type: string; title: string; summary: string; private_details?: string | null;
+  subject_type?: string | null; subject_id?: string | null; subject_label?: string | null; scene_id?: number | null;
+  contract_id?: number | null; character_id?: string | null; importance: "low" | "medium" | "high" | "critical";
+  confidence: "confirmed" | "believed" | "suspected" | "doubtful" | "false_known_by_npc";
+  visibility: DiceVisibility; status: string; occurred_at?: string | null; learned_at: string; forgotten_at?: string | null;
+  created_at: string; updated_at: string; version: number; responsible_party?: string | null; beneficiary?: string | null;
+  due_text?: string | null; fulfilled_at?: string | null; obligation_status?: string | null;
+  linked_contract_id?: number | null; linked_scene_id?: number | null; contradicts_memory_id?: number | null;
+};
+
+export type NpcEncounter = {
+  id: number; npc_id: number; scene_id: number; contract_id?: number | null; session_id?: number | null; title: string;
+  public_summary?: string | null; private_summary?: string | null; occurred_at: string; created_at: string;
+};
+
+export type NpcEvent = {
+  id: number; npc_id: number; actor_id: string; actor_role: string; event_type: string; title: string;
+  public_text?: string | null; private_text?: string | null; relationship_id?: number | null; memory_id?: number | null;
+  encounter_id?: number | null; scene_id?: number | null; contract_id?: number | null; character_id?: string | null;
+  visibility: DiceVisibility; created_at: string; voided?: boolean; voided_at?: string | null; void_reason?: string | null;
+};
+
+export type NpcContractLink = {
+  id: number; npc_id: number; contract_id: number; role?: string | null; visible_to_players: boolean;
+  name?: string; portrait_path?: string | null; class_or_role?: string | null; occupation?: string | null; created_at: string;
+};
+
+export type NpcRecord = {
+  id: number; campaign_id: string; source_path?: string | null; slug: string; name: string; aliases: string[];
+  portrait_path?: string | null; race?: string | null; class_or_role?: string | null; occupation?: string | null;
+  faction_names: string[]; public_description?: string | null; private_description?: string | null;
+  canonical_status?: string | null; visible_to_players: boolean; current_location?: string | null;
+  public_status?: string | null; private_status?: string | null; disposition_summary?: string | null; active?: boolean;
+  last_seen_at?: string | null; last_scene_id?: number | null; state_version?: number; version: number;
+  relationships?: NpcRelationship[]; memories?: NpcMemory[]; encounters?: NpcEncounter[]; events?: NpcEvent[];
+  contract_links?: NpcContractLink[];
 };
 
 export type ReputationLedger = {
@@ -997,6 +1044,37 @@ export async function listReputation(params: { character_id?: string; party_id?:
 export async function applyReputation(payload: Record<string, unknown>): Promise<ReputationLedger> { return contractRequest("/gm/reputation", { method: "POST", body: JSON.stringify(payload) }); }
 export async function revertReputation(id: number): Promise<ReputationLedger> { return contractRequest(`/gm/reputation/${id}/revert`, { method: "POST" }); }
 export async function voidContractEvent(id: number, reason: string): Promise<ContractEvent> { return contractRequest(`/gm/contract-events/${id}/void`, { method: "POST", body: JSON.stringify({ reason }) }); }
+
+async function npcRequest<T>(path: string, init?: RequestInit): Promise<T> {
+  const response = await fetch(`${API_BASE}${path}`, {
+    ...init,
+    headers: authHeaders(init?.body ? { "Content-Type": "application/json" } : undefined),
+  });
+  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha na memória de NPCs");
+  return response.json();
+}
+
+export function newNpcRequestId(prefix = "npc") { return newDiceRequestId(prefix); }
+export async function listNpcs(filters: Record<string, string> = {}): Promise<NpcRecord[]> {
+  const query = new URLSearchParams(Object.entries(filters).filter(([, value]) => Boolean(value)));
+  return npcRequest(`/npcs${query.size ? `?${query}` : ""}`);
+}
+export async function getNpc(id: number): Promise<NpcRecord> { return npcRequest(`/npcs/${id}`); }
+export async function getNpcSummary(id: number): Promise<Record<string, unknown>> { return npcRequest(`/npcs/${id}/summary`); }
+export async function createNpc(payload: Record<string, unknown>): Promise<NpcRecord> { return npcRequest("/gm/npcs", { method: "POST", body: JSON.stringify(payload) }); }
+export async function importNpc(payload: { request_id: string; source_path: string; visible_to_players?: boolean }): Promise<NpcRecord> { return npcRequest("/gm/npcs/import", { method: "POST", body: JSON.stringify(payload) }); }
+export async function updateNpc(id: number, expectedVersion: number, fields: Record<string, unknown>, reason = "Atualização administrativa"): Promise<NpcRecord> { return npcRequest(`/gm/npcs/${id}`, { method: "PATCH", body: JSON.stringify({ expected_version: expectedVersion, fields, reason }) }); }
+export async function updateNpcState(id: number, expectedVersion: number, fields: Record<string, unknown>, reason = "Atualização de estado"): Promise<NpcRecord> { return npcRequest(`/gm/npcs/${id}/state`, { method: "PATCH", body: JSON.stringify({ expected_version: expectedVersion, fields, reason }) }); }
+export async function createNpcRelationship(id: number, payload: Record<string, unknown>): Promise<NpcRelationship> { return npcRequest(`/gm/npcs/${id}/relationships`, { method: "POST", body: JSON.stringify(payload) }); }
+export async function updateNpcRelationship(id: number, expectedVersion: number, fields: Record<string, unknown>, reason: string): Promise<NpcRelationship> { return npcRequest(`/gm/npc-relationships/${id}`, { method: "PATCH", body: JSON.stringify({ expected_version: expectedVersion, fields, reason }) }); }
+export async function createNpcMemory(id: number, payload: Record<string, unknown>): Promise<NpcMemory> { return npcRequest(`/gm/npcs/${id}/memories`, { method: "POST", body: JSON.stringify(payload) }); }
+export async function updateNpcMemory(id: number, expectedVersion: number, fields: Record<string, unknown>, reason: string): Promise<NpcMemory> { return npcRequest(`/gm/npc-memories/${id}`, { method: "PATCH", body: JSON.stringify({ expected_version: expectedVersion, fields, reason }) }); }
+export async function contradictNpcMemory(id: number, payload: Record<string, unknown>): Promise<NpcMemory> { return npcRequest(`/gm/npc-memories/${id}/contradict`, { method: "POST", body: JSON.stringify(payload) }); }
+export async function recordNpcEncounter(id: number, payload: Record<string, unknown>): Promise<NpcEncounter> { return npcRequest(`/gm/npcs/${id}/encounters`, { method: "POST", body: JSON.stringify(payload) }); }
+export async function unlinkNpcEncounter(id: number, reason: string): Promise<NpcEncounter> { return npcRequest(`/gm/npc-encounters/${id}`, { method: "DELETE", body: JSON.stringify({ reason }) }); }
+export async function linkNpcContract(id: number, payload: Record<string, unknown>): Promise<NpcContractLink> { return npcRequest(`/gm/npcs/${id}/contracts`, { method: "POST", body: JSON.stringify(payload) }); }
+export async function listContractNpcs(id: number): Promise<NpcContractLink[]> { return npcRequest(`/contracts/${id}/npcs`); }
+export async function voidNpcEvent(id: number, reason: string): Promise<NpcEvent> { return npcRequest(`/gm/npc-events/${id}/void`, { method: "POST", body: JSON.stringify({ reason }) }); }
 
 export async function health() {
   const response = await fetch(`${API_BASE}/health`, { headers: authHeaders() });

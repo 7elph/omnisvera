@@ -11,10 +11,14 @@ import {
   getScene,
   listGameSessions,
   listPlayableCharacters,
+  listNpcs,
   listScenes,
   mediaUrlFromVaultPath,
   newSceneRequestId,
   PlayableCharacterSummary,
+  NpcRecord,
+  newNpcRequestId,
+  recordNpcEncounter,
   rejectSceneAction,
   requestSceneActionRoll,
   resolveSceneAction,
@@ -44,15 +48,21 @@ function storedSceneId() {
 
 function ParticipantCard({ participant, mode, sceneId, onRefresh }: { participant: GameScene["participants"][number]; mode: "gm" | "player"; sceneId: number; onRefresh: () => Promise<void> }) {
   const character = participant.character;
-  const portrait = mediaUrlFromVaultPath(character?.portrait);
+  const npc = participant.npc;
+  const portrait = mediaUrlFromVaultPath(character?.portrait || npc?.portrait_path);
   async function consequence(action: string, payload: Record<string, unknown>, title: string) {
     if (!participant.character_id) return;
     await applySceneConsequence(sceneId, { character_id: participant.character_id, action, payload, title, public_text: title, visibility: "table" });
     window.dispatchEvent(new CustomEvent("omnisvera-character-state"));
     await onRefresh();
   }
+  async function registerEncounter() {
+    if (!npc) return;
+    await recordNpcEncounter(npc.id, { request_id: newNpcRequestId("scene-npc-encounter"), scene_id: sceneId, title: `Encontro em cena: ${participant.public_label}`, public_summary: `${participant.public_label} participou desta cena.` });
+    await onRefresh();
+  }
   return <article className="scene-participant-card">
-    <button className="scene-character-link" disabled={!participant.character_id} onClick={() => participant.character_id && window.dispatchEvent(new CustomEvent("omnisvera-open-character", { detail: participant.character_id }))}>
+    <button className="scene-character-link" disabled={!participant.character_id && !npc} onClick={() => participant.character_id ? window.dispatchEvent(new CustomEvent("omnisvera-open-character", { detail: participant.character_id })) : npc && window.dispatchEvent(new CustomEvent("omnisvera-open-npc", { detail: npc.id }))}>
       {portrait ? <img src={portrait} alt={`Retrato de ${participant.public_label}`} /> : <span aria-hidden="true">♟</span>}
       <div><strong>{participant.public_label}</strong><small>{participant.public_status || "Presente"}</small></div>
     </button>
@@ -63,6 +73,7 @@ function ParticipantCard({ participant, mode, sceneId, onRefresh }: { participan
       <button onClick={() => void consequence("add_condition", { condition: "Abalado" }, `${participant.public_label} fica Abalado`)}>+ Abalado</button>
       {character?.conditions.map((condition) => <button key={`remove-${condition}`} aria-label={`Remover condição ${condition} de ${participant.public_label}`} onClick={() => void consequence("remove_condition", { condition }, `${participant.public_label} não está mais ${condition}`)}>− {condition}</button>)}
     </div>}
+    {mode === "gm" && npc && <div className="scene-participant-actions"><button onClick={() => void registerEncounter()}>Registrar encontro</button><button onClick={() => window.dispatchEvent(new CustomEvent("omnisvera-open-npc", { detail: npc.id }))}>Memória e relações</button></div>}
   </article>;
 }
 
@@ -70,6 +81,7 @@ export default function ScenePanel({ mode }: { mode: "gm" | "player" }) {
   const [scene, setScene] = useState<GameScene | null>(null);
   const [scenes, setScenes] = useState<GameScene[]>([]);
   const [characters, setCharacters] = useState<PlayableCharacterSummary[]>([]);
+  const [npcs, setNpcs] = useState<NpcRecord[]>([]);
   const [sessions, setSessions] = useState<Array<{ id: number; title: string; status: string }>>([]);
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
@@ -79,6 +91,7 @@ export default function ScenePanel({ mode }: { mode: "gm" | "player" }) {
   const [createDraft, setCreateDraft] = useState({ title: "", location_name: "", objective: "", public_description: "", private_notes: "", session_id: "" });
   const [sessionTitle, setSessionTitle] = useState("");
   const [participantId, setParticipantId] = useState("");
+  const [npcId, setNpcId] = useState("");
   const [elementDraft, setElementDraft] = useState({ element_type: "clue", title: "", public_description: "", private_description: "" });
   const [actionType, setActionType] = useState("investigate");
   const [actionText, setActionText] = useState("");
@@ -105,6 +118,11 @@ export default function ScenePanel({ mode }: { mode: "gm" | "player" }) {
     void listPlayableCharacters()
       .then((roster) => { if (!cancelled) setCharacters(roster); })
       .catch((cause) => { if (!cancelled && mode === "gm") setError(cause instanceof Error ? cause.message : "Não foi possível carregar os personagens."); });
+    return () => { cancelled = true; };
+  }, [mode]);
+  useEffect(() => {
+    let cancelled = false;
+    void listNpcs().then((rows) => { if (!cancelled) setNpcs(rows); }).catch(() => undefined);
     return () => { cancelled = true; };
   }, [mode]);
   useEffect(() => {
@@ -161,6 +179,8 @@ export default function ScenePanel({ mode }: { mode: "gm" | "player" }) {
       </button>)}
     </section>}
     {notice && <p className="success-text" role="status">{notice}</p>}{error && <p className="warning-text" role="alert">{error}</p>}
+
+    {mode === "gm" && <section className="scene-section scene-npc-picker"><header><div><small>Continuidade</small><h3>Adicionar NPC existente</h3></div></header><div className="scene-inline-form"><select aria-label="NPC participante" value={npcId} onChange={(event) => setNpcId(event.target.value)}><option value="">Selecionar NPC...</option>{npcs.map((npc) => <option key={npc.id} value={npc.id}>{npc.name}</option>)}</select><button disabled={!npcId || busy} onClick={() => { const npc = npcs.find((item) => item.id === Number(npcId)); if (npc) void run(() => addSceneParticipant(scene.id, { participant_type: "npc", npc_name: npc.name, npc_source: `npc:${npc.id}`, public_label: npc.name, public_status: npc.public_status || "Presente", visible_to_players: npc.visible_to_players }), "NPC adicionado à cena.", scene.id); }}>Adicionar NPC</button></div></section>}
 
     <div className="scene-layout">
       <div className="scene-main-column">

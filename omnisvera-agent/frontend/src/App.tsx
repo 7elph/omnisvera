@@ -4,6 +4,7 @@ import DiceTray from "./components/DiceTray";
 import QuickCharacterSheet from "./components/QuickCharacterSheet";
 import QuickContractPanel from "./components/QuickContractPanel";
 import QuickScenePanel from "./components/QuickScenePanel";
+import QuickNpcPanel from "./components/QuickNpcPanel";
 import ChatVault from "./pages/ChatVault";
 import ConclaveHub from "./pages/ConclaveHub";
 import PlayableCharacterSheet from "./pages/PlayableCharacterSheet";
@@ -13,8 +14,9 @@ import SearchNotes from "./pages/SearchNotes";
 import SessionPanel from "./pages/SessionPanel";
 import ModelCurationPanel from "./pages/ModelCurationPanel";
 import ScenePanel from "./pages/ScenePanel";
+import NpcDirectory from "./pages/NpcDirectory";
 
-type Page = "chat" | "search" | "note" | "session" | "player" | "sheet" | "scene" | "conclave" | "curation";
+type Page = "chat" | "search" | "note" | "session" | "player" | "sheet" | "scene" | "conclave" | "npcs" | "curation";
 
 export default function App() {
   const initialMode = getAccessMode();
@@ -198,6 +200,11 @@ export default function App() {
     navigate("scene");
   }
 
+  function openNpcDirectory(npcId?: number) {
+    if (npcId) localStorage.setItem("omnisvera_selected_npc", String(npcId));
+    navigate("npcs");
+  }
+
   return (
     <main className="app-shell">
       <header className="hero">
@@ -265,6 +272,9 @@ export default function App() {
         <button className={page === "conclave" ? "active" : ""} onClick={() => navigate("conclave")}>
           <span>◈</span><small>Conclave</small>
         </button>
+        <button className={page === "npcs" ? "active" : ""} onClick={() => navigate("npcs")}>
+          <span>◉</span><small>NPCs</small>
+        </button>
         {mode === "gm" && (
           <button className={page === "curation" ? "active" : ""} onClick={() => navigate("curation")}>
             <span>⚗</span><small>Curadoria</small>
@@ -291,6 +301,7 @@ export default function App() {
       {authenticated && page === "sheet" && <PlayableCharacterSheet key={`sheet-${authVersion}-${mode}`} mode={mode === "player" ? "player" : "gm"} />}
       {authenticated && page === "scene" && <ScenePanel key={`scene-${authVersion}-${mode}`} mode={mode === "player" ? "player" : "gm"} />}
       {authenticated && page === "conclave" && <ConclaveHub key={`conclave-${authVersion}-${mode}`} mode={mode === "player" ? "player" : "gm"} onOpenScene={openScenePanel} />}
+      {authenticated && page === "npcs" && <NpcDirectory key={`npcs-${authVersion}-${mode}`} mode={mode === "player" ? "player" : "gm"} />}
       {authenticated && page === "curation" && mode === "gm" && <ModelCurationPanel key={`curation-${authVersion}`} />}
       {authenticated && page === "search" && <SearchNotes onOpenNote={openNote} />}
       {authenticated && page === "note" && (
@@ -308,10 +319,11 @@ export default function App() {
           />
         </>
       )}
-      {authenticated && <QuickCharacterSheet hidden={page === "sheet"} onOpen={() => navigate("sheet")} />}
-      {authenticated && <QuickScenePanel hidden={page === "scene"} mode={mode === "player" ? "player" : "gm"} onOpen={() => navigate("scene")} />}
-      {authenticated && <QuickContractPanel hidden={page === "conclave"} mode={mode === "player" ? "player" : "gm"} onOpenContract={openConclave} onOpenScene={openScenePanel} />}
-      {authenticated && <DiceTray key={`dice-${authVersion}-${mode}`} mode={mode === "player" ? "player" : "gm"} />}
+      {authenticated && <QuickCharacterSheet hidden={page === "sheet" || page === "npcs"} onOpen={() => navigate("sheet")} />}
+      {authenticated && <QuickScenePanel hidden={page === "scene" || page === "npcs"} mode={mode === "player" ? "player" : "gm"} onOpen={() => navigate("scene")} />}
+      {authenticated && <QuickContractPanel hidden={page === "conclave" || page === "npcs"} mode={mode === "player" ? "player" : "gm"} onOpenContract={openConclave} onOpenScene={openScenePanel} />}
+      {authenticated && <QuickNpcPanel mode={mode === "player" ? "player" : "gm"} onOpen={openNpcDirectory} />}
+      {authenticated && page !== "npcs" && <DiceTray key={`dice-${authVersion}-${mode}`} mode={mode === "player" ? "player" : "gm"} />}
     </main>
   );
 }

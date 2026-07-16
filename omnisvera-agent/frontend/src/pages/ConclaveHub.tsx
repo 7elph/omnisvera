@@ -18,11 +18,14 @@ import {
   linkContractScene,
   listContracts,
   listPlayableCharacters,
+  listNpcs,
   listReputation,
   listScenes,
   mediaUrlFromVaultPath,
   newContractRequestId,
   PlayableCharacterSummary,
+  NpcRecord,
+  linkNpcContract,
   ReputationLedger,
   revertReputation,
   setContractObjectiveStatus,
@@ -98,6 +101,7 @@ export default function ConclaveHub({
   });
   const [contract, setContract] = useState<ContractRecord | null>(null);
   const [characters, setCharacters] = useState<PlayableCharacterSummary[]>([]);
+  const [npcs, setNpcs] = useState<NpcRecord[]>([]);
   const [scenes, setScenes] = useState<GameScene[]>([]);
   const [reputation, setReputation] = useState<ReputationLedger[]>([]);
   const [loading, setLoading] = useState(true);
@@ -138,6 +142,7 @@ export default function ConclaveHub({
     revealed_to_players: false,
   });
   const [assignmentDraft, setAssignmentDraft] = useState({ character_id: "", public_role: "" });
+  const [npcDraft, setNpcDraft] = useState({ npc_id: "", role: "", visible_to_players: false });
   const [sceneLinkDraft, setSceneLinkDraft] = useState({ scene_id: "", objective_id: "", link_type: "investigation" });
   const [linkedSceneDraft, setLinkedSceneDraft] = useState({
     title: "",
@@ -178,6 +183,7 @@ export default function ConclaveHub({
       setSelectedId(null);
     }
     setCharacters(await listPlayableCharacters());
+    setNpcs(await listNpcs());
     setScenes(await listScenes());
     setReputation(await listReputation(isGm ? { party_id: "group" } : {}));
   }
@@ -293,6 +299,12 @@ export default function ConclaveHub({
     if (!contract || !assignmentDraft.character_id) return;
     await run(() => addContractAssignment(contract.id, { request_id: newContractRequestId("assignment"), ...assignmentDraft }), "Personagem atribuído.", contract.id);
     setAssignmentDraft({ character_id: "", public_role: "" });
+  }
+
+  async function submitNpcLink() {
+    if (!contract || !npcDraft.npc_id) return;
+    await run(() => linkNpcContract(Number(npcDraft.npc_id), { request_id: newContractRequestId("npc-contract"), contract_id: contract.id, role: npcDraft.role || null, visible_to_players: npcDraft.visible_to_players }), "NPC vinculado ao contrato.", contract.id);
+    setNpcDraft({ npc_id: "", role: "", visible_to_players: false });
   }
 
   async function submitSceneLink() {
@@ -458,6 +470,15 @@ export default function ConclaveHub({
               <input aria-label="Papel público" placeholder="Papel público" value={assignmentDraft.public_role} onChange={(event) => setAssignmentDraft({ ...assignmentDraft, public_role: event.target.value })} />
               <button disabled={busy || !assignmentDraft.character_id} onClick={() => void submitAssignment()}>Atribuir</button>
             </div>}
+          </section>
+
+          <section className="contract-subsection">
+            <header><h4>NPCs relacionados</h4></header>
+            <div className="contract-character-list">{contract.npcs?.length ? contract.npcs.map((link) => <button key={link.id} onClick={() => window.dispatchEvent(new CustomEvent("omnisvera-open-npc", { detail: link.npc_id }))}>
+              {mediaUrlFromVaultPath(link.portrait_path) ? <img src={mediaUrlFromVaultPath(link.portrait_path)!} alt="" /> : <span aria-hidden="true">N</span>}
+              <strong>{link.name || `NPC ${link.npc_id}`}</strong><small>{link.role || link.class_or_role || link.occupation || "Papel não informado"}</small>
+            </button>) : <p className="sheet-empty">Nenhum NPC vinculado.</p>}</div>
+            {isGm && <div className="contract-inline-form"><select aria-label="NPC relacionado" value={npcDraft.npc_id} onChange={(event) => setNpcDraft({ ...npcDraft, npc_id: event.target.value })}><option value="">Adicionar NPC...</option>{npcs.map((npc) => <option key={npc.id} value={npc.id}>{npc.name}</option>)}</select><input aria-label="Papel do NPC" placeholder="Contratante, contato, alvo..." value={npcDraft.role} onChange={(event) => setNpcDraft({ ...npcDraft, role: event.target.value })} /><label><input type="checkbox" checked={npcDraft.visible_to_players} onChange={(event) => setNpcDraft({ ...npcDraft, visible_to_players: event.target.checked })} /> Visível</label><button disabled={busy || !npcDraft.npc_id} onClick={() => void submitNpcLink()}>Vincular NPC</button></div>}
           </section>
 
           <section className="contract-subsection">

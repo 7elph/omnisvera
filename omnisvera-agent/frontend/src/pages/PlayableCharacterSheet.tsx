@@ -7,10 +7,12 @@ import {
   InventoryItem,
   listCharacterEvents,
   listNotes,
+  listNpcs,
   listPlayableCharacters,
   mediaUrlFromVaultPath,
   newDiceRequestId,
   NoteSummary,
+  NpcRecord,
   PlayableCharacter,
   PlayableCharacterDefinition,
   PlayableCharacterSummary,
@@ -204,8 +206,8 @@ function AbilitiesTab({ character }: { character: PlayableCharacter }) {
   return <div className="playable-tab-grid"><section className="sheet-card"><h3>Habilidades raciais</h3><TextBlock value={abilities.racial} /></section><section className="sheet-card"><h3>Habilidades de classe</h3><TextBlock value={abilities.class} /></section><section className="sheet-card span-2"><h3>Magias, fórmulas ou técnicas</h3><TextBlock value={abilities.magic} empty="Nenhuma magia ou técnica confirmada nesta ficha." />{abilities.magic_notes && <aside className="rule-note">{abilities.magic_notes}</aside>}</section></div>;
 }
 
-function StoryTab({ character }: { character: PlayableCharacter }) {
-  return <div className="playable-tab-grid"><section className="sheet-card span-2"><h3>História</h3><TextBlock value={character.definition.history} /></section><section className="sheet-card"><h3>Personalidade</h3><TextBlock value={character.definition.personality} /></section><section className="sheet-card"><h3>Relações</h3><TextBlock value={character.definition.relationships} /></section></div>;
+function StoryTab({ character, npcs }: { character: PlayableCharacter; npcs: NpcRecord[] }) {
+  return <div className="playable-tab-grid"><section className="sheet-card span-2"><h3>História</h3><TextBlock value={character.definition.history} /></section><section className="sheet-card"><h3>Personalidade</h3><TextBlock value={character.definition.personality} /></section><section className="sheet-card"><h3>Relações</h3><TextBlock value={character.definition.relationships} /></section><section className="sheet-card span-2"><h3>NPCs conhecidos</h3>{npcs.length ? <div className="known-npc-list">{npcs.map((npc) => <button key={npc.id} onClick={() => window.dispatchEvent(new CustomEvent("omnisvera-open-npc", { detail: npc.id }))}>{mediaUrlFromVaultPath(npc.portrait_path) ? <img src={mediaUrlFromVaultPath(npc.portrait_path)!} alt="" /> : <span aria-hidden="true">N</span>}<strong>{npc.name}</strong><small>{npc.public_status || npc.class_or_role || "Relação registrada"}</small></button>)}</div> : <p className="sheet-empty">Nenhum NPC conhecido foi vinculado a este personagem.</p>}</section></div>;
 }
 
 function GmTab({ character, events, onDefinition, onAction, onRevert }: { character: PlayableCharacter; events: CharacterEvent[]; onDefinition: (fields: Record<string, unknown>) => Promise<void>; onAction: (action: string, payload: Record<string, unknown>) => Promise<void>; onRevert: (eventId: number) => Promise<void> }) {
@@ -255,6 +257,7 @@ export default function PlayableCharacterSheet({ mode }: { mode: "player" | "gm"
   const [character, setCharacter] = useState<PlayableCharacter | null>(null);
   const [events, setEvents] = useState<CharacterEvent[]>([]);
   const [availableItems, setAvailableItems] = useState<NoteSummary[]>([]);
+  const [knownNpcs, setKnownNpcs] = useState<NpcRecord[]>([]);
   const [tab, setTab] = useState<CharacterTab>("summary");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -285,6 +288,11 @@ export default function PlayableCharacterSheet({ mode }: { mode: "player" | "gm"
       listCharacterEvents(selectedId).then(setEvents).catch(() => setEvents([]));
       listNotes().then((notes) => setAvailableItems(notes.filter((note) => note.type === "item"))).catch(() => setAvailableItems([]));
     }
+  }, [selectedId, mode, view]);
+
+  useEffect(() => {
+    if (!selectedId || view !== "play") return;
+    listNpcs({ character_id: selectedId }).then(setKnownNpcs).catch(() => setKnownNpcs([]));
   }, [selectedId, mode, view]);
 
   async function refresh(updated?: PlayableCharacter) {
@@ -332,7 +340,7 @@ export default function PlayableCharacterSheet({ mode }: { mode: "player" | "gm"
           {tab === "combat" && <CombatTab character={character} mode={mode} rolling={rolling} onAction={action} onRoll={roll} />}
           {tab === "inventory" && <InventoryTab character={character} mode={mode} availableItems={availableItems} rolling={rolling} onAction={action} onRoll={roll} />}
           {tab === "abilities" && <AbilitiesTab character={character} />}
-          {tab === "story" && <StoryTab character={character} />}
+          {tab === "story" && <StoryTab character={character} npcs={knownNpcs} />}
           {tab === "gm" && mode === "gm" && <GmTab character={character} events={events} onDefinition={updateDefinition} onAction={action} onRevert={revert} />}
         </div>
       </>}

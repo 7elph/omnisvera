@@ -6,7 +6,9 @@ import {
   ChatResult,
   getAccessMode,
   mediaUrlFromVaultPath,
+  listNpcs,
   NoteSummary,
+  NpcRecord,
   TrainingFeedbackAction,
   updateTrainingExample,
 } from "../api";
@@ -85,11 +87,19 @@ export default function ChatVault({
   const [feedbackQuality, setFeedbackQuality] = useState(4);
   const [feedbackSaving, setFeedbackSaving] = useState(false);
   const [feedbackState, setFeedbackState] = useState<Record<number, string>>({});
+  const [knownNpcs, setKnownNpcs] = useState<NpcRecord[]>([]);
   const threadEndRef = useRef<HTMLDivElement | null>(null);
   const sessionIdRef = useRef(
     typeof crypto !== "undefined" && "randomUUID" in crypto ? crypto.randomUUID() : `session-${Date.now()}`,
   );
   const isPlayer = getAccessMode() === "player";
+
+  useEffect(() => { listNpcs().then(setKnownNpcs).catch(() => setKnownNpcs([])); }, []);
+
+  function npcForMessage(message: ChatMessage) {
+    const paths = new Set(message.result.notes_used.map((note) => note.path));
+    return knownNpcs.find((npc) => (npc.source_path && paths.has(npc.source_path)) || message.result.notes_used.some((note) => note.title === npc.name));
+  }
 
   const latestSuggestions = useMemo(() => {
     const latest = messages.at(-1)?.result.suggested_questions || [];
@@ -333,6 +343,7 @@ export default function ChatVault({
             {message.result.notes_used[0] && (
               <button className="chat-primary-source" onClick={() => onOpenNote(message.result.notes_used[0].id)}>Abrir registro principal · {message.result.notes_used[0].title}</button>
             )}
+            {npcForMessage(message) && <button className="chat-primary-source npc-link" onClick={() => window.dispatchEvent(new CustomEvent("omnisvera-open-npc", { detail: npcForMessage(message)!.id }))}>Abrir perfil jogável · {npcForMessage(message)!.name}</button>}
             {message.result.notes_used.length > 0 && (
               <details className="source-list chat-sources">
                 <summary>{message.result.notes_used.length} fonte(s) consultada(s)</summary>

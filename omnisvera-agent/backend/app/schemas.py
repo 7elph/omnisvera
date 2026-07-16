@@ -813,3 +813,112 @@ class ReputationApplyRequest(BaseModel):
 
 class ContractEventVoidRequest(BaseModel):
     reason: str = Field(min_length=2, max_length=500)
+
+
+class NpcCreate(BaseModel):
+    request_id: str = Field(min_length=8, max_length=140)
+    name: str = Field(min_length=1, max_length=180)
+    slug: str | None = Field(default=None, max_length=180)
+    aliases: list[str] = Field(default_factory=list)
+    portrait_path: str | None = Field(default=None, max_length=500)
+    race: str | None = Field(default=None, max_length=120)
+    class_or_role: str | None = Field(default=None, max_length=180)
+    occupation: str | None = Field(default=None, max_length=180)
+    faction_names: list[str] = Field(default_factory=list)
+    public_description: str | None = Field(default=None, max_length=4000)
+    private_description: str | None = Field(default=None, max_length=4000)
+    canonical_status: str | None = Field(default=None, max_length=120)
+    visible_to_players: bool = False
+    current_location: str | None = Field(default=None, max_length=180)
+    public_status: str | None = Field(default=None, max_length=300)
+    private_status: str | None = Field(default=None, max_length=500)
+    disposition_summary: str | None = Field(default=None, max_length=500)
+    active: bool = True
+
+
+class NpcImportRequest(BaseModel):
+    request_id: str = Field(min_length=8, max_length=140)
+    source_path: str = Field(min_length=1, max_length=500)
+    visible_to_players: bool | None = None
+
+
+class NpcRelationshipCreate(BaseModel):
+    request_id: str = Field(min_length=8, max_length=140)
+    target_type: str
+    target_id: str | None = Field(default=None, max_length=180)
+    target_label: str = Field(min_length=1, max_length=180)
+    public_label: str | None = Field(default=None, max_length=180)
+    private_label: str | None = Field(default=None, max_length=180)
+    attitude_value: int | None = Field(default=None, ge=-100, le=100)
+    trust_value: int | None = Field(default=None, ge=-100, le=100)
+    fear_value: int | None = Field(default=None, ge=-100, le=100)
+    respect_value: int | None = Field(default=None, ge=-100, le=100)
+    status: str = "active"
+    public_notes: str | None = Field(default=None, max_length=4000)
+    private_notes: str | None = Field(default=None, max_length=4000)
+    visible_to_players: bool = False
+    reason: str = Field(min_length=2, max_length=500)
+
+
+class NpcVersionedUpdate(BaseModel):
+    expected_version: int = Field(ge=1)
+    fields: dict[str, Any] = Field(default_factory=dict)
+    reason: str = Field(default="Atualização administrativa", min_length=2, max_length=500)
+
+
+class NpcMemoryCreate(BaseModel):
+    request_id: str = Field(min_length=8, max_length=140)
+    memory_type: str
+    title: str = Field(min_length=1, max_length=180)
+    summary: str = Field(min_length=1, max_length=4000)
+    private_details: str | None = Field(default=None, max_length=4000)
+    subject_type: str | None = Field(default=None, max_length=80)
+    subject_id: str | None = Field(default=None, max_length=180)
+    subject_label: str | None = Field(default=None, max_length=180)
+    scene_id: int | None = Field(default=None, ge=1)
+    contract_id: int | None = Field(default=None, ge=1)
+    character_id: str | None = Field(default=None, max_length=180)
+    importance: str = "medium"
+    confidence: str = "believed"
+    visibility: str = "gm"
+    status: str = "active"
+    occurred_at: str | None = None
+    learned_at: str | None = None
+    responsible_party: str | None = Field(default=None, max_length=180)
+    beneficiary: str | None = Field(default=None, max_length=180)
+    due_text: str | None = Field(default=None, max_length=300)
+    obligation_status: str | None = None
+    linked_contract_id: int | None = Field(default=None, ge=1)
+    linked_scene_id: int | None = Field(default=None, ge=1)
+
+
+class NpcMemoryContradict(BaseModel):
+    request_id: str = Field(min_length=8, max_length=140)
+    title: str = Field(min_length=1, max_length=180)
+    summary: str = Field(min_length=1, max_length=4000)
+    private_details: str | None = Field(default=None, max_length=4000)
+    confidence: str = "confirmed"
+    visibility: str = "gm"
+    reason: str = Field(min_length=2, max_length=500)
+
+
+class NpcEncounterCreate(BaseModel):
+    request_id: str = Field(min_length=8, max_length=140)
+    scene_id: int = Field(ge=1)
+    contract_id: int | None = Field(default=None, ge=1)
+    session_id: int | None = Field(default=None, ge=1)
+    title: str = Field(min_length=1, max_length=180)
+    public_summary: str | None = Field(default=None, max_length=4000)
+    private_summary: str | None = Field(default=None, max_length=4000)
+    occurred_at: str | None = None
+
+
+class NpcContractLinkCreate(BaseModel):
+    request_id: str = Field(min_length=8, max_length=140)
+    contract_id: int = Field(ge=1)
+    role: str | None = Field(default=None, max_length=180)
+    visible_to_players: bool = False
+
+
+class NpcEventVoidRequest(BaseModel):
+    reason: str = Field(min_length=2, max_length=500)

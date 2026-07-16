@@ -83,6 +83,25 @@ from .dice_rolls import (
     void_roll,
 )
 from .ollama_client import check_ollama
+from .npc_memory import (
+    contradict_memory as contradict_npc_memory,
+    create_memory as create_npc_memory,
+    create_npc,
+    create_relationship as create_npc_relationship,
+    get_npc,
+    init_npc_memory,
+    link_contract as link_npc_contract,
+    list_contract_npcs,
+    list_npcs,
+    record_encounter as record_npc_encounter,
+    structured_summary as npc_structured_summary,
+    unlink_encounter as unlink_npc_encounter,
+    update_memory as update_npc_memory,
+    update_npc,
+    update_npc_state,
+    update_relationship as update_npc_relationship,
+    void_event as void_npc_event,
+)
 from .note_editor import EditConflictError, read_editable_note, save_editable_note
 from .player_actions import (
     ACTION_STATUSES,
@@ -188,6 +207,15 @@ from .schemas import (
     InventoryUpdate,
     NoteDetail,
     NoteSummary,
+    NpcContractLinkCreate,
+    NpcCreate,
+    NpcEncounterCreate,
+    NpcEventVoidRequest,
+    NpcImportRequest,
+    NpcMemoryContradict,
+    NpcMemoryCreate,
+    NpcRelationshipCreate,
+    NpcVersionedUpdate,
     PlayerActionCreate,
     PlayerActionRecord,
     PlayerActionUpdate,
@@ -546,6 +574,7 @@ def startup() -> None:
     init_dice_rolls(settings.database_path)
     init_scene_play(settings.database_path)
     init_contract_play(settings.database_path)
+    init_npc_memory(settings.database_path)
     if settings.training_capture_mode != "off":
         purge_unreviewed(settings.unreviewed_retention_days)
     if settings.rebuild_on_startup:
@@ -1779,6 +1808,16 @@ def _scene_payload(scene_id: int, access: AccessContext) -> dict | None:
                 record["character"] = _character_summary(_playable_character(str(character_id), access))
             except (HTTPException, ValueError):
                 record["character"] = None
+        npc_source = str(record.get("npc_source") or "")
+        if npc_source.startswith("npc:"):
+            try:
+                record["npc"] = get_npc(
+                    settings.database_path,
+                    int(npc_source.split(":", 1)[1]),
+                    access_mode=access.mode,
+                )
+            except (TypeError, ValueError):
+                record["npc"] = None
         enriched_participants.append(record)
     payload["participants"] = enriched_participants
     for event in payload.get("events", []):
@@ -1815,6 +1854,7 @@ def authorized_contract(contract_id: int, access: AccessContext = Depends(requir
     payload = get_contract(settings.database_path, contract_id, access_mode=access.mode, profile_id=access.profile_id)
     if payload is None:
         raise HTTPException(status_code=404, detail="Contrato inexistente ou não publicado.")
+    payload["npcs"] = list_contract_npcs(settings.database_path, contract_id, access_mode=access.mode)
     return payload
 
 
@@ -2761,6 +2801,246 @@ def player_dashboard(access: AccessContext = Depends(require_player)) -> dict:
     }
 
 
+def _npc_http_error(error: Exception) -> HTTPException:
+    detail = str(error)
+    if isinstance(error, PermissionError):
+        return HTTPException(status_code=403, detail=detail)
+    if isinstance(error, RuntimeError):
+        return HTTPException(status_code=409, detail=detail)
+    if "inexistente" in detail.casefold() or "não encontrado" in detail.casefold():
+        return HTTPException(status_code=404, detail=detail)
+    return HTTPException(status_code=400, detail=detail)
+
+
+def _frontmatter_list(value) -> list[str]:
+    if isinstance(value, list):
+        return [str(item).strip() for item in value if str(item).strip()]
+    if isinstance(value, str) and value.strip():
+        return [part.strip() for part in re.split(r"[,;]", value) if part.strip()]
+    return []
+
+
+@app.get("/npcs")
+def authorized_npcs(
+    query: str | None = None,
+    faction: str | None = None,
+    location: str | None = None,
+    role: str | None = None,
+    status: str | None = None,
+    character_id: str | None = None,
+    access: AccessContext = Depends(require_any),
+) -> list[dict]:
+    return list_npcs(
+        settings.database_path,
+        campaign_id="omnisvera",
+        access_mode=access.mode,
+        query=query,
+        faction=faction,
+        location=location,
+        role=role,
+        status=status,
+        character_id=character_id,
+    )
+
+
+@app.get("/npcs/{npc_id}")
+def authorized_npc(npc_id: int, access: AccessContext = Depends(require_any)) -> dict:
+    payload = get_npc(settings.database_path, npc_id, access_mode=access.mode)
+    if payload is None:
+        raise HTTPException(status_code=404, detail="NPC inexistente ou ainda não revelado.")
+    return payload
+
+
+@app.get("/npcs/{npc_id}/summary")
+def authorized_npc_summary(npc_id: int, access: AccessContext = Depends(require_any)) -> dict:
+    payload = npc_structured_summary(
+        settings.database_path,
+        npc_id,
+        access_mode=access.mode,
+        character_id=access.profile_id,
+    )
+    if payload is None:
+        raise HTTPException(status_code=404, detail="NPC inexistente ou ainda não revelado.")
+    return payload
+
+
+@app.post("/gm/npcs")
+def gm_create_npc(request: NpcCreate, _: AccessContext = Depends(require_master)) -> dict:
+    try:
+        npc, _created = create_npc(
+            settings.database_path,
+            request_id=request.request_id,
+            campaign_id="omnisvera",
+            actor_id="master",
+            fields=request.model_dump(exclude={"request_id"}),
+        )
+        return get_npc(settings.database_path, int(npc["id"]), access_mode="gm") or npc
+    except Exception as error:
+        raise _npc_http_error(error) from error
+
+
+@app.post("/gm/npcs/import")
+def gm_import_npc(request: NpcImportRequest, _: AccessContext = Depends(require_master)) -> dict:
+    maybe_refresh_index()
+    source = resolve_note(settings.database_path, request.source_path, access_mode="gm")
+    if source is None:
+        raise HTTPException(status_code=404, detail="Nota de NPC não encontrada no índice.")
+    note = get_note(settings.database_path, int(source["id"]), access_mode="gm")
+    if note is None or str(note.get("type") or "").casefold() != "character":
+        raise HTTPException(status_code=400, detail="A importação explícita aceita somente notas de personagem.")
+    frontmatter = dict(note.get("frontmatter") or {})
+    player_visible = resolve_note(settings.database_path, str(note["path"]), access_mode="player") is not None
+    aliases = list(dict.fromkeys([*_frontmatter_list(note.get("aliases")), *_frontmatter_list(frontmatter.get("aliases"))]))
+    factions = list(dict.fromkeys([
+        *_frontmatter_list(frontmatter.get("faction")),
+        *_frontmatter_list(frontmatter.get("factions")),
+        *_frontmatter_list(frontmatter.get("related_factions")),
+    ]))
+    fields = {
+        "source_path": note["path"],
+        "name": note.get("title") or Path(note["path"]).stem,
+        "aliases": aliases,
+        "portrait_path": frontmatter.get("thumbnail") or frontmatter.get("portrait") or frontmatter.get("cover"),
+        "race": frontmatter.get("race") or frontmatter.get("raça"),
+        "class_or_role": frontmatter.get("class") or frontmatter.get("function") or frontmatter.get("role"),
+        "occupation": frontmatter.get("occupation") or frontmatter.get("profession"),
+        "faction_names": factions,
+        "public_description": frontmatter.get("description") or frontmatter.get("summary") or frontmatter.get("info"),
+        "canonical_status": frontmatter.get("canon") or frontmatter.get("canonical_status"),
+        "visible_to_players": player_visible if request.visible_to_players is None else request.visible_to_players,
+        "current_location": frontmatter.get("current_location") or frontmatter.get("location"),
+        "public_status": frontmatter.get("status"),
+    }
+    try:
+        npc, _created = create_npc(
+            settings.database_path,
+            request_id=request.request_id,
+            campaign_id="omnisvera",
+            actor_id="master",
+            fields=fields,
+        )
+        return get_npc(settings.database_path, int(npc["id"]), access_mode="gm") or npc
+    except Exception as error:
+        raise _npc_http_error(error) from error
+
+
+@app.patch("/gm/npcs/{npc_id}")
+def gm_update_npc(npc_id: int, request: NpcVersionedUpdate, _: AccessContext = Depends(require_master)) -> dict:
+    try:
+        update_npc(settings.database_path, npc_id, expected_version=request.expected_version, fields=request.fields, actor_id="master")
+        return get_npc(settings.database_path, npc_id, access_mode="gm") or {}
+    except Exception as error:
+        raise _npc_http_error(error) from error
+
+
+@app.patch("/gm/npcs/{npc_id}/state")
+def gm_update_npc_state(npc_id: int, request: NpcVersionedUpdate, _: AccessContext = Depends(require_master)) -> dict:
+    try:
+        update_npc_state(settings.database_path, npc_id, expected_version=request.expected_version, fields=request.fields, actor_id="master")
+        return get_npc(settings.database_path, npc_id, access_mode="gm") or {}
+    except Exception as error:
+        raise _npc_http_error(error) from error
+
+
+@app.post("/gm/npcs/{npc_id}/relationships")
+def gm_create_npc_relationship(npc_id: int, request: NpcRelationshipCreate, _: AccessContext = Depends(require_master)) -> dict:
+    try:
+        relationship, _created = create_npc_relationship(
+            settings.database_path,
+            npc_id,
+            request_id=request.request_id,
+            fields=request.model_dump(exclude={"request_id", "reason"}),
+            actor_id="master",
+            reason=request.reason,
+        )
+        return relationship
+    except Exception as error:
+        raise _npc_http_error(error) from error
+
+
+@app.patch("/gm/npc-relationships/{relationship_id}")
+def gm_update_npc_relationship(relationship_id: int, request: NpcVersionedUpdate, _: AccessContext = Depends(require_master)) -> dict:
+    try:
+        return update_npc_relationship(settings.database_path, relationship_id, expected_version=request.expected_version, fields=request.fields, actor_id="master", reason=request.reason)
+    except Exception as error:
+        raise _npc_http_error(error) from error
+
+
+@app.post("/gm/npcs/{npc_id}/memories")
+def gm_create_npc_memory(npc_id: int, request: NpcMemoryCreate, _: AccessContext = Depends(require_master)) -> dict:
+    try:
+        memory, _created = create_npc_memory(settings.database_path, npc_id, request_id=request.request_id, fields=request.model_dump(exclude={"request_id"}), actor_id="master")
+        return memory
+    except Exception as error:
+        raise _npc_http_error(error) from error
+
+
+@app.patch("/gm/npc-memories/{memory_id}")
+def gm_update_npc_memory(memory_id: int, request: NpcVersionedUpdate, _: AccessContext = Depends(require_master)) -> dict:
+    try:
+        return update_npc_memory(settings.database_path, memory_id, expected_version=request.expected_version, fields=request.fields, actor_id="master", reason=request.reason)
+    except Exception as error:
+        raise _npc_http_error(error) from error
+
+
+@app.post("/gm/npc-memories/{memory_id}/contradict")
+def gm_contradict_npc_memory(memory_id: int, request: NpcMemoryContradict, _: AccessContext = Depends(require_master)) -> dict:
+    try:
+        return contradict_npc_memory(
+            settings.database_path,
+            memory_id,
+            request_id=request.request_id,
+            fields=request.model_dump(exclude={"request_id", "reason"}),
+            actor_id="master",
+            reason=request.reason,
+        )
+    except Exception as error:
+        raise _npc_http_error(error) from error
+
+
+@app.post("/gm/npcs/{npc_id}/encounters")
+def gm_record_npc_encounter(npc_id: int, request: NpcEncounterCreate, _: AccessContext = Depends(require_master)) -> dict:
+    try:
+        encounter, _created = record_npc_encounter(settings.database_path, npc_id, request_id=request.request_id, fields=request.model_dump(exclude={"request_id"}), actor_id="master")
+        return encounter
+    except Exception as error:
+        raise _npc_http_error(error) from error
+
+
+@app.delete("/gm/npc-encounters/{encounter_id}")
+def gm_unlink_npc_encounter(encounter_id: int, request: NpcEventVoidRequest, _: AccessContext = Depends(require_master)) -> dict:
+    try:
+        return unlink_npc_encounter(settings.database_path, encounter_id, actor_id="master", reason=request.reason)
+    except Exception as error:
+        raise _npc_http_error(error) from error
+
+
+@app.post("/gm/npcs/{npc_id}/contracts")
+def gm_link_npc_contract(npc_id: int, request: NpcContractLinkCreate, _: AccessContext = Depends(require_master)) -> dict:
+    if get_contract(settings.database_path, request.contract_id, access_mode="gm") is None:
+        raise HTTPException(status_code=404, detail="Contrato inexistente.")
+    try:
+        link, _created = link_npc_contract(settings.database_path, npc_id, request_id=request.request_id, contract_id=request.contract_id, role=request.role, visible_to_players=request.visible_to_players, actor_id="master")
+        return link
+    except Exception as error:
+        raise _npc_http_error(error) from error
+
+
+@app.get("/contracts/{contract_id}/npcs")
+def authorized_contract_npcs(contract_id: int, access: AccessContext = Depends(require_any)) -> list[dict]:
+    if get_contract(settings.database_path, contract_id, access_mode=access.mode, profile_id=access.profile_id) is None:
+        raise HTTPException(status_code=404, detail="Contrato inexistente ou ainda não revelado.")
+    return list_contract_npcs(settings.database_path, contract_id, access_mode=access.mode)
+
+
+@app.post("/gm/npc-events/{event_id}/void")
+def gm_void_npc_event(event_id: int, request: NpcEventVoidRequest, _: AccessContext = Depends(require_master)) -> dict:
+    try:
+        return void_npc_event(settings.database_path, event_id, actor_id="master", reason=request.reason)
+    except Exception as error:
+        raise _npc_http_error(error) from error
+
+
 @app.get("/media/{media_path:path}", response_model=None)
 def vault_media(media_path: str, _: AccessContext = Depends(require_any)):
     requested = _resolve_media_file(media_path)
@@ -2786,7 +3066,7 @@ def frontend_root():
 
 @app.get("/{full_path:path}", response_model=None)
 def frontend_fallback(request: Request, full_path: str):
-    if full_path.startswith(("health", "notes", "index", "search", "chat", "gm", "player", "characters", "rolls", "roll-requests", "scenes", "sessions", "media")):
+    if full_path.startswith(("health", "notes", "index", "search", "chat", "gm", "player", "characters", "rolls", "roll-requests", "scenes", "sessions", "contracts", "npcs", "media")):
         raise HTTPException(status_code=404, detail="Endpoint não encontrado.")
     index = FRONTEND_DIST / "index.html"
     if index.exists():
