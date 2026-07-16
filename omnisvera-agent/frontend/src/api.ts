@@ -559,6 +559,67 @@ export type GameScene = {
   status: string; visibility: DiceVisibility; created_by: string; created_at: string;
   activated_at?: string | null; closed_at?: string | null; order_index: number; version: number;
   participants: SceneParticipant[]; elements: SceneElement[]; actions: SceneAction[]; events: SceneEvent[];
+  contract_links?: ContractSceneLink[];
+};
+
+export type ContractStatus = "draft" | "published" | "accepted" | "active" | "completed" | "failed" | "abandoned" | "cancelled";
+export type ContractObjectiveStatus = "hidden" | "available" | "active" | "completed" | "failed" | "skipped";
+export type ContractRewardType = "currency" | "item" | "reputation" | "information" | "favor" | "access" | "custom";
+export type ContractRewardStatus = "proposed" | "approved" | "delivered" | "withheld" | "cancelled";
+
+export type ContractObjective = {
+  id: number; request_id: string; contract_id: number; title: string; public_description: string;
+  private_description?: string | null; objective_type: string; status: ContractObjectiveStatus;
+  required: boolean; order_index: number; progress_current?: number | null; progress_target?: number | null;
+  revealed_to_players: boolean; completed_at?: string | null; completed_by?: string | null;
+  created_at: string; version: number;
+};
+
+export type ContractAssignment = {
+  id: number; request_id: string; contract_id: number; character_id: string; assigned_by?: string | null;
+  assigned_at: string; status: string; left_at?: string | null; public_role?: string | null;
+};
+
+export type ContractSceneLink = {
+  id: number; request_id: string; contract_id: number; scene_id: number; objective_id?: number | null;
+  link_type: string; created_by: string; created_at: string; scene_title?: string | null; scene_status?: string | null;
+  scene_visibility?: string | null; objective_title?: string | null; objective_revealed?: boolean | number | null;
+  objective_status?: string | null; contract_title?: string | null; contract_status?: string | null;
+};
+
+export type ContractReward = {
+  id: number; request_id: string; contract_id: number; reward_type: ContractRewardType; label: string;
+  description?: string | null; quantity?: number | null; currency_type?: string | null; item_source?: string | null;
+  item_name?: string | null; reputation_faction?: string | null; reputation_amount?: number | null;
+  visibility: DiceVisibility; status: ContractRewardStatus; created_by: string; created_at: string;
+  approved_at?: string | null; approved_by?: string | null; delivered_at?: string | null; version: number;
+};
+
+export type ContractEvent = {
+  id: number; event_key?: string | null; contract_id: number; actor_id: string; actor_role: "gm" | "player";
+  event_type: string; title: string; public_text?: string | null; private_text?: string | null;
+  objective_id?: number | null; scene_id?: number | null; character_id?: string | null; reward_id?: number | null;
+  visibility: DiceVisibility; created_at: string; voided_at?: string | null; voided_by?: string | null;
+  void_reason?: string | null; voided?: boolean;
+};
+
+export type ContractRecord = {
+  id: number; request_id: string; campaign_id: string; session_id?: number | null; title: string;
+  slug?: string | null; contract_type: string; status: ContractStatus; issuer_name: string;
+  issuer_type?: string | null; issuer_source?: string | null; location_name?: string | null; location_source?: string | null;
+  public_summary: string; public_briefing: string; private_briefing?: string | null; risk_label: string;
+  recommended_level?: string | null; deadline_text?: string | null; visibility: string; created_by: string;
+  created_at: string; published_at?: string | null; accepted_at?: string | null; started_at?: string | null;
+  resolved_at?: string | null; version: number; objectives: ContractObjective[]; assignments: ContractAssignment[];
+  scene_links: ContractSceneLink[]; rewards: ContractReward[]; events: ContractEvent[];
+  revealed_objective_count: number; assigned_character_ids: string[];
+};
+
+export type ReputationLedger = {
+  id: number; request_id: string; campaign_id: string; character_id?: string | null; party_id?: string | null;
+  faction_name: string; delta: number; resulting_value: number; reason: string; contract_id?: number | null;
+  actor_id: string; actor_role: "gm" | "player"; created_at: string; reverted_at?: string | null;
+  reverted_by?: string | null; reverted?: boolean;
 };
 
 export function newDiceRequestId(prefix = "roll") {
@@ -897,6 +958,45 @@ export async function requestSceneActionRoll(actionId: number, payload: Record<s
 export async function applySceneConsequence(sceneId: number, payload: Record<string, unknown>): Promise<{ character_event: Record<string, unknown>; scene_event: SceneEvent; scene: GameScene }> { return sceneRequest(`/gm/scenes/${sceneId}/consequences`, { method: "POST", body: JSON.stringify(payload) }); }
 export async function createSceneEvent(sceneId: number, payload: Record<string, unknown>): Promise<SceneEvent> { return sceneRequest(`/gm/scenes/${sceneId}/events`, { method: "POST", body: JSON.stringify(payload) }); }
 export async function voidSceneEvent(eventId: number, reason: string): Promise<SceneEvent> { return sceneRequest(`/gm/scene-events/${eventId}/void`, { method: "POST", body: JSON.stringify({ reason }) }); }
+
+async function contractRequest<T>(path: string, init?: RequestInit): Promise<T> {
+  const response = await fetch(`${API_BASE}${path}`, {
+    ...init,
+    headers: authHeaders(init?.body ? { "Content-Type": "application/json" } : undefined),
+  });
+  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha na operaÃ§Ã£o de contrato");
+  return response.json();
+}
+
+export function newContractRequestId(prefix = "contract") { return newDiceRequestId(prefix); }
+export async function listContracts(): Promise<ContractRecord[]> { return contractRequest("/contracts"); }
+export async function getContract(id: number): Promise<ContractRecord> { return contractRequest(`/contracts/${id}`); }
+export async function acceptContract(id: number, payload: { request_id: string; character_id?: string; public_role?: string }): Promise<ContractRecord> { return contractRequest(`/contracts/${id}/accept`, { method: "POST", body: JSON.stringify(payload) }); }
+export async function createContract(payload: Record<string, unknown>): Promise<ContractRecord> { return contractRequest("/gm/contracts", { method: "POST", body: JSON.stringify(payload) }); }
+export async function updateContract(id: number, expectedVersion: number, fields: Record<string, unknown>): Promise<ContractRecord> { return contractRequest(`/gm/contracts/${id}`, { method: "PATCH", body: JSON.stringify({ expected_version: expectedVersion, fields }) }); }
+export async function transitionContract(id: number, action: "publish" | "accept" | "start" | "complete" | "fail" | "abandon" | "cancel", requestId: string, reason?: string): Promise<ContractRecord> { return contractRequest(`/gm/contracts/${id}/${action}`, { method: "POST", body: JSON.stringify({ request_id: requestId, reason }) }); }
+export async function createContractObjective(contractId: number, payload: Record<string, unknown>): Promise<ContractObjective> { return contractRequest(`/gm/contracts/${contractId}/objectives`, { method: "POST", body: JSON.stringify(payload) }); }
+export async function updateContractObjective(id: number, expectedVersion: number, fields: Record<string, unknown>): Promise<ContractObjective> { return contractRequest(`/gm/contract-objectives/${id}`, { method: "PATCH", body: JSON.stringify({ expected_version: expectedVersion, fields }) }); }
+export async function setContractObjectiveStatus(id: number, status: ContractObjectiveStatus, requestId: string): Promise<ContractObjective> { return contractRequest(`/gm/contract-objectives/${id}/status`, { method: "POST", body: JSON.stringify({ request_id: requestId, status }) }); }
+export async function reorderContractObjectives(contractId: number, order: number[]): Promise<ContractObjective[]> { return contractRequest(`/gm/contracts/${contractId}/objectives/order`, { method: "POST", body: JSON.stringify({ order }) }); }
+export async function addContractAssignment(contractId: number, payload: { request_id: string; character_id: string; public_role?: string }): Promise<ContractAssignment> { return contractRequest(`/gm/contracts/${contractId}/assignments`, { method: "POST", body: JSON.stringify(payload) }); }
+export async function removeContractAssignment(id: number, requestId: string, reason?: string): Promise<ContractAssignment> { return contractRequest(`/gm/contract-assignments/${id}`, { method: "DELETE", body: JSON.stringify({ request_id: requestId, reason }) }); }
+export async function linkContractScene(contractId: number, payload: { request_id: string; scene_id: number; objective_id?: number; link_type?: string }): Promise<ContractSceneLink> { return contractRequest(`/gm/contracts/${contractId}/scene-links`, { method: "POST", body: JSON.stringify(payload) }); }
+export async function unlinkContractScene(id: number): Promise<ContractSceneLink> { return contractRequest(`/gm/contract-scene-links/${id}`, { method: "DELETE" }); }
+export async function createContractScene(contractId: number, payload: Record<string, unknown>): Promise<GameScene> { return contractRequest(`/gm/contracts/${contractId}/scenes`, { method: "POST", body: JSON.stringify(payload) }); }
+export async function createContractReward(contractId: number, payload: Record<string, unknown>): Promise<ContractReward> { return contractRequest(`/gm/contracts/${contractId}/rewards`, { method: "POST", body: JSON.stringify(payload) }); }
+export async function updateContractReward(id: number, expectedVersion: number, fields: Record<string, unknown>): Promise<ContractReward> { return contractRequest(`/gm/contract-rewards/${id}`, { method: "PATCH", body: JSON.stringify({ expected_version: expectedVersion, fields }) }); }
+export async function approveContractReward(id: number, requestId: string): Promise<ContractReward> { return contractRequest(`/gm/contract-rewards/${id}/approve`, { method: "POST", body: JSON.stringify({ request_id: requestId }) }); }
+export async function deliverContractReward(id: number, payload: { request_id: string; character_ids: string[] }): Promise<Record<string, unknown>> { return contractRequest(`/gm/contract-rewards/${id}/deliver`, { method: "POST", body: JSON.stringify(payload) }); }
+export async function listReputation(params: { character_id?: string; party_id?: string } = {}): Promise<ReputationLedger[]> {
+  const query = new URLSearchParams();
+  if (params.character_id) query.set("character_id", params.character_id);
+  if (params.party_id) query.set("party_id", params.party_id);
+  return contractRequest(`/reputation${query.toString() ? `?${query.toString()}` : ""}`);
+}
+export async function applyReputation(payload: Record<string, unknown>): Promise<ReputationLedger> { return contractRequest("/gm/reputation", { method: "POST", body: JSON.stringify(payload) }); }
+export async function revertReputation(id: number): Promise<ReputationLedger> { return contractRequest(`/gm/reputation/${id}/revert`, { method: "POST" }); }
+export async function voidContractEvent(id: number, reason: string): Promise<ContractEvent> { return contractRequest(`/gm/contract-events/${id}/void`, { method: "POST", body: JSON.stringify({ reason }) }); }
 
 export async function health() {
   const response = await fetch(`${API_BASE}/health`, { headers: authHeaders() });

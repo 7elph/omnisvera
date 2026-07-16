@@ -40,6 +40,34 @@ from .character_play import (
     update_definition_overrides,
 )
 from .config import get_settings
+from .contract_play import (
+    accept_contract,
+    add_assignment,
+    apply_reputation,
+    approve_reward,
+    create_contract,
+    create_objective,
+    create_reward,
+    deliver_reward,
+    get_contract,
+    init_contract_play,
+    link_scene as link_contract_scene,
+    list_contracts,
+    list_events as list_contract_events,
+    list_reputation,
+    record_scene_contract_event,
+    remove_assignment,
+    reorder_objectives,
+    revert_reputation,
+    scene_contract_links,
+    set_objective_status,
+    transition_contract,
+    unlink_scene as unlink_contract_scene,
+    update_contract,
+    update_objective,
+    update_reward,
+    void_contract_event,
+)
 from .dice_rolls import (
     RollSpec,
     can_view_roll,
@@ -136,6 +164,15 @@ from .schemas import (
     CharacterSheetReview,
     CharacterSheetStepUpdate,
     CharacterRollCreate,
+    ContractAcceptRequest,
+    ContractAssignmentCreate,
+    ContractCreate,
+    ContractEventVoidRequest,
+    ContractLinkedSceneCreate,
+    ContractObjectiveCreate,
+    ContractRewardCreate,
+    ContractSceneLinkCreate,
+    ContractTransitionRequest,
     DiceRollCreate,
     DiceRollEventResponse,
     DiceRollRequestComplete,
@@ -183,11 +220,16 @@ from .schemas import (
     SceneStatusUpdate,
     SceneUpdate,
     SceneVoidRequest,
+    ObjectiveOrderRequest,
+    ObjectiveStatusRequest,
+    ReputationApplyRequest,
+    RewardDeliveryRequest,
     TrainingDecisionRequest,
     TrainingBatchRequest,
     TrainingExamplePatch,
     TrainingFlagRequest,
     TrainingInteractionCapture,
+    VersionedPatch,
 )
 from .search import search_notes
 from .vault_index import all_notes_for_search, get_note, index_signature, init_db, list_notes, rebuild_index, resolve_note, row_to_note
@@ -503,6 +545,7 @@ def startup() -> None:
     init_character_play(settings.database_path)
     init_dice_rolls(settings.database_path)
     init_scene_play(settings.database_path)
+    init_contract_play(settings.database_path)
     if settings.training_capture_mode != "off":
         purge_unreviewed(settings.unreviewed_retention_days)
     if settings.rebuild_on_startup:
@@ -1742,7 +1785,335 @@ def _scene_payload(scene_id: int, access: AccessContext) -> dict | None:
         if event.get("roll_id"):
             roll = get_roll(settings.database_path, int(event["roll_id"]))
             event["roll"] = _visible_roll(roll, access) if roll else None
+    payload["contract_links"] = scene_contract_links(
+        settings.database_path,
+        scene_id,
+        access_mode=access.mode,
+        profile_id=access.profile_id,
+    )
     return payload
+
+
+def _contract_http_error(error: Exception) -> HTTPException:
+    detail = str(error)
+    if isinstance(error, PermissionError):
+        return HTTPException(status_code=403, detail=detail)
+    if isinstance(error, RuntimeError):
+        return HTTPException(status_code=409, detail=detail)
+    if "inexistente" in detail.casefold() or "não encontrado" in detail.casefold():
+        return HTTPException(status_code=404, detail=detail)
+    return HTTPException(status_code=400, detail=detail)
+
+
+@app.get("/contracts")
+def authorized_contracts(access: AccessContext = Depends(require_any)) -> list[dict]:
+    return list_contracts(settings.database_path, access_mode=access.mode, profile_id=access.profile_id)
+
+
+@app.get("/contracts/{contract_id}")
+def authorized_contract(contract_id: int, access: AccessContext = Depends(require_any)) -> dict:
+    payload = get_contract(settings.database_path, contract_id, access_mode=access.mode, profile_id=access.profile_id)
+    if payload is None:
+        raise HTTPException(status_code=404, detail="Contrato inexistente ou não publicado.")
+    return payload
+
+
+@app.get("/contracts/{contract_id}/events")
+def authorized_contract_events(contract_id: int, access: AccessContext = Depends(require_any)) -> list[dict]:
+    try:
+        return list_contract_events(settings.database_path, contract_id, access_mode=access.mode, profile_id=access.profile_id)
+    except Exception as error:
+        raise _contract_http_error(error) from error
+
+
+@app.post("/contracts/{contract_id}/accept")
+def accept_authorized_contract(contract_id: int, request: ContractAcceptRequest, access: AccessContext = Depends(require_any)) -> dict:
+    actor_id = "master" if access.mode == "gm" else access.profile_id
+    actor_role = "gm" if access.mode == "gm" else "player"
+    if not actor_id:
+        raise HTTPException(status_code=403, detail="Use um acesso individual para aceitar contrato.")
+    character_id = request.character_id
+    if actor_role == "player":
+        character_id = character_id or access.profile_id
+        if character_id != access.profile_id:
+            raise HTTPException(status_code=403, detail="Personagem não autorizado.")
+    if character_id:
+        _playable_character(character_id, access if access.mode == "gm" else AccessContext(mode="player", profile_id=character_id))
+    try:
+        return accept_contract(
+            settings.database_path,
+            contract_id,
+            request_id=request.request_id,
+            actor_id=str(actor_id),
+            actor_role=actor_role,
+            character_id=character_id,
+            public_role=request.public_role,
+        )
+    except Exception as error:
+        raise _contract_http_error(error) from error
+
+
+@app.post("/gm/contracts")
+def gm_create_contract(request: ContractCreate, access: AccessContext = Depends(require_master)) -> dict:
+    try:
+        contract, _created = create_contract(
+            settings.database_path,
+            request_id=request.request_id,
+            campaign_id="omnisvera",
+            actor_id="master",
+            fields=request.model_dump(exclude={"request_id"}),
+        )
+        return contract
+    except Exception as error:
+        raise _contract_http_error(error) from error
+
+
+@app.patch("/gm/contracts/{contract_id}")
+def gm_update_contract(contract_id: int, request: VersionedPatch, _: AccessContext = Depends(require_master)) -> dict:
+    try:
+        return update_contract(settings.database_path, contract_id, expected_version=request.expected_version, fields=dict(request.fields), actor_id="master")
+    except Exception as error:
+        raise _contract_http_error(error) from error
+
+
+def _gm_contract_transition(contract_id: int, status: str, request: ContractTransitionRequest) -> dict:
+    return transition_contract(
+        settings.database_path,
+        contract_id,
+        status=status,
+        actor_id="master",
+        actor_role="gm",
+        request_id=request.request_id,
+        reason=request.reason,
+    )
+
+
+@app.post("/gm/contracts/{contract_id}/publish")
+def gm_publish_contract(contract_id: int, request: ContractTransitionRequest, _: AccessContext = Depends(require_master)) -> dict:
+    try:
+        return _gm_contract_transition(contract_id, "published", request)
+    except Exception as error:
+        raise _contract_http_error(error) from error
+
+
+@app.post("/gm/contracts/{contract_id}/accept")
+def gm_accept_contract(contract_id: int, request: ContractAcceptRequest, access: AccessContext = Depends(require_master)) -> dict:
+    if request.character_id:
+        _playable_character(request.character_id, access)
+    try:
+        return accept_contract(settings.database_path, contract_id, request_id=request.request_id, actor_id="master", actor_role="gm", character_id=request.character_id, public_role=request.public_role)
+    except Exception as error:
+        raise _contract_http_error(error) from error
+
+
+@app.post("/gm/contracts/{contract_id}/start")
+def gm_start_contract(contract_id: int, request: ContractTransitionRequest, _: AccessContext = Depends(require_master)) -> dict:
+    try:
+        return _gm_contract_transition(contract_id, "active", request)
+    except Exception as error:
+        raise _contract_http_error(error) from error
+
+
+@app.post("/gm/contracts/{contract_id}/complete")
+def gm_complete_contract(contract_id: int, request: ContractTransitionRequest, _: AccessContext = Depends(require_master)) -> dict:
+    try:
+        return _gm_contract_transition(contract_id, "completed", request)
+    except Exception as error:
+        raise _contract_http_error(error) from error
+
+
+@app.post("/gm/contracts/{contract_id}/fail")
+def gm_fail_contract(contract_id: int, request: ContractTransitionRequest, _: AccessContext = Depends(require_master)) -> dict:
+    try:
+        return _gm_contract_transition(contract_id, "failed", request)
+    except Exception as error:
+        raise _contract_http_error(error) from error
+
+
+@app.post("/gm/contracts/{contract_id}/abandon")
+def gm_abandon_contract(contract_id: int, request: ContractTransitionRequest, _: AccessContext = Depends(require_master)) -> dict:
+    try:
+        return _gm_contract_transition(contract_id, "abandoned", request)
+    except Exception as error:
+        raise _contract_http_error(error) from error
+
+
+@app.post("/gm/contracts/{contract_id}/cancel")
+def gm_cancel_contract(contract_id: int, request: ContractTransitionRequest, _: AccessContext = Depends(require_master)) -> dict:
+    try:
+        return _gm_contract_transition(contract_id, "cancelled", request)
+    except Exception as error:
+        raise _contract_http_error(error) from error
+
+
+@app.post("/gm/contracts/{contract_id}/objectives")
+def gm_create_contract_objective(contract_id: int, request: ContractObjectiveCreate, _: AccessContext = Depends(require_master)) -> dict:
+    try:
+        objective, _created = create_objective(settings.database_path, contract_id, request_id=request.request_id, actor_id="master", fields=request.model_dump(exclude={"request_id"}))
+        return objective
+    except Exception as error:
+        raise _contract_http_error(error) from error
+
+
+@app.patch("/gm/contract-objectives/{objective_id}")
+def gm_update_contract_objective(objective_id: int, request: VersionedPatch, _: AccessContext = Depends(require_master)) -> dict:
+    try:
+        return update_objective(settings.database_path, objective_id, expected_version=request.expected_version, fields=dict(request.fields), actor_id="master")
+    except Exception as error:
+        raise _contract_http_error(error) from error
+
+
+@app.post("/gm/contract-objectives/{objective_id}/status")
+def gm_set_contract_objective_status(objective_id: int, request: ObjectiveStatusRequest, _: AccessContext = Depends(require_master)) -> dict:
+    try:
+        return set_objective_status(settings.database_path, objective_id, status=request.status, request_id=request.request_id, actor_id="master")
+    except Exception as error:
+        raise _contract_http_error(error) from error
+
+
+@app.post("/gm/contracts/{contract_id}/objectives/order")
+def gm_reorder_contract_objectives(contract_id: int, request: ObjectiveOrderRequest, _: AccessContext = Depends(require_master)) -> list[dict]:
+    try:
+        return reorder_objectives(settings.database_path, contract_id, request.order, actor_id="master")
+    except Exception as error:
+        raise _contract_http_error(error) from error
+
+
+@app.post("/gm/contracts/{contract_id}/assignments")
+def gm_add_contract_assignment(contract_id: int, request: ContractAssignmentCreate, access: AccessContext = Depends(require_master)) -> dict:
+    _playable_character(request.character_id, access)
+    try:
+        return add_assignment(settings.database_path, contract_id, request_id=request.request_id, character_id=request.character_id, assigned_by="master", public_role=request.public_role)
+    except Exception as error:
+        raise _contract_http_error(error) from error
+
+
+@app.delete("/gm/contract-assignments/{assignment_id}")
+def gm_remove_contract_assignment(assignment_id: int, request: ContractTransitionRequest, _: AccessContext = Depends(require_master)) -> dict:
+    try:
+        return remove_assignment(settings.database_path, assignment_id, actor_id="master", reason=request.reason)
+    except Exception as error:
+        raise _contract_http_error(error) from error
+
+
+@app.post("/gm/contracts/{contract_id}/scene-links")
+def gm_link_contract_scene(contract_id: int, request: ContractSceneLinkCreate, _: AccessContext = Depends(require_master)) -> dict:
+    try:
+        link, _created = link_contract_scene(settings.database_path, contract_id, request_id=request.request_id, scene_id=request.scene_id, objective_id=request.objective_id, link_type=request.link_type, created_by="master")
+        return link
+    except Exception as error:
+        raise _contract_http_error(error) from error
+
+
+@app.delete("/gm/contract-scene-links/{link_id}")
+def gm_unlink_contract_scene(link_id: int, _: AccessContext = Depends(require_master)) -> dict:
+    try:
+        return unlink_contract_scene(settings.database_path, link_id, actor_id="master")
+    except Exception as error:
+        raise _contract_http_error(error) from error
+
+
+@app.post("/gm/contracts/{contract_id}/scenes")
+def gm_create_contract_scene(contract_id: int, request: ContractLinkedSceneCreate, access: AccessContext = Depends(require_master)) -> dict:
+    try:
+        scene, _created = create_scene(
+            settings.database_path,
+            request_id=request.request_id,
+            campaign_id="omnisvera",
+            session_id=request.session_id,
+            title=request.title,
+            location_name=request.location_name,
+            location_source=request.location_source,
+            public_description=request.public_description,
+            objective=request.objective,
+            private_notes=request.private_notes,
+            visibility=request.visibility,
+            created_by="master",
+        )
+        link_contract_scene(settings.database_path, contract_id, request_id=f"{request.request_id}:contract-link", scene_id=int(scene["id"]), objective_id=request.objective_id, link_type=request.link_type, created_by="master")
+        return _scene_payload(int(scene["id"]), access) or scene
+    except Exception as error:
+        raise _contract_http_error(error) from error
+
+
+@app.post("/gm/contracts/{contract_id}/rewards")
+def gm_create_contract_reward(contract_id: int, request: ContractRewardCreate, _: AccessContext = Depends(require_master)) -> dict:
+    try:
+        reward, _created = create_reward(settings.database_path, contract_id, request_id=request.request_id, actor_id="master", fields=request.model_dump(exclude={"request_id"}))
+        return reward
+    except Exception as error:
+        raise _contract_http_error(error) from error
+
+
+@app.patch("/gm/contract-rewards/{reward_id}")
+def gm_update_contract_reward(reward_id: int, request: VersionedPatch, _: AccessContext = Depends(require_master)) -> dict:
+    try:
+        return update_reward(settings.database_path, reward_id, expected_version=request.expected_version, fields=dict(request.fields), actor_id="master")
+    except Exception as error:
+        raise _contract_http_error(error) from error
+
+
+@app.post("/gm/contract-rewards/{reward_id}/approve")
+def gm_approve_contract_reward(reward_id: int, request: ContractTransitionRequest, _: AccessContext = Depends(require_master)) -> dict:
+    try:
+        return approve_reward(settings.database_path, reward_id, request_id=request.request_id, actor_id="master")
+    except Exception as error:
+        raise _contract_http_error(error) from error
+
+
+@app.post("/gm/contract-rewards/{reward_id}/deliver")
+def gm_deliver_contract_reward(reward_id: int, request: RewardDeliveryRequest, access: AccessContext = Depends(require_master)) -> dict:
+    for character_id in request.character_ids:
+        _playable_character(character_id, access)
+    try:
+        result = deliver_reward(settings.database_path, reward_id, request_id=request.request_id, actor_id="master", character_ids=request.character_ids)
+        return result
+    except Exception as error:
+        raise _contract_http_error(error) from error
+
+
+@app.get("/reputation")
+def authorized_reputation(access: AccessContext = Depends(require_any), character_id: str | None = None, party_id: str | None = "group") -> list[dict]:
+    if access.mode != "gm":
+        character_id = access.profile_id
+        party_id = None
+    return list_reputation(settings.database_path, character_id=character_id, party_id=party_id)
+
+
+@app.post("/gm/reputation")
+def gm_apply_reputation(request: ReputationApplyRequest, _: AccessContext = Depends(require_master)) -> dict:
+    try:
+        return apply_reputation(
+            settings.database_path,
+            request_id=request.request_id,
+            campaign_id="omnisvera",
+            faction_name=request.faction_name,
+            delta=request.delta,
+            reason=request.reason,
+            actor_id="master",
+            actor_role="gm",
+            contract_id=request.contract_id,
+            character_id=request.character_id,
+            party_id=request.party_id,
+        )
+    except Exception as error:
+        raise _contract_http_error(error) from error
+
+
+@app.post("/gm/reputation/{ledger_id}/revert")
+def gm_revert_reputation(ledger_id: int, _: AccessContext = Depends(require_master)) -> dict:
+    try:
+        return revert_reputation(settings.database_path, ledger_id, actor_id="master")
+    except Exception as error:
+        raise _contract_http_error(error) from error
+
+
+@app.post("/gm/contract-events/{event_id}/void")
+def gm_void_contract_event(event_id: int, request: ContractEventVoidRequest, _: AccessContext = Depends(require_master)) -> dict:
+    try:
+        return void_contract_event(settings.database_path, event_id, actor_id="master", reason=request.reason)
+    except Exception as error:
+        raise _contract_http_error(error) from error
 
 
 @app.post("/gm/sessions")
@@ -1836,6 +2207,8 @@ def gm_edit_scene(scene_id: int, request: SceneUpdate, access: AccessContext = D
 def gm_set_scene_status(scene_id: int, request: SceneStatusUpdate, access: AccessContext = Depends(require_master)) -> dict:
     try:
         change_scene_status(settings.database_path, scene_id, request.status, summary=request.summary)
+        if request.status in {"resolved", "abandoned"}:
+            record_scene_contract_event(settings.database_path, scene_id=scene_id, actor_id="master", status=request.status, summary=request.summary)
         return _scene_payload(scene_id, access) or {}
     except ValueError as error:
         raise HTTPException(status_code=400, detail=str(error)) from error

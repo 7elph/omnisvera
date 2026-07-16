@@ -2,8 +2,10 @@ import { useEffect, useState } from "react";
 import { AccessMode, getAccessMode, getAccessToken, health, rebuildIndex, resolveNote, setAccessMode, setAccessToken } from "./api";
 import DiceTray from "./components/DiceTray";
 import QuickCharacterSheet from "./components/QuickCharacterSheet";
+import QuickContractPanel from "./components/QuickContractPanel";
 import QuickScenePanel from "./components/QuickScenePanel";
 import ChatVault from "./pages/ChatVault";
+import ConclaveHub from "./pages/ConclaveHub";
 import PlayableCharacterSheet from "./pages/PlayableCharacterSheet";
 import NoteView from "./pages/NoteView";
 import PlayerPanel from "./pages/PlayerPanel";
@@ -12,7 +14,7 @@ import SessionPanel from "./pages/SessionPanel";
 import ModelCurationPanel from "./pages/ModelCurationPanel";
 import ScenePanel from "./pages/ScenePanel";
 
-type Page = "chat" | "search" | "note" | "session" | "player" | "sheet" | "scene" | "curation";
+type Page = "chat" | "search" | "note" | "session" | "player" | "sheet" | "scene" | "conclave" | "curation";
 
 export default function App() {
   const initialMode = getAccessMode();
@@ -55,6 +57,25 @@ export default function App() {
         setAuthenticated(false);
         setStatus("token inválido ou backend indisponível");
       });
+  }, []);
+
+  useEffect(() => {
+    const openContract = (event: Event) => {
+      const contractId = Number((event as CustomEvent<number>).detail);
+      if (Number.isFinite(contractId) && contractId > 0) localStorage.setItem("omnisvera_selected_contract", String(contractId));
+      setPage("conclave");
+    };
+    const openScene = (event: Event) => {
+      const sceneId = Number((event as CustomEvent<number>).detail);
+      if (Number.isFinite(sceneId) && sceneId > 0) localStorage.setItem("omnisvera_selected_scene", String(sceneId));
+      setPage("scene");
+    };
+    window.addEventListener("omnisvera-open-contract", openContract);
+    window.addEventListener("omnisvera-open-scene", openScene);
+    return () => {
+      window.removeEventListener("omnisvera-open-contract", openContract);
+      window.removeEventListener("omnisvera-open-scene", openScene);
+    };
   }, []);
 
   useEffect(() => {
@@ -167,6 +188,16 @@ export default function App() {
     setPage(next);
   }
 
+  function openConclave(contractId?: number) {
+    if (contractId) localStorage.setItem("omnisvera_selected_contract", String(contractId));
+    navigate("conclave");
+  }
+
+  function openScenePanel(sceneId?: number) {
+    if (sceneId) localStorage.setItem("omnisvera_selected_scene", String(sceneId));
+    navigate("scene");
+  }
+
   return (
     <main className="app-shell">
       <header className="hero">
@@ -231,6 +262,9 @@ export default function App() {
         <button className={page === "scene" ? "active" : ""} onClick={() => navigate("scene")}>
           <span>◈</span><small>Cena</small>
         </button>
+        <button className={page === "conclave" ? "active" : ""} onClick={() => navigate("conclave")}>
+          <span>◈</span><small>Conclave</small>
+        </button>
         {mode === "gm" && (
           <button className={page === "curation" ? "active" : ""} onClick={() => navigate("curation")}>
             <span>⚗</span><small>Curadoria</small>
@@ -256,6 +290,7 @@ export default function App() {
       {authenticated && page === "chat" && <ChatVault onOpenNote={openNote} onUnknownNote={openUnknownNote} initialQuestion={chatSeed} />}
       {authenticated && page === "sheet" && <PlayableCharacterSheet key={`sheet-${authVersion}-${mode}`} mode={mode === "player" ? "player" : "gm"} />}
       {authenticated && page === "scene" && <ScenePanel key={`scene-${authVersion}-${mode}`} mode={mode === "player" ? "player" : "gm"} />}
+      {authenticated && page === "conclave" && <ConclaveHub key={`conclave-${authVersion}-${mode}`} mode={mode === "player" ? "player" : "gm"} onOpenScene={openScenePanel} />}
       {authenticated && page === "curation" && mode === "gm" && <ModelCurationPanel key={`curation-${authVersion}`} />}
       {authenticated && page === "search" && <SearchNotes onOpenNote={openNote} />}
       {authenticated && page === "note" && (
@@ -275,6 +310,7 @@ export default function App() {
       )}
       {authenticated && <QuickCharacterSheet hidden={page === "sheet"} onOpen={() => navigate("sheet")} />}
       {authenticated && <QuickScenePanel hidden={page === "scene"} mode={mode === "player" ? "player" : "gm"} onOpen={() => navigate("scene")} />}
+      {authenticated && <QuickContractPanel hidden={page === "conclave"} mode={mode === "player" ? "player" : "gm"} onOpenContract={openConclave} onOpenScene={openScenePanel} />}
       {authenticated && <DiceTray key={`dice-${authVersion}-${mode}`} mode={mode === "player" ? "player" : "gm"} />}
     </main>
   );

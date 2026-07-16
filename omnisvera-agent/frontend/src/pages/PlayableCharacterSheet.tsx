@@ -231,7 +231,7 @@ function GmTab({ character, events, onDefinition, onAction, onRevert }: { charac
         class_name: draft.class_name, level: Number(draft.level), maximum_hp: draft.maximum_hp === "" ? null : Number(draft.maximum_hp),
         armor_class: draft.armor_class === "" ? null : Number(draft.armor_class), initiative: draft.initiative === "" ? null : Number(draft.initiative),
         movement: draft.movement, location: draft.location, current_status: draft.current_status,
-        attributes: Object.fromEntries(Object.keys(ATTRIBUTE_LABELS).map((key) => [key, Number(draft[key as keyof typeof draft])]).filter(([, value]) => Number.isFinite(value) && value > 0)),
+        attributes: Object.fromEntries(Object.keys(ATTRIBUTE_LABELS).map((key) => [key, Number(draft[key as keyof typeof draft])] as [string, number]).filter(([, value]) => Number.isFinite(value) && value > 0)),
         gm_fields: { notes: draft.notes, private_state: draft.private_state },
       });
       setFeedback("Definição local atualizada. O Vault não foi alterado.");

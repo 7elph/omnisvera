@@ -18,6 +18,8 @@ export default defineConfig({
       "/rolls": "http://127.0.0.1:8787",
       "/roll-requests": "http://127.0.0.1:8787",
       "/scenes": "http://127.0.0.1:8787",
+      "/contracts": "http://127.0.0.1:8787",
+      "/reputation": "http://127.0.0.1:8787",
       "/media": "http://127.0.0.1:8787",
     },
   },

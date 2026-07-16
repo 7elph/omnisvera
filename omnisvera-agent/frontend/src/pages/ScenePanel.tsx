@@ -37,6 +37,11 @@ function statusLabel(value: string) {
   return ({ draft: "Rascunho", active: "Ativa", paused: "Pausada", resolved: "Encerrada", abandoned: "Abandonada", declared: "Declarada", awaiting_roll: "Aguardando rolagem", rejected: "Rejeitada", cancelled: "Cancelada" } as Record<string, string>)[value] || value;
 }
 
+function storedSceneId() {
+  const stored = Number(localStorage.getItem("omnisvera_selected_scene") || "");
+  return Number.isFinite(stored) && stored > 0 ? stored : null;
+}
+
 function ParticipantCard({ participant, mode, sceneId, onRefresh }: { participant: GameScene["participants"][number]; mode: "gm" | "player"; sceneId: number; onRefresh: () => Promise<void> }) {
   const character = participant.character;
   const portrait = mediaUrlFromVaultPath(character?.portrait);
@@ -85,15 +90,16 @@ export default function ScenePanel({ mode }: { mode: "gm" | "player" }) {
       const [active, all] = await Promise.all([getActiveScene(), listScenes()]);
       setScenes(all);
       if (mode === "gm") setSessions(await listGameSessions());
-      const wanted = preferredId ?? selectedId ?? active?.id ?? all[0]?.id ?? null;
+      const wanted = preferredId ?? selectedId ?? storedSceneId() ?? active?.id ?? all[0]?.id ?? null;
       setSelectedId(wanted);
+      if (wanted) localStorage.setItem("omnisvera_selected_scene", String(wanted));
       setScene(wanted ? await getScene(wanted) : active);
       window.dispatchEvent(new CustomEvent("omnisvera-scene-updated"));
     } catch (cause) { setError(cause instanceof Error ? cause.message : "Não foi possível carregar a cena."); }
     finally { setLoading(false); }
   }
 
-  useEffect(() => { void refresh(); }, []);
+  useEffect(() => { void refresh(storedSceneId()); }, []);
   useEffect(() => {
     let cancelled = false;
     void listPlayableCharacters()
@@ -103,8 +109,19 @@ export default function ScenePanel({ mode }: { mode: "gm" | "player" }) {
   }, [mode]);
   useEffect(() => {
     const update = () => void refresh();
+    const openScene = (event: Event) => {
+      const sceneId = Number((event as CustomEvent<number>).detail);
+      if (!Number.isFinite(sceneId) || sceneId <= 0) return;
+      localStorage.setItem("omnisvera_selected_scene", String(sceneId));
+      setSelectedId(sceneId);
+      void refresh(sceneId);
+    };
     window.addEventListener("omnisvera-roll-created", update);
-    return () => window.removeEventListener("omnisvera-roll-created", update);
+    window.addEventListener("omnisvera-open-scene", openScene);
+    return () => {
+      window.removeEventListener("omnisvera-roll-created", update);
+      window.removeEventListener("omnisvera-open-scene", openScene);
+    };
   }, [selectedId]);
 
   async function run(operation: () => Promise<unknown>, message: string, preferredId?: number) {
@@ -136,7 +153,13 @@ export default function ScenePanel({ mode }: { mode: "gm" | "player" }) {
 
   return <section className="panel scene-page">
     <header className="scene-hero"><div><p className="eyebrow">Cena atual · {statusLabel(scene.status)}</p><h2>{scene.title}</h2><p className="scene-location">⌖ {scene.location_name}</p><p>{scene.public_description}</p></div><div className="scene-objective"><small>Objetivo</small><strong>{scene.objective || "Não informado"}</strong></div></header>
-    <div className="scene-toolbar"><button onClick={() => void refresh(scene.id)}>Atualizar</button>{scenes.length > 1 && <select aria-label="Abrir outra cena" value={scene.id} onChange={(event) => { const id = Number(event.target.value); setSelectedId(id); void refresh(id); }}>{scenes.map((item) => <option key={item.id} value={item.id}>{item.title} · {statusLabel(item.status)}</option>)}</select>}{mode === "gm" && <>{scene.status !== "active" && scene.status !== "resolved" && <button onClick={() => void run(() => updateSceneStatus(scene.id, "active"), "Cena iniciada.", scene.id)}>Ativar</button>}{scene.status === "active" && <button onClick={() => void run(() => updateSceneStatus(scene.id, "paused"), "Cena pausada.", scene.id)}>Pausar</button>}{!(["resolved", "abandoned"].includes(scene.status)) && <button className="danger-button subtle" onClick={() => void run(() => updateSceneStatus(scene.id, "resolved", "Cena encerrada pelo Mestre."), "Cena encerrada.", scene.id)}>Encerrar</button>}</>}</div>
+    <div className="scene-toolbar"><button onClick={() => void refresh(scene.id)}>Atualizar</button>{scenes.length > 1 && <select aria-label="Abrir outra cena" value={scene.id} onChange={(event) => { const id = Number(event.target.value); localStorage.setItem("omnisvera_selected_scene", String(id)); setSelectedId(id); void refresh(id); }}>{scenes.map((item) => <option key={item.id} value={item.id}>{item.title} · {statusLabel(item.status)}</option>)}</select>}{mode === "gm" && <>{scene.status !== "active" && scene.status !== "resolved" && <button onClick={() => void run(() => updateSceneStatus(scene.id, "active"), "Cena iniciada.", scene.id)}>Ativar</button>}{scene.status === "active" && <button onClick={() => void run(() => updateSceneStatus(scene.id, "paused"), "Cena pausada.", scene.id)}>Pausar</button>}{!(["resolved", "abandoned"].includes(scene.status)) && <button className="danger-button subtle" onClick={() => void run(() => updateSceneStatus(scene.id, "resolved", "Cena encerrada pelo Mestre."), "Cena encerrada.", scene.id)}>Encerrar</button>}</>}</div>
+    {!!scene.contract_links?.length && <section className="scene-contract-links" aria-label="Contratos vinculados">
+      {scene.contract_links.map((link) => <button key={link.id} onClick={() => window.dispatchEvent(new CustomEvent("omnisvera-open-contract", { detail: link.contract_id }))}>
+        <strong>{link.contract_title || `Contrato ${link.contract_id}`}</strong>
+        <small>{link.objective_title ? `Objetivo: ${link.objective_title}` : "Contrato vinculado"}</small>
+      </button>)}
+    </section>}
     {notice && <p className="success-text" role="status">{notice}</p>}{error && <p className="warning-text" role="alert">{error}</p>}
 
     <div className="scene-layout">

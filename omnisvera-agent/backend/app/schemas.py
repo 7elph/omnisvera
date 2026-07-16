@@ -703,3 +703,113 @@ class SceneManualEventCreate(BaseModel):
 
 class SceneVoidRequest(BaseModel):
     reason: str = Field(min_length=2, max_length=500)
+
+
+class ContractCreate(BaseModel):
+    request_id: str = Field(min_length=8, max_length=140)
+    session_id: int | None = Field(default=None, ge=1)
+    title: str = Field(min_length=1, max_length=180)
+    slug: str | None = Field(default=None, max_length=180)
+    contract_type: str = "outro"
+    issuer_name: str = Field(min_length=1, max_length=180)
+    issuer_type: str | None = Field(default=None, max_length=120)
+    issuer_source: str | None = Field(default=None, max_length=500)
+    location_name: str | None = Field(default=None, max_length=180)
+    location_source: str | None = Field(default=None, max_length=500)
+    public_summary: str = Field(min_length=1, max_length=500)
+    public_briefing: str = Field(min_length=1, max_length=3000)
+    private_briefing: str | None = Field(default=None, max_length=3000)
+    risk_label: str = Field(default="Não informado", max_length=120)
+    recommended_level: str | None = Field(default=None, max_length=80)
+    deadline_text: str | None = Field(default=None, max_length=180)
+    visibility: str = "table"
+
+
+class VersionedPatch(BaseModel):
+    expected_version: int = Field(ge=1)
+    fields: dict[str, Any] = Field(default_factory=dict)
+
+
+class ContractTransitionRequest(BaseModel):
+    request_id: str = Field(min_length=8, max_length=140)
+    reason: str | None = Field(default=None, max_length=500)
+
+
+class ContractAcceptRequest(BaseModel):
+    request_id: str = Field(min_length=8, max_length=140)
+    character_id: str | None = Field(default=None, max_length=120)
+    public_role: str | None = Field(default=None, max_length=180)
+
+
+class ContractObjectiveCreate(BaseModel):
+    request_id: str = Field(min_length=8, max_length=140)
+    title: str = Field(min_length=1, max_length=180)
+    public_description: str = Field(min_length=1, max_length=3000)
+    private_description: str | None = Field(default=None, max_length=3000)
+    objective_type: str = "narrative"
+    status: str = "hidden"
+    required: bool = True
+    order_index: int | None = Field(default=None, ge=0)
+    progress_current: int | float | None = None
+    progress_target: int | float | None = None
+    revealed_to_players: bool = False
+
+
+class ObjectiveStatusRequest(BaseModel):
+    request_id: str = Field(min_length=8, max_length=140)
+    status: str
+
+
+class ObjectiveOrderRequest(BaseModel):
+    order: list[int] = Field(min_length=1)
+
+
+class ContractAssignmentCreate(BaseModel):
+    request_id: str = Field(min_length=8, max_length=140)
+    character_id: str = Field(min_length=1, max_length=120)
+    public_role: str | None = Field(default=None, max_length=180)
+
+
+class ContractSceneLinkCreate(BaseModel):
+    request_id: str = Field(min_length=8, max_length=140)
+    scene_id: int = Field(ge=1)
+    objective_id: int | None = Field(default=None, ge=1)
+    link_type: str = "other"
+
+
+class ContractLinkedSceneCreate(SceneCreate):
+    objective_id: int | None = Field(default=None, ge=1)
+    link_type: str = "other"
+
+
+class ContractRewardCreate(BaseModel):
+    request_id: str = Field(min_length=8, max_length=140)
+    reward_type: str
+    label: str = Field(min_length=1, max_length=180)
+    description: str | None = Field(default=None, max_length=3000)
+    quantity: int | float | None = None
+    currency_type: str | None = Field(default=None, max_length=80)
+    item_source: str | None = Field(default=None, max_length=500)
+    item_name: str | None = Field(default=None, max_length=180)
+    reputation_faction: str | None = Field(default=None, max_length=180)
+    reputation_amount: int | None = None
+    visibility: str = "table"
+
+
+class RewardDeliveryRequest(BaseModel):
+    request_id: str = Field(min_length=8, max_length=140)
+    character_ids: list[str] = Field(default_factory=list)
+
+
+class ReputationApplyRequest(BaseModel):
+    request_id: str = Field(min_length=8, max_length=140)
+    faction_name: str = Field(min_length=1, max_length=180)
+    delta: int = Field(ge=-1000, le=1000)
+    reason: str = Field(min_length=1, max_length=500)
+    contract_id: int | None = Field(default=None, ge=1)
+    character_id: str | None = Field(default=None, max_length=120)
+    party_id: str | None = Field(default="group", max_length=120)
+
+
+class ContractEventVoidRequest(BaseModel):
+    reason: str = Field(min_length=2, max_length=500)
