@@ -385,7 +385,7 @@ def _filter_npc(npc: dict[str, Any], access_mode: str) -> dict[str, Any] | None:
         return npc
     if not npc.get("visible_to_players"):
         return None
-    allowed = {"id", "campaign_id", "slug", "name", "aliases", "portrait_path", "race", "class_or_role", "occupation", "faction_names", "public_description", "canonical_status", "visible_to_players", "current_location", "public_status", "active", "last_seen_at", "last_scene_id", "state_version", "state_updated_at", "created_at", "updated_at", "version"}
+    allowed = {"id", "campaign_id", "slug", "name", "aliases", "portrait_path", "race", "class_or_role", "occupation", "faction_names", "public_description", "canonical_status", "visible_to_players", "current_location", "current_location_id", "active_journey_id", "public_status", "active", "last_seen_at", "last_scene_id", "state_version", "state_updated_at", "created_at", "updated_at", "version"}
     return {key: value for key, value in npc.items() if key in allowed}
 
 
@@ -529,7 +529,7 @@ def update_npc(database_path: Path, npc_id: int, *, expected_version: int, field
 
 
 def update_npc_state(database_path: Path, npc_id: int, *, expected_version: int, fields: dict[str, Any], actor_id: str) -> dict[str, Any]:
-    allowed = {"current_location", "public_status", "private_status", "disposition_summary", "active", "last_seen_at", "last_scene_id"}
+    allowed = {"current_location", "current_location_id", "public_status", "private_status", "disposition_summary", "active", "last_seen_at", "last_scene_id"}
     if set(fields) - allowed:
         raise ValueError("Campo de estado não editável")
     with closing(_connect(database_path)) as connection, connection:
@@ -542,7 +542,7 @@ def update_npc_state(database_path: Path, npc_id: int, *, expected_version: int,
         for key, value in fields.items():
             if key == "active":
                 value = 1 if value else 0
-            elif key == "last_scene_id":
+            elif key in {"last_scene_id", "current_location_id"}:
                 value = int(value) if value not in (None, "") else None
             else:
                 value = _text(value, key, maximum=500)

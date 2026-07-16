@@ -36,7 +36,7 @@ function RollCard({ roll, characters, mode, onVoid }: { roll: DiceRollEvent; cha
   </article>;
 }
 
-export default function DiceTray({ mode }: { mode: "gm" | "player" }) {
+export default function DiceTray({ mode, triggerHidden = false }: { mode: "gm" | "player"; triggerHidden?: boolean }) {
   const [open, setOpen] = useState(false);
   const [sides, setSides] = useState(20);
   const [count, setCount] = useState(1);
@@ -137,7 +137,7 @@ export default function DiceTray({ mode }: { mode: "gm" | "player" }) {
   }
 
   return <aside className={`dice-tray-shell ${open ? "open" : ""}`} aria-label="Bandeja global de dados">
-    {!open && <button className="dice-tray-trigger" onClick={() => setOpen(true)} aria-label="Abrir bandeja de dados"><span>⚄</span><small>Dados</small>{pending.length > 0 && <b aria-label={`${pending.length} solicitações pendentes`}>{pending.length}</b>}</button>}
+    {!open && !triggerHidden && <button className="dice-tray-trigger" onClick={() => setOpen(true)} aria-label="Abrir bandeja de dados"><span>⚄</span><small>Dados</small>{pending.length > 0 && <b aria-label={`${pending.length} solicitações pendentes`}>{pending.length}</b>}</button>}
     {open && <div className="dice-tray-backdrop" onClick={(event) => { if (event.target === event.currentTarget) setOpen(false); }}><section className="dice-tray" role="dialog" aria-modal="true" aria-labelledby="dice-tray-title">
       <header><div><p className="eyebrow">Mesa determinística</p><h2 id="dice-tray-title">Bandeja de dados</h2></div><button aria-label="Fechar bandeja de dados" onClick={() => setOpen(false)}>×</button></header>
       {pending.length > 0 && <section className="pending-rolls"><h3>Solicitações pendentes</h3>{pending.map((item) => <article key={item.id}><div><strong>{item.label}</strong><small>{characterMap.get(item.character_id)?.name || item.character_id} · {item.formula}{item.target_value ? ` · Dificuldade ${item.target_value}` : ""}</small></div><button disabled={busy} onClick={() => void finishRequest(item)}>Confirmar e rolar</button></article>)}</section>}

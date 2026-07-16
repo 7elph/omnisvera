@@ -382,6 +382,8 @@ class CharacterStateResponse(BaseModel):
     resources: list[CharacterResource] = Field(default_factory=list)
     coins: int | float | None = None
     location: str | None = None
+    current_location_id: int | None = None
+    active_journey_id: int | None = None
     session_notes: str = ""
     updated_at: str
     version: int
@@ -922,3 +924,145 @@ class NpcContractLinkCreate(BaseModel):
 
 class NpcEventVoidRequest(BaseModel):
     reason: str = Field(min_length=2, max_length=500)
+
+
+class WorldMapCreate(BaseModel):
+    request_id: str = Field(min_length=8, max_length=140)
+    title: str = Field(min_length=1, max_length=180)
+    source_path: str | None = Field(default=None, max_length=500)
+    image_path: str | None = Field(default=None, max_length=500)
+    map_type: str = "custom"
+    width: float | None = Field(default=None, gt=0)
+    height: float | None = Field(default=None, gt=0)
+    coordinate_system: str = "percentage"
+    public_description: str | None = Field(default=None, max_length=4000)
+    private_description: str | None = Field(default=None, max_length=4000)
+    visibility: str = "gm"
+    active: bool = True
+
+
+class WorldImportRequest(BaseModel):
+    request_id: str = Field(min_length=8, max_length=140)
+    source_path: str = Field(min_length=1, max_length=500)
+    visibility: str | None = None
+    discovered_by_default: bool | None = None
+    confirm: bool = False
+
+
+class WorldVersionedUpdate(BaseModel):
+    expected_version: int = Field(ge=1)
+    fields: dict[str, Any] = Field(default_factory=dict)
+    reason: str = Field(default="Atualização espacial", min_length=2, max_length=500)
+
+
+class WorldLocationCreate(BaseModel):
+    request_id: str = Field(min_length=8, max_length=140)
+    map_id: int | None = Field(default=None, ge=1)
+    source_path: str | None = Field(default=None, max_length=500)
+    slug: str | None = Field(default=None, max_length=180)
+    name: str = Field(min_length=1, max_length=180)
+    aliases: list[str] = Field(default_factory=list)
+    location_type: str = "unknown"
+    parent_location_id: int | None = Field(default=None, ge=1)
+    territory_name: str | None = Field(default=None, max_length=180)
+    public_description: str | None = Field(default=None, max_length=4000)
+    private_description: str | None = Field(default=None, max_length=4000)
+    portrait_or_cover_path: str | None = Field(default=None, max_length=500)
+    marker_icon: str | None = Field(default=None, max_length=100)
+    x: float | None = Field(default=None, ge=0, le=100)
+    y: float | None = Field(default=None, ge=0, le=100)
+    latitude: float | None = Field(default=None, ge=-90, le=90)
+    longitude: float | None = Field(default=None, ge=-180, le=180)
+    discovered_by_default: bool = False
+    visibility: str = "gm"
+    canon_status: str | None = Field(default=None, max_length=120)
+    active: bool = True
+    public_status: str | None = Field(default=None, max_length=500)
+    private_status: str | None = Field(default=None, max_length=500)
+    controlling_faction: str | None = Field(default=None, max_length=180)
+    danger_label: str | None = Field(default=None, max_length=180)
+    accessible: bool = True
+    current_scene_id: int | None = Field(default=None, ge=1)
+
+
+class LocationDiscoveryCreate(BaseModel):
+    request_id: str = Field(min_length=8, max_length=140)
+    discoverer_type: str = "campaign"
+    character_id: str | None = Field(default=None, max_length=180)
+    party_id: str | None = Field(default="group", max_length=180)
+    knowledge_level: str = "discovered"
+    public_name_override: str | None = Field(default=None, max_length=180)
+    source_scene_id: int | None = Field(default=None, ge=1)
+    source_contract_id: int | None = Field(default=None, ge=1)
+    notes: str | None = Field(default=None, max_length=4000)
+
+
+class TravelRouteCreate(BaseModel):
+    request_id: str = Field(min_length=8, max_length=140)
+    origin_location_id: int = Field(ge=1)
+    destination_location_id: int = Field(ge=1)
+    reverse_route_id: int | None = Field(default=None, ge=1)
+    title: str = Field(min_length=1, max_length=180)
+    route_type: str = "custom"
+    public_description: str | None = Field(default=None, max_length=4000)
+    private_description: str | None = Field(default=None, max_length=4000)
+    distance_value: float | None = Field(default=None, ge=0)
+    distance_unit: str | None = Field(default=None, max_length=40)
+    duration_value: float | None = Field(default=None, ge=0)
+    duration_unit: str | None = Field(default=None, max_length=40)
+    difficulty_label: str | None = Field(default=None, max_length=120)
+    danger_label: str | None = Field(default=None, max_length=120)
+    required_condition: str | None = Field(default=None, max_length=300)
+    public: bool = False
+    active: bool = True
+
+
+class JourneyCreate(BaseModel):
+    request_id: str = Field(min_length=8, max_length=140)
+    session_id: int | None = Field(default=None, ge=1)
+    contract_id: int | None = Field(default=None, ge=1)
+    route_id: int | None = Field(default=None, ge=1)
+    origin_location_id: int = Field(ge=1)
+    destination_location_id: int = Field(ge=1)
+    title: str = Field(min_length=1, max_length=180)
+    visibility: str = "table"
+    planned_duration_value: float | None = Field(default=None, ge=0)
+    planned_duration_unit: str | None = Field(default=None, max_length=40)
+    progress_target: float = Field(default=1, gt=0)
+
+
+class JourneyParticipantCreate(BaseModel):
+    request_id: str = Field(min_length=8, max_length=140)
+    participant_type: str
+    character_id: str | None = Field(default=None, max_length=180)
+    npc_id: int | None = Field(default=None, ge=1)
+    public_label: str = Field(min_length=1, max_length=180)
+
+
+class JourneyParticipantRemove(BaseModel):
+    request_id: str = Field(min_length=8, max_length=140)
+    reason: str = Field(min_length=2, max_length=500)
+
+
+class JourneyTransitionRequest(BaseModel):
+    request_id: str = Field(min_length=8, max_length=140)
+    expected_version: int = Field(ge=1)
+    reason: str | None = Field(default=None, max_length=500)
+
+
+class JourneyAdvanceRequest(JourneyTransitionRequest):
+    amount: float = Field(gt=0)
+
+
+class JourneySceneLinkCreate(BaseModel):
+    request_id: str = Field(min_length=8, max_length=140)
+    scene_id: int = Field(ge=1)
+    stage_label: str | None = Field(default=None, max_length=180)
+    progress_value: float | None = Field(default=None, ge=0)
+
+
+class LocationLinkCreate(BaseModel):
+    request_id: str = Field(min_length=8, max_length=140)
+    location_id: int = Field(ge=1)
+    role: str = Field(default="related", max_length=80)
+    public: bool = False

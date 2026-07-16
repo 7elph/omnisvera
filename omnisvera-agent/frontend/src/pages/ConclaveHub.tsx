@@ -423,6 +423,7 @@ export default function ConclaveHub({
             <span>{contract.risk_label}</span>
           </header>
           <p>{contract.public_briefing}</p>
+          <button className="secondary-button" onClick={() => window.dispatchEvent(new CustomEvent("omnisvera-open-map"))}>Abrir local e planejar viagem</button>
           <div className="contract-meta-grid">
             <span><small>Prazo</small><strong>{contract.deadline_text || "Sem prazo"}</strong></span>
             <span><small>Recompensa pública</small><strong>{rewardSummary(contract.rewards)}</strong></span>

@@ -655,11 +655,56 @@ export type NpcRecord = {
   id: number; campaign_id: string; source_path?: string | null; slug: string; name: string; aliases: string[];
   portrait_path?: string | null; race?: string | null; class_or_role?: string | null; occupation?: string | null;
   faction_names: string[]; public_description?: string | null; private_description?: string | null;
-  canonical_status?: string | null; visible_to_players: boolean; current_location?: string | null;
+  canonical_status?: string | null; visible_to_players: boolean; current_location?: string | null; current_location_id?: number | null; active_journey_id?: number | null;
   public_status?: string | null; private_status?: string | null; disposition_summary?: string | null; active?: boolean;
   last_seen_at?: string | null; last_scene_id?: number | null; state_version?: number; version: number;
   relationships?: NpcRelationship[]; memories?: NpcMemory[]; encounters?: NpcEncounter[]; events?: NpcEvent[];
   contract_links?: NpcContractLink[];
+};
+
+export type WorldMapRecord = {
+  id: number; title: string; source_path?: string | null; image_path?: string | null;
+  map_type: string; width?: number | null; height?: number | null; coordinate_system: string;
+  public_description?: string | null; private_description?: string | null;
+  visibility: string; active: boolean; version: number;
+};
+
+export type WorldLocationRecord = {
+  id: number; map_id?: number | null; source_path?: string | null; slug: string; name: string;
+  aliases: string[]; location_type: string; parent_location_id?: number | null;
+  territory_name?: string | null; public_description?: string | null; private_description?: string | null;
+  portrait_or_cover_path?: string | null; marker_icon?: string | null; x?: number | null; y?: number | null;
+  latitude?: number | null; longitude?: number | null; knowledge_level?: string;
+  public_status?: string | null; private_status?: string | null; controlling_faction?: string | null;
+  danger_label?: string | null; accessible?: boolean; current_scene_id?: number | null;
+  visibility: string; active: boolean; version: number; state_version?: number;
+};
+
+export type TravelRouteRecord = {
+  id: number; origin_location_id: number; destination_location_id: number; title: string;
+  route_type: string; public_description?: string | null; distance_value?: number | null;
+  distance_unit?: string | null; duration_value?: number | null; duration_unit?: string | null;
+  difficulty_label?: string | null; danger_label?: string | null; public: boolean; version: number;
+};
+
+export type JourneyParticipantRecord = {
+  id: number; journey_id: number; participant_type: string; character_id?: string | null;
+  npc_id?: number | null; public_label: string; status: string;
+};
+
+export type JourneyEventRecord = {
+  id: number; journey_id: number; event_type: string; title: string; public_text?: string | null;
+  private_text?: string | null; visibility: string; created_at: string; voided?: boolean;
+};
+
+export type JourneyRecord = {
+  id: number; route_id?: number | null; contract_id?: number | null; session_id?: number | null;
+  origin_location_id: number; destination_location_id: number; title: string;
+  status: "planned" | "active" | "paused" | "completed" | "cancelled" | "failed";
+  visibility: string; planned_duration_value?: number | null; planned_duration_unit?: string | null;
+  progress_current: number; progress_target: number; version: number;
+  participants: JourneyParticipantRecord[]; scene_links: Array<Record<string, unknown>>;
+  events?: JourneyEventRecord[];
 };
 
 export type ReputationLedger = {
@@ -1075,6 +1120,46 @@ export async function unlinkNpcEncounter(id: number, reason: string): Promise<Np
 export async function linkNpcContract(id: number, payload: Record<string, unknown>): Promise<NpcContractLink> { return npcRequest(`/gm/npcs/${id}/contracts`, { method: "POST", body: JSON.stringify(payload) }); }
 export async function listContractNpcs(id: number): Promise<NpcContractLink[]> { return npcRequest(`/contracts/${id}/npcs`); }
 export async function voidNpcEvent(id: number, reason: string): Promise<NpcEvent> { return npcRequest(`/gm/npc-events/${id}/void`, { method: "POST", body: JSON.stringify({ reason }) }); }
+
+async function worldRequest<T>(path: string, init?: RequestInit): Promise<T> {
+  const response = await fetch(`${API_BASE}${path}`, {
+    ...init,
+    headers: authHeaders(init?.body ? { "Content-Type": "application/json" } : undefined),
+  });
+  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha no mapa ou na viagem");
+  return response.json();
+}
+
+export function newWorldRequestId(prefix = "world") { return newDiceRequestId(prefix); }
+export async function listWorldMaps(): Promise<WorldMapRecord[]> { return worldRequest("/world/maps"); }
+export async function getWorldMap(id: number): Promise<WorldMapRecord> { return worldRequest(`/world/maps/${id}`); }
+export async function createWorldMap(payload: Record<string, unknown>): Promise<WorldMapRecord> { return worldRequest("/gm/world/maps", { method: "POST", body: JSON.stringify(payload) }); }
+export async function previewWorldMapImport(payload: Record<string, unknown>): Promise<Record<string, unknown>> { return worldRequest("/gm/world/maps/import-preview", { method: "POST", body: JSON.stringify(payload) }); }
+export async function importWorldMap(payload: Record<string, unknown>): Promise<WorldMapRecord> { return worldRequest("/gm/world/maps/import", { method: "POST", body: JSON.stringify(payload) }); }
+export async function listWorldLocations(mapId?: number): Promise<WorldLocationRecord[]> { return worldRequest(`/world/locations${mapId ? `?map_id=${mapId}` : ""}`); }
+export async function getWorldLocation(id: number): Promise<WorldLocationRecord> { return worldRequest(`/world/locations/${id}`); }
+export async function createWorldLocation(payload: Record<string, unknown>): Promise<WorldLocationRecord> { return worldRequest("/gm/world/locations", { method: "POST", body: JSON.stringify(payload) }); }
+export async function importWorldLocation(payload: Record<string, unknown>, mapId?: number): Promise<WorldLocationRecord> { return worldRequest(`/gm/world/locations/import${mapId ? `?map_id=${mapId}` : ""}`, { method: "POST", body: JSON.stringify(payload) }); }
+export async function updateWorldLocation(id: number, expectedVersion: number, fields: Record<string, unknown>): Promise<WorldLocationRecord> { return worldRequest(`/gm/world/locations/${id}`, { method: "PATCH", body: JSON.stringify({ expected_version: expectedVersion, fields }) }); }
+export async function updateWorldLocationState(id: number, expectedVersion: number, fields: Record<string, unknown>): Promise<WorldLocationRecord> { return worldRequest(`/gm/world/locations/${id}/state`, { method: "PATCH", body: JSON.stringify({ expected_version: expectedVersion, fields }) }); }
+export async function discoverWorldLocation(id: number, payload: Record<string, unknown>): Promise<Record<string, unknown>> { return worldRequest(`/gm/world/locations/${id}/discoveries`, { method: "POST", body: JSON.stringify(payload) }); }
+export async function listTravelRoutes(): Promise<TravelRouteRecord[]> { return worldRequest("/world/routes"); }
+export async function createTravelRoute(payload: Record<string, unknown>): Promise<TravelRouteRecord> { return worldRequest("/gm/world/routes", { method: "POST", body: JSON.stringify(payload) }); }
+export async function updateTravelRoute(id: number, expectedVersion: number, fields: Record<string, unknown>): Promise<TravelRouteRecord> { return worldRequest(`/gm/world/routes/${id}`, { method: "PATCH", body: JSON.stringify({ expected_version: expectedVersion, fields }) }); }
+export async function discoverTravelRoute(id: number, payload: Record<string, unknown>): Promise<Record<string, unknown>> { return worldRequest(`/gm/world/routes/${id}/discoveries`, { method: "POST", body: JSON.stringify(payload) }); }
+export async function listJourneys(): Promise<JourneyRecord[]> { return worldRequest("/world/journeys"); }
+export async function getJourney(id: number): Promise<JourneyRecord> { return worldRequest(`/world/journeys/${id}`); }
+export async function createJourney(payload: Record<string, unknown>): Promise<JourneyRecord> { return worldRequest("/gm/world/journeys", { method: "POST", body: JSON.stringify(payload) }); }
+export async function updatePlannedJourney(id: number, expectedVersion: number, fields: Record<string, unknown>): Promise<JourneyRecord> { return worldRequest(`/gm/world/journeys/${id}`, { method: "PATCH", body: JSON.stringify({ expected_version: expectedVersion, fields }) }); }
+export async function addJourneyParticipant(id: number, payload: Record<string, unknown>): Promise<JourneyParticipantRecord> { return worldRequest(`/gm/world/journeys/${id}/participants`, { method: "POST", body: JSON.stringify(payload) }); }
+export async function removeJourneyParticipant(id: number, payload: { request_id: string; reason: string }): Promise<JourneyParticipantRecord> { return worldRequest(`/gm/world/journey-participants/${id}`, { method: "DELETE", body: JSON.stringify(payload) }); }
+export async function transitionJourney(id: number, action: "start" | "pause" | "resume" | "complete" | "cancel" | "fail", payload: Record<string, unknown>): Promise<JourneyRecord> { return worldRequest(`/gm/world/journeys/${id}/transition/${action}`, { method: "POST", body: JSON.stringify(payload) }); }
+export async function advanceJourney(id: number, payload: Record<string, unknown>): Promise<JourneyRecord> { return worldRequest(`/gm/world/journeys/${id}/advance`, { method: "POST", body: JSON.stringify(payload) }); }
+export async function linkJourneyScene(id: number, payload: Record<string, unknown>): Promise<Record<string, unknown>> { return worldRequest(`/gm/world/journeys/${id}/scenes`, { method: "POST", body: JSON.stringify(payload) }); }
+export async function linkSceneLocation(sceneId: number, payload: Record<string, unknown>): Promise<Record<string, unknown>> { return worldRequest(`/gm/world/scenes/${sceneId}/location`, { method: "POST", body: JSON.stringify(payload) }); }
+export async function listSceneLocations(sceneId: number): Promise<Array<{ link: Record<string, unknown>; location: WorldLocationRecord }>> { return worldRequest(`/scenes/${sceneId}/locations`); }
+export async function linkContractLocation(contractId: number, payload: Record<string, unknown>): Promise<Record<string, unknown>> { return worldRequest(`/gm/world/contracts/${contractId}/locations`, { method: "POST", body: JSON.stringify(payload) }); }
+export async function listContractLocations(contractId: number): Promise<Array<{ link: Record<string, unknown>; location: WorldLocationRecord }>> { return worldRequest(`/contracts/${contractId}/locations`); }
 
 export async function health() {
   const response = await fetch(`${API_BASE}/health`, { headers: authHeaders() });

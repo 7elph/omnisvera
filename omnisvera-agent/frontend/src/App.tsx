@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import { AccessMode, getAccessMode, getAccessToken, health, rebuildIndex, resolveNote, setAccessMode, setAccessToken } from "./api";
 import DiceTray from "./components/DiceTray";
 import QuickCharacterSheet from "./components/QuickCharacterSheet";
 import QuickContractPanel from "./components/QuickContractPanel";
 import QuickScenePanel from "./components/QuickScenePanel";
 import QuickNpcPanel from "./components/QuickNpcPanel";
+import QuickAccessMenu from "./components/QuickAccessMenu";
 import ChatVault from "./pages/ChatVault";
 import ConclaveHub from "./pages/ConclaveHub";
 import PlayableCharacterSheet from "./pages/PlayableCharacterSheet";
@@ -16,7 +17,9 @@ import ModelCurationPanel from "./pages/ModelCurationPanel";
 import ScenePanel from "./pages/ScenePanel";
 import NpcDirectory from "./pages/NpcDirectory";
 
-type Page = "chat" | "search" | "note" | "session" | "player" | "sheet" | "scene" | "conclave" | "npcs" | "curation";
+const WorldMapPage = lazy(() => import("./pages/WorldMapPage"));
+
+type Page = "chat" | "search" | "note" | "session" | "player" | "sheet" | "scene" | "conclave" | "npcs" | "map" | "curation";
 
 export default function App() {
   const initialMode = getAccessMode();
@@ -72,11 +75,14 @@ export default function App() {
       if (Number.isFinite(sceneId) && sceneId > 0) localStorage.setItem("omnisvera_selected_scene", String(sceneId));
       setPage("scene");
     };
+    const openMap = () => setPage("map");
     window.addEventListener("omnisvera-open-contract", openContract);
     window.addEventListener("omnisvera-open-scene", openScene);
+    window.addEventListener("omnisvera-open-map", openMap);
     return () => {
       window.removeEventListener("omnisvera-open-contract", openContract);
       window.removeEventListener("omnisvera-open-scene", openScene);
+      window.removeEventListener("omnisvera-open-map", openMap);
     };
   }, []);
 
@@ -214,7 +220,7 @@ export default function App() {
       {authenticated && !accessPanelOpen ? (
         <section className="access-summary">
           <span><b>{mode === "player" ? "Jogador" : "Mestre"}</b><small>{status}</small></span>
-          <button className="secondary-button" onClick={() => setAccessPanelOpen(true)}>Trocar acesso</button>
+          <div className="access-summary-actions"><QuickAccessMenu onNavigate={navigate} /><button className="secondary-button" onClick={() => setAccessPanelOpen(true)}>Trocar acesso</button></div>
         </section>
       ) : <section className="token-bar">
         <div className="mode-switch">
@@ -275,6 +281,9 @@ export default function App() {
         <button className={page === "npcs" ? "active" : ""} onClick={() => navigate("npcs")}>
           <span>◉</span><small>NPCs</small>
         </button>
+        <button className={page === "map" ? "active" : ""} onClick={() => navigate("map")}>
+          <span>⌖</span><small>Mapa</small>
+        </button>
         {mode === "gm" && (
           <button className={page === "curation" ? "active" : ""} onClick={() => navigate("curation")}>
             <span>⚗</span><small>Curadoria</small>
@@ -302,6 +311,7 @@ export default function App() {
       {authenticated && page === "scene" && <ScenePanel key={`scene-${authVersion}-${mode}`} mode={mode === "player" ? "player" : "gm"} />}
       {authenticated && page === "conclave" && <ConclaveHub key={`conclave-${authVersion}-${mode}`} mode={mode === "player" ? "player" : "gm"} onOpenScene={openScenePanel} />}
       {authenticated && page === "npcs" && <NpcDirectory key={`npcs-${authVersion}-${mode}`} mode={mode === "player" ? "player" : "gm"} />}
+      {authenticated && page === "map" && <Suspense fallback={<section className="panel world-loading" role="status">Carregando mapa…</section>}><WorldMapPage key={`map-${authVersion}-${mode}`} mode={mode === "player" ? "player" : "gm"} onOpenScene={openScenePanel} onOpenContract={openConclave} /></Suspense>}
       {authenticated && page === "curation" && mode === "gm" && <ModelCurationPanel key={`curation-${authVersion}`} />}
       {authenticated && page === "search" && <SearchNotes onOpenNote={openNote} />}
       {authenticated && page === "note" && (
@@ -319,11 +329,11 @@ export default function App() {
           />
         </>
       )}
-      {authenticated && <QuickCharacterSheet hidden={page === "sheet" || page === "npcs"} onOpen={() => navigate("sheet")} />}
-      {authenticated && <QuickScenePanel hidden={page === "scene" || page === "npcs"} mode={mode === "player" ? "player" : "gm"} onOpen={() => navigate("scene")} />}
-      {authenticated && <QuickContractPanel hidden={page === "conclave" || page === "npcs"} mode={mode === "player" ? "player" : "gm"} onOpenContract={openConclave} onOpenScene={openScenePanel} />}
+      {authenticated && <QuickCharacterSheet triggerHidden hidden={page === "sheet" || page === "npcs"} onOpen={() => navigate("sheet")} />}
+      {authenticated && <QuickScenePanel triggerHidden hidden={page === "scene" || page === "npcs"} mode={mode === "player" ? "player" : "gm"} onOpen={() => navigate("scene")} />}
+      {authenticated && <QuickContractPanel triggerHidden hidden={page === "conclave" || page === "npcs"} mode={mode === "player" ? "player" : "gm"} onOpenContract={openConclave} onOpenScene={openScenePanel} />}
       {authenticated && <QuickNpcPanel mode={mode === "player" ? "player" : "gm"} onOpen={openNpcDirectory} />}
-      {authenticated && page !== "npcs" && <DiceTray key={`dice-${authVersion}-${mode}`} mode={mode === "player" ? "player" : "gm"} />}
+      {authenticated && page !== "npcs" && <DiceTray triggerHidden key={`dice-${authVersion}-${mode}`} mode={mode === "player" ? "player" : "gm"} />}
     </main>
   );
 }

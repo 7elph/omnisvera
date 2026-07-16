@@ -155,6 +155,37 @@ from .scene_play import (
     update_scene,
     void_event,
 )
+from .world_travel import (
+    add_journey_participant,
+    advance_journey,
+    complete_journey,
+    create_journey,
+    create_location,
+    create_map,
+    create_route,
+    discover_route,
+    discover_location,
+    get_journey,
+    get_location,
+    get_map,
+    init_world_travel,
+    link_journey_scene,
+    link_location,
+    list_journey_events,
+    list_journeys,
+    list_locations,
+    list_maps,
+    list_routes,
+    remove_journey_participant,
+    related_locations,
+    transition_journey,
+    update_location,
+    update_location_state,
+    update_map,
+    update_planned_journey,
+    update_route,
+    void_journey_event,
+)
 from .training_curation import (
     approve_batch,
     approve_example,
@@ -258,6 +289,19 @@ from .schemas import (
     TrainingFlagRequest,
     TrainingInteractionCapture,
     VersionedPatch,
+    JourneyAdvanceRequest,
+    JourneyCreate,
+    JourneyParticipantCreate,
+    JourneyParticipantRemove,
+    JourneySceneLinkCreate,
+    JourneyTransitionRequest,
+    LocationDiscoveryCreate,
+    LocationLinkCreate,
+    TravelRouteCreate,
+    WorldImportRequest,
+    WorldLocationCreate,
+    WorldMapCreate,
+    WorldVersionedUpdate,
 )
 from .search import search_notes
 from .vault_index import all_notes_for_search, get_note, index_signature, init_db, list_notes, rebuild_index, resolve_note, row_to_note
@@ -575,6 +619,7 @@ def startup() -> None:
     init_scene_play(settings.database_path)
     init_contract_play(settings.database_path)
     init_npc_memory(settings.database_path)
+    init_world_travel(settings.database_path)
     if settings.training_capture_mode != "off":
         purge_unreviewed(settings.unreviewed_retention_days)
     if settings.rebuild_on_startup:
@@ -3039,6 +3084,324 @@ def gm_void_npc_event(event_id: int, request: NpcEventVoidRequest, _: AccessCont
         return void_npc_event(settings.database_path, event_id, actor_id="master", reason=request.reason)
     except Exception as error:
         raise _npc_http_error(error) from error
+
+
+def _world_http_error(error: Exception) -> HTTPException:
+    detail = str(error)
+    if isinstance(error, RuntimeError) and "Versão" in detail:
+        return HTTPException(status_code=409, detail=detail)
+    if "inexistente" in detail or "não revelado" in detail:
+        return HTTPException(status_code=404, detail=detail)
+    return HTTPException(status_code=400, detail=detail)
+
+
+def _leaflet_preview(note: dict) -> dict:
+    frontmatter = dict(note.get("frontmatter") or {})
+    content = str(note.get("content") or "")
+    block_match = re.search(r"```leaflet\s*\n([\s\S]*?)```", content, re.IGNORECASE)
+    block = block_match.group(1) if block_match else ""
+    values: dict[str, str] = {}
+    for line in block.splitlines():
+        if ":" not in line:
+            continue
+        key, value = line.split(":", 1)
+        if key.strip() in {"image", "width", "height", "lat", "long", "bounds", "unit"}:
+            values[key.strip()] = value.strip()
+    warnings: list[str] = []
+    if not values.get("image") and not frontmatter.get("cover"):
+        warnings.append("A nota não informa imagem de mapa.")
+    if "marker" in block.casefold():
+        warnings.append("Marcadores do plugin exigem revisão; nenhum foi importado automaticamente.")
+    return {
+        "source_path": note.get("path"),
+        "title": note.get("title") or Path(str(note.get("path") or "Mapa")).stem,
+        "image_path": values.get("image") or frontmatter.get("cover"),
+        "width": frontmatter.get("width"),
+        "height": frontmatter.get("height"),
+        "map_type": frontmatter.get("map_scope") or "custom",
+        "coordinate_system": "percentage",
+        "visibility": "table" if str(frontmatter.get("visibility") or "").casefold() in {"jogadores", "public", "players"} else "gm",
+        "warnings": warnings,
+        "adapter": "obsidian_leaflet_image_v1" if block_match else "frontmatter_map_v1",
+    }
+
+
+@app.get("/world/maps")
+def authorized_world_maps(access: AccessContext = Depends(require_any)) -> list[dict]:
+    return list_maps(settings.database_path, campaign_id="omnisvera", access_mode=access.mode)
+
+
+@app.get("/world/maps/{map_id}")
+def authorized_world_map(map_id: int, access: AccessContext = Depends(require_any)) -> dict:
+    item = get_map(settings.database_path, map_id, access_mode=access.mode)
+    if item is None:
+        raise HTTPException(status_code=404, detail="Mapa inexistente ou ainda não revelado.")
+    return item
+
+
+@app.post("/gm/world/maps")
+def gm_create_world_map(request: WorldMapCreate, _: AccessContext = Depends(require_master)) -> dict:
+    try:
+        item, _ = create_map(settings.database_path, request_id=request.request_id, campaign_id="omnisvera", actor_id="master", fields=request.model_dump(exclude={"request_id"}))
+        return item
+    except Exception as error:
+        raise _world_http_error(error) from error
+
+
+@app.patch("/gm/world/maps/{map_id}")
+def gm_update_world_map(map_id: int, request: WorldVersionedUpdate, _: AccessContext = Depends(require_master)) -> dict:
+    try:
+        return update_map(settings.database_path, map_id, expected_version=request.expected_version, fields=request.fields)
+    except Exception as error:
+        raise _world_http_error(error) from error
+
+
+@app.post("/gm/world/maps/import-preview")
+def gm_preview_world_map(request: WorldImportRequest, _: AccessContext = Depends(require_master)) -> dict:
+    maybe_refresh_index()
+    source = resolve_note(settings.database_path, request.source_path, access_mode="gm")
+    if source is None:
+        raise HTTPException(status_code=404, detail="Nota de mapa não encontrada.")
+    note = get_note(settings.database_path, int(source["id"]), access_mode="gm")
+    if note is None or str(note.get("type") or "").casefold() != "map":
+        raise HTTPException(status_code=400, detail="A prévia aceita somente uma nota do tipo map.")
+    return _leaflet_preview(note)
+
+
+@app.post("/gm/world/maps/import")
+def gm_import_world_map(request: WorldImportRequest, _: AccessContext = Depends(require_master)) -> dict:
+    if not request.confirm:
+        raise HTTPException(status_code=400, detail="Revise a prévia e confirme a importação explicitamente.")
+    preview = gm_preview_world_map(request)
+    fields = {key: preview.get(key) for key in ("source_path", "title", "image_path", "width", "height", "coordinate_system")}
+    map_type = str(preview.get("map_type") or "custom").casefold()
+    fields["map_type"] = map_type if map_type in {"world", "continent", "territory", "region", "city", "district", "dungeon", "schematic", "custom"} else "custom"
+    fields["visibility"] = request.visibility or preview.get("visibility") or "gm"
+    try:
+        item, _ = create_map(settings.database_path, request_id=request.request_id, campaign_id="omnisvera", actor_id="master", fields=fields)
+        return item
+    except Exception as error:
+        raise _world_http_error(error) from error
+
+
+@app.get("/world/locations")
+def authorized_world_locations(map_id: int | None = None, query: str | None = None, access: AccessContext = Depends(require_any)) -> list[dict]:
+    return list_locations(settings.database_path, campaign_id="omnisvera", access_mode=access.mode, profile_id=access.profile_id, map_id=map_id, query=query)
+
+
+@app.get("/world/locations/{location_id}")
+def authorized_world_location(location_id: int, access: AccessContext = Depends(require_any)) -> dict:
+    item = get_location(settings.database_path, location_id, access_mode=access.mode, profile_id=access.profile_id)
+    if item is None:
+        raise HTTPException(status_code=404, detail="Local inexistente ou ainda não descoberto.")
+    return item
+
+
+@app.post("/gm/world/locations")
+def gm_create_world_location(request: WorldLocationCreate, _: AccessContext = Depends(require_master)) -> dict:
+    try:
+        item, _ = create_location(settings.database_path, request_id=request.request_id, campaign_id="omnisvera", actor_id="master", fields=request.model_dump(exclude={"request_id"}))
+        return item
+    except Exception as error:
+        raise _world_http_error(error) from error
+
+
+@app.post("/gm/world/locations/import")
+def gm_import_world_location(request: WorldImportRequest, map_id: int | None = None, _: AccessContext = Depends(require_master)) -> dict:
+    if not request.confirm:
+        raise HTTPException(status_code=400, detail="Revise a nota e confirme a importação explicitamente.")
+    maybe_refresh_index()
+    source = resolve_note(settings.database_path, request.source_path, access_mode="gm")
+    if source is None:
+        raise HTTPException(status_code=404, detail="Nota de local não encontrada.")
+    note = get_note(settings.database_path, int(source["id"]), access_mode="gm")
+    if note is None or str(note.get("type") or "").casefold() not in {"location", "territory"}:
+        raise HTTPException(status_code=400, detail="A importação aceita somente notas de local ou território.")
+    fm = dict(note.get("frontmatter") or {})
+    location_type = str(fm.get("location_type") or fm.get("type") or "unknown").casefold()
+    if location_type not in {"realm", "territory", "region", "city", "village", "port", "fortress", "forest", "mountain", "road", "ruin", "dungeon", "building", "district", "landmark", "unknown", "custom"}:
+        location_type = "territory" if str(note.get("type")).casefold() == "territory" else "unknown"
+    fields = {
+        "map_id": map_id, "source_path": note["path"], "name": note.get("title") or Path(note["path"]).stem,
+        "aliases": _frontmatter_list(note.get("aliases")) + _frontmatter_list(fm.get("aliases")),
+        "location_type": location_type, "territory_name": fm.get("territory") or fm.get("region"),
+        "public_description": fm.get("description") or fm.get("summary") or fm.get("info"),
+        "portrait_or_cover_path": fm.get("cover") or fm.get("thumbnail"), "canon_status": fm.get("canon") or fm.get("canonical_status"),
+        "visibility": request.visibility or ("table" if resolve_note(settings.database_path, note["path"], access_mode="player") else "gm"),
+        "discovered_by_default": bool(request.discovered_by_default),
+    }
+    try:
+        item, _ = create_location(settings.database_path, request_id=request.request_id, campaign_id="omnisvera", actor_id="master", fields=fields)
+        return item
+    except Exception as error:
+        raise _world_http_error(error) from error
+
+
+@app.patch("/gm/world/locations/{location_id}")
+def gm_update_world_location(location_id: int, request: WorldVersionedUpdate, _: AccessContext = Depends(require_master)) -> dict:
+    try:
+        return update_location(settings.database_path, location_id, expected_version=request.expected_version, fields=request.fields)
+    except Exception as error:
+        raise _world_http_error(error) from error
+
+
+@app.patch("/gm/world/locations/{location_id}/state")
+def gm_update_world_location_state(location_id: int, request: WorldVersionedUpdate, _: AccessContext = Depends(require_master)) -> dict:
+    try:
+        return update_location_state(settings.database_path, location_id, expected_version=request.expected_version, fields=request.fields)
+    except Exception as error:
+        raise _world_http_error(error) from error
+
+
+@app.post("/gm/world/locations/{location_id}/discoveries")
+def gm_discover_world_location(location_id: int, request: LocationDiscoveryCreate, _: AccessContext = Depends(require_master)) -> dict:
+    try:
+        item, _ = discover_location(settings.database_path, location_id, request_id=request.request_id, campaign_id="omnisvera", actor_id="master", fields=request.model_dump(exclude={"request_id"}))
+        return item
+    except Exception as error:
+        raise _world_http_error(error) from error
+
+
+@app.get("/world/routes")
+def authorized_world_routes(access: AccessContext = Depends(require_any)) -> list[dict]:
+    return list_routes(settings.database_path, campaign_id="omnisvera", access_mode=access.mode, profile_id=access.profile_id)
+
+
+@app.post("/gm/world/routes")
+def gm_create_world_route(request: TravelRouteCreate, _: AccessContext = Depends(require_master)) -> dict:
+    try:
+        item, _ = create_route(settings.database_path, request_id=request.request_id, campaign_id="omnisvera", actor_id="master", fields=request.model_dump(exclude={"request_id"}))
+        return item
+    except Exception as error:
+        raise _world_http_error(error) from error
+
+
+@app.patch("/gm/world/routes/{route_id}")
+def gm_update_world_route(route_id: int, request: WorldVersionedUpdate, _: AccessContext = Depends(require_master)) -> dict:
+    try:
+        return update_route(settings.database_path, route_id, expected_version=request.expected_version, fields=request.fields)
+    except Exception as error:
+        raise _world_http_error(error) from error
+
+
+@app.post("/gm/world/routes/{route_id}/discoveries")
+def gm_discover_world_route(route_id: int, request: LocationDiscoveryCreate, _: AccessContext = Depends(require_master)) -> dict:
+    try:
+        item, _ = discover_route(settings.database_path, route_id, request_id=request.request_id, fields=request.model_dump(exclude={"request_id", "public_name_override", "notes"}))
+        return item
+    except Exception as error:
+        raise _world_http_error(error) from error
+
+
+@app.get("/world/journeys")
+def authorized_world_journeys(access: AccessContext = Depends(require_any)) -> list[dict]:
+    return list_journeys(settings.database_path, campaign_id="omnisvera", access_mode=access.mode, profile_id=access.profile_id)
+
+
+@app.get("/world/journeys/{journey_id}")
+def authorized_world_journey(journey_id: int, access: AccessContext = Depends(require_any)) -> dict:
+    item = get_journey(settings.database_path, journey_id, access_mode=access.mode, profile_id=access.profile_id)
+    if item is None:
+        raise HTTPException(status_code=404, detail="Viagem inexistente ou privada.")
+    item["events"] = list_journey_events(settings.database_path, journey_id, access_mode=access.mode)
+    return item
+
+
+@app.post("/gm/world/journeys")
+def gm_create_world_journey(request: JourneyCreate, _: AccessContext = Depends(require_master)) -> dict:
+    try:
+        item, _ = create_journey(settings.database_path, request_id=request.request_id, campaign_id="omnisvera", actor_id="master", fields=request.model_dump(exclude={"request_id"}))
+        return item
+    except Exception as error:
+        raise _world_http_error(error) from error
+
+
+@app.patch("/gm/world/journeys/{journey_id}")
+def gm_update_world_journey(journey_id: int, request: WorldVersionedUpdate, _: AccessContext = Depends(require_master)) -> dict:
+    try:
+        return update_planned_journey(settings.database_path, journey_id, expected_version=request.expected_version, fields=request.fields)
+    except Exception as error:
+        raise _world_http_error(error) from error
+
+
+@app.post("/gm/world/journeys/{journey_id}/participants")
+def gm_add_world_journey_participant(journey_id: int, request: JourneyParticipantCreate, _: AccessContext = Depends(require_master)) -> dict:
+    try:
+        item, _ = add_journey_participant(settings.database_path, journey_id, request_id=request.request_id, actor_id="master", fields=request.model_dump(exclude={"request_id"}))
+        return item
+    except Exception as error:
+        raise _world_http_error(error) from error
+
+
+@app.delete("/gm/world/journey-participants/{participant_id}")
+def gm_remove_world_journey_participant(participant_id: int, request: JourneyParticipantRemove, _: AccessContext = Depends(require_master)) -> dict:
+    try:
+        return remove_journey_participant(settings.database_path, participant_id, request_id=request.request_id, actor_id="master", reason=request.reason)
+    except Exception as error:
+        raise _world_http_error(error) from error
+
+
+@app.post("/gm/world/journeys/{journey_id}/transition/{action}")
+def gm_transition_world_journey(journey_id: int, action: str, request: JourneyTransitionRequest, _: AccessContext = Depends(require_master)) -> dict:
+    try:
+        if action == "complete":
+            return complete_journey(settings.database_path, journey_id, request_id=request.request_id, actor_id="master", expected_version=request.expected_version)
+        return transition_journey(settings.database_path, journey_id, request_id=request.request_id, actor_id="master", action=action, expected_version=request.expected_version, reason=request.reason)
+    except Exception as error:
+        raise _world_http_error(error) from error
+
+
+@app.post("/gm/world/journeys/{journey_id}/advance")
+def gm_advance_world_journey(journey_id: int, request: JourneyAdvanceRequest, _: AccessContext = Depends(require_master)) -> dict:
+    try:
+        return advance_journey(settings.database_path, journey_id, request_id=request.request_id, actor_id="master", expected_version=request.expected_version, amount=request.amount)
+    except Exception as error:
+        raise _world_http_error(error) from error
+
+
+@app.post("/gm/world/journeys/{journey_id}/scenes")
+def gm_link_world_journey_scene(journey_id: int, request: JourneySceneLinkCreate, _: AccessContext = Depends(require_master)) -> dict:
+    try:
+        item, _ = link_journey_scene(settings.database_path, journey_id, request_id=request.request_id, actor_id="master", scene_id=request.scene_id, stage_label=request.stage_label, progress_value=request.progress_value)
+        return item
+    except Exception as error:
+        raise _world_http_error(error) from error
+
+
+@app.post("/gm/world/scenes/{scene_id}/location")
+def gm_link_world_scene_location(scene_id: int, request: LocationLinkCreate, _: AccessContext = Depends(require_master)) -> dict:
+    try:
+        item, _ = link_location(settings.database_path, kind="scene", owner_id=scene_id, location_id=request.location_id, request_id=request.request_id, actor_id="master")
+        return item
+    except Exception as error:
+        raise _world_http_error(error) from error
+
+
+@app.get("/scenes/{scene_id}/locations")
+def authorized_scene_locations(scene_id: int, access: AccessContext = Depends(require_any)) -> list[dict]:
+    return related_locations(settings.database_path, kind="scene", owner_id=scene_id, access_mode=access.mode, profile_id=access.profile_id)
+
+
+@app.post("/gm/world/contracts/{contract_id}/locations")
+def gm_link_world_contract_location(contract_id: int, request: LocationLinkCreate, _: AccessContext = Depends(require_master)) -> dict:
+    try:
+        item, _ = link_location(settings.database_path, kind="contract", owner_id=contract_id, location_id=request.location_id, request_id=request.request_id, actor_id="master", role=request.role, public=request.public)
+        return item
+    except Exception as error:
+        raise _world_http_error(error) from error
+
+
+@app.get("/contracts/{contract_id}/locations")
+def authorized_contract_locations(contract_id: int, access: AccessContext = Depends(require_any)) -> list[dict]:
+    return related_locations(settings.database_path, kind="contract", owner_id=contract_id, access_mode=access.mode, profile_id=access.profile_id)
+
+
+@app.post("/gm/world/journey-events/{event_id}/void")
+def gm_void_world_journey_event(event_id: int, request: NpcEventVoidRequest, _: AccessContext = Depends(require_master)) -> dict:
+    try:
+        return void_journey_event(settings.database_path, event_id, actor_id="master", reason=request.reason)
+    except Exception as error:
+        raise _world_http_error(error) from error
 
 
 @app.get("/media/{media_path:path}", response_model=None)

@@ -24,11 +24,13 @@ function progress(contract: ContractRecord | null) {
 
 export default function QuickContractPanel({
   hidden,
+  triggerHidden,
   mode,
   onOpenContract,
   onOpenScene,
 }: {
   hidden?: boolean;
+  triggerHidden?: boolean;
   mode: AccessMode;
   onOpenContract: (contractId?: number) => void;
   onOpenScene: (sceneId?: number) => void;
@@ -47,10 +49,13 @@ export default function QuickContractPanel({
     const interval = window.setInterval(update, 12000);
     window.addEventListener("omnisvera-contract-updated", update);
     window.addEventListener("omnisvera-scene-updated", update);
+    const show = () => setOpen(true);
+    window.addEventListener("omnisvera-open-quick-contract", show);
     return () => {
       window.clearInterval(interval);
       window.removeEventListener("omnisvera-contract-updated", update);
       window.removeEventListener("omnisvera-scene-updated", update);
+      window.removeEventListener("omnisvera-open-quick-contract", show);
     };
   }, [mode]);
 
@@ -72,7 +77,7 @@ export default function QuickContractPanel({
 
   if (hidden) return null;
   return <aside className={`quick-contract-panel ${open ? "open" : ""}`} aria-label="Contrato rápido">
-    {!open ? <button className="quick-contract-trigger" onClick={() => setOpen(true)} aria-label="Abrir contrato rápido">
+    {!open ? !triggerHidden && <button className="quick-contract-trigger" onClick={() => setOpen(true)} aria-label="Abrir contrato rápido">
       <span aria-hidden="true">Contrato</span>
       <strong>{contract?.title || "Sem contrato ativo"}</strong>
       {contract && <small>{label(contract.status)}</small>}

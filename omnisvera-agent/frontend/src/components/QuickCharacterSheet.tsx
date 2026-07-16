@@ -5,7 +5,7 @@ function stat(value: unknown) {
   return value === null || value === undefined || value === "" ? "—" : String(value);
 }
 
-export default function QuickCharacterSheet({ hidden, onOpen }: { hidden?: boolean; onOpen: () => void }) {
+export default function QuickCharacterSheet({ hidden, triggerHidden, onOpen }: { hidden?: boolean; triggerHidden?: boolean; onOpen: () => void }) {
   const [characters, setCharacters] = useState<PlayableCharacterSummary[]>([]);
   const [selectedId, setSelectedId] = useState(localStorage.getItem("omnisvera_selected_character") || "");
   const [open, setOpen] = useState(false);
@@ -72,7 +72,7 @@ export default function QuickCharacterSheet({ hidden, onOpen }: { hidden?: boole
   const portrait = mediaUrlFromVaultPath(character.portrait);
 
   return <aside className={`quick-character-sheet ${open ? "open" : ""}`} aria-label="Ficha rápida">
-    {!open ? <button className="quick-sheet-trigger" onClick={() => setOpen(true)} aria-label={`Abrir ficha rápida de ${character.name}`}>
+    {!open ? !triggerHidden && <button className="quick-sheet-trigger" onClick={() => setOpen(true)} aria-label={`Abrir ficha rápida de ${character.name}`}>
       {portrait ? <img src={portrait} alt="" /> : <span aria-hidden="true">♙</span>}
       <strong>{character.name}</strong><em>{stat(character.current_hp)}/{stat(character.maximum_hp)} PV</em>
     </button> : <div className="quick-sheet-drawer">

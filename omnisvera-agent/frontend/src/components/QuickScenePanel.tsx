@@ -16,10 +16,12 @@ const QUICK_ACTIONS = [
 
 export default function QuickScenePanel({
   hidden,
+  triggerHidden,
   mode,
   onOpen,
 }: {
   hidden?: boolean;
+  triggerHidden?: boolean;
   mode: "gm" | "player";
   onOpen: () => void;
 }) {
@@ -41,10 +43,13 @@ export default function QuickScenePanel({
     const interval = window.setInterval(update, 12000);
     window.addEventListener("omnisvera-scene-updated", update);
     window.addEventListener("omnisvera-roll-created", update);
+    const show = () => setOpen(true);
+    window.addEventListener("omnisvera-open-quick-scene", show);
     return () => {
       window.clearInterval(interval);
       window.removeEventListener("omnisvera-scene-updated", update);
       window.removeEventListener("omnisvera-roll-created", update);
+      window.removeEventListener("omnisvera-open-quick-scene", show);
     };
   }, []);
 
@@ -80,7 +85,7 @@ export default function QuickScenePanel({
 
   if (hidden) return null;
   return <aside className={`quick-scene-panel ${open ? "open" : ""}`} aria-label="Cena rápida">
-    {!open ? <button className="quick-scene-trigger" onClick={() => setOpen(true)} aria-label="Abrir cena rápida">
+    {!open ? !triggerHidden && <button className="quick-scene-trigger" onClick={() => setOpen(true)} aria-label="Abrir cena rápida">
       <span aria-hidden="true">Cena</span>
       <strong>{scene?.title || "Sem cena ativa"}</strong>
       {scene && <small>{scene.location_name}</small>}
