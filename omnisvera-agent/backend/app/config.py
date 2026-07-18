@@ -16,6 +16,8 @@ class Settings:
     vault_path: Path
     ollama_base_url: str
     ollama_model: str
+    ollama_fallback_model: str
+    ollama_request_timeout: int
     fast_model: str
     quality_model: str
     candidate_model: str
@@ -111,15 +113,18 @@ def get_settings() -> Settings:
             str(backend_root / "data" / "omnisvera_companion.sqlite3"),
         )
     ).resolve()
-    fast_model = os.getenv("OMNISVERA_FAST_MODEL", "qwen2:1.5b")
+    fast_model = os.getenv(
+        "OLLAMA_FALLBACK_MODEL",
+        os.getenv("OMNISVERA_FAST_MODEL", "qwen2:1.5b"),
+    )
     quality_model = os.getenv("OMNISVERA_QUALITY_MODEL", "llama-3.2-omnisvera-3b")
     candidate_model = os.getenv("OMNISVERA_CANDIDATE_MODEL", quality_model)
     production_model = os.getenv("OMNISVERA_PRODUCTION_MODEL", quality_model)
     model_mode = _model_mode(os.getenv("OMNISVERA_MODEL_MODE", "baseline"))
     production_approved = _production_is_approved(vault_path, production_model)
     response_mode = _response_mode(os.getenv("OMNISVERA_RESPONSE_MODE", "grounded"))
-    selected_model = {
-        "baseline": fast_model,
+    selected_model = os.getenv("OLLAMA_MODEL") or {
+        "baseline": "qwen3.5:397b-cloud",
         "candidate": candidate_model,
         "production": production_model if production_approved else fast_model,
     }[model_mode]
@@ -132,6 +137,8 @@ def get_settings() -> Settings:
         vault_path=vault_path,
         ollama_base_url=os.getenv("OLLAMA_BASE_URL", "http://localhost:11434").rstrip("/"),
         ollama_model=selected_model,
+        ollama_fallback_model=fast_model,
+        ollama_request_timeout=_safe_int("OLLAMA_REQUEST_TIMEOUT", 180),
         fast_model=fast_model,
         quality_model=quality_model,
         candidate_model=candidate_model,

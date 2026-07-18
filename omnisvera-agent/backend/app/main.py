@@ -715,7 +715,7 @@ async def chat(request: ChatRequest, _: AccessContext = Depends(require_master))
         context_limit=settings.rag_context_limit,
         context_chars=settings.rag_context_chars,
         response_mode=settings.response_mode,
-        fallback_model=settings.fast_model,
+        fallback_model=settings.ollama_fallback_model,
         conversation_paths=context_paths,
     )
 
@@ -768,7 +768,7 @@ async def gm_chat(request: ChatRequest, _: AccessContext = Depends(require_maste
         context_limit=settings.rag_context_limit,
         context_chars=settings.rag_context_chars,
         response_mode=settings.response_mode,
-        fallback_model=settings.fast_model,
+        fallback_model=settings.ollama_fallback_model,
         conversation_paths=context_paths,
     )
     trace = result.pop("_training_trace", {}) or {}
@@ -1105,7 +1105,7 @@ async def player_chat(request: ChatRequest, access: AccessContext = Depends(requ
             question, request.limit, access_mode="player", embedding_model=settings.embedding_model,
             semantic_index_path=settings.semantic_index_path, rag_mode=settings.rag_mode,
             context_limit=settings.rag_context_limit, context_chars=settings.rag_context_chars,
-            response_mode=settings.response_mode, fallback_model=settings.fast_model,
+            response_mode=settings.response_mode, fallback_model=settings.ollama_fallback_model,
             conversation_paths=context_paths,
             priority_paths=priority_paths,
         )

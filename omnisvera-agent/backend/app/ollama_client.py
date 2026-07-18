@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import logging
+import os
 import time
 from typing import Any
 
@@ -7,6 +9,24 @@ import httpx
 
 
 _MODEL_CACHE: dict[str, Any] = {"base_url": "", "expires": 0.0, "names": set()}
+_LOGGER = logging.getLogger(__name__)
+_FALLBACK_STATUS_CODES = {429, 502, 503}
+
+
+class OllamaRequestError(RuntimeError):
+    def __init__(self, message: str, *, status_code: int | None = None, fallback_allowed: bool = False):
+        super().__init__(message)
+        self.status_code = status_code
+        self.fallback_allowed = fallback_allowed
+
+
+def _configured_request_timeout(value: float | None) -> float:
+    if value is not None:
+        return max(1.0, float(value))
+    try:
+        return max(1.0, float(os.getenv("OLLAMA_REQUEST_TIMEOUT", "180")))
+    except ValueError:
+        return 180.0
 
 
 async def available_ollama_models(base_url: str) -> set[str]:
@@ -27,6 +47,8 @@ async def available_ollama_models(base_url: str) -> set[str]:
 
 
 async def resolve_ollama_model(base_url: str, preferred: str, fallback: str) -> str:
+    if preferred.strip().lower().endswith("-cloud"):
+        return preferred
     names = await available_ollama_models(base_url)
     if not names or preferred in names:
         return preferred
@@ -50,7 +72,10 @@ async def chat_with_ollama(
     messages: list[dict[str, str]],
     options: dict[str, Any] | None = None,
     response_format: str | dict[str, Any] | None = None,
+    request_timeout: float | None = None,
+    raise_on_error: bool = False,
 ) -> str:
+    request_timeout = _configured_request_timeout(request_timeout)
     is_qwen3 = model.strip().lower().startswith("qwen3")
     normalized_model = model.strip().lower()
     is_compact_local = (
@@ -89,14 +114,32 @@ async def chat_with_ollama(
         payload["think"] = False
     if response_format is not None:
         payload["format"] = response_format
-    request_timeout = 90.0 if is_qwen3 or normalized_model.startswith("omnisvera-entity") else (65.0 if is_compact_local else 45.0)
     try:
         async with httpx.AsyncClient(timeout=request_timeout) as client:
             response = await client.post(f"{base_url}/api/chat", json=payload)
             response.raise_for_status()
             data = response.json()
         message = data.get("message") or {}
-    except Exception:
+    except httpx.TimeoutException as exc:
+        if raise_on_error:
+            raise OllamaRequestError("Ollama request timed out", fallback_allowed=True) from exc
+        return ""
+    except httpx.ConnectError as exc:
+        if raise_on_error:
+            raise OllamaRequestError("Ollama gateway unavailable", fallback_allowed=True) from exc
+        return ""
+    except httpx.HTTPStatusError as exc:
+        status_code = exc.response.status_code
+        if raise_on_error:
+            raise OllamaRequestError(
+                f"Ollama returned HTTP {status_code}",
+                status_code=status_code,
+                fallback_allowed=status_code in _FALLBACK_STATUS_CODES,
+            ) from exc
+        return ""
+    except (httpx.RequestError, ValueError, TypeError, KeyError) as exc:
+        if raise_on_error:
+            raise OllamaRequestError("Invalid Ollama response", fallback_allowed=False) from exc
         return ""
     return str(message.get("content") or "").strip()
 
@@ -108,14 +151,53 @@ async def chat_with_fallback(
     messages: list[dict[str, str]],
     options: dict[str, Any] | None = None,
     response_format: str | dict[str, Any] | None = None,
+    request_timeout: float | None = None,
 ) -> tuple[str, str, bool]:
-    """Tenta o modelo selecionado e volta ao baseline sem expor Ollama na rede."""
+    """Tenta o modelo selecionado e usa um unico fallback em falhas transitorias."""
     selected = await resolve_ollama_model(base_url, preferred_model, fallback_model)
-    answer = await chat_with_ollama(base_url, selected, messages, options, response_format)
-    if answer or selected == fallback_model:
-        return answer, selected, False
-    fallback_answer = await chat_with_ollama(base_url, fallback_model, messages, options, response_format)
-    return fallback_answer, fallback_model, True
+    started = time.perf_counter()
+    status_code: int | None = None
+    fallback_used = False
+    effective_model = selected
+    answer = ""
+    try:
+        answer = await chat_with_ollama(
+            base_url,
+            selected,
+            messages,
+            options,
+            response_format,
+            request_timeout=request_timeout,
+            raise_on_error=True,
+        )
+    except OllamaRequestError as exc:
+        status_code = exc.status_code
+        if exc.fallback_allowed and selected != fallback_model:
+            fallback_used = True
+            effective_model = fallback_model
+            try:
+                answer = await chat_with_ollama(
+                    base_url,
+                    fallback_model,
+                    messages,
+                    options,
+                    response_format,
+                    request_timeout=request_timeout,
+                    raise_on_error=True,
+                )
+            except OllamaRequestError as fallback_exc:
+                status_code = fallback_exc.status_code or status_code
+                answer = ""
+    duration_ms = round((time.perf_counter() - started) * 1000)
+    _LOGGER.info(
+        "ollama_chat model=%s duration_ms=%s success=%s fallback=%s status=%s",
+        effective_model,
+        duration_ms,
+        bool(answer),
+        fallback_used,
+        status_code,
+    )
+    return answer, effective_model, fallback_used
 
 
 async def embed_with_ollama(

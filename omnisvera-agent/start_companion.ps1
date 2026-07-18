@@ -1,5 +1,6 @@
 param(
   [string]$VaultPath = (Resolve-Path "$PSScriptRoot\..").Path,
+  [string]$GenerationModel = "qwen3.5:397b-cloud",
   [string]$FastModel = "qwen2:1.5b",
   [string]$QualityModel = "llama-3.2-omnisvera-3b",
   [string]$CandidateModel = "llama-3.2-omnisvera-3b",
@@ -15,6 +16,7 @@ param(
   [string]$MasterToken = "",
   [string]$PlayerToken = "",
   [string]$TokenFile = "",
+  [int]$OllamaRequestTimeout = 180,
   [int]$Port = 8787,
   [switch]$NoBuild,
   [switch]$NoRebuild
@@ -127,6 +129,9 @@ if (-not $NoBuild) {
 
 $env:OMNISVERA_VAULT_PATH = $VaultPath
 $env:OLLAMA_BASE_URL = "http://localhost:11434"
+$env:OLLAMA_MODEL = $GenerationModel
+$env:OLLAMA_FALLBACK_MODEL = $FastModel
+$env:OLLAMA_REQUEST_TIMEOUT = [string]$OllamaRequestTimeout
 $env:OMNISVERA_FAST_MODEL = $FastModel
 $env:OMNISVERA_QUALITY_MODEL = $QualityModel
 $env:OMNISVERA_CANDIDATE_MODEL = $CandidateModel
@@ -152,6 +157,8 @@ Write-Host ""
 Write-Host "Omnisvera Companion" -ForegroundColor Yellow
 Write-Host "Vault: $VaultPath"
 Write-Host "Modo de resposta: $ResponseMode"
+Write-Host "Modelo de geração: $GenerationModel"
+Write-Host "Fallback local: $FastModel"
 Write-Host "Modelo rápido: $FastModel"
 Write-Host "Modelo fundamentado: $QualityModel"
 Write-Host "Modelo de embeddings: $EmbedModel"
