@@ -28,7 +28,8 @@ class CloudConfigurationTests(unittest.TestCase):
     def test_cloud_model_and_local_gateway_are_defaults(self):
         with patch.dict(os.environ, {}, clear=True):
             settings = get_settings()
-        self.assertEqual("qwen3.5:397b-cloud", settings.ollama_model)
+        self.assertEqual("gpt-oss:120b-cloud", settings.ollama_model)
+        self.assertNotEqual("qwen3.5:397b-cloud", settings.ollama_model)
         self.assertEqual("qwen2:1.5b", settings.ollama_fallback_model)
         self.assertEqual("http://localhost:11434", settings.ollama_base_url)
         self.assertEqual(180, settings.ollama_request_timeout)
@@ -37,13 +38,13 @@ class CloudConfigurationTests(unittest.TestCase):
 
     def test_environment_overrides_generation_and_fallback_models(self):
         env = {
-            "OLLAMA_MODEL": "qwen3.5:397b-cloud",
+            "OLLAMA_MODEL": "gpt-oss:120b-cloud",
             "OLLAMA_FALLBACK_MODEL": "local:test",
             "OLLAMA_REQUEST_TIMEOUT": "75",
         }
         with patch.dict(os.environ, env, clear=True):
             settings = get_settings()
-        self.assertEqual("qwen3.5:397b-cloud", settings.ollama_model)
+        self.assertEqual("gpt-oss:120b-cloud", settings.ollama_model)
         self.assertEqual("local:test", settings.ollama_fallback_model)
         self.assertEqual(75, settings.ollama_request_timeout)
 
@@ -56,10 +57,10 @@ class CloudResolutionTests(unittest.IsolatedAsyncioTestCase):
         ):
             model = await resolve_ollama_model(
                 "http://localhost:11434",
-                "qwen3.5:397b-cloud",
+                "gpt-oss:120b-cloud",
                 "qwen2:1.5b",
             )
-        self.assertEqual("qwen3.5:397b-cloud", model)
+        self.assertEqual("gpt-oss:120b-cloud", model)
 
     async def test_health_check_only_reads_tags(self):
         calls: list[tuple[str, str]] = []
@@ -90,14 +91,14 @@ class SelectiveFallbackTests(unittest.IsolatedAsyncioTestCase):
     async def _run_transient(self, error: OllamaRequestError):
         with patch(
             "app.ollama_client.resolve_ollama_model",
-            new=AsyncMock(return_value="qwen3.5:397b-cloud"),
+            new=AsyncMock(return_value="gpt-oss:120b-cloud"),
         ), patch(
             "app.ollama_client.chat_with_ollama",
             new=AsyncMock(side_effect=[error, "resposta local"]),
         ) as chat:
             result = await chat_with_fallback(
                 "http://localhost:11434",
-                "qwen3.5:397b-cloud",
+                "gpt-oss:120b-cloud",
                 "qwen2:1.5b",
                 MESSAGES,
             )
@@ -122,7 +123,7 @@ class SelectiveFallbackTests(unittest.IsolatedAsyncioTestCase):
         for status in (400, 401, 403):
             with self.subTest(status=status), patch(
                 "app.ollama_client.resolve_ollama_model",
-                new=AsyncMock(return_value="qwen3.5:397b-cloud"),
+                new=AsyncMock(return_value="gpt-oss:120b-cloud"),
             ), patch(
                 "app.ollama_client.chat_with_ollama",
                 new=AsyncMock(
@@ -135,14 +136,14 @@ class SelectiveFallbackTests(unittest.IsolatedAsyncioTestCase):
             ) as chat:
                 result = await chat_with_fallback(
                     "http://localhost:11434",
-                    "qwen3.5:397b-cloud",
+                    "gpt-oss:120b-cloud",
                     "qwen2:1.5b",
                     MESSAGES,
                 )
-            self.assertEqual(("", "qwen3.5:397b-cloud", False), result)
+            self.assertEqual(("", "gpt-oss:120b-cloud", False), result)
             self.assertEqual(1, chat.await_count)
 
-    async def test_chat_payload_requires_no_api_key_and_keeps_response_shape(self):
+    async def test_gpt_oss_reasoning_is_not_exposed_and_response_shape_is_preserved(self):
         captured: dict = {}
 
         class Response:
@@ -150,7 +151,13 @@ class SelectiveFallbackTests(unittest.IsolatedAsyncioTestCase):
                 return None
 
             def json(self):
-                return {"message": {"content": "resposta"}}
+                return {
+                    "message": {
+                        "content": "resposta",
+                        "thinking": "raciocinio interno",
+                        "reasoning": "raciocinio alternativo",
+                    }
+                }
 
         class Client:
             async def __aenter__(self):
@@ -171,14 +178,15 @@ class SelectiveFallbackTests(unittest.IsolatedAsyncioTestCase):
         with patch("app.ollama_client.httpx.AsyncClient", side_effect=client_factory):
             answer = await chat_with_ollama(
                 "http://localhost:11434",
-                "qwen3.5:397b-cloud",
+                "gpt-oss:120b-cloud",
                 MESSAGES,
             )
         self.assertEqual("resposta", answer)
         self.assertEqual("http://localhost:11434/api/chat", captured["url"])
         self.assertEqual(180.0, captured["timeout"])
         self.assertNotIn("headers", captured)
-        self.assertEqual("qwen3.5:397b-cloud", captured["json"]["model"])
+        self.assertEqual("gpt-oss:120b-cloud", captured["json"]["model"])
+        self.assertEqual("low", captured["json"]["think"])
 
     async def test_embeddings_keep_their_own_local_model(self):
         captured: dict = {}

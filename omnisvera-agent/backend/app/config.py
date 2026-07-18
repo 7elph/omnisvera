@@ -124,7 +124,7 @@ def get_settings() -> Settings:
     production_approved = _production_is_approved(vault_path, production_model)
     response_mode = _response_mode(os.getenv("OMNISVERA_RESPONSE_MODE", "grounded"))
     selected_model = os.getenv("OLLAMA_MODEL") or {
-        "baseline": "qwen3.5:397b-cloud",
+        "baseline": "gpt-oss:120b-cloud",
         "candidate": candidate_model,
         "production": production_model if production_approved else fast_model,
     }[model_mode]

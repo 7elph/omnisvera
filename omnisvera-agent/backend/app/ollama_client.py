@@ -78,6 +78,7 @@ async def chat_with_ollama(
     request_timeout = _configured_request_timeout(request_timeout)
     is_qwen3 = model.strip().lower().startswith("qwen3")
     normalized_model = model.strip().lower()
+    is_gpt_oss = normalized_model.startswith("gpt-oss")
     is_compact_local = (
         is_qwen3
         or normalized_model.startswith("qwen2:")
@@ -112,6 +113,8 @@ async def chat_with_ollama(
     # Companion needs the concise final answer, not a visible reasoning trace.
     if is_qwen3:
         payload["think"] = False
+    elif is_gpt_oss:
+        payload["think"] = "low"
     if response_format is not None:
         payload["format"] = response_format
     try:

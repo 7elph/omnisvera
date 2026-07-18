@@ -1,6 +1,6 @@
 param(
   [string]$VaultPath = (Resolve-Path "$PSScriptRoot\..").Path,
-  [string]$GenerationModel = "qwen3.5:397b-cloud",
+  [string]$GenerationModel = "gpt-oss:120b-cloud",
   [string]$FastModel = "qwen2:1.5b",
   [string]$QualityModel = "llama-3.2-omnisvera-3b",
   [string]$CandidateModel = "llama-3.2-omnisvera-3b",

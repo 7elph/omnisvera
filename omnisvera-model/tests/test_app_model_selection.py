@@ -19,7 +19,7 @@ class ModelSelectionTests(unittest.TestCase):
              "OMNISVERA_QUALITY_MODEL":"llama-3.2-omnisvera-3b"}
         with patch.dict(os.environ,env,clear=True):
             settings=get_settings()
-        self.assertEqual("baseline",settings.model_mode); self.assertEqual("qwen3.5:397b-cloud",settings.ollama_model)
+        self.assertEqual("baseline",settings.model_mode); self.assertEqual("gpt-oss:120b-cloud",settings.ollama_model)
 
     def test_candidate_is_explicit(self):
         env={"OMNISVERA_MODEL_MODE":"candidate","OMNISVERA_CANDIDATE_MODEL":"candidate:test",
