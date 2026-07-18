@@ -23,12 +23,12 @@ _STOPWORDS = {
 _GENERIC_CAPITALIZED = {
     "Acredita-se", "Ainda", "Além", "Apesar", "Assim", "Atualmente", "Com", "Como", "Contudo", "Durante", "Ele", "Ela",
     "Embora", "Em", "Entre", "Essa", "Esse", "Esta", "Este", "Isso", "Mas", "Nascido", "No", "O", "Os",
-    "Hoje", "Não", "Para", "Por", "Porém", "Quando", "São", "Se", "Seu", "Sua", "Também", "Uma",
+    "Graças", "Hoje", "Não", "Para", "Por", "Porém", "Quando", "São", "Se", "Seu", "Sua", "Também", "Uma",
 }
 
 _UNCERTAINTY_PATTERNS = (
     "ainda não foi revelado", "ainda não sabemos", "não está claro", "não foi confirmado",
-    "não há informação", "não há detalhes", "permanece desconhecido", "continua em aberto",
+    "não há informação", "não há informações", "não há detalhes", "permanece desconhecido", "continua em aberto",
 )
 
 _RISK_GROUPS = {
@@ -339,6 +339,8 @@ def _claim_support(claim: str, records: list[dict[str, str]]) -> tuple[bool, str
     if risk and not _contains_risk(best_support, risk):
         return False, f"{risk} sem evidência correspondente"
     unsupported = claim_tokens - _tokens(best_support)
+    if best_overlap >= 5 and best_ratio >= 0.35 and len(unsupported) <= 8:
+        return True, f"paráfrase fortemente apoiada {best_ratio:.2f}"
     allowed_unsupported = 3 if risk == "description" else max(2, int(len(claim_tokens) * 0.35))
     if len(unsupported) > allowed_unsupported:
         return False, f"detalhes novos demais: {len(unsupported)}"

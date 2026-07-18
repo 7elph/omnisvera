@@ -20,7 +20,7 @@ from app.ollama_client import (
     embed_with_ollama,
     resolve_ollama_model,
 )
-from app.narrative_composer import compose_narrative
+from app.narrative_composer import compose_narrative, validate_narrative
 from app.rag import _clean_answer, _first_section_paragraph
 
 
@@ -227,6 +227,30 @@ class SelectiveFallbackTests(unittest.IsolatedAsyncioTestCase):
 
 
 class CloudNarrativeTests(unittest.IsolatedAsyncioTestCase):
+    def test_supported_relation_paraphrase_is_not_discarded(self):
+        card = {
+            "entidade": "Mira Valen",
+            "fatos_confirmados": [
+                {
+                    "texto": "Durante o combate, Mira sacrificou a própria vida para salvar Vezemir de um golpe mortal.",
+                    "fonte": "Characters/Individual/Mira Valen.md",
+                    "evidencia": "Durante o combate, Mira sacrificou a própria vida para salvar Vezemir de um golpe mortal.",
+                }
+            ],
+            "relacoes_confirmadas": [],
+            "locais_confirmados": [],
+            "eventos_confirmados": [],
+            "rumores_publicos": [],
+        }
+        raw = (
+            "A morte de Mira ocorreu quando ela se sacrificou durante o combate para impedir "
+            "que Vezemir fosse atingido por um golpe mortal."
+        )
+        validated, accepted, rejected = validate_narrative(raw, card)
+        self.assertIn("Mira", validated)
+        self.assertTrue(accepted)
+        self.assertFalse(rejected)
+
     async def test_short_fact_card_still_calls_cloud_composer(self):
         card = {
             "entidade": "Ruínas de Valthor",

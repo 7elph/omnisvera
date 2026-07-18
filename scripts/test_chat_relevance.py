@@ -63,6 +63,7 @@ def main() -> None:
 
     for question in (
         "Como a morte de Mira Valen afetou Vezemir?",
+        "Como a morte de Mira influenciou Vezemir?",
         "Por que Vezemir e Theron Elensar entram em conflito?",
         "Compare Vezemir e Varkh Nimalis sem inventar semelhanças.",
         "Quais motivações confirmadas conduzem Vezemir atualmente?",
@@ -77,6 +78,14 @@ def main() -> None:
     assert elarion is not None
     assert "Associados Conhecidos:**" not in elarion["answer"]
     assert any(term in elarion["answer"].casefold() for term in ("adot", "ensin", "trein", "criou"))
+
+    mira = _answer_explicit_relation(
+        database_path,
+        "Como a morte de Mira influenciou Vezemir?",
+        "player",
+    )
+    assert mira is not None and not mira["insufficient_context"]
+    assert "vingan" in mira["answer"].casefold()
 
     theron = _answer_explicit_relation(
         database_path,

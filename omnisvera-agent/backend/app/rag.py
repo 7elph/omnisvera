@@ -2140,7 +2140,7 @@ def _asks_relation_or_theory(question: str) -> bool:
         term in normalized
         for term in (
             "ligacao", "relacao", "relacion", "entre", "suspeit", "teoria", "conexao",
-            "afetou", "conflito", "compare", "motivac", "papel", "importante para",
+            "afetou", "influenciou", "impactou", "conflito", "compare", "motivac", "papel", "importante para",
             "em qual parte da historia", "acontecimentos historicos", "cronologia",
         )
     )
@@ -2153,7 +2153,7 @@ def _explicit_relation_targets(question: str) -> tuple[str, str] | None:
         r"^\s*qual(?:\s+é|\s+e)?\s+a\s+rela(?:ção|cao)(?:\s+conhecida)?\s+entre\s+(.+?)\s+e\s+(.+?)[?.!]*\s*$",
         r"^\s*qual(?:\s+é|\s+e)?\s+a\s+liga(?:ção|cao)\s+(?:de|entre)\s+(.+?)\s+(?:com|e)\s+(.+?)[?.!]*\s*$",
         r"^\s*que\s+liga(?:ção|cao)\s+existe\s+entre\s+(.+?)\s+e\s+(.+?)[?.!]*\s*$",
-        r"^\s*como\s+a\s+morte\s+de\s+(.+?)\s+afetou\s+(.+?)[?.!]*\s*$",
+        r"^\s*como\s+a\s+morte\s+de\s+(.+?)\s+(?:afetou|influenciou|impactou)\s+(.+?)[?.!]*\s*$",
         r"^\s*por\s+que\s+(.+?)\s+e\s+(.+?)\s+entram\s+em\s+conflito[?.!]*\s*$",
         r"^\s*quem\s+(?:é|e|foi)\s+(.+?)\s+e\s+por\s+que\s+.+?\s+importante\s+para\s+(.+?)[?.!]*\s*$",
         r"^\s*quem\s+(?:é|e|foi)\s+(.+?)\s+e\s+qual\s+(?:é|e)?\s*(?:a\s+)?sua\s+liga(?:ção|cao)\s+com\s+(.+?)[?.!]*\s*$",
@@ -2187,11 +2187,27 @@ def _answer_explicit_relation(database_path: Path, question: str, access_mode: A
         note = get_note(database_path, int(summary["id"]), access_mode=access_mode)
         if not note:
             continue
+        other_summary = resolve_note(database_path, other, access_mode=access_mode)
+        other_names = {normalize_text(other)}
+        if other_summary is not None:
+            other_title = str(other_summary.get("title") or "")
+            other_names.add(normalize_text(other_title))
+            other_names.update(
+                normalize_text(part)
+                for part in re.split(r"\s+[—–-]\s+", other_title)
+                if len(normalize_text(part)) >= 4
+            )
+            other_names.update(
+                normalize_text(str(alias))
+                for alias in other_summary.get("aliases") or []
+                if str(alias).strip()
+            )
+        other_names.discard("")
         content = sanitize_player_text(note["content"]) if access_mode == "player" else note["content"]
         for sentence in re.split(r"(?<=[.!?])\s+|\n+", _compact_markdown(content, max_chars=12000)):
             sentence = _plain_wikilinks(re.sub(r"\s+", " ", sentence)).strip(" -*")
             normalized_sentence = normalize_text(sentence)
-            if normalize_text(other) not in normalized_sentence or not 20 <= len(sentence) <= 420:
+            if not any(name in normalized_sentence for name in other_names) or not 20 <= len(sentence) <= 420:
                 continue
             score = sum(25 for term in relation_terms if term in normalized_sentence)
             if "associados conhecidos" in normalized_sentence or sentence.startswith("**"):
