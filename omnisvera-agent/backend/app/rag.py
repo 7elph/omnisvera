@@ -235,6 +235,61 @@ def _looks_like_current_date(question: str) -> bool:
     return "data" in lowered and any(term in lowered for term in ("atual", "agora", "campanha", "hoje"))
 
 
+def _looks_like_intimate_personal_question(question: str) -> bool:
+    lowered = normalize_text(question)
+    return any(
+        term in lowered
+        for term in (
+            "se deita com", "dorme com", "divide a cama", "mesmo sexo", "sexo oposto",
+            "orientacao sexual", "sexualidade", "homossexual", "heterossexual", "bissexual",
+            "e gay", "e lesbica", "quem ele pega", "quem ela pega",
+        )
+    )
+
+
+def _answer_intimate_personal_question(
+    database_path: Path,
+    question: str,
+    access_mode: AccessMode,
+) -> dict | None:
+    note = _find_mentioned_entity_note(database_path, question, access_mode)
+    if note is None or normalize_text(note.get("type")) != "character":
+        return None
+    content = sanitize_player_text(note["content"]) if access_mode == "player" else note["content"]
+    fields = _labeled_fields(content)
+    frontmatter = note.get("frontmatter") or {}
+    disclosed = (
+        fields.get("orientacao sexual")
+        or fields.get("sexualidade")
+        or fields.get("relacionamento")
+        or (frontmatter.get("sexual_orientation") if access_mode != "player" else None)
+    )
+    title = _short_note_title(frontmatter.get("name") or note.get("title") or "Essa pessoa")
+    if disclosed:
+        answer = f"Sobre {title}, o que foi revelado é: {_clean_value(disclosed)}."
+        insufficient = False
+        missing: list[str] = []
+    else:
+        answer = (
+            f"Não foi revelado com quem {title} divide a cama. Nesse assunto, qualquer resposta "
+            "seria apenas fofoca inventada."
+        )
+        insufficient = True
+        missing = [f"A vida íntima de {title} não foi revelada."]
+    return {
+        "answer": answer,
+        "notes_used": [note],
+        "note_paths": [note["path"]],
+        "insufficient_context": insufficient,
+        "warning": None,
+        "suggested_questions": _suggested_questions_for_notes(question, [note], access_mode),
+        "fatos_confirmados": [],
+        "teorias": [],
+        "informacoes_insuficientes": missing,
+        "fontes_usadas": [note["path"]],
+    }
+
+
 def _answer_public_reference(database_path: Path, access_mode: AccessMode, target: str, answer: str, mode: str) -> dict | None:
     note = resolve_note(database_path, target, access_mode=access_mode)
     if not note:
@@ -3332,6 +3387,14 @@ async def answer_question(
             return await _polish_response_with_ollama(
                 database_path, ollama_base_url, ollama_model, question, mission_access,
                 access_mode, "structured:mission_access", fallback_model,
+            )
+
+    if not action_kind and _looks_like_intimate_personal_question(question):
+        intimate_answer = _answer_intimate_personal_question(database_path, question, access_mode)
+        if intimate_answer:
+            return await _polish_response_with_ollama(
+                database_path, ollama_base_url, ollama_model, question, intimate_answer,
+                access_mode, "structured:intimate_personal", fallback_model,
             )
 
     if not action_kind and _looks_like_conversation_followup(question):

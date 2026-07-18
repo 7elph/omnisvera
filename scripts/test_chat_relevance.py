@@ -22,6 +22,7 @@ from app.rag import (  # noqa: E402
     _answer_faction_conflicts,
     _answer_known_chronology,
     _answer_incomplete_chronology,
+    _answer_intimate_personal_question,
     _answer_targeted_rumor,
     _asks_relation_or_theory,
     _direct_entity_target,
@@ -29,6 +30,7 @@ from app.rag import (  # noqa: E402
     _filter_results_by_query_entities,
     _fact_theory_subject,
     _looks_like_campaign_recap,
+    _looks_like_intimate_personal_question,
 )
 
 
@@ -60,6 +62,17 @@ def main() -> None:
     ) == ("santuario de elaris", "about")
     assert not _looks_like_campaign_recap("Quem é Raziel e em qual parte da história ele aparece?")
     assert _looks_like_campaign_recap("O que aconteceu até agora na campanha?")
+    assert _looks_like_intimate_personal_question("Raziel se deita com aqueles do mesmo sexo?")
+
+    intimate = _answer_intimate_personal_question(
+        database_path,
+        "Raziel se deita com aqueles do mesmo sexo?",
+        "player",
+    )
+    assert intimate is not None and intimate["insufficient_context"]
+    assert "não foi revelado" in intimate["answer"].casefold()
+    assert "adagas" not in intimate["answer"].casefold()
+    assert "sanguinallis" not in intimate["answer"].casefold()
 
     for question in (
         "Como a morte de Mira Valen afetou Vezemir?",
