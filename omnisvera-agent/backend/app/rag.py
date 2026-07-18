@@ -809,10 +809,12 @@ def _first_section_paragraph(content: str, headings: tuple[str, ...], max_chars:
 
     for line in lines:
         heading = re.match(r"^\s*#{2,4}\s+(.+?)\s*$", line)
-        if heading:
+        callout = re.match(r"^\s*>\s*\[![^\]]+\][+-]?\s*(.+?)\s*$", line)
+        section_label = heading.group(1) if heading else (callout.group(1) if callout else "")
+        if section_label:
             if inside:
                 break
-            inside = normalize_text(heading.group(1)) in wanted
+            inside = normalize_text(section_label) in wanted
             continue
         if inside:
             stripped = line.strip()
@@ -996,19 +998,12 @@ def _rich_direct_entity_answer(note: dict, question: str, access_mode: AccessMod
     public_info = _first_section_paragraph(
         content,
         (
+            "Sinopse Pública",
             "Conhecimento Público",
             "O que os jogadores sabem",
+            "Visão Geral",
             "Resumo",
             "Descrição",
-        ),
-    )
-    table_use = _first_section_paragraph(
-        content,
-        (
-            "Uso em Mesa",
-            "Função em jogo",
-            "Entrada no Capítulo 01",
-            "Como usar em mesa",
         ),
     )
     rumors = _first_section_paragraph(content, ("Rumores", "Rumores Públicos", "Boatos"), max_chars=260)
@@ -1173,17 +1168,12 @@ def _rich_direct_entity_answer(note: dict, question: str, access_mode: AccessMod
             ),
             f"Entre os nomes ligados à sua história estão {_clean_value(associates)}." if _clean_value(associates) else "",
         ]
-        story_lines = [line for line in (_compact_sentence(table_use),) if line] if access_mode != "player" else []
-
         answer_parts = [
             " ".join(line for line in identity_lines if line),
             " ".join(line for line in relation_lines if line),
         ]
         if access_mode != "player":
-            campaign_lines = [line for line in story_lines if line]
             clue_lines = [_compact_sentence(item) for item in (rumors, hooks) if item]
-            if campaign_lines:
-                answer_parts.append("**Presença na campanha**\n\n" + " ".join(campaign_lines))
             if clue_lines:
                 answer_parts.append("**Pistas abertas**\n\n" + " ".join(clue_lines))
         answer = "\n\n".join(part for part in answer_parts if part.strip())
@@ -1237,16 +1227,11 @@ def _rich_direct_entity_answer(note: dict, question: str, access_mode: AccessMod
                 ]
             )
 
-        story_lines = [_compact_sentence(table_use)] if table_use and access_mode != "player" else []
-
-        answer = _answer_as_guide(
-            title,
-            [
-                ("O que se sabe", short_lines),
-                ("Como entra na história", story_lines),
-                ("Pistas abertas", [_compact_sentence(item) for item in (rumors, hooks) if item]),
-            ],
-        )
+        answer_parts = [" ".join(line for line in short_lines if line)]
+        clue_lines = [_compact_sentence(item) for item in (rumors, hooks) if item]
+        if clue_lines:
+            answer_parts.append(" ".join(clue_lines))
+        answer = "\n\n".join(part for part in answer_parts if part.strip())
 
     return {
         "answer": answer,
@@ -1871,8 +1856,26 @@ def _answer_index_overview(
 
 
 def _clean_answer(answer: str) -> str:
+    answer = re.sub(
+        r"(?im)^\s*#{0,6}\s*(?:o que se sabe|como entra na hist[oó]ria)\s*:?[ \t]*$",
+        "",
+        answer,
+    )
+    answer = re.sub(r"(?i)\bo que se sabe (?:é|e) que\s+", "", answer)
+    answer = re.sub(r"(?i)\bcomo apresentar:\s*", "", answer)
+    answer = re.sub(r"(?i)\bo que os jogadores sabem:\s*", "", answer)
+    answer = re.sub(
+        r"(?i)\s*o que manter em aberto(?: no estado_da_campanha)?:?[^.!?]*(?:[.!?]|$)",
+        "",
+        answer,
+    )
     answer = re.sub(r"\bà\s+(um|uma)\b", r"a \1", answer, flags=re.IGNORECASE)
     answer = _dedupe_paragraphs(answer)
+    answer = re.sub(
+        r"(^|\n\n)([a-záéíóúâêôãõç])",
+        lambda match: match.group(1) + match.group(2).upper(),
+        answer,
+    )
     if len(answer) <= 1800:
         return answer
     clipped = answer[:1800].rsplit(".", 1)[0].strip()
@@ -2073,18 +2076,6 @@ async def _polish_response_with_ollama(
         return _with_chat_meta(result, ollama_used=False, model=ollama_model, retrieval_mode=retrieval_mode)
     if result.get("insufficient_context") and not result.get("notes_used"):
         return _with_chat_meta(result, ollama_used=False, model=ollama_model, retrieval_mode=retrieval_mode)
-
-    # Structured lists are already concise and factual. Entity answers may use
-    # the local voice, but are grounded sentence by sentence below.
-    if retrieval_mode.startswith("structured:") or (
-        retrieval_mode == "direct_entity" and not _requests_narrative_voice(question)
-    ):
-        return _with_chat_meta(
-            result,
-            ollama_used=False,
-            model=ollama_model,
-            retrieval_mode=f"{retrieval_mode}:verified_fast_path",
-        )
 
     try:
         card = build_factual_card(question, result)
@@ -3302,7 +3293,10 @@ async def answer_question(
             "structured:economy",
         )
         if economy:
-            return _with_chat_meta(economy, ollama_used=False, model=ollama_model, retrieval_mode="structured:economy")
+            return await _polish_response_with_ollama(
+                database_path, ollama_base_url, ollama_model, question, economy,
+                access_mode, "structured:economy", fallback_model,
+            )
 
     if not action_kind and _looks_like_current_date(question):
         current_date = _answer_public_reference(
@@ -3311,12 +3305,18 @@ async def answer_question(
             "structured:current_date",
         )
         if current_date:
-            return _with_chat_meta(current_date, ollama_used=False, model=ollama_model, retrieval_mode="structured:current_date")
+            return await _polish_response_with_ollama(
+                database_path, ollama_base_url, ollama_model, question, current_date,
+                access_mode, "structured:current_date", fallback_model,
+            )
 
     if not action_kind and _looks_like_mission_access(question):
         mission_access = _answer_mission_access(database_path, access_mode)
         if mission_access:
-            return _with_chat_meta(mission_access, ollama_used=False, model=ollama_model, retrieval_mode="structured:mission_access")
+            return await _polish_response_with_ollama(
+                database_path, ollama_base_url, ollama_model, question, mission_access,
+                access_mode, "structured:mission_access", fallback_model,
+            )
 
     if not action_kind and _looks_like_conversation_followup(question):
         previous_note = _conversation_note(database_path, conversation_paths or [], access_mode)
@@ -3348,11 +3348,9 @@ async def answer_question(
                 )
             contextual_question = _contextual_question(question, str(previous_note.get("title") or ""))
             followup_answer = _direct_entity_answer(previous_note, contextual_question, access_mode)
-            return _with_chat_meta(
-                followup_answer,
-                ollama_used=False,
-                model=ollama_model,
-                retrieval_mode="conversation_followup",
+            return await _polish_response_with_ollama(
+                database_path, ollama_base_url, ollama_model, question, followup_answer,
+                access_mode, "conversation_followup", fallback_model,
             )
         return _with_chat_meta(
             {
@@ -3375,65 +3373,54 @@ async def answer_question(
     if not action_kind and _looks_like_nimalia_borders(question):
         border_answer = _answer_nimalia_borders(database_path, access_mode)
         if border_answer:
-            return _with_chat_meta(
-                border_answer,
-                ollama_used=False,
-                model=ollama_model,
-                retrieval_mode="structured:nimalia_borders",
+            return await _polish_response_with_ollama(
+                database_path, ollama_base_url, ollama_model, question, border_answer,
+                access_mode, "structured:nimalia_borders", fallback_model,
             )
 
     if not action_kind:
         route_answer = _answer_known_route(database_path, question, access_mode)
         if route_answer:
-            return _with_chat_meta(
-                route_answer,
-                ollama_used=False,
-                model=ollama_model,
-                retrieval_mode="structured:known_route",
+            return await _polish_response_with_ollama(
+                database_path, ollama_base_url, ollama_model, question, route_answer,
+                access_mode, "structured:known_route", fallback_model,
             )
 
     if not action_kind and _looks_like_campaign_territories(question):
         territory_answer = _answer_campaign_territories(database_path, access_mode)
         if territory_answer:
-            return _with_chat_meta(
-                territory_answer,
-                ollama_used=False,
-                model=ollama_model,
-                retrieval_mode="structured:campaign_territories",
+            return await _polish_response_with_ollama(
+                database_path, ollama_base_url, ollama_model, question, territory_answer,
+                access_mode, "structured:campaign_territories", fallback_model,
             )
 
     if not action_kind and _looks_like_faction_conflicts(question):
-        return _with_chat_meta(
-            _answer_faction_conflicts(database_path, access_mode),
-            ollama_used=False,
-            model=ollama_model,
-            retrieval_mode="structured:faction_conflicts",
+        return await _polish_response_with_ollama(
+            database_path, ollama_base_url, ollama_model, question,
+            _answer_faction_conflicts(database_path, access_mode), access_mode,
+            "structured:faction_conflicts", fallback_model,
         )
 
     if not action_kind and _looks_like_known_chronology(question):
-        return _with_chat_meta(
-            _answer_known_chronology(database_path, access_mode),
-            ollama_used=False,
-            model=ollama_model,
-            retrieval_mode="structured:known_chronology",
+        return await _polish_response_with_ollama(
+            database_path, ollama_base_url, ollama_model, question,
+            _answer_known_chronology(database_path, access_mode), access_mode,
+            "structured:known_chronology", fallback_model,
         )
 
     if not action_kind and _looks_like_incomplete_chronology(question):
-        return _with_chat_meta(
-            _answer_incomplete_chronology(database_path, access_mode),
-            ollama_used=False,
-            model=ollama_model,
-            retrieval_mode="structured:incomplete_chronology",
+        return await _polish_response_with_ollama(
+            database_path, ollama_base_url, ollama_model, question,
+            _answer_incomplete_chronology(database_path, access_mode), access_mode,
+            "structured:incomplete_chronology", fallback_model,
         )
 
     if not action_kind:
         targeted_rumor = _answer_targeted_rumor(database_path, question, access_mode)
         if targeted_rumor:
-            return _with_chat_meta(
-                targeted_rumor,
-                ollama_used=False,
-                model=ollama_model,
-                retrieval_mode="structured:targeted_rumor",
+            return await _polish_response_with_ollama(
+                database_path, ollama_base_url, ollama_model, question, targeted_rumor,
+                access_mode, "structured:targeted_rumor", fallback_model,
             )
 
     if not action_kind and _looks_like_rumor_overview(question):
@@ -3479,11 +3466,9 @@ async def answer_question(
     if not action_kind and _looks_like_player_current_activity(question):
         current_answer = _answer_campaign_recap(database_path, access_mode)
         if current_answer:
-            return _with_chat_meta(
-                current_answer,
-                ollama_used=False,
-                model=ollama_model,
-                retrieval_mode="structured:player_current_activity",
+            return await _polish_response_with_ollama(
+                database_path, ollama_base_url, ollama_model, question, current_answer,
+                access_mode, "structured:player_current_activity", fallback_model,
             )
 
     if not action_kind and _looks_like_player_character_overview(question):
@@ -3517,11 +3502,9 @@ async def answer_question(
     if not action_kind and _looks_like_public_nimalia_king(question):
         king_answer = _answer_public_nimalia_king(database_path, access_mode)
         if king_answer:
-            return _with_chat_meta(
-                king_answer,
-                ollama_used=False,
-                model=ollama_model,
-                retrieval_mode="structured:public_nimalia_king",
+            return await _polish_response_with_ollama(
+                database_path, ollama_base_url, ollama_model, question, king_answer,
+                access_mode, "structured:public_nimalia_king", fallback_model,
             )
 
     extracted = _direct_entity_target(question)
@@ -3579,20 +3562,16 @@ async def answer_question(
 
     comparison_answer = _answer_comparison(database_path, question, access_mode)
     if comparison_answer is not None:
-        return _with_chat_meta(
-            comparison_answer,
-            ollama_used=False,
-            model=ollama_model,
-            retrieval_mode="structured:comparison",
+        return await _polish_response_with_ollama(
+            database_path, ollama_base_url, ollama_model, question, comparison_answer,
+            access_mode, "structured:comparison", fallback_model,
         )
 
     relation_answer = _answer_explicit_relation(database_path, question, access_mode)
     if relation_answer is not None:
-        return _with_chat_meta(
-            relation_answer,
-            ollama_used=False,
-            model=ollama_model,
-            retrieval_mode="structured:explicit_relation",
+        return await _polish_response_with_ollama(
+            database_path, ollama_base_url, ollama_model, question, relation_answer,
+            access_mode, "structured:explicit_relation", fallback_model,
         )
 
     normalized_question = normalize_text(question)
@@ -3603,11 +3582,9 @@ async def answer_question(
     if personal_memory_query:
         memory_answer = _answer_priority_memory(database_path, question, priority_paths, access_mode)
         if memory_answer is not None:
-            return _with_chat_meta(
-                memory_answer,
-                ollama_used=False,
-                model=ollama_model,
-                retrieval_mode="structured:personal_memory",
+            return await _polish_response_with_ollama(
+                database_path, ollama_base_url, ollama_model, question, memory_answer,
+                access_mode, "structured:personal_memory", fallback_model,
             )
     direct_note = None if personal_memory_query else _find_direct_entity_note(database_path, question, access_mode)
     if (

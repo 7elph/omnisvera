@@ -4,6 +4,7 @@ import os
 import sys
 import unittest
 from pathlib import Path
+from types import SimpleNamespace
 from unittest.mock import AsyncMock, patch
 
 
@@ -19,6 +20,8 @@ from app.ollama_client import (
     embed_with_ollama,
     resolve_ollama_model,
 )
+from app.narrative_composer import compose_narrative
+from app.rag import _clean_answer, _first_section_paragraph
 
 
 MESSAGES = [{"role": "user", "content": "teste"}]
@@ -180,6 +183,7 @@ class SelectiveFallbackTests(unittest.IsolatedAsyncioTestCase):
                 "http://localhost:11434",
                 "gpt-oss:120b-cloud",
                 MESSAGES,
+                options={"num_predict": 24},
             )
         self.assertEqual("resposta", answer)
         self.assertEqual("http://localhost:11434/api/chat", captured["url"])
@@ -187,6 +191,7 @@ class SelectiveFallbackTests(unittest.IsolatedAsyncioTestCase):
         self.assertNotIn("headers", captured)
         self.assertEqual("gpt-oss:120b-cloud", captured["json"]["model"])
         self.assertEqual("low", captured["json"]["think"])
+        self.assertEqual(320, captured["json"]["options"]["num_predict"])
 
     async def test_embeddings_keep_their_own_local_model(self):
         captured: dict = {}
@@ -219,6 +224,132 @@ class SelectiveFallbackTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual([[0.1, 0.2]], vectors)
         self.assertEqual("http://localhost:11434/api/embed", captured["url"])
         self.assertEqual("nomic-embed-text", captured["json"]["model"])
+
+
+class CloudNarrativeTests(unittest.IsolatedAsyncioTestCase):
+    async def test_short_fact_card_still_calls_cloud_composer(self):
+        card = {
+            "entidade": "Ruínas de Valthor",
+            "tipo": "location",
+            "fatos_confirmados": [
+                {
+                    "texto": "Hoje restam ruínas ao sudeste de Nimalia, associadas a histórias esquecidas.",
+                    "fonte": "Locations/Ruínas de Valthor.md",
+                    "evidencia": "Hoje restam ruínas ao sudeste de Nimalia, associadas a histórias esquecidas.",
+                }
+            ],
+            "relacoes_confirmadas": [],
+            "locais_confirmados": [],
+            "eventos_confirmados": [],
+            "rumores_publicos": [],
+            "teorias": [],
+            "informacoes_nao_disponiveis": [],
+            "fontes": ["Locations/Ruínas de Valthor.md"],
+        }
+        memory = SimpleNamespace(
+            retrieve=lambda *_args, **_kwargs: SimpleNamespace(
+                examples=[], mode="sanitized", retrieval_time_ms=0.0
+            )
+        )
+        with patch("app.narrative_composer.get_behavioral_memory", return_value=memory), patch(
+            "app.narrative_composer.chat_with_fallback",
+            new=AsyncMock(
+                return_value=(
+                    "As ruínas de Valthor encontram-se hoje ao sudeste de Nimalia.",
+                    "gpt-oss:120b-cloud",
+                    False,
+                )
+            ),
+        ) as cloud:
+            result = await compose_narrative(
+                question="Quem é Valthor?",
+                card=card,
+                ollama_base_url="http://localhost:11434",
+                model="gpt-oss:120b-cloud",
+                fallback_model="qwen2:1.5b",
+                access_mode="player",
+                intent="direct_entity",
+            )
+        self.assertTrue(result["attempted"])
+        self.assertTrue(result["used"])
+        self.assertEqual("gpt-oss:120b-cloud", result["model"])
+        self.assertEqual(1, cloud.await_count)
+
+    async def test_cloud_answer_keeps_source_backed_fact_omitted_by_model(self):
+        card = {
+            "entidade": "Ruínas de Valthor",
+            "tipo": "location",
+            "fatos_confirmados": [
+                {
+                    "texto": "Valthor foi um reino antigo e próspero.",
+                    "fonte": "Locations/Ruínas de Valthor.md",
+                    "evidencia": "Valthor foi um reino antigo e próspero.",
+                },
+                {
+                    "texto": "Hoje restam ruínas ao sudeste de Nimalia, associadas a cavernas profundas.",
+                    "fonte": "Locations/Ruínas de Valthor.md",
+                    "evidencia": "Hoje restam ruínas ao sudeste de Nimalia, associadas a cavernas profundas.",
+                },
+            ],
+            "relacoes_confirmadas": [],
+            "locais_confirmados": [],
+            "eventos_confirmados": [],
+            "rumores_publicos": [],
+            "teorias": [],
+            "informacoes_nao_disponiveis": [],
+            "fontes": ["Locations/Ruínas de Valthor.md"],
+        }
+        memory = SimpleNamespace(
+            retrieve=lambda *_args, **_kwargs: SimpleNamespace(
+                examples=[], mode="sanitized", retrieval_time_ms=0.0
+            )
+        )
+        with patch("app.narrative_composer.get_behavioral_memory", return_value=memory), patch(
+            "app.narrative_composer.chat_with_fallback",
+            new=AsyncMock(
+                return_value=("Valthor foi um reino antigo e próspero.", "gpt-oss:120b-cloud", False)
+            ),
+        ):
+            result = await compose_narrative(
+                question="Quem é Valthor?",
+                card=card,
+                ollama_base_url="http://localhost:11434",
+                model="gpt-oss:120b-cloud",
+                fallback_model="qwen2:1.5b",
+                access_mode="player",
+                intent="direct_entity",
+            )
+        self.assertTrue(result["used"])
+        self.assertIn("reino antigo e próspero", result["answer"])
+        self.assertIn("ruínas ao sudeste de Nimalia", result["answer"])
+
+    def test_editorial_labels_are_removed_from_final_answer(self):
+        raw = (
+            "### O que se sabe\n"
+            "Valthor foi um reino antigo.\n\n"
+            "### Como entra na história\n"
+            "Como apresentar: ruínas antigas e silenciosas. "
+            "O que manter em aberto no ESTADO_DA_CAMPANHA: decisões pendentes."
+        )
+        cleaned = _clean_answer(raw)
+        self.assertNotIn("O que se sabe", cleaned)
+        self.assertNotIn("Como entra na história", cleaned)
+        self.assertNotIn("Como apresentar", cleaned)
+        self.assertNotIn("ESTADO_DA_CAMPANHA", cleaned)
+        self.assertIn("Valthor foi um reino antigo", cleaned)
+
+    def test_public_callout_is_available_to_the_fact_card(self):
+        content = (
+            "> [!world]- SINOPSE PÚBLICA\n"
+            "> Valthor foi um reino antigo e próspero. Hoje restam apenas suas ruínas.\n\n"
+            "## Uso em Mesa\n"
+            "Como apresentar: não deve entrar na resposta."
+        )
+        synopsis = _first_section_paragraph(content, ("Sinopse Pública",))
+        self.assertEqual(
+            "Valthor foi um reino antigo e próspero. Hoje restam apenas suas ruínas.",
+            synopsis,
+        )
 
 
 if __name__ == "__main__":

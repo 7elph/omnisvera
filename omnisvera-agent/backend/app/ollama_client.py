@@ -94,7 +94,9 @@ async def chat_with_ollama(
     }
     if options:
         default_options.update(options)
-    if is_qwen3:
+    if is_gpt_oss:
+        default_options["num_predict"] = max(int(default_options["num_predict"]), 320)
+    elif is_qwen3:
         # With reasoning disabled, the token budget is spent on the answer
         # instead of an internal chain that never reaches the player.
         default_options["num_predict"] = min(int(default_options["num_predict"]), 240)

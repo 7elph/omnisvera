@@ -23,7 +23,7 @@ _STOPWORDS = {
 _GENERIC_CAPITALIZED = {
     "Acredita-se", "Ainda", "Além", "Apesar", "Assim", "Atualmente", "Com", "Como", "Contudo", "Durante", "Ele", "Ela",
     "Embora", "Em", "Entre", "Essa", "Esse", "Esta", "Este", "Isso", "Mas", "Nascido", "No", "O", "Os",
-    "Para", "Por", "Porém", "Quando", "Se", "Seu", "Sua", "Também", "Uma",
+    "Hoje", "Não", "Para", "Por", "Porém", "Quando", "São", "Se", "Seu", "Sua", "Também", "Uma",
 }
 
 _UNCERTAINTY_PATTERNS = (
@@ -247,6 +247,26 @@ def deterministic_narrative(card: dict[str, Any]) -> str:
     return "\n\n".join(paragraphs[:3]).strip()
 
 
+def _ensure_factual_coverage(answer: str, card: dict[str, Any]) -> str:
+    """Append only source-backed facts omitted by an otherwise valid narrative."""
+    answer = answer.strip()
+    covered_tokens = _tokens(answer)
+    missing: list[str] = []
+    for record in factual_records(card):
+        text = _clean_sentence(str(record.get("texto") or ""))
+        fact_tokens = _tokens(text)
+        if not text or not fact_tokens:
+            continue
+        coverage = len(fact_tokens & covered_tokens) / len(fact_tokens)
+        if coverage < 0.58:
+            missing.append(_ensure_period(text))
+            covered_tokens.update(fact_tokens)
+    if not missing:
+        return answer
+    supplement = " ".join(missing)
+    return f"{answer} {supplement}".strip() if answer else supplement
+
+
 def _ensure_period(value: str) -> str:
     value = re.sub(r"\s+", " ", value).strip()
     if value:
@@ -331,6 +351,10 @@ def validate_narrative(raw: str, card: dict[str, Any]) -> tuple[str, list[dict[s
     raw = _plain_wikilinks(raw)
     raw = re.sub(r"(?im)^\s*#{1,6}\s*(?:resposta|arquivo vivo).*?$", "", raw)
     records = factual_records(card)
+    entity = _clean_sentence(str(card.get("entidade") or ""))
+    validation_records = [*records]
+    if entity:
+        validation_records.append({"texto": entity, "fonte": "", "evidencia": entity})
     accepted: list[dict[str, str]] = []
     rejected: list[dict[str, str]] = []
     for sentence in re.split(r"(?<=[.!?])\s+|\n+", raw):
@@ -347,7 +371,7 @@ def validate_narrative(raw: str, card: dict[str, Any]) -> tuple[str, list[dict[s
             clause = _clean_sentence(clause)
             if len(clause) < 10:
                 continue
-            allowed, reason = _claim_support(clause, records)
+            allowed, reason = _claim_support(clause, validation_records)
             target = accepted if allowed else rejected
             target.append({"texto": clause, "motivo": reason})
             if allowed:
@@ -441,10 +465,12 @@ def build_prompt(
     return (
         "FATOS PERMITIDOS:\n" + "\n".join(lines) + "\n\n"
         "Transforme somente esses fatos em uma resposta natural em português brasileiro. "
+        "Inclua cada fato fornecido uma vez, sem omitir os pontos relevantes para a pergunta. "
         "Não use memória externa e não associe o assunto a outros cenários, países ou jogos. "
         "Não crie nomes, relações, causas, motivações ou acontecimentos. "
         "Se faltar informação, diga isso sem tentar completar. Não mencione notas, Vault, RAG, sistema ou fontes. "
-        f"{mode} Use 2 ou 3 parágrafos, sem títulos ou listas; tente 80 a 180 palavras, mas pare antes se os fatos acabarem.\n\n"
+        "Não use os rótulos 'O que se sabe', 'Como entra na história', 'Como apresentar' ou instruções editoriais. "
+        f"{mode} Use 1 a 3 parágrafos, sem títulos ou listas; tente 60 a 160 palavras, mas pare antes se os fatos acabarem.\n\n"
         + _behavioral_prompt(behavioral_examples or [])
         + "Pergunta: " + question
     )
@@ -479,41 +505,6 @@ async def compose_narrative(
         intent=intent,
         persona_id=None,
     )
-    if len(factual_records(card)) < 2:
-        final = deterministic_narrative(card)
-        trace = {
-            "question": question,
-            "intent": intent,
-            "notes_retrieved": list(card.get("fontes") or []),
-            "chunks": [
-                {"path": item.get("fonte"), "evidence": item.get("evidencia")}
-                for item in factual_records(card)
-            ],
-            "factual_card": {key: value for key, value in card.items() if not key.startswith("_")},
-            "prompt": "",
-            "raw_ollama": "",
-            "accepted_claims": [],
-            "rejected_claims": [],
-            "final_answer": final,
-            "timings_ms": {
-                "card_build": card.get("_build_ms", 0.0),
-                "ollama": 0.0,
-                "validation": 0.0,
-                "composer_total": round((time.perf_counter() - started) * 1000, 3),
-            },
-            "model": model,
-            "model_answer_used": False,
-            "skip_reason": "cartão curto: resposta determinística é mais segura",
-            "behavior_memory_used": False,
-            "behavioral_example_ids": [],
-            "behavioral_categories": [],
-            "behavioral_scores": [],
-            "behavioral_mode": behavioral.mode,
-            "behavioral_retrieval_time_ms": behavioral.retrieval_time_ms,
-            "behavioral_prompt_size_added": 0,
-        }
-        _write_trace(trace, access_mode)
-        return {"answer": final, "used": False, "attempted": False, "model": model, "card": card, "trace": trace}
     behavior_block = _behavioral_prompt(behavioral.examples)
     prompt = build_prompt(question, card, access_mode, behavioral.examples)
     generation_started = time.perf_counter()
@@ -532,11 +523,8 @@ async def compose_narrative(
     validated, accepted, rejected = validate_narrative(raw, card) if raw else ("", [], [])
     validation_ms = round((time.perf_counter() - validation_started) * 1000, 3)
     fallback = deterministic_narrative(card)
-    if validated:
-        final, replacements = _merge_with_fallback(validated, fallback)
-    else:
-        final, replacements = fallback, 0
-    used = replacements > 0
+    final = _ensure_factual_coverage(validated, card) if validated else fallback
+    used = bool(validated)
     trace = {
         "question": question,
         "intent": intent,
