@@ -3,6 +3,14 @@ import react from "@vitejs/plugin-react";
 
 export default defineConfig({
   plugins: [react()],
+  // Public currently contains historical 600 MB Godot exports. They are
+  // deployment archives, not frontend assets, so do not copy them into Vite.
+  publicDir: false,
+  // The Godot Web export lives beside the Vite bundle in dist/nimalis.
+  // Keep it when rebuilding the Companion frontend.
+  build: {
+    emptyOutDir: false,
+  },
   server: {
     host: "0.0.0.0",
     port: 5173,

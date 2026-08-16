@@ -1,10 +1,10 @@
 param(
   [string]$VaultPath = (Resolve-Path "$PSScriptRoot\..").Path,
-  [string]$GenerationModel = "gpt-oss:120b-cloud",
-  [string]$FastModel = "qwen2:1.5b",
-  [string]$QualityModel = "llama-3.2-omnisvera-3b",
-  [string]$CandidateModel = "llama-3.2-omnisvera-3b",
-  [string]$ProductionModel = "llama-3.2-omnisvera-3b",
+  [string]$GenerationModel = "omnisvera-local:latest",
+  [string]$FastModel = "omnisvera-fast:latest",
+  [string]$QualityModel = "omnisvera-local:latest",
+  [string]$CandidateModel = "omnisvera-local:latest",
+  [string]$ProductionModel = "omnisvera-local:latest",
   [ValidateSet("baseline", "candidate", "production")]
   [string]$ModelMode = "baseline",
   [string]$EmbedModel = "nomic-embed-text",
@@ -87,6 +87,7 @@ $ProfileDefinitions = @{
   varkh = @{ character_path = "Characters/Individual/Varkh Nimalis.md"; character_title = "Varkh Nimalis" }
   raziel = @{ character_path = "Characters/Individual/Raziel.md"; character_title = "Raziel" }
   morthak = @{ character_path = "Characters/Individual/Morthak.md"; character_title = "Morthak" }
+  guest = @{ character_path = ""; character_title = "Convidado" }
 }
 foreach ($profileId in $ProfileDefinitions.Keys) {
   if (-not $PlayerProfiles.ContainsKey($profileId) -or -not $PlayerProfiles[$profileId].token) {
@@ -167,7 +168,7 @@ Write-Host "Influência comportamental: ativa (sanitizada)"
 Write-Host "Token do Mestre: $MasterToken" -ForegroundColor Cyan
 Write-Host "Token dos Jogadores: $PlayerToken" -ForegroundColor Green
 Write-Host "Acessos individuais:" -ForegroundColor Green
-foreach ($profileId in @("vezemir", "varkh", "raziel", "morthak")) {
+foreach ($profileId in @("vezemir", "varkh", "raziel", "morthak", "guest")) {
   Write-Host "  $($PlayerProfiles[$profileId].character_title): $($PlayerProfiles[$profileId].token)"
 }
 Write-Host "Local: http://127.0.0.1:$Port"

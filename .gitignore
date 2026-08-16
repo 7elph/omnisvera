@@ -19,6 +19,12 @@ Desktop.ini
 .local-proposals/
 .assistant-runtime/
 /omnisvera-agent/backend/data/cloudflare-tunnel/
+/omnisvera-agent/backend/data/*
+!/omnisvera-agent/backend/data/.gitkeep
+/omnisvera-agent/backend/runtime-*.log
+/omnisvera-agent/frontend/public/nimalis_backup_*/
+/omnisvera-agent/frontend/public/nimalis/*.TMP
+/omnisvera-agent/frontend/public/nimalis/*.tmp
 /omnisvera-model/artifacts/
 /omnisvera-model/dist/
 /omnisvera-model/checkpoints/

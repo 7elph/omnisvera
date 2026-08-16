@@ -1,42 +1,64 @@
-import { lazy, Suspense, useEffect, useState } from "react";
-import { AccessMode, getAccessMode, getAccessToken, health, rebuildIndex, resolveNote, setAccessMode, setAccessToken } from "./api";
-import DiceTray from "./components/DiceTray";
-import QuickCharacterSheet from "./components/QuickCharacterSheet";
-import QuickContractPanel from "./components/QuickContractPanel";
-import QuickScenePanel from "./components/QuickScenePanel";
-import QuickNpcPanel from "./components/QuickNpcPanel";
-import QuickAccessMenu from "./components/QuickAccessMenu";
-import ChatVault from "./pages/ChatVault";
+import { useEffect, useState } from "react";
+import { AccessMode, getAccessMode, getAccessToken, health, rebuildIndex, setAccessMode, setAccessToken } from "./api";
 import ConclaveHub from "./pages/ConclaveHub";
-import PlayableCharacterSheet from "./pages/PlayableCharacterSheet";
-import NoteView from "./pages/NoteView";
-import PlayerPanel from "./pages/PlayerPanel";
-import SearchNotes from "./pages/SearchNotes";
-import SessionPanel from "./pages/SessionPanel";
-import ModelCurationPanel from "./pages/ModelCurationPanel";
-import ScenePanel from "./pages/ScenePanel";
-import NpcDirectory from "./pages/NpcDirectory";
+import SessionWorkspace from "./pages/SessionWorkspace";
+import DiceRollOverlay from "./components/DiceRollOverlay";
 
-const WorldMapPage = lazy(() => import("./pages/WorldMapPage"));
+type Page = "session" | "player" | "conclave" | "game";
 
-type Page = "chat" | "search" | "note" | "session" | "player" | "sheet" | "scene" | "conclave" | "npcs" | "map" | "curation";
+function gameUrlWithCompanionIdentity(url: string, token: string, accessMode: AccessMode, profileId: string) {
+  if (!token.trim()) return url;
+  const [base, existingHash] = url.split("#", 2);
+  const params = new URLSearchParams(existingHash || "");
+  params.set("companion_token", token.trim());
+  params.set("companion_mode", accessMode);
+  params.set("companion_profile", profileId || (accessMode === "gm" ? "sage" : ""));
+  return `${base}#${params.toString()}`;
+}
 
 export default function App() {
   const initialMode = getAccessMode();
   const initialToken = getAccessToken();
   const [page, setPage] = useState<Page>(initialMode === "player" ? "player" : "session");
-  const [selectedNoteId, setSelectedNoteId] = useState<number | null>(null);
-  const [unknownTarget, setUnknownTarget] = useState<string | null>(null);
-  const [noteHistory, setNoteHistory] = useState<number[]>([]);
-  const [chatSeed, setChatSeed] = useState("");
   const [status, setStatus] = useState<string>("");
   const [tokenDraft, setTokenDraft] = useState<string>(initialToken);
   const [mode, setMode] = useState<AccessMode>(initialMode);
   const [authVersion, setAuthVersion] = useState(0);
   const [authenticated, setAuthenticated] = useState(false);
   const [accessPanelOpen, setAccessPanelOpen] = useState(!initialToken);
+  // Do not boot Godot before the Companion validates the saved token.
+  // Otherwise the game can start anonymously with its scene default (Vezemir)
+  // and the first visual may be captured before identity/animation setup.
+  const [gameWebUrl, setGameWebUrl] = useState("");
+  const [gameFullscreen, setGameFullscreen] = useState(false);
+
+  const toggleGameFullscreen = async () => {
+    const frame = document.querySelector<HTMLIFrameElement>(".game-frame");
+    if (!frame) return;
+    try {
+      if (document.fullscreenElement) await document.exitFullscreen();
+      else await frame.requestFullscreen();
+    } catch {
+      setStatus("O navegador bloqueou a tela cheia; use o menu do navegador.");
+    }
+  };
 
   useEffect(() => {
+    const syncFullscreen = () => setGameFullscreen(Boolean(document.fullscreenElement));
+    document.addEventListener("fullscreenchange", syncFullscreen);
+    return () => document.removeEventListener("fullscreenchange", syncFullscreen);
+  }, []);
+
+  useEffect(() => {
+    // Keep the embedded Godot runtime on the phone after the first download.
+    // The worker is scoped only to /nimalis/, so it cannot affect Companion
+    // API calls or the rest of the site.
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("/nimalis/sw.js", { scope: "/nimalis/" }).catch(() => {
+        // The game remains playable without caching when the browser blocks SW.
+      });
+    }
+
     const token = getAccessToken();
     if (!token) {
       setAuthenticated(false);
@@ -49,6 +71,12 @@ export default function App() {
         setMode(detectedMode);
         setAccessMode(detectedMode);
         setAuthenticated(true);
+        setGameWebUrl(gameUrlWithCompanionIdentity(
+          typeof data.game_web_url === "string" ? data.game_web_url : "/nimalis/nimalis.html",
+          token,
+          detectedMode,
+          detectedMode === "gm" ? "sage" : (data.player_profile_id || ""),
+        ));
         setPage((current) => {
           if (current === "session" && detectedMode === "player") return "player";
           if (current === "player" && detectedMode === "gm") return "session";
@@ -65,67 +93,8 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    const openContract = (event: Event) => {
-      const contractId = Number((event as CustomEvent<number>).detail);
-      if (Number.isFinite(contractId) && contractId > 0) localStorage.setItem("omnisvera_selected_contract", String(contractId));
-      setPage("conclave");
-    };
-    const openScene = (event: Event) => {
-      const sceneId = Number((event as CustomEvent<number>).detail);
-      if (Number.isFinite(sceneId) && sceneId > 0) localStorage.setItem("omnisvera_selected_scene", String(sceneId));
-      setPage("scene");
-    };
-    const openMap = () => setPage("map");
-    window.addEventListener("omnisvera-open-contract", openContract);
-    window.addEventListener("omnisvera-open-scene", openScene);
-    window.addEventListener("omnisvera-open-map", openMap);
-    return () => {
-      window.removeEventListener("omnisvera-open-contract", openContract);
-      window.removeEventListener("omnisvera-open-scene", openScene);
-      window.removeEventListener("omnisvera-open-map", openMap);
-    };
-  }, []);
-
-  useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "auto" });
-  }, [page, selectedNoteId]);
-
-  useEffect(() => {
-    let cancelled = false;
-
-    async function openHashNote() {
-      const prefix = "#/note/";
-      if (!window.location.hash.startsWith(prefix)) return;
-      const target = decodeURIComponent(window.location.hash.slice(prefix.length));
-      window.history.replaceState(null, "", window.location.pathname + window.location.search);
-      if (!target.trim()) return;
-
-      try {
-        const note = await resolveNote(target);
-        if (cancelled) return;
-        if (note) {
-          setUnknownTarget(null);
-          setSelectedNoteId(note.id);
-        } else {
-          setSelectedNoteId(null);
-          setUnknownTarget(target);
-        }
-        setPage("note");
-      } catch {
-        if (cancelled) return;
-        setSelectedNoteId(null);
-        setUnknownTarget(target);
-        setPage("note");
-      }
-    }
-
-    void openHashNote();
-    window.addEventListener("hashchange", openHashNote);
-    return () => {
-      cancelled = true;
-      window.removeEventListener("hashchange", openHashNote);
-    };
-  }, []);
+  }, [page]);
 
   function saveToken() {
     setAuthenticated(false);
@@ -138,6 +107,12 @@ export default function App() {
         setMode(detectedMode);
         setAccessMode(detectedMode);
         setAuthenticated(true);
+        setGameWebUrl(gameUrlWithCompanionIdentity(
+          typeof data.game_web_url === "string" ? data.game_web_url : "/nimalis/nimalis.html",
+          tokenDraft,
+          detectedMode,
+          detectedMode === "gm" ? "sage" : (data.player_profile_id || ""),
+        ));
         setAccessPanelOpen(false);
         setPage(detectedMode === "player" ? "player" : "session");
         setStatus(
@@ -165,54 +140,17 @@ export default function App() {
     }
   }
 
-  function openNote(id: number) {
-    setNoteHistory((current) => (selectedNoteId ? [...current.slice(-12), selectedNoteId] : current));
-    setUnknownTarget(null);
-    setSelectedNoteId(id);
-    setPage("note");
-  }
-
-  function openUnknownNote(target: string) {
-    setNoteHistory((current) => (selectedNoteId ? [...current.slice(-12), selectedNoteId] : current));
-    setSelectedNoteId(null);
-    setUnknownTarget(target);
-    setPage("note");
-  }
-
-  function goBackNote() {
-    const previous = noteHistory.at(-1);
-    if (!previous) return;
-    setNoteHistory((current) => current.slice(0, -1));
-    setSelectedNoteId(previous);
-    setPage("note");
-  }
-
-  function askPrompt(prompt: string) {
-    setChatSeed(prompt);
-    setPage("chat");
-  }
-
   function navigate(next: Page) {
     setPage(next);
   }
 
-  function openConclave(contractId?: number) {
-    if (contractId) localStorage.setItem("omnisvera_selected_contract", String(contractId));
-    navigate("conclave");
-  }
-
   function openScenePanel(sceneId?: number) {
     if (sceneId) localStorage.setItem("omnisvera_selected_scene", String(sceneId));
-    navigate("scene");
-  }
-
-  function openNpcDirectory(npcId?: number) {
-    if (npcId) localStorage.setItem("omnisvera_selected_npc", String(npcId));
-    navigate("npcs");
+    navigate(mode === "gm" ? "session" : "player");
   }
 
   return (
-    <main className="app-shell">
+    <main className={`app-shell ${authenticated ? "authenticated" : ""}`}>
       <header className="hero">
         <h1>OMNISVERA</h1>
       </header>
@@ -220,7 +158,7 @@ export default function App() {
       {authenticated && !accessPanelOpen ? (
         <section className="access-summary">
           <span><b>{mode === "player" ? "Jogador" : "Mestre"}</b><small>{status}</small></span>
-          <div className="access-summary-actions"><QuickAccessMenu onNavigate={navigate} /><button className="secondary-button" onClick={() => setAccessPanelOpen(true)}>Trocar acesso</button></div>
+          <div className="access-summary-actions"><button className="secondary-button" onClick={() => setAccessPanelOpen(true)}>Trocar acesso</button></div>
         </section>
       ) : <section className="token-bar">
         <div className="mode-switch">
@@ -266,35 +204,17 @@ export default function App() {
             <span>⌂</span><small>Início</small>
           </button>
         )}
-        <button className={page === "chat" ? "active" : ""} onClick={() => navigate("chat")}>
-          <span>✦</span><small>Chat</small>
-        </button>
-        <button className={page === "sheet" ? "active" : ""} onClick={() => navigate("sheet")}>
-          <span>♜</span><small>{mode === "gm" ? "Fichas" : "Ficha"}</small>
-        </button>
-        <button className={page === "scene" ? "active" : ""} onClick={() => navigate("scene")}>
-          <span>◈</span><small>Cena</small>
-        </button>
         <button className={page === "conclave" ? "active" : ""} onClick={() => navigate("conclave")}>
           <span>◈</span><small>Conclave</small>
         </button>
-        <button className={page === "npcs" ? "active" : ""} onClick={() => navigate("npcs")}>
-          <span>◉</span><small>NPCs</small>
-        </button>
-        <button className={page === "map" ? "active" : ""} onClick={() => navigate("map")}>
-          <span>⌖</span><small>Mapa</small>
-        </button>
-        {mode === "gm" && (
-          <button className={page === "curation" ? "active" : ""} onClick={() => navigate("curation")}>
-            <span>⚗</span><small>Curadoria</small>
+        {gameWebUrl && (
+          <button className={page === "game" ? "active" : ""} onClick={() => navigate("game")}>
+            <span>▶</span><small>Jogar</small>
           </button>
         )}
-        <button className={page === "search" || page === "note" ? "active" : ""} onClick={() => navigate("search")}>
-          <span>⌕</span><small>Arquivo</small>
-        </button>
       </nav>
 
-      {!authenticated && (
+      {!authenticated && page !== "game" && (
         <section className="panel">
           <div className="chat-header">
             <h2>Token necessário</h2>
@@ -302,38 +222,22 @@ export default function App() {
           </div>
         </section>
       )}
-      {authenticated && page === "session" && mode === "gm" && <SessionPanel key={`session-${authVersion}`} onOpenNote={openNote} onAskPrompt={askPrompt} />}
-      {authenticated && page === "player" && mode === "player" && (
-        <PlayerPanel key={`player-${authVersion}`} onOpenNote={openNote} onAskPrompt={askPrompt} />
-      )}
-      {authenticated && page === "chat" && <ChatVault onOpenNote={openNote} onUnknownNote={openUnknownNote} initialQuestion={chatSeed} />}
-      {authenticated && page === "sheet" && <PlayableCharacterSheet key={`sheet-${authVersion}-${mode}`} mode={mode === "player" ? "player" : "gm"} />}
-      {authenticated && page === "scene" && <ScenePanel key={`scene-${authVersion}-${mode}`} mode={mode === "player" ? "player" : "gm"} />}
+      {authenticated && page === "session" && mode === "gm" && <SessionWorkspace key={`workspace-${authVersion}-gm`} mode="gm" />}
+      {authenticated && page === "player" && mode === "player" && <SessionWorkspace key={`workspace-${authVersion}-player`} mode="player" />}
       {authenticated && page === "conclave" && <ConclaveHub key={`conclave-${authVersion}-${mode}`} mode={mode === "player" ? "player" : "gm"} onOpenScene={openScenePanel} />}
-      {authenticated && page === "npcs" && <NpcDirectory key={`npcs-${authVersion}-${mode}`} mode={mode === "player" ? "player" : "gm"} />}
-      {authenticated && page === "map" && <Suspense fallback={<section className="panel world-loading" role="status">Carregando mapa…</section>}><WorldMapPage key={`map-${authVersion}-${mode}`} mode={mode === "player" ? "player" : "gm"} onOpenScene={openScenePanel} onOpenContract={openConclave} /></Suspense>}
-      {authenticated && page === "curation" && mode === "gm" && <ModelCurationPanel key={`curation-${authVersion}`} />}
-      {authenticated && page === "search" && <SearchNotes onOpenNote={openNote} />}
-      {authenticated && page === "note" && (
-        <>
-          {noteHistory.length > 0 && (
-            <button className="back-button" onClick={goBackNote}>
-              Voltar
+      {authenticated && page === "game" && gameWebUrl && (
+        <section className="panel game-panel">
+          <div className="chat-header">
+            <h2>Nimalis</h2>
+            <button className="game-fullscreen-button" type="button" onClick={toggleGameFullscreen}>
+              {gameFullscreen ? "Sair da tela cheia" : "Tela cheia"}
             </button>
-          )}
-          <NoteView
-            noteId={selectedNoteId}
-            unknownTarget={unknownTarget}
-            onOpenNote={openNote}
-            onUnknownNote={openUnknownNote}
-          />
-        </>
+            <p>Jogo conectado ao Companion. O mesmo token permanece válido dentro do jogo.</p>
+          </div>
+          <iframe key={gameWebUrl} title="Nimalis" src={gameWebUrl} className="game-frame" allow="fullscreen" allowFullScreen />
+        </section>
       )}
-      {authenticated && <QuickCharacterSheet triggerHidden hidden={page === "sheet" || page === "npcs"} onOpen={() => navigate("sheet")} />}
-      {authenticated && <QuickScenePanel triggerHidden hidden={page === "scene" || page === "npcs"} mode={mode === "player" ? "player" : "gm"} onOpen={() => navigate("scene")} />}
-      {authenticated && <QuickContractPanel triggerHidden hidden={page === "conclave" || page === "npcs"} mode={mode === "player" ? "player" : "gm"} onOpenContract={openConclave} onOpenScene={openScenePanel} />}
-      {authenticated && <QuickNpcPanel mode={mode === "player" ? "player" : "gm"} onOpen={openNpcDirectory} />}
-      {authenticated && page !== "npcs" && <DiceTray triggerHidden key={`dice-${authVersion}-${mode}`} mode={mode === "player" ? "player" : "gm"} />}
+      <DiceRollOverlay />
     </main>
   );
 }

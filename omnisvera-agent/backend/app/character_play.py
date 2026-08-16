@@ -14,6 +14,54 @@ from .access import sanitize_player_text
 
 AccessLevel = Literal["gm", "owner", "public"]
 
+SESSION_ABILITY_CATALOG_PATH = Path(__file__).with_name("data") / "session_abilities.json"
+
+
+def load_session_abilities(profile_id: str) -> list[dict[str, Any]]:
+    """Load player-safe abilities without embedding character-specific data in the UI."""
+    try:
+        payload = json.loads(SESSION_ABILITY_CATALOG_PATH.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return []
+
+    raw_entries = (payload.get("characters") or {}).get(profile_id, [])
+    if not isinstance(raw_entries, list):
+        return []
+
+    entries: list[dict[str, Any]] = []
+    for raw_entry in raw_entries:
+        if not isinstance(raw_entry, dict):
+            continue
+        name = str(raw_entry.get("name") or "").strip()
+        if not name:
+            continue
+        entry = {
+            "id": str(raw_entry.get("id") or name).strip(),
+            "name": name,
+            "kind": str(raw_entry.get("kind") or "ability").strip(),
+            "group": str(raw_entry.get("group") or "Habilidades").strip(),
+            "description": str(raw_entry.get("description") or "").strip(),
+            "mechanics_status": (
+                "structured" if raw_entry.get("mechanics_status") == "structured" else "partial"
+            ),
+            "source": str(raw_entry.get("source") or "").strip(),
+        }
+        circle = raw_entry.get("circle")
+        if isinstance(circle, int) and circle > 0:
+            entry["circle"] = circle
+        uses = raw_entry.get("uses")
+        if isinstance(uses, dict):
+            maximum = _number(uses.get("maximum"))
+            if maximum is not None and maximum > 0:
+                entry["uses"] = {
+                    "resource_key": _resource_key(str(uses.get("resource_key") or raw_entry.get("id") or name)),
+                    "label": str(uses.get("label") or f"{name} · usos").strip(),
+                    "maximum": int(maximum),
+                    "recharge": str(uses.get("recharge") or "inn_rest").strip(),
+                }
+        entries.append(entry)
+    return entries
+
 STATE_ACTIONS = {
     "damage",
     "heal",
@@ -29,6 +77,7 @@ STATE_ACTIONS = {
     "remove_item",
     "set_location",
     "set_session_notes",
+    "rest_at_inn",
 }
 
 OWNER_ACTIONS = {
@@ -286,6 +335,33 @@ def seed_resources(sheet: dict[str, Any]) -> list[dict[str, Any]]:
     return list(resources.values())
 
 
+def seed_session_ability_resources(profile_id: str) -> list[dict[str, Any]]:
+    resources: list[dict[str, Any]] = []
+    for ability in load_session_abilities(profile_id):
+        uses = ability.get("uses")
+        if not isinstance(uses, dict):
+            continue
+        maximum = int(uses.get("maximum") or 0)
+        if maximum <= 0:
+            continue
+        key = _resource_key(str(uses.get("resource_key") or ability["id"]))
+        resources.append({
+            "key": key,
+            "label": str(uses.get("label") or f"{ability['name']} · usos"),
+            "current": maximum,
+            "maximum": maximum,
+            "recharge": str(uses.get("recharge") or "inn_rest"),
+        })
+    return resources
+
+
+def seed_all_resources(profile_id: str, sheet: dict[str, Any]) -> list[dict[str, Any]]:
+    resources = {resource["key"]: resource for resource in seed_resources(sheet)}
+    for resource in seed_session_ability_resources(profile_id):
+        resources[resource["key"]] = resource
+    return list(resources.values())
+
+
 def load_definition_overrides(database_path: Path, profile_id: str) -> dict[str, Any]:
     init_character_play(database_path)
     with closing(_connect(database_path)) as connection:
@@ -384,6 +460,7 @@ def build_character_definition(
             "magic": _clean_text(magic.get("known_magic"), 4000),
             "magic_notes": _clean_text(magic.get("magic_notes"), 1800),
         },
+        "session_abilities": load_session_abilities(profile_id),
         "attacks": attack_entries,
         "attack_notes": _clean_text(attacks.get("attack_notes"), 1800),
         "defenses": {
@@ -434,7 +511,7 @@ def build_character_definition(
     return result
 
 
-def _initial_state(sheet: dict[str, Any], definition: dict[str, Any]) -> dict[str, Any]:
+def _initial_state(profile_id: str, sheet: dict[str, Any], definition: dict[str, Any]) -> dict[str, Any]:
     maximum_hp = definition.get("progression", {}).get("maximum_hp")
     equipment = _step_fields(sheet, "equipment")
     return {
@@ -442,7 +519,7 @@ def _initial_state(sheet: dict[str, Any], definition: dict[str, Any]) -> dict[st
         "maximum_hp": maximum_hp,
         "temporary_hp": 0,
         "conditions": [],
-        "resources": seed_resources(sheet),
+        "resources": seed_all_resources(profile_id, sheet),
         "coins": _number(equipment.get("starting_gold")),
         "location": definition.get("location"),
         "session_notes": "",
@@ -463,7 +540,7 @@ def get_or_create_state(
         ).fetchone()
         if row is None:
             now = _now()
-            state = _initial_state(sheet, definition)
+            state = _initial_state(profile_id, sheet, definition)
             connection.execute(
                 "INSERT INTO character_states(profile_id,state_json,version,updated_at) VALUES(?,?,1,?)",
                 (profile_id, json.dumps(state, ensure_ascii=False), now),
@@ -484,14 +561,18 @@ def get_or_create_state(
                     state["current_hp"] = min(int(state["current_hp"]), int(confirmed_maximum))
                 changed = True
             existing_resources = {item.get("key"): item for item in state.get("resources") or []}
-            for resource in seed_resources(sheet):
+            for resource in seed_all_resources(profile_id, sheet):
                 existing = existing_resources.get(resource["key"])
                 if existing is None:
                     state.setdefault("resources", []).append(resource)
                     changed = True
                 elif int(existing.get("maximum") or 0) != int(resource["maximum"]):
+                    spent = max(0, int(existing.get("maximum") or 0) - int(existing.get("current") or 0))
                     existing["maximum"] = int(resource["maximum"])
-                    existing["current"] = min(int(existing.get("current") or 0), int(resource["maximum"]))
+                    existing["current"] = max(0, int(resource["maximum"]) - spent)
+                    existing["label"] = resource["label"]
+                    if resource.get("recharge"):
+                        existing["recharge"] = resource["recharge"]
                     changed = True
             if changed:
                 now = _now()
@@ -612,7 +693,20 @@ def apply_character_action(
         before: Any
         after: Any
 
-        if action in {"damage", "heal", "set_hp"}:
+        if action == "rest_at_inn":
+            before = json.loads(json.dumps(state, ensure_ascii=False))
+            state["current_hp"] = state.get("maximum_hp")
+            state["temporary_hp"] = 0
+            state["conditions"] = []
+            state["resources"] = [
+                {**resource, "current": int(resource.get("maximum") or 0)}
+                for resource in state.get("resources") or []
+            ]
+            after = json.loads(json.dumps(state, ensure_ascii=False))
+            field = "state"
+            _save_state(connection, character_id, state)
+
+        elif action in {"damage", "heal", "set_hp"}:
             maximum = state.get("maximum_hp")
             current = state.get("current_hp")
             if maximum is None or current is None:
@@ -878,6 +972,11 @@ def revert_character_event(
                 """,
                 (character_id, json.dumps(before or {}, ensure_ascii=False), _now()),
             )
+        elif field == "state":
+            _state_row, current = _load_state_row(connection, character_id)
+            if current != after:
+                raise ValueError("O estado mudou depois deste descanso; reverta o evento mais recente primeiro")
+            _save_state(connection, character_id, dict(before or {}))
         elif field.startswith("inventory."):
             item_path = field.split(".", 1)[1]
             current = _inventory_row(connection, character_id, item_path)

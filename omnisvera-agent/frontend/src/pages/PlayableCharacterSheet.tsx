@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import {
   applyCharacterStateAction,
+  CharacterResource,
   CharacterEvent,
   DiceRollEvent,
   getPlayableCharacter,
@@ -16,20 +17,20 @@ import {
   PlayableCharacter,
   PlayableCharacterDefinition,
   PlayableCharacterSummary,
+  SessionAbility,
   revertCharacterEvent,
   rollCharacterAction,
   updateCharacterDefinition,
 } from "../api";
 import CharacterSheetBuilder from "./CharacterSheetBuilder";
 
-type CharacterTab = "summary" | "mechanics" | "combat" | "inventory" | "abilities" | "story" | "gm";
+type CharacterTab = "summary" | "mechanics" | "combat" | "inventory" | "story" | "gm";
 
 const TAB_LABELS: Array<{ key: CharacterTab; icon: string; label: string }> = [
   { key: "summary", icon: "✦", label: "Resumo" },
   { key: "mechanics", icon: "⚙", label: "Mecânicas" },
-  { key: "combat", icon: "⚔", label: "Combate" },
+  { key: "combat", icon: "⚔", label: "Combate e Habilidades" },
   { key: "inventory", icon: "◈", label: "Inventário" },
-  { key: "abilities", icon: "✧", label: "Habilidades e Magias" },
   { key: "story", icon: "⌘", label: "História e Relações" },
   { key: "gm", icon: "♛", label: "Mestre" },
 ];
@@ -59,6 +60,7 @@ const EVENT_LABELS: Record<string, string> = {
   set_location: "Localização atualizada",
   set_session_notes: "Observação de sessão atualizada",
   definition_update: "Definição atualizada",
+  rest_at_inn: "Descanso completo",
 };
 
 function shown(value: unknown, fallback = "Não informado") {
@@ -112,6 +114,13 @@ function QuickStat({ label, value, accent = false }: { label: string; value: unk
   return <span className={accent ? "accent" : ""}><small>{label}</small><strong>{shown(value, "—")}</strong></span>;
 }
 
+function inventoryItemIsConsumable(item: InventoryItem) {
+  if (item.usable) return true;
+  const text = [item.item_title, item.item_type, item.description, item.notes, ...(item.effects || [])]
+    .filter(Boolean).join(" ").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+  return /(consum|pocao|elixir|antidoto|acido|solvente|bomba|oleo|veneno|toxina|incenso|frasco|reagente|mistura|tonico|potion)/.test(text);
+}
+
 function SummaryTab({ character }: { character: PlayableCharacter }) {
   const { definition, state } = character;
   return <div className="playable-tab-grid summary-tab">
@@ -155,6 +164,7 @@ function CombatTab({ character, mode, rolling, onAction, onRoll }: { character: 
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const state = character.state;
+  const abilities = character.definition.abilities || {};
 
   async function act(action: string, payload: Record<string, unknown>) {
     setBusy(true); setError("");
@@ -163,15 +173,25 @@ function CombatTab({ character, mode, rolling, onAction, onRoll }: { character: 
     finally { setBusy(false); }
   }
 
-  return <div className="playable-tab-grid">
+  async function restAtInn() {
+    if (!window.confirm("Descansar na estalagem e restaurar PV, condições e todos os usos?")) return;
+    await act("rest_at_inn", {});
+  }
+
+  return <div className="playable-tab-grid combat-abilities-tab">
+    <section className="sheet-card span-2 inn-rest-card"><div><small>DESCANSO COMPLETO</small><h3>Estalagem</h3><p>Restaura PV, remove condições e recupera reservas, magias e poderes diários.</p></div>{character.permissions.edit_state && <button disabled={busy} onClick={() => void restAtInn()}>☾ Descansar e restaurar tudo</button>}</section>
     <section className="sheet-card hp-control-card">
       <h3>Pontos de Vida</h3>
       <div className="hp-display"><strong>{shown(state?.current_hp, "—")}</strong><span>/ {shown(state?.maximum_hp, "—")}</span>{state?.temporary_hp ? <em>+{state.temporary_hp} temp.</em> : null}</div>
       {character.permissions.edit_state && <><label>Valor<input aria-label="Valor de PV" type="number" min="0" value={amount} onChange={(event) => setAmount(Math.max(0, Number(event.target.value)))} /></label><div className="compact-actions"><button disabled={busy} className="danger-button" onClick={() => void act("damage", { amount })}>Aplicar dano</button><button disabled={busy} onClick={() => void act("heal", { amount })}>Curar</button><button disabled={busy} className="secondary-button" onClick={() => void act("set_hp", { value: amount })}>Definir PV</button></div></>}
     </section>
     <section className="sheet-card"><h3>Condições</h3><div className="condition-cloud">{state?.conditions.map((item) => <button title="Remover condição" key={item} disabled={busy} onClick={() => void act("remove_condition", { condition: item })}>{item} ×</button>)}</div>{character.permissions.edit_state && <div className="inline-control"><input aria-label="Nova condição" value={condition} placeholder="Ex.: Caído" onChange={(event) => setCondition(event.target.value)} /><button disabled={!condition.trim() || busy} onClick={() => { void act("add_condition", { condition }); setCondition(""); }}>Adicionar</button></div>}</section>
-    <section className="sheet-card span-2"><h3>Recursos</h3>{state?.resources.length ? <div className="resource-grid">{state.resources.map((resource) => <article key={resource.key}><span><strong>{resource.label}</strong><small>{resource.current} / {resource.maximum}</small></span><div><button disabled={busy || resource.current <= 0} onClick={() => void act("consume_resource", { resource_key: resource.key, amount: 1 })}>− Usar</button>{mode === "gm" && <button disabled={busy || resource.current >= resource.maximum} onClick={() => void act("restore_resource", { resource_key: resource.key, amount: 1 })}>+ Restaurar</button>}</div></article>)}</div> : <p className="sheet-empty">Nenhum recurso consumível confirmado para esta ficha.</p>}</section>
+    <section className="sheet-card span-2"><h3>Recursos e usos</h3>{state?.resources.length ? <div className="resource-grid">{state.resources.map((resource) => <article key={resource.key}><span><strong>{resource.label}</strong><small>{resource.current} / {resource.maximum}</small></span>{resource.recharge === "inn_rest" && <em className="recharge-label">Recupera no descanso</em>}<div><button disabled={busy || resource.current <= 0} onClick={() => void act("consume_resource", { resource_key: resource.key, amount: 1 })}>− Usar</button>{mode === "gm" && <button disabled={busy || resource.current >= resource.maximum} onClick={() => void act("restore_resource", { resource_key: resource.key, amount: 1 })}>+ Restaurar</button>}</div></article>)}</div> : <p className="sheet-empty">Nenhum recurso consumível confirmado para esta ficha.</p>}</section>
     <section className="sheet-card span-2"><h3>Ataques</h3>{character.definition.attacks?.length ? <div className="attack-grid">{character.definition.attacks.map((attack) => <article key={attack.id}><span><strong>{attack.name}</strong><em>{signed(attack.attack_bonus)}</em></span><dl><div><dt>Dano</dt><dd>{shown(attack.damage, "Não configurado")}</dd></div><div><dt>Alcance</dt><dd>{shown(attack.range, "Não configurado")}</dd></div></dl><small>{attack.notes}</small><button disabled={attack.attack_bonus == null || !!rolling} onClick={() => void onRoll("attack", attack.id)}>Rolar ataque</button></article>)}</div> : <p className="sheet-empty">Ataques ainda não configurados.</p>}<TextBlock value={character.definition.attack_notes} /></section>
+    <SessionAbilityCatalog entries={character.definition.session_abilities || []} resources={state?.resources || []} busy={busy} onUse={(resourceKey) => act("consume_resource", { resource_key: resourceKey, amount: 1 })} />
+    <section className="sheet-card"><h3>Habilidades raciais</h3><TextBlock value={abilities.racial} /></section>
+    <section className="sheet-card"><h3>Habilidades de classe</h3><TextBlock value={abilities.class} /></section>
+    <section className="sheet-card span-2"><h3>Magias, fórmulas ou técnicas</h3><TextBlock value={abilities.magic} empty="Nenhuma magia ou técnica confirmada nesta ficha." />{abilities.magic_notes && <aside className="rule-note">{abilities.magic_notes}</aside>}</section>
     {error && <p className="warning-text span-2">{error}</p>}
   </div>;
 }
@@ -180,10 +200,11 @@ function InventoryCard({ item, canEdit, isGm, busy, rolling, onAction, onRoll }:
   const [quantity, setQuantity] = useState(item.quantity);
   useEffect(() => setQuantity(item.quantity), [item.quantity]);
   const image = mediaUrlFromVaultPath(item.thumbnail || item.cover);
-  return <article className={`sheet-inventory-card ${item.equipped ? "equipped" : ""}`}>
+  const consumable = inventoryItemIsConsumable(item);
+  return <article className={`sheet-inventory-card ${item.equipped ? "equipped" : ""} ${item.quantity <= 0 ? "depleted" : ""}`}>
     {image ? <img src={image} alt={item.item_title} /> : <span className="inventory-item-placeholder" aria-hidden="true">◈</span>}
-    <div><strong>{item.item_title}</strong><small>{item.equipped ? "Equipado" : "Guardado"}{item.damage_formula ? ` · Dano ${item.damage_formula}` : ""}</small>{item.notes && <p>{item.notes}</p>}</div>
-    {canEdit && <div className="inventory-card-actions">{item.damage_formula && <button disabled={busy || !!rolling} onClick={() => void onRoll("damage", item.item_path)}>Rolar dano</button>}<button disabled={busy} onClick={() => void onAction(item.equipped ? "unequip_item" : "equip_item", { item_path: item.item_path })}>{item.equipped ? "Desequipar" : "Equipar"}</button><label>Qtd.<input type="number" min="0" max="999" value={quantity} onChange={(event) => setQuantity(Math.max(0, Number(event.target.value)))} /></label><button disabled={busy || quantity === item.quantity} className="secondary-button" onClick={() => void onAction("change_quantity", { item_path: item.item_path, quantity })}>Salvar</button>{isGm && <button disabled={busy} className="danger-button subtle" onClick={() => void onAction("remove_item", { item_path: item.item_path })}>Remover</button>}</div>}
+    <div className="inventory-card-copy"><div className="inventory-item-title"><strong>{item.item_title}</strong><b>×{item.quantity}</b></div><small>{item.item_type || (consumable ? "Consumível" : "Item")} · {item.equipped ? "Equipado" : "Guardado"}{item.damage_formula ? ` · Dano ${item.damage_formula}` : ""}</small>{item.description && <p>{item.description}</p>}{item.notes && <p>{item.notes}</p>}{item.effects?.length ? <ul>{item.effects.map((effect) => <li key={effect}>{effect}</li>)}</ul> : null}</div>
+    {canEdit && <div className="inventory-card-actions">{consumable && <button className="use-item-button" disabled={busy || item.quantity <= 0} onClick={() => void onAction("change_quantity", { item_path: item.item_path, quantity: Math.max(0, item.quantity - 1) })}>Usar 1 <small>({item.quantity} restantes)</small></button>}{item.damage_formula && <button disabled={busy || !!rolling} onClick={() => void onRoll("damage", item.item_path)}>Rolar dano</button>}<button disabled={busy} onClick={() => void onAction(item.equipped ? "unequip_item" : "equip_item", { item_path: item.item_path })}>{item.equipped ? "Desequipar" : "Equipar"}</button><label>Quantidade<input type="number" min="0" max="999" value={quantity} onChange={(event) => setQuantity(Math.max(0, Number(event.target.value)))} /></label><button disabled={busy || quantity === item.quantity} className="secondary-button" onClick={() => void onAction("change_quantity", { item_path: item.item_path, quantity })}>Salvar quantidade</button>{isGm && <button disabled={busy} className="danger-button subtle" onClick={() => void onAction("remove_item", { item_path: item.item_path })}>Remover</button>}</div>}
   </article>;
 }
 
@@ -192,18 +213,77 @@ function InventoryTab({ character, mode, availableItems, rolling, onAction, onRo
   const [error, setError] = useState("");
   const [noteId, setNoteId] = useState("");
   const [quantity, setQuantity] = useState(1);
+  const [search, setSearch] = useState("");
+  const [filter, setFilter] = useState<"all" | "equipped" | "consumable">("all");
+  const consumableCount = character.inventory.filter(inventoryItemIsConsumable).length;
+  const filteredItems = useMemo(() => character.inventory.filter((item) => {
+    if (filter === "equipped" && !item.equipped) return false;
+    if (filter === "consumable" && !inventoryItemIsConsumable(item)) return false;
+    return !search.trim() || [item.item_title, item.item_type, item.description, item.notes].filter(Boolean).join(" ").toLowerCase().includes(search.trim().toLowerCase());
+  }), [character.inventory, filter, search]);
   async function act(action: string, payload: Record<string, unknown>) { setBusy(true); setError(""); try { await onAction(action, payload); } catch (reason) { setError(reason instanceof Error ? reason.message : "Não foi possível atualizar o inventário."); } finally { setBusy(false); } }
   return <div className="inventory-tab">
-    <section className="sheet-card"><h3>Recursos carregados</h3><dl className="definition-list"><div><dt>Moedas</dt><dd>{shown(character.state?.coins)}</dd></div></dl>{character.definition.base_equipment?.length ? <><h4>Equipamento-base confirmado</h4><div className="condition-cloud">{character.definition.base_equipment.map((item) => <span key={item}>{item}</span>)}</div></> : <p className="sheet-empty">Equipamento-base ainda não informado.</p>}</section>
+    <section className="sheet-card inventory-overview"><div><small>MOCHILA</small><h3>Inventário</h3><p>Consulte, equipe e consuma itens sem sair da ficha.</p></div><dl><div><dt>Moedas</dt><dd>{shown(character.state?.coins)}</dd></div><div><dt>Itens</dt><dd>{character.inventory.length}</dd></div><div><dt>Consumíveis</dt><dd>{consumableCount}</dd></div><div><dt>Unidades</dt><dd>{character.inventory.reduce((total, item) => total + item.quantity, 0)}</dd></div></dl></section>
+    <section className="sheet-card inventory-toolbar"><label>Buscar item<input value={search} placeholder="Nome, tipo ou efeito..." onChange={(event) => setSearch(event.target.value)} /></label><div role="group" aria-label="Filtrar inventário"><button className={filter === "all" ? "active" : ""} onClick={() => setFilter("all")}>Todos</button><button className={filter === "equipped" ? "active" : ""} onClick={() => setFilter("equipped")}>Equipados</button><button className={filter === "consumable" ? "active" : ""} onClick={() => setFilter("consumable")}>Consumíveis</button></div></section>
     {mode === "gm" && <section className="sheet-card grant-item-form"><div><h3>Conceder item</h3><p>Adiciona ao estado do Companion sem editar a nota do personagem.</p></div><select aria-label="Item para conceder" value={noteId} onChange={(event) => setNoteId(event.target.value)}><option value="">Escolha um item...</option>{availableItems.map((item) => <option key={item.id} value={item.id}>{item.title}</option>)}</select><input aria-label="Quantidade do item" type="number" min="1" max="999" value={quantity} onChange={(event) => setQuantity(Math.max(1, Number(event.target.value)))} /><button disabled={!noteId || busy} onClick={() => void act("grant_item", { note_id: Number(noteId), quantity })}>Conceder</button></section>}
-    <div className="sheet-inventory-grid">{character.inventory.length ? character.inventory.map((item) => <InventoryCard key={item.id} item={item} canEdit={character.permissions.edit_state} isGm={mode === "gm"} busy={busy} rolling={rolling} onAction={act} onRoll={onRoll} />) : <p className="sheet-empty">Inventário vazio.</p>}</div>
+    <div className="sheet-inventory-grid">{filteredItems.length ? filteredItems.map((item) => <InventoryCard key={item.id} item={item} canEdit={character.permissions.edit_state} isGm={mode === "gm"} busy={busy} rolling={rolling} onAction={act} onRoll={onRoll} />) : <p className="sheet-empty">Nenhum item corresponde a este filtro.</p>}</div>
     {error && <p className="warning-text">{error}</p>}
   </div>;
 }
 
+const SESSION_ABILITY_KIND_LABELS: Record<SessionAbility["kind"], string> = {
+  ability: "Habilidade",
+  power: "Poder",
+  technique: "Técnica",
+  spell: "Magia",
+  resource: "Recurso",
+  attack: "Ataque básico",
+};
+
+function SessionAbilityCatalog({ entries, resources = [], busy = false, onUse }: { entries: SessionAbility[]; resources?: CharacterResource[]; busy?: boolean; onUse?: (resourceKey: string) => Promise<void> }) {
+  const groups = useMemo(() => {
+    const grouped = new Map<string, SessionAbility[]>();
+    entries.forEach((entry) => {
+      const current = grouped.get(entry.group) || [];
+      current.push(entry);
+      grouped.set(entry.group, current);
+    });
+    return Array.from(grouped.entries());
+  }, [entries]);
+
+  return <section className="sheet-card span-2 session-ability-catalog">
+    <header className="session-ability-heading">
+      <div><small>Modo Sessão</small><h2>O QUE POSSO FAZER?</h2></div>
+      <p>Consulta rápida das capacidades confirmadas deste personagem.</p>
+    </header>
+    {groups.length ? <div className="session-ability-groups">{groups.map(([group, groupEntries]) => {
+      const circles = Array.from(new Set(groupEntries.map((entry) => entry.circle).filter((circle): circle is number => Boolean(circle))));
+      return <section className="session-ability-group" key={group}>
+        <h3>{group}</h3>
+        {circles.length ? circles.map((circle) => <div className="session-ability-circle" key={`${group}-${circle}`}>
+          <h4>{circle}º CÍRCULO</h4>
+          <div className="session-ability-list">{groupEntries.filter((entry) => entry.circle === circle).map((entry) => <SessionAbilityCard entry={entry} resource={resources.find((resource) => resource.key === entry.uses?.resource_key)} busy={busy} onUse={onUse} key={entry.id} />)}</div>
+        </div>) : <div className="session-ability-list">{groupEntries.map((entry) => <SessionAbilityCard entry={entry} resource={resources.find((resource) => resource.key === entry.uses?.resource_key)} busy={busy} onUse={onUse} key={entry.id} />)}</div>}
+      </section>;
+    })}</div> : <p className="sheet-empty">Nenhuma habilidade rápida foi estruturada para este personagem.</p>}
+  </section>;
+}
+
+function SessionAbilityCard({ entry, resource, busy = false, onUse }: { entry: SessionAbility; resource?: CharacterResource; busy?: boolean; onUse?: (resourceKey: string) => Promise<void> }) {
+  return <details className="session-ability-card">
+    <summary><span><strong>{entry.name}</strong><small>{SESSION_ABILITY_KIND_LABELS[entry.kind]}{resource ? ` · ${resource.current}/${resource.maximum}` : ""}</small></span><b>VER</b></summary>
+    <div className="session-ability-body">
+      <p>{entry.description || "Habilidade disponível."}</p>
+      {resource && <div className="ability-use-control"><span><strong>{resource.current}</strong><small>de {resource.maximum} disponíveis</small></span>{onUse && <button disabled={busy || resource.current <= 0} onClick={() => void onUse(resource.key)}>Usar 1</button>}</div>}
+      {entry.mechanics_status === "partial" && <aside>Detalhes mecânicos ainda não estruturados.</aside>}
+      {entry.source && <small>Fonte: {entry.source}</small>}
+    </div>
+  </details>;
+}
+
 function AbilitiesTab({ character }: { character: PlayableCharacter }) {
   const abilities = character.definition.abilities || {};
-  return <div className="playable-tab-grid"><section className="sheet-card"><h3>Habilidades raciais</h3><TextBlock value={abilities.racial} /></section><section className="sheet-card"><h3>Habilidades de classe</h3><TextBlock value={abilities.class} /></section><section className="sheet-card span-2"><h3>Magias, fórmulas ou técnicas</h3><TextBlock value={abilities.magic} empty="Nenhuma magia ou técnica confirmada nesta ficha." />{abilities.magic_notes && <aside className="rule-note">{abilities.magic_notes}</aside>}</section></div>;
+  return <div className="playable-tab-grid"><SessionAbilityCatalog entries={character.definition.session_abilities || []} /><section className="sheet-card"><h3>Habilidades raciais</h3><TextBlock value={abilities.racial} /></section><section className="sheet-card"><h3>Habilidades de classe</h3><TextBlock value={abilities.class} /></section><section className="sheet-card span-2"><h3>Magias, fórmulas ou técnicas</h3><TextBlock value={abilities.magic} empty="Nenhuma magia ou técnica confirmada nesta ficha." />{abilities.magic_notes && <aside className="rule-note">{abilities.magic_notes}</aside>}</section></div>;
 }
 
 function StoryTab({ character, npcs }: { character: PlayableCharacter; npcs: NpcRecord[] }) {
@@ -339,7 +419,6 @@ export default function PlayableCharacterSheet({ mode }: { mode: "player" | "gm"
           {tab === "mechanics" && <MechanicsTab character={character} rolling={rolling} onRoll={roll} />}
           {tab === "combat" && <CombatTab character={character} mode={mode} rolling={rolling} onAction={action} onRoll={roll} />}
           {tab === "inventory" && <InventoryTab character={character} mode={mode} availableItems={availableItems} rolling={rolling} onAction={action} onRoll={roll} />}
-          {tab === "abilities" && <AbilitiesTab character={character} />}
           {tab === "story" && <StoryTab character={character} npcs={knownNpcs} />}
           {tab === "gm" && mode === "gm" && <GmTab character={character} events={events} onDefinition={updateDefinition} onAction={action} onRevert={revert} />}
         </div>

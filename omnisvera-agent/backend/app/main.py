@@ -2,15 +2,19 @@ from __future__ import annotations
 
 from pathlib import Path
 from datetime import datetime, timezone
+import asyncio
+import base64
+import binascii
 import re
+import json
 import threading
 import time
 import unicodedata
 import uuid
 
-from fastapi import Depends, FastAPI, Header, HTTPException, Query, Request
+from fastapi import Depends, FastAPI, Header, HTTPException, Query, Request, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, JSONResponse, Response
 from fastapi.staticfiles import StaticFiles
 
 from .access import (
@@ -129,6 +133,7 @@ from .player_progress import (
 from .player_inventory import init_player_inventory, list_inventory, upsert_inventory
 from .player_ideas import create_idea, init_player_ideas, list_ideas, review_idea
 from .rag import answer_question
+from .runtime_events import RUNTIME_EVENT_TYPES, init_runtime_events, record_runtime_event
 from .scene_play import (
     active_scene,
     add_participant,
@@ -155,6 +160,22 @@ from .scene_play import (
     update_scene,
     void_event,
 )
+from .session_workspace import (
+    delete_workspace_token,
+    get_session_item,
+    get_session_item_by_path,
+    get_workspace_snapshot,
+    heartbeat_workspace,
+    init_session_workspace,
+    list_session_items,
+    record_workspace_message,
+    save_session_item,
+    save_workspace_token,
+    set_workspace_map,
+    update_workspace_token_position,
+)
+from .session_ledger import init_session_ledger, list_session_ledger, session_ledger_version
+from .session_realtime import session_realtime
 from .world_travel import (
     add_journey_participant,
     advance_journey,
@@ -261,6 +282,9 @@ from .schemas import (
     PlayerIdeaReview,
     PlayerQuestRecord,
     PlayerQuestUpdate,
+    PlayerRuntimeResponse,
+    RuntimeEventCreate,
+    RuntimeEventResponse,
     PlayableCharacterResponse,
     PlayableCharacterSummary,
     RebuildResponse,
@@ -302,6 +326,12 @@ from .schemas import (
     WorldLocationCreate,
     WorldMapCreate,
     WorldVersionedUpdate,
+    WorkspaceMapUpload,
+    WorkspaceMessageCreate,
+    WorkspaceTokenCreate,
+    WorkspaceTokenPositionUpdate,
+    SessionItemWrite,
+    SessionItemGrant,
 )
 from .search import search_notes
 from .vault_index import all_notes_for_search, get_note, index_signature, init_db, list_notes, rebuild_index, resolve_note, row_to_note
@@ -310,7 +340,28 @@ from .vault_reader import iter_markdown_notes, markdown_signature
 
 settings = get_settings()
 app = FastAPI(title="Omnisvera Companion", version="0.2.0")
+_realtime_watch_task: asyncio.Task | None = None
+
+
+@app.middleware("http")
+async def no_cache_nimalis_game(request: Request, call_next):
+    response = await call_next(request)
+    if request.url.path.startswith("/nimalis/"):
+        # The game is large and is embedded in the Companion on mobile.  Keep
+        # the bootstrap files revalidating, but allow the runtime binaries to
+        # be retained by the browser/Service Worker between launches.
+        file_name = request.url.path.rsplit("/", 1)[-1].lower()
+        if file_name in {"nimalis.html", "nimalis.pck", "nimalis.wasm", "nimalis.js", "sw.js", "release.json"}:
+            response.headers["Cache-Control"] = "no-cache, must-revalidate"
+        else:
+            response.headers["Cache-Control"] = "public, max-age=3600"
+        if "Pragma" in response.headers:
+            del response.headers["Pragma"]
+    return response
+
+
 FRONTEND_DIST = Path(__file__).resolve().parents[2] / "frontend" / "dist"
+NIMALIS_GAME_DIST = FRONTEND_DIST / "nimalis"
 EDITOR_BACKUP_ROOT = Path(__file__).resolve().parents[1] / "data" / "editor_backups"
 _INDEX_REFRESH_LOCK = threading.Lock()
 _LAST_INDEX_REFRESH_CHECK = 0.0
@@ -430,6 +481,13 @@ def _personal_player_answer(question: str, access: AccessContext) -> dict | None
         note = resolve_note(settings.database_path, path, access_mode="player")
         if note:
             notes_used.append(note)
+    # The master token controls Sage in the game. Keep Sage's inventory in the
+    # same runtime envelope as player characters, while still filtering it in
+    # the Godot client by the authenticated master session.
+    sage_inventory = _inventory_with_media(
+        list_inventory(settings.database_path, "Sage"),
+        access_mode="gm",
+    ) if access.mode == "gm" else []
     return {
         "answer": "\n\n".join(paragraphs),
         "notes_used": notes_used,
@@ -620,6 +678,9 @@ def startup() -> None:
     init_contract_play(settings.database_path)
     init_npc_memory(settings.database_path)
     init_world_travel(settings.database_path)
+    init_runtime_events(settings.database_path)
+    init_session_workspace(settings.database_path)
+    init_session_ledger(settings.database_path)
     if settings.training_capture_mode != "off":
         purge_unreviewed(settings.unreviewed_retention_days)
     if settings.rebuild_on_startup:
@@ -627,8 +688,40 @@ def startup() -> None:
         rebuild_index(settings.database_path, notes)
 
 
+async def _watch_session_ledger() -> None:
+    version = session_ledger_version(settings.database_path)
+    while True:
+        await asyncio.sleep(.6)
+        current = await asyncio.to_thread(session_ledger_version, settings.database_path)
+        if current != version:
+            version = current
+            await session_realtime.broadcast({"type": "session_changed", "ledger_id": current})
+
+
+@app.on_event("startup")
+async def startup_realtime() -> None:
+    global _realtime_watch_task
+    _realtime_watch_task = asyncio.create_task(_watch_session_ledger())
+
+
+@app.on_event("shutdown")
+async def shutdown_realtime() -> None:
+    global _realtime_watch_task
+    if _realtime_watch_task is not None:
+        _realtime_watch_task.cancel()
+        try:
+            await _realtime_watch_task
+        except asyncio.CancelledError:
+            pass
+        _realtime_watch_task = None
+
+
 @app.get("/health", response_model=HealthResponse)
 async def health(access: AccessContext = Depends(require_any)) -> HealthResponse:
+    try:
+        ollama_accessible = await asyncio.wait_for(check_ollama(settings.ollama_base_url), timeout=1.5)
+    except (TimeoutError, OSError):
+        ollama_accessible = False
     return HealthResponse(
         backend="ok",
         vault_path=str(settings.vault_path),
@@ -647,12 +740,14 @@ async def health(access: AccessContext = Depends(require_any)) -> HealthResponse
         semantic_index_path=str(settings.semantic_index_path),
         auto_refresh_index=settings.auto_refresh_index,
         auto_refresh_interval_seconds=settings.auto_refresh_interval_seconds,
-        ollama_accessible=await check_ollama(settings.ollama_base_url),
+        ollama_accessible=ollama_accessible,
         access_mode=access.mode,
         player_mode_available=bool(settings.player_token or settings.player_profiles),
         player_profile_id=access.profile_id,
         player_character_path=access.character_path,
         player_character_title=access.character_title,
+        game_web_available=(NIMALIS_GAME_DIST / "nimalis.html").exists(),
+        game_web_url="/nimalis/nimalis.html" if (NIMALIS_GAME_DIST / "nimalis.html").exists() else None,
         training_capture_mode=settings.training_capture_mode if access.mode == "gm" else None,
         behavior_memory_enabled=settings.behavior_memory_enabled,
         behavior_memory_mode=settings.behavior_memory_mode if access.mode == "gm" else None,
@@ -660,11 +755,327 @@ async def health(access: AccessContext = Depends(require_any)) -> HealthResponse
     )
 
 
+def _workspace_identity(access: AccessContext) -> tuple[str, str, str, str | None]:
+    if access.mode == "gm":
+        return "master", "Mestre", "gm", "sage"
+    actor_id = str(access.profile_id or "player")
+    actor_name = str(access.character_title or actor_id.title())
+    return actor_id, actor_name, "player", access.profile_id
+
+
+@app.get("/workspace")
+def session_workspace_snapshot(_: AccessContext = Depends(require_any)) -> dict:
+    return get_workspace_snapshot(settings.database_path)
+
+
+@app.get("/workspace/ledger")
+def session_workspace_ledger(
+    limit: int = Query(default=500, ge=1, le=1000),
+    access: AccessContext = Depends(require_any),
+) -> list[dict]:
+    return list_session_ledger(settings.database_path, access, limit=limit)
+
+
+@app.post("/workspace/realtime-ticket")
+def session_workspace_realtime_ticket(access: AccessContext = Depends(require_any)) -> dict:
+    return {"ticket": session_realtime.issue_ticket(access), "expires_in": 60}
+
+
+@app.websocket("/ws/session")
+async def session_workspace_socket(websocket: WebSocket, ticket: str = Query(default="")) -> None:
+    access = session_realtime.consume_ticket(ticket)
+    if access is None:
+        await websocket.close(code=4401, reason="Ticket inválido ou expirado")
+        return
+    await session_realtime.connect(websocket)
+    try:
+        await websocket.send_json({
+            "type": "connected",
+            "ledger_id": session_ledger_version(settings.database_path),
+            "mode": access.mode,
+        })
+        while True:
+            message = await websocket.receive_text()
+            if message == "ping":
+                await websocket.send_text("pong")
+    except WebSocketDisconnect:
+        pass
+    finally:
+        await session_realtime.disconnect(websocket)
+
+
+@app.post("/workspace/heartbeat")
+def session_workspace_heartbeat(access: AccessContext = Depends(require_any)) -> dict:
+    actor_id, actor_name, actor_role, character_id = _workspace_identity(access)
+    return heartbeat_workspace(
+        settings.database_path,
+        actor_id=actor_id,
+        actor_name=actor_name,
+        actor_role=actor_role,
+        character_id=character_id,
+    )
+
+
+@app.post("/workspace/messages")
+def session_workspace_message(
+    request: WorkspaceMessageCreate,
+    access: AccessContext = Depends(require_any),
+) -> dict:
+    actor_id, actor_name, actor_role, character_id = _workspace_identity(access)
+    return record_workspace_message(
+        settings.database_path,
+        actor_id=actor_id,
+        actor_name=actor_name,
+        actor_role=actor_role,
+        character_id=character_id,
+        text=request.text.strip(),
+        message_kind=request.message_kind,
+    )
+
+
+@app.post("/gm/workspace/map")
+def gm_upload_workspace_map(
+    request: WorkspaceMapUpload,
+    _: AccessContext = Depends(require_master),
+) -> dict:
+    try:
+        content = base64.b64decode(request.data_base64, validate=True)
+    except (binascii.Error, ValueError) as error:
+        raise HTTPException(status_code=400, detail="Imagem codificada de forma inválida.") from error
+    if not content or len(content) > 10 * 1024 * 1024:
+        raise HTTPException(status_code=400, detail="A imagem deve possuir no máximo 10 MB.")
+    if content.startswith(b"\x89PNG\r\n\x1a\n"):
+        extension = ".png"
+    elif content.startswith(b"\xff\xd8\xff"):
+        extension = ".jpg"
+    elif content.startswith(b"RIFF") and len(content) >= 12 and content[8:12] == b"WEBP":
+        extension = ".webp"
+    else:
+        raise HTTPException(status_code=400, detail="Use uma imagem PNG, JPG ou WEBP.")
+    title = request.title.strip()
+    safe_stem = _media_lookup_key(title).strip("_")[:80] or "mapa_da_sessao"
+    target_directory = settings.vault_path / "zz_media" / "session_maps"
+    target_directory.mkdir(parents=True, exist_ok=True)
+    target = target_directory / f"{safe_stem}_{uuid.uuid4().hex[:10]}{extension}"
+    temporary = target.with_suffix(target.suffix + ".tmp")
+    temporary.write_bytes(content)
+    temporary.replace(target)
+    relative_path = target.relative_to(settings.vault_path).as_posix()
+    map_record = set_workspace_map(settings.database_path, title=title, image_path=relative_path)
+    record_workspace_message(
+        settings.database_path,
+        actor_id="master",
+        actor_name="Mestre",
+        actor_role="gm",
+        character_id="sage",
+        text=f"Mapa da sessão alterado para: {title}",
+        message_kind="action",
+    )
+    return map_record
+
+
+@app.post("/gm/workspace/tokens")
+def gm_create_workspace_token(
+    request: WorkspaceTokenCreate,
+    _: AccessContext = Depends(require_master),
+) -> dict:
+    image_path = request.image_path
+    name = request.name.strip()
+    current_hp = request.current_hp
+    maximum_hp = request.maximum_hp
+    if request.token_type == "character":
+        if not request.character_id or request.character_id not in _character_ids():
+            raise HTTPException(status_code=400, detail="Escolha um personagem válido.")
+        character = _character_summary(_playable_character(request.character_id, AccessContext(mode="gm")))
+        name = character["name"]
+        image_path = character.get("portrait")
+        current_hp = character.get("current_hp")
+        maximum_hp = character.get("maximum_hp")
+    elif request.image_data_base64:
+        try:
+            content = base64.b64decode(request.image_data_base64, validate=True)
+        except (binascii.Error, ValueError) as error:
+            raise HTTPException(status_code=400, detail="Imagem do monstro inválida.") from error
+        if not content or len(content) > 5 * 1024 * 1024:
+            raise HTTPException(status_code=400, detail="A imagem do monstro deve possuir no máximo 5 MB.")
+        if content.startswith(b"\x89PNG\r\n\x1a\n"):
+            extension = ".png"
+        elif content.startswith(b"\xff\xd8\xff"):
+            extension = ".jpg"
+        elif content.startswith(b"RIFF") and len(content) >= 12 and content[8:12] == b"WEBP":
+            extension = ".webp"
+        else:
+            raise HTTPException(status_code=400, detail="Use uma imagem PNG, JPG ou WEBP para o monstro.")
+        target_directory = settings.vault_path / "zz_media" / "session_tokens"
+        target_directory.mkdir(parents=True, exist_ok=True)
+        safe_stem = _media_lookup_key(name).strip("_")[:80] or "monstro"
+        target = target_directory / f"{safe_stem}_{uuid.uuid4().hex[:10]}{extension}"
+        target.write_bytes(content)
+        image_path = target.relative_to(settings.vault_path).as_posix()
+    token = save_workspace_token(
+        settings.database_path,
+        token_type=request.token_type,
+        character_id=request.character_id,
+        name=name,
+        image_path=image_path,
+        color=request.color,
+        latitude=request.latitude,
+        longitude=request.longitude,
+        current_hp=current_hp,
+        maximum_hp=maximum_hp,
+        conditions=request.conditions,
+    )
+    record_workspace_message(
+        settings.database_path,
+        actor_id="master",
+        actor_name="Mestre",
+        actor_role="gm",
+        character_id="sage",
+        message_kind="action",
+        text=f"{name} foi posicionado no mapa · latitude {token['latitude']:.2f} · longitude {token['longitude']:.2f}.",
+    )
+    return token
+
+
+@app.patch("/gm/workspace/tokens/{token_id:path}/position")
+def gm_move_workspace_token(
+    token_id: str,
+    request: WorkspaceTokenPositionUpdate,
+    _: AccessContext = Depends(require_master),
+) -> dict:
+    token = update_workspace_token_position(
+        settings.database_path,
+        token_id=token_id,
+        latitude=request.latitude,
+        longitude=request.longitude,
+    )
+    if token is None:
+        raise HTTPException(status_code=404, detail="Marcador não encontrado.")
+    record_workspace_message(
+        settings.database_path,
+        actor_id="master",
+        actor_name="Mestre",
+        actor_role="gm",
+        character_id="sage",
+        message_kind="action",
+        text=f"{token['name']} movido · latitude {token['latitude']:.2f} · longitude {token['longitude']:.2f}.",
+    )
+    return token
+
+
+@app.delete("/gm/workspace/tokens/{token_id:path}", status_code=204)
+def gm_remove_workspace_token(token_id: str, _: AccessContext = Depends(require_master)) -> Response:
+    if not delete_workspace_token(settings.database_path, token_id):
+        raise HTTPException(status_code=404, detail="Marcador não encontrado.")
+    return Response(status_code=204)
+
+
+@app.get("/gm/workspace/items")
+def gm_list_session_items(_: AccessContext = Depends(require_master)) -> list[dict]:
+    return list_session_items(settings.database_path)
+
+
+@app.post("/gm/workspace/items")
+def gm_create_session_item(request: SessionItemWrite, _: AccessContext = Depends(require_master)) -> dict:
+    item = save_session_item(settings.database_path, **request.model_dump())
+    record_workspace_message(
+        settings.database_path, actor_id="master", actor_name="Mestre", actor_role="gm",
+        character_id="sage", message_kind="action", text=f"Item criado: {item['name']}.",
+    )
+    return item
+
+
+@app.patch("/gm/workspace/items/{item_id}")
+def gm_update_session_item(
+    item_id: int,
+    request: SessionItemWrite,
+    _: AccessContext = Depends(require_master),
+) -> dict:
+    item = save_session_item(settings.database_path, item_id=item_id, **request.model_dump())
+    record_workspace_message(
+        settings.database_path, actor_id="master", actor_name="Mestre", actor_role="gm",
+        character_id="sage", message_kind="action", text=f"Item editado: {item['name']}.",
+    )
+    return item
+
+
+@app.post("/gm/workspace/items/grant")
+def gm_grant_session_item(request: SessionItemGrant, _: AccessContext = Depends(require_master)) -> dict:
+    if request.character_id not in _character_ids():
+        raise HTTPException(status_code=400, detail="Personagem inválido.")
+    item = get_session_item(settings.database_path, request.item_id)
+    if item is None:
+        raise HTTPException(status_code=404, detail="Item da sessão não encontrado.")
+    apply_character_action(
+        settings.database_path,
+        character_id=request.character_id,
+        actor_id="master",
+        actor_role="gm",
+        action="grant_item",
+        payload={
+            "item_path": item["item_path"], "item_title": item["name"],
+            "quantity": request.quantity, "equipped": request.equipped, "notes": request.notes,
+        },
+        reason=f"Concedeu {request.quantity}× {item['name']}",
+    )
+    character_name = _character_summary(_playable_character(request.character_id, AccessContext(mode="gm")))["name"]
+    record_workspace_message(
+        settings.database_path, actor_id="master", actor_name="Mestre", actor_role="gm",
+        character_id="sage", message_kind="action",
+        text=f"{character_name} recebeu {request.quantity}× {item['name']}.",
+    )
+    return {"item": item, "character": _playable_character(request.character_id, AccessContext(mode="gm"))}
+
+
 @app.post("/index/rebuild", response_model=RebuildResponse)
 def rebuild(_: AccessContext = Depends(require_master)) -> RebuildResponse:
     notes, skipped = iter_markdown_notes(settings.vault_path)
     indexed = rebuild_index(settings.database_path, notes)
     return RebuildResponse(indexed_notes=indexed, skipped_files=skipped, vault_path=str(settings.vault_path))
+
+
+@app.get("/player/runtime", response_model=PlayerRuntimeResponse, response_model_exclude_none=True)
+def player_runtime(access: AccessContext = Depends(require_any)) -> dict:
+    """Return the single authenticated runtime envelope consumed by the game client."""
+    if access.mode == "player" and access.profile_id:
+        character = _playable_character(access.profile_id, access)
+        return {
+            "access_mode": access.mode,
+            "profile_id": access.profile_id,
+            "character_id": access.profile_id,
+            "character_title": access.character_title,
+            "character": character,
+            "inventory": character.get("inventory", []),
+        }
+    return {
+        "access_mode": access.mode,
+        "profile_id": "sage" if access.mode == "gm" else None,
+        "character_id": "sage" if access.mode == "gm" else "unassigned",
+        "character_title": "Sage" if access.mode == "gm" else access.character_title,
+        "character": None,
+        "inventory": sage_inventory,
+    }
+
+
+@app.post("/player/runtime/events", response_model=RuntimeEventResponse)
+def player_runtime_event(
+    request: RuntimeEventCreate,
+    access: AccessContext = Depends(require_any),
+) -> dict:
+    if request.event_type not in RUNTIME_EVENT_TYPES:
+        raise HTTPException(status_code=400, detail="Tipo de evento de runtime invÃ¡lido.")
+    if len(json.dumps(request.payload, ensure_ascii=False)) > 12_000:
+        raise HTTPException(status_code=413, detail="Payload de evento muito grande.")
+    profile_id = access.profile_id or ("sage" if access.mode == "gm" else "group")
+    return record_runtime_event(
+        settings.database_path,
+        event_id=request.event_id,
+        profile_id=profile_id,
+        actor_id="master" if access.mode == "gm" else profile_id,
+        actor_role=access.mode,
+        event_type=request.event_type,
+        payload=dict(request.payload),
+    )
 
 
 # Legacy endpoints: kept as GM-only so old frontend/bookmarks do not bypass safety.
@@ -1330,12 +1741,25 @@ def _inventory_with_media(items: list[dict], *, access_mode: str) -> list[dict]:
             record["cover"] = note.get("cover")
             detail = get_note(settings.database_path, int(note["id"]), access_mode=access_mode)
             frontmatter = dict((detail or {}).get("frontmatter") or {})
+            record["item_type"] = frontmatter.get("item_type") or frontmatter.get("item_category")
+            record["description"] = frontmatter.get("description") or frontmatter.get("summary")
+            raw_effects = frontmatter.get("effects") or frontmatter.get("efeitos") or []
+            record["effects"] = raw_effects if isinstance(raw_effects, list) else [str(raw_effects)]
+            record["usable"] = bool(frontmatter.get("usable", frontmatter.get("usavel", False)))
             candidate_formula = frontmatter.get("base_damage") or frontmatter.get("damage")
             if candidate_formula:
                 try:
                     record["damage_formula"] = parse_formula(str(candidate_formula)).formula
                 except ValueError:
                     record["damage_formula"] = None
+        else:
+            custom = get_session_item_by_path(settings.database_path, str(record.get("item_path") or ""))
+            if custom:
+                record["item_type"] = custom.get("item_type")
+                record["description"] = custom.get("description")
+                record["effects"] = custom.get("effects") or []
+                record["usable"] = bool(custom.get("usable"))
+                record["thumbnail"] = custom.get("image_path")
         enriched.append(record)
     return enriched
 
@@ -1409,7 +1833,11 @@ def _sheet_for_character(profile_id: str) -> dict:
 
 
 def _character_ids() -> list[str]:
-    ids = list(settings.player_profiles)
+    ids = [
+        profile_id
+        for profile_id, profile in settings.player_profiles.items()
+        if str(profile.get("character_path") or "").strip()
+    ]
     for sheet in list_sheets(settings.database_path):
         if sheet["profile_id"] not in ids:
             ids.append(sheet["profile_id"])
@@ -1486,13 +1914,18 @@ def _character_summary(record: dict) -> dict:
 
 @app.get("/characters", response_model=list[PlayableCharacterSummary])
 def playable_characters(access: AccessContext = Depends(require_any)) -> list[dict]:
-    maybe_refresh_index()
-    return [_character_summary(_playable_character(profile_id, access)) for profile_id in _character_ids()]
+    summaries: list[dict] = []
+    for profile_id in _character_ids():
+        summary = _character_summary(_playable_character(profile_id, AccessContext(mode="gm")))
+        summary["access_level"] = _character_access_level(access, profile_id)
+        if summary["access_level"] == "public":
+            summary["resources"] = []
+        summaries.append(summary)
+    return summaries
 
 
 @app.get("/characters/{profile_id}", response_model=PlayableCharacterResponse, response_model_exclude_none=True)
 def playable_character(profile_id: str, access: AccessContext = Depends(require_any)) -> dict:
-    maybe_refresh_index()
     return _playable_character(profile_id, access)
 
 
@@ -1521,7 +1954,7 @@ def playable_character_action(
         payload["item_path"] = note["path"]
         payload["item_title"] = note["title"]
     try:
-        apply_character_action(
+        result = apply_character_action(
             settings.database_path,
             character_id=profile_id,
             actor_id="master" if access.mode == "gm" else str(access.profile_id),
@@ -1535,6 +1968,17 @@ def playable_character_action(
         raise HTTPException(status_code=403, detail=str(error)) from error
     except (TypeError, ValueError) as error:
         raise HTTPException(status_code=400, detail=str(error)) from error
+    public_reason = (request.reason or "").strip() or request.action.replace("_", " ")
+    character_name = _character_summary(_playable_character(profile_id, AccessContext(mode="gm")))["name"]
+    record_workspace_message(
+        settings.database_path,
+        actor_id="master" if access.mode == "gm" else str(access.profile_id),
+        actor_name="Mestre" if access.mode == "gm" else str(access.character_title or character_name),
+        actor_role="gm" if access.mode == "gm" else "player",
+        character_id="sage" if access.mode == "gm" else access.profile_id,
+        message_kind="action",
+        text=f"{character_name}: {public_reason}.",
+    )
     return _playable_character(profile_id, access)
 
 
@@ -1558,6 +2002,7 @@ def playable_character_events(
             "equip_item",
             "unequip_item",
             "change_quantity",
+            "rest_at_inn",
         }
         events = [event for event in events if event["event_type"] in owner_visible_types]
     return events
@@ -1580,6 +2025,12 @@ def gm_update_playable_character_definition(
         )
     except ValueError as error:
         raise HTTPException(status_code=400, detail=str(error)) from error
+    character_name = _character_summary(_playable_character(profile_id, AccessContext(mode="gm")))["name"]
+    record_workspace_message(
+        settings.database_path, actor_id="master", actor_name="Mestre", actor_role="gm",
+        character_id="sage", message_kind="action",
+        text=f"{character_name}: {(request.reason or 'ficha ajustada pelo Mestre').strip()}.",
+    )
     return _playable_character(profile_id, access)
 
 
@@ -2660,6 +3111,7 @@ def gm_inventory(_: AccessContext = Depends(require_master)) -> list[dict]:
     items: list[dict] = []
     for profile_id in settings.player_profiles:
         items.extend(list_inventory(settings.database_path, profile_id))
+    items.extend(list_inventory(settings.database_path, "Sage"))
     return _inventory_with_media(items, access_mode="gm")
 
 
@@ -2681,7 +3133,7 @@ def gm_review_idea(idea_id: int, request: PlayerIdeaReview, _: AccessContext = D
 
 @app.post("/gm/inventory", response_model=InventoryRecord)
 def gm_update_inventory(request: InventoryUpdate, _: AccessContext = Depends(require_master)) -> dict:
-    if request.profile_id not in settings.player_profiles:
+    if request.profile_id not in settings.player_profiles and request.profile_id.strip().lower() != "sage":
         raise HTTPException(status_code=400, detail="Perfil de jogador inválido.")
     note = get_note(settings.database_path, request.note_id, access_mode="player")
     if note is None or note.get("type") != "item":
@@ -3415,6 +3867,34 @@ def vault_media(media_path: str, _: AccessContext = Depends(require_any)):
 
 if FRONTEND_DIST.exists():
     app.mount("/assets", StaticFiles(directory=FRONTEND_DIST / "assets"), name="assets")
+if NIMALIS_GAME_DIST.exists():
+    @app.get("/nimalis/release.json", include_in_schema=False)
+    def nimalis_release_manifest():
+        base_pack = NIMALIS_GAME_DIST / "nimalis.pck"
+        base_signature = "missing"
+        if base_pack.exists():
+            stat = base_pack.stat()
+            base_signature = f"{stat.st_size}-{stat.st_mtime_ns}"
+        return JSONResponse({
+            "version": base_signature,
+            "base_version": base_signature,
+            "patch_url": None,
+        })
+
+    @app.get("/nimalis/sw.js", include_in_schema=False)
+    def nimalis_service_worker():
+        worker = Path(__file__).with_name("nimalis_sw.js")
+        source = worker.read_text(encoding="utf-8")
+        pack = NIMALIS_GAME_DIST / "nimalis.pck"
+        if pack.exists():
+            stamp = pack.stat()
+            release_id = f"{stamp.st_size}-{stamp.st_mtime_ns}"
+        else:
+            release_id = "development"
+        source = source.replace("nimalis-runtime-vCURRENT", f"nimalis-runtime-v{release_id}")
+        return Response(source, media_type="application/javascript")
+
+    app.mount("/nimalis", StaticFiles(directory=NIMALIS_GAME_DIST, html=True), name="nimalis_game")
 
 
 @app.get("/", response_model=None)
@@ -3429,7 +3909,14 @@ def frontend_root():
 
 @app.get("/{full_path:path}", response_model=None)
 def frontend_fallback(request: Request, full_path: str):
-    if full_path.startswith(("health", "notes", "index", "search", "chat", "gm", "player", "characters", "rolls", "roll-requests", "scenes", "sessions", "contracts", "npcs", "media")):
+    if full_path.startswith("nimalis/"):
+        relative_path = full_path.removeprefix("nimalis/")
+        game_root = NIMALIS_GAME_DIST.resolve()
+        game_file = (NIMALIS_GAME_DIST / relative_path).resolve()
+        if game_root in game_file.parents and game_file.is_file():
+            return FileResponse(game_file)
+        raise HTTPException(status_code=404, detail="Arquivo do jogo nÃ£o encontrado.")
+    if full_path.startswith(("health", "workspace", "notes", "index", "search", "chat", "gm", "player", "characters", "rolls", "roll-requests", "scenes", "sessions", "contracts", "npcs", "media")):
         raise HTTPException(status_code=404, detail="Endpoint não encontrado.")
     index = FRONTEND_DIST / "index.html"
     if index.exists():

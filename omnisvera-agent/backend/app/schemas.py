@@ -29,6 +29,8 @@ class HealthResponse(BaseModel):
     player_profile_id: str | None = None
     player_character_path: str | None = None
     player_character_title: str | None = None
+    game_web_available: bool = False
+    game_web_url: str | None = None
     training_capture_mode: str | None = None
     behavior_memory_enabled: bool = False
     behavior_memory_mode: str | None = None
@@ -305,6 +307,10 @@ class InventoryRecord(BaseModel):
     thumbnail: str | None = None
     cover: str | None = None
     damage_formula: str | None = None
+    item_type: str | None = None
+    description: str | None = None
+    effects: list[str] = Field(default_factory=list)
+    usable: bool = False
     quantity: int
     equipped: bool
     notes: str | None = None
@@ -372,6 +378,7 @@ class CharacterResource(BaseModel):
     label: str
     current: int = Field(ge=0)
     maximum: int = Field(ge=0)
+    recharge: str | None = None
 
 
 class CharacterStateResponse(BaseModel):
@@ -404,6 +411,7 @@ class CharacterDefinitionResponse(BaseModel):
     attributes: dict[str, int | float | None] | None = None
     attribute_modifiers: dict[str, int | None] | None = None
     abilities: dict[str, str] | None = None
+    session_abilities: list[dict[str, Any]] | None = None
     attacks: list[dict[str, Any]] | None = None
     attack_notes: str | None = None
     defenses: dict[str, Any] | None = None
@@ -440,6 +448,33 @@ class PlayableCharacterResponse(BaseModel):
     permissions: CharacterPermissions
 
 
+class PlayerRuntimeResponse(BaseModel):
+    schema_version: str = "omnisvera.game.runtime.v1"
+    access_mode: str
+    profile_id: str | None = None
+    character_id: str
+    character_title: str | None = None
+    character: PlayableCharacterResponse | None = None
+    inventory: list[InventoryRecord] = Field(default_factory=list)
+
+
+class RuntimeEventCreate(BaseModel):
+    event_id: str = Field(min_length=8, max_length=120)
+    event_type: str = Field(min_length=3, max_length=64)
+    payload: dict[str, Any] = Field(default_factory=dict)
+
+
+class RuntimeEventResponse(BaseModel):
+    id: int
+    event_id: str
+    profile_id: str
+    actor_id: str
+    actor_role: str
+    event_type: str
+    payload: dict[str, Any] = Field(default_factory=dict)
+    created_at: str
+
+
 class PlayableCharacterSummary(BaseModel):
     id: str
     name: str
@@ -463,6 +498,55 @@ class CharacterStateAction(BaseModel):
     payload: dict[str, Any] = Field(default_factory=dict)
     reason: str | None = Field(default=None, max_length=500)
     session_id: str | None = Field(default=None, max_length=120)
+
+
+class WorkspaceMessageCreate(BaseModel):
+    text: str = Field(min_length=1, max_length=2000)
+    message_kind: str = Field(default="message", pattern="^(message|action)$")
+
+
+class WorkspaceMapUpload(BaseModel):
+    title: str = Field(min_length=1, max_length=180)
+    filename: str = Field(min_length=1, max_length=255)
+    content_type: str = Field(min_length=1, max_length=100)
+    data_base64: str = Field(min_length=16, max_length=16_000_000)
+
+
+class WorkspaceTokenCreate(BaseModel):
+    token_type: str = Field(pattern="^(character|monster)$")
+    character_id: str | None = Field(default=None, max_length=80)
+    name: str = Field(min_length=1, max_length=120)
+    image_path: str | None = Field(default=None, max_length=500)
+    image_filename: str | None = Field(default=None, max_length=255)
+    image_data_base64: str | None = Field(default=None, max_length=8_000_000)
+    color: str = Field(default="#d6a858", pattern="^#[0-9A-Fa-f]{6}$")
+    latitude: float = Field(default=50, ge=0, le=100)
+    longitude: float = Field(default=50, ge=0, le=100)
+    current_hp: int | None = Field(default=None, ge=0, le=99999)
+    maximum_hp: int | None = Field(default=None, ge=1, le=99999)
+    conditions: list[str] = Field(default_factory=list, max_length=30)
+
+
+class WorkspaceTokenPositionUpdate(BaseModel):
+    latitude: float = Field(ge=0, le=100)
+    longitude: float = Field(ge=0, le=100)
+
+
+class SessionItemWrite(BaseModel):
+    name: str = Field(min_length=1, max_length=160)
+    item_type: str = Field(default="item", min_length=1, max_length=80)
+    description: str | None = Field(default=None, max_length=3000)
+    effects: list[str] = Field(default_factory=list, max_length=30)
+    usable: bool = False
+    image_path: str | None = Field(default=None, max_length=500)
+
+
+class SessionItemGrant(BaseModel):
+    character_id: str = Field(min_length=1, max_length=80)
+    item_id: int = Field(ge=1)
+    quantity: int = Field(default=1, ge=1, le=999)
+    equipped: bool = False
+    notes: str | None = Field(default=None, max_length=500)
 
 
 class CharacterDefinitionUpdate(BaseModel):

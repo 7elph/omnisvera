@@ -17,7 +17,17 @@ New-Item -ItemType Directory -Force -Path $runtime | Out-Null
 Get-Process cloudflared -ErrorAction SilentlyContinue | Stop-Process -Force
 Remove-Item $log -Force -ErrorAction SilentlyContinue
 Remove-Item $outLog -Force -ErrorAction SilentlyContinue
-Start-Process -FilePath $cloudflared -ArgumentList @("tunnel","--url","http://127.0.0.1:$Port","--no-autoupdate") -WindowStyle Hidden -RedirectStandardOutput $outLog -RedirectStandardError $log
+# HTTP/2 over IPv4 is more reliable than QUIC on this connection for the
+# large Godot .pck transfer. Extra retries prevent a transient resolver/edge
+# failure from aborting the first game download on mobile.
+Start-Process -FilePath $cloudflared -ArgumentList @(
+  "tunnel",
+  "--url", "http://127.0.0.1:$Port",
+  "--protocol", "http2",
+  "--edge-ip-version", "4",
+  "--retries", "10",
+  "--no-autoupdate"
+) -WindowStyle Hidden -RedirectStandardOutput $outLog -RedirectStandardError $log
 
 $public = $null
 for ($i = 0; $i -lt 30 -and -not $public; $i++) {

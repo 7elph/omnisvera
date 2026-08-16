@@ -298,6 +298,7 @@ export type EditableNote = { path: string; content: string; content_hash: string
 export type InventoryItem = {
   id: number; profile_id: string; item_path: string; item_title: string;
   note_id?: number | null; thumbnail?: string | null; cover?: string | null; damage_formula?: string | null;
+  item_type?: string | null; description?: string | null; effects?: string[]; usable?: boolean;
   quantity: number; equipped: boolean; notes?: string | null; updated_at: string;
 };
 export type PlayerIdea = {
@@ -348,6 +349,7 @@ export type CharacterResource = {
   label: string;
   current: number;
   maximum: number;
+  recharge?: string | null;
 };
 
 export type CharacterAttack = {
@@ -357,6 +359,23 @@ export type CharacterAttack = {
   damage?: string | null;
   range?: string | null;
   notes?: string | null;
+};
+
+export type SessionAbility = {
+  id: string;
+  name: string;
+  kind: "ability" | "power" | "technique" | "spell" | "resource" | "attack";
+  group: string;
+  circle?: number | null;
+  description?: string | null;
+  mechanics_status: "structured" | "partial";
+  source?: string | null;
+  uses?: {
+    resource_key: string;
+    label: string;
+    maximum: number;
+    recharge: string;
+  } | null;
 };
 
 export type PlayableCharacterDefinition = {
@@ -374,6 +393,7 @@ export type PlayableCharacterDefinition = {
   attributes?: Record<string, number | null> | null;
   attribute_modifiers?: Record<string, number | null> | null;
   abilities?: Record<string, string> | null;
+  session_abilities?: SessionAbility[] | null;
   attacks?: CharacterAttack[] | null;
   attack_notes?: string | null;
   defenses?: { armor_class?: number | null; saving_throw?: string | number | null; initiative?: number | null; initiative_configured?: boolean } | null;
@@ -437,6 +457,78 @@ export type PlayableCharacterSummary = {
   conditions: string[];
   resources: CharacterResource[];
   access_level: "gm" | "owner" | "public";
+};
+
+export type WorkspaceMessage = {
+  id: number;
+  actor_id: string;
+  actor_name: string;
+  actor_role: "gm" | "player";
+  character_id?: string | null;
+  message_kind: "message" | "action";
+  text: string;
+  created_at: string;
+};
+
+export type SessionLedgerEntry = {
+  id: number;
+  source_type: "workspace_message" | "character_event" | "dice_roll" | string;
+  source_id: string;
+  event_kind: "message" | "action" | "state" | "roll" | string;
+  actor_id: string;
+  actor_name: string;
+  actor_role: "gm" | "player" | string;
+  character_id?: string | null;
+  title: string;
+  detail?: Record<string, unknown> | null;
+  visibility: string;
+  created_at: string;
+  voided_at?: string | null;
+};
+
+export type WorkspaceToken = {
+  id: string;
+  token_type: "character" | "monster";
+  character_id?: string | null;
+  name: string;
+  image_path?: string | null;
+  color: string;
+  latitude: number;
+  longitude: number;
+  current_hp?: number | null;
+  maximum_hp?: number | null;
+  conditions: string[];
+  created_at: string;
+  updated_at: string;
+};
+
+export type SessionItem = {
+  id: number;
+  item_path: string;
+  name: string;
+  item_type: string;
+  description?: string | null;
+  effects: string[];
+  usable: boolean;
+  image_path?: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+export type WorkspacePresence = {
+  actor_id: string;
+  actor_name: string;
+  actor_role: "gm" | "player";
+  character_id?: string | null;
+  last_seen_at: string;
+  online: boolean;
+};
+
+export type WorkspaceSnapshot = {
+  map?: { title: string; image_path: string; updated_at: string } | null;
+  messages: WorkspaceMessage[];
+  presence: WorkspacePresence[];
+  tokens: WorkspaceToken[];
 };
 
 export type CharacterEvent = {
@@ -893,6 +985,140 @@ export async function reviewCharacterSheet(profileId: string, status: "approved"
 export async function listPlayableCharacters(): Promise<PlayableCharacterSummary[]> {
   const response = await fetch(`${API_BASE}/characters`, { headers: authHeaders() });
   if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao carregar personagens");
+  return response.json();
+}
+
+export async function getSessionWorkspace(): Promise<WorkspaceSnapshot> {
+  const response = await fetch(`${API_BASE}/workspace`, { headers: authHeaders() });
+  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao carregar a mesa");
+  return response.json();
+}
+
+export async function listSessionLedger(limit = 500): Promise<SessionLedgerEntry[]> {
+  const response = await fetch(`${API_BASE}/workspace/ledger?limit=${Math.max(1, Math.min(1000, limit))}`, { headers: authHeaders() });
+  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao carregar registro da sessão");
+  return response.json();
+}
+
+export async function connectSessionRealtime(onChange: (ledgerId: number) => void): Promise<() => void> {
+  let stopped = false;
+  let socket: WebSocket | null = null;
+  let reconnectTimer = 0;
+  let pingTimer = 0;
+
+  const connect = async () => {
+    if (stopped) return;
+    try {
+      const ticketResponse = await fetch(`${API_BASE}/workspace/realtime-ticket`, { method: "POST", headers: authHeaders() });
+      if (!ticketResponse.ok) throw new Error("Ticket em tempo real indisponível");
+      const { ticket } = await ticketResponse.json() as { ticket: string };
+      const base = new URL(API_BASE || window.location.origin, window.location.href);
+      const protocol = base.protocol === "https:" ? "wss:" : "ws:";
+      const prefix = API_BASE ? base.pathname.replace(/\/$/, "") : "";
+      socket = new WebSocket(`${protocol}//${base.host}${prefix}/ws/session?ticket=${encodeURIComponent(ticket)}`);
+      socket.onopen = () => {
+        window.clearInterval(pingTimer);
+        pingTimer = window.setInterval(() => { if (socket?.readyState === WebSocket.OPEN) socket.send("ping"); }, 25_000);
+      };
+      socket.onmessage = (event) => {
+        if (event.data === "pong") return;
+        try {
+          const payload = JSON.parse(String(event.data)) as { type?: string; ledger_id?: number };
+          if (payload.type === "session_changed" && Number.isFinite(payload.ledger_id)) onChange(Number(payload.ledger_id));
+        } catch { /* Mensagens desconhecidas não interrompem a sessão. */ }
+      };
+      socket.onclose = () => {
+        window.clearInterval(pingTimer);
+        if (!stopped) reconnectTimer = window.setTimeout(() => void connect(), 1800);
+      };
+    } catch {
+      if (!stopped) reconnectTimer = window.setTimeout(() => void connect(), 2500);
+    }
+  };
+  await connect();
+  return () => {
+    stopped = true;
+    window.clearTimeout(reconnectTimer);
+    window.clearInterval(pingTimer);
+    socket?.close();
+  };
+}
+
+export async function heartbeatSessionWorkspace(): Promise<WorkspacePresence> {
+  const response = await fetch(`${API_BASE}/workspace/heartbeat`, { method: "POST", headers: authHeaders() });
+  if (!response.ok) throw new Error("Falha ao atualizar presença");
+  return response.json();
+}
+
+export async function sendWorkspaceMessage(text: string, messageKind: "message" | "action" = "message"): Promise<WorkspaceMessage> {
+  const response = await fetch(`${API_BASE}/workspace/messages`, {
+    method: "POST",
+    headers: authHeaders({ "Content-Type": "application/json" }),
+    body: JSON.stringify({ text, message_kind: messageKind }),
+  });
+  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao enviar mensagem");
+  return response.json();
+}
+
+export async function uploadWorkspaceMap(payload: { title: string; filename: string; content_type: string; data_base64: string }): Promise<{ title: string; image_path: string; updated_at: string }> {
+  const response = await fetch(`${API_BASE}/gm/workspace/map`, {
+    method: "POST",
+    headers: authHeaders({ "Content-Type": "application/json" }),
+    body: JSON.stringify(payload),
+  });
+  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao trocar o mapa");
+  return response.json();
+}
+
+export async function createWorkspaceToken(payload: {
+  token_type: "character" | "monster"; character_id?: string; name: string;
+  image_path?: string | null; image_filename?: string; image_data_base64?: string;
+  color?: string; latitude?: number; longitude?: number; current_hp?: number; maximum_hp?: number;
+  conditions?: string[];
+}): Promise<WorkspaceToken> {
+  const response = await fetch(`${API_BASE}/gm/workspace/tokens`, {
+    method: "POST", headers: authHeaders({ "Content-Type": "application/json" }), body: JSON.stringify(payload),
+  });
+  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao criar marcador");
+  return response.json();
+}
+
+export async function moveWorkspaceToken(tokenId: string, latitude: number, longitude: number): Promise<WorkspaceToken> {
+  const response = await fetch(`${API_BASE}/gm/workspace/tokens/${encodeURIComponent(tokenId)}/position`, {
+    method: "PATCH", headers: authHeaders({ "Content-Type": "application/json" }), body: JSON.stringify({ latitude, longitude }),
+  });
+  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao mover marcador");
+  return response.json();
+}
+
+export async function removeWorkspaceToken(tokenId: string): Promise<void> {
+  const response = await fetch(`${API_BASE}/gm/workspace/tokens/${encodeURIComponent(tokenId)}`, { method: "DELETE", headers: authHeaders() });
+  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao remover marcador");
+}
+
+export async function listSessionItems(): Promise<SessionItem[]> {
+  const response = await fetch(`${API_BASE}/gm/workspace/items`, { headers: authHeaders() });
+  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao carregar itens da sessão");
+  return response.json();
+}
+
+export async function saveSessionItem(payload: {
+  name: string; item_type: string; description?: string; effects: string[]; usable: boolean; image_path?: string | null;
+}, itemId?: number): Promise<SessionItem> {
+  const response = await fetch(`${API_BASE}/gm/workspace/items${itemId ? `/${itemId}` : ""}`, {
+    method: itemId ? "PATCH" : "POST", headers: authHeaders({ "Content-Type": "application/json" }), body: JSON.stringify(payload),
+  });
+  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao salvar item");
+  return response.json();
+}
+
+export async function grantSessionItem(payload: {
+  character_id: string; item_id: number; quantity: number; equipped?: boolean; notes?: string;
+}): Promise<{ item: SessionItem; character: PlayableCharacter }> {
+  const response = await fetch(`${API_BASE}/gm/workspace/items/grant`, {
+    method: "POST", headers: authHeaders({ "Content-Type": "application/json" }), body: JSON.stringify(payload),
+  });
+  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao conceder item");
   return response.json();
 }
 
