@@ -35,6 +35,19 @@ npx tsc --noEmit
 npm run build
 ```
 
+## OpenCode como alternativa
+
+Para abrir o OpenCode já apontado para este Companion:
+
+```powershell
+cd C:\Users\delib\Desktop\OMNISVERA\omnisvera-agent
+.\start_opencode.ps1
+```
+
+O projeto deve ser editado diretamente nesta pasta. Preserve a separação
+Mestre/Jogador, não altere o Godot ou o Vault sem pedido explícito, execute os
+checks acima após cada etapa e não faça `git push` automaticamente.
+
 ## Próxima fila aprovada
 
 - Centralizar as ferramentas do Mestre em um único painel lateral.

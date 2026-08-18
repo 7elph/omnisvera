@@ -20,10 +20,16 @@ function sidesFrom(dice: string) {
 
 function colorsFor(roll: DiceVisualRoll): [number, number] {
   const character = String(roll.character_id || "").toLocaleLowerCase("pt-BR");
+  if (!character) return [0x111214, 0x050607];
+  if (character === "vezemir") return [0x858b92, 0x343a40];
   if (CHARACTER_COLORS[character]) return CHARACTER_COLORS[character];
   if (roll.roll_type === "attack" || roll.roll_type === "damage") return [0xc64343, 0x5a1717];
   if (roll.roll_type === "saving_throw") return [0x5d8fd5, 0x213c70];
   return [0xd0a45f, 0x70451f];
+}
+
+function numberColorFor(roll: DiceVisualRoll) {
+  return roll.character_id ? (String(roll.character_id).toLocaleLowerCase("pt-BR") === "vezemir" ? "#f1f3f5" : "#f3dfb6") : "#ff4055";
 }
 
 function seededRandom(seedText: string) {
@@ -140,7 +146,7 @@ export default function DicePhysicsCanvas({ roll, compact = false }: Props) {
         try { return new CANNON.ConvexPolyhedron({ vertices, faces }); } catch { return new CANNON.Sphere(1); }
       };
 
-      const faceNumbersFor = (mesh: Mesh, geometry: BufferGeometry, die: number, labels?: string[]): FaceMark[] => {
+      const faceNumbersFor = (mesh: Mesh, geometry: BufferGeometry, die: number, labels?: string[], numberColor = "#f3dfb6"): FaceMark[] => {
         const source = geometry.index ? geometry.toNonIndexed() : geometry;
         const position = source.getAttribute("position");
         const groups = new Map<string, { normal: Vector3; vertices: Map<string, Vector3> }>();
@@ -182,9 +188,9 @@ export default function DicePhysicsCanvas({ roll, compact = false }: Props) {
               context.font = value.length > 2 ? "900 118px Georgia" : "900 150px Georgia";
               context.lineJoin = "round"; context.lineWidth = 12;
               context.strokeStyle = "rgba(25,12,8,.9)";
-              context.shadowColor = "rgba(0,0,0,.7)"; context.shadowBlur = 7; context.shadowOffsetY = 4;
+              context.shadowColor = numberColor === "#ff4055" ? "rgba(255,24,48,.9)" : "rgba(0,0,0,.7)"; context.shadowBlur = numberColor === "#ff4055" ? 16 : 7; context.shadowOffsetY = 4;
               context.strokeText(value, 128, 132);
-              context.fillStyle = "#f3dfb6"; context.fillText(value, 128, 132);
+              context.fillStyle = numberColor; context.fillText(value, 128, 132);
               context.shadowBlur = 0; context.shadowOffsetY = 0;
               texture.needsUpdate = true;
             },
@@ -222,7 +228,7 @@ export default function DicePhysicsCanvas({ roll, compact = false }: Props) {
         const mesh = new THREE.Mesh(geometry, material); mesh.castShadow = true; mesh.receiveShadow = true;
         const edges = new THREE.LineSegments(new THREE.EdgesGeometry(geometry), new THREE.LineBasicMaterial({ color: 0xf5dfad, transparent: true, opacity: .48 }));
         mesh.add(edges);
-        const faces = faceNumbersFor(mesh, geometry, visual.die, visual.labels);
+        const faces = faceNumbersFor(mesh, geometry, visual.die, visual.labels, numberColorFor(roll));
         const resultFace = faces.find((face) => face.value === visual.wanted) || faces[Math.floor(random() * Math.max(1, faces.length))];
         if (resultFace && resultFace.value !== visual.wanted) resultFace.setValue(visual.wanted);
         const alignment = new THREE.Quaternion().setFromUnitVectors(resultFace?.normal.clone().normalize() || new THREE.Vector3(0, 1, 0), new THREE.Vector3(0, 1, 0));
@@ -253,8 +259,38 @@ export default function DicePhysicsCanvas({ roll, compact = false }: Props) {
       const resize = () => {
         const width = Math.max(1, canvas.clientWidth), height = Math.max(1, canvas.clientHeight);
         renderer.setSize(width, height, false); camera.aspect = width / height; camera.updateProjectionMatrix();
+        camera.updateMatrixWorld();
       };
       resize(); window.addEventListener("resize", resize);
+      const containToViewport = (body: Body) => {
+        camera.updateMatrixWorld();
+        const point = new THREE.Vector3(body.position.x, body.position.y, body.position.z);
+        const projected = point.clone().project(camera);
+        if (![projected.x, projected.y, projected.z].every(Number.isFinite)) return;
+
+        // Reserve space for the die radius so its faces never leave the visible panel.
+        const marginX = compact ? .78 : .88;
+        const marginY = compact ? .68 : .78;
+        const targetX = THREE.MathUtils.clamp(projected.x, -marginX, marginX);
+        const targetY = THREE.MathUtils.clamp(projected.y, -marginY, marginY);
+        const correctionX = targetX - projected.x;
+        const correctionY = targetY - projected.y;
+        if (Math.abs(correctionX) < .001 && Math.abs(correctionY) < .001) return;
+
+        const viewPoint = point.clone().applyMatrix4(camera.matrixWorldInverse);
+        const depth = Math.max(1, -viewPoint.z);
+        const halfFov = THREE.MathUtils.degToRad(camera.fov / 2);
+        const worldPerNdcX = depth * Math.tan(halfFov) * camera.aspect;
+        const worldPerNdcY = depth * Math.tan(halfFov);
+        const cameraRight = new THREE.Vector3(1, 0, 0).applyQuaternion(camera.quaternion).normalize();
+        const cameraUp = new THREE.Vector3(0, 1, 0).applyQuaternion(camera.quaternion).normalize();
+        body.position.vadd(new CANNON.Vec3(
+          cameraRight.x * correctionX * worldPerNdcX + cameraUp.x * correctionY * worldPerNdcY,
+          cameraRight.y * correctionX * worldPerNdcX + cameraUp.y * correctionY * worldPerNdcY,
+          cameraRight.z * correctionX * worldPerNdcX + cameraUp.z * correctionY * worldPerNdcY,
+        ));
+        body.velocity.x *= .35; body.velocity.z *= .35;
+      };
       let previousFrame = performance.now(); let elapsed = 0;
       const render = () => {
         if (disposed) return;
@@ -278,6 +314,7 @@ export default function DicePhysicsCanvas({ roll, compact = false }: Props) {
             object.settled = true;
             finalized = true;
           }
+          containToViewport(body);
           mesh.position.set(body.position.x, body.position.y, body.position.z);
           mesh.quaternion.set(body.quaternion.x, body.quaternion.y, body.quaternion.z, body.quaternion.w);
           if (finalized) settleTopFace(mesh, object.faces, object.wanted);

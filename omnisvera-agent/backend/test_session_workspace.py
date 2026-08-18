@@ -6,6 +6,7 @@ from tempfile import TemporaryDirectory
 
 from app.session_workspace import (
     get_session_item_by_path,
+    get_workspace_fog,
     get_workspace_snapshot,
     heartbeat_workspace,
     init_session_workspace,
@@ -13,6 +14,7 @@ from app.session_workspace import (
     save_session_item,
     save_workspace_token,
     set_workspace_map,
+    update_workspace_fog,
     update_workspace_token_position,
 )
 
@@ -63,6 +65,25 @@ class SessionWorkspaceTests(unittest.TestCase):
             self.assertEqual(snapshot["tokens"][0]["longitude"], 66.75)
             self.assertEqual(moved["name"], "Morthak")
             self.assertEqual(get_session_item_by_path(database, item["item_path"])["name"], "Poção de Mana")
+
+    def test_fog_persists_and_hides_unrevealed_tokens_from_players(self) -> None:
+        with TemporaryDirectory() as temporary:
+            database = Path(temporary) / "workspace.db"
+            visible = save_workspace_token(
+                database, token_type="monster", name="Visível", latitude=2, longitude=2,
+            )
+            hidden = save_workspace_token(
+                database, token_type="monster", name="Oculto", latitude=80, longitude=80,
+            )
+            layer = update_workspace_fog(
+                database, layer="exploration", enabled=True, revealed_cells=["0:0"],
+            )
+            self.assertTrue(layer["enabled"])
+            self.assertEqual(get_workspace_fog(database)["exploration"]["revealed_cells"], ["0:0"])
+            player_snapshot = get_workspace_snapshot(database)
+            gm_snapshot = get_workspace_snapshot(database, is_gm=True)
+            self.assertEqual([token["id"] for token in player_snapshot["tokens"]], [visible["id"]])
+            self.assertEqual({token["id"] for token in gm_snapshot["tokens"]}, {visible["id"], hidden["id"]})
 
 
 if __name__ == "__main__":

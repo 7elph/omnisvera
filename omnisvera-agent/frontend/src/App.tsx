@@ -212,6 +212,11 @@ export default function App() {
             <span>▶</span><small>Jogar</small>
           </button>
         )}
+        {mode === "gm" && (
+          <button className="gm-tools-tab" onClick={() => { navigate("session"); window.setTimeout(() => window.dispatchEvent(new CustomEvent("omnisvera-open-gm-tools")), 0); }}>
+            <span>⚙</span><small>Mestre</small>
+          </button>
+        )}
       </nav>
 
       {!authenticated && page !== "game" && (

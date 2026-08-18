@@ -45,7 +45,11 @@ def load_session_abilities(profile_id: str) -> list[dict[str, Any]]:
                 "structured" if raw_entry.get("mechanics_status") == "structured" else "partial"
             ),
             "source": str(raw_entry.get("source") or "").strip(),
+            "active": bool(raw_entry.get("active", True)),
+            "blocked": bool(raw_entry.get("blocked", False)),
         }
+        if raw_entry.get("hidden"):
+            continue
         circle = raw_entry.get("circle")
         if isinstance(circle, int) and circle > 0:
             entry["circle"] = circle
@@ -59,6 +63,8 @@ def load_session_abilities(profile_id: str) -> list[dict[str, Any]]:
                     "maximum": int(maximum),
                     "recharge": str(uses.get("recharge") or "inn_rest").strip(),
                 }
+                if _number(uses.get("cost")) is not None:
+                    entry["uses"]["cost"] = max(1, int(_number(uses.get("cost")) or 1))
         entries.append(entry)
     return entries
 
@@ -336,7 +342,7 @@ def seed_resources(sheet: dict[str, Any]) -> list[dict[str, Any]]:
 
 
 def seed_session_ability_resources(profile_id: str) -> list[dict[str, Any]]:
-    resources: list[dict[str, Any]] = []
+    resources_by_key: dict[str, dict[str, Any]] = {}
     for ability in load_session_abilities(profile_id):
         uses = ability.get("uses")
         if not isinstance(uses, dict):
@@ -345,14 +351,19 @@ def seed_session_ability_resources(profile_id: str) -> list[dict[str, Any]]:
         if maximum <= 0:
             continue
         key = _resource_key(str(uses.get("resource_key") or ability["id"]))
-        resources.append({
+        resource = {
             "key": key,
             "label": str(uses.get("label") or f"{ability['name']} · usos"),
             "current": maximum,
             "maximum": maximum,
             "recharge": str(uses.get("recharge") or "inn_rest"),
-        })
-    return resources
+        }
+        existing = resources_by_key.get(key)
+        if existing is None or maximum > int(existing.get("maximum") or 0):
+            resources_by_key[key] = resource
+        elif existing.get("label", "").endswith("· usos") and resource.get("label"):
+            existing["label"] = resource["label"]
+    return list(resources_by_key.values())
 
 
 def seed_all_resources(profile_id: str, sheet: dict[str, Any]) -> list[dict[str, Any]]:

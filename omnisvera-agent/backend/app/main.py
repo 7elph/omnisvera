@@ -167,11 +167,15 @@ from .session_workspace import (
     get_workspace_snapshot,
     heartbeat_workspace,
     init_session_workspace,
+    list_workspace_maps,
     list_session_items,
     record_workspace_message,
     save_session_item,
     save_workspace_token,
     set_workspace_map,
+    set_active_workspace_map,
+    update_workspace_fog,
+    update_workspace_token,
     update_workspace_token_position,
 )
 from .session_ledger import init_session_ledger, list_session_ledger, session_ledger_version
@@ -327,8 +331,11 @@ from .schemas import (
     WorldMapCreate,
     WorldVersionedUpdate,
     WorkspaceMapUpload,
+    WorkspaceMapSelect,
+    WorkspaceFogUpdate,
     WorkspaceMessageCreate,
     WorkspaceTokenCreate,
+    WorkspaceTokenUpdate,
     WorkspaceTokenPositionUpdate,
     SessionItemWrite,
     SessionItemGrant,
@@ -764,8 +771,8 @@ def _workspace_identity(access: AccessContext) -> tuple[str, str, str, str | Non
 
 
 @app.get("/workspace")
-def session_workspace_snapshot(_: AccessContext = Depends(require_any)) -> dict:
-    return get_workspace_snapshot(settings.database_path)
+def session_workspace_snapshot(access: AccessContext = Depends(require_any)) -> dict:
+    return get_workspace_snapshot(settings.database_path, is_gm=access.mode == "gm")
 
 
 @app.get("/workspace/ledger")
@@ -874,6 +881,38 @@ def gm_upload_workspace_map(
     return map_record
 
 
+@app.get("/workspace/maps")
+def workspace_maps(_: AccessContext = Depends(require_any)) -> list[dict]:
+    return list_workspace_maps(settings.database_path)
+
+
+@app.patch("/gm/workspace/maps/active")
+def gm_select_workspace_map(request: WorkspaceMapSelect, _: AccessContext = Depends(require_master)) -> dict:
+    selected = set_active_workspace_map(settings.database_path, request.map_id)
+    if selected is None:
+        raise HTTPException(status_code=404, detail="Mapa não encontrado.")
+    record_workspace_message(settings.database_path, actor_id="master", actor_name="Mestre", actor_role="gm", character_id="sage", text=f"Mapa ativo: {selected['title']}", message_kind="action")
+    return selected
+
+
+@app.patch("/gm/workspace/fog")
+@app.post("/gm/workspace/fog")
+def gm_update_workspace_fog(
+    request: WorkspaceFogUpdate,
+    _: AccessContext = Depends(require_master),
+) -> dict:
+    try:
+        return update_workspace_fog(
+            settings.database_path,
+            layer=request.layer,
+            enabled=request.enabled,
+            revealed_cells=request.revealed_cells,
+            mist_density=request.mist_density,
+        )
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
 @app.post("/gm/workspace/tokens")
 def gm_create_workspace_token(
     request: WorkspaceTokenCreate,
@@ -924,6 +963,8 @@ def gm_create_workspace_token(
         current_hp=current_hp,
         maximum_hp=maximum_hp,
         conditions=request.conditions,
+        sheet=request.sheet,
+        map_id=request.map_id,
     )
     record_workspace_message(
         settings.database_path,
@@ -959,6 +1000,23 @@ def gm_move_workspace_token(
         character_id="sage",
         message_kind="action",
         text=f"{token['name']} movido · latitude {token['latitude']:.2f} · longitude {token['longitude']:.2f}.",
+    )
+    return token
+
+
+@app.patch("/gm/workspace/tokens/{token_id:path}")
+def gm_update_workspace_token(
+    token_id: str,
+    request: WorkspaceTokenUpdate,
+    _: AccessContext = Depends(require_master),
+) -> dict:
+    token = update_workspace_token(settings.database_path, token_id=token_id, **request.model_dump(exclude_unset=True))
+    if token is None:
+        raise HTTPException(status_code=404, detail="Marcador não encontrado.")
+    record_workspace_message(
+        settings.database_path,
+        actor_id="master", actor_name="Mestre", actor_role="gm", character_id="sage", message_kind="action",
+        text=f"Marcador {token['name']} atualizado.",
     )
     return token
 

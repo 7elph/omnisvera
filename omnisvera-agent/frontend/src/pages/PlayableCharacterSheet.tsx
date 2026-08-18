@@ -23,6 +23,7 @@ import {
   updateCharacterDefinition,
 } from "../api";
 import CharacterSheetBuilder from "./CharacterSheetBuilder";
+import { cleanItemDisplayName, iconPathForItem } from "../companionIconCatalog";
 
 type CharacterTab = "summary" | "mechanics" | "combat" | "inventory" | "story" | "gm";
 
@@ -199,11 +200,12 @@ function CombatTab({ character, mode, rolling, onAction, onRoll }: { character: 
 function InventoryCard({ item, canEdit, isGm, busy, rolling, onAction, onRoll }: { item: InventoryItem; canEdit: boolean; isGm: boolean; busy: boolean; rolling: string; onAction: (action: string, payload: Record<string, unknown>) => Promise<void>; onRoll: (rollType: string, sourceId?: string) => Promise<void> }) {
   const [quantity, setQuantity] = useState(item.quantity);
   useEffect(() => setQuantity(item.quantity), [item.quantity]);
-  const image = mediaUrlFromVaultPath(item.thumbnail || item.cover);
+  const image = mediaUrlFromVaultPath(item.thumbnail || item.cover || iconPathForItem(item.item_title, item.item_type));
   const consumable = inventoryItemIsConsumable(item);
+  const title = cleanItemDisplayName(item.item_title);
   return <article className={`sheet-inventory-card ${item.equipped ? "equipped" : ""} ${item.quantity <= 0 ? "depleted" : ""}`}>
-    {image ? <img src={image} alt={item.item_title} /> : <span className="inventory-item-placeholder" aria-hidden="true">◈</span>}
-    <div className="inventory-card-copy"><div className="inventory-item-title"><strong>{item.item_title}</strong><b>×{item.quantity}</b></div><small>{item.item_type || (consumable ? "Consumível" : "Item")} · {item.equipped ? "Equipado" : "Guardado"}{item.damage_formula ? ` · Dano ${item.damage_formula}` : ""}</small>{item.description && <p>{item.description}</p>}{item.notes && <p>{item.notes}</p>}{item.effects?.length ? <ul>{item.effects.map((effect) => <li key={effect}>{effect}</li>)}</ul> : null}</div>
+    {image ? <img src={image} alt={title} /> : <span className="inventory-item-placeholder" aria-hidden="true">◈</span>}
+    <div className="inventory-card-copy"><div className="inventory-item-title"><strong>{title}</strong><b>×{item.quantity}</b></div><small>{item.item_type || (consumable ? "Consumível" : "Item")} · {item.equipped ? "Equipado" : "Guardado"}{item.damage_formula ? ` · Dano ${item.damage_formula}` : ""}</small>{item.description && <p>{item.description}</p>}{item.notes && <p>{item.notes}</p>}{item.effects?.length ? <ul>{item.effects.map((effect) => <li key={effect}>{effect}</li>)}</ul> : null}</div>
     {canEdit && <div className="inventory-card-actions">{consumable && <button className="use-item-button" disabled={busy || item.quantity <= 0} onClick={() => void onAction("change_quantity", { item_path: item.item_path, quantity: Math.max(0, item.quantity - 1) })}>Usar 1 <small>({item.quantity} restantes)</small></button>}{item.damage_formula && <button disabled={busy || !!rolling} onClick={() => void onRoll("damage", item.item_path)}>Rolar dano</button>}<button disabled={busy} onClick={() => void onAction(item.equipped ? "unequip_item" : "equip_item", { item_path: item.item_path })}>{item.equipped ? "Desequipar" : "Equipar"}</button><label>Quantidade<input type="number" min="0" max="999" value={quantity} onChange={(event) => setQuantity(Math.max(0, Number(event.target.value)))} /></label><button disabled={busy || quantity === item.quantity} className="secondary-button" onClick={() => void onAction("change_quantity", { item_path: item.item_path, quantity })}>Salvar quantidade</button>{isGm && <button disabled={busy} className="danger-button subtle" onClick={() => void onAction("remove_item", { item_path: item.item_path })}>Remover</button>}</div>}
   </article>;
 }
@@ -240,6 +242,18 @@ const SESSION_ABILITY_KIND_LABELS: Record<SessionAbility["kind"], string> = {
   attack: "Ataque básico",
 };
 
+const SESSION_GROUP_ORDER = [
+  "Ataques básicos",
+  "Magias",
+  "Poderes vampíricos",
+  "Técnicas",
+  "Conjuração Arcana",
+  "Traços vampíricos",
+  "Traços de Morto-Vivo",
+  "Limitações vampíricas",
+  "Limitações de Morto-Vivo",
+];
+
 function SessionAbilityCatalog({ entries, resources = [], busy = false, onUse }: { entries: SessionAbility[]; resources?: CharacterResource[]; busy?: boolean; onUse?: (resourceKey: string) => Promise<void> }) {
   const groups = useMemo(() => {
     const grouped = new Map<string, SessionAbility[]>();
@@ -248,7 +262,13 @@ function SessionAbilityCatalog({ entries, resources = [], busy = false, onUse }:
       current.push(entry);
       grouped.set(entry.group, current);
     });
-    return Array.from(grouped.entries());
+    return Array.from(grouped.entries()).sort(([left], [right]) => {
+      const leftIndex = SESSION_GROUP_ORDER.indexOf(left);
+      const rightIndex = SESSION_GROUP_ORDER.indexOf(right);
+      const leftRank = leftIndex < 0 ? SESSION_GROUP_ORDER.length : leftIndex;
+      const rightRank = rightIndex < 0 ? SESSION_GROUP_ORDER.length : rightIndex;
+      return leftRank - rightRank || left.localeCompare(right, "pt-BR");
+    });
   }, [entries]);
 
   return <section className="sheet-card span-2 session-ability-catalog">

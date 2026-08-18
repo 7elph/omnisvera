@@ -24,6 +24,7 @@ import {
   reviewPlayerIdea,
   PlayerIdea,
 } from "../api";
+import { cleanItemDisplayName, iconPathForItem } from "../companionIconCatalog";
 
 const PLAYER_PROFILES = [
   { id: "group", title: "Todo o grupo" },
@@ -411,10 +412,11 @@ export default function SessionPanel({
         {inventoryFeedback && <p className="action-feedback">{inventoryFeedback}</p>}
         <div className="gm-inventory-list">
           {inventory.map((item) => {
-            const image = mediaUrlFromVaultPath(item.thumbnail || item.cover);
+            const title = cleanItemDisplayName(item.item_title);
+            const image = mediaUrlFromVaultPath(item.thumbnail || item.cover || iconPathForItem(item.item_title, item.item_type));
             return <article key={item.id}>
-              {image ? <img className="inventory-item-image" src={image} alt={item.item_title} /> : <span className="inventory-item-placeholder" aria-hidden="true">&#9671;</span>}
-              <span className="inventory-item-copy"><strong>{item.item_title}</strong><small>{item.profile_id}{item.equipped ? " · equipado" : ""}</small></span>
+              {image ? <img className="inventory-item-image" src={image} alt={title} /> : <span className="inventory-item-placeholder" aria-hidden="true">&#9671;</span>}
+              <span className="inventory-item-copy"><strong>{title}</strong><small>{item.profile_id}{item.equipped ? " · equipado" : ""}</small></span>
               <b>×{item.quantity}</b>
             </article>;
           })}

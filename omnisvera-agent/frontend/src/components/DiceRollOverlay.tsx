@@ -37,17 +37,14 @@ export default function DiceRollOverlay() {
       const next = queueRef.current.shift() || null;
       activeRef.current = next;
       setRoll(next);
-    }, 4600);
+    }, 3400);
     return () => window.clearTimeout(timer);
   }, [roll]);
 
   if (!roll) return null;
-  const sides = Number(roll.dice.match(/d(\d+)/i)?.[1] || 20);
-  const critical = roll.individual_results.some((value) => value === sides);
-  const fumble = sides === 20 && roll.individual_results.some((value) => value === 1);
-  return <div className={`dice-cinematic-overlay${critical ? " critical" : fumble ? " fumble" : ""}`} aria-live="assertive" aria-label={`${roll.label}: resultado ${roll.total}`}>
-    <div className="dice-cinematic-vignette" />
+  const math = `${roll.dice}: ${roll.individual_results.join(" + ")}${roll.modifier ? ` ${roll.modifier > 0 ? "+" : "−"} ${Math.abs(roll.modifier)}` : ""} = ${roll.total}`;
+  return <div className="dice-roll-overlay" aria-live="assertive" aria-label={`${roll.label}: resultado ${roll.total}`}>
     <DicePhysicsCanvas roll={roll} />
-    <div className="dice-cinematic-result"><small>{roll.label || "Rolagem de dados"}</small><strong>{roll.total}</strong><span>{roll.formula}</span></div>
+    <div className="dice-roll-math"><small>{roll.label || "Rolagem de dados"}</small><strong>{roll.total}</strong><span>{math}</span></div>
   </div>;
 }

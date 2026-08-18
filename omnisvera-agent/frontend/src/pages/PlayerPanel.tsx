@@ -22,6 +22,7 @@ import {
   submitPlayerAction,
   submitPlayerIdea,
 } from "../api";
+import { cleanItemDisplayName, iconPathForItem } from "../companionIconCatalog";
 
 const SECTION_ICONS: Record<string, string> = {
   diary: "✦",
@@ -515,11 +516,12 @@ export default function PlayerPanel({
             {inventory.slice(0, 10).map((item) => {
               const note = knownNotes.find((entry) => entry.path === item.item_path);
               const noteId = item.note_id || note?.id;
-              const image = mediaUrlFromVaultPath(item.thumbnail || item.cover || note?.thumbnail || note?.cover);
+              const image = mediaUrlFromVaultPath(item.thumbnail || item.cover || note?.thumbnail || note?.cover || iconPathForItem(item.item_title, item.item_type));
+              const title = cleanItemDisplayName(item.item_title);
               return <article className="inventory-play-card" key={item.id}>
                 <button className="inventory-main" disabled={!noteId} onClick={() => noteId && onOpenNote(noteId)}>
-                  {image ? <img className="inventory-item-image" src={image} alt={item.item_title} /> : <span className="inventory-item-placeholder" aria-hidden="true">&#9671;</span>}
-                  <span className="inventory-item-copy"><strong>{item.item_title}</strong><small>{item.notes || (item.equipped ? "Equipado" : "Guardado")}</small></span>
+                  {image ? <img className="inventory-item-image" src={image} alt={title} /> : <span className="inventory-item-placeholder" aria-hidden="true">&#9671;</span>}
+                  <span className="inventory-item-copy"><strong>{title}</strong><small>{item.notes || (item.equipped ? "Equipado" : "Guardado")}</small></span>
                   <b>×{item.quantity}</b>
                 </button>
                 <div className="inventory-actions">

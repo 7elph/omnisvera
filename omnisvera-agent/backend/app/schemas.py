@@ -512,6 +512,10 @@ class WorkspaceMapUpload(BaseModel):
     data_base64: str = Field(min_length=16, max_length=16_000_000)
 
 
+class WorkspaceMapSelect(BaseModel):
+    map_id: str = Field(min_length=1, max_length=120)
+
+
 class WorkspaceTokenCreate(BaseModel):
     token_type: str = Field(pattern="^(character|monster)$")
     character_id: str | None = Field(default=None, max_length=80)
@@ -525,11 +529,30 @@ class WorkspaceTokenCreate(BaseModel):
     current_hp: int | None = Field(default=None, ge=0, le=99999)
     maximum_hp: int | None = Field(default=None, ge=1, le=99999)
     conditions: list[str] = Field(default_factory=list, max_length=30)
+    sheet: dict = Field(default_factory=dict)
+    map_id: str = Field(default="default", max_length=120)
 
 
 class WorkspaceTokenPositionUpdate(BaseModel):
     latitude: float = Field(ge=0, le=100)
     longitude: float = Field(ge=0, le=100)
+
+
+class WorkspaceTokenUpdate(BaseModel):
+    name: str | None = Field(default=None, min_length=1, max_length=120)
+    image_path: str | None = Field(default=None, max_length=500)
+    color: str | None = Field(default=None, pattern="^#[0-9A-Fa-f]{6}$")
+    current_hp: int | None = Field(default=None, ge=0, le=99999)
+    maximum_hp: int | None = Field(default=None, ge=1, le=99999)
+    conditions: list[str] | None = Field(default=None, max_length=30)
+    sheet: dict | None = None
+
+
+class WorkspaceFogUpdate(BaseModel):
+    layer: str = Field(pattern="^(exploration|battle)$")
+    enabled: bool = True
+    revealed_cells: list[str] = Field(default_factory=list, max_length=768)
+    mist_density: dict[str, float] = Field(default_factory=dict, max_length=768)
 
 
 class SessionItemWrite(BaseModel):

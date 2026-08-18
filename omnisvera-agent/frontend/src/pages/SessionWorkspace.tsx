@@ -1,7 +1,8 @@
-import { FormEvent, PointerEvent as ReactPointerEvent, WheelEvent as ReactWheelEvent, useEffect, useMemo, useRef, useState } from "react";
+import { FormEvent, PointerEvent as ReactPointerEvent, useEffect, useMemo, useRef, useState } from "react";
 import {
   applyCharacterStateAction,
   connectSessionRealtime,
+  createFreeRoll,
   createWorkspaceToken,
   getPlayableCharacter,
   getSessionWorkspace,
@@ -9,6 +10,7 @@ import {
   listPlayableCharacters,
   listSessionLedger,
   listSessionItems,
+  listWorkspaceMaps,
   mediaUrlFromVaultPath,
   moveWorkspaceToken,
   newDiceRequestId,
@@ -16,17 +18,25 @@ import {
   PlayableCharacterSummary,
   rollCharacterAction,
   grantSessionItem,
+  removeWorkspaceToken,
   saveSessionItem,
   sendWorkspaceMessage,
+  selectWorkspaceMap,
   SessionAbility,
   SessionItem,
   SessionLedgerEntry,
   updateCharacterDefinition,
+  updateWorkspaceToken,
   uploadWorkspaceMap,
+  updateWorkspaceFog,
   WorkspaceSnapshot,
+  WorkspaceFog,
   WorkspaceToken,
+  WorkspaceTokenSheet,
 } from "../api";
 import DiceTray from "../components/DiceTray";
+import MistParticleOverlay from "../components/MistParticleOverlay";
+import { COMPANION_ICON_CATALOG, cleanItemDisplayName, iconPathForItem } from "../companionIconCatalog";
 
 type Props = { mode: "gm" | "player" };
 
@@ -47,6 +57,16 @@ const ATTRIBUTES: Array<[string, string]> = [
 
 const CHARACTER_COLORS: Record<string, string> = {
   sage: "#d6a858", vezemir: "#de9148", raziel: "#d35a75", varkh: "#4fc2b3", morthak: "#a987e8", guest: "#c7cbd0",
+};
+
+const DEFAULT_FOG: WorkspaceFog = {
+  exploration: { enabled: false, revealed_cells: [], mist_density: {}, columns: 32, rows: 24 },
+  battle: { enabled: false, revealed_cells: [], mist_density: {}, columns: 32, rows: 24 },
+};
+
+const EMPTY_MONSTER_DRAFT = {
+  name: "", current_hp: 10, maximum_hp: 10, color: "#b94c4c", image_path: "", conditions: "",
+  role: "Inimigo", level: 1, armor_class: 10, initiative: 0, description: "", attacks: "", abilities: "", notes: "",
 };
 
 function characterColor(characterId?: string | null) {
@@ -90,6 +110,17 @@ function abilityResource(ability: SessionAbility, resources: NonNullable<Playabl
   return null;
 }
 
+const ATTACK_DAMAGE_BY_CHARACTER: Record<string, Record<string, string>> = {
+  morthak: { melee: "1d4", ranged: "1d4" },
+  varkh: { melee: "1d4", ranged: "1d4" },
+  raziel: { melee: "1d4", ranged: "1d4" },
+  vezemir: { melee: "2d6", ranged: "1d6" },
+};
+
+function attackDamage(characterId: string | undefined, attack: { id?: string; damage?: string | null }) {
+  return attack.damage || ATTACK_DAMAGE_BY_CHARACTER[String(characterId || "").toLowerCase()]?.[String(attack.id || "").toLowerCase()] || "1d4";
+}
+
 function fileAsBase64(file: File) {
   return new Promise<string>((resolve, reject) => {
     const reader = new FileReader();
@@ -104,7 +135,8 @@ export default function SessionWorkspace({ mode }: Props) {
   const [selectedId, setSelectedId] = useState(localStorage.getItem("omnisvera_selected_character") || "");
   const [character, setCharacter] = useState<PlayableCharacter | null>(null);
   const [ledger, setLedger] = useState<SessionLedgerEntry[]>([]);
-  const [workspace, setWorkspace] = useState<WorkspaceSnapshot>({ messages: [], presence: [], tokens: [] });
+  const [workspace, setWorkspace] = useState<WorkspaceSnapshot>({ messages: [], presence: [], tokens: [], fog: DEFAULT_FOG });
+  const [workspaceMaps, setWorkspaceMaps] = useState<Array<{ id: string; title: string; image_path: string; updated_at: string }>>([]);
   const [message, setMessage] = useState("");
   const [condition, setCondition] = useState("");
   const [sessionNotes, setSessionNotes] = useState("");
@@ -115,10 +147,21 @@ export default function SessionWorkspace({ mode }: Props) {
     return Number.isFinite(saved) ? Math.max(1, Math.min(3, saved)) : 1;
   });
   const [sessionItems, setSessionItems] = useState<SessionItem[]>([]);
-  const [itemDraft, setItemDraft] = useState({ id: 0, name: "", item_type: "consumível", description: "", effects: "", usable: true });
+  const [itemDraft, setItemDraft] = useState({ id: 0, name: "", item_type: "consumível", description: "", effects: "", usable: true, image_path: "" });
   const [grantDraft, setGrantDraft] = useState({ item_id: 0, character_id: "", quantity: 1 });
-  const [monsterDraft, setMonsterDraft] = useState({ name: "", maximum_hp: 10, color: "#b94c4c" });
+  const [monsterDraft, setMonsterDraft] = useState(EMPTY_MONSTER_DRAFT);
+  const [editingMonsterId, setEditingMonsterId] = useState<string | null>(null);
   const [monsterImage, setMonsterImage] = useState<File | null>(null);
+  const [gmToolsOpen, setGmToolsOpen] = useState(false);
+  const [fogLayer, setFogLayer] = useState<"exploration" | "battle">("exploration");
+  const [fogTool, setFogTool] = useState<"add" | "remove">("add");
+  const [fogBrush, setFogBrush] = useState(1.5);
+  const [fogDensity, setFogDensity] = useState(1);
+  const [iconFilter, setIconFilter] = useState<"all" | "map" | "items">("all");
+  const [iconSearch, setIconSearch] = useState("");
+  const [openTokenId, setOpenTokenId] = useState<string | null>(null);
+  const [openCharacterDetail, setOpenCharacterDetail] = useState<PlayableCharacter | null>(null);
+  const [loadingTokenDetail, setLoadingTokenDetail] = useState(false);
   const [busy, setBusy] = useState("");
   const [error, setError] = useState("");
   const timelineRef = useRef<HTMLDivElement>(null);
@@ -128,13 +171,15 @@ export default function SessionWorkspace({ mode }: Props) {
   const mapViewportRef = useRef<HTMLDivElement>(null);
   const mapCanvasRef = useRef<HTMLDivElement>(null);
   const draggingTokenRef = useRef<string | null>(null);
+  const paintingFogRef = useRef(false);
+  const fogPaintLayerRef = useRef<WorkspaceFog["exploration"] | null>(null);
   const ledgerLoadedRef = useRef(false);
   const knownRollIdsRef = useRef(new Set<string>());
   const rollLedgerInitializedRef = useRef(false);
 
   async function loadOverview() {
-    const [summaryItems, snapshot, itemItems, ledgerItems] = await Promise.all([
-      listPlayableCharacters(), getSessionWorkspace(), mode === "gm" ? listSessionItems().catch(() => []) : Promise.resolve([]), listSessionLedger(500),
+    const [summaryItems, snapshot, itemItems, ledgerItems, mapItems] = await Promise.all([
+      listPlayableCharacters(), getSessionWorkspace(), mode === "gm" ? listSessionItems().catch(() => []) : Promise.resolve([]), listSessionLedger(500), listWorkspaceMaps().catch(() => []),
     ]);
     const ordered = [...summaryItems].sort((a, b) => Number(b.access_level === "owner") - Number(a.access_level === "owner"));
     const currentSelection = selectedIdRef.current;
@@ -143,7 +188,8 @@ export default function SessionWorkspace({ mode }: Props) {
       : ordered.find((item) => item.access_level === "owner")?.id || ordered[0]?.id || "";
     charactersRef.current = ordered;
     setCharacters(ordered);
-    setWorkspace(snapshot);
+    setWorkspace({ ...snapshot, fog: snapshot.fog || DEFAULT_FOG });
+    setWorkspaceMaps(mapItems);
     setSessionItems(itemItems);
     ledgerLoadedRef.current = true;
     setLedger(ledgerItems);
@@ -200,6 +246,23 @@ export default function SessionWorkspace({ mode }: Props) {
     window.addEventListener("omnisvera-roll-created", refreshRolls);
     return () => window.removeEventListener("omnisvera-roll-created", refreshRolls);
   }, []);
+
+  useEffect(() => {
+    const openTools = () => { if (mode === "gm") setGmToolsOpen(true); };
+    window.addEventListener("omnisvera-open-gm-tools", openTools);
+    return () => window.removeEventListener("omnisvera-open-gm-tools", openTools);
+  }, [mode]);
+
+  useEffect(() => {
+    const viewport = mapViewportRef.current;
+    if (!viewport) return;
+    const zoomWithWheel = (event: WheelEvent) => {
+      event.preventDefault();
+      changeMapZoom(mapZoom + (event.deltaY < 0 ? .1 : -.1), event.clientX, event.clientY);
+    };
+    viewport.addEventListener("wheel", zoomWithWheel, { passive: false });
+    return () => viewport.removeEventListener("wheel", zoomWithWheel);
+  }, [mapZoom]);
 
   useEffect(() => {
     if (!ledgerLoadedRef.current) return;
@@ -272,8 +335,18 @@ export default function SessionWorkspace({ mode }: Props) {
 
   async function useAbility(ability: SessionAbility) {
     const resource = abilityResource(ability, character?.state?.resources || []);
+    if (ability.blocked) {
+      setError(`${ability.name} ainda está bloqueado.`);
+      return;
+    }
+    if (ability.id === "caixao") {
+      await stateAction("rest_at_inn", {}, `${character?.definition.name || "Personagem"} descansou no Caixão`);
+      const refreshed = character?.state?.resources.find((item) => item.key === "caixao");
+      if (refreshed) await stateAction("consume_resource", { resource_key: refreshed.key, amount: 1 }, `Usou ${ability.name}`);
+      return;
+    }
     if (resource) {
-      await stateAction("consume_resource", { resource_key: resource.key, amount: 1 }, `Usou ${ability.name}`);
+      await stateAction("consume_resource", { resource_key: resource.key, amount: ability.uses?.cost || 1 }, `Usou ${ability.name}`);
       return;
     }
     setBusy(`ability:${ability.id}`);
@@ -281,6 +354,17 @@ export default function SessionWorkspace({ mode }: Props) {
       await sendWorkspaceMessage(`${character?.definition.name || "Personagem"} usou ${ability.name}.`, "action");
       await loadOverview();
     } catch (reason) { setError(reason instanceof Error ? reason.message : "Falha ao registrar a habilidade."); }
+    finally { setBusy(""); }
+  }
+
+  async function rollDamage(formula: string, label: string) {
+    if (!selectedId || busy) return;
+    setBusy(`damage:${label}`); setError("");
+    try {
+      const createdRoll = await createFreeRoll({ request_id: newDiceRequestId("damage"), formula, label: `${character?.definition.name || "Personagem"} — Dano de ${label}`, visibility: "table", character_id: selectedId });
+      window.dispatchEvent(new CustomEvent("omnisvera-roll-created", { detail: createdRoll }));
+      await refresh();
+    } catch (reason) { setError(reason instanceof Error ? reason.message : "Não foi possível rolar o dano."); }
     finally { setBusy(""); }
   }
 
@@ -305,6 +389,14 @@ export default function SessionWorkspace({ mode }: Props) {
     finally { setBusy(""); }
   }
 
+  async function changeWorkspaceMap(mapId: string) {
+    if (mode !== "gm" || !mapId || busy) return;
+    setBusy("map-select"); setError("");
+    try { await selectWorkspaceMap(mapId); await loadOverview(); }
+    catch (reason) { setError(reason instanceof Error ? reason.message : "Não foi possível trocar o mapa."); }
+    finally { setBusy(""); }
+  }
+
   async function pinCharacter(characterId: string) {
     if (mode !== "gm" || busy) return;
     const summary = characters.find((item) => item.id === characterId);
@@ -313,7 +405,7 @@ export default function SessionWorkspace({ mode }: Props) {
     try {
       await createWorkspaceToken({
         token_type: "character", character_id: characterId, name: summary.name,
-        color: characterColor(characterId), latitude: 50, longitude: 50,
+        color: characterColor(characterId), latitude: 50, longitude: 50, map_id: workspace.map?.id || "default",
       });
       await loadOverview();
     } catch (reason) { setError(reason instanceof Error ? reason.message : "Não foi possível posicionar o personagem."); }
@@ -326,14 +418,67 @@ export default function SessionWorkspace({ mode }: Props) {
     setBusy("monster"); setError("");
     try {
       const imageData = monsterImage ? await fileAsBase64(monsterImage) : undefined;
-      await createWorkspaceToken({
-        token_type: "monster", name: monsterDraft.name.trim(), color: monsterDraft.color,
-        maximum_hp: monsterDraft.maximum_hp, current_hp: monsterDraft.maximum_hp,
-        latitude: 50, longitude: 50, image_filename: monsterImage?.name, image_data_base64: imageData,
-      });
-      setMonsterDraft({ name: "", maximum_hp: 10, color: "#b94c4c" }); setMonsterImage(null);
+      const conditions = monsterDraft.conditions.split(",").map((item) => item.trim()).filter(Boolean);
+      const sheet: WorkspaceTokenSheet = {
+        role: monsterDraft.role.trim() || "Inimigo",
+        level: monsterDraft.level,
+        armor_class: monsterDraft.armor_class,
+        initiative: monsterDraft.initiative,
+        description: monsterDraft.description.trim(),
+        attacks: monsterDraft.attacks.split("\n").map((line) => line.trim()).filter(Boolean).map((line) => {
+          const [name, damage, bonus, notes] = line.split("|").map((part) => part.trim());
+          return { name, damage, bonus, notes };
+        }),
+        abilities: monsterDraft.abilities.split("\n").map((item) => item.trim()).filter(Boolean),
+        notes: monsterDraft.notes.trim(),
+      };
+      if (editingMonsterId) {
+        await updateWorkspaceToken(editingMonsterId, { name: monsterDraft.name.trim(), color: monsterDraft.color, maximum_hp: monsterDraft.maximum_hp, current_hp: monsterDraft.current_hp, image_path: monsterDraft.image_path || undefined, conditions, sheet });
+      } else {
+        await createWorkspaceToken({
+          token_type: "monster", name: monsterDraft.name.trim(), color: monsterDraft.color,
+          maximum_hp: monsterDraft.maximum_hp, current_hp: monsterDraft.current_hp, image_path: monsterDraft.image_path || undefined,
+          latitude: 50, longitude: 50, image_filename: monsterImage?.name, image_data_base64: imageData, conditions, sheet, map_id: workspace.map?.id || "default",
+        });
+      }
+      setMonsterDraft(EMPTY_MONSTER_DRAFT); setMonsterImage(null); setEditingMonsterId(null);
       await loadOverview();
     } catch (reason) { setError(reason instanceof Error ? reason.message : "Não foi possível criar o monstro."); }
+    finally { setBusy(""); }
+  }
+
+  function editMonster(token: WorkspaceToken) {
+    setEditingMonsterId(token.id);
+    const sheet = token.sheet || {};
+    setMonsterDraft({
+      ...EMPTY_MONSTER_DRAFT, name: token.name, current_hp: token.current_hp || 0, maximum_hp: token.maximum_hp || 10,
+      color: token.color, image_path: token.image_path || "", conditions: token.conditions.join(", "),
+      role: sheet.role || "Inimigo", level: sheet.level || 1, armor_class: sheet.armor_class || 10, initiative: sheet.initiative || 0,
+      description: sheet.description || "", attacks: (sheet.attacks || []).map((attack) => [attack.name, attack.damage || "", attack.bonus ?? "", attack.notes || ""].join(" | ")).join("\n"),
+      abilities: (sheet.abilities || []).join("\n"), notes: sheet.notes || "",
+    });
+    setMonsterImage(null);
+  }
+
+  async function openTokenDetails(token: WorkspaceToken) {
+    setOpenTokenId(token.id);
+    setOpenCharacterDetail(null);
+    if (!token.character_id) return;
+    setLoadingTokenDetail(true);
+    try { setOpenCharacterDetail(await getPlayableCharacter(token.character_id)); }
+    catch { setOpenCharacterDetail(null); }
+    finally { setLoadingTokenDetail(false); }
+  }
+
+  async function removeMonster(token: WorkspaceToken) {
+    if (mode !== "gm" || busy) return;
+    if (!window.confirm(`Remover o monstro "${token.name}" do mapa?`)) return;
+    setBusy(`remove-monster:${token.id}`); setError("");
+    try {
+      await removeWorkspaceToken(token.id);
+      setWorkspace((current) => ({ ...current, tokens: current.tokens.filter((item) => item.id !== token.id) }));
+      await loadOverview();
+    } catch (reason) { setError(reason instanceof Error ? reason.message : "Não foi possível remover o monstro."); }
     finally { setBusy(""); }
   }
 
@@ -362,11 +507,6 @@ export default function SessionWorkspace({ mode }: Props) {
     });
   }
 
-  function zoomMapWithWheel(event: ReactWheelEvent<HTMLDivElement>) {
-    event.preventDefault();
-    changeMapZoom(mapZoom + (event.deltaY < 0 ? .1 : -.1), event.clientX, event.clientY);
-  }
-
   function previewTokenMove(event: ReactPointerEvent<HTMLDivElement>) {
     const tokenId = draggingTokenRef.current;
     if (mode !== "gm" || !tokenId) return;
@@ -387,17 +527,104 @@ export default function SessionWorkspace({ mode }: Props) {
     finally { setBusy(""); }
   }
 
+  function fogCellFromEvent(event: ReactPointerEvent<HTMLDivElement>) {
+    const rect = event.currentTarget.getBoundingClientRect();
+    const layer = fogPaintLayerRef.current || (workspace.fog || DEFAULT_FOG)[fogLayer];
+    if (!rect || !layer || rect.width <= 0 || rect.height <= 0) return null;
+    return {
+      column: Math.max(0, Math.min(layer.columns - 1, Math.floor((event.clientX - rect.left) / rect.width * layer.columns))),
+      row: Math.max(0, Math.min(layer.rows - 1, Math.floor((event.clientY - rect.top) / rect.height * layer.rows))),
+    };
+  }
+
+  function paintFog(event: ReactPointerEvent<HTMLDivElement>) {
+    if (mode !== "gm" || !paintingFogRef.current) return;
+    const center = fogCellFromEvent(event);
+    if (!center) return;
+    const currentFog = workspace.fog || DEFAULT_FOG;
+    const layer = fogPaintLayerRef.current || currentFog[fogLayer];
+    const mistDensity = { ...(layer.mist_density || {}) };
+    const radius = Math.max(0.25, fogBrush / 2);
+    for (let row = center.row - radius; row <= center.row + radius; row += 1) {
+      for (let column = center.column - radius; column <= center.column + radius; column += 1) {
+        if (column < 0 || row < 0 || column >= layer.columns || row >= layer.rows) continue;
+        if ((column - center.column) ** 2 + (row - center.row) ** 2 > radius ** 2 + 0.25) continue;
+        const key = `${column}:${row}`;
+        if (fogTool === "add") mistDensity[key] = fogDensity;
+        else delete mistDensity[key];
+      }
+    }
+    const nextLayer = { ...layer, mist_density: mistDensity };
+    fogPaintLayerRef.current = nextLayer;
+    setWorkspace((current) => ({ ...current, fog: { ...(current.fog || DEFAULT_FOG), [fogLayer]: nextLayer } }));
+  }
+
+  function beginFogPaint(event: ReactPointerEvent<HTMLDivElement>) {
+    if (mode !== "gm") return;
+    event.preventDefault();
+    paintingFogRef.current = true;
+    const currentLayer = (workspace.fog || DEFAULT_FOG)[fogLayer];
+    fogPaintLayerRef.current = { ...currentLayer, mist_density: { ...(currentLayer.mist_density || {}) } };
+    event.currentTarget.setPointerCapture?.(event.pointerId);
+    paintFog(event);
+  }
+
+  async function finishFogPaint(event?: ReactPointerEvent<HTMLDivElement>) {
+    if (!paintingFogRef.current) return;
+    paintingFogRef.current = false;
+    event?.currentTarget.releasePointerCapture?.(event.pointerId);
+    if (mode !== "gm") return;
+    const layer = fogPaintLayerRef.current || (workspace.fog || DEFAULT_FOG)[fogLayer];
+    fogPaintLayerRef.current = null;
+    setBusy(`fog:${fogLayer}`); setError("");
+    try {
+      const saved = await updateWorkspaceFog({ layer: fogLayer, enabled: layer.enabled || fogTool === "add", revealed_cells: layer.revealed_cells, mist_density: layer.mist_density || {} });
+      setWorkspace((current) => ({ ...current, fog: { ...(current.fog || DEFAULT_FOG), [fogLayer]: saved } }));
+    } catch (reason) { setError(reason instanceof Error ? reason.message : "Não foi possível salvar a fog do mapa."); }
+    finally { setBusy(""); }
+  }
+
+  async function toggleFog(enabled: boolean) {
+    if (mode !== "gm" || busy) return;
+    const currentFog = workspace.fog || DEFAULT_FOG;
+    const layer = currentFog[fogLayer];
+    const mist_density = enabled && Object.keys(layer.mist_density || {}).length === 0
+      ? Object.fromEntries(Array.from({ length: layer.rows * layer.columns }, (_, index) => [`${index % layer.columns}:${Math.floor(index / layer.columns)}`, fogDensity]))
+      : layer.mist_density || {};
+    setBusy(`fog-toggle:${fogLayer}`); setError("");
+    try {
+      const saved = await updateWorkspaceFog({ layer: fogLayer, enabled, revealed_cells: layer.revealed_cells, mist_density });
+      setWorkspace((current) => ({ ...current, fog: { ...(current.fog || DEFAULT_FOG), [fogLayer]: saved } }));
+    } catch (reason) { setError(reason instanceof Error ? reason.message : "Não foi possível alternar a fog."); }
+    finally { setBusy(""); }
+  }
+
+  async function setAllFog(filled: boolean) {
+    if (mode !== "gm" || busy) return;
+    const currentFog = workspace.fog || DEFAULT_FOG;
+    const layer = currentFog[fogLayer];
+    const mist_density = filled
+      ? Object.fromEntries(Array.from({ length: layer.rows * layer.columns }, (_, index) => [`${index % layer.columns}:${Math.floor(index / layer.columns)}`, fogDensity]))
+      : {};
+    setBusy(`fog-reset:${fogLayer}`); setError("");
+    try {
+      const saved = await updateWorkspaceFog({ layer: fogLayer, enabled: layer.enabled || filled, revealed_cells: layer.revealed_cells, mist_density });
+      setWorkspace((current) => ({ ...current, fog: { ...(current.fog || DEFAULT_FOG), [fogLayer]: saved } }));
+    } catch (reason) { setError(reason instanceof Error ? reason.message : "Não foi possível limpar a fog."); }
+    finally { setBusy(""); }
+  }
+
   async function saveItem(event: FormEvent) {
     event.preventDefault();
     if (mode !== "gm" || !itemDraft.name.trim() || busy) return;
     setBusy("item"); setError("");
     try {
       await saveSessionItem({
-        name: itemDraft.name.trim(), item_type: itemDraft.item_type.trim() || "item",
+        name: itemDraft.name.trim(), item_type: itemDraft.item_type.trim() || "item", image_path: itemDraft.image_path || null,
         description: itemDraft.description.trim(), effects: itemDraft.effects.split("\n").map((item) => item.trim()).filter(Boolean),
         usable: itemDraft.usable,
       }, itemDraft.id || undefined);
-      setItemDraft({ id: 0, name: "", item_type: "consumível", description: "", effects: "", usable: true });
+      setItemDraft({ id: 0, name: "", item_type: "consumível", description: "", effects: "", usable: true, image_path: "" });
       await loadOverview();
     } catch (reason) { setError(reason instanceof Error ? reason.message : "Não foi possível salvar o item."); }
     finally { setBusy(""); }
@@ -418,24 +645,49 @@ export default function SessionWorkspace({ mode }: Props) {
   const definition = character?.definition;
   const state = character?.state;
   const canOperate = character?.access_level !== "public";
+  const [hpDraft, setHpDraft] = useState<number | "">(state?.current_hp ?? "");
+  useEffect(() => setHpDraft(state?.current_hp ?? ""), [selectedId, state?.current_hp]);
   const mapTitleShown = workspace.map?.title || "Mapa de Nimalis";
   const mapImagePath = workspace.map?.image_path || "zz_media/maps/mapa_de_nimalis.png";
+  const fog = workspace.fog || DEFAULT_FOG;
+  const fogLayers = mode === "gm" ? [fog[fogLayer]] : [fog.exploration, fog.battle].filter((layer) => layer.enabled);
+  const fogColumns = fog[fogLayer].columns || 32;
+  const fogRows = fog[fogLayer].rows || 24;
+  const fogCells = Array.from({ length: fogColumns * fogRows }, (_, index) => `${index % fogColumns}:${Math.floor(index / fogColumns)}`);
+  const fogIsRevealed = (cell: string) => fogLayers.every((layer) => layer.revealed_cells.includes(cell));
+  const mistDensityByCell = useMemo(() => {
+    const result: Record<string, number> = {};
+    fogLayers.forEach((layer) => Object.entries(layer.mist_density || {}).forEach(([cell, amount]) => {
+      result[cell] = Math.max(result[cell] || 0, amount);
+    }));
+    return result;
+  }, [fogLayers]);
   const presenceByCharacter = useMemo(() => new Map(workspace.presence.filter((item) => item.character_id).map((item) => [item.character_id as string, item.online])), [workspace.presence]);
   const nameById = useMemo(() => new Map(characters.map((item) => [item.id, item.name])), [characters]);
   const characterById = useMemo(() => new Map(characters.map((item) => [item.id, item])), [characters]);
-  const abilities = definition?.session_abilities || [];
+  const abilities = (definition?.session_abilities || []).filter((item) => item.id !== "hemomancia" && item.id !== "grimorio-de-mago");
   const spells = abilities.filter((item) => item.kind === "spell" && item.id !== "misseis-magicos");
   const basicAbilities = abilities.filter((item) => !["spell", "resource", "attack"].includes(item.kind));
+  const groupedAbilities = basicAbilities.reduce<Record<string, SessionAbility[]>>((groups, ability) => {
+    const group = ability.group || "Habilidades";
+    (groups[group] ||= []).push(ability);
+    return groups;
+  }, {});
   const basicAttacks = abilities.filter((item) => item.kind === "attack");
+  const equipmentAttacks = basicAttacks;
   const catalogResourceKeys = new Set(
     abilities
       .filter((item) => Boolean(item.uses) && item.kind !== "resource" && item.id !== "misseis-magicos")
       .map((item) => abilityResource(item, state?.resources || [])?.key)
       .filter((key): key is string => Boolean(key)),
   );
-  const standaloneResources = (state?.resources || []).filter((resource) => !catalogResourceKeys.has(resource.key));
+  const standaloneResources = (state?.resources || []).filter((resource) => !catalogResourceKeys.has(resource.key) && !resource.label.toLocaleLowerCase("pt-BR").startsWith("magias de "));
   const consumables = character?.inventory.filter(isConsumable) || [];
   const carriedItems = character?.inventory.filter((item) => !isConsumable(item)) || [];
+  const equippedItem = carriedItems.find((item) => item.equipped);
+  const diceIcon = mediaUrlFromVaultPath(iconPathForItem("dados"));
+  const filteredIcons = useMemo(() => COMPANION_ICON_CATALOG.filter((icon) => (iconFilter === "all" || icon.category === iconFilter) && (!iconSearch.trim() || `${icon.label} ${icon.id}`.toLocaleLowerCase("pt-BR").includes(iconSearch.trim().toLocaleLowerCase("pt-BR")))), [iconFilter, iconSearch]);
+  const openToken = openTokenId ? workspace.tokens.find((token) => token.id === openTokenId) || null : null;
 
   const timeline = useMemo(() => {
     // Character state events retain the complete before/after payload for audit and
@@ -458,10 +710,44 @@ export default function SessionWorkspace({ mode }: Props) {
       title: item.title,
       detail: detailText || undefined,
     }; });
-    return entries.sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()).slice(-250);
+    return entries.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()).slice(0, 250);
   }, [ledger, nameById]);
 
-  useEffect(() => { if (timelineRef.current) timelineRef.current.scrollTop = timelineRef.current.scrollHeight; }, [timeline.length]);
+  useEffect(() => { if (timelineRef.current) timelineRef.current.scrollTop = 0; }, [timeline.length]);
+
+  function renderGmWorkspaceTools() {
+    if (mode !== "gm" || !gmToolsOpen) return null;
+    return <section className="workspace-gm-drawer">
+      <header className="workspace-gm-drawer-heading"><div><small>PAINEL DO MESTRE</small><strong>Ferramentas da sessão</strong></div><button type="button" onClick={() => setGmToolsOpen(false)} aria-label="Fechar ferramentas do Mestre">×</button></header>
+      <section className="workspace-fog-tools">
+        <header><div><span>FOG DO MAPA</span><small>pinte o mapa e revele apenas o necessário aos jogadores</small></div><label><input type="checkbox" checked={fog[fogLayer].enabled} onChange={(event) => void toggleFog(event.target.checked)} /> Ativa</label></header>
+        <div className="workspace-fog-toolbar"><button type="button" className={fogLayer === "exploration" ? "active" : ""} onClick={() => setFogLayer("exploration")}>Exploração</button><button type="button" className={fogLayer === "battle" ? "active" : ""} onClick={() => setFogLayer("battle")}>Batalha</button><span className="workspace-fog-divider" /><button type="button" className={fogTool === "add" ? "active" : ""} onClick={() => setFogTool("add")}>Pintar névoa</button><button type="button" className={fogTool === "remove" ? "active" : ""} onClick={() => setFogTool("remove")}>Apagar névoa</button><label>Densidade <input type="range" min={0.01} max={1} step={0.01} value={fogDensity} onChange={(event) => setFogDensity(Number(event.target.value))} /><output>{Math.round(fogDensity * 100)}%</output></label><label>Pincel redondo <input type="range" min={0.5} max={6} step={0.25} value={fogBrush} onChange={(event) => setFogBrush(Number(event.target.value))} /><output>{fogBrush.toLocaleString("pt-BR")} células</output></label><button type="button" onClick={() => void setAllFog(false)}>Limpar névoa</button><button type="button" onClick={() => void setAllFog(true)}>Preencher névoa</button></div>
+      </section>
+      <section className="workspace-map-tools workspace-pin-controls">
+        <header><span>CONTROLE DE ÍCONES E PINS</span><small>posicione, edite e abra a ficha de cada marcador</small></header>
+        <div><header><span>PERSONAGENS NO MAPA</span><small>arraste os avatares para posicionar</small></header><div>{characters.map((item) => { const pinned = workspace.tokens.some((token) => token.character_id === item.id); return <button type="button" key={item.id} disabled={pinned || Boolean(busy)} style={{ color: characterColor(item.id) }} onClick={() => void pinCharacter(item.id)}>{pinned ? "✓" : "+"} {item.name}</button>; })}</div><div className="workspace-pin-list">{workspace.tokens.map((token) => <div key={token.id}><span><strong style={{ color: token.color }}>{token.name}</strong><small>{token.token_type === "monster" ? "Monstro/NPC" : "Personagem"} · {token.latitude.toFixed(1)}, {token.longitude.toFixed(1)}</small></span><button type="button" onClick={() => void openTokenDetails(token)}>Ficha</button></div>)}</div><section className="workspace-monster-manager"><header><span>MONSTROS E NPCS NO MAPA</span><small>gerencie os marcadores criados</small></header>{workspace.tokens.filter((token) => token.token_type === "monster").map((token) => <div className="workspace-monster-row" key={token.id}><span><strong style={{ color: token.color }}>{token.name}</strong><small>{token.current_hp ?? "—"}/{token.maximum_hp ?? "—"} PV · {token.latitude.toFixed(1)}, {token.longitude.toFixed(1)}</small></span><button type="button" disabled={Boolean(busy)} onClick={() => void openTokenDetails(token)}>Ficha</button><button type="button" disabled={Boolean(busy)} onClick={() => editMonster(token)}>Editar</button><button type="button" disabled={Boolean(busy)} onClick={() => void removeMonster(token)}>Remover</button></div>)}{!workspace.tokens.some((token) => token.token_type === "monster") && <p className="workspace-empty-monsters">Nenhum monstro ou NPC criado.</p>}</section></div>
+        <form onSubmit={createMonster}><header><span>{editingMonsterId ? "EDITAR MONSTRO / NPC" : "CRIAR MONSTRO / NPC"}</span><small>ficha completa e marcador tático</small></header><input value={monsterDraft.name} onChange={(event) => setMonsterDraft({ ...monsterDraft, name: event.target.value })} placeholder="Nome" /><div className="workspace-monster-hp"><label><span>PV atual</span><input type="number" min={0} max={99999} value={monsterDraft.current_hp} onChange={(event) => setMonsterDraft({ ...monsterDraft, current_hp: Number(event.target.value) })} /></label><label><span>PV máximo</span><input type="number" min={1} max={99999} value={monsterDraft.maximum_hp} onChange={(event) => setMonsterDraft({ ...monsterDraft, maximum_hp: Number(event.target.value) })} /></label></div><div className="workspace-monster-sheet-grid"><input value={monsterDraft.role} onChange={(event) => setMonsterDraft({ ...monsterDraft, role: event.target.value })} placeholder="Função / classe" /><input type="number" min={1} max={30} value={monsterDraft.level} onChange={(event) => setMonsterDraft({ ...monsterDraft, level: Number(event.target.value) })} placeholder="Nível" /><input type="number" min={0} max={99} value={monsterDraft.armor_class} onChange={(event) => setMonsterDraft({ ...monsterDraft, armor_class: Number(event.target.value) })} placeholder="CA" /><input type="number" min={-30} max={30} value={monsterDraft.initiative} onChange={(event) => setMonsterDraft({ ...monsterDraft, initiative: Number(event.target.value) })} placeholder="Iniciativa" /></div><input value={monsterDraft.conditions} onChange={(event) => setMonsterDraft({ ...monsterDraft, conditions: event.target.value })} placeholder="Status separados por vírgula" /><textarea value={monsterDraft.description} onChange={(event) => setMonsterDraft({ ...monsterDraft, description: event.target.value })} placeholder="Descrição da ficha" /><textarea value={monsterDraft.attacks} onChange={(event) => setMonsterDraft({ ...monsterDraft, attacks: event.target.value })} placeholder="Ataques: nome | dano | bônus | observações (um por linha)" /><textarea value={monsterDraft.abilities} onChange={(event) => setMonsterDraft({ ...monsterDraft, abilities: event.target.value })} placeholder="Habilidades (uma por linha)" /><textarea value={monsterDraft.notes} onChange={(event) => setMonsterDraft({ ...monsterDraft, notes: event.target.value })} placeholder="Notas do Mestre" /><input type="color" value={monsterDraft.color} onChange={(event) => setMonsterDraft({ ...monsterDraft, color: event.target.value })} title="Cor" /><label><input type="file" accept="image/png,image/jpeg,image/webp" onChange={(event) => setMonsterImage(event.target.files?.[0] || null)} /><span>{monsterImage?.name || (monsterDraft.image_path ? "Ícone do catálogo selecionado" : "Imagem opcional")}</span></label><button disabled={!monsterDraft.name.trim() || Boolean(busy)}>{editingMonsterId ? "Salvar ficha" : "Criar e pinar"}</button>{editingMonsterId && <button type="button" onClick={() => { setEditingMonsterId(null); setMonsterDraft(EMPTY_MONSTER_DRAFT); }}>Cancelar</button>}</form>
+      </section>
+      <section className="workspace-icon-catalog">
+        <header><div><span>CATÁLOGO DE ÍCONES</span><small>mapas, itens e marcadores</small></div><b>{filteredIcons.length}/{COMPANION_ICON_CATALOG.length}</b></header>
+        <div className="workspace-icon-toolbar"><input value={iconSearch} onChange={(event) => setIconSearch(event.target.value)} placeholder="Buscar ícone..." /><button type="button" className={iconFilter === "all" ? "active" : ""} onClick={() => setIconFilter("all")}>Todos</button><button type="button" className={iconFilter === "map" ? "active" : ""} onClick={() => setIconFilter("map")}>Mapa</button><button type="button" className={iconFilter === "items" ? "active" : ""} onClick={() => setIconFilter("items")}>Itens</button></div>
+        <div className="workspace-icon-grid">{filteredIcons.map((icon) => <article key={`${icon.category}:${icon.id}`}><img src={mediaUrlFromVaultPath(icon.path)} alt="" /><strong>{icon.label}</strong><small>{icon.category === "map" ? "Mapa" : "Item"}</small><div><button type="button" onClick={() => setItemDraft((current) => ({ ...current, image_path: icon.path }))}>Usar em item</button>{icon.category === "map" && <button type="button" onClick={() => setMonsterDraft((current) => ({ ...current, image_path: icon.path }))}>Usar no marcador</button>}</div></article>)}</div>
+      </section>
+      <section className="workspace-gm-tools">
+        <header><span>EDIÇÃO DO MESTRE</span><small>ficha, itens e descanso</small></header>
+        <div className="workspace-gm-numbers"><NumericEditor label="PV atual" value={state?.current_hp} max={state?.maximum_hp || 999} onSave={(value) => stateAction("set_hp", { value }, "PV ajustado pelo Mestre")} /><NumericEditor label="PV máximo" value={state?.maximum_hp} min={1} onSave={(value) => definitionAction({ maximum_hp: value })} /><NumericEditor label="Nível" value={definition?.level} min={1} max={20} onSave={(value) => definitionAction({ level: value })} /><NumericEditor label="Classe de Armadura" value={definition?.defenses?.armor_class} onSave={(value) => definitionAction({ armor_class: value })} /><NumericEditor label="Iniciativa" value={definition?.defenses?.initiative} min={-30} max={30} onSave={(value) => definitionAction({ initiative: value })} />{ATTRIBUTES.map(([key, label]) => <NumericEditor key={key} label={label} value={definition?.attributes?.[key]} min={1} max={30} onSave={(value) => definitionAction({ attributes: { [key]: value } })} />)}</div>
+        <form onSubmit={(event) => { event.preventDefault(); if (condition.trim()) { void stateAction("add_condition", { condition: condition.trim() }, `Adicionou ${condition.trim()}`); setCondition(""); } }}><input value={condition} onChange={(event) => setCondition(event.target.value)} placeholder="Nova condição" /><button disabled={!condition.trim() || Boolean(busy)}>Adicionar status</button></form>
+        <label className="workspace-session-notes"><span>Notas da sessão do Mestre</span><textarea value={sessionNotes} onChange={(event) => setSessionNotes(event.target.value)} /><button disabled={Boolean(busy) || sessionNotes === (state?.session_notes || "")} onClick={() => void stateAction("set_session_notes", { value: sessionNotes }, "Atualizou notas da sessão")}>Salvar notas</button></label>
+        <section className="workspace-item-studio">
+          <header><span>CRIAR E EDITAR ITENS</span><button type="button" onClick={() => setItemDraft({ id: 0, name: "", item_type: "consumível", description: "", effects: "", usable: true, image_path: "" })}>Novo</button></header>
+          <form onSubmit={saveItem}><input value={itemDraft.name} onChange={(event) => setItemDraft({ ...itemDraft, name: event.target.value })} placeholder="Nome do item" /><input value={itemDraft.item_type} onChange={(event) => setItemDraft({ ...itemDraft, item_type: event.target.value })} placeholder="Tipo" /><textarea value={itemDraft.description} onChange={(event) => setItemDraft({ ...itemDraft, description: event.target.value })} placeholder="Descrição" /><textarea value={itemDraft.effects} onChange={(event) => setItemDraft({ ...itemDraft, effects: event.target.value })} placeholder="Um efeito por linha" /><label><input type="checkbox" checked={itemDraft.usable} onChange={(event) => setItemDraft({ ...itemDraft, usable: event.target.checked })} /> Consumível / utilizável</label><button disabled={!itemDraft.name.trim() || Boolean(busy)}>{itemDraft.id ? "Salvar item" : "Criar item"}</button></form>
+          <div className="workspace-item-list">{sessionItems.map((item) => <button type="button" key={item.id} onClick={() => setItemDraft({ id: item.id, name: item.name, item_type: item.item_type, description: item.description || "", effects: item.effects.join("\n"), usable: item.usable, image_path: item.image_path || "" })}><strong>{item.name}</strong><small>{item.item_type}</small></button>)}</div>
+          <form className="workspace-grant-item" onSubmit={grantItem}><select value={grantDraft.item_id} onChange={(event) => setGrantDraft({ ...grantDraft, item_id: Number(event.target.value) })}><option value={0}>Escolha um item</option>{sessionItems.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}</select><select value={grantDraft.character_id || selectedId} onChange={(event) => setGrantDraft({ ...grantDraft, character_id: event.target.value })}>{characters.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}</select><input type="number" min={1} max={999} value={grantDraft.quantity} onChange={(event) => setGrantDraft({ ...grantDraft, quantity: Number(event.target.value) })} /><button disabled={!grantDraft.item_id || Boolean(busy)}>Dar ao personagem</button></form>
+        </section>
+        <button className="workspace-rest-button" disabled={Boolean(busy)} onClick={() => void stateAction("rest_at_inn", {}, "Descanso completo no INN")}>Descanso completo · restaurar vida, status, magias e habilidades</button>
+      </section>
+    </section>;
+  }
 
   return <section className="session-workspace unified-workspace">
     <header className="party-status-header">
@@ -469,7 +755,7 @@ export default function SessionWorkspace({ mode }: Props) {
       <div className="party-status-list">{characters.map((item) => {
         const hpPercent = item.maximum_hp ? Math.max(0, Math.min(100, Number(item.current_hp || 0) / item.maximum_hp * 100)) : 0;
         const online = Boolean(presenceByCharacter.get(item.id));
-        return <button key={item.id} data-character={item.id} className={selectedId === item.id ? "active" : ""} onClick={() => { selectedIdRef.current = item.id; setSelectedId(item.id); localStorage.setItem("omnisvera_selected_character", item.id); }}>
+        return <button key={item.id} data-character={item.id} className={selectedId === item.id ? "active" : ""} onClick={() => { setGmToolsOpen(false); selectedIdRef.current = item.id; setSelectedId(item.id); localStorage.setItem("omnisvera_selected_character", item.id); }}>
           <span className="workspace-avatar"><CharacterPortrait character={item} /><i className={online ? "online" : "offline"} title={online ? "Online" : "Offline"} /></span>
           <span><strong style={{ color: characterColor(item.id) }}>{item.name}</strong><small>{item.conditions.length ? item.conditions.join(" · ") : `${item.class_name || "Personagem"} · Nv. ${item.level || 1}`}</small><i><b style={{ width: `${hpPercent}%` }} /></i></span>
           <em>{item.current_hp ?? "—"}/{item.maximum_hp ?? "—"}</em>
@@ -480,37 +766,38 @@ export default function SessionWorkspace({ mode }: Props) {
     {error && <p className="workspace-error">{error}</p>}
     <div className="session-workspace-grid">
       <aside className="workspace-character-panel">
-        {character ? <>
+        {mode === "gm" && gmToolsOpen ? renderGmWorkspaceTools() : character ? <>
           <header className="workspace-character-identity">
             {mediaUrlFromVaultPath(definition?.portrait) ? <img src={mediaUrlFromVaultPath(definition?.portrait)} alt={`Retrato de ${definition?.name}`} /> : <span>{definition?.name.slice(0, 1)}</span>}
             <div><small>PERSONAGEM ATIVO</small><h2 style={{ color: characterColor(definition?.id) }}>{definition?.name}</h2>{definition?.epithet && <p>{definition.epithet}</p>}<div><b>{definition?.race || "Raça"}</b><b>{definition?.class_name || "Classe"}</b><b>Nível {definition?.level || 1}</b></div></div>
           </header>
 
           <section className="workspace-vitals"><div className="workspace-hp-heading"><span><small>VIDA</small><strong>{state?.current_hp ?? "—"}<em>/ {state?.maximum_hp ?? "—"}</em></strong></span><span><small>CA</small><strong>{definition?.defenses?.armor_class ?? "—"}</strong></span></div><div className="workspace-hp-track"><i style={{ width: `${state?.maximum_hp ? Math.max(0, Math.min(100, Number(state.current_hp || 0) / state.maximum_hp * 100)) : 0}%` }} /></div></section>
+          <div className="workspace-hp-quick-controls" aria-label="Ajuste rápido de vida"><button type="button" disabled={!canOperate || Boolean(busy)} onClick={() => setHpDraft(Math.max(0, Number(hpDraft || state?.current_hp || 0) - 1))}>−</button><input type="number" min={0} max={state?.maximum_hp || 99999} value={hpDraft} onChange={(event) => setHpDraft(event.target.value === "" ? "" : Number(event.target.value))} aria-label="PV" /><button type="button" disabled={!canOperate || Boolean(busy)} onClick={() => setHpDraft(Math.min(state?.maximum_hp || 99999, Number(hpDraft || state?.current_hp || 0) + 1))}>+</button><button type="button" disabled={!canOperate || Boolean(busy) || hpDraft === ""} onClick={() => void stateAction("set_hp", { value: Number(hpDraft) }, "PV ajustado")}>Aplicar</button></div>
 
-          <section className="workspace-attributes"><header><span>ATRIBUTOS E TESTES</span></header><div>{ATTRIBUTES.map(([key, label]) => <button key={key} disabled={!canOperate || Boolean(busy)} onClick={() => void roll("attribute", key)}><span>{label}</span><strong>{definition?.attributes?.[key] ?? "—"}</strong><small>{definition?.attribute_modifiers?.[key] == null ? "N/C" : `${Number(definition.attribute_modifiers[key]) >= 0 ? "+" : ""}${definition.attribute_modifiers[key]}`}</small></button>)}</div><button className="workspace-save-roll" disabled={!canOperate || Boolean(busy)} onClick={() => void roll("saving_throw")}>Jogar proteção</button><button className="workspace-dice-tray-button" type="button" onClick={() => window.dispatchEvent(new CustomEvent("omnisvera-open-dice-tray"))}><span>⚄</span> Bandeja de dados</button></section>
+          <section className="workspace-conditions workspace-status-under-vitals">{state?.conditions.length ? <div className="workspace-condition-list">{state.conditions.map((item) => <span key={item}>{item}{mode === "gm" && <button onClick={() => void stateAction("remove_condition", { condition: item }, `Removeu ${item}`)}>×</button>}</span>)}</div> : <p>STATUS - Nenhum</p>}</section>
 
-          <section className="workspace-resources"><header><span>USOS DISPONÍVEIS</span><small>atual / máximo</small></header>{standaloneResources.map((resource) => <div key={resource.key}><span><strong>{resource.label}</strong><small>recupera no descanso completo</small></span><b>{resource.current}/{resource.maximum}</b>{canOperate && <button disabled={Boolean(busy) || resource.current <= 0} onClick={() => void stateAction("consume_resource", { resource_key: resource.key, amount: 1 }, `Usou ${resource.label}`)}>Usar</button>}</div>)}{consumables.map((item) => <div key={item.item_path} className="consumable-counter"><span><strong>{item.item_title}</strong><small>consumível · inventário</small></span><b>{item.quantity}</b>{canOperate && <button disabled={Boolean(busy) || item.quantity <= 0} onClick={() => void stateAction("change_quantity", { item_path: item.item_path, quantity: Math.max(0, item.quantity - 1) }, `Usou ${item.item_title}`)}>Usar</button>}</div>)}{!standaloneResources.length && !consumables.length && <p>Nenhum uso limitado ou consumível.</p>}</section>
+          <section className="workspace-attributes"><header><span>ATRIBUTOS E TESTES</span></header><div>{ATTRIBUTES.map(([key, label]) => <button key={key} disabled={!canOperate || Boolean(busy)} onClick={() => void roll("attribute", key)}><span>{label}</span><strong>{definition?.attributes?.[key] ?? "—"}</strong><small>{definition?.attribute_modifiers?.[key] == null ? "N/C" : `${Number(definition.attribute_modifiers[key]) >= 0 ? "+" : ""}${definition.attribute_modifiers[key]}`}</small></button>)}</div><button className="workspace-save-roll" disabled={!canOperate || Boolean(busy)} onClick={() => void roll("saving_throw")}>Jogar proteção</button><button className="workspace-dice-tray-button" type="button" onClick={() => window.dispatchEvent(new CustomEvent("omnisvera-open-dice-tray"))}>{diceIcon ? <img src={diceIcon} alt="" /> : <span>⚄</span>} Bandeja de dados</button></section>
 
-          <section className="workspace-action-catalog"><header><span>MAGIAS</span><small>{spells.length}</small></header>{spells.map((ability) => { const resource = abilityResource(ability, state?.resources || []); return <details key={ability.id}><summary><span><strong>{ability.name}</strong><small>{ability.circle ? `${ability.circle}º círculo` : "magia"}</small></span>{resource && <b>{resource.current}/{resource.maximum}</b>}</summary><p>{ability.description || "Sem descrição adicional."}</p>{canOperate && <button disabled={Boolean(busy) || Boolean(resource && resource.current <= 0)} onClick={() => void useAbility(ability)}>Usar magia</button>}</details>; })}{!spells.length && <p>Nenhuma magia cadastrada.</p>}</section>
+          {(standaloneResources.length > 0 || consumables.length > 0) && <section className="workspace-action-catalog workspace-resource-catalog"><header><span>RECURSOS</span><small>atual / máximo</small></header>{standaloneResources.map((resource) => <article key={resource.key}><span><strong>{resource.label}</strong></span><b>{resource.current}/{resource.maximum}</b>{canOperate && <button disabled={Boolean(busy) || resource.current <= 0} onClick={() => void stateAction("consume_resource", { resource_key: resource.key, amount: 1 }, `Usou ${resource.label}`)}>Usar</button>}</article>)}{consumables.map((item) => { const title = cleanItemDisplayName(item.item_title); return <article key={item.item_path}><span><strong>{title}</strong></span><b>{item.quantity}</b>{canOperate && <button disabled={Boolean(busy) || item.quantity <= 0} onClick={() => void stateAction("change_quantity", { item_path: item.item_path, quantity: Math.max(0, item.quantity - 1) }, `Usou ${title}`)}>Usar</button>}</article>; })}</section>}
 
-          <section className="workspace-action-catalog"><header><span>HABILIDADES</span><small>{basicAbilities.length}</small></header>{basicAbilities.map((ability) => { const resource = abilityResource(ability, state?.resources || []); return <details key={ability.id}><summary><span><strong>{ability.name}</strong><small>{ability.group}</small></span>{resource && <b>{resource.current}/{resource.maximum}</b>}</summary><p>{ability.description || "Sem descrição adicional."}</p>{canOperate && <button disabled={Boolean(busy) || Boolean(resource && resource.current <= 0)} onClick={() => void useAbility(ability)}>Usar habilidade</button>}</details>; })}</section>
+          <section className="workspace-action-catalog"><header><span>MAGIAS</span><small>{spells.length}</small></header>{spells.map((ability) => { const resource = abilityResource(ability, state?.resources || []); return <article key={ability.id}><span><strong>{ability.name}</strong><small>{ability.circle ? `${ability.circle}º círculo` : "magia"}</small></span>{resource && <b>{resource.current}/{resource.maximum}</b>}{canOperate && <button disabled={Boolean(busy) || Boolean(resource && resource.current <= 0) || Boolean(ability.blocked)} onClick={() => void useAbility(ability)}>{ability.blocked ? "Bloqueado" : "Usar"}</button>}</article>; })}{!spells.length && <p>Nenhuma cadastrada.</p>}</section>
 
-          <section className="workspace-action-catalog"><header><span>ATAQUES</span><small>{(definition?.attacks?.length || 0) + basicAttacks.length}</small></header>{definition?.attacks?.map((attack) => <article key={attack.id}><span><strong>{attack.name}</strong><small>{attack.damage || "Dano não configurado"}{attack.range ? ` · ${attack.range}` : ""}</small></span><b>{attack.attack_bonus == null ? "—" : `${attack.attack_bonus >= 0 ? "+" : ""}${attack.attack_bonus}`}</b>{canOperate && <button disabled={Boolean(busy)} onClick={() => void roll("attack", attack.id)}>Atacar</button>}</article>)}{basicAttacks.map((attack) => <article key={attack.id}><span><strong>{attack.name}</strong><small>Ataque básico · uso normal</small></span><b>∞</b>{canOperate && <button disabled={Boolean(busy)} onClick={() => void useAbility(attack)}>Atacar</button>}</article>)}</section>
+          {Object.entries(groupedAbilities).map(([group, groupEntries]) => <section className="workspace-action-catalog" key={group}><header><span>{group.toUpperCase()}</span><small>{groupEntries.length}</small></header>{groupEntries.map((ability) => { const resource = abilityResource(ability, state?.resources || []); return <article key={ability.id}><span><strong>{ability.name}</strong>{!ability.active && <small>Passiva</small>}</span>{resource && <b>{resource.current}/{resource.maximum}</b>}{ability.active && canOperate && <button disabled={Boolean(busy) || Boolean(resource && resource.current <= 0) || Boolean(ability.blocked)} onClick={() => void useAbility(ability)}>{ability.blocked ? "Bloqueado" : "Usar"}</button>}</article>; })}</section>)}
 
-          <section className="workspace-action-catalog"><header><span>INVENTÁRIO</span><small>{carriedItems.length}</small></header>{carriedItems.length ? carriedItems.map((item) => <article key={item.item_path}><span><strong>{item.item_title}</strong><small>{item.equipped ? "Equipado" : "Guardado"}</small></span><b>{item.quantity}</b>{canOperate && <button disabled={Boolean(busy)} onClick={() => void stateAction(item.equipped ? "unequip_item" : "equip_item", { item_path: item.item_path }, `${item.equipped ? "Guardou" : "Equipou"} ${item.item_title}`)}>{item.equipped ? "Guardar" : "Equipar"}</button>}</article>) : <p>Nenhum item não consumível registrado.</p>}</section>
+          <section className="workspace-action-catalog"><header><span>ATAQUES</span><small>{(definition?.attacks?.length || 0) + equipmentAttacks.length}{equippedItem ? ` · ${cleanItemDisplayName(equippedItem.item_title)}` : ""}</small></header>{definition?.attacks?.map((attack) => { const damage = attackDamage(definition?.id, attack); return <article key={attack.id}><span><strong>{attack.name}</strong><small>{damage}{attack.range ? ` · ${attack.range}` : ""}</small></span><b>{attack.attack_bonus == null ? "—" : `${attack.attack_bonus >= 0 ? "+" : ""}${attack.attack_bonus}`}</b>{canOperate && <div className="workspace-inline-actions"><button disabled={Boolean(busy)} onClick={() => void roll("attack", attack.id)}>Atacar</button><button className="workspace-damage-die" title={damage} aria-label={`Rolar ${damage}`} disabled={Boolean(busy)} onClick={() => void rollDamage(damage, attack.name)}>{diceIcon ? <img src={diceIcon} alt="" /> : "⚄"}</button></div>}</article>; })}{equipmentAttacks.map((attack) => { const damage = attackDamage(definition?.id, attack); return <article key={attack.id}><span><strong>{attack.name}</strong><small>{damage}</small></span><b>—</b>{canOperate && <div className="workspace-inline-actions"><button disabled={Boolean(busy)} onClick={() => void useAbility(attack)}>Atacar</button><button className="workspace-damage-die" title={damage} aria-label={`Rolar ${damage}`} disabled={Boolean(busy)} onClick={() => void rollDamage(damage, attack.name)}>{diceIcon ? <img src={diceIcon} alt="" /> : "⚄"}</button></div>}</article>; })}</section>
 
-          <section className="workspace-conditions"><header><span>ALTERAÇÕES DE STATUS</span><small>{state?.conditions.length || 0} ativas</small></header>{state?.conditions.length ? <div className="workspace-condition-list">{state.conditions.map((item) => <span key={item}>{item}{mode === "gm" && <button onClick={() => void stateAction("remove_condition", { condition: item }, `Removeu ${item}`)}>×</button>}</span>)}</div> : <p>Nenhuma condição ativa.</p>}</section>
+          <section className="workspace-action-catalog workspace-inventory-catalog"><header><span>INVENTÁRIO</span><small>{carriedItems.length}</small></header>{carriedItems.length ? carriedItems.map((item) => { const title = cleanItemDisplayName(item.item_title); const icon = mediaUrlFromVaultPath(item.thumbnail || item.cover || iconPathForItem(item.item_title, item.item_type)); return <article className={item.equipped ? "equipped" : ""} key={item.item_path}>{icon ? <img src={icon} alt="" /> : <span className="inventory-inline-placeholder">◈</span>}<span><strong>{title}</strong><small>{item.equipped ? "Equipado" : "Guardado"}</small></span><b>{item.quantity}</b>{canOperate && <button disabled={Boolean(busy)} onClick={() => void stateAction(item.equipped ? "unequip_item" : "equip_item", { item_path: item.item_path }, `${item.equipped ? "Guardou" : "Equipou"} ${title}`)}>{item.equipped ? "Guardar" : "Equipar"}</button>}</article>; }) : <p>Nenhum item não consumível registrado.</p>}</section>
 
-          {mode === "gm" && <section className="workspace-gm-tools">
+          {false && <section className="workspace-gm-tools">
             <header><span>FERRAMENTAS DO MESTRE</span><small>edição completa</small></header>
             <div className="workspace-gm-numbers"><NumericEditor label="PV atual" value={state?.current_hp} max={state?.maximum_hp || 999} onSave={(value) => stateAction("set_hp", { value }, "PV ajustado pelo Mestre")} /><NumericEditor label="PV máximo" value={state?.maximum_hp} min={1} onSave={(value) => definitionAction({ maximum_hp: value })} /><NumericEditor label="Nível" value={definition?.level} min={1} max={20} onSave={(value) => definitionAction({ level: value })} /><NumericEditor label="Classe de Armadura" value={definition?.defenses?.armor_class} onSave={(value) => definitionAction({ armor_class: value })} /><NumericEditor label="Iniciativa" value={definition?.defenses?.initiative} min={-30} max={30} onSave={(value) => definitionAction({ initiative: value })} />{ATTRIBUTES.map(([key, label]) => <NumericEditor key={key} label={label} value={definition?.attributes?.[key]} min={1} max={30} onSave={(value) => definitionAction({ attributes: { [key]: value } })} />)}</div>
             <form onSubmit={(event) => { event.preventDefault(); if (condition.trim()) { void stateAction("add_condition", { condition: condition.trim() }, `Adicionou ${condition.trim()}`); setCondition(""); } }}><input value={condition} onChange={(event) => setCondition(event.target.value)} placeholder="Nova condição" /><button disabled={!condition.trim() || Boolean(busy)}>Adicionar status</button></form>
             <label className="workspace-session-notes"><span>Notas da sessão do Mestre</span><textarea value={sessionNotes} onChange={(event) => setSessionNotes(event.target.value)} /><button disabled={Boolean(busy) || sessionNotes === (state?.session_notes || "")} onClick={() => void stateAction("set_session_notes", { value: sessionNotes }, "Atualizou notas da sessão")}>Salvar notas</button></label>
             <section className="workspace-item-studio">
-              <header><span>CRIAR E EDITAR ITENS</span><button type="button" onClick={() => setItemDraft({ id: 0, name: "", item_type: "consumível", description: "", effects: "", usable: true })}>Novo</button></header>
+              <header><span>CRIAR E EDITAR ITENS</span><button type="button" onClick={() => setItemDraft({ id: 0, name: "", item_type: "consumível", description: "", effects: "", usable: true, image_path: "" })}>Novo</button></header>
               <form onSubmit={saveItem}><input value={itemDraft.name} onChange={(event) => setItemDraft({ ...itemDraft, name: event.target.value })} placeholder="Nome do item" /><input value={itemDraft.item_type} onChange={(event) => setItemDraft({ ...itemDraft, item_type: event.target.value })} placeholder="Tipo" /><textarea value={itemDraft.description} onChange={(event) => setItemDraft({ ...itemDraft, description: event.target.value })} placeholder="Descrição" /><textarea value={itemDraft.effects} onChange={(event) => setItemDraft({ ...itemDraft, effects: event.target.value })} placeholder="Um efeito por linha" /><label><input type="checkbox" checked={itemDraft.usable} onChange={(event) => setItemDraft({ ...itemDraft, usable: event.target.checked })} /> Consumível / utilizável</label><button disabled={!itemDraft.name.trim() || Boolean(busy)}>{itemDraft.id ? "Salvar item" : "Criar item"}</button></form>
-              <div className="workspace-item-list">{sessionItems.map((item) => <button type="button" key={item.id} onClick={() => setItemDraft({ id: item.id, name: item.name, item_type: item.item_type, description: item.description || "", effects: item.effects.join("\n"), usable: item.usable })}><strong>{item.name}</strong><small>{item.item_type}</small></button>)}</div>
+              <div className="workspace-item-list">{sessionItems.map((item) => <button type="button" key={item.id} onClick={() => setItemDraft({ id: item.id, name: item.name, item_type: item.item_type, description: item.description || "", effects: item.effects.join("\n"), usable: item.usable, image_path: item.image_path || "" })}><strong>{item.name}</strong><small>{item.item_type}</small></button>)}</div>
               <form className="workspace-grant-item" onSubmit={grantItem}><select value={grantDraft.item_id} onChange={(event) => setGrantDraft({ ...grantDraft, item_id: Number(event.target.value) })}><option value={0}>Escolha um item</option>{sessionItems.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}</select><select value={grantDraft.character_id || selectedId} onChange={(event) => setGrantDraft({ ...grantDraft, character_id: event.target.value })}>{characters.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}</select><input type="number" min={1} max={999} value={grantDraft.quantity} onChange={(event) => setGrantDraft({ ...grantDraft, quantity: Number(event.target.value) })} /><button disabled={!grantDraft.item_id || Boolean(busy)}>Dar ao personagem</button></form>
             </section>
             <button className="workspace-rest-button" disabled={Boolean(busy)} onClick={() => void stateAction("rest_at_inn", {}, "Descanso completo no INN")}>Descanso completo · restaurar vida, status, magias e habilidades</button>
@@ -519,20 +806,20 @@ export default function SessionWorkspace({ mode }: Props) {
       </aside>
 
       <main className="workspace-map-panel">
-        <header><div><small>IMAGEM DA SESSÃO</small><h2>{mapTitleShown}</h2></div><div className="workspace-map-zoom" aria-label="Zoom do mapa"><button type="button" disabled={mapZoom <= 1} onClick={() => changeMapZoom(mapZoom - .1)} aria-label="Diminuir zoom">−</button><output>{Math.round(mapZoom * 100)}%</output><button type="button" disabled={mapZoom >= 3} onClick={() => changeMapZoom(mapZoom + .1)} aria-label="Aumentar zoom">+</button><button type="button" disabled={mapZoom === 1} onClick={() => changeMapZoom(1)}>Ajustar</button></div>{mode === "gm" && <form className="workspace-map-upload" onSubmit={submitMap}><input value={mapTitle} onChange={(event) => setMapTitle(event.target.value)} placeholder="Nome da imagem" /><label><input type="file" accept="image/png,image/jpeg,image/webp" onChange={(event) => setMapFile(event.target.files?.[0] || null)} /><span>{mapFile?.name || "Escolher imagem"}</span></label><button disabled={!mapTitle.trim() || !mapFile || Boolean(busy)}>Carregar</button></form>}</header>
-        <div ref={mapViewportRef} className={`workspace-map-canvas ${mode === "gm" ? "editable" : ""}`} onWheel={zoomMapWithWheel} onPointerMove={previewTokenMove} onPointerUp={(event) => void finishTokenMove(event)} onPointerLeave={(event) => { if (draggingTokenRef.current && event.buttons === 0) void finishTokenMove(event); }}>
+        <header><div><small>IMAGEM DA SESSÃO</small><h2>{mapTitleShown}</h2>{mode === "gm" && workspaceMaps.length > 0 && <label className="workspace-map-select">Mapa<select value={workspace.map?.id || "default"} onChange={(event) => void changeWorkspaceMap(event.target.value)}>{workspaceMaps.map((item) => <option key={item.id} value={item.id}>{item.title}</option>)}</select></label>}</div><div className="workspace-map-zoom" aria-label="Zoom do mapa"><button type="button" disabled={mapZoom <= 1} onClick={() => changeMapZoom(mapZoom - .1)} aria-label="Diminuir zoom">−</button><output>{Math.round(mapZoom * 100)}%</output><button type="button" disabled={mapZoom >= 3} onClick={() => changeMapZoom(mapZoom + .1)} aria-label="Aumentar zoom">+</button><button type="button" disabled={mapZoom === 1} onClick={() => changeMapZoom(1)}>Ajustar</button></div>{mode === "gm" && <form className="workspace-map-upload" onSubmit={submitMap}><input value={mapTitle} onChange={(event) => setMapTitle(event.target.value)} placeholder="Nome da imagem" /><label><input type="file" accept="image/png,image/jpeg,image/webp" onChange={(event) => setMapFile(event.target.files?.[0] || null)} /><span>{mapFile?.name || "Escolher imagem"}</span></label><button disabled={!mapTitle.trim() || !mapFile || Boolean(busy)}>Carregar</button></form>}</header>
+        <div ref={mapViewportRef} className={`workspace-map-canvas ${mode === "gm" ? "editable" : ""}`} onPointerMove={previewTokenMove} onPointerUp={(event) => void finishTokenMove(event)} onPointerLeave={(event) => { if (draggingTokenRef.current && event.buttons === 0) void finishTokenMove(event); }}>
           <div ref={mapCanvasRef} className="workspace-map-stage" style={{ width: `${mapZoom * 100}%`, height: `${mapZoom * 100}%` }}>
             <img src={mediaUrlFromVaultPath(mapImagePath)} alt={mapTitleShown} draggable={false} />
             <div className="workspace-map-grid" aria-hidden="true" />
-            {workspace.tokens.map((token) => { const summary = token.character_id ? characterById.get(token.character_id) : undefined; const image = mediaUrlFromVaultPath(token.image_path || summary?.portrait); const hpCurrent = summary?.current_hp ?? token.current_hp; const hpMaximum = summary?.maximum_hp ?? token.maximum_hp; const conditions = summary?.conditions || token.conditions; return <button type="button" key={token.id} className={`workspace-map-token ${token.token_type}`} style={{ left: `${token.longitude}%`, top: `${token.latitude}%`, borderColor: token.color, color: token.color }} onPointerDown={(event) => { if (mode === "gm") { event.preventDefault(); draggingTokenRef.current = token.id; } }} onClick={() => { if (token.character_id) { selectedIdRef.current = token.character_id; setSelectedId(token.character_id); } }} title={`${token.name} · latitude ${token.latitude.toFixed(2)} · longitude ${token.longitude.toFixed(2)}${conditions.length ? ` · ${conditions.join(", ")}` : ""}`}>
+            {(mode === "gm" || fogLayers.length > 0) && <div className={`workspace-map-fog ${mode === "gm" ? "editor" : ""}`} style={{ gridTemplateColumns: `repeat(${fogColumns}, 1fr)`, gridTemplateRows: `repeat(${fogRows}, 1fr)` }} onPointerDown={beginFogPaint} onPointerMove={paintFog} onPointerUp={(event) => void finishFogPaint(event)} onPointerCancel={(event) => void finishFogPaint(event)} onLostPointerCapture={() => void finishFogPaint()}>
+              {fogCells.map((cell) => <div key={cell} className={`workspace-fog-cell ${fogIsRevealed(cell) ? "revealed" : "hidden"}`} aria-hidden="true" />)}
+            </div>}
+            {Object.keys(mistDensityByCell).length > 0 && <MistParticleOverlay densityByCell={mistDensityByCell} columns={fogColumns} rows={fogRows} />}
+            {workspace.tokens.map((token) => { const summary = token.character_id ? characterById.get(token.character_id) : undefined; const image = mediaUrlFromVaultPath(token.image_path || summary?.portrait); const hpCurrent = summary?.current_hp ?? token.current_hp; const hpMaximum = summary?.maximum_hp ?? token.maximum_hp; const conditions = summary?.conditions || token.conditions; return <button type="button" key={token.id} className={`workspace-map-token ${token.token_type}`} style={{ left: `${token.longitude}%`, top: `${token.latitude}%`, borderColor: token.color, color: token.color }} onPointerDown={(event) => { if (mode === "gm") { event.preventDefault(); draggingTokenRef.current = token.id; } }} onClick={() => { if (token.character_id) { selectedIdRef.current = token.character_id; setSelectedId(token.character_id); } void openTokenDetails(token); }} title={`${token.name} · latitude ${token.latitude.toFixed(2)} · longitude ${token.longitude.toFixed(2)}${conditions.length ? ` · ${conditions.join(", ")}` : ""}`}>
               {image ? <img src={image} alt="" draggable={false} /> : <i>{token.name.slice(0, 1).toUpperCase()}</i>}<strong>{token.name}</strong>{hpMaximum != null && <small>{hpCurrent ?? "—"}/{hpMaximum} PV</small>}
             </button>; })}
           </div>
         </div>
-        {mode === "gm" && <section className="workspace-map-tools">
-          <div><header><span>PERSONAGENS NO MAPA</span><small>arraste os avatares para posicionar</small></header><div>{characters.map((item) => { const pinned = workspace.tokens.some((token) => token.character_id === item.id); return <button type="button" key={item.id} disabled={pinned || Boolean(busy)} style={{ color: characterColor(item.id) }} onClick={() => void pinCharacter(item.id)}>{pinned ? "✓" : "+"} {item.name}</button>; })}</div></div>
-          <form onSubmit={createMonster}><header><span>CRIAR MONSTRO</span><small>novo marcador tático</small></header><input value={monsterDraft.name} onChange={(event) => setMonsterDraft({ ...monsterDraft, name: event.target.value })} placeholder="Nome do monstro" /><div className="workspace-monster-hp"><span>PV</span><input type="number" min={1} max={99999} value={monsterDraft.maximum_hp} onChange={(event) => setMonsterDraft({ ...monsterDraft, maximum_hp: Number(event.target.value) })} title="PV máximo" /></div><input type="color" value={monsterDraft.color} onChange={(event) => setMonsterDraft({ ...monsterDraft, color: event.target.value })} title="Cor" /><label><input type="file" accept="image/png,image/jpeg,image/webp" onChange={(event) => setMonsterImage(event.target.files?.[0] || null)} /><span>{monsterImage?.name || "Imagem opcional"}</span></label><button disabled={!monsterDraft.name.trim() || Boolean(busy)}>Criar e pinar</button></form>
-        </section>}
         <footer><span><i className="online" /> Mesa sincronizada</span><span>{workspace.presence.filter((item) => item.online && item.actor_role === "player").length} jogadores online</span><span>{timeline.length} registros</span></footer>
       </main>
 
@@ -542,6 +829,7 @@ export default function SessionWorkspace({ mode }: Props) {
         <form className="workspace-log-composer" onSubmit={submitMessage}><textarea value={message} onChange={(event) => setMessage(event.target.value)} placeholder="Escreva sua mensagem…" /><button disabled={!message.trim() || Boolean(busy)}>Enviar</button></form>
       </aside>
     </div>
+    {openToken && <div className="workspace-token-modal-backdrop" role="presentation" onClick={() => setOpenTokenId(null)}><section className="workspace-token-modal" role="dialog" aria-modal="true" aria-label={`Ficha de ${openToken.name}`} onClick={(event) => event.stopPropagation()}><header><div><small>{openToken.token_type === "monster" ? "MONSTRO / NPC" : "PERSONAGEM"}</small><h2 style={{ color: openToken.color }}>{openToken.name}</h2></div><button type="button" onClick={() => setOpenTokenId(null)} aria-label="Fechar ficha">×</button></header>{loadingTokenDetail ? <p>Carregando ficha…</p> : <><div className="workspace-token-modal-vitals"><strong>VIDA {openCharacterDetail?.state?.current_hp ?? openToken.current_hp ?? "—"} / {openCharacterDetail?.state?.maximum_hp ?? openToken.maximum_hp ?? "—"}</strong><span>{(openCharacterDetail?.state?.conditions || openToken.conditions).length ? (openCharacterDetail?.state?.conditions || openToken.conditions).join(" · ") : "STATUS - Nenhum"}</span></div><div className="workspace-token-modal-meta"><span>Mapa: {openToken.map_id || "default"}</span><span>Latitude: {openToken.latitude.toFixed(2)}</span><span>Longitude: {openToken.longitude.toFixed(2)}</span>{openCharacterDetail ? <><span>Classe: {openCharacterDetail.definition.class_name}</span><span>Nível: {openCharacterDetail.definition.level}</span><span>CA: {openCharacterDetail.definition.defenses?.armor_class ?? "—"}</span></> : <><span>Função: {openToken.sheet?.role || "Inimigo"}</span><span>Nível: {openToken.sheet?.level ?? "—"}</span><span>CA: {openToken.sheet?.armor_class ?? "—"}</span><span>Iniciativa: {openToken.sheet?.initiative ?? "—"}</span></>}</div>{openCharacterDetail ? <div className="workspace-token-modal-body"><p>{openCharacterDetail.definition.epithet || openCharacterDetail.definition.race}</p><h3>Ataques</h3>{openCharacterDetail.definition.attacks?.map((attack) => <p key={attack.id}>{attack.name} · {attack.damage || "dano não configurado"}</p>)}</div> : <div className="workspace-token-modal-body">{openToken.sheet?.description && <p>{openToken.sheet.description}</p>}{(openToken.sheet?.attacks || []).length > 0 && <><h3>Ataques</h3>{openToken.sheet?.attacks?.map((attack, index) => <p key={`${attack.name}-${index}`}>{attack.name} · {attack.damage || "dano não configurado"}{attack.bonus ? ` · ${attack.bonus}` : ""}{attack.notes ? ` · ${attack.notes}` : ""}</p>)}</>}{(openToken.sheet?.abilities || []).length > 0 && <><h3>Habilidades</h3>{openToken.sheet?.abilities?.map((ability) => <p key={ability}>{ability}</p>)}</>}{openToken.sheet?.notes && <><h3>Notas</h3><p>{openToken.sheet.notes}</p></>}</div>}</>}</section></div>}
     <DiceTray mode={mode} triggerHidden />
   </section>;
 }

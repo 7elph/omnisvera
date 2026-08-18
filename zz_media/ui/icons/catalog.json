@@ -1,0 +1,710 @@
+﻿[
+    {
+        "id":  "earthropo",
+        "name":  "Earthropo",
+        "category":  "map",
+        "path":  "zz_media/ui/icons/map/earthropo.png"
+    },
+    {
+        "id":  "nimalia",
+        "name":  "Nimalia",
+        "category":  "map",
+        "path":  "zz_media/ui/icons/map/nimalia.png"
+    },
+    {
+        "id":  "floresta-de-avenor",
+        "name":  "Floresta de Avenor",
+        "category":  "map",
+        "path":  "zz_media/ui/icons/map/floresta-de-avenor.png"
+    },
+    {
+        "id":  "vale-dourado",
+        "name":  "Vale Dourado",
+        "category":  "map",
+        "path":  "zz_media/ui/icons/map/vale-dourado.png"
+    },
+    {
+        "id":  "bosque-sussurrante",
+        "name":  "Bosque Sussurrante",
+        "category":  "map",
+        "path":  "zz_media/ui/icons/map/bosque-sussurrante.png"
+    },
+    {
+        "id":  "mar-da-neblina",
+        "name":  "Mar da Neblina",
+        "category":  "map",
+        "path":  "zz_media/ui/icons/map/mar-da-neblina.png"
+    },
+    {
+        "id":  "costa-dos-naufragios",
+        "name":  "Costa dos Naufragios",
+        "category":  "map",
+        "path":  "zz_media/ui/icons/map/costa-dos-naufragios.png"
+    },
+    {
+        "id":  "lago-prateado",
+        "name":  "Lago Prateado",
+        "category":  "map",
+        "path":  "zz_media/ui/icons/map/lago-prateado.png"
+    },
+    {
+        "id":  "montanhas-geladas",
+        "name":  "Montanhas Geladas",
+        "category":  "map",
+        "path":  "zz_media/ui/icons/map/montanhas-geladas.png"
+    },
+    {
+        "id":  "passagem-de-korr",
+        "name":  "Passagem de Korr",
+        "category":  "map",
+        "path":  "zz_media/ui/icons/map/passagem-de-korr.png"
+    },
+    {
+        "id":  "montanhas-do-dragao",
+        "name":  "Montanhas do Dragao",
+        "category":  "map",
+        "path":  "zz_media/ui/icons/map/montanhas-do-dragao.png"
+    },
+    {
+        "id":  "terras-de-morghul",
+        "name":  "Terras de Morghul",
+        "category":  "map",
+        "path":  "zz_media/ui/icons/map/terras-de-morghul.png"
+    },
+    {
+        "id":  "nimalis",
+        "name":  "Nimalis",
+        "category":  "map",
+        "path":  "zz_media/ui/icons/map/nimalis.png"
+    },
+    {
+        "id":  "porto-de-nimalia",
+        "name":  "Porto de Nimalia",
+        "category":  "map",
+        "path":  "zz_media/ui/icons/map/porto-de-nimalia.png"
+    },
+    {
+        "id":  "mare-baixa",
+        "name":  "Mare Baixa",
+        "category":  "map",
+        "path":  "zz_media/ui/icons/map/mare-baixa.png"
+    },
+    {
+        "id":  "bairro-nobre",
+        "name":  "Bairro Nobre",
+        "category":  "map",
+        "path":  "zz_media/ui/icons/map/bairro-nobre.png"
+    },
+    {
+        "id":  "bairro-dos-forasteiros",
+        "name":  "Bairro dos Forasteiros",
+        "category":  "map",
+        "path":  "zz_media/ui/icons/map/bairro-dos-forasteiros.png"
+    },
+    {
+        "id":  "mercado-central",
+        "name":  "Mercado Central",
+        "category":  "map",
+        "path":  "zz_media/ui/icons/map/mercado-central.png"
+    },
+    {
+        "id":  "casa-da-moeda-de-nimalia",
+        "name":  "Casa da Moeda de Nimalia",
+        "category":  "map",
+        "path":  "zz_media/ui/icons/map/casa-da-moeda-de-nimalia.png"
+    },
+    {
+        "id":  "o-frasco-afogado",
+        "name":  "O Frasco Afogado",
+        "category":  "map",
+        "path":  "zz_media/ui/icons/map/o-frasco-afogado.png"
+    },
+    {
+        "id":  "leth-valora",
+        "name":  "Leth\u0027valora",
+        "category":  "map",
+        "path":  "zz_media/ui/icons/map/leth-valora.png"
+    },
+    {
+        "id":  "ruinas-de-valthor",
+        "name":  "Ruinas de Valthor",
+        "category":  "map",
+        "path":  "zz_media/ui/icons/map/ruinas-de-valthor.png"
+    },
+    {
+        "id":  "fortaleza-de-gharok",
+        "name":  "Fortaleza de Gharok",
+        "category":  "map",
+        "path":  "zz_media/ui/icons/map/fortaleza-de-gharok.png"
+    },
+    {
+        "id":  "fortaleza-abandonada-de-avenor",
+        "name":  "Fortaleza Abandonada de Avenor",
+        "category":  "map",
+        "path":  "zz_media/ui/icons/map/fortaleza-abandonada-de-avenor.png"
+    },
+    {
+        "id":  "santuario-de-elaris",
+        "name":  "Santuario de Elaris",
+        "category":  "map",
+        "path":  "zz_media/ui/icons/map/santuario-de-elaris.png"
+    },
+    {
+        "id":  "porto-de-zevran",
+        "name":  "Porto de Zevran",
+        "category":  "map",
+        "path":  "zz_media/ui/icons/map/porto-de-zevran.png"
+    },
+    {
+        "id":  "antiga-estrada-esquecida",
+        "name":  "Antiga Estrada Esquecida",
+        "category":  "map",
+        "path":  "zz_media/ui/icons/map/antiga-estrada-esquecida.png"
+    },
+    {
+        "id":  "capital",
+        "name":  "Capital",
+        "category":  "map",
+        "path":  "zz_media/ui/icons/map/capital.png"
+    },
+    {
+        "id":  "cidade",
+        "name":  "Cidade",
+        "category":  "map",
+        "path":  "zz_media/ui/icons/map/cidade.png"
+    },
+    {
+        "id":  "bairro",
+        "name":  "Bairro",
+        "category":  "map",
+        "path":  "zz_media/ui/icons/map/bairro.png"
+    },
+    {
+        "id":  "porto",
+        "name":  "Porto",
+        "category":  "map",
+        "path":  "zz_media/ui/icons/map/porto.png"
+    },
+    {
+        "id":  "fortaleza",
+        "name":  "Fortaleza",
+        "category":  "map",
+        "path":  "zz_media/ui/icons/map/fortaleza.png"
+    },
+    {
+        "id":  "santuario",
+        "name":  "Santuario",
+        "category":  "map",
+        "path":  "zz_media/ui/icons/map/santuario.png"
+    },
+    {
+        "id":  "ruina",
+        "name":  "Ruina",
+        "category":  "map",
+        "path":  "zz_media/ui/icons/map/ruina.png"
+    },
+    {
+        "id":  "estrada",
+        "name":  "Estrada",
+        "category":  "map",
+        "path":  "zz_media/ui/icons/map/estrada.png"
+    },
+    {
+        "id":  "floresta",
+        "name":  "Floresta",
+        "category":  "map",
+        "path":  "zz_media/ui/icons/map/floresta.png"
+    },
+    {
+        "id":  "vale",
+        "name":  "Vale",
+        "category":  "map",
+        "path":  "zz_media/ui/icons/map/vale.png"
+    },
+    {
+        "id":  "lago",
+        "name":  "Lago",
+        "category":  "map",
+        "path":  "zz_media/ui/icons/map/lago.png"
+    },
+    {
+        "id":  "costa",
+        "name":  "Costa",
+        "category":  "map",
+        "path":  "zz_media/ui/icons/map/costa.png"
+    },
+    {
+        "id":  "mar",
+        "name":  "Mar",
+        "category":  "map",
+        "path":  "zz_media/ui/icons/map/mar.png"
+    },
+    {
+        "id":  "montanha",
+        "name":  "Montanha",
+        "category":  "map",
+        "path":  "zz_media/ui/icons/map/montanha.png"
+    },
+    {
+        "id":  "regiao",
+        "name":  "Regiao",
+        "category":  "map",
+        "path":  "zz_media/ui/icons/map/regiao.png"
+    },
+    {
+        "id":  "adaga",
+        "name":  "Adaga",
+        "category":  "items",
+        "path":  "zz_media/ui/icons/items/adaga.png"
+    },
+    {
+        "id":  "alabarda",
+        "name":  "Alabarda",
+        "category":  "items",
+        "path":  "zz_media/ui/icons/items/alabarda.png"
+    },
+    {
+        "id":  "azagaia",
+        "name":  "Azagaia",
+        "category":  "items",
+        "path":  "zz_media/ui/icons/items/azagaia.png"
+    },
+    {
+        "id":  "bordao-cajado",
+        "name":  "Bordao Cajado",
+        "category":  "items",
+        "path":  "zz_media/ui/icons/items/bordao-cajado.png"
+    },
+    {
+        "id":  "chicote",
+        "name":  "Chicote",
+        "category":  "items",
+        "path":  "zz_media/ui/icons/items/chicote.png"
+    },
+    {
+        "id":  "cimitarra",
+        "name":  "Cimitarra",
+        "category":  "items",
+        "path":  "zz_media/ui/icons/items/cimitarra.png"
+    },
+    {
+        "id":  "espada-bastarda",
+        "name":  "Espada Bastarda",
+        "category":  "items",
+        "path":  "zz_media/ui/icons/items/espada-bastarda.png"
+    },
+    {
+        "id":  "espada-curta",
+        "name":  "Espada Curta",
+        "category":  "items",
+        "path":  "zz_media/ui/icons/items/espada-curta.png"
+    },
+    {
+        "id":  "espada-larga",
+        "name":  "Espada Larga",
+        "category":  "items",
+        "path":  "zz_media/ui/icons/items/espada-larga.png"
+    },
+    {
+        "id":  "espada-longa",
+        "name":  "Espada Longa",
+        "category":  "items",
+        "path":  "zz_media/ui/icons/items/espada-longa.png"
+    },
+    {
+        "id":  "falcao",
+        "name":  "Falcao",
+        "category":  "items",
+        "path":  "zz_media/ui/icons/items/falcao.png"
+    },
+    {
+        "id":  "foice-de-mao",
+        "name":  "Foice de Mao",
+        "category":  "items",
+        "path":  "zz_media/ui/icons/items/foice-de-mao.png"
+    },
+    {
+        "id":  "lanca-curta",
+        "name":  "Lanca Curta",
+        "category":  "items",
+        "path":  "zz_media/ui/icons/items/lanca-curta.png"
+    },
+    {
+        "id":  "lanca-longa",
+        "name":  "Lanca Longa",
+        "category":  "items",
+        "path":  "zz_media/ui/icons/items/lanca-longa.png"
+    },
+    {
+        "id":  "maca",
+        "name":  "Maca",
+        "category":  "items",
+        "path":  "zz_media/ui/icons/items/maca.png"
+    },
+    {
+        "id":  "machado",
+        "name":  "Machado",
+        "category":  "items",
+        "path":  "zz_media/ui/icons/items/machado.png"
+    },
+    {
+        "id":  "machado-de-arremesso",
+        "name":  "Machado de Arremesso",
+        "category":  "items",
+        "path":  "zz_media/ui/icons/items/machado-de-arremesso.png"
+    },
+    {
+        "id":  "machado-de-batalha",
+        "name":  "Machado de Batalha",
+        "category":  "items",
+        "path":  "zz_media/ui/icons/items/machado-de-batalha.png"
+    },
+    {
+        "id":  "mangual",
+        "name":  "Mangual",
+        "category":  "items",
+        "path":  "zz_media/ui/icons/items/mangual.png"
+    },
+    {
+        "id":  "martelo",
+        "name":  "Martelo",
+        "category":  "items",
+        "path":  "zz_media/ui/icons/items/martelo.png"
+    },
+    {
+        "id":  "martelo-de-batalha",
+        "name":  "Martelo de Batalha",
+        "category":  "items",
+        "path":  "zz_media/ui/icons/items/martelo-de-batalha.png"
+    },
+    {
+        "id":  "montante",
+        "name":  "Montante",
+        "category":  "items",
+        "path":  "zz_media/ui/icons/items/montante.png"
+    },
+    {
+        "id":  "picareta",
+        "name":  "Picareta",
+        "category":  "items",
+        "path":  "zz_media/ui/icons/items/picareta.png"
+    },
+    {
+        "id":  "porrete",
+        "name":  "Porrete",
+        "category":  "items",
+        "path":  "zz_media/ui/icons/items/porrete.png"
+    },
+    {
+        "id":  "sabre",
+        "name":  "Sabre",
+        "category":  "items",
+        "path":  "zz_media/ui/icons/items/sabre.png"
+    },
+    {
+        "id":  "tridente",
+        "name":  "Tridente",
+        "category":  "items",
+        "path":  "zz_media/ui/icons/items/tridente.png"
+    },
+    {
+        "id":  "arco-curto",
+        "name":  "Arco Curto",
+        "category":  "items",
+        "path":  "zz_media/ui/icons/items/arco-curto.png"
+    },
+    {
+        "id":  "arco-longo",
+        "name":  "Arco Longo",
+        "category":  "items",
+        "path":  "zz_media/ui/icons/items/arco-longo.png"
+    },
+    {
+        "id":  "besta-de-mao",
+        "name":  "Besta de Mao",
+        "category":  "items",
+        "path":  "zz_media/ui/icons/items/besta-de-mao.png"
+    },
+    {
+        "id":  "besta",
+        "name":  "Besta",
+        "category":  "items",
+        "path":  "zz_media/ui/icons/items/besta.png"
+    },
+    {
+        "id":  "dardo",
+        "name":  "Dardo",
+        "category":  "items",
+        "path":  "zz_media/ui/icons/items/dardo.png"
+    },
+    {
+        "id":  "flecha",
+        "name":  "Flecha",
+        "category":  "items",
+        "path":  "zz_media/ui/icons/items/flecha.png"
+    },
+    {
+        "id":  "flecha-improvisada",
+        "name":  "Flecha Improvisada",
+        "category":  "items",
+        "path":  "zz_media/ui/icons/items/flecha-improvisada.png"
+    },
+    {
+        "id":  "armadura-acolchoada",
+        "name":  "Armadura Acolchoada",
+        "category":  "items",
+        "path":  "zz_media/ui/icons/items/armadura-acolchoada.png"
+    },
+    {
+        "id":  "armadura-de-couro",
+        "name":  "Armadura de Couro",
+        "category":  "items",
+        "path":  "zz_media/ui/icons/items/armadura-de-couro.png"
+    },
+    {
+        "id":  "armadura-de-couro-batido",
+        "name":  "Armadura de Couro Batido",
+        "category":  "items",
+        "path":  "zz_media/ui/icons/items/armadura-de-couro-batido.png"
+    },
+    {
+        "id":  "cota-de-malha",
+        "name":  "Cota de Malha",
+        "category":  "items",
+        "path":  "zz_media/ui/icons/items/cota-de-malha.png"
+    },
+    {
+        "id":  "armadura-de-placas",
+        "name":  "Armadura de Placas",
+        "category":  "items",
+        "path":  "zz_media/ui/icons/items/armadura-de-placas.png"
+    },
+    {
+        "id":  "armadura-completa",
+        "name":  "Armadura Completa",
+        "category":  "items",
+        "path":  "zz_media/ui/icons/items/armadura-completa.png"
+    },
+    {
+        "id":  "broquel",
+        "name":  "Broquel",
+        "category":  "items",
+        "path":  "zz_media/ui/icons/items/broquel.png"
+    },
+    {
+        "id":  "escudo-de-madeira",
+        "name":  "Escudo de Madeira",
+        "category":  "items",
+        "path":  "zz_media/ui/icons/items/escudo-de-madeira.png"
+    },
+    {
+        "id":  "escudo-de-aco",
+        "name":  "Escudo de Aco",
+        "category":  "items",
+        "path":  "zz_media/ui/icons/items/escudo-de-aco.png"
+    },
+    {
+        "id":  "escudo-torre",
+        "name":  "Escudo Torre",
+        "category":  "items",
+        "path":  "zz_media/ui/icons/items/escudo-torre.png"
+    },
+    {
+        "id":  "arpeu",
+        "name":  "Arpeu",
+        "category":  "items",
+        "path":  "zz_media/ui/icons/items/arpeu.png"
+    },
+    {
+        "id":  "corda",
+        "name":  "Corda",
+        "category":  "items",
+        "path":  "zz_media/ui/icons/items/corda.png"
+    },
+    {
+        "id":  "giz",
+        "name":  "Giz",
+        "category":  "items",
+        "path":  "zz_media/ui/icons/items/giz.png"
+    },
+    {
+        "id":  "mochila",
+        "name":  "Mochila",
+        "category":  "items",
+        "path":  "zz_media/ui/icons/items/mochila.png"
+    },
+    {
+        "id":  "odre",
+        "name":  "Odre",
+        "category":  "items",
+        "path":  "zz_media/ui/icons/items/odre.png"
+    },
+    {
+        "id":  "pederneira",
+        "name":  "Pederneira",
+        "category":  "items",
+        "path":  "zz_media/ui/icons/items/pederneira.png"
+    },
+    {
+        "id":  "tocha",
+        "name":  "Tocha",
+        "category":  "items",
+        "path":  "zz_media/ui/icons/items/tocha.png"
+    },
+    {
+        "id":  "vara-de-3-m",
+        "name":  "Vara de 3 m",
+        "category":  "items",
+        "path":  "zz_media/ui/icons/items/vara-de-3-m.png"
+    },
+    {
+        "id":  "apito",
+        "name":  "Apito",
+        "category":  "items",
+        "path":  "zz_media/ui/icons/items/apito.png"
+    },
+    {
+        "id":  "escada-de-corda",
+        "name":  "Escada de Corda",
+        "category":  "items",
+        "path":  "zz_media/ui/icons/items/escada-de-corda.png"
+    },
+    {
+        "id":  "frasco-de-oleo",
+        "name":  "Frasco de Oleo",
+        "category":  "items",
+        "path":  "zz_media/ui/icons/items/frasco-de-oleo.png"
+    },
+    {
+        "id":  "lanterna-furta-fogo",
+        "name":  "Lanterna Furta-Fogo",
+        "category":  "items",
+        "path":  "zz_media/ui/icons/items/lanterna-furta-fogo.png"
+    },
+    {
+        "id":  "pa-picareta",
+        "name":  "Pa Picareta",
+        "category":  "items",
+        "path":  "zz_media/ui/icons/items/pa-picareta.png"
+    },
+    {
+        "id":  "pe-de-cabra",
+        "name":  "Pe de Cabra",
+        "category":  "items",
+        "path":  "zz_media/ui/icons/items/pe-de-cabra.png"
+    },
+    {
+        "id":  "pena-tinta",
+        "name":  "Pena Tinta",
+        "category":  "items",
+        "path":  "zz_media/ui/icons/items/pena-tinta.png"
+    },
+    {
+        "id":  "pergaminhos",
+        "name":  "Pergaminhos",
+        "category":  "items",
+        "path":  "zz_media/ui/icons/items/pergaminhos.png"
+    },
+    {
+        "id":  "racao-de-viagem",
+        "name":  "Racao de Viagem",
+        "category":  "items",
+        "path":  "zz_media/ui/icons/items/racao-de-viagem.png"
+    },
+    {
+        "id":  "rede",
+        "name":  "Rede",
+        "category":  "items",
+        "path":  "zz_media/ui/icons/items/rede.png"
+    },
+    {
+        "id":  "saco-de-dormir",
+        "name":  "Saco de Dormir",
+        "category":  "items",
+        "path":  "zz_media/ui/icons/items/saco-de-dormir.png"
+    },
+    {
+        "id":  "tenda",
+        "name":  "Tenda",
+        "category":  "items",
+        "path":  "zz_media/ui/icons/items/tenda.png"
+    },
+    {
+        "id":  "cadeado",
+        "name":  "Cadeado",
+        "category":  "items",
+        "path":  "zz_media/ui/icons/items/cadeado.png"
+    },
+    {
+        "id":  "estrepe",
+        "name":  "Estrepe",
+        "category":  "items",
+        "path":  "zz_media/ui/icons/items/estrepe.png"
+    },
+    {
+        "id":  "ferramentas-de-arrombamento",
+        "name":  "Ferramentas de Arrombamento",
+        "category":  "items",
+        "path":  "zz_media/ui/icons/items/ferramentas-de-arrombamento.png"
+    },
+    {
+        "id":  "ferramentas-de-desarme-de-armadilhas",
+        "name":  "Ferramentas de Desarme de Armadilhas",
+        "category":  "items",
+        "path":  "zz_media/ui/icons/items/ferramentas-de-desarme-de-armadilhas.png"
+    },
+    {
+        "id":  "vela",
+        "name":  "Vela",
+        "category":  "items",
+        "path":  "zz_media/ui/icons/items/vela.png"
+    },
+    {
+        "id":  "acido",
+        "name":  "Acido",
+        "category":  "items",
+        "path":  "zz_media/ui/icons/items/acido.png"
+    },
+    {
+        "id":  "agua-benta",
+        "name":  "Agua Benta",
+        "category":  "items",
+        "path":  "zz_media/ui/icons/items/agua-benta.png"
+    },
+    {
+        "id":  "antitoxina",
+        "name":  "Antitoxina",
+        "category":  "items",
+        "path":  "zz_media/ui/icons/items/antitoxina.png"
+    },
+    {
+        "id":  "bastao-solar",
+        "name":  "Bastao Solar",
+        "category":  "items",
+        "path":  "zz_media/ui/icons/items/bastao-solar.png"
+    },
+    {
+        "id":  "fogo-de-alquimista",
+        "name":  "Fogo de Alquimista",
+        "category":  "items",
+        "path":  "zz_media/ui/icons/items/fogo-de-alquimista.png"
+    },
+    {
+        "id":  "ima",
+        "name":  "Ima",
+        "category":  "items",
+        "path":  "zz_media/ui/icons/items/ima.png"
+    },
+    {
+        "id":  "incenso",
+        "name":  "Incenso",
+        "category":  "items",
+        "path":  "zz_media/ui/icons/items/incenso.png"
+    },
+    {
+        "id":  "pedra-trovao",
+        "name":  "Pedra Trovao",
+        "category":  "items",
+        "path":  "zz_media/ui/icons/items/pedra-trovao.png"
+    }
+]

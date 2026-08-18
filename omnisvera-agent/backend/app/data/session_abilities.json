@@ -23,7 +23,8 @@
         "group": "Poderes vampíricos",
         "description": "Manipula sangue para atacar, defender-se, curar-se e enfraquecer inimigos.",
         "mechanics_status": "partial",
-        "source": "Ficha de Raziel"
+        "source": "Ficha de Raziel",
+        "hidden": true
       },
       {
         "id": "regeneracao-vampirica",
@@ -32,7 +33,15 @@
         "group": "Poderes vampíricos",
         "description": "Raziel possui regeneração vampírica, mas a intensidade e os limites desta manifestação permanecem controlados pelo Mestre no nível 1.",
         "mechanics_status": "partial",
-        "source": "Ficha de Raziel"
+        "source": "Ficha de Raziel",
+        "active": true,
+        "uses": {
+          "resource_key": "reserva-de-sangue",
+          "label": "Regeneração Vampírica · usos",
+          "maximum": 1,
+          "recharge": "inn_rest",
+          "cost": 1
+        }
       },
       {
         "id": "lamina-de-sangue",
@@ -41,7 +50,15 @@
         "group": "Técnicas",
         "description": "Custo: 1 ponto de Reserva de Sangue. Reforça uma lâmina, garra ou arma leve e concede +1 no ataque ou +1d4 de dano na próxima ação ofensiva. Não acumula consigo mesma.",
         "mechanics_status": "structured",
-        "source": "Classe Hemomante"
+        "source": "Classe Hemomante",
+        "active": true,
+        "uses": {
+          "resource_key": "reserva-de-sangue",
+          "label": "Lâmina de Sangue · usos",
+          "maximum": 1,
+          "recharge": "inn_rest",
+          "cost": 1
+        }
       },
       {
         "id": "marca-rubra",
@@ -50,7 +67,15 @@
         "group": "Técnicas",
         "description": "Custo: 1 ponto de Reserva de Sangue. Marca o sangue de um alvo ferido e permite reconhecê-lo ou rastreá-lo por um curto período. Falha sem sangue, ferimento ou contato significativo.",
         "mechanics_status": "structured",
-        "source": "Classe Hemomante"
+        "source": "Classe Hemomante",
+        "active": true,
+        "uses": {
+          "resource_key": "reserva-de-sangue",
+          "label": "Marca Rubra · usos",
+          "maximum": 1,
+          "recharge": "inn_rest",
+          "cost": 1
+        }
       },
       {
         "id": "nao-vida-consciente-vampiro",
@@ -59,7 +84,8 @@
         "group": "Traços vampíricos",
         "description": "Não envelhece normalmente e não precisa respirar como uma criatura viva comum. Ainda pode ser afetado por magia, venenos, maldições e efeitos sobrenaturais conforme a cena.",
         "mechanics_status": "structured",
-        "source": "Raça Vampiro"
+        "source": "Raça Vampiro",
+        "active": false
       },
       {
         "id": "visao-no-escuro-vampiro",
@@ -68,7 +94,8 @@
         "group": "Traços vampíricos",
         "description": "Enxerga no escuro em um alcance de 12 metros.",
         "mechanics_status": "structured",
-        "source": "Old Dragon — Novas Raças, Vampiro"
+        "source": "Old Dragon — Novas Raças, Vampiro",
+        "active": false
       },
       {
         "id": "imunidades-vampiricas",
@@ -77,16 +104,24 @@
         "group": "Traços vampíricos",
         "description": "Possui imunidade a doenças, frio e efeitos psíquicos, conforme a regra racial de referência.",
         "mechanics_status": "structured",
-        "source": "Old Dragon — Novas Raças, Vampiro"
+        "source": "Old Dragon — Novas Raças, Vampiro",
+        "active": false
       },
       {
         "id": "caixao",
         "name": "Caixão",
         "kind": "ability",
-        "group": "Traços vampíricos",
+        "group": "Poderes vampíricos",
         "description": "Possui caixão ou sarcófago vinculado magicamente e só realiza descanso completo nele. Pode invocá-lo sem custo de mana; se for destruído, precisa vincular outro com uma Jogada de Proteção modificada por Sabedoria.",
         "mechanics_status": "structured",
-        "source": "Old Dragon — Novas Raças, Vampiro"
+        "source": "Old Dragon — Novas Raças, Vampiro",
+        "active": true,
+        "uses": {
+          "resource_key": "caixao",
+          "label": "Caixão · descanso diário",
+          "maximum": 1,
+          "recharge": "inn_rest"
+        }
       },
       {
         "id": "fome-de-sangue",
@@ -95,7 +130,8 @@
         "group": "Poderes vampíricos",
         "description": "Precisa alimentar-se de sangue em intervalos definidos pelo Mestre. Negligenciar a fome pode gerar uma complicação narrativa.",
         "mechanics_status": "partial",
-        "source": "Raça Vampiro"
+        "source": "Raça Vampiro",
+        "active": false
       },
       {
         "id": "mordida",
@@ -104,7 +140,8 @@
         "group": "Técnicas",
         "description": "Também chamada de absorção de sangue durante a sessão. No nível 1, cura 1d4 PV e causa ao alvo a mesma quantidade como dano. Exige um ataque normal contra a CA do alvo; a percepção posterior é resolvida por Jogada de Proteção modificada por Sabedoria.",
         "mechanics_status": "structured",
-        "source": "Sessão anterior e Old Dragon — Novas Raças, Vampiro"
+        "source": "Sessão anterior e Old Dragon — Novas Raças, Vampiro",
+        "active": true
       },
       {
         "id": "medo-vampirico",
@@ -113,7 +150,8 @@
         "group": "Poderes vampíricos",
         "description": "1 vez por dia, afeta uma criatura. Ela resiste com Jogada de Proteção modificada por Sabedoria; em falha, obedece ao vampiro por 1d4 horas. A partir do 5º nível, pode ser usado 2 vezes por dia.",
         "mechanics_status": "structured",
-        "source": "Old Dragon — Novas Raças, Vampiro"
+        "source": "Old Dragon — Novas Raças, Vampiro",
+        "active": false
       },
       {
         "id": "forma-da-noite",
@@ -123,10 +161,11 @@
         "description": "1 vez por dia, assume a forma de morcego, corvo ou coruja e usa a ficha da criatura. Nessa forma não pode atacar nem falar; ao chegar a 0 PV, retorna à forma normal e recebe a diferença de dano.",
         "mechanics_status": "structured",
         "source": "Old Dragon — Novas Raças, Vampiro; limite da campanha",
+        "active": true,
         "uses": {
           "resource_key": "forma-da-noite",
           "label": "Forma da Noite · uso diário",
-          "maximum": 1,
+          "maximum": 3,
           "recharge": "inn_rest"
         }
       },
@@ -137,7 +176,15 @@
         "group": "Poderes vampíricos",
         "description": "Pode perceber sangue recente, ferimentos graves ou morte próxima quando isso for relevante. Pode conceder pista, bônus situacional ou permissão narrativa para detectar rastros.",
         "mechanics_status": "partial",
-        "source": "Raça Vampiro adaptada para Omnisvera"
+        "source": "Raça Vampiro adaptada para Omnisvera",
+        "active": true,
+        "uses": {
+          "resource_key": "sentido-do-sangue",
+          "label": "Sentido do Sangue · bloqueado",
+          "maximum": 1,
+          "recharge": "inn_rest"
+        },
+        "blocked": true
       },
       {
         "id": "corpo-predatorio",
@@ -146,7 +193,15 @@
         "group": "Poderes vampíricos",
         "description": "Possui presença, reflexos e resistência anormais, úteis para feitos físicos dramáticos e intimidação sobrenatural. Bônus específicos ainda dependem da ficha final e do Mestre.",
         "mechanics_status": "partial",
-        "source": "Raça Vampiro adaptada para Omnisvera"
+        "source": "Raça Vampiro adaptada para Omnisvera",
+        "active": true,
+        "uses": {
+          "resource_key": "corpo-predatorio",
+          "label": "Corpo Predatório · bloqueado",
+          "maximum": 1,
+          "recharge": "inn_rest"
+        },
+        "blocked": true
       },
       {
         "id": "fotossensibilidade",
@@ -155,7 +210,8 @@
         "group": "Fraquezas vampíricas",
         "description": "A cada turno sob luz solar, faz Jogada de Proteção modificada por Constituição; em falha sofre 1d6 de dano solar. Três falhas consecutivas forçam o retorno ao caixão; se esse retorno for impedido, uma nova falha o reduz a pó.",
         "mechanics_status": "structured",
-        "source": "Old Dragon — Novas Raças, Vampiro"
+        "source": "Old Dragon — Novas Raças, Vampiro",
+        "active": false
       },
       {
         "id": "cura-vampirica-invertida",
@@ -164,7 +220,8 @@
         "group": "Fraquezas vampíricas",
         "description": "Magias de cura lançadas por clérigos causam dano na mesma quantidade; magias de infligir dano curam na mesma quantidade. Pode ser afetado por Afastar Mortos-Vivos até o nível 10.",
         "mechanics_status": "structured",
-        "source": "Old Dragon — Novas Raças, Vampiro"
+        "source": "Old Dragon — Novas Raças, Vampiro",
+        "active": false
       }
     ],
     "varkh": [
@@ -190,46 +247,51 @@
         "id": "alquimia-de-rua",
         "name": "Alquimia de Rua",
         "kind": "ability",
-        "group": "Capacidades",
+        "group": "Habilidades",
         "description": "Prepara poções, venenos, fumos e ácidos com ingredientes improvisados.",
         "mechanics_status": "partial",
-        "source": "Ficha de Varkh"
+        "source": "Ficha de Varkh",
+        "active": false
       },
       {
         "id": "mimetismo",
         "name": "Mimetismo",
         "kind": "ability",
-        "group": "Capacidades",
+        "group": "Habilidades",
         "description": "Reproduz vozes e sons, usando falas emprestadas para comunicar-se, distrair e enganar.",
         "mechanics_status": "partial",
-        "source": "Ficha de Varkh"
+        "source": "Ficha de Varkh",
+        "active": true
       },
       {
         "id": "furtividade",
         "name": "Furtividade",
         "kind": "ability",
-        "group": "Capacidades",
+        "group": "Habilidades",
         "description": "Move-se silenciosamente por telhados, becos e ambientes urbanos.",
         "mechanics_status": "partial",
-        "source": "Ficha de Varkh"
+        "source": "Ficha de Varkh",
+        "active": true
       },
       {
         "id": "falsificacao",
         "name": "Falsificação",
         "kind": "ability",
-        "group": "Capacidades",
+        "group": "Habilidades",
         "description": "Altera documentos e reproduz marcas usando tintas, solventes e ácidos.",
         "mechanics_status": "partial",
-        "source": "Ficha de Varkh"
+        "source": "Ficha de Varkh",
+        "active": true
       },
       {
         "id": "conhecimento-das-ruas",
         "name": "Conhecimento das Ruas",
         "kind": "ability",
-        "group": "Capacidades",
+        "group": "Habilidades",
         "description": "Conhece o porto, Maré Baixa e parte do submundo da capital de Nimalia.",
         "mechanics_status": "partial",
-        "source": "Ficha de Varkh"
+        "source": "Ficha de Varkh",
+        "active": false
       }
     ],
     "vezemir": [
@@ -272,7 +334,8 @@
         "group": "Traços de Morto-Vivo",
         "description": "Não precisa respirar, comer ou beber e não envelhece normalmente. Pode falar, pensar, aprender, conjurar magia e tomar decisões, mas continua sujeito a magia, maldições, símbolos sagrados, banimento e efeitos contra mortos-vivos.",
         "mechanics_status": "structured",
-        "source": "Raça Morto-Vivo Esqueleto"
+        "source": "Raça Morto-Vivo Esqueleto",
+        "active": false
       },
       {
         "id": "memoria-fraturada",
@@ -281,7 +344,8 @@
         "group": "Traços de Morto-Vivo",
         "description": "Recorda fragmentos, símbolos, vozes e lugares sem poder confiar completamente neles. Em cenas ligadas à sua origem, o Mestre pode revelar uma memória curta, imagem ou sensação, sem torná-la automaticamente uma verdade definitiva.",
         "mechanics_status": "partial",
-        "source": "Raça Morto-Vivo Esqueleto"
+        "source": "Raça Morto-Vivo Esqueleto",
+        "active": false
       },
       {
         "id": "chamado-necromantico",
@@ -290,7 +354,8 @@
         "group": "Traços de Morto-Vivo",
         "description": "Perto de rituais, mortos inquietos, ossuários, energia necromântica ou magia antiga, pode sentir atração, desconforto ou familiaridade. Quando o Mestre permitir, isso pode justificar pista, teste arcano, pressentimento ou consequência narrativa.",
         "mechanics_status": "partial",
-        "source": "Raça Morto-Vivo Esqueleto"
+        "source": "Raça Morto-Vivo Esqueleto",
+        "active": false
       },
       {
         "id": "ossos-sem-carne",
@@ -299,7 +364,8 @@
         "group": "Traços de Morto-Vivo",
         "description": "Recebe +2 em Jogadas de Proteção contra venenos, doenças naturais e efeitos que dependam de sono físico. Pode passar por lugares estreitos ou ocultar-se entre ossos, ruínas e destroços quando a cena permitir.",
         "mechanics_status": "structured",
-        "source": "Raça Morto-Vivo Esqueleto"
+        "source": "Raça Morto-Vivo Esqueleto",
+        "active": false
       },
       {
         "id": "corpo-quebradico",
@@ -308,7 +374,8 @@
         "group": "Limitações de Morto-Vivo",
         "description": "Ataques de dano contundente causam +1 de dano por dado contra Morthak. Quedas, esmagamentos ou colapsos podem exigir teste adicional para evitar osso quebrado, membro deslocado ou penalidade temporária.",
         "mechanics_status": "structured",
-        "source": "Raça Morto-Vivo Esqueleto"
+        "source": "Raça Morto-Vivo Esqueleto",
+        "active": false
       },
       {
         "id": "cura-antinatural",
@@ -317,7 +384,8 @@
         "group": "Limitações de Morto-Vivo",
         "description": "Cura mundana pode reparar ossos com tempo e ferramentas. Poções e magias de cura recuperam metade dos PV, arredondando para cima, salvo decisão diferente do Mestre. Necromancia, rituais de reparo ou repouso adequado podem curar normalmente se autorizados.",
         "mechanics_status": "structured",
-        "source": "Raça Morto-Vivo Esqueleto"
+        "source": "Raça Morto-Vivo Esqueleto",
+        "active": false
       },
       {
         "id": "repouso-imovel",
@@ -326,7 +394,8 @@
         "group": "Traços de Morto-Vivo",
         "description": "Precisa de 4 horas de repouso imóvel para recuperar foco, preparar magia e evitar desgaste. Permanece parcialmente consciente, mas sofre penalidade em testes de percepção ativa durante o repouso.",
         "mechanics_status": "structured",
-        "source": "Raça Morto-Vivo Esqueleto"
+        "source": "Raça Morto-Vivo Esqueleto",
+        "active": false
       },
       {
         "id": "afastar-mortos-vivos",
@@ -335,7 +404,8 @@
         "group": "Limitações de Morto-Vivo",
         "description": "Quando um efeito de afastamento o atinge, Morthak realiza Jogada de Proteção. Em sucesso, sofre desconforto, dor espiritual ou breve recuo; em falha, recebe o efeito adequado à cena, como medo, paralisia curta, impossibilidade de avançar ou perda de ação.",
         "mechanics_status": "structured",
-        "source": "Raça Morto-Vivo Esqueleto"
+        "source": "Raça Morto-Vivo Esqueleto",
+        "active": false
       },
       {
         "id": "grimorio-de-mago",
@@ -344,7 +414,8 @@
         "group": "Conjuração Arcana",
         "description": "No nível 1, o grimório começa com 2 magias escolhidas. A progressão atual permite preparar/conjurar 1 magia de 1º círculo por dia, conforme as regras da classe Mago usadas na ficha.",
         "mechanics_status": "structured",
-        "source": "Classe Mago e ficha de Morthak"
+        "source": "Classe Mago e ficha de Morthak",
+        "hidden": true
       },
       {
         "id": "misseis-magicos",
@@ -366,10 +437,11 @@
         "id": "adaga-de-osso",
         "name": "Adaga de Osso",
         "kind": "attack",
-        "group": "Ataques básicos",
+        "group": "Magias",
         "description": "Ataque básico de Morthak. Não consome uso de magia nem contador diário.",
         "mechanics_status": "partial",
-        "source": "Definição da campanha"
+        "source": "Definição da campanha",
+        "active": true
       },
       {
         "id": "levantar-um-esqueleto",
@@ -379,7 +451,14 @@
         "circle": 2,
         "description": "Magia autoral confirmada para Morthak no 2º círculo. Nenhuma regra com esse nome foi localizada nos cinco PDFs anexados nem no Vault; quantidade, duração, alcance e controle do esqueleto permanecem pendentes.",
         "mechanics_status": "partial",
-        "source": "Definição da campanha"
+        "source": "Definição da campanha",
+        "active": true,
+        "uses": {
+          "resource_key": "levantar-um-esqueleto",
+          "label": "Levantar um Esqueleto · usos",
+          "maximum": 1,
+          "recharge": "inn_rest"
+        }
       },
       {
         "id": "animar-mortos",
@@ -389,7 +468,14 @@
         "circle": 3,
         "description": "Na campanha, esta magia permanece organizada no 3º círculo. A referência arcana anexada a apresenta no 5º círculo: alcance de 10 metros, duração permanente e sem Jogada de Proteção; anima esqueletos ou zumbis a partir de restos intactos e permite comandos verbais simples. A adaptação de círculo ainda é uma regra da campanha.",
         "mechanics_status": "partial",
-        "source": "Definição da campanha + Tomo de Magia Arcana (5º círculo na referência)"
+        "source": "Definição da campanha + Tomo de Magia Arcana (5º círculo na referência)",
+        "active": true,
+        "uses": {
+          "resource_key": "animar-mortos",
+          "label": "Animar Mortos · usos",
+          "maximum": 1,
+          "recharge": "inn_rest"
+        }
       }
     ]
   }

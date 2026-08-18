@@ -33,7 +33,6 @@ class SessionAbilityCatalogTests(unittest.TestCase):
                 "Mísseis Mágicos", "Adaga de Osso", "Levantar um Esqueleto", "Animar Mortos",
                 "Não-Vida Consciente", "Memória Fraturada", "Chamado Necromântico", "Ossos sem Carne",
                 "Corpo Quebradiço", "Cura Antinatural", "Repouso Imóvel", "Afastar Mortos-Vivos",
-                "Grimório de Mago",
             },
         }
         catalogs = {profile_id: set(by_name(profile_id)) for profile_id in expected}
@@ -81,7 +80,7 @@ class SessionAbilityCatalogTests(unittest.TestCase):
 
     def test_campaign_use_counters_are_structured_as_resources(self) -> None:
         expected = {
-            "raziel": {"reserva_de_sangue": 5, "forma_da_noite": 1},
+            "raziel": {"reserva_de_sangue": 5, "forma_da_noite": 3},
             "morthak": {"misseis_magicos": 3},
             "vezemir": {"forca_arcana": 1, "velocidade": 1},
         }

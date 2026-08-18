@@ -369,12 +369,15 @@ export type SessionAbility = {
   circle?: number | null;
   description?: string | null;
   mechanics_status: "structured" | "partial";
+  active?: boolean;
+  blocked?: boolean;
   source?: string | null;
   uses?: {
     resource_key: string;
     label: string;
     maximum: number;
     recharge: string;
+    cost?: number;
   } | null;
 };
 
@@ -486,9 +489,21 @@ export type SessionLedgerEntry = {
   voided_at?: string | null;
 };
 
+export type WorkspaceTokenSheet = {
+  role?: string;
+  level?: number | null;
+  armor_class?: number | null;
+  initiative?: number | null;
+  description?: string;
+  attacks?: Array<{ name: string; damage?: string; bonus?: string | number; notes?: string }>;
+  abilities?: string[];
+  notes?: string;
+};
+
 export type WorkspaceToken = {
   id: string;
   token_type: "character" | "monster";
+  map_id?: string;
   character_id?: string | null;
   name: string;
   image_path?: string | null;
@@ -498,6 +513,7 @@ export type WorkspaceToken = {
   current_hp?: number | null;
   maximum_hp?: number | null;
   conditions: string[];
+  sheet?: WorkspaceTokenSheet;
   created_at: string;
   updated_at: string;
 };
@@ -524,11 +540,26 @@ export type WorkspacePresence = {
   online: boolean;
 };
 
+export type WorkspaceFogLayer = {
+  enabled: boolean;
+  revealed_cells: string[];
+  mist_density: Record<string, number>;
+  columns: number;
+  rows: number;
+  updated_at?: string | null;
+};
+
+export type WorkspaceFog = {
+  exploration: WorkspaceFogLayer;
+  battle: WorkspaceFogLayer;
+};
+
 export type WorkspaceSnapshot = {
-  map?: { title: string; image_path: string; updated_at: string } | null;
+  map?: { id?: string; title: string; image_path: string; updated_at: string } | null;
   messages: WorkspaceMessage[];
   presence: WorkspacePresence[];
   tokens: WorkspaceToken[];
+  fog?: WorkspaceFog;
 };
 
 export type CharacterEvent = {
@@ -1060,7 +1091,7 @@ export async function sendWorkspaceMessage(text: string, messageKind: "message" 
   return response.json();
 }
 
-export async function uploadWorkspaceMap(payload: { title: string; filename: string; content_type: string; data_base64: string }): Promise<{ title: string; image_path: string; updated_at: string }> {
+export async function uploadWorkspaceMap(payload: { title: string; filename: string; content_type: string; data_base64: string }): Promise<{ id: string; title: string; image_path: string; updated_at: string }> {
   const response = await fetch(`${API_BASE}/gm/workspace/map`, {
     method: "POST",
     headers: authHeaders({ "Content-Type": "application/json" }),
@@ -1070,11 +1101,36 @@ export async function uploadWorkspaceMap(payload: { title: string; filename: str
   return response.json();
 }
 
+export async function listWorkspaceMaps(): Promise<Array<{ id: string; title: string; image_path: string; updated_at: string }>> {
+  const response = await fetch(`${API_BASE}/workspace/maps`, { headers: authHeaders() });
+  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao carregar mapas");
+  return response.json();
+}
+
+export async function selectWorkspaceMap(mapId: string): Promise<{ id: string; title: string; image_path: string; updated_at: string }> {
+  const response = await fetch(`${API_BASE}/gm/workspace/maps/active`, { method: "PATCH", headers: authHeaders({ "Content-Type": "application/json" }), body: JSON.stringify({ map_id: mapId }) });
+  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao trocar mapa");
+  return response.json();
+}
+
+export async function updateWorkspaceFog(payload: { layer: "exploration" | "battle"; enabled: boolean; revealed_cells: string[]; mist_density: Record<string, number> }): Promise<WorkspaceFogLayer> {
+    const request = (method: "POST" | "PATCH") => fetch(`${API_BASE}/gm/workspace/fog`, {
+      method, headers: authHeaders({ "Content-Type": "application/json" }), body: JSON.stringify(payload),
+    });
+    let response = await request("POST");
+    // Backends antigos expõem esta rota apenas como PATCH. Mantemos compatibilidade
+    // durante a atualização do túnel, sem esconder outros erros de autenticação/validação.
+    if (response.status === 405) response = await request("PATCH");
+    if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao atualizar fog do mapa");
+    return response.json();
+  }
+
 export async function createWorkspaceToken(payload: {
   token_type: "character" | "monster"; character_id?: string; name: string;
+  map_id?: string;
   image_path?: string | null; image_filename?: string; image_data_base64?: string;
   color?: string; latitude?: number; longitude?: number; current_hp?: number; maximum_hp?: number;
-  conditions?: string[];
+  conditions?: string[]; sheet?: WorkspaceTokenSheet;
 }): Promise<WorkspaceToken> {
   const response = await fetch(`${API_BASE}/gm/workspace/tokens`, {
     method: "POST", headers: authHeaders({ "Content-Type": "application/json" }), body: JSON.stringify(payload),
@@ -1088,6 +1144,14 @@ export async function moveWorkspaceToken(tokenId: string, latitude: number, long
     method: "PATCH", headers: authHeaders({ "Content-Type": "application/json" }), body: JSON.stringify({ latitude, longitude }),
   });
   if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao mover marcador");
+  return response.json();
+}
+
+export async function updateWorkspaceToken(tokenId: string, fields: { name?: string; image_path?: string | null; color?: string; current_hp?: number; maximum_hp?: number; conditions?: string[]; sheet?: WorkspaceTokenSheet }): Promise<WorkspaceToken> {
+  const response = await fetch(`${API_BASE}/gm/workspace/tokens/${encodeURIComponent(tokenId)}`, {
+    method: "PATCH", headers: authHeaders({ "Content-Type": "application/json" }), body: JSON.stringify(fields),
+  });
+  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao editar marcador");
   return response.json();
 }
 
