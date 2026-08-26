@@ -7,6 +7,7 @@ from mcp.server.fastmcp import FastMCP
 
 import assistant_bridge
 import vault_tools
+from omnisvera_mcp import register_foundation_tools
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -19,10 +20,7 @@ def get_handoff() -> str:
     return (ROOT / "Workflow" / "ASSISTANT_HANDOFF.md").read_text(encoding="utf-8-sig")
 
 
-@mcp.tool()
-def get_migration_status() -> str:
-    """Retorna o registro versionado da migração de Disgraceland para Omnisvera."""
-    return (ROOT / "Workflow" / "MIGRATION_LEDGER.md").read_text(encoding="utf-8-sig")
+get_migration_status, CORE_REGISTRY = register_foundation_tools(mcp, ROOT)
 
 
 @mcp.tool()
