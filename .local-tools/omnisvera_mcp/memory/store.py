@@ -18,6 +18,10 @@ def stable_json(value: Any) -> str:
     return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
 
 
+class MemoryConflictError(ValueError):
+    """Raised when a stable memory ID already represents different evidence."""
+
+
 class MemoryStore:
     """Minimal SQLite store for memory, provenance, project state, and audit."""
 
@@ -122,6 +126,83 @@ class MemoryStore:
                      source.get("relation", "supports"), source.get("excerpt_hash"), now),
                 )
         return item_id
+
+    def apply_seed(self, items: list[dict[str, Any]]) -> dict[str, int]:
+        """Insert an explicit seed atomically, skipping only exact matches."""
+
+        required = {
+            "id", "namespace", "type", "title", "content", "status", "confidence",
+            "owner", "classification", "created_at", "updated_at", "sources",
+        }
+        identifiers = [str(item.get("id", "")) for item in items]
+        if len(identifiers) != len(set(identifiers)):
+            raise ValueError("memory seed contains duplicate IDs")
+
+        inserted = 0
+        skipped = 0
+        with closing(self._connect()) as connection, connection:
+            for item in items:
+                missing = sorted(required - item.keys())
+                if missing:
+                    raise ValueError(f"memory seed {item.get('id', '<unknown>')} missing fields: {', '.join(missing)}")
+
+                item_id = str(item["id"])
+                expected_item = (
+                    item_id,
+                    str(item["namespace"]),
+                    str(item["type"]),
+                    str(item["title"]),
+                    str(item["content"]),
+                    str(item["status"]),
+                    float(item["confidence"]),
+                    str(item["owner"]),
+                    str(item["classification"]),
+                    stable_json(item.get("metadata", {})),
+                    str(item["created_at"]),
+                    str(item["updated_at"]),
+                    item.get("valid_from"),
+                    item.get("valid_until"),
+                )
+                expected_sources = [
+                    (
+                        str(source["source_type"]),
+                        str(source["source_ref"]),
+                        source.get("source_timestamp"),
+                        str(source.get("relation", "supports")),
+                        source.get("excerpt_hash"),
+                        str(source.get("created_at", item["created_at"])),
+                    )
+                    for source in item["sources"]
+                ]
+
+                existing = connection.execute(
+                    "SELECT id,namespace,type,title,content,status,confidence,owner,classification,"
+                    "metadata_json,created_at,updated_at,valid_from,valid_until "
+                    "FROM memory_items WHERE id=?",
+                    (item_id,),
+                ).fetchone()
+                if existing:
+                    existing_sources = connection.execute(
+                        "SELECT source_type,source_ref,source_timestamp,relation,excerpt_hash,created_at "
+                        "FROM memory_sources WHERE memory_item_id=? ORDER BY id",
+                        (item_id,),
+                    ).fetchall()
+                    if tuple(existing) != expected_item or [tuple(row) for row in existing_sources] != expected_sources:
+                        raise MemoryConflictError(f"memory seed conflict for {item_id}")
+                    skipped += 1
+                    continue
+
+                connection.execute(
+                    "INSERT INTO memory_items VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                    expected_item,
+                )
+                for index, source in enumerate(expected_sources, start=1):
+                    connection.execute(
+                        "INSERT INTO memory_sources VALUES (?,?,?,?,?,?,?,?)",
+                        (f"src-{item_id}-{index:02d}", item_id, *source),
+                    )
+                inserted += 1
+        return {"inserted": inserted, "skipped": skipped}
 
     def record_project_state(
         self,
