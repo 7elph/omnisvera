@@ -298,3 +298,16 @@ class LexicalIndex:
 
             raw_hits.sort(key=lambda item: (-item.score, item.path.casefold(), item.text))
             return raw_hits[:limit]
+
+    def status(self) -> dict:
+        with self._lock:
+            dirty = sum(
+                1 for document in self._state["documents"].values()
+                if document.get("embedding_dirty", True)
+            )
+            return {
+                "documents": len(self._state["documents"]),
+                "dirty_documents": dirty,
+                "updated_at": self._state.get("updated_at"),
+                "freshness": "fresh" if self.index_path.exists() else "unavailable",
+            }

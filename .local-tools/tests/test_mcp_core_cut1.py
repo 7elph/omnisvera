@@ -70,9 +70,10 @@ EXPECTED_SCHEMAS = {
 class ExistingContractTests(unittest.TestCase):
     def test_all_six_tool_schemas_match_the_captured_baseline(self) -> None:
         tools = asyncio.run(mcp_server.mcp.list_tools())
-        self.assertEqual([tool.name for tool in tools], list(EXPECTED_SCHEMAS))
+        schemas = {tool.name: tool.inputSchema for tool in tools}
+        self.assertEqual([tool.name for tool in tools[:6]], list(EXPECTED_SCHEMAS))
         self.assertEqual(
-            {tool.name: tool.inputSchema for tool in tools},
+            {name: schemas[name] for name in EXPECTED_SCHEMAS},
             EXPECTED_SCHEMAS,
         )
 
@@ -102,11 +103,12 @@ class ExistingContractTests(unittest.TestCase):
         )
         self.assertEqual(mcp_server.get_migration_status(), expected)
 
-    def test_static_handoff_semantics_are_unchanged_in_cut_one(self) -> None:
-        expected = (ROOT / "Workflow" / "ASSISTANT_HANDOFF.md").read_text(
-            encoding="utf-8-sig"
-        )
-        self.assertEqual(mcp_server.get_handoff(), expected)
+    def test_handoff_contract_is_string_but_current_semantics_are_dynamic(self) -> None:
+        handoff = mcp_server.get_handoff()
+        self.assertIsInstance(handoff, str)
+        self.assertIn("handoff dinâmico", handoff)
+        self.assertIn("Source:", handoff)
+        self.assertIn("Freshness:", handoff)
 
 
 class RegistryAndPolicyTests(unittest.TestCase):

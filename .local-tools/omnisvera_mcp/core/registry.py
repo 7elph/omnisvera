@@ -2,9 +2,12 @@ from __future__ import annotations
 
 from collections.abc import Callable, Mapping
 from dataclasses import dataclass
+from datetime import datetime, timezone
+from time import perf_counter
 from typing import Any
 
 from .context import CallContext
+from .audit import AuditSink, NullAuditSink, arguments_fingerprint
 from .policy import PolicyEngine
 
 
@@ -27,9 +30,11 @@ class RegisteredTool:
 class ToolRegistry:
     """Internal invocation path shared by present and future transports."""
 
-    def __init__(self, policy: PolicyEngine | None = None) -> None:
+    def __init__(self, policy: PolicyEngine | None = None, audit: AuditSink | None = None) -> None:
         self._policy = policy or PolicyEngine()
+        self._audit = audit or NullAuditSink()
         self._tools: dict[str, RegisteredTool] = {}
+        self.services: dict[str, Any] = {}
 
     def register(self, tool: RegisteredTool) -> None:
         if tool.name in self._tools:
@@ -53,8 +58,32 @@ class ToolRegistry:
             fields = ", ".join(sorted(forged_fields))
             raise ValueError(f"Identity fields are transport-controlled: {fields}")
 
-        self._policy.require(context, required_scopes=tool.required_scopes)
-        return tool.handler(context, safe_arguments)
+        started = perf_counter()
+        result = "denied"
+        try:
+            self._policy.require(context, required_scopes=tool.required_scopes)
+            result = "running"
+            value = tool.handler(context, safe_arguments)
+            result = "success"
+            return value
+        except Exception:
+            if result == "running":
+                result = "error"
+            raise
+        finally:
+            self._audit.record({
+                "timestamp": datetime.now(timezone.utc).isoformat(),
+                "actor": context.actor,
+                "client": context.client,
+                "transport": context.transport,
+                "action": tool.action,
+                "target": tool.resource,
+                "result": result,
+                "duration_ms": round((perf_counter() - started) * 1000, 3),
+                "arguments_hash": arguments_fingerprint(safe_arguments),
+                "request_id": context.request_id,
+                "metadata": {"tool": tool.name},
+            })
 
     def get(self, tool_name: str) -> RegisteredTool:
         try:

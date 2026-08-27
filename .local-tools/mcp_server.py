@@ -16,6 +16,8 @@ semantic_search = TOOL_BINDINGS.semantic_search
 assistant_status = TOOL_BINDINGS.assistant_status
 create_local_proposal = TOOL_BINDINGS.create_local_proposal
 audit_changed_notes = TOOL_BINDINGS.audit_changed_notes
+system_health = TOOL_BINDINGS.system_health
+CORE_SERVICES = CORE_REGISTRY.services
 
 
 if __name__ == "__main__":

@@ -217,7 +217,7 @@ class TemporarySearchCase(unittest.TestCase):
 class CutTwoIntegrationTests(unittest.TestCase):
     def test_all_six_tools_now_run_through_the_registry(self) -> None:
         self.assertEqual(
-            mcp_server.CORE_REGISTRY.names(),
+            mcp_server.CORE_REGISTRY.names()[:6],
             (
                 "get_handoff",
                 "get_migration_status",
@@ -228,8 +228,10 @@ class CutTwoIntegrationTests(unittest.TestCase):
             ),
         )
 
-    def test_assistant_status_remains_equivalent_to_the_legacy_implementation(self) -> None:
-        self.assertEqual(mcp_server.assistant_status(), assistant_bridge.status())
+    def test_assistant_status_preserves_git_header_and_uses_dynamic_handoff(self) -> None:
+        result = mcp_server.assistant_status()
+        self.assertIn("# Estado do assistente", result)
+        self.assertIn("# Omnisvera — handoff dinâmico", result)
 
     def test_real_search_returns_text_while_ollama_is_offline(self) -> None:
         result = mcp_server.semantic_search("Nimalia", 2)

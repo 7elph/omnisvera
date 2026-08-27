@@ -35,26 +35,39 @@ async def cold_start() -> dict[str, object]:
             initialize_result = await session.initialize()
             listed = await session.list_tools()
             schemas = {tool.name: tool.inputSchema for tool in listed.tools}
-            if schemas != EXPECTED_SCHEMAS:
+            if {name: schemas.get(name) for name in EXPECTED_SCHEMAS} != EXPECTED_SCHEMAS:
                 raise AssertionError("Cold-start tool schemas differ from the Cut 1 baseline")
+            if "system.health" not in schemas:
+                raise AssertionError("Cut 3 health tool missing after cold start")
 
             migration_result = await session.call_tool("get_migration_status", {})
             handoff_result = await session.call_tool("get_handoff", {})
+            health_result = await session.call_tool("system.health", {})
             search_result = await session.call_tool(
                 "semantic_search", {"query": "Nimalia", "limit": 2}
             )
             expected_migration = (ROOT / "Workflow" / "MIGRATION_LEDGER.md").read_text(
                 encoding="utf-8-sig"
             )
-            expected_handoff = (ROOT / "Workflow" / "ASSISTANT_HANDOFF.md").read_text(
-                encoding="utf-8-sig"
-            )
             if text_result(migration_result) != expected_migration:
                 raise AssertionError("Migrated tool output differs after cold start")
-            if text_result(handoff_result) != expected_handoff:
-                raise AssertionError("Legacy tool output differs after cold start")
+            handoff_text = text_result(handoff_result)
+            if "handoff dinâmico" not in handoff_text or "Freshness:" not in handoff_text:
+                raise AssertionError("Dynamic handoff missing evidence metadata after cold start")
+            health = json.loads(text_result(health_result))
+            if health["mcp_core"]["status"] != "healthy":
+                raise AssertionError("MCP Core is not healthy after cold start")
             if "Territories/Nimalia.md" not in text_result(search_result):
                 raise AssertionError("Resilient search failed after cold start")
+            listed_resources = await session.list_resources()
+            resource_uris = {str(resource.uri) for resource in listed_resources.resources}
+            expected_resources = {"system://health", "omnisvera://handoff", "projects://companion/current"}
+            if resource_uris != expected_resources:
+                raise AssertionError("Cut 3 resources differ after cold start")
+            resource = await session.read_resource("system://health")
+            resource_health = json.loads(resource.contents[0].text)
+            if resource_health["mcp_core"]["status"] != "healthy":
+                raise AssertionError("Health resource unreadable after cold start")
 
             return {
                 "server": initialize_result.serverInfo.name,
@@ -62,7 +75,9 @@ async def cold_start() -> dict[str, object]:
                 "tools": [tool.name for tool in listed.tools],
                 "schemas_match": True,
                 "migrated_tool_match": True,
-                "handoff_match": True,
+                "dynamic_handoff": True,
+                "health": True,
+                "resources": sorted(resource_uris),
                 "offline_search_match": True,
             }
 

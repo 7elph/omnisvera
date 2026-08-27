@@ -143,7 +143,7 @@ audit_events
 
 `memory_items` supports typed observations, decisions, heuristics, skills, baselines, experiments, preferences, constraints, facts, and handoff snapshots. `memory_sources` records source type/ref/time, relation, and excerpt hash. `project_states` records observed state, source, confidence, and freshness.
 
-The database lives in a documented ignored local path that can later move without changing public contracts. Cut 1 creates no database.
+The v0.1 database lives at `.assistant-runtime/omnisvera-mcp/memory.db`. The parent runtime directory is ignored by Git, and the path remains an internal implementation detail so it can later move without changing public contracts. Cut 1 creates no database.
 
 ## 11. Resources and namespaces
 
@@ -161,7 +161,7 @@ Namespaces organize; policy authorizes. v0.1 exposes only useful read-only resou
 
 ## 12. Health and audit
 
-`system.health` reports the independent state of Core, Vault, Git, Companion, lexical index, semantic index, embedding provider, and memory using healthy, degraded, stale, offline, unavailable, or unknown. Exact public naming is confirmed before implementation.
+`system.health` reports the independent state of Core, Vault, Git, Companion, lexical index, semantic index, embedding provider, and memory using healthy, degraded, stale, offline, unavailable, or unknown. The public tool name is `system.health`.
 
 Audit stores allowlisted operational metadata: time, actor, client, transport, action/tool, target ID/category, result, duration, source IDs, argument hash, and request ID. It does not automatically store full notes, credentials, headers, private responses, campaign secrets, full prompts, or raw sensitive payloads.
 

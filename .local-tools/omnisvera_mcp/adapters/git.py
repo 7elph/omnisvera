@@ -14,6 +14,7 @@ class GitAdapter:
         result = subprocess.run(
             ["git", *arguments],
             cwd=self.root,
+            stdin=subprocess.DEVNULL,
             capture_output=True,
             text=True,
             encoding="utf-8",

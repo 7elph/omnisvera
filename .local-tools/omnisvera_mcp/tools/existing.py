@@ -8,6 +8,7 @@ import assistant_bridge
 from ..adapters.git import GitAdapter
 from ..adapters.vault import VaultAdapter
 from ..core.context import CallContext
+from ..core.handoff import HandoffService
 from ..search.coordinator import SearchCoordinator
 
 
@@ -19,17 +20,19 @@ class ExistingToolHandlers:
         vault: VaultAdapter,
         git: GitAdapter,
         search: SearchCoordinator,
+        handoff: HandoffService | None = None,
     ) -> None:
         self.vault = vault
         self.git = git
         self.search = search
+        self.handoff = handoff
 
     def get_handoff(
         self,
         _context: CallContext,
         _arguments: Mapping[str, Any],
     ) -> str:
-        return self.vault.read_handoff()
+        return self.handoff.render() if self.handoff else self.vault.read_handoff()
 
     def get_migration_status(
         self,
@@ -61,7 +64,7 @@ class ExistingToolHandlers:
                 "Mudanças locais:",
                 self.git.working_tree_status() or "(nenhuma)",
                 "",
-                self.vault.read_handoff(),
+                self.handoff.render() if self.handoff else self.vault.read_handoff(),
             ]
         )
 

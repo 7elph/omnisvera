@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
@@ -7,9 +8,14 @@ from pathlib import Path
 from mcp.server.fastmcp import FastMCP
 
 from .adapters.git import GitAdapter
+from .adapters.companion import CompanionAdapter
 from .adapters.vault import VaultAdapter
 from .core.context import CallContext
+from .core.handoff import HandoffService
+from .core.health import HealthService
 from .core.registry import RegisteredTool, ToolRegistry
+from .memory import MemoryStore, SQLiteAuditSink
+from .resources import RegisteredResource, ResourceRegistry
 from .search.coordinator import SearchCoordinator
 from .search.lexical import LexicalIndex
 from .search.semantic import OllamaSemanticBackend
@@ -27,6 +33,7 @@ class ToolBindings:
     assistant_status: Callable[[], str]
     create_local_proposal: Callable[[str, list[str]], str]
     audit_changed_notes: Callable[[], str]
+    system_health: Callable[[], str]
 
 
 def register_foundation_tools(
@@ -48,8 +55,13 @@ def register_foundation_tools(
     semantic = OllamaSemanticBackend(root / ".local-index" / "vault.jsonl")
     search = SearchCoordinator(lexical, semantic)
     search.refresh()
-    handlers = ExistingToolHandlers(vault, git, search)
-    registry = ToolRegistry()
+    memory = MemoryStore(root / ".assistant-runtime" / "omnisvera-mcp" / "memory.db")
+    companion = CompanionAdapter(root)
+    health = HealthService(root, vault, git, lexical, semantic, companion, memory)
+    handoff = HandoffService(vault, git, companion, memory, health)
+    handlers = ExistingToolHandlers(vault, git, search, handoff)
+    audit = SQLiteAuditSink(memory)
+    registry = ToolRegistry(audit=audit)
     for tool in (
         RegisteredTool(
             "get_handoff",
@@ -93,6 +105,13 @@ def register_foundation_tools(
             "omnisvera://vault/changed",
             frozenset({"vault.audit"}),
         ),
+        RegisteredTool(
+            "system.health",
+            lambda _context, _arguments: json.dumps(health.collect(), ensure_ascii=False, indent=2),
+            "health",
+            "system://health",
+            frozenset({"system.health.read"}),
+        ),
     ):
         registry.register(tool)
     make_context = context_factory or CallContext.trusted_local_stdio
@@ -135,6 +154,36 @@ def register_foundation_tools(
         """Executa auditoria de YAML e wikilinks apenas nas notas modificadas."""
         return registry.invoke("audit_changed_notes", make_context(), {})
 
+    @mcp.tool(name="system.health")
+    def system_health() -> str:
+        """Retorna saúde, freshness e limitações dos subsistemas do Omnisvera."""
+        return registry.invoke("system.health", make_context(), {})
+
+    resources = ResourceRegistry(audit=audit)
+    resources.register(RegisteredResource("system://health", lambda _context: health.collect(), frozenset({"system.health.read"})))
+    resources.register(RegisteredResource("omnisvera://handoff", lambda _context: handoff.snapshot(), frozenset({"vault.handoff.read"})))
+    resources.register(RegisteredResource("projects://companion/current", lambda _context: companion.get_dashboard().as_dict(), frozenset({"companion.read"})))
+
+    @mcp.resource("system://health", name="Omnisvera system health")
+    def system_health_resource() -> str:
+        return json.dumps(resources.read("system://health", make_context()), ensure_ascii=False, indent=2)
+
+    @mcp.resource("omnisvera://handoff", name="Dynamic Omnisvera handoff")
+    def dynamic_handoff_resource() -> str:
+        return json.dumps(resources.read("omnisvera://handoff", make_context()), ensure_ascii=False, indent=2)
+
+    @mcp.resource("projects://companion/current", name="Current Companion project state")
+    def companion_state_resource() -> str:
+        return json.dumps(resources.read("projects://companion/current", make_context()), ensure_ascii=False, indent=2)
+
+    registry.services = {
+        "memory": memory,
+        "companion": companion,
+        "health": health,
+        "handoff": handoff,
+        "resources": resources,
+    }
+
     return (
         ToolBindings(
             get_handoff=get_handoff,
@@ -143,6 +192,7 @@ def register_foundation_tools(
             assistant_status=assistant_status,
             create_local_proposal=create_local_proposal,
             audit_changed_notes=audit_changed_notes,
+            system_health=system_health,
         ),
         registry,
         search,
