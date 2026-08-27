@@ -40,6 +40,9 @@ async def cold_start() -> dict[str, object]:
 
             migration_result = await session.call_tool("get_migration_status", {})
             handoff_result = await session.call_tool("get_handoff", {})
+            search_result = await session.call_tool(
+                "semantic_search", {"query": "Nimalia", "limit": 2}
+            )
             expected_migration = (ROOT / "Workflow" / "MIGRATION_LEDGER.md").read_text(
                 encoding="utf-8-sig"
             )
@@ -50,6 +53,8 @@ async def cold_start() -> dict[str, object]:
                 raise AssertionError("Migrated tool output differs after cold start")
             if text_result(handoff_result) != expected_handoff:
                 raise AssertionError("Legacy tool output differs after cold start")
+            if "Territories/Nimalia.md" not in text_result(search_result):
+                raise AssertionError("Resilient search failed after cold start")
 
             return {
                 "server": initialize_result.serverInfo.name,
@@ -57,7 +62,8 @@ async def cold_start() -> dict[str, object]:
                 "tools": [tool.name for tool in listed.tools],
                 "schemas_match": True,
                 "migrated_tool_match": True,
-                "legacy_tool_match": True,
+                "handoff_match": True,
+                "offline_search_match": True,
             }
 
 
