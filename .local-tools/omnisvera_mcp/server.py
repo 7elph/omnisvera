@@ -36,6 +36,8 @@ class ToolBindings:
     system_health: Callable[[], str]
     memory_get: Callable[[str], str]
     memory_list: Callable[[str | None, int], str]
+    memory_search: Callable[[str, str | None, int], str]
+    memory_recent: Callable[[str | None, int], str]
 
 
 def register_foundation_tools(
@@ -86,6 +88,21 @@ def register_foundation_tools(
             memory.list_memories(item_type=item_type, limit=limit),
             ensure_ascii=False,
             indent=2,
+        )
+
+    def search_memory(_context: CallContext, arguments: dict) -> str:
+        return json.dumps(
+            memory.search_memories(
+                arguments.get("query"), item_type=arguments.get("item_type"),
+                limit=arguments.get("limit", 10),
+            ), ensure_ascii=False, indent=2,
+        )
+
+    def recent_memory(_context: CallContext, arguments: dict) -> str:
+        return json.dumps(
+            memory.recall_recent(
+                item_type=arguments.get("item_type"), limit=arguments.get("limit", 10),
+            ), ensure_ascii=False, indent=2,
         )
 
     for tool in (
@@ -152,6 +169,14 @@ def register_foundation_tools(
             "memory://items",
             frozenset({"memory.read"}),
         ),
+        RegisteredTool(
+            "memory.search", search_memory, "read", "memory://items",
+            frozenset({"memory.read"}),
+        ),
+        RegisteredTool(
+            "memory.recent", recent_memory, "read", "memory://items",
+            frozenset({"memory.read"}),
+        ),
     ):
         registry.register(tool)
     make_context = context_factory or CallContext.trusted_local_stdio
@@ -215,6 +240,24 @@ def register_foundation_tools(
             {"item_type": item_type, "limit": limit},
         )
 
+    @mcp.tool(name="memory.search")
+    def memory_search(query: str, item_type: str | None = None, limit: int = 10) -> str:
+        """Busca lexical em ID, título e conteúdo; retorna memórias com fontes.
+
+        Ignora caixa/acentos, não interpreta sinônimos. Limite: 1–100.
+        """
+        return registry.invoke(
+            "memory.search", make_context(),
+            {"query": query, "item_type": item_type, "limit": limit},
+        )
+
+    @mcp.tool(name="memory.recent")
+    def memory_recent(item_type: str | None = None, limit: int = 10) -> str:
+        """Retorna memórias com fontes, por updated_at decrescente e ID. Limite: 1–100."""
+        return registry.invoke(
+            "memory.recent", make_context(), {"item_type": item_type, "limit": limit},
+        )
+
     resources = ResourceRegistry(audit=audit)
     resources.register(RegisteredResource("system://health", lambda _context: health.collect(), frozenset({"system.health.read"})))
     resources.register(RegisteredResource("omnisvera://handoff", lambda _context: handoff.snapshot(), frozenset({"vault.handoff.read"})))
@@ -251,6 +294,8 @@ def register_foundation_tools(
             system_health=system_health,
             memory_get=memory_get,
             memory_list=memory_list,
+            memory_search=memory_search,
+            memory_recent=memory_recent,
         ),
         registry,
         search,

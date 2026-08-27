@@ -19,6 +19,8 @@ audit_changed_notes = TOOL_BINDINGS.audit_changed_notes
 system_health = TOOL_BINDINGS.system_health
 memory_get = TOOL_BINDINGS.memory_get
 memory_list = TOOL_BINDINGS.memory_list
+memory_search = TOOL_BINDINGS.memory_search
+memory_recent = TOOL_BINDINGS.memory_recent
 CORE_SERVICES = CORE_REGISTRY.services
 
 

@@ -20,6 +20,8 @@ REMOTE_TOOL_NAMES = (
     "get_companion_state",
     "memory.get",
     "memory.list",
+    "memory.search",
+    "memory.recent",
 )
 READ_ONLY = ToolAnnotations(
     readOnlyHint=True,
@@ -36,6 +38,8 @@ class BridgeBindings:
     get_companion_state: Callable[[], str]
     memory_get: Callable[[str], str]
     memory_list: Callable[[str | None, int], str]
+    memory_search: Callable[[str, str | None, int], str]
+    memory_recent: Callable[[str | None, int], str]
 
 
 def remote_bridge_context() -> CallContext:
@@ -127,4 +131,25 @@ def register_remote_bridge_tools(
             {"item_type": item_type, "limit": limit},
         )
 
-    return BridgeBindings(system_health, get_handoff, get_companion_state, memory_get, memory_list)
+    @mcp.tool(name="memory.search", annotations=READ_ONLY)
+    def memory_search(query: str, item_type: str | None = None, limit: int = 10) -> str:
+        """Lexical search of memory ID/title/content, including provenance.
+
+        Case/accent insensitive; no semantic synonyms. Limit: 1–100.
+        """
+        return registry.invoke(
+            "memory.search", context_factory(),
+            {"query": query, "item_type": item_type, "limit": limit},
+        )
+
+    @mcp.tool(name="memory.recent", annotations=READ_ONLY)
+    def memory_recent(item_type: str | None = None, limit: int = 10) -> str:
+        """Read full memories by updated_at descending, then stable ID. Limit: 1–100."""
+        return registry.invoke(
+            "memory.recent", context_factory(), {"item_type": item_type, "limit": limit},
+        )
+
+    return BridgeBindings(
+        system_health, get_handoff, get_companion_state, memory_get, memory_list,
+        memory_search, memory_recent,
+    )

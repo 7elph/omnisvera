@@ -9,6 +9,8 @@ from pathlib import Path
 from typing import Any
 from uuid import uuid4
 
+from .recall import query_terms, rank, validate_options
+
 
 def utc_now() -> str:
     return datetime.now(timezone.utc).isoformat()
@@ -266,6 +268,40 @@ class MemoryStore:
                     (safe_limit,),
                 ).fetchall()
         return [memory for row in rows if (memory := self.get_memory(str(row["id"]))) is not None]
+
+    def search_memories(
+        self, query: str, *, item_type: str | None = None, limit: int = 10,
+    ) -> list[dict[str, Any]]:
+        item_type = validate_options(item_type, limit)
+        normalized, terms = query_terms(query)
+        with closing(self._connect()) as connection:
+            # Rank the entire eligible collection before applying the result limit.
+            rows = connection.execute(
+                "SELECT id,title,content FROM memory_items WHERE (? IS NULL OR type=?)",
+                (item_type, item_type),
+            )
+            ranked = []
+            for row in rows:
+                score = rank(normalized, terms, item_id=row["id"],
+                             title=row["title"], content=row["content"])
+                if score is not None:
+                    ranked.append((tuple(-part for part in score), row["id"]))
+        ranked.sort()  # Equal scores break by stable ID, never insertion order.
+        return [item for _, item_id in ranked[:limit]
+                if (item := self.get_memory(item_id)) is not None]
+
+    def recall_recent(
+        self, *, item_type: str | None = None, limit: int = 10,
+    ) -> list[dict[str, Any]]:
+        item_type = validate_options(item_type, limit)
+        with closing(self._connect()) as connection:
+            rows = connection.execute(
+                "SELECT id FROM memory_items WHERE (? IS NULL OR type=?) "
+                "ORDER BY julianday(updated_at) DESC,id LIMIT ?",
+                (item_type, item_type, limit),
+            ).fetchall()
+        return [item for row in rows
+                if (item := self.get_memory(row["id"])) is not None]
 
     def get_memory(self, item_id: str) -> dict[str, Any] | None:
         with closing(self._connect()) as connection:
