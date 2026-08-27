@@ -252,6 +252,21 @@ class MemoryStore:
             ).fetchall()
         return [dict(row) for row in rows]
 
+    def list_memories(self, *, item_type: str | None = None, limit: int = 20) -> list[dict[str, Any]]:
+        safe_limit = max(1, min(int(limit), 100))
+        with closing(self._connect()) as connection:
+            if item_type:
+                rows = connection.execute(
+                    "SELECT id FROM memory_items WHERE type=? ORDER BY updated_at DESC,id LIMIT ?",
+                    (item_type, safe_limit),
+                ).fetchall()
+            else:
+                rows = connection.execute(
+                    "SELECT id FROM memory_items ORDER BY updated_at DESC,id LIMIT ?",
+                    (safe_limit,),
+                ).fetchall()
+        return [memory for row in rows if (memory := self.get_memory(str(row["id"]))) is not None]
+
     def get_memory(self, item_id: str) -> dict[str, Any] | None:
         with closing(self._connect()) as connection:
             item = connection.execute("SELECT * FROM memory_items WHERE id=?", (item_id,)).fetchone()

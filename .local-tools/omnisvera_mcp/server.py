@@ -34,6 +34,8 @@ class ToolBindings:
     create_local_proposal: Callable[[str, list[str]], str]
     audit_changed_notes: Callable[[], str]
     system_health: Callable[[], str]
+    memory_get: Callable[[str], str]
+    memory_list: Callable[[str | None, int], str]
 
 
 def register_foundation_tools(
@@ -62,6 +64,30 @@ def register_foundation_tools(
     handlers = ExistingToolHandlers(vault, git, search, handoff)
     audit = SQLiteAuditSink(memory)
     registry = ToolRegistry(audit=audit)
+
+    def read_memory(_context: CallContext, arguments: dict) -> str:
+        memory_id = str(arguments.get("memory_id", "")).strip()
+        if not memory_id:
+            raise ValueError("memory_id is required")
+        item = memory.get_memory(memory_id)
+        if item is None:
+            raise ValueError(f"memory item not found: {memory_id}")
+        return json.dumps(item, ensure_ascii=False, indent=2)
+
+    def list_memory(_context: CallContext, arguments: dict) -> str:
+        raw_type = arguments.get("item_type")
+        item_type = str(raw_type).strip() if raw_type is not None else None
+        if item_type == "":
+            item_type = None
+        limit = int(arguments.get("limit", 20))
+        if not 1 <= limit <= 100:
+            raise ValueError("limit must be between 1 and 100")
+        return json.dumps(
+            memory.list_memories(item_type=item_type, limit=limit),
+            ensure_ascii=False,
+            indent=2,
+        )
+
     for tool in (
         RegisteredTool(
             "get_handoff",
@@ -112,6 +138,20 @@ def register_foundation_tools(
             "system://health",
             frozenset({"system.health.read"}),
         ),
+        RegisteredTool(
+            "memory.get",
+            read_memory,
+            "read",
+            "memory://items",
+            frozenset({"memory.read"}),
+        ),
+        RegisteredTool(
+            "memory.list",
+            list_memory,
+            "read",
+            "memory://items",
+            frozenset({"memory.read"}),
+        ),
     ):
         registry.register(tool)
     make_context = context_factory or CallContext.trusted_local_stdio
@@ -159,6 +199,22 @@ def register_foundation_tools(
         """Retorna saúde, freshness e limitações dos subsistemas do Omnisvera."""
         return registry.invoke("system.health", make_context(), {})
 
+    @mcp.tool(name="memory.get")
+    def memory_get(memory_id: str) -> str:
+        """Retorna uma memória persistida por ID, incluindo sua proveniência."""
+
+        return registry.invoke("memory.get", make_context(), {"memory_id": memory_id})
+
+    @mcp.tool(name="memory.list")
+    def memory_list(item_type: str | None = None, limit: int = 20) -> str:
+        """Lista memórias persistidas, opcionalmente filtradas por tipo."""
+
+        return registry.invoke(
+            "memory.list",
+            make_context(),
+            {"item_type": item_type, "limit": limit},
+        )
+
     resources = ResourceRegistry(audit=audit)
     resources.register(RegisteredResource("system://health", lambda _context: health.collect(), frozenset({"system.health.read"})))
     resources.register(RegisteredResource("omnisvera://handoff", lambda _context: handoff.snapshot(), frozenset({"vault.handoff.read"})))
@@ -193,6 +249,8 @@ def register_foundation_tools(
             create_local_proposal=create_local_proposal,
             audit_changed_notes=audit_changed_notes,
             system_health=system_health,
+            memory_get=memory_get,
+            memory_list=memory_list,
         ),
         registry,
         search,

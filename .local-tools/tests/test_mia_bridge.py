@@ -30,6 +30,9 @@ class BridgeContractTests(unittest.TestCase):
         self.assertNotIn("create_local_proposal", names)
         self.assertNotIn("audit_changed_notes", names)
         self.assertNotIn("semantic_search", names)
+        self.assertNotIn("memory.add", names)
+        self.assertNotIn("memory.update", names)
+        self.assertNotIn("memory.delete", names)
 
     def test_remote_context_is_internal_and_distinct_in_audit(self) -> None:
         context = remote_bridge_context()
@@ -46,6 +49,8 @@ class BridgeContractTests(unittest.TestCase):
         self.assertEqual(str(inspect.signature(mcp_http_server.BRIDGE_BINDINGS.system_health)), "() -> 'str'")
         self.assertEqual(str(inspect.signature(mcp_http_server.BRIDGE_BINDINGS.get_handoff)), "() -> 'str'")
         self.assertEqual(str(inspect.signature(mcp_http_server.BRIDGE_BINDINGS.get_companion_state)), "() -> 'str'")
+        self.assertEqual(str(inspect.signature(mcp_http_server.BRIDGE_BINDINGS.memory_get)), "(memory_id: 'str') -> 'str'")
+        self.assertEqual(str(inspect.signature(mcp_http_server.BRIDGE_BINDINGS.memory_list)), "(item_type: 'str | None' = None, limit: 'int' = 20) -> 'str'")
 
     def test_remote_calls_reuse_core_registry_and_typed_companion_result(self) -> None:
         health = json.loads(mcp_http_server.BRIDGE_BINDINGS.system_health())
@@ -56,6 +61,14 @@ class BridgeContractTests(unittest.TestCase):
             mcp_server.CORE_REGISTRY.get("get_companion_state").resource,
             "projects://companion/current",
         )
+
+    def test_remote_memory_read_returns_persisted_content_and_sources(self) -> None:
+        memories = json.loads(mcp_http_server.BRIDGE_BINDINGS.memory_list(None, 20))
+
+        self.assertIsInstance(memories, list)
+        self.assertEqual(mcp_server.CORE_REGISTRY.get("memory.get").resource, "memory://items")
+        self.assertEqual(mcp_server.CORE_REGISTRY.get("memory.list").resource, "memory://items")
+        self.assertIn("memory.read", remote_bridge_context().scopes)
 
 
 if __name__ == "__main__":

@@ -14,7 +14,13 @@ from .core.registry import RegisteredTool, ToolRegistry
 
 
 ContextFactory = Callable[[], CallContext]
-REMOTE_TOOL_NAMES = ("system.health", "get_handoff", "get_companion_state")
+REMOTE_TOOL_NAMES = (
+    "system.health",
+    "get_handoff",
+    "get_companion_state",
+    "memory.get",
+    "memory.list",
+)
 READ_ONLY = ToolAnnotations(
     readOnlyHint=True,
     destructiveHint=False,
@@ -28,6 +34,8 @@ class BridgeBindings:
     system_health: Callable[[], str]
     get_handoff: Callable[[], str]
     get_companion_state: Callable[[], str]
+    memory_get: Callable[[str], str]
+    memory_list: Callable[[str | None, int], str]
 
 
 def remote_bridge_context() -> CallContext:
@@ -38,7 +46,7 @@ def remote_bridge_context() -> CallContext:
         client="chatgpt-mia-bridge",
         transport="streamable-http",
         scopes=frozenset(
-            {"system.health.read", "vault.handoff.read", "companion.read"}
+            {"system.health.read", "vault.handoff.read", "companion.read", "memory.read"}
         ),
         request_id=uuid4().hex,
         project_id="omnisvera",
@@ -103,4 +111,20 @@ def register_remote_bridge_tools(
 
         return registry.invoke("get_companion_state", context_factory(), {})
 
-    return BridgeBindings(system_health, get_handoff, get_companion_state)
+    @mcp.tool(name="memory.get", annotations=READ_ONLY)
+    def memory_get(memory_id: str) -> str:
+        """Read one persistent memory by stable ID, including provenance."""
+
+        return registry.invoke("memory.get", context_factory(), {"memory_id": memory_id})
+
+    @mcp.tool(name="memory.list", annotations=READ_ONLY)
+    def memory_list(item_type: str | None = None, limit: int = 20) -> str:
+        """List persistent memories, optionally filtered by type."""
+
+        return registry.invoke(
+            "memory.list",
+            context_factory(),
+            {"item_type": item_type, "limit": limit},
+        )
+
+    return BridgeBindings(system_health, get_handoff, get_companion_state, memory_get, memory_list)

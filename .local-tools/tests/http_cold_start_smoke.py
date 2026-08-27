@@ -20,7 +20,7 @@ TESTS = Path(__file__).resolve().parent
 LOCAL_TOOLS = TESTS.parent
 ROOT = LOCAL_TOOLS.parent
 DATABASE = ROOT / ".assistant-runtime" / "omnisvera-mcp" / "memory.db"
-EXPECTED_TOOLS = ("system.health", "get_handoff", "get_companion_state")
+EXPECTED_TOOLS = ("system.health", "get_handoff", "get_companion_state", "memory.get", "memory.list")
 
 
 def available_port() -> int:
@@ -79,6 +79,18 @@ async def probe(url: str) -> dict[str, object]:
             if companion["status"] not in {"healthy", "offline", "degraded", "unavailable"}:
                 raise AssertionError("Companion state is not typed")
 
+            memories_result = await session.call_tool("memory.list", {"item_type": "decision", "limit": 20})
+            memories = json.loads(memories_result.content[0].text)
+            if not isinstance(memories, list):
+                raise AssertionError("memory.list did not return a list")
+
+            memory = None
+            if memories:
+                memory_result = await session.call_tool("memory.get", {"memory_id": memories[0]["id"]})
+                memory = json.loads(memory_result.content[0].text)
+                if memory["id"] != memories[0]["id"] or not memory["sources"]:
+                    raise AssertionError("memory.get did not return content with provenance")
+
             forbidden = await session.call_tool(
                 "create_local_proposal",
                 {"task": "must-not-run", "source_files": []},
@@ -92,6 +104,8 @@ async def probe(url: str) -> dict[str, object]:
                 "tools": list(names),
                 "health": health["mcp_core"]["status"],
                 "companion": companion["status"],
+                "memory": memory["id"] if memory else None,
+                "memory_sources": len(memory["sources"]) if memory else 0,
                 "forbidden_tool_rejected": True,
             }
 
@@ -136,7 +150,7 @@ def cold_start() -> dict[str, object]:
         "mia",
         "chatgpt-mia-bridge",
         "streamable-http",
-        "projects://companion/current",
+        "memory://items",
         "success",
     ):
         raise AssertionError(f"Unexpected bridge audit identity: {audit}")
