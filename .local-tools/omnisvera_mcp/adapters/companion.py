@@ -65,7 +65,7 @@ class CompanionAdapter:
         except (OSError, json.JSONDecodeError, TypeError, AttributeError):
             return None
 
-    def _get(self, path: str) -> CompanionObservation:
+    def _get(self, path: str, *, timeout: float | None = None) -> CompanionObservation:
         observed_at = utc_now()
         token = self._master_token()
         if not token:
@@ -76,7 +76,7 @@ class CompanionAdapter:
             method="GET",
         )
         try:
-            with self._opener(request, timeout=self.timeout) as response:
+            with self._opener(request, timeout=self.timeout if timeout is None else timeout) as response:
                 payload = json.loads(response.read().decode("utf-8"))
             return CompanionObservation(path, "healthy", "fresh", observed_at, payload)
         except urllib.error.HTTPError as error:
@@ -85,7 +85,10 @@ class CompanionAdapter:
             return CompanionObservation(path, "offline", "unavailable", observed_at, limitation=type(error).__name__)
 
     def get_health(self) -> CompanionObservation:
-        return self._get("/health")
+        # /health awaits the optional Ollama probe for up to 1.5 s before
+        # returning backend=ok. An equal client deadline mislabels it offline.
+        # Leave all state reads on their existing short deadline; do not retry.
+        return self._get("/health", timeout=max(self.timeout, 3.0))
 
     def get_app_state(self) -> CompanionObservation:
         return self._get("/workspace")
