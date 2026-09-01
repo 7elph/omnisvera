@@ -10,6 +10,7 @@ from mcp.server.fastmcp import FastMCP
 from .adapters.git import GitAdapter
 from .adapters.companion import CompanionAdapter
 from .adapters.vault import VaultAdapter
+from .adapters.football import FootballWorldAdapter
 from .core.context import CallContext
 from .core.handoff import HandoffService
 from .core.health import HealthService
@@ -20,6 +21,10 @@ from .search.coordinator import SearchCoordinator
 from .search.lexical import LexicalIndex
 from .search.semantic import OllamaSemanticBackend
 from .tools.existing import ExistingToolHandlers
+from . import epistemic
+from .world import WorldRegistry, WorldModelRegistry, CoreStateVectorBuilder
+from .manifest import generate_manifest
+from .bootstrap import generate_bootstrap
 
 
 ContextFactory = Callable[[], CallContext]
@@ -66,6 +71,16 @@ def register_foundation_tools(
     handlers = ExistingToolHandlers(vault, git, search, handoff)
     audit = SQLiteAuditSink(memory)
     registry = ToolRegistry(audit=audit)
+
+    # World registry
+    worlds = WorldRegistry()
+    model_builders = WorldModelRegistry()
+    model_builders.register(CoreStateVectorBuilder())
+    try:
+        football_adapter = FootballWorldAdapter(root)
+        worlds.register(football_adapter)
+    except Exception:
+        pass  # Football world not available
 
     def read_memory(_context: CallContext, arguments: dict) -> str:
         memory_id = str(arguments.get("memory_id", "")).strip()
@@ -177,6 +192,192 @@ def register_foundation_tools(
             "memory.recent", recent_memory, "read", "memory://items",
             frozenset({"memory.read"}),
         ),
+        # System tools
+        RegisteredTool(
+            "system.manifest",
+            lambda _ctx, _args: json.dumps(generate_manifest(
+                worlds=[d.as_dict() for d in worlds.list()],
+                model_builders=model_builders.list(),
+                tools=[{"name": t.name, "access_mode": t.action} for t in registry._tools.values()],
+            ), ensure_ascii=False, indent=2),
+            "read",
+            "system://manifest",
+            frozenset({"system.health.read"}),
+        ),
+        RegisteredTool(
+            "system.bootstrap",
+            lambda _ctx, _args: json.dumps(generate_bootstrap(
+                health=health.collect(),
+                handoff=handoff.snapshot(),
+                worlds=[d.as_dict() for d in worlds.list()],
+                memory_stats=memory.stats(),
+                manifest_summary=generate_manifest(
+                    worlds=[d.as_dict() for d in worlds.list()],
+                    model_builders=model_builders.list(),
+                    tools=[{"name": t.name, "access_mode": t.action} for t in registry._tools.values()],
+                ),
+            ), ensure_ascii=False, indent=2),
+            "read",
+            "system://bootstrap",
+            frozenset({"system.health.read"}),
+        ),
+        # Companion
+        RegisteredTool(
+            "get_companion_state",
+            lambda _ctx, _args: json.dumps(companion.get_dashboard().as_dict(), ensure_ascii=False, indent=2),
+            "read",
+            "projects://companion/current",
+            frozenset({"companion.read"}),
+        ),
+        # World tools
+        RegisteredTool(
+            "world.list",
+            lambda _ctx, _args: json.dumps([d.as_dict() for d in worlds.list()], ensure_ascii=False, indent=2),
+            "read",
+            "world://list",
+            frozenset({"world.read"}),
+        ),
+        RegisteredTool(
+            "world.describe",
+            lambda _ctx, args: json.dumps(worlds.get(str(args.get("world_id", ""))).describe().as_dict(), ensure_ascii=False, indent=2),
+            "read",
+            "world://describe",
+            frozenset({"world.read"}),
+        ),
+        RegisteredTool(
+            "world.observe",
+            lambda _ctx, args: json.dumps(worlds.get(str(args.get("world_id", ""))).observe().as_dict(), ensure_ascii=False, indent=2),
+            "read",
+            "world://observe",
+            frozenset({"world.read"}),
+        ),
+        RegisteredTool(
+            "world.signals",
+            lambda _ctx, args: json.dumps([s.as_dict() for s in worlds.get(str(args.get("world_id", ""))).signals()], ensure_ascii=False, indent=2),
+            "read",
+            "world://signals",
+            frozenset({"world.read"}),
+        ),
+        RegisteredTool(
+            "world.signal_history",
+            lambda _ctx, args: json.dumps(memory.signal_history(
+                world_id=str(args.get("world_id", "")),
+                signal_id=str(args.get("signal_id", "")),
+                limit=int(args.get("limit", 50)),
+            ), ensure_ascii=False, indent=2),
+            "read",
+            "world://signals/history",
+            frozenset({"world.read"}),
+        ),
+        RegisteredTool(
+            "world.signal_changes",
+            lambda _ctx, args: json.dumps(memory.signal_changes(
+                world_id=str(args.get("world_id", "")),
+                signal_id=str(args.get("signal_id", "")),
+                limit=int(args.get("limit", 20)),
+            ), ensure_ascii=False, indent=2),
+            "read",
+            "world://signals/changes",
+            frozenset({"world.read"}),
+        ),
+        RegisteredTool(
+            "world.signal_patterns",
+            lambda _ctx, args: json.dumps(memory.signal_patterns(
+                world_id=str(args.get("world_id", "")),
+                signal_id=str(args.get("signal_id", "")),
+                limit=int(args.get("limit", 10)),
+            ), ensure_ascii=False, indent=2),
+            "read",
+            "world://signals/patterns",
+            frozenset({"world.read"}),
+        ),
+        RegisteredTool(
+            "world.model",
+            lambda _ctx, args: json.dumps(worlds.get(str(args.get("world_id", ""))).model().as_dict(), ensure_ascii=False, indent=2),
+            "read",
+            "world://model",
+            frozenset({"world.read"}),
+        ),
+        RegisteredTool(
+            "world.capture_signals",
+            lambda _ctx, args: json.dumps({"captured": memory.capture_signals(
+                signals=args.get("signals", []),
+            )}, ensure_ascii=False, indent=2),
+            "write",
+            "world://signals/capture",
+            frozenset({"world.write"}),
+        ),
+        # Epistemic tools
+        RegisteredTool(
+            "epistemic.create_snapshot",
+            lambda _ctx, args: epistemic.create_snapshot(memory, _ctx, args),
+            "write",
+            "epistemic://snapshots",
+            frozenset({"epistemic.write"}),
+        ),
+        RegisteredTool(
+            "epistemic.snapshot_from_model",
+            lambda _ctx, args: epistemic.snapshot_from_model(memory, _ctx, args),
+            "write",
+            "epistemic://snapshots",
+            frozenset({"epistemic.write"}),
+        ),
+        RegisteredTool(
+            "epistemic.validate_candidate",
+            lambda _ctx, args: epistemic.validate_candidate(memory, _ctx, args),
+            "read",
+            "epistemic://predictions",
+            frozenset({"epistemic.read"}),
+        ),
+        RegisteredTool(
+            "epistemic.commit_candidate",
+            lambda _ctx, args: epistemic.commit_candidate(memory, _ctx, args),
+            "write",
+            "epistemic://predictions",
+            frozenset({"epistemic.write"}),
+        ),
+        RegisteredTool(
+            "epistemic.create_prediction",
+            lambda _ctx, args: epistemic.create_prediction(memory, _ctx, args),
+            "write",
+            "epistemic://predictions",
+            frozenset({"epistemic.write"}),
+        ),
+        RegisteredTool(
+            "epistemic.list_predictions",
+            lambda _ctx, args: epistemic.list_predictions(memory, _ctx, args),
+            "read",
+            "epistemic://predictions",
+            frozenset({"epistemic.read"}),
+        ),
+        RegisteredTool(
+            "epistemic.get_prediction",
+            lambda _ctx, args: epistemic.get_prediction(memory, _ctx, args),
+            "read",
+            "epistemic://predictions",
+            frozenset({"epistemic.read"}),
+        ),
+        RegisteredTool(
+            "epistemic.resolve_prediction",
+            lambda _ctx, args: epistemic.resolve_prediction(memory, _ctx, args),
+            "write",
+            "epistemic://predictions",
+            frozenset({"epistemic.write"}),
+        ),
+        RegisteredTool(
+            "epistemic.calibration_summary",
+            lambda _ctx, args: epistemic.calibration_summary(memory, _ctx, args),
+            "read",
+            "epistemic://calibration",
+            frozenset({"epistemic.read"}),
+        ),
+        RegisteredTool(
+            "epistemic.resolve_due_predictions",
+            lambda _ctx, args: epistemic.resolve_due_predictions(memory, _ctx, args),
+            "write",
+            "epistemic://predictions",
+            frozenset({"epistemic.write"}),
+        ),
     ):
         registry.register(tool)
     make_context = context_factory or CallContext.trusted_local_stdio
@@ -281,6 +482,8 @@ def register_foundation_tools(
         "health": health,
         "handoff": handoff,
         "resources": resources,
+        "worlds": worlds,
+        "model_builders": model_builders,
     }
 
     return (
