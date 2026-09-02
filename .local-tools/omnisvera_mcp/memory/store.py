@@ -38,6 +38,24 @@ class MemoryStore:
         connection.execute("PRAGMA foreign_keys=ON")
         return connection
 
+    def _compute_observation_hash(
+        self,
+        world_id: str,
+        signal_id: str,
+        entity_ref: str | None,
+        observed_at: str,
+        value: Any,
+    ) -> str:
+        """Compute deterministic SHA-256 hash for signal observation identity.
+
+        Hashes: world_id, signal_id, entity_ref, observed_at, canonical(value).
+        source/metadata do NOT participate in identity (v0.2).
+        """
+        canonical_value = stable_json(value)
+        entity_part = entity_ref if entity_ref is not None else ""
+        payload = f"{world_id}\x00{signal_id}\x00{entity_part}\x00{observed_at}\x00{canonical_value}"
+        return hashlib.sha256(payload.encode("utf-8")).hexdigest()
+
     def _initialize(self) -> None:
         with closing(self._connect()) as connection, connection:
             connection.executescript(
@@ -94,8 +112,168 @@ class MemoryStore:
                     request_id TEXT NOT NULL,
                     metadata_json TEXT NOT NULL
                 );
+                CREATE TABLE IF NOT EXISTS predictions (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    domain TEXT NOT NULL,
+                    snapshot_memory_id TEXT NOT NULL REFERENCES memory_items(id),
+                    snapshot_hash TEXT NOT NULL,
+                    claim TEXT NOT NULL,
+                    probability REAL NOT NULL CHECK(probability >= 0.0 AND probability <= 1.0),
+                    horizon TEXT NOT NULL,
+                    resolution_rule_json TEXT NOT NULL,
+                    evidence_mode TEXT NOT NULL DEFAULT 'prospective' CHECK(evidence_mode IN ('prospective','retrospective')),
+                    predictor_id TEXT,
+                    predictor_version TEXT,
+                    status TEXT NOT NULL DEFAULT 'open' CHECK(status IN ('open','resolved','expired')),
+                    created_at TEXT NOT NULL,
+                    world_id TEXT,
+                    subject_ref TEXT,
+                    model_id TEXT,
+                    predictor_type TEXT,
+                    signals_used_json TEXT,
+                    patterns_used_json TEXT,
+                    reasoning_summary TEXT,
+                    candidate_hash TEXT
+                );
+                CREATE TABLE IF NOT EXISTS prediction_resolutions (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    prediction_id INTEGER NOT NULL UNIQUE REFERENCES predictions(id),
+                    resolved_at TEXT NOT NULL,
+                    observed_value REAL,
+                    outcome INTEGER NOT NULL CHECK(outcome IN (0, 1)),
+                    calibration_score REAL,
+                    sources_json TEXT,
+                    notes TEXT,
+                    created_at TEXT NOT NULL
+                );
+                CREATE INDEX IF NOT EXISTS idx_predictions_domain
+                    ON predictions(domain, status);
+                CREATE INDEX IF NOT EXISTS idx_predictions_status
+                    ON predictions(status, created_at);
+                CREATE TRIGGER IF NOT EXISTS trg_predictions_immutable
+                    AFTER UPDATE ON predictions
+                    FOR EACH ROW
+                    WHEN OLD.domain != NEW.domain
+                        OR OLD.snapshot_memory_id != NEW.snapshot_memory_id
+                        OR OLD.snapshot_hash != NEW.snapshot_hash
+                        OR OLD.claim != NEW.claim
+                        OR OLD.probability != NEW.probability
+                        OR OLD.horizon != NEW.horizon
+                        OR OLD.resolution_rule_json != NEW.resolution_rule_json
+                        OR OLD.evidence_mode != NEW.evidence_mode
+                        OR (OLD.predictor_id IS NOT NULL AND OLD.predictor_id != NEW.predictor_id)
+                        OR (OLD.predictor_version IS NOT NULL AND OLD.predictor_version != NEW.predictor_version)
+                        OR OLD.created_at != NEW.created_at
+                    BEGIN
+                        SELECT RAISE(ABORT, 'prediction fields are immutable');
+                    END;
+                CREATE TABLE IF NOT EXISTS signal_observations (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    world_id TEXT NOT NULL,
+                    signal_id TEXT NOT NULL,
+                    entity_ref TEXT,
+                    schema TEXT NOT NULL,
+                    value_json TEXT NOT NULL,
+                    value_type TEXT NOT NULL,
+                    unit TEXT,
+                    observed_at TEXT NOT NULL,
+                    source_json TEXT NOT NULL,
+                    metadata_json TEXT,
+                    recorded_at TEXT NOT NULL,
+                    observation_hash TEXT
+                );
+                CREATE UNIQUE INDEX IF NOT EXISTS idx_signal_obs_hash
+                    ON signal_observations(observation_hash);
+                CREATE INDEX IF NOT EXISTS idx_signal_obs_world_signal
+                    ON signal_observations(world_id, signal_id, observed_at);
+                CREATE INDEX IF NOT EXISTS idx_signal_obs_entity
+                    ON signal_observations(entity_ref, signal_id, observed_at);
                 """
             )
+            # Migration: add observation_hash to existing signal_observations
+            try:
+                connection.execute(
+                    "ALTER TABLE signal_observations ADD COLUMN observation_hash TEXT"
+                )
+            except sqlite3.OperationalError:
+                pass  # column already exists
+            # Backfill hashes for existing rows without one
+            rows = connection.execute(
+                "SELECT id, world_id, signal_id, entity_ref, observed_at, value_json "
+                "FROM signal_observations WHERE observation_hash IS NULL"
+            ).fetchall()
+            for row in rows:
+                entity_part = row["entity_ref"] if row["entity_ref"] is not None else ""
+                payload = (
+                    f"{row['world_id']}\x00{row['signal_id']}\x00"
+                    f"{entity_part}\x00{row['observed_at']}\x00{row['value_json']}"
+                )
+                obs_hash = hashlib.sha256(payload.encode("utf-8")).hexdigest()
+                connection.execute(
+                    "UPDATE signal_observations SET observation_hash=? WHERE id=?",
+                    (obs_hash, row["id"]),
+                )
+            # Create unique index if not exists (safe for existing data)
+            connection.execute(
+                "CREATE UNIQUE INDEX IF NOT EXISTS idx_signal_obs_hash "
+                "ON signal_observations(observation_hash)"
+            )
+            # Migration: add prediction provenance columns
+            for col in ("world_id", "subject_ref", "model_id", "predictor_type",
+                        "signals_used_json", "patterns_used_json", "reasoning_summary"):
+                try:
+                    connection.execute(f"ALTER TABLE predictions ADD COLUMN {col} TEXT")
+                except sqlite3.OperationalError:
+                    pass  # column already exists
+            # Migration: add evidence_mode for retrospective predictions
+            try:
+                connection.execute(
+                    "ALTER TABLE predictions ADD COLUMN evidence_mode TEXT NOT NULL DEFAULT 'prospective'"
+                )
+            except sqlite3.OperationalError:
+                pass  # column already exists
+            # Create index on evidence_mode (safe for existing data)
+            connection.execute(
+                "CREATE INDEX IF NOT EXISTS idx_predictions_evidence "
+                "ON predictions(evidence_mode, status)"
+            )
+            # Migration: add candidate_hash for idempotency
+            try:
+                connection.execute("ALTER TABLE predictions ADD COLUMN candidate_hash TEXT")
+            except sqlite3.OperationalError:
+                pass  # column already exists
+            # Create unique index on candidate_hash (safe for existing data)
+            connection.execute(
+                "CREATE UNIQUE INDEX IF NOT EXISTS idx_predictions_candidate_hash "
+                "ON predictions(candidate_hash)"
+            )
+            # Migration: add snapshot_hash for integrity verification
+            try:
+                connection.execute(
+                    "ALTER TABLE predictions ADD COLUMN snapshot_hash TEXT NOT NULL DEFAULT ''"
+                )
+            except sqlite3.OperationalError:
+                pass  # column already exists
+            # Migration: add predictor_id and predictor_version
+            for col in ("predictor_id", "predictor_version"):
+                try:
+                    connection.execute(f"ALTER TABLE predictions ADD COLUMN {col} TEXT")
+                except sqlite3.OperationalError:
+                    pass  # column already exists
+            # Backfill snapshot_hash for existing predictions
+            rows = connection.execute(
+                "SELECT p.id, m.content FROM predictions p "
+                "JOIN memory_items m ON p.snapshot_memory_id = m.id "
+                "WHERE p.snapshot_hash IS NULL OR p.snapshot_hash = ''"
+            ).fetchall()
+            for row in rows:
+                content_hash = hashlib.sha256(
+                    row["content"].encode("utf-8")
+                ).hexdigest()
+                connection.execute(
+                    "UPDATE predictions SET snapshot_hash=? WHERE id=?",
+                    (content_hash, row["id"]),
+                )
 
     def add_memory(
         self,
@@ -327,11 +505,756 @@ class MemoryStore:
                  event["request_id"], stable_json(event.get("metadata", {}))),
             )
 
+    # -- Epistemic Loop ---------------------------------------------------
+
+    def create_snapshot_memory(
+        self,
+        *,
+        domain: str,
+        subject: str,
+        state: dict[str, Any],
+        sources: list[dict[str, Any]] | None = None,
+        metadata: dict[str, Any] | None = None,
+    ) -> str:
+        """Create a model_snapshot memory item. Returns the memory item ID."""
+        return self.add_memory(
+            namespace="omnisvera",
+            item_type="model_snapshot",
+            title=f"{domain} — {subject}",
+            content=stable_json(state),
+            status="immutable",
+            confidence=1.0,
+            owner="omnisvera",
+            classification="internal",
+            metadata={**(metadata or {}), "domain": domain, "subject": subject},
+            sources=sources or [],
+        )
+
+    def create_prediction(
+        self,
+        *,
+        domain: str,
+        snapshot_memory_id: str,
+        claim: str,
+        probability: float,
+        horizon: str,
+        resolution_rule: dict[str, Any],
+        evidence_mode: str = "prospective",
+        predictor_id: str | None = None,
+        predictor_version: str | None = None,
+        world_id: str | None = None,
+        subject_ref: str | None = None,
+        model_id: str | None = None,
+        predictor_type: str | None = None,
+        signals_used: list[dict[str, Any]] | None = None,
+        patterns_used: list[dict[str, Any]] | None = None,
+        reasoning_summary: str | None = None,
+        candidate_hash: str | None = None,
+    ) -> int:
+        if not 0.0 <= probability <= 1.0:
+            raise ValueError("probability must be between 0.0 and 1.0")
+        if evidence_mode not in ("prospective", "retrospective"):
+            raise ValueError("evidence_mode must be 'prospective' or 'retrospective'")
+        now = utc_now()
+        with closing(self._connect()) as connection, connection:
+            snapshot = connection.execute(
+                "SELECT id, content FROM memory_items WHERE id=?", (snapshot_memory_id,),
+            ).fetchone()
+            if not snapshot:
+                raise ValueError(f"snapshot not found: {snapshot_memory_id}")
+            snapshot_hash = hashlib.sha256(
+                snapshot["content"].encode("utf-8")
+            ).hexdigest()
+            cursor = connection.execute(
+                "INSERT INTO predictions "
+                "(domain, snapshot_memory_id, snapshot_hash, claim, probability, "
+                "horizon, resolution_rule_json, evidence_mode, predictor_id, predictor_version, "
+                "status, created_at, world_id, subject_ref, model_id, predictor_type, "
+                "signals_used_json, patterns_used_json, reasoning_summary, candidate_hash) "
+                "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                (domain, snapshot_memory_id, snapshot_hash, claim, probability, horizon,
+                 stable_json(resolution_rule), evidence_mode, predictor_id, predictor_version,
+                 "open", now, world_id, subject_ref, model_id, predictor_type,
+                 stable_json(signals_used) if signals_used else None,
+                 stable_json(patterns_used) if patterns_used else None,
+                 reasoning_summary, candidate_hash),
+            )
+            return cursor.lastrowid  # type: ignore[return-value]
+
+    def get_prediction(self, prediction_id: int) -> dict[str, Any] | None:
+        with closing(self._connect()) as connection, connection:
+            row = connection.execute(
+                "SELECT * FROM predictions WHERE id=?", (prediction_id,),
+            ).fetchone()
+            if not row:
+                return None
+            result = dict(row)
+            result["resolution_rule"] = json.loads(result.pop("resolution_rule_json"))
+            # Verify snapshot integrity
+            snapshot = connection.execute(
+                "SELECT content FROM memory_items WHERE id=?",
+                (result["snapshot_memory_id"],),
+            ).fetchone()
+            if snapshot:
+                current_hash = hashlib.sha256(
+                    snapshot["content"].encode("utf-8")
+                ).hexdigest()
+                result["snapshot_intact"] = current_hash == result["snapshot_hash"]
+            else:
+                result["snapshot_intact"] = False
+            resolution = connection.execute(
+                "SELECT * FROM prediction_resolutions WHERE prediction_id=?",
+                (prediction_id,),
+            ).fetchone()
+            if resolution:
+                result["resolution"] = dict(resolution)
+            return result
+
+    def find_prediction_by_hash(self, candidate_hash: str) -> int | None:
+        """Find existing prediction by candidate_hash for idempotency.
+
+        Returns prediction_id if found, None otherwise.
+        """
+        with closing(self._connect()) as connection:
+            row = connection.execute(
+                "SELECT id FROM predictions WHERE candidate_hash=?",
+                (candidate_hash,),
+            ).fetchone()
+            return row["id"] if row else None
+
+    def list_predictions(
+        self,
+        *,
+        domain: str | None = None,
+        status: str | None = None,
+        limit: int = 20,
+    ) -> list[dict[str, Any]]:
+        safe_limit = max(1, min(int(limit), 100))
+        clauses = []
+        params: list[Any] = []
+        if domain:
+            clauses.append("domain=?")
+            params.append(domain)
+        if status:
+            clauses.append("status=?")
+            params.append(status)
+        where = f" WHERE {' AND '.join(clauses)}" if clauses else ""
+        params.append(safe_limit)
+        with closing(self._connect()) as connection:
+            rows = connection.execute(
+                f"SELECT id FROM predictions{where} ORDER BY created_at DESC, id LIMIT ?",
+                params,
+            ).fetchall()
+        return [p for row in rows if (p := self.get_prediction(int(row["id"]))) is not None]
+
+    def resolve_prediction(
+        self,
+        prediction_id: int,
+        *,
+        observed_value: float | None = None,
+        outcome: int,
+        sources: list[str] | None = None,
+        notes: str | None = None,
+    ) -> dict[str, Any]:
+        if outcome not in (0, 1):
+            raise ValueError("outcome must be 0 or 1")
+        now = utc_now()
+        with closing(self._connect()) as connection, connection:
+            row = connection.execute(
+                "SELECT id, status, probability, snapshot_memory_id, snapshot_hash "
+                "FROM predictions WHERE id=?",
+                (prediction_id,),
+            ).fetchone()
+            if not row:
+                raise ValueError(f"prediction not found: {prediction_id}")
+            if row["status"] != "open":
+                raise ValueError(
+                    f"prediction {prediction_id} already {row['status']}, cannot resolve"
+                )
+            # Verify snapshot integrity before resolution
+            snapshot = connection.execute(
+                "SELECT content FROM memory_items WHERE id=?",
+                (row["snapshot_memory_id"],),
+            ).fetchone()
+            if snapshot:
+                current_hash = hashlib.sha256(
+                    snapshot["content"].encode("utf-8")
+                ).hexdigest()
+                if current_hash != row["snapshot_hash"]:
+                    raise ValueError("snapshot integrity mismatch")
+            probability = float(row["probability"])
+            calibration_score = round((probability - outcome) ** 2, 8)
+            connection.execute(
+                "INSERT INTO prediction_resolutions "
+                "(prediction_id, resolved_at, observed_value, outcome, calibration_score, "
+                "sources_json, notes, created_at) VALUES (?,?,?,?,?,?,?,?)",
+                (prediction_id, now, observed_value, outcome, calibration_score,
+                 stable_json(sources or []), notes, now),
+            )
+            connection.execute(
+                "UPDATE predictions SET status='resolved' WHERE id=?",
+                (prediction_id,),
+            )
+        return self.get_prediction(prediction_id)  # type: ignore[return-value]
+
+    def calibration_summary(
+        self,
+        *,
+        domain: str | None = None,
+        evidence_mode: str = "prospective",
+    ) -> dict[str, Any]:
+        if evidence_mode not in ("prospective", "retrospective", "all"):
+            raise ValueError("evidence_mode must be 'prospective', 'retrospective', or 'all'")
+        with closing(self._connect()) as connection:
+            if evidence_mode == "all":
+                if domain:
+                    row = connection.execute(
+                        "SELECT COUNT(*) as count, AVG(r.calibration_score) as mean_brier, "
+                        "p.evidence_mode "
+                        "FROM predictions p "
+                        "JOIN prediction_resolutions r ON r.prediction_id = p.id "
+                        "WHERE p.domain=? "
+                        "GROUP BY p.evidence_mode",
+                        (domain,),
+                    ).fetchall()
+                else:
+                    row = connection.execute(
+                        "SELECT COUNT(*) as count, AVG(r.calibration_score) as mean_brier, "
+                        "p.evidence_mode "
+                        "FROM predictions p "
+                        "JOIN prediction_resolutions r ON r.prediction_id = p.id "
+                        "GROUP BY p.evidence_mode",
+                    ).fetchall()
+                breakdown = {}
+                total_count = 0
+                total_brier_sum = 0.0
+                for r in row:
+                    mode = r["evidence_mode"]
+                    breakdown[mode] = {
+                        "count": r["count"],
+                        "mean_brier": round(r["mean_brier"], 8) if r["mean_brier"] is not None else None,
+                    }
+                    total_count += r["count"]
+                    if r["mean_brier"] is not None:
+                        total_brier_sum += r["mean_brier"] * r["count"]
+                return {
+                    "domain": domain,
+                    "evidence_mode": "all",
+                    "count": total_count,
+                    "mean_brier": round(total_brier_sum / total_count, 8) if total_count else None,
+                    "breakdown": breakdown,
+                }
+            else:
+                if domain:
+                    row = connection.execute(
+                        "SELECT COUNT(*) as count, AVG(r.calibration_score) as mean_brier "
+                        "FROM predictions p "
+                        "JOIN prediction_resolutions r ON r.prediction_id = p.id "
+                        "WHERE p.domain=? AND p.evidence_mode=?",
+                        (domain, evidence_mode),
+                    ).fetchone()
+                else:
+                    row = connection.execute(
+                        "SELECT COUNT(*) as count, AVG(r.calibration_score) as mean_brier "
+                        "FROM predictions p "
+                        "JOIN prediction_resolutions r ON r.prediction_id = p.id "
+                        "WHERE p.evidence_mode=?",
+                        (evidence_mode,),
+                    ).fetchone()
+            return {
+                "domain": domain,
+                "evidence_mode": evidence_mode,
+                "count": row["count"],
+                "mean_brier": round(row["mean_brier"], 8) if row["mean_brier"] is not None else None,
+            }
+
+    def get_due_predictions(
+        self,
+        *,
+        now: str | None = None,
+        domain: str | None = None,
+        limit: int = 50,
+    ) -> list[dict[str, Any]]:
+        """Find open predictions whose horizon has passed (due for resolution)."""
+        now = now or utc_now()
+        safe_limit = max(1, min(int(limit), 200))
+        clauses = ["status='open'", "horizon<=?"]
+        params: list[Any] = [now]
+        if domain:
+            clauses.append("domain=?")
+            params.append(domain)
+        params.append(safe_limit)
+        with closing(self._connect()) as connection:
+            rows = connection.execute(
+                f"SELECT id FROM predictions WHERE {' AND '.join(clauses)} "
+                "ORDER BY horizon ASC, id LIMIT ?",
+                params,
+            ).fetchall()
+        return [p for row in rows if (p := self.get_prediction(int(row["id"]))) is not None]
+
+    def void_prediction(self, prediction_id: int, *, notes: str | None = None) -> dict[str, Any]:
+        """Mark a prediction as void (cancelled/invalid) without Brier score."""
+        now = utc_now()
+        with closing(self._connect()) as connection, connection:
+            row = connection.execute(
+                "SELECT id, status FROM predictions WHERE id=?",
+                (prediction_id,),
+            ).fetchone()
+            if not row:
+                raise ValueError(f"prediction not found: {prediction_id}")
+            if row["status"] != "open":
+                raise ValueError(
+                    f"prediction {prediction_id} already {row['status']}, cannot void"
+                )
+            connection.execute(
+                "UPDATE predictions SET status='expired' WHERE id=?",
+                (prediction_id,),
+            )
+            # Record void resolution (no Brier)
+            connection.execute(
+                "INSERT INTO prediction_resolutions "
+                "(prediction_id, resolved_at, observed_value, outcome, calibration_score, "
+                "sources_json, notes, created_at) VALUES (?,?,NULL,?,NULL,?,?,?)",
+                (prediction_id, now, None, stable_json(["void"]), notes or "voided", now),
+            )
+        return self.get_prediction(prediction_id)  # type: ignore[return-value]
+
+    # -- Signal History --------------------------------------------------------
+
+    def capture_signal(
+        self,
+        *,
+        world_id: str,
+        signal_id: str,
+        entity_ref: str | None,
+        schema: str,
+        value: Any,
+        value_type: str,
+        unit: str | None,
+        observed_at: str,
+        source: dict[str, Any],
+        metadata: dict[str, Any] | None = None,
+    ) -> dict[str, Any]:
+        """Persist a single signal observation. Idempotent.
+
+        Returns:
+            {"status": "recorded", "id": <row_id>}
+            or {"status": "duplicate", "id": <existing_row_id>}
+        """
+        observation_hash = self._compute_observation_hash(
+            world_id, signal_id, entity_ref, observed_at, value,
+        )
+        recorded_at = utc_now()
+        with closing(self._connect()) as connection, connection:
+            # Check if hash already exists
+            existing = connection.execute(
+                "SELECT id FROM signal_observations WHERE observation_hash=?",
+                (observation_hash,),
+            ).fetchone()
+            if existing is not None:
+                return {"status": "duplicate", "id": existing["id"]}
+            try:
+                cursor = connection.execute(
+                    "INSERT INTO signal_observations "
+                    "(world_id, signal_id, entity_ref, schema, value_json, value_type, "
+                    "unit, observed_at, source_json, metadata_json, recorded_at, observation_hash) "
+                    "VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
+                    (
+                        world_id,
+                        signal_id,
+                        entity_ref,
+                        schema,
+                        stable_json(value),
+                        value_type,
+                        unit,
+                        observed_at,
+                        stable_json(source),
+                        stable_json(metadata or {}),
+                        recorded_at,
+                        observation_hash,
+                    ),
+                )
+                return {"status": "recorded", "id": cursor.lastrowid or 0}
+            except sqlite3.IntegrityError:
+                # Race condition: another connection inserted the same hash
+                existing = connection.execute(
+                    "SELECT id FROM signal_observations WHERE observation_hash=?",
+                    (observation_hash,),
+                ).fetchone()
+                return {"status": "duplicate", "id": existing["id"] if existing else 0}
+
+    def capture_signals(self, signals: list[dict[str, Any]]) -> dict[str, Any]:
+        """Persist a batch of WorldSignal dicts. Idempotent.
+
+        Returns summary: observed, recorded, duplicates_ignored, world_id.
+        """
+        recorded = 0
+        duplicates = 0
+        world_id = ""
+        for sig in signals:
+            world_id = sig.get("world_id", "")
+            result = self.capture_signal(
+                world_id=world_id,
+                signal_id=sig.get("signal_id", ""),
+                entity_ref=sig.get("entity_ref"),
+                schema=sig.get("schema", ""),
+                value=sig.get("value"),
+                value_type=sig.get("value_type", ""),
+                unit=sig.get("unit"),
+                observed_at=sig.get("observed_at", ""),
+                source=sig.get("source", {}),
+                metadata=sig.get("metadata"),
+            )
+            if result["status"] == "recorded":
+                recorded += 1
+            else:
+                duplicates += 1
+        return {
+            "observed": len(signals),
+            "recorded": recorded,
+            "duplicates_ignored": duplicates,
+            "world_id": world_id,
+        }
+
+    def signal_history(
+        self,
+        world_id: str,
+        signal_id: str,
+        entity_ref: str | None = None,
+        since: str | None = None,
+        until: str | None = None,
+        limit: int = 100,
+    ) -> list[dict[str, Any]]:
+        """Query signal observations ordered by observed_at ascending."""
+        query = (
+            "SELECT id, world_id, signal_id, entity_ref, schema, "
+            "value_json, value_type, unit, observed_at, source_json, "
+            "metadata_json, recorded_at "
+            "FROM signal_observations "
+            "WHERE world_id=? AND signal_id=?"
+        )
+        params: list[Any] = [world_id, signal_id]
+
+        if entity_ref is not None:
+            query += " AND entity_ref=?"
+            params.append(entity_ref)
+        if since is not None:
+            query += " AND observed_at>=?"
+            params.append(since)
+        if until is not None:
+            query += " AND observed_at<=?"
+            params.append(until)
+
+        query += " ORDER BY observed_at ASC LIMIT ?"
+        params.append(limit)
+
+        with closing(self._connect()) as connection:
+            rows = connection.execute(query, params).fetchall()
+            results = []
+            for row in rows:
+                results.append({
+                    "id": row["id"],
+                    "world_id": row["world_id"],
+                    "signal_id": row["signal_id"],
+                    "entity_ref": row["entity_ref"],
+                    "schema": row["schema"],
+                    "value": json.loads(row["value_json"]),
+                    "value_type": row["value_type"],
+                    "unit": row["unit"],
+                    "observed_at": row["observed_at"],
+                    "source": json.loads(row["source_json"]),
+                    "metadata": json.loads(row["metadata_json"]) if row["metadata_json"] else {},
+                    "recorded_at": row["recorded_at"],
+                })
+            return results
+
+    def signal_changes(
+        self,
+        world_id: str,
+        signal_id: str,
+        entity_ref: str | None = None,
+        limit: int = 100,
+    ) -> list[dict[str, Any]]:
+        """Detect changes between consecutive signal observations.
+
+        Returns list of SignalChange dicts comparing each observation
+        to its predecessor.
+        """
+        history = self.signal_history(world_id, signal_id, entity_ref, limit=limit)
+        if len(history) < 2:
+            return []
+
+        changes = []
+        for i in range(1, len(history)):
+            prev = history[i - 1]
+            curr = history[i]
+            prev_val = prev["value"]
+            curr_val = curr["value"]
+
+            if prev_val == curr_val:
+                change_type = "unchanged"
+                delta = None
+                delta_percent = None
+            elif prev_val is None and curr_val is not None:
+                change_type = "appeared"
+                delta = None
+                delta_percent = None
+            elif prev_val is not None and curr_val is None:
+                change_type = "disappeared"
+                delta = None
+                delta_percent = None
+            else:
+                change_type = "changed"
+                delta = None
+                delta_percent = None
+                # Calculate numeric delta when valid
+                if isinstance(prev_val, (int, float)) and isinstance(curr_val, (int, float)):
+                    delta = curr_val - prev_val
+                    if prev_val != 0:
+                        delta_percent = round((delta / abs(prev_val)) * 100, 2)
+
+            changes.append({
+                "world_id": world_id,
+                "signal_id": signal_id,
+                "entity_ref": entity_ref,
+                "previous_value": prev_val,
+                "current_value": curr_val,
+                "previous_observed_at": prev["observed_at"],
+                "current_observed_at": curr["observed_at"],
+                "change_type": change_type,
+                "delta": delta,
+                "delta_percent": delta_percent,
+            })
+
+        return changes
+
+    # -- Pattern Detection -----------------------------------------------------
+
+    def signal_patterns(
+        self,
+        world_id: str,
+        signal_id: str,
+        entity_ref: str | None = None,
+        since: str | None = None,
+        until: str | None = None,
+        pattern_type: str | None = None,
+        limit: int = 100,
+    ) -> list[dict[str, Any]]:
+        """Detect patterns in signal history. Derived on demand, not persisted.
+
+        Returns list of SignalPattern dicts.
+        """
+        history = self.signal_history(world_id, signal_id, entity_ref, since, until, limit)
+        patterns: list[dict[str, Any]] = []
+
+        if pattern_type is None or pattern_type == "trend":
+            trend = self._detect_trend(history)
+            if trend is not None:
+                patterns.append(trend)
+
+        if pattern_type is None or pattern_type == "anomaly":
+            anomalies = self._detect_anomalies(history)
+            patterns.extend(anomalies)
+
+        return patterns
+
+    def signals_for_world(
+        self,
+        world_id: str,
+        limit: int = 500,
+    ) -> list[dict[str, Any]]:
+        """Return all signal observations for a world, ordered by observed_at ascending."""
+        query = (
+            "SELECT id, world_id, signal_id, entity_ref, schema, "
+            "value_json, value_type, unit, observed_at, source_json, "
+            "metadata_json, recorded_at "
+            "FROM signal_observations "
+            "WHERE world_id=? "
+            "ORDER BY observed_at ASC LIMIT ?"
+        )
+        with closing(self._connect()) as connection:
+            rows = connection.execute(query, (world_id, limit)).fetchall()
+            return [
+                {
+                    "id": row["id"],
+                    "world_id": row["world_id"],
+                    "signal_id": row["signal_id"],
+                    "entity_ref": row["entity_ref"],
+                    "schema": row["schema"],
+                    "value": json.loads(row["value_json"]),
+                    "value_type": row["value_type"],
+                    "unit": row["unit"],
+                    "observed_at": row["observed_at"],
+                    "source": json.loads(row["source_json"]),
+                    "metadata": json.loads(row["metadata_json"]) if row["metadata_json"] else {},
+                    "recorded_at": row["recorded_at"],
+                }
+                for row in rows
+            ]
+
+    def patterns_for_world(
+        self,
+        world_id: str,
+        limit: int = 500,
+    ) -> list[dict[str, Any]]:
+        """Return all signal patterns for a world, derived on demand."""
+        signals = self.signals_for_world(world_id, limit=limit)
+        # Group by (entity_ref, signal_id) to compute patterns per signal
+        seen: set[tuple[str | None, str]] = set()
+        patterns: list[dict[str, Any]] = []
+        for sig in signals:
+            key = (sig.get("entity_ref"), sig.get("signal_id", ""))
+            if key in seen:
+                continue
+            seen.add(key)
+            sig_patterns = self.signal_patterns(
+                world_id=world_id,
+                signal_id=sig["signal_id"],
+                entity_ref=sig.get("entity_ref"),
+            )
+            patterns.extend(sig_patterns)
+        return patterns
+
+    def _detect_trend(self, history: list[dict[str, Any]]) -> dict[str, Any] | None:
+        """Detect trend in numeric signal history.
+
+        Requires >= 2 observations with numeric values.
+        Method: linear regression slope + structural classification.
+        """
+        numeric = [(h["observed_at"], h["value"], h["id"])
+                    for h in history
+                    if isinstance(h["value"], (int, float))]
+
+        if len(numeric) < 2:
+            return None
+
+        values = [v for _, v, _ in numeric]
+        n = len(values)
+
+        first_value = values[0]
+        last_value = values[-1]
+        abs_change = last_value - first_value
+        pct_change = (abs_change / abs(first_value) * 100) if first_value != 0 else None
+        mean_val = sum(values) / n
+        min_val = min(values)
+        max_val = max(values)
+
+        # Slope via least squares
+        x_mean = (n - 1) / 2
+        y_mean = mean_val
+        numerator = sum((i - x_mean) * (values[i] - y_mean) for i in range(n))
+        denominator = sum((i - x_mean) ** 2 for i in range(n))
+        slope = numerator / denominator if denominator != 0 else 0.0
+
+        # Structural classification
+        threshold = abs(mean_val) * 0.01 if mean_val != 0 else 0.001
+        if slope > threshold:
+            classification = "increasing"
+        elif slope < -threshold:
+            classification = "decreasing"
+        else:
+            classification = "stable"
+
+        observation_ids = [oid for _, _, oid in numeric]
+
+        return {
+            "world_id": history[0]["world_id"] if history else "",
+            "signal_id": history[0]["signal_id"] if history else "",
+            "entity_ref": history[0].get("entity_ref"),
+            "pattern_type": "trend",
+            "window_start": numeric[0][0],
+            "window_end": numeric[-1][0],
+            "observation_count": n,
+            "metrics": {
+                "first_value": first_value,
+                "last_value": last_value,
+                "absolute_change": round(abs_change, 8),
+                "percent_change": round(pct_change, 2) if pct_change is not None else None,
+                "mean": round(mean_val, 8),
+                "min": min_val,
+                "max": max_val,
+                "slope": round(slope, 8),
+                "classification": classification,
+            },
+            "confidence": None,
+            "method": "linear_regression",
+            "method_version": "1.0",
+            "provenance": {
+                "observation_ids": observation_ids,
+                "input_count": n,
+                "numeric_values": values,
+            },
+        }
+
+    def _detect_anomalies(self, history: list[dict[str, Any]]) -> list[dict[str, Any]]:
+        """Detect anomalies using z-score method.
+
+        For each observation, compute z-score against all PREVIOUS observations.
+        Requires >= 5 prior observations for baseline.
+        An observation is anomalous if |z-score| > 2.0.
+        """
+        numeric = [(h["observed_at"], h["value"], h["id"])
+                    for h in history
+                    if isinstance(h["value"], (int, float))]
+
+        MIN_BASELINE = 5
+        Z_THRESHOLD = 2.0
+        anomalies: list[dict[str, Any]] = []
+
+        for i in range(MIN_BASELINE, len(numeric)):
+            candidate_at, candidate_val, candidate_id = numeric[i]
+            baseline_vals = [v for _, v, _ in numeric[:i]]
+
+            mean_val = sum(baseline_vals) / len(baseline_vals)
+            variance = sum((v - mean_val) ** 2 for v in baseline_vals) / len(baseline_vals)
+            std_val = variance ** 0.5
+
+            if std_val == 0:
+                # Baseline is constant; any different value is infinitely anomalous
+                z_score = float("inf") if candidate_val != mean_val else 0.0
+            else:
+                z_score = (candidate_val - mean_val) / std_val
+
+            is_anomalous = abs(z_score) > Z_THRESHOLD
+
+            if is_anomalous:
+                anomalies.append({
+                    "world_id": history[0]["world_id"] if history else "",
+                    "signal_id": history[0]["signal_id"] if history else "",
+                    "entity_ref": history[0].get("entity_ref"),
+                    "pattern_type": "anomaly",
+                    "window_start": numeric[0][0],
+                    "window_end": candidate_at,
+                    "observation_count": i + 1,
+                    "metrics": {
+                        "value": candidate_val,
+                        "baseline_mean": round(mean_val, 8),
+                        "baseline_std": round(std_val, 8),
+                        "z_score": round(z_score, 4),
+                        "threshold": Z_THRESHOLD,
+                        "anomalous": True,
+                    },
+                    "confidence": None,
+                    "method": "z_score",
+                    "method_version": "1.0",
+                    "provenance": {
+                        "observation_ids": [oid for _, _, oid in numeric[:i + 1]],
+                        "candidate_id": candidate_id,
+                        "baseline_count": i,
+                        "candidate_index": i,
+                    },
+                })
+
+        return anomalies
+
     def stats(self) -> dict[str, Any]:
         with closing(self._connect()) as connection:
             counts = {
                 table: connection.execute(f"SELECT COUNT(*) FROM {table}").fetchone()[0]
-                for table in ("memory_items", "memory_sources", "project_states", "audit_events")
+                for table in (
+                    "memory_items", "memory_sources", "project_states", "audit_events",
+                    "predictions", "prediction_resolutions", "signal_observations",
+                )
             }
         return {"path": str(self.path), "counts": counts}
 

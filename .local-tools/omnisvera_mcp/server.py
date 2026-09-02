@@ -30,6 +30,60 @@ from .bootstrap import generate_bootstrap
 ContextFactory = Callable[[], CallContext]
 
 
+def _build_world_model(
+    worlds: WorldRegistry,
+    model_builders: WorldModelRegistry,
+    memory: MemoryStore,
+    args: dict,
+) -> dict:
+    """Build a world model using the WorldModelRegistry and persisted signals."""
+    world_id = str(args.get("world_id", ""))
+    builder_id = str(args.get("builder_id", "core.state-vector"))
+    entity_ref = args.get("entity_ref")
+    signal_ids = args.get("signal_ids")
+    since = args.get("since")
+    until = args.get("until")
+
+    if not world_id:
+        raise ValueError("world_id is required")
+
+    # Verify world exists
+    worlds.get(world_id)
+
+    # Get builder
+    builder = model_builders.get(builder_id)
+
+    # Get signals from memory
+    signals = memory.signals_for_world(world_id, limit=500)
+
+    # Filter by entity_ref if specified
+    if entity_ref:
+        signals = [s for s in signals if s.get("entity_ref") == entity_ref]
+
+    # Filter by signal_ids if specified
+    if signal_ids:
+        sig_id_set = set(signal_ids)
+        signals = [s for s in signals if s.get("signal_id") in sig_id_set]
+
+    # Filter by time range if specified
+    if since:
+        signals = [s for s in signals if s.get("observed_at", "") >= since]
+    if until:
+        signals = [s for s in signals if s.get("observed_at", "") <= until]
+
+    # Get patterns
+    patterns = memory.patterns_for_world(world_id, limit=500)
+
+    # Build model
+    model = builder.build(
+        world_id=world_id,
+        signals=signals,
+        patterns=patterns,
+        query=args,
+    )
+    return model.as_dict()
+
+
 @dataclass(frozen=True, slots=True)
 class ToolBindings:
     get_handoff: Callable[[], str]
@@ -77,7 +131,7 @@ def register_foundation_tools(
     model_builders = WorldModelRegistry()
     model_builders.register(CoreStateVectorBuilder())
     try:
-        football_adapter = FootballWorldAdapter(root)
+        football_adapter = FootballWorldAdapter()
         worlds.register(football_adapter)
     except Exception:
         pass  # Football world not available
@@ -293,7 +347,7 @@ def register_foundation_tools(
         ),
         RegisteredTool(
             "world.model",
-            lambda _ctx, args: json.dumps(worlds.get(str(args.get("world_id", ""))).model().as_dict(), ensure_ascii=False, indent=2),
+            lambda _ctx, args: json.dumps(_build_world_model(worlds, model_builders, memory, args), ensure_ascii=False, indent=2),
             "read",
             "world://model",
             frozenset({"world.read"}),

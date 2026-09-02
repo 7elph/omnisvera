@@ -175,6 +175,46 @@ class TestBridgeDispatch(unittest.TestCase):
             self.assertEqual(item["prediction_id"], 1)
             self.assertEqual(item["status"], "awaiting_evidence")
 
+    def test_world_describe_football(self):
+        """world.describe('football') must return provider 'FakeFootballDataProvider'."""
+        result = self.registry.invoke("world.describe", self.ctx, {"world_id": "football"})
+        data = json.loads(result)
+        self.assertEqual(data["world_id"], "football")
+        self.assertEqual(data["metadata"]["provider"], "FakeFootballDataProvider")
+
+    def test_world_observe_football(self):
+        """world.observe('football') must return a WorldObservation with schema 'football.match.v1'."""
+        result = self.registry.invoke("world.observe", self.ctx, {"world_id": "football"})
+        data = json.loads(result)
+        self.assertEqual(data["world_id"], "football")
+        self.assertEqual(data["schema"], "football.match.v1")
+        self.assertIn("matches", data["state"])
+
+    def test_world_signals_football(self):
+        """world.signals('football') must return structured signals."""
+        result = self.registry.invoke("world.signals", self.ctx, {"world_id": "football"})
+        data = json.loads(result)
+        self.assertIsInstance(data, list)
+        self.assertGreater(len(data), 0)
+        # Each signal must have required fields
+        for signal in data:
+            self.assertIn("signal_id", signal)
+            self.assertIn("world_id", signal)
+            self.assertEqual(signal["world_id"], "football")
+
+    def test_world_model_football(self):
+        """world.model('football') must use WorldModelRegistry, not adapter.model()."""
+        result = self.registry.invoke(
+            "world.model",
+            self.ctx,
+            {"world_id": "football", "builder_id": "core.state-vector"},
+        )
+        data = json.loads(result)
+        self.assertEqual(data["world_id"], "football")
+        self.assertEqual(data["builder_id"], "core.state-vector")
+        self.assertIn("state", data)
+        self.assertIn("signal_refs", data)
+
 
 class TestParityConsistency(unittest.TestCase):
     """Test that REMOTE_TOOL_NAMES, bridge tools, and registry are consistent."""
@@ -202,6 +242,49 @@ class TestParityConsistency(unittest.TestCase):
                 registry_tools,
                 f"Bridge tool {tool_name} not in CORE_REGISTRY",
             )
+
+    def test_football_adapter_not_path(self):
+        """FootballWorldAdapter must not receive a Path as provider."""
+        from omnisvera_mcp.adapters.football import FootballWorldAdapter
+        from pathlib import Path
+
+        # Should create with default FakeFootballDataProvider
+        adapter = FootballWorldAdapter()
+        self.assertNotIsInstance(adapter._provider, Path)
+        self.assertEqual(type(adapter._provider).__name__, "FakeFootballDataProvider")
+
+    def test_football_adapter_observe_works(self):
+        """FootballWorldAdapter.observe() must work without Path errors."""
+        from omnisvera_mcp.adapters.football import FootballWorldAdapter
+
+        adapter = FootballWorldAdapter()
+        obs = adapter.observe()
+        self.assertEqual(obs.world_id, "football")
+        self.assertEqual(obs.schema, "football.match.v1")
+        self.assertIn("matches", obs.state)
+
+    def test_world_model_no_adapter_model_call(self):
+        """world.model must not call adapter.model() — use WorldModelRegistry."""
+        import mcp_server
+        from omnisvera_mcp.core.context import CallContext
+
+        ctx = CallContext(
+            actor="test",
+            client="test",
+            transport="test",
+            scopes=frozenset({"world.read"}),
+            request_id="test",
+            project_id="test",
+        )
+
+        # This should NOT raise AttributeError about 'model' on adapter
+        result = mcp_server.CORE_REGISTRY.invoke(
+            "world.model",
+            ctx,
+            {"world_id": "football", "builder_id": "core.state-vector"},
+        )
+        data = json.loads(result)
+        self.assertEqual(data["builder_id"], "core.state-vector")
 
 
 if __name__ == "__main__":
