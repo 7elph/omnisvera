@@ -10,7 +10,8 @@ from mcp.server.fastmcp import FastMCP
 from .adapters.git import GitAdapter
 from .adapters.companion import CompanionAdapter
 from .adapters.vault import VaultAdapter
-from .adapters.football import FootballWorldAdapter
+from .adapters.football import FootballWorldAdapter, HttpFootballDataProvider
+from .adapters.crypto import CryptoWorldAdapter, CoinGeckoProvider
 from .core.context import CallContext
 from .core.handoff import HandoffService
 from .core.health import HealthService
@@ -130,11 +131,32 @@ def register_foundation_tools(
     worlds = WorldRegistry()
     model_builders = WorldModelRegistry()
     model_builders.register(CoreStateVectorBuilder())
+    
+    # Football world — real data from TheSportsDB
     try:
-        football_adapter = FootballWorldAdapter()
+        football_provider = HttpFootballDataProvider(
+            team_ids=[
+                "133604",  # Arsenal
+                "133616",  # Chelsea
+                "133608",  # Manchester City
+                "133614",  # Liverpool
+                "133594",  # Manchester United
+            ]
+        )
+        football_adapter = FootballWorldAdapter(provider=football_provider)
         worlds.register(football_adapter)
     except Exception:
         pass  # Football world not available
+    
+    # Crypto world — real data from CoinGecko
+    try:
+        crypto_provider = CoinGeckoProvider(
+            coin_ids=["bitcoin", "ethereum", "solana", "binancecoin"]
+        )
+        crypto_adapter = CryptoWorldAdapter(provider=crypto_provider)
+        worlds.register(crypto_adapter)
+    except Exception:
+        pass  # Crypto world not available
 
     def read_memory(_context: CallContext, arguments: dict) -> str:
         memory_id = str(arguments.get("memory_id", "")).strip()
