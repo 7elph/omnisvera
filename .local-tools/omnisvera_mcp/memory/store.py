@@ -188,6 +188,21 @@ class MemoryStore:
                     ON signal_observations(world_id, signal_id, observed_at);
                 CREATE INDEX IF NOT EXISTS idx_signal_obs_entity
                     ON signal_observations(entity_ref, signal_id, observed_at);
+                CREATE TABLE IF NOT EXISTS scheduler_runs (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    run_id TEXT NOT NULL,
+                    world_id TEXT NOT NULL,
+                    provider TEXT NOT NULL,
+                    run_started_at TEXT NOT NULL,
+                    run_finished_at TEXT NOT NULL,
+                    success INTEGER NOT NULL DEFAULT 1,
+                    signals_seen INTEGER NOT NULL DEFAULT 0,
+                    signals_changed INTEGER NOT NULL DEFAULT 0,
+                    signals_unchanged INTEGER NOT NULL DEFAULT 0,
+                    error TEXT
+                );
+                CREATE INDEX IF NOT EXISTS idx_scheduler_runs_world
+                    ON scheduler_runs(world_id, run_started_at);
                 """
             )
             # Migration: add observation_hash to existing signal_observations
@@ -821,6 +836,45 @@ class MemoryStore:
 
     # -- Signal History --------------------------------------------------------
 
+    def last_signal_value(
+        self,
+        world_id: str,
+        signal_id: str,
+        entity_ref: str | None = None,
+    ) -> dict[str, Any] | None:
+        """Return the most recent signal observation for a (world_id, signal_id, entity_ref) key.
+
+        Returns None if no observation exists.
+        """
+        with closing(self._connect()) as connection:
+            if entity_ref is not None:
+                row = connection.execute(
+                    "SELECT id, value_json, value_type, unit, observed_at, source_json, metadata_json "
+                    "FROM signal_observations "
+                    "WHERE world_id=? AND signal_id=? AND entity_ref=? "
+                    "ORDER BY observed_at DESC LIMIT 1",
+                    (world_id, signal_id, entity_ref),
+                ).fetchone()
+            else:
+                row = connection.execute(
+                    "SELECT id, value_json, value_type, unit, observed_at, source_json, metadata_json "
+                    "FROM signal_observations "
+                    "WHERE world_id=? AND signal_id=? AND entity_ref IS NULL "
+                    "ORDER BY observed_at DESC LIMIT 1",
+                    (world_id, signal_id),
+                ).fetchone()
+            if row is None:
+                return None
+            return {
+                "id": row["id"],
+                "value": json.loads(row["value_json"]),
+                "value_type": row["value_type"],
+                "unit": row["unit"],
+                "observed_at": row["observed_at"],
+                "source": json.loads(row["source_json"]),
+                "metadata": json.loads(row["metadata_json"]) if row["metadata_json"] else {},
+            }
+
     def capture_signal(
         self,
         *,
@@ -915,6 +969,104 @@ class MemoryStore:
             "duplicates_ignored": duplicates,
             "world_id": world_id,
         }
+
+    def _capture_scheduler_telemetry(
+        self,
+        *,
+        run_id: str,
+        world_id: str,
+        provider: str,
+        run_started_at: str,
+        run_finished_at: str,
+        success: bool,
+        signals_seen: int,
+        signals_changed: int,
+        signals_unchanged: int,
+        error: str | None = None,
+    ) -> None:
+        """Record scheduler operational telemetry (NOT a WorldSignal)."""
+        with closing(self._connect()) as connection, connection:
+            connection.execute(
+                "INSERT INTO scheduler_runs "
+                "(run_id, world_id, provider, run_started_at, run_finished_at, "
+                "success, signals_seen, signals_changed, signals_unchanged, error) "
+                "VALUES (?,?,?,?,?,?,?,?,?,?)",
+                (run_id, world_id, provider, run_started_at, run_finished_at,
+                 int(success), signals_seen, signals_changed, signals_unchanged, error),
+            )
+
+    def capture_signal_change_aware(
+        self,
+        *,
+        world_id: str,
+        signal_id: str,
+        entity_ref: str | None,
+        schema: str,
+        value: Any,
+        value_type: str,
+        unit: str | None,
+        observed_at: str,
+        source: dict[str, Any],
+        metadata: dict[str, Any] | None = None,
+    ) -> dict[str, Any]:
+        """Persist a signal observation only if the value changed from the last known value.
+
+        Compares with the most recent observation for this (world_id, signal_id, entity_ref) key.
+        If the value is semantically identical, returns {"status": "unchanged_skipped"}.
+        If different (or first observation), persists normally.
+
+        Returns:
+            {"status": "changed_recorded", "id": <row_id>}
+            {"status": "initial_recorded", "id": <row_id>}
+            {"status": "unchanged_skipped", "last_id": <existing_row_id>}
+            {"status": "duplicate", "id": <existing_row_id>}
+        """
+        last = self.last_signal_value(world_id, signal_id, entity_ref)
+
+        if last is not None:
+            # Compare values semantically
+            last_value = last["value"]
+            if self._values_equal(last_value, value):
+                return {"status": "unchanged_skipped", "last_id": last["id"]}
+
+        # Value changed or first observation — persist
+        result = self.capture_signal(
+            world_id=world_id,
+            signal_id=signal_id,
+            entity_ref=entity_ref,
+            schema=schema,
+            value=value,
+            value_type=value_type,
+            unit=unit,
+            observed_at=observed_at,
+            source=source,
+            metadata=metadata,
+        )
+        if result["status"] == "recorded":
+            status = "initial_recorded" if last is None else "changed_recorded"
+            return {"status": status, "id": result["id"]}
+        return result  # duplicate
+
+    @staticmethod
+    def _values_equal(a: Any, b: Any) -> bool:
+        """Semantic equality check for signal values.
+
+        Handles numeric tolerance for floats, and direct equality for others.
+        """
+        if a is None and b is None:
+            return True
+        if a is None or b is None:
+            return False
+        # Numeric comparison with tolerance
+        if isinstance(a, (int, float)) and isinstance(b, (int, float)):
+            if a == b:
+                return True
+            # Relative tolerance for large numbers (prices, market caps)
+            if a != 0:
+                return abs(a - b) / abs(a) < 1e-9
+            return abs(a - b) < 1e-9
+        # String/other comparison
+        return stable_json(a) == stable_json(b)
 
     def signal_history(
         self,
