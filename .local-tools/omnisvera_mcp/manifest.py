@@ -87,7 +87,12 @@ def generate_manifest(
         "get": "experience.get" in experience_names,
         "latest": "experience.latest" in experience_names,
         "history": "experience.history" in experience_names,
+        "update_status": "experience.update_status" in experience_names,
+        "pending_updates": "experience.pending_updates" in experience_names,
+        "process_pending": "experience.process_pending_updates" in experience_names,
         "persistence": "predictor_experiences (append-only, versioned, hash-verified)",
+        "update_ledger": "experience_update_events (durable, exactly-once, retryable)",
+        "update_runtime": "outcome → experience version (automatic, failure-isolated)",
     }
 
     # -- Model capabilities --
@@ -166,6 +171,8 @@ def generate_manifest(
             "Commit",
             "Resolution",
             "Score",
+            "Experience",
+            "ExperienceUpdate",
         ],
         "principles": [
             "Core does not interpret domain semantics",

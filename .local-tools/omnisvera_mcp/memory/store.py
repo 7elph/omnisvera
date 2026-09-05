@@ -231,6 +231,26 @@ class MemoryStore:
                     ON predictor_experiences(world_id, predictor_id, predictor_version, state_version);
                 CREATE INDEX IF NOT EXISTS idx_exp_latest
                     ON predictor_experiences(world_id, predictor_id, predictor_version);
+                CREATE TABLE IF NOT EXISTS experience_update_events (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    update_event_id TEXT NOT NULL UNIQUE,
+                    prediction_id INTEGER NOT NULL,
+                    resolution_id INTEGER,
+                    world_id TEXT NOT NULL,
+                    predictor_id TEXT NOT NULL,
+                    predictor_version TEXT NOT NULL,
+                    status TEXT NOT NULL CHECK(status IN ('pending','applied','failed','no_updater','missing_experience','integrity_failed')),
+                    attempt_count INTEGER NOT NULL DEFAULT 0,
+                    last_error TEXT,
+                    created_at TEXT NOT NULL,
+                    updated_at TEXT NOT NULL,
+                    applied_experience_id TEXT,
+                    applied_state_version INTEGER
+                );
+                CREATE UNIQUE INDEX IF NOT EXISTS idx_update_trigger
+                    ON experience_update_events(world_id, predictor_id, predictor_version, prediction_id);
+                CREATE INDEX IF NOT EXISTS idx_update_status
+                    ON experience_update_events(status, updated_at);
                 """
             )
             # Migration: add observation_hash to existing signal_observations
@@ -1845,6 +1865,116 @@ class MemoryStore:
                     })
             return out
 
+    # -- Experience update ledger (durable, exactly-once) --------------------
+
+    def experience_update_enqueue(
+        self,
+        *,
+        prediction_id: int,
+        world_id: str | None = None,
+        predictor_id: str | None = None,
+        predictor_version: str | None = None,
+        resolution_id: int | None = None,
+    ) -> dict[str, Any]:
+        """Idempotently create or return update event for a prediction resolution.
+
+        Caller should provide prediction_id; world/predictor derived from prediction if not given.
+        Returns event dict.
+        """
+        # Derive identities if not supplied
+        if world_id is None or predictor_id is None or predictor_version is None:
+            with closing(self._connect()) as conn:
+                pred = conn.execute("SELECT id, world_id, predictor_id, predictor_version FROM predictions WHERE id=?", (prediction_id,)).fetchone()
+                if not pred:
+                    raise ValueError(f"prediction not found: {prediction_id}")
+                world_id = world_id or pred["world_id"] or pred["domain"] or "unknown"
+                predictor_id = predictor_id or pred["predictor_id"]
+                predictor_version = predictor_version or pred["predictor_version"]
+                if not predictor_id or not predictor_version:
+                    raise ValueError(f"prediction {prediction_id} has no predictor identity")
+        # Derive resolution_id if not supplied
+        if resolution_id is None:
+            with closing(self._connect()) as conn:
+                res = conn.execute("SELECT id FROM prediction_resolutions WHERE prediction_id=?", (prediction_id,)).fetchone()
+                resolution_id = int(res["id"]) if res else None
+        now = utc_now()
+        with closing(self._connect()) as connection, connection:
+            # Try to find existing
+            existing = connection.execute(
+                "SELECT * FROM experience_update_events WHERE world_id=? AND predictor_id=? AND predictor_version=? AND prediction_id=?",
+                (world_id, predictor_id, predictor_version, prediction_id),
+            ).fetchone()
+            if existing:
+                return dict(existing)
+            # Insert pending (ignore if race)
+            event_id = f"upd-{uuid4().hex}"
+            connection.execute(
+                "INSERT OR IGNORE INTO experience_update_events "
+                "(update_event_id, prediction_id, resolution_id, world_id, predictor_id, predictor_version, status, attempt_count, created_at, updated_at) "
+                "VALUES (?,?,?,?,?,?,?, ?, ?, ?)",
+                (event_id, prediction_id, resolution_id, world_id, predictor_id, predictor_version, "pending", 0, now, now),
+            )
+            row = connection.execute(
+                "SELECT * FROM experience_update_events WHERE world_id=? AND predictor_id=? AND predictor_version=? AND prediction_id=?",
+                (world_id, predictor_id, predictor_version, prediction_id),
+            ).fetchone()
+            return dict(row) if row else {"update_event_id": event_id, "status": "pending"}
+
+    def experience_update_get(self, update_event_id: str) -> dict[str, Any] | None:
+        with closing(self._connect()) as conn:
+            row = conn.execute("SELECT * FROM experience_update_events WHERE update_event_id=?", (update_event_id,)).fetchone()
+            return dict(row) if row else None
+
+    def experience_update_get_by_prediction(self, prediction_id: int) -> dict[str, Any] | None:
+        with closing(self._connect()) as conn:
+            row = conn.execute("SELECT * FROM experience_update_events WHERE prediction_id=? ORDER BY id DESC LIMIT 1", (prediction_id,)).fetchone()
+            return dict(row) if row else None
+
+    def experience_update_list(
+        self,
+        *,
+        world_id: str | None = None,
+        status: str | None = None,
+        limit: int = 20,
+    ) -> list[dict[str, Any]]:
+        safe = max(1, min(int(limit), 100))
+        q = "SELECT * FROM experience_update_events WHERE 1=1"
+        params: list[Any] = []
+        if world_id:
+            q += " AND world_id=?"
+            params.append(world_id)
+        if status:
+            q += " AND status=?"
+            params.append(status)
+        q += " ORDER BY updated_at DESC LIMIT ?"
+        params.append(safe)
+        with closing(self._connect()) as conn:
+            rows = conn.execute(q, params).fetchall()
+            return [dict(r) for r in rows]
+
+    def experience_update_mark(
+        self,
+        update_event_id: str,
+        *,
+        status: str,
+        last_error: str | None = None,
+        applied_experience_id: str | None = None,
+        applied_state_version: int | None = None,
+        increment_attempt: bool = True,
+    ) -> dict[str, Any] | None:
+        now = utc_now()
+        with closing(self._connect()) as conn, conn:
+            row = conn.execute("SELECT * FROM experience_update_events WHERE update_event_id=?", (update_event_id,)).fetchone()
+            if not row:
+                return None
+            attempt = int(row["attempt_count"] or 0) + (1 if increment_attempt else 0)
+            conn.execute(
+                "UPDATE experience_update_events SET status=?, last_error=?, applied_experience_id=?, applied_state_version=?, attempt_count=?, updated_at=? WHERE update_event_id=?",
+                (status, last_error, applied_experience_id, applied_state_version, attempt, now, update_event_id),
+            )
+            updated = conn.execute("SELECT * FROM experience_update_events WHERE update_event_id=?", (update_event_id,)).fetchone()
+            return dict(updated) if updated else None
+
     def stats(self) -> dict[str, Any]:
         with closing(self._connect()) as connection:
             counts = {
@@ -1852,7 +1982,7 @@ class MemoryStore:
                 for table in (
                     "memory_items", "memory_sources", "project_states", "audit_events",
                     "predictions", "prediction_resolutions", "signal_observations",
-                    "predictor_experiences",
+                    "predictor_experiences", "experience_update_events",
                 )
             }
         return {"path": str(self.path), "counts": counts}

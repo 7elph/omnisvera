@@ -296,10 +296,29 @@ def _build_bootstrap_payload(memory, health, handoff, worlds, model_builders, re
         per_world: dict[str, list[dict]] = {}
         for desc in worlds.list():
             per_world[desc.world_id] = memory.experience_list_world(desc.world_id)[:5]
-        payload["experience"] = {"available": True, "per_world": per_world}
+        # bounded update ledger summary
+        pending = len(memory.experience_update_list(status="pending", limit=20))
+        failed = len(memory.experience_update_list(status="failed", limit=20))
+        payload["experience"] = {"available": True, "per_world": per_world, "pending_updates": pending, "failed_updates": failed}
     except Exception:
-        payload["experience"] = {"available": False, "per_world": {}}
+        payload["experience"] = {"available": False, "per_world": {}, "pending_updates": 0, "failed_updates": 0}
     return payload
+
+
+def _experience_process_pending(memory, args: dict) -> dict:
+    from .experience.runtime import process_pending_updates
+    from .experience.updater import ExperienceUpdaterRegistry
+    from .experience.football_elo import FootballEloUpdater
+
+    reg = ExperienceUpdaterRegistry()
+    try:
+        reg.register(FootballEloUpdater())
+    except ValueError:
+        pass
+    reg2 = getattr(memory, "_experience_updater_registry", None) or reg
+    return process_pending_updates(
+        memory, reg2, limit=int(args.get("limit", 20) or 20), world_id=str(args.get("world_id", "")) or None
+    )
 
 
 def _build_world_model(
@@ -798,6 +817,40 @@ def register_foundation_tools(
             "read",
             "experience://state",
             frozenset({"experience.read"}),
+        ),
+        RegisteredTool(
+            "experience.update_status",
+            lambda _ctx, args: json.dumps(
+                memory.experience_update_get(str(args.get("update_event_id", ""))),
+                ensure_ascii=False, indent=2,
+            ),
+            "read",
+            "experience://updates",
+            frozenset({"experience.read"}),
+        ),
+        RegisteredTool(
+            "experience.pending_updates",
+            lambda _ctx, args: json.dumps(
+                memory.experience_update_list(
+                    world_id=str(args.get("world_id", "")) or None,
+                    status=str(args.get("status", "")) or None,
+                    limit=int(args.get("limit", 20) or 20),
+                ),
+                ensure_ascii=False, indent=2,
+            ),
+            "read",
+            "experience://updates",
+            frozenset({"experience.read"}),
+        ),
+        RegisteredTool(
+            "experience.process_pending_updates",
+            lambda _ctx, args: json.dumps(
+                _experience_process_pending(memory, args),
+                ensure_ascii=False, indent=2,
+            ),
+            "write",
+            "experience://updates",
+            frozenset({"experience.write"}),
         ),
     ):
         registry.register(tool)
