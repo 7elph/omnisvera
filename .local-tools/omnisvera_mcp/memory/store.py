@@ -1399,6 +1399,174 @@ class MemoryStore:
 
         return anomalies
 
+    # -- World Context helpers (read-only aggregation, no new tables) -------
+
+    def current_state_for_world(
+        self,
+        world_id: str,
+        *,
+        operational_ids: set[str] | frozenset[str] | None = None,
+        limit: int = 200,
+    ) -> list[dict[str, Any]]:
+        """Latest observation per (signal_id, entity_ref) for a world.
+
+        Excludes operational signals when operational_ids is provided.
+        Returns at most `limit` entries, ordered by observed_at DESC.
+        """
+        op = operational_ids or set()
+        with closing(self._connect()) as connection:
+            rows = connection.execute(
+                "SELECT id, world_id, signal_id, entity_ref, schema, "
+                "value_json, value_type, unit, observed_at, source_json, "
+                "metadata_json, recorded_at "
+                "FROM signal_observations WHERE world_id=? "
+                "ORDER BY observed_at DESC, id DESC LIMIT 1000",
+                (world_id,),
+            ).fetchall()
+        seen: set[tuple[str, str | None]] = set()
+        result: list[dict[str, Any]] = []
+        for row in rows:
+            sid = row["signal_id"]
+            if sid in op:
+                continue
+            key = (sid, row["entity_ref"])
+            if key in seen:
+                continue
+            seen.add(key)
+            result.append({
+                "id": row["id"],
+                "world_id": row["world_id"],
+                "signal_id": sid,
+                "entity_ref": row["entity_ref"],
+                "schema": row["schema"],
+                "value": json.loads(row["value_json"]),
+                "value_type": row["value_type"],
+                "unit": row["unit"],
+                "observed_at": row["observed_at"],
+                "source": json.loads(row["source_json"]),
+                "metadata": json.loads(row["metadata_json"]) if row["metadata_json"] else {},
+                "recorded_at": row["recorded_at"],
+            })
+            if len(result) >= limit:
+                break
+        return result
+
+    def recent_domain_changes(
+        self,
+        world_id: str,
+        *,
+        operational_ids: set[str] | frozenset[str] | None = None,
+        lookback_hours: int = 24,
+        limit: int = 20,
+    ) -> list[dict[str, Any]]:
+        """Domain changes within lookback window.
+
+        Uses persisted signal_observations; only emits when value differs
+        from predecessor (ignores unchanged polling).
+        """
+        op = operational_ids or set()
+        cutoff = datetime.now(timezone.utc).isoformat()  # will be overwritten with timedelta below
+        # compute cutoff at query time
+        from datetime import timedelta
+        cutoff_dt = datetime.now(timezone.utc) - timedelta(hours=lookback_hours)
+        cutoff = cutoff_dt.isoformat()
+        with closing(self._connect()) as connection:
+            rows = connection.execute(
+                "SELECT world_id, signal_id, entity_ref, value_json, observed_at "
+                "FROM signal_observations WHERE world_id=? AND observed_at>=? "
+                "ORDER BY signal_id, COALESCE(entity_ref,''), observed_at ASC",
+                (world_id, cutoff),
+            ).fetchall()
+        # group by key
+        from collections import defaultdict
+        grouped: dict[tuple[str, str | None], list[tuple[str, Any]]] = defaultdict(list)
+        for row in rows:
+            sid = row["signal_id"]
+            if sid in op:
+                continue
+            key = (sid, row["entity_ref"])
+            grouped[key].append((row["observed_at"], json.loads(row["value_json"])))
+        changes: list[dict[str, Any]] = []
+        for (sid, eref), seq in grouped.items():
+            for i in range(1, len(seq)):
+                prev_at, prev_val = seq[i - 1]
+                curr_at, curr_val = seq[i]
+                if self._values_equal(prev_val, curr_val):
+                    continue
+                delta: Any = None
+                delta_percent: float | None = None
+                if isinstance(prev_val, (int, float)) and isinstance(curr_val, (int, float)):
+                    delta = curr_val - prev_val
+                    if prev_val != 0:
+                        delta_percent = round((delta / abs(prev_val)) * 100, 4)
+                changes.append({
+                    "world_id": world_id,
+                    "signal_id": sid,
+                    "entity_ref": eref,
+                    "previous_value": prev_val,
+                    "current_value": curr_val,
+                    "previous_observed_at": prev_at,
+                    "current_observed_at": curr_at,
+                    "change_type": "changed",
+                    "delta": delta,
+                    "delta_percent": delta_percent,
+                })
+        # most recent first, bounded
+        changes.sort(key=lambda c: c["current_observed_at"], reverse=True)
+        return changes[:limit]
+
+    def recent_outcomes_for_world(
+        self,
+        world_id: str,
+        *,
+        limit: int = 20,
+    ) -> list[dict[str, Any]]:
+        """Recent resolved predictions for a world (by world_id or domain)."""
+        with closing(self._connect()) as connection:
+            rows = connection.execute(
+                "SELECT p.id as prediction_id, p.claim, p.probability, p.horizon, "
+                "p.predictor_id, p.predictor_version, p.created_at, "
+                "p.domain, p.world_id as pred_world_id, "
+                "r.resolved_at, r.outcome, r.observed_value, r.calibration_score, r.notes "
+                "FROM predictions p JOIN prediction_resolutions r ON r.prediction_id=p.id "
+                "WHERE (p.world_id=? OR p.domain=?) "
+                "ORDER BY r.resolved_at DESC LIMIT ?",
+                (world_id, world_id, limit),
+            ).fetchall()
+            return [
+                {
+                    "prediction_id": row["prediction_id"],
+                    "claim": row["claim"],
+                    "probability": row["probability"],
+                    "horizon": row["horizon"],
+                    "predictor_id": row["predictor_id"],
+                    "predictor_version": row["predictor_version"],
+                    "created_at": row["created_at"],
+                    "resolved_at": row["resolved_at"],
+                    "outcome": row["outcome"],
+                    "observed_value": row["observed_value"],
+                    "calibration_score": row["calibration_score"],
+                    "notes": row["notes"],
+                }
+                for row in rows
+            ]
+
+    def scheduler_freshness_for_world(
+        self,
+        world_id: str,
+    ) -> dict[str, Any] | None:
+        """Latest scheduler run for a world, if any."""
+        with closing(self._connect()) as connection:
+            row = connection.execute(
+                "SELECT run_id, provider, run_started_at, run_finished_at, "
+                "success, signals_seen, signals_changed, signals_unchanged, error "
+                "FROM scheduler_runs WHERE world_id=? ORDER BY run_finished_at DESC LIMIT 1",
+                (world_id,),
+            ).fetchone()
+            if row is None:
+                return None
+            return dict(row)
+
     def stats(self) -> dict[str, Any]:
         with closing(self._connect()) as connection:
             counts = {

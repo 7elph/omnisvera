@@ -16,8 +16,6 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-import pytest
-
 from omnisvera_mcp.memory.store import MemoryStore
 from omnisvera_mcp.scheduler import _is_operational, OPERATIONAL_SIGNALS
 

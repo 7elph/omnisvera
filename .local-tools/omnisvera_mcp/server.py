@@ -1,8 +1,10 @@
 from __future__ import annotations
 
+import contextlib
 import json
 from collections.abc import Callable
 from dataclasses import dataclass
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 from mcp.server.fastmcp import FastMCP
@@ -29,6 +31,252 @@ from .bootstrap import generate_bootstrap
 
 
 ContextFactory = Callable[[], CallContext]
+
+
+WORLD_CONTEXT_OPERATIONAL: frozenset[str] = frozenset({
+    "football.observation.match_count",
+    "football.provider.freshness",
+    "crypto.observation.coin_count",
+    "test.signal",
+})
+
+
+def _build_world_context(
+    memory: MemoryStore,
+    worlds: WorldRegistry,
+    model_builders: WorldModelRegistry,
+    *,
+    world_id: str,
+    lookback_hours: int = 24,
+) -> dict:
+    """Aggregated read-only view of a world for AI consumption.
+
+    No persistence, no inference without provenance, bounded payload.
+    """
+    if not world_id:
+        raise ValueError("world_id is required")
+    if not 1 <= lookback_hours <= 168:
+        raise ValueError("lookback_hours must be between 1 and 168")
+    # Verify world exists (raises KeyError → caller surfaces as error)
+    adapter = worlds.get(world_id)
+    descriptor = adapter.describe()
+    health: dict = {}
+    try:
+        health = adapter.health()  # type: ignore
+        if not isinstance(health, dict):
+            health = {"status": str(health)}
+    except Exception:
+        health = {"status": "unknown"}
+
+    now_iso = datetime.now(timezone.utc).isoformat()
+
+    # Current domain state (latest per key, domain only)
+    current_domain = memory.current_state_for_world(
+        world_id, operational_ids=WORLD_CONTEXT_OPERATIONAL, limit=200
+    )
+    # Operational current (separate)
+    with contextlib.closing(memory._connect()) as conn:  # type: ignore
+        rows = conn.execute(
+            "SELECT id, world_id, signal_id, entity_ref, schema, value_json, value_type, unit, observed_at "
+            "FROM signal_observations WHERE world_id=? ORDER BY observed_at DESC LIMIT 200",
+            (world_id,),
+        ).fetchall()
+        operational_current: list[dict] = []
+        seen_op: set[tuple[str, str | None]] = set()
+        for r in rows:
+            sid = r["signal_id"]
+            if sid not in WORLD_CONTEXT_OPERATIONAL:
+                continue
+            key = (sid, r["entity_ref"])
+            if key in seen_op:
+                continue
+            seen_op.add(key)
+            operational_current.append({
+                "signal_id": sid,
+                "entity_ref": r["entity_ref"],
+                "value": json.loads(r["value_json"]),
+                "value_type": r["value_type"],
+                "unit": r["unit"],
+                "observed_at": r["observed_at"],
+            })
+
+    # Entities: distinct from current domain + open predictions subjects
+    entities_set: set[str] = set()
+    for s in current_domain:
+        if s.get("entity_ref"):
+            entities_set.add(s["entity_ref"])  # type: ignore
+    # Recent changes (domain only)
+    recent_changes = memory.recent_domain_changes(
+        world_id, operational_ids=WORLD_CONTEXT_OPERATIONAL,
+        lookback_hours=lookback_hours, limit=20,
+    )
+    # Patterns (domain-derived, bounded)
+    try:
+        patterns = memory.patterns_for_world(world_id, limit=20)
+    except Exception:
+        patterns = []
+    patterns = patterns[:20]
+
+    # Open predictions for this world
+    try:
+        open_preds = memory.list_predictions(domain=world_id, status="open", limit=20)
+    except Exception:
+        open_preds = []
+    open_predictions = []
+    for p in open_preds[:20]:
+        open_predictions.append({
+            "prediction_id": p.get("id"),
+            "subject_ref": p.get("subject_ref"),
+            "claim": p.get("claim"),
+            "probability": p.get("probability"),
+            "horizon": p.get("horizon"),
+            "predictor_id": p.get("predictor_id"),
+            "predictor_version": p.get("predictor_version"),
+            "created_at": p.get("created_at"),
+        })
+        if p.get("subject_ref"):
+            entities_set.add(p["subject_ref"])  # type: ignore
+
+    # Recent outcomes
+    try:
+        recent_outcomes = memory.recent_outcomes_for_world(world_id, limit=20)
+    except Exception:
+        recent_outcomes = []
+
+    # Model — compact summary only
+    model_summary: dict | None = None
+    if current_domain:
+        try:
+            # reuse builder helper with domain signals only
+            signals_for_model = memory.signals_for_world(world_id, limit=200)
+            # filter operational out
+            signals_for_model = [s for s in signals_for_model if s.get("signal_id") not in WORLD_CONTEXT_OPERATIONAL]
+            patterns_for_model = memory.patterns_for_world(world_id, limit=20)
+            builder = model_builders.get("core.state-vector")
+            model = builder.build(world_id=world_id, signals=signals_for_model, patterns=patterns_for_model, query={"world_id": world_id})
+            md = model.as_dict()
+            model_summary = {
+                "model_id": md.get("model_id"),
+                "created_at": md.get("created_at"),
+                "schema": md.get("schema"),
+                "builder_id": md.get("builder_id"),
+                "builder_version": md.get("builder_version"),
+                "signal_count": len(md.get("signal_refs", [])),
+                "pattern_count": len(md.get("pattern_refs", [])),
+                "entity_count": len(md.get("state", {}).get("entities", [])),
+                "limitations": md.get("limitations", [])[:5],
+            }
+        except Exception:
+            model_summary = None
+
+    # Freshness & limitations
+    limitations: list[str] = []
+    freshness_info: dict[str, object] = {}
+    last_run = None
+    try:
+        last_run = memory.scheduler_freshness_for_world(world_id)
+    except Exception:
+        pass
+    # last observation timestamp
+    last_observed: str | None = None
+    if current_domain:
+        last_observed = max(s.get("observed_at", "") for s in current_domain)
+    elif operational_current:
+        last_observed = max(s.get("observed_at", "") for s in operational_current)
+
+    # Data age
+    data_age_seconds: float | None = None
+    if last_observed:
+        try:
+            lo = last_observed.replace("Z", "+00:00")
+            dt = datetime.fromisoformat(lo)
+            data_age_seconds = (datetime.now(timezone.utc) - dt).total_seconds()
+        except Exception:
+            pass
+
+    freshness_info = {
+        "last_observation_at": last_observed,
+        "data_age_seconds": round(data_age_seconds, 1) if data_age_seconds is not None else None,
+        "scheduler_last_run": last_run,
+    }
+
+    # World-level limitations
+    if health.get("status") not in ("healthy",):
+        limitations.append(f"provider status: {health.get('status')} — {health.get('message','')}".strip())
+    if last_run is None:
+        limitations.append("no scheduler telemetry yet — cannot distinguish 'unchanged' from 'not observed'")
+    elif last_run.get("success") == 0:
+        limitations.append(f"last scheduler run failed: {last_run.get('error')}")
+    if data_age_seconds is not None and data_age_seconds > 7200:
+        limitations.append(f"stale: last observation {round(data_age_seconds/3600,1)}h ago")
+    if not current_domain:
+        limitations.append("no domain signals yet for this world")
+    if not open_predictions and not recent_outcomes:
+        limitations.append("no predictions/outcomes for this world yet")
+
+    # Known provider caveats (from football adapter status map etc.)
+    # Keep generic — adapter limitations are surfaced via health/message above.
+
+    # Active entities list
+    active_entities = sorted(entities_set)
+
+    # Provenance
+    provenance = {
+        "world_id": world_id,
+        "generated_at": now_iso,
+        "sources": {
+            "descriptor": "world.describe",
+            "health": "world.health",
+            "current_state": "signal_observations (latest per key, domain only)",
+            "recent_changes": f"signal_observations diff, lookback_hours={lookback_hours}",
+            "patterns": "memory.patterns_for_world",
+            "open_predictions": "predictions(status=open, domain=world_id)",
+            "recent_outcomes": "predictions JOIN prediction_resolutions",
+            "model": "WorldModelRegistry core.state-vector",
+            "scheduler": "scheduler_runs",
+        },
+        "last_observation_at": last_observed,
+        "signal_counts": {
+            "domain_current": len(current_domain),
+            "operational_current": len(operational_current),
+            "recent_changes": len(recent_changes),
+        },
+    }
+
+    return {
+        "world": {
+            "world_id": descriptor.world_id,
+            "world_type": descriptor.world_type,
+            "name": descriptor.name,
+        },
+        "observed_at": now_iso,
+        "health": health,
+        "current_state": {
+            "signals": [
+                {
+                    "signal_id": s["signal_id"],
+                    "entity_ref": s["entity_ref"],
+                    "value": s["value"],
+                    "value_type": s["value_type"],
+                    "unit": s["unit"],
+                    "observed_at": s["observed_at"],
+                }
+                for s in current_domain
+            ],
+            "entities": active_entities,
+        },
+        "recent_changes": recent_changes,
+        "patterns": patterns,
+        "open_predictions": open_predictions,
+        "recent_outcomes": recent_outcomes,
+        "model": model_summary,
+        "operational": {
+            "signals": operational_current,
+        },
+        "freshness": freshness_info,
+        "limitations": limitations,
+        "provenance": provenance,
+    }
 
 
 def _build_world_model(
@@ -382,6 +630,20 @@ def register_foundation_tools(
             "write",
             "world://signals/capture",
             frozenset({"world.write"}),
+        ),
+        RegisteredTool(
+            "world.context",
+            lambda _ctx, args: json.dumps(
+                _build_world_context(
+                    memory, worlds, model_builders,
+                    world_id=str(args.get("world_id", "")),
+                    lookback_hours=int(args.get("lookback_hours", 24)) if args.get("lookback_hours") is not None else 24,
+                ),
+                ensure_ascii=False, indent=2,
+            ),
+            "read",
+            "world://context",
+            frozenset({"world.read"}),
         ),
         # Epistemic tools
         RegisteredTool(

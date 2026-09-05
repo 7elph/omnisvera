@@ -32,6 +32,7 @@ REMOTE_TOOL_NAMES = (
     "world.signal_changes",
     "world.signal_patterns",
     "world.model",
+    "world.context",
     "world.capture_signals",
     "epistemic.validate_candidate",
     "epistemic.commit_candidate",
@@ -311,6 +312,12 @@ def register_remote_bridge_tools(
         if until is not None:
             args["until"] = until
         return registry.invoke("world.model", context_factory(), args)
+
+    @mcp.tool(name="world.context", annotations=READ_ONLY)
+    def world_context(world_id: str, lookback_hours: int = 24) -> str:
+        """Aggregated read-only view of a world: current state, recent changes, predictions, outcomes, freshness."""
+
+        return registry.invoke("world.context", context_factory(), {"world_id": world_id, "lookback_hours": lookback_hours})
 
     # --- World tools (write) ---
 
