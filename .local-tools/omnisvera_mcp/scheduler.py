@@ -35,15 +35,8 @@ logger = logging.getLogger(__name__)
 #  Signal classification — operational vs domain
 # ---------------------------------------------------------------------------
 
-# Signals that are operational metadata, NOT domain state.
-# These are always persisted (not change-aware) because they track
-# system health, not world state.
-OPERATIONAL_SIGNALS: frozenset[str] = frozenset({
-    "football.observation.match_count",
-    "football.provider.freshness",
-    "crypto.observation.coin_count",
-    "test.signal",
-})
+# Re-export shared constant for backward compatibility.
+from .ops import OPERATIONAL_SIGNAL_IDS as OPERATIONAL_SIGNALS  # noqa: F401
 
 
 def _is_operational(signal_id: str) -> bool:

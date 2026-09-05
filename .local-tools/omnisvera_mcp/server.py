@@ -33,12 +33,7 @@ from .bootstrap import generate_bootstrap
 ContextFactory = Callable[[], CallContext]
 
 
-WORLD_CONTEXT_OPERATIONAL: frozenset[str] = frozenset({
-    "football.observation.match_count",
-    "football.provider.freshness",
-    "crypto.observation.coin_count",
-    "test.signal",
-})
+from .ops import OPERATIONAL_SIGNAL_IDS as WORLD_CONTEXT_OPERATIONAL
 
 
 def _build_world_context(
@@ -194,8 +189,13 @@ def _build_world_context(
         except Exception:
             pass
 
+    # Distinguish poll time vs informational change time (audit 3)
+    last_domain_change_at: str | None = None
+    if recent_changes:
+        last_domain_change_at = recent_changes[0]["current_observed_at"]
     freshness_info = {
         "last_observation_at": last_observed,
+        "last_domain_change_at": last_domain_change_at,
         "data_age_seconds": round(data_age_seconds, 1) if data_age_seconds is not None else None,
         "scheduler_last_run": last_run,
     }
