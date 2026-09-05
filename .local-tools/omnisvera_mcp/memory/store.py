@@ -203,6 +203,34 @@ class MemoryStore:
                 );
                 CREATE INDEX IF NOT EXISTS idx_scheduler_runs_world
                     ON scheduler_runs(world_id, run_started_at);
+                CREATE TABLE IF NOT EXISTS predictor_experiences (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    experience_id TEXT NOT NULL UNIQUE,
+                    world_id TEXT NOT NULL,
+                    predictor_id TEXT NOT NULL,
+                    predictor_version TEXT NOT NULL,
+                    predictor_type TEXT NOT NULL,
+                    state_version INTEGER NOT NULL,
+                    created_at TEXT NOT NULL,
+                    updated_at TEXT NOT NULL,
+                    observations_used INTEGER NOT NULL DEFAULT 0,
+                    predictions_made INTEGER NOT NULL DEFAULT 0,
+                    outcomes_seen INTEGER NOT NULL DEFAULT 0,
+                    performance_json TEXT NOT NULL,
+                    learned_state_schema TEXT NOT NULL,
+                    learned_state_json TEXT NOT NULL,
+                    learned_state_hash TEXT NOT NULL,
+                    source_prediction_ids_json TEXT NOT NULL,
+                    source_outcome_ids_json TEXT NOT NULL,
+                    metadata_json TEXT NOT NULL,
+                    provenance_json TEXT NOT NULL,
+                    previous_experience_id TEXT,
+                    previous_state_version INTEGER
+                );
+                CREATE UNIQUE INDEX IF NOT EXISTS idx_exp_version
+                    ON predictor_experiences(world_id, predictor_id, predictor_version, state_version);
+                CREATE INDEX IF NOT EXISTS idx_exp_latest
+                    ON predictor_experiences(world_id, predictor_id, predictor_version);
                 """
             )
             # Migration: add observation_hash to existing signal_observations
@@ -1567,6 +1595,256 @@ class MemoryStore:
                 return None
             return dict(row)
 
+    # -- Predictor Experience (append-only versioned) -------------------------
+
+    def _derive_experience_performance(
+        self,
+        source_prediction_ids: list[int],
+        source_outcome_ids: list[int] | None = None,
+    ) -> dict[str, Any]:
+        """Derive performance metrics from real predictions/resolutions.
+
+        Uses provided ids to query; falls back to empty when none.
+        """
+        if not source_prediction_ids:
+            return {
+                "resolved_predictions": 0,
+                "mean_brier": None,
+                "first_prediction_at": None,
+                "last_prediction_at": None,
+                "last_outcome_at": None,
+            }
+        # Build placeholders
+        placeholders = ",".join("?" for _ in source_prediction_ids)
+        with closing(self._connect()) as connection:
+            rows = connection.execute(
+                f"SELECT p.id, p.created_at, r.resolved_at, r.calibration_score "
+                f"FROM predictions p LEFT JOIN prediction_resolutions r ON r.prediction_id=p.id "
+                f"WHERE p.id IN ({placeholders})",
+                source_prediction_ids,
+            ).fetchall()
+            if not rows:
+                return {
+                    "resolved_predictions": 0,
+                    "mean_brier": None,
+                    "first_prediction_at": None,
+                    "last_prediction_at": None,
+                    "last_outcome_at": None,
+                }
+            resolved = [r for r in rows if r["calibration_score"] is not None]
+            mean_brier = None
+            if resolved:
+                mean_brier = round(sum(r["calibration_score"] for r in resolved) / len(resolved), 8)
+            # times
+            created_times = [r["created_at"] for r in rows if r["created_at"]]
+            resolved_times = [r["resolved_at"] for r in resolved if r["resolved_at"]]
+            return {
+                "resolved_predictions": len(resolved),
+                "mean_brier": mean_brier,
+                "first_prediction_at": min(created_times) if created_times else None,
+                "last_prediction_at": max(created_times) if created_times else None,
+                "last_outcome_at": max(resolved_times) if resolved_times else None,
+            }
+
+    def experience_create(
+        self,
+        *,
+        world_id: str,
+        predictor_id: str,
+        predictor_version: str,
+        predictor_type: str,
+        learned_state_schema: str,
+        learned_state: Any,
+        observations_used: int = 0,
+        source_prediction_ids: list[int] | None = None,
+        source_outcome_ids: list[int] | None = None,
+        metadata: dict[str, Any] | None = None,
+        created_by: str | None = None,
+    ) -> dict[str, Any]:
+        """Create a new PredictorExperience version (append-only).
+
+        Rules: world/predictor identity required, state_version auto-increments,
+        hash is canonical, previous version linked, source IDs validated.
+        """
+        if not world_id or not predictor_id or not predictor_version or not predictor_type:
+            raise ValueError("world_id, predictor_id, predictor_version, predictor_type are required")
+        if not learned_state_schema:
+            raise ValueError("learned_state_schema is required")
+        source_prediction_ids = list(source_prediction_ids or [])
+        source_outcome_ids = list(source_outcome_ids or [])
+        observations_used = int(observations_used or 0)
+
+        # Validate source IDs exist when provided (light check)
+        if source_prediction_ids:
+            placeholders = ",".join("?" for _ in source_prediction_ids)
+            with closing(self._connect()) as connection:
+                found = connection.execute(
+                    f"SELECT id FROM predictions WHERE id IN ({placeholders})", source_prediction_ids
+                ).fetchall()
+                found_ids = {r["id"] for r in found}
+                missing = set(source_prediction_ids) - found_ids
+                if missing:
+                    raise ValueError(f"source_prediction_ids not found: {sorted(missing)}")
+
+        # canonical hash
+        learned_state_json = stable_json(learned_state)
+        learned_state_hash = hashlib.sha256(learned_state_json.encode("utf-8")).hexdigest()
+        now = utc_now()
+        performance = self._derive_experience_performance(source_prediction_ids, source_outcome_ids)
+
+        with closing(self._connect()) as connection, connection:
+            # Determine next state_version atomically inside transaction
+            row = connection.execute(
+                "SELECT MAX(state_version) as max_v FROM predictor_experiences "
+                "WHERE world_id=? AND predictor_id=? AND predictor_version=?",
+                (world_id, predictor_id, predictor_version),
+            ).fetchone()
+            next_version = int(row["max_v"] + 1) if row["max_v"] is not None else 1
+            # previous linkage
+            prev_row = None
+            if next_version > 1:
+                prev_row = connection.execute(
+                    "SELECT experience_id, state_version FROM predictor_experiences "
+                    "WHERE world_id=? AND predictor_id=? AND predictor_version=? AND state_version=?",
+                    (world_id, predictor_id, predictor_version, next_version - 1),
+                ).fetchone()
+            experience_id = f"exp-{uuid4().hex}"
+            provenance = {
+                "world_id": world_id,
+                "predictor_id": predictor_id,
+                "predictor_version": predictor_version,
+                "predictor_type": predictor_type,
+                "previous_experience_id": prev_row["experience_id"] if prev_row else None,
+                "previous_state_version": prev_row["state_version"] if prev_row else None,
+                "source_prediction_ids": source_prediction_ids,
+                "source_outcome_ids": source_outcome_ids,
+                "created_by": created_by or predictor_id,
+                "created_at": now,
+            }
+            predictions_made = len(source_prediction_ids)
+            outcomes_seen = len(source_outcome_ids)
+            # outcomes_seen also derivable as resolved count but keep explicit
+            # Use derived resolved count as truth when ids cover resolutions
+            if performance.get("resolved_predictions", 0) > 0:
+                outcomes_seen = performance["resolved_predictions"]
+
+            connection.execute(
+                "INSERT INTO predictor_experiences "
+                "(experience_id, world_id, predictor_id, predictor_version, predictor_type, "
+                "state_version, created_at, updated_at, observations_used, predictions_made, "
+                "outcomes_seen, performance_json, learned_state_schema, learned_state_json, "
+                "learned_state_hash, source_prediction_ids_json, source_outcome_ids_json, "
+                "metadata_json, provenance_json, previous_experience_id, previous_state_version) "
+                "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                (
+                    experience_id, world_id, predictor_id, predictor_version, predictor_type,
+                    next_version, now, now, observations_used, predictions_made,
+                    outcomes_seen, stable_json(performance), learned_state_schema,
+                    learned_state_json, learned_state_hash,
+                    stable_json(source_prediction_ids), stable_json(source_outcome_ids),
+                    stable_json(metadata or {}), stable_json(provenance),
+                    provenance["previous_experience_id"], provenance["previous_state_version"],
+                ),
+            )
+        return self.experience_get(experience_id)  # type: ignore — after commit
+
+    def experience_get(self, experience_id: str) -> dict[str, Any] | None:
+        """Retrieve an experience by experience_id with integrity check."""
+        with closing(self._connect()) as connection:
+            row = connection.execute(
+                "SELECT * FROM predictor_experiences WHERE experience_id=?", (experience_id,)
+            ).fetchone()
+            if row is None:
+                return None
+            d = dict(row)
+            # deserialize
+            d["learned_state"] = json.loads(d.pop("learned_state_json"))
+            d["performance"] = json.loads(d.pop("performance_json"))
+            d["source_prediction_ids"] = json.loads(d.pop("source_prediction_ids_json"))
+            d["source_outcome_ids"] = json.loads(d.pop("source_outcome_ids_json"))
+            d["metadata"] = json.loads(d.pop("metadata_json"))
+            d["provenance"] = json.loads(d.pop("provenance_json"))
+            # integrity check
+            canonical = stable_json(d["learned_state"])
+            current_hash = hashlib.sha256(canonical.encode("utf-8")).hexdigest()
+            d["integrity_ok"] = current_hash == d["learned_state_hash"]
+            d["integrity_expected"] = d["learned_state_hash"]
+            d["integrity_computed"] = current_hash
+            # remove internal id
+            d.pop("id", None)
+            return d
+
+    def experience_latest(
+        self,
+        world_id: str,
+        predictor_id: str,
+        predictor_version: str,
+    ) -> dict[str, Any] | None:
+        """Latest experience version for a predictor in a world."""
+        with closing(self._connect()) as connection:
+            row = connection.execute(
+                "SELECT experience_id FROM predictor_experiences "
+                "WHERE world_id=? AND predictor_id=? AND predictor_version=? "
+                "ORDER BY state_version DESC LIMIT 1",
+                (world_id, predictor_id, predictor_version),
+            ).fetchone()
+            if row is None:
+                return None
+            return self.experience_get(row["experience_id"])
+
+    def experience_history(
+        self,
+        world_id: str,
+        predictor_id: str,
+        predictor_version: str,
+        *,
+        limit: int = 20,
+        include_learned_state: bool = False,
+    ) -> list[dict[str, Any]]:
+        """Versioned history, bounded. By default omits learned_state for size."""
+        safe_limit = max(1, min(int(limit), 100))
+        with closing(self._connect()) as connection:
+            rows = connection.execute(
+                "SELECT experience_id FROM predictor_experiences "
+                "WHERE world_id=? AND predictor_id=? AND predictor_version=? "
+                "ORDER BY state_version ASC LIMIT ?",
+                (world_id, predictor_id, predictor_version, safe_limit),
+            ).fetchall()
+        result: list[dict[str, Any]] = []
+        for r in rows:
+            exp = self.experience_get(r["experience_id"])
+            if exp is None:
+                continue
+            if not include_learned_state:
+                exp = {**exp, "learned_state": None, "learned_state_omitted": True}
+            result.append(exp)
+        return result
+
+    def experience_list_world(self, world_id: str) -> list[dict[str, Any]]:
+        """Summary of latest experience per predictor for a world (for manifest/bootstrap)."""
+        with closing(self._connect()) as connection:
+            rows = connection.execute(
+                "SELECT world_id, predictor_id, predictor_version, MAX(state_version) as max_v "
+                "FROM predictor_experiences WHERE world_id=? GROUP BY predictor_id, predictor_version",
+                (world_id,),
+            ).fetchall()
+            out: list[dict[str, Any]] = []
+            for r in rows:
+                latest = self.experience_latest(r["world_id"], r["predictor_id"], r["predictor_version"])
+                if latest:
+                    out.append({
+                        "world_id": latest["world_id"],
+                        "predictor_id": latest["predictor_id"],
+                        "predictor_version": latest["predictor_version"],
+                        "predictor_type": latest["predictor_type"],
+                        "state_version": latest["state_version"],
+                        "experience_id": latest["experience_id"],
+                        "updated_at": latest["updated_at"],
+                        "performance": latest["performance"],
+                        "learned_state_hash": latest["learned_state_hash"],
+                    })
+            return out
+
     def stats(self) -> dict[str, Any]:
         with closing(self._connect()) as connection:
             counts = {
@@ -1574,6 +1852,7 @@ class MemoryStore:
                 for table in (
                     "memory_items", "memory_sources", "project_states", "audit_events",
                     "predictions", "prediction_resolutions", "signal_observations",
+                    "predictor_experiences",
                 )
             }
         return {"path": str(self.path), "counts": counts}

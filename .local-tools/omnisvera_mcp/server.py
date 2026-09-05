@@ -279,6 +279,29 @@ def _build_world_context(
     }
 
 
+def _build_bootstrap_payload(memory, health, handoff, worlds, model_builders, registry) -> dict:
+    """Bootstrap with bounded experience summary (no learned_state)."""
+    payload = generate_bootstrap(
+        health=health.collect(),
+        handoff=handoff.snapshot(),
+        worlds=[d.as_dict() for d in worlds.list()],
+        memory_stats=memory.stats(),
+        manifest_summary=generate_manifest(
+            worlds=[d.as_dict() for d in worlds.list()],
+            model_builders=model_builders.list(),
+            tools=[{"name": t.name, "access_mode": t.action} for t in registry._tools.values()],
+        ),
+    )
+    try:
+        per_world: dict[str, list[dict]] = {}
+        for desc in worlds.list():
+            per_world[desc.world_id] = memory.experience_list_world(desc.world_id)[:5]
+        payload["experience"] = {"available": True, "per_world": per_world}
+    except Exception:
+        payload["experience"] = {"available": False, "per_world": {}}
+    return payload
+
+
 def _build_world_model(
     worlds: WorldRegistry,
     model_builders: WorldModelRegistry,
@@ -530,17 +553,11 @@ def register_foundation_tools(
         ),
         RegisteredTool(
             "system.bootstrap",
-            lambda _ctx, _args: json.dumps(generate_bootstrap(
-                health=health.collect(),
-                handoff=handoff.snapshot(),
-                worlds=[d.as_dict() for d in worlds.list()],
-                memory_stats=memory.stats(),
-                manifest_summary=generate_manifest(
-                    worlds=[d.as_dict() for d in worlds.list()],
-                    model_builders=model_builders.list(),
-                    tools=[{"name": t.name, "access_mode": t.action} for t in registry._tools.values()],
-                ),
-            ), ensure_ascii=False, indent=2),
+            lambda _ctx, _args: json.dumps(
+                _build_bootstrap_payload(memory, health, handoff, worlds, model_builders, registry),
+                ensure_ascii=False,
+                indent=2,
+            ),
             "read",
             "system://bootstrap",
             frozenset({"system.health.read"}),
@@ -715,6 +732,72 @@ def register_foundation_tools(
             "write",
             "epistemic://predictions",
             frozenset({"epistemic.write"}),
+        ),
+        # Experience — persistent learned state per predictor/world
+        RegisteredTool(
+            "experience.create",
+            lambda _ctx, args: json.dumps(
+                (lambda: (
+                    worlds.get(str(args.get("world_id", ""))),  # validate
+                    memory.experience_create(
+                        world_id=str(args.get("world_id", "")),
+                        predictor_id=str(args.get("predictor_id", "")),
+                        predictor_version=str(args.get("predictor_version", "")),
+                        predictor_type=str(args.get("predictor_type", "")),
+                        learned_state_schema=str(args.get("learned_state_schema", "")),
+                        learned_state=args.get("learned_state"),
+                        observations_used=int(args.get("observations_used", 0) or 0),
+                        source_prediction_ids=args.get("source_prediction_ids"),
+                        source_outcome_ids=args.get("source_outcome_ids"),
+                        metadata=args.get("metadata"),
+                        created_by=_ctx.actor if hasattr(_ctx, "actor") else None,
+                    ),
+                )[-1]),
+                ensure_ascii=False, indent=2,
+            ),
+            "write",
+            "experience://state",
+            frozenset({"experience.write"}),
+        ),
+        RegisteredTool(
+            "experience.get",
+            lambda _ctx, args: json.dumps(
+                memory.experience_get(str(args.get("experience_id", ""))),
+                ensure_ascii=False, indent=2,
+            ),
+            "read",
+            "experience://state",
+            frozenset({"experience.read"}),
+        ),
+        RegisteredTool(
+            "experience.latest",
+            lambda _ctx, args: json.dumps(
+                memory.experience_latest(
+                    str(args.get("world_id", "")),
+                    str(args.get("predictor_id", "")),
+                    str(args.get("predictor_version", "")),
+                ),
+                ensure_ascii=False, indent=2,
+            ),
+            "read",
+            "experience://state",
+            frozenset({"experience.read"}),
+        ),
+        RegisteredTool(
+            "experience.history",
+            lambda _ctx, args: json.dumps(
+                memory.experience_history(
+                    str(args.get("world_id", "")),
+                    str(args.get("predictor_id", "")),
+                    str(args.get("predictor_version", "")),
+                    limit=int(args.get("limit", 20) or 20),
+                    include_learned_state=bool(args.get("include_learned_state", False)),
+                ),
+                ensure_ascii=False, indent=2,
+            ),
+            "read",
+            "experience://state",
+            frozenset({"experience.read"}),
         ),
     ):
         registry.register(tool)

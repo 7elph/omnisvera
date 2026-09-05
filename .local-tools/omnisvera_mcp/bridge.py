@@ -34,6 +34,9 @@ REMOTE_TOOL_NAMES = (
     "world.model",
     "world.context",
     "world.capture_signals",
+    "experience.get",
+    "experience.latest",
+    "experience.history",
     "epistemic.validate_candidate",
     "epistemic.commit_candidate",
     "epistemic.create_snapshot",
@@ -91,7 +94,7 @@ def remote_bridge_context() -> CallContext:
             {"system.health.read", "vault.handoff.read", "companion.read", "memory.read",
              "memory.write",
              "world.read", "world.write", "epistemic.read", "epistemic.write",
-             "epistemic.prediction.commit"}
+             "epistemic.prediction.commit", "experience.read"}
         ),
         request_id=uuid4().hex,
         project_id="omnisvera",
@@ -318,6 +321,27 @@ def register_remote_bridge_tools(
         """Aggregated read-only view of a world: current state, recent changes, predictions, outcomes, freshness."""
 
         return registry.invoke("world.context", context_factory(), {"world_id": world_id, "lookback_hours": lookback_hours})
+
+    @mcp.tool(name="experience.get", annotations=READ_ONLY)
+    def experience_get(experience_id: str) -> str:
+        """Get predictor experience by experience_id (integrity verified)."""
+        return registry.invoke("experience.get", context_factory(), {"experience_id": experience_id})
+
+    @mcp.tool(name="experience.latest", annotations=READ_ONLY)
+    def experience_latest(world_id: str, predictor_id: str, predictor_version: str) -> str:
+        """Get latest experience version for a predictor/world."""
+        return registry.invoke(
+            "experience.latest", context_factory(),
+            {"world_id": world_id, "predictor_id": predictor_id, "predictor_version": predictor_version},
+        )
+
+    @mcp.tool(name="experience.history", annotations=READ_ONLY)
+    def experience_history(world_id: str, predictor_id: str, predictor_version: str, limit: int = 20) -> str:
+        """Get versioned experience history for a predictor/world."""
+        return registry.invoke(
+            "experience.history", context_factory(),
+            {"world_id": world_id, "predictor_id": predictor_id, "predictor_version": predictor_version, "limit": limit},
+        )
 
     # --- World tools (write) ---
 
