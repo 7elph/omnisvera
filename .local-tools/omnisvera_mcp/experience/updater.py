@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Any, Protocol, runtime_checkable
+from typing import Any, Literal, Protocol, runtime_checkable
 
 
 @dataclass(frozen=True, slots=True)
@@ -25,7 +25,7 @@ class ExperienceUpdater(Protocol):
     """Domain-specific updater for a predictor's learned state."""
 
     def describe(self) -> dict[str, Any]:
-        """Return identity: predictor_id, predictor_version, predictor_type, description."""
+        """Return identity: predictor_id, predictor_version, predictor_type, description, update_order_semantics."""
         ...
 
     def update(

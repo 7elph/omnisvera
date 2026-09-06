@@ -28,7 +28,7 @@ def process_experience_update_event(
     if not event:
         raise ValueError(f"update event not found: {update_event_id}")
     # Idempotency for terminal states that should not be reprocessed automatically
-    if event["status"] in ("applied", "no_updater", "missing_experience", "integrity_failed"):
+    if event["status"] in ("applied", "no_updater", "missing_experience", "integrity_failed", "causal_reorder_required"):
         return event  # already terminal (except failed which is retryable)
     # For failed, we will retry (increment attempt)
     prediction_id: int = int(event["prediction_id"])
@@ -67,12 +67,14 @@ def process_experience_update_event(
     if not prev.get("integrity_ok", True):
         return store.experience_update_mark(update_event_id, status="integrity_failed", last_error="previous_experience_integrity_failed", increment_attempt=False)  # type: ignore
 
-    # Check prediction's referenced experience (lineage)
+    # Check prediction's referenced experience (lineage) — prediction basis vs update base
     trigger_exp_id = pred.get("experience_id")
     trigger_exp_version = pred.get("experience_state_version")
     trigger_exp_hash = pred.get("experience_state_hash")
     trigger_experience: dict[str, Any] | None = None
     trigger_is_latest: bool | None = None
+    prediction_basis = None
+    update_basis = {"experience_id": prev.get("experience_id"), "state_version": prev.get("state_version")}
     if trigger_exp_id:
         trigger_experience = store.experience_get(trigger_exp_id)
         if not trigger_experience:
@@ -83,8 +85,30 @@ def process_experience_update_event(
         if trigger_experience.get("learned_state_hash") != trigger_exp_hash or trigger_experience.get("state_version") != trigger_exp_version:
             return store.experience_update_mark(update_event_id, status="failed", last_error="trigger experience version/hash mismatch")  # type: ignore
         trigger_is_latest = bool(prev.get("experience_id") == trigger_exp_id)
+        prediction_basis = {"experience_id": trigger_exp_id, "state_version": trigger_exp_version}
         # If trigger is historical and latest has advanced, we keep provenance but base update on latest (detect conflict explicitly)
         # For v0.1 we proceed with latest as base but record trigger lineage
+
+    # Causal ordering check (deterministic, not thread scheduling)
+    updater_desc = updater.describe()
+    order_semantics = updater_desc.get("update_order_semantics", "order_sensitive")
+    # Derive causal key for this event (from ledger, or fallback to resolution time)
+    causal_key = event.get("causal_key")
+    if not causal_key:
+        # Fallback derive
+        resolved_at = resolution.get("resolved_at") or ""
+        causal_key = f"{resolved_at}#{prediction_id:010d}"
+    if order_semantics == "order_sensitive":
+        # Find max applied causal_key for this predictor
+        from contextlib import closing as _closing
+        with _closing(store._connect()) as conn:  # type: ignore
+            row = conn.execute(
+                "SELECT causal_key FROM experience_update_events WHERE world_id=? AND predictor_id=? AND predictor_version=? AND status='applied' AND causal_key IS NOT NULL ORDER BY causal_key DESC LIMIT 1",
+                (world_id, predictor_id, predictor_version),
+            ).fetchone()
+            max_causal = row["causal_key"] if row and row["causal_key"] else None
+            if max_causal and causal_key < max_causal:
+                return store.experience_update_mark(update_event_id, status="causal_reorder_required", last_error=f"out-of-order: {causal_key} < max_applied {max_causal}", increment_attempt=False)  # type: ignore
 
     # Call updater
     try:
@@ -92,7 +116,7 @@ def process_experience_update_event(
             previous_experience=prev,
             prediction=pred,
             resolution=resolution,
-            context={"world_id": world_id, "trigger_experience": trigger_experience, "trigger_is_latest": trigger_is_latest},
+            context={"world_id": world_id, "trigger_experience": trigger_experience, "trigger_is_latest": trigger_is_latest, "causal_key": causal_key, "prediction_basis": prediction_basis, "update_basis": update_basis},
         )
     except Exception as exc:
         err = _sanitize_error(exc)
@@ -131,7 +155,7 @@ def process_experience_update_event(
     if getattr(result, "update_summary", None):
         metadata["update_summary"] = result.update_summary[:500]
 
-    # Provenance extra: trigger ids + experience lineage
+    # Provenance extra: trigger ids + experience lineage (explicit basis distinction)
     provenance_extra.update({
         "trigger_prediction_id": prediction_id,
         "trigger_resolution_id": res_id,
@@ -140,10 +164,16 @@ def process_experience_update_event(
         "trigger_experience_version": trigger_exp_version,
         "trigger_experience_hash": trigger_exp_hash,
         "trigger_is_latest": trigger_is_latest,
+        "prediction_basis_experience_id": trigger_exp_id,
+        "prediction_basis_version": trigger_exp_version,
+        "update_basis_experience_id": prev.get("experience_id"),
+        "update_basis_version": prev.get("state_version"),
         "previous_experience_id": prev.get("experience_id"),
         "previous_state_version": prev.get("state_version"),
+        "causal_key": causal_key,
         "update_event_id": update_event_id,
         "updater": f"{predictor_id}:{predictor_version}",
+        "update_order_semantics": order_semantics,
     })
 
     try:
@@ -191,17 +221,18 @@ def process_pending_updates(
     limit: int = 20,
     world_id: str | None = None,
 ) -> dict[str, Any]:
-    """Process pending/failed update events, bounded."""
+    """Process pending/failed update events, bounded. Causal reorder events are not auto-retried."""
     safe_limit = max(1, min(int(limit), 100))
-    # Fetch pending + failed (retryable) events
+    # Fetch pending + failed (retryable) events — causal_reorder_required is not auto-retried in v0.1
     pending = store.experience_update_list(world_id=world_id, status="pending", limit=safe_limit)
     failed = store.experience_update_list(world_id=world_id, status="failed", limit=safe_limit)
-    # Combine, pending first
+    # Combine, then sort by causal_key deterministically (not thread scheduling)
     events = (pending + failed)[:safe_limit]
-    summary = {"examined": len(events), "applied": 0, "failed": 0, "no_updater": 0, "missing_experience": 0, "integrity_failed": 0, "items": []}
+    # Deterministic causal ordering: effective_at/resolved_at + prediction_id tie-breaker
+    events = sorted(events, key=lambda e: (e.get("causal_key") or "", int(e.get("prediction_id", 0))))
+    summary = {"examined": len(events), "applied": 0, "failed": 0, "no_updater": 0, "missing_experience": 0, "integrity_failed": 0, "causal_reorder_required": 0, "items": []}
     for ev in events:
         upd_id = ev["update_event_id"]
-        # Skip already applied etc (should not be in list)
         result = process_experience_update_event(store, registry, upd_id)
         status = result.get("status") if result else "failed"
         if status == "applied":
@@ -214,9 +245,11 @@ def process_pending_updates(
             summary["missing_experience"] += 1
         elif status == "integrity_failed":
             summary["integrity_failed"] += 1
+        elif status == "causal_reorder_required":
+            summary["causal_reorder_required"] += 1
         else:
             summary["failed"] += 1
-        summary["items"].append({"update_event_id": upd_id, "prediction_id": ev["prediction_id"], "status": status})
+        summary["items"].append({"update_event_id": upd_id, "prediction_id": ev["prediction_id"], "status": status, "causal_key": ev.get("causal_key")})
     return summary
 
 

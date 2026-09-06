@@ -245,18 +245,21 @@ class MemoryStore:
                     world_id TEXT NOT NULL,
                     predictor_id TEXT NOT NULL,
                     predictor_version TEXT NOT NULL,
-                    status TEXT NOT NULL CHECK(status IN ('pending','applied','failed','no_updater','missing_experience','integrity_failed')),
+                    status TEXT NOT NULL CHECK(status IN ('pending','applied','failed','no_updater','missing_experience','integrity_failed','causal_reorder_required')),
                     attempt_count INTEGER NOT NULL DEFAULT 0,
                     last_error TEXT,
                     created_at TEXT NOT NULL,
                     updated_at TEXT NOT NULL,
                     applied_experience_id TEXT,
-                    applied_state_version INTEGER
+                    applied_state_version INTEGER,
+                    causal_key TEXT
                 );
                 CREATE UNIQUE INDEX IF NOT EXISTS idx_update_trigger
                     ON experience_update_events(world_id, predictor_id, predictor_version, prediction_id);
                 CREATE INDEX IF NOT EXISTS idx_update_status
                     ON experience_update_events(status, updated_at);
+                CREATE INDEX IF NOT EXISTS idx_update_causal
+                    ON experience_update_events(world_id, predictor_id, predictor_version, causal_key);
                 """
             )
             # Migration: add experience linkage to predictions
@@ -269,6 +272,68 @@ class MemoryStore:
                     connection.execute(ddl)
                 except sqlite3.OperationalError:
                     pass
+            # Migration: causal ordering for experience_update_events
+            try:
+                connection.execute("ALTER TABLE experience_update_events ADD COLUMN causal_key TEXT")
+            except sqlite3.OperationalError:
+                pass
+            # Migrate CHECK constraint if needed to allow causal_reorder_required
+            try:
+                row = connection.execute("SELECT sql FROM sqlite_master WHERE type='table' AND name='experience_update_events'").fetchone()
+                if row and row["sql"] and "causal_reorder_required" not in row["sql"]:
+                    # Recreate table with new CHECK and causal_key
+                    connection.execute("ALTER TABLE experience_update_events RENAME TO experience_update_events_old")
+                    connection.execute(
+                        """
+                        CREATE TABLE experience_update_events (
+                            id INTEGER PRIMARY KEY AUTOINCREMENT,
+                            update_event_id TEXT NOT NULL UNIQUE,
+                            prediction_id INTEGER NOT NULL,
+                            resolution_id INTEGER,
+                            world_id TEXT NOT NULL,
+                            predictor_id TEXT NOT NULL,
+                            predictor_version TEXT NOT NULL,
+                            status TEXT NOT NULL CHECK(status IN ('pending','applied','failed','no_updater','missing_experience','integrity_failed','causal_reorder_required')),
+                            attempt_count INTEGER NOT NULL DEFAULT 0,
+                            last_error TEXT,
+                            created_at TEXT NOT NULL,
+                            updated_at TEXT NOT NULL,
+                            applied_experience_id TEXT,
+                            applied_state_version INTEGER,
+                            causal_key TEXT
+                        )
+                        """
+                    )
+                    connection.execute("INSERT INTO experience_update_events (id, update_event_id, prediction_id, resolution_id, world_id, predictor_id, predictor_version, status, attempt_count, last_error, created_at, updated_at, applied_experience_id, applied_state_version, causal_key) SELECT id, update_event_id, prediction_id, resolution_id, world_id, predictor_id, predictor_version, status, attempt_count, last_error, created_at, updated_at, applied_experience_id, applied_state_version, causal_key FROM experience_update_events_old")
+                    connection.execute("DROP TABLE experience_update_events_old")
+                    connection.execute("CREATE UNIQUE INDEX IF NOT EXISTS idx_update_trigger ON experience_update_events(world_id, predictor_id, predictor_version, prediction_id)")
+                    connection.execute("CREATE INDEX IF NOT EXISTS idx_update_status ON experience_update_events(status, updated_at)")
+                    connection.execute("CREATE INDEX IF NOT EXISTS idx_update_causal ON experience_update_events(world_id, predictor_id, predictor_version, causal_key)")
+            except Exception:
+                pass  # best effort
+            # Backfill causal_key for existing events
+            try:
+                rows = connection.execute("SELECT update_event_id, prediction_id FROM experience_update_events WHERE causal_key IS NULL").fetchall()
+                for r in rows:
+                    res = connection.execute("SELECT resolved_at FROM prediction_resolutions WHERE prediction_id=?", (r["prediction_id"],)).fetchone()
+                    base = res["resolved_at"] if res and res["resolved_at"] else ""
+                    # try effective_at from prediction
+                    pred = connection.execute("SELECT resolution_rule_json FROM predictions WHERE id=?", (r["prediction_id"],)).fetchone()
+                    if pred and pred["resolution_rule_json"]:
+                        try:
+                            rr = json.loads(pred["resolution_rule_json"])
+                            for k in ("effective_at", "event_occurred_at", "outcome_effective_at", "event_date"):
+                                if k in rr and rr[k]:
+                                    base = str(rr[k])
+                                    break
+                        except Exception:
+                            pass
+                    if not base:
+                        base = ""
+                    key = f"{base}#{r['prediction_id']:010d}"
+                    connection.execute("UPDATE experience_update_events SET causal_key=? WHERE update_event_id=?", (key, r["update_event_id"]))
+            except Exception:
+                pass
             # Migration: add observation_hash to existing signal_observations
             try:
                 connection.execute(
@@ -1903,21 +1968,52 @@ class MemoryStore:
         Returns event dict.
         """
         # Derive identities if not supplied
-        if world_id is None or predictor_id is None or predictor_version is None:
+        pred_row = None
+        if world_id is None or predictor_id is None or predictor_version is None or True:  # always fetch for causal effective_at
             with closing(self._connect()) as conn:
-                pred = conn.execute("SELECT id, world_id, predictor_id, predictor_version FROM predictions WHERE id=?", (prediction_id,)).fetchone()
-                if not pred:
+                pred_row = conn.execute("SELECT id, world_id, predictor_id, predictor_version, domain, resolution_rule_json FROM predictions WHERE id=?", (prediction_id,)).fetchone()
+                if not pred_row:
                     raise ValueError(f"prediction not found: {prediction_id}")
-                world_id = world_id or pred["world_id"] or pred["domain"] or "unknown"
-                predictor_id = predictor_id or pred["predictor_id"]
-                predictor_version = predictor_version or pred["predictor_version"]
+                world_id = world_id or pred_row["world_id"] or pred_row["domain"] or "unknown"
+                predictor_id = predictor_id or pred_row["predictor_id"]
+                predictor_version = predictor_version or pred_row["predictor_version"]
                 if not predictor_id or not predictor_version:
                     raise ValueError(f"prediction {prediction_id} has no predictor identity")
-        # Derive resolution_id if not supplied
+        else:
+            pred_row = None
+        # Derive resolution_id and causal_key if not supplied
+        # Causal ordering: prefer effective_at from resolution_rule, then resolved_at, then prediction_id tie-breaker
+        causal_key: str | None = None
+        effective_at: str | None = None
+        if pred_row and pred_row["resolution_rule_json"]:
+            try:
+                rr = json.loads(pred_row["resolution_rule_json"])
+                for k in ("effective_at", "event_occurred_at", "outcome_effective_at", "event_date", "match_date"):
+                    if k in rr and rr[k]:
+                        effective_at = str(rr[k])
+                        break
+            except Exception:
+                pass
         if resolution_id is None:
             with closing(self._connect()) as conn:
-                res = conn.execute("SELECT id FROM prediction_resolutions WHERE prediction_id=?", (prediction_id,)).fetchone()
-                resolution_id = int(res["id"]) if res else None
+                res = conn.execute("SELECT id, resolved_at FROM prediction_resolutions WHERE prediction_id=?", (prediction_id,)).fetchone()
+                if res:
+                    resolution_id = int(res["id"])
+                    resolved_at = res["resolved_at"] or ""
+                    # Prefer effective_at if available, else resolved_at
+                    causal_base = effective_at or resolved_at
+                    causal_key = f"{causal_base}#{prediction_id:010d}"
+                else:
+                    causal_key = None
+        else:
+            with closing(self._connect()) as conn:
+                res = conn.execute("SELECT resolved_at FROM prediction_resolutions WHERE id=?", (resolution_id,)).fetchone()
+                if res and res["resolved_at"]:
+                    causal_base = effective_at or res["resolved_at"]
+                    causal_key = f"{causal_base}#{prediction_id:010d}"
+        if causal_key is None:
+            # fallback to now + prediction_id if no resolution yet
+            causal_key = f"{utc_now()}#{prediction_id:010d}"
         now = utc_now()
         with closing(self._connect()) as connection, connection:
             # Try to find existing
@@ -1926,20 +2022,24 @@ class MemoryStore:
                 (world_id, predictor_id, predictor_version, prediction_id),
             ).fetchone()
             if existing:
-                return dict(existing)
+                # Backfill causal_key if missing
+                if not existing["causal_key"] and causal_key:
+                    connection.execute("UPDATE experience_update_events SET causal_key=? WHERE update_event_id=?", (causal_key, existing["update_event_id"]))
+                    existing = connection.execute("SELECT * FROM experience_update_events WHERE update_event_id=?", (existing["update_event_id"],)).fetchone()
+                return dict(existing)  # type: ignore
             # Insert pending (ignore if race)
             event_id = f"upd-{uuid4().hex}"
             connection.execute(
                 "INSERT OR IGNORE INTO experience_update_events "
-                "(update_event_id, prediction_id, resolution_id, world_id, predictor_id, predictor_version, status, attempt_count, created_at, updated_at) "
-                "VALUES (?,?,?,?,?,?,?, ?, ?, ?)",
-                (event_id, prediction_id, resolution_id, world_id, predictor_id, predictor_version, "pending", 0, now, now),
+                "(update_event_id, prediction_id, resolution_id, world_id, predictor_id, predictor_version, status, attempt_count, created_at, updated_at, causal_key) "
+                "VALUES (?,?,?,?,?,?,?,?,?,?,?)",
+                (event_id, prediction_id, resolution_id, world_id, predictor_id, predictor_version, "pending", 0, now, now, causal_key),
             )
             row = connection.execute(
                 "SELECT * FROM experience_update_events WHERE world_id=? AND predictor_id=? AND predictor_version=? AND prediction_id=?",
                 (world_id, predictor_id, predictor_version, prediction_id),
             ).fetchone()
-            return dict(row) if row else {"update_event_id": event_id, "status": "pending"}
+            return dict(row) if row else {"update_event_id": event_id, "status": "pending", "causal_key": causal_key}
 
     def experience_update_get(self, update_event_id: str) -> dict[str, Any] | None:
         with closing(self._connect()) as conn:

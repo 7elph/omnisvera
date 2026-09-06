@@ -40,6 +40,7 @@ class FootballEloUpdater(ExperienceUpdater):
             "predictor_type": self.PREDICTOR_TYPE,
             "schema": self.SCHEMA,
             "description": "Simple deterministic Elo updater for football.elo v1",
+            "update_order_semantics": "order_sensitive",
         }
 
     def update(

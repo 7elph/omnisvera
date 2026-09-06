@@ -91,8 +91,13 @@ def generate_manifest(
         "pending_updates": "experience.pending_updates" in experience_names,
         "process_pending": "experience.process_pending_updates" in experience_names,
         "persistence": "predictor_experiences (append-only, versioned, hash-verified)",
-        "update_ledger": "experience_update_events (durable, exactly-once, retryable)",
-        "update_runtime": "outcome → experience version (automatic, failure-isolated)",
+        "update_ledger": "experience_update_events (durable, exactly-once, retryable, causal_key)",
+        "update_runtime": "outcome → experience version (automatic, failure-isolated, causally ordered)",
+        "causal_ordering": {
+            "key": "effective_at (from resolution_rule) → resolved_at → prediction_id tie-breaker",
+            "policy": "order_sensitive → causal_reorder_required (no silent misordering); order_independent → allow out-of-order",
+            "provenance": "prediction_basis vs update_basis distinguished",
+        },
     }
 
     # -- Model capabilities --
