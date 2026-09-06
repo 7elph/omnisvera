@@ -67,13 +67,32 @@ def process_experience_update_event(
     if not prev.get("integrity_ok", True):
         return store.experience_update_mark(update_event_id, status="integrity_failed", last_error="previous_experience_integrity_failed", increment_attempt=False)  # type: ignore
 
+    # Check prediction's referenced experience (lineage)
+    trigger_exp_id = pred.get("experience_id")
+    trigger_exp_version = pred.get("experience_state_version")
+    trigger_exp_hash = pred.get("experience_state_hash")
+    trigger_experience: dict[str, Any] | None = None
+    trigger_is_latest: bool | None = None
+    if trigger_exp_id:
+        trigger_experience = store.experience_get(trigger_exp_id)
+        if not trigger_experience:
+            return store.experience_update_mark(update_event_id, status="failed", last_error=f"trigger experience not found: {trigger_exp_id}")  # type: ignore
+        if not trigger_experience.get("integrity_ok"):
+            return store.experience_update_mark(update_event_id, status="failed", last_error="trigger experience integrity failed")  # type: ignore
+        # Validate identity/hash already validated at commit, but re-check version/hash match
+        if trigger_experience.get("learned_state_hash") != trigger_exp_hash or trigger_experience.get("state_version") != trigger_exp_version:
+            return store.experience_update_mark(update_event_id, status="failed", last_error="trigger experience version/hash mismatch")  # type: ignore
+        trigger_is_latest = bool(prev.get("experience_id") == trigger_exp_id)
+        # If trigger is historical and latest has advanced, we keep provenance but base update on latest (detect conflict explicitly)
+        # For v0.1 we proceed with latest as base but record trigger lineage
+
     # Call updater
     try:
         result = updater.update(
             previous_experience=prev,
             prediction=pred,
             resolution=resolution,
-            context={"world_id": world_id},
+            context={"world_id": world_id, "trigger_experience": trigger_experience, "trigger_is_latest": trigger_is_latest},
         )
     except Exception as exc:
         err = _sanitize_error(exc)
@@ -112,11 +131,17 @@ def process_experience_update_event(
     if getattr(result, "update_summary", None):
         metadata["update_summary"] = result.update_summary[:500]
 
-    # Provenance extra: trigger ids
+    # Provenance extra: trigger ids + experience lineage
     provenance_extra.update({
         "trigger_prediction_id": prediction_id,
         "trigger_resolution_id": res_id,
         "trigger_outcome": resolution.get("outcome"),
+        "trigger_experience_id": trigger_exp_id,
+        "trigger_experience_version": trigger_exp_version,
+        "trigger_experience_hash": trigger_exp_hash,
+        "trigger_is_latest": trigger_is_latest,
+        "previous_experience_id": prev.get("experience_id"),
+        "previous_state_version": prev.get("state_version"),
         "update_event_id": update_event_id,
         "updater": f"{predictor_id}:{predictor_version}",
     })

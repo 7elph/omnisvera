@@ -9,6 +9,7 @@ Philosophy:
 
 from __future__ import annotations
 
+import hashlib
 import json
 from typing import Any
 
@@ -93,6 +94,12 @@ def create_prediction(
     predictor_id = str(predictor_id_raw).strip() if predictor_id_raw else None
     predictor_version_raw = arguments.get("predictor_version")
     predictor_version = str(predictor_version_raw).strip() if predictor_version_raw else None
+    exp_id_raw = arguments.get("experience_id")
+    exp_id = str(exp_id_raw).strip() if exp_id_raw else None
+    exp_ver_raw = arguments.get("experience_state_version")
+    exp_ver = int(exp_ver_raw) if exp_ver_raw is not None and str(exp_ver_raw).strip() != "" else None
+    exp_hash_raw = arguments.get("experience_state_hash")
+    exp_hash = str(exp_hash_raw).strip() if exp_hash_raw else None
 
     prediction_id = store.create_prediction(
         domain=domain,
@@ -104,6 +111,10 @@ def create_prediction(
         evidence_mode=evidence_mode,
         predictor_id=predictor_id,
         predictor_version=predictor_version,
+        world_id=arguments.get("world_id"),
+        experience_id=exp_id,
+        experience_state_version=exp_ver,
+        experience_state_hash=exp_hash,
     )
     return json.dumps(
         {"prediction_id": prediction_id, "status": "open", "evidence_mode": evidence_mode},
@@ -638,6 +649,76 @@ def validate_candidate(
                 if stored and stored["snapshot_hash"] != current_hash:
                     warnings.append("snapshot content has changed since last prediction")
 
+    # Experience validation (optional)
+    exp_id = str(candidate.get("experience_id", "")).strip() or None
+    exp_version_raw = candidate.get("experience_state_version")
+    exp_version = int(exp_version_raw) if exp_version_raw is not None and str(exp_version_raw).strip() != "" else None
+    exp_hash = str(candidate.get("experience_state_hash", "")).strip() or None
+    experience_info: dict[str, Any] = {"referenced": bool(exp_id or exp_version is not None or exp_hash)}
+    has_experience_ref = bool(exp_id or exp_version is not None or exp_hash)
+    if has_experience_ref:
+        # All three should be present for valid reference
+        if not exp_id:
+            errors.append("experience_id is required when experience is referenced")
+        if exp_version is None:
+            errors.append("experience_state_version is required when experience is referenced")
+        if not exp_hash:
+            errors.append("experience_state_hash is required when experience is referenced")
+        if exp_id and exp_version is not None and exp_hash:
+            exp = store.experience_get(exp_id)
+            if not exp:
+                errors.append(f"experience not found: {exp_id}")
+            else:
+                # integrity
+                if not exp.get("integrity_ok"):
+                    errors.append(f"experience integrity failed: {exp_id}")
+                # world match (candidate world_id or domain vs experience world_id)
+                cand_world = str(candidate.get("world_id", "")).strip() or str(candidate.get("domain", "")).strip()
+                exp_world = str(exp.get("world_id", "")).strip()
+                world_match = (cand_world == exp_world) if cand_world and exp_world else False
+                if cand_world and exp_world and cand_world != exp_world:
+                    errors.append(f"experience world mismatch: candidate {cand_world} vs experience {exp_world}")
+                # predictor match
+                if exp.get("predictor_id") != predictor_id:
+                    errors.append(f"experience predictor_id mismatch: candidate {predictor_id} vs experience {exp.get('predictor_id')}")
+                if exp.get("predictor_version") != predictor_version:
+                    errors.append(f"experience predictor_version mismatch: candidate {predictor_version} vs experience {exp.get('predictor_version')}")
+                if exp.get("state_version") != exp_version:
+                    errors.append(f"experience state_version mismatch: candidate {exp_version} vs experience {exp.get('state_version')}")
+                if exp.get("learned_state_hash") != exp_hash:
+                    errors.append(f"experience hash mismatch: candidate {exp_hash[:8]} vs experience {exp.get('learned_state_hash','')[:8]}")
+                # is_latest
+                latest = store.experience_latest(exp.get("world_id"), exp.get("predictor_id"), exp.get("predictor_version"))
+                is_latest = bool(latest and latest.get("experience_id") == exp_id)
+                experience_info.update({
+                    "experience_id": exp_id,
+                    "state_version": exp_version,
+                    "integrity_ok": bool(exp.get("integrity_ok")),
+                    "identity_match": exp.get("predictor_id") == predictor_id and exp.get("predictor_version") == predictor_version,
+                    "world_match": world_match,
+                    "is_latest": is_latest,
+                })
+                if not is_latest:
+                    warnings.append(f"experience is not latest (referenced v{exp_version}, latest v{latest.get('state_version') if latest else '?'})")
+            if not experience_info.get("experience_id"):
+                experience_info.update({"experience_id": exp_id, "state_version": exp_version, "integrity_ok": False, "is_latest": False})
+    else:
+        # No experience reference — check if predictor is stateful (has existing experience)
+        cand_world = str(candidate.get("world_id", "")).strip() or str(candidate.get("domain", "")).strip()
+        if predictor_id and predictor_version and cand_world:
+            try:
+                latest_existing = store.experience_latest(cand_world, predictor_id, predictor_version)
+                if latest_existing:
+                    # Stateful predictor without reference — reject per spec section 3
+                    errors.append(f"experience required for stateful predictor {predictor_id}:{predictor_version} (latest v{latest_existing.get('state_version')})")
+                    experience_info.update({"referenced": False, "reason": "stateful predictor requires experience reference"})
+                else:
+                    experience_info.update({"referenced": False, "is_latest": None})
+            except Exception:
+                experience_info.update({"referenced": False})
+        else:
+            experience_info.update({"referenced": False})
+
     # Warnings for missing optional fields
     if not candidate.get("world_id"):
         warnings.append("world_id not provided")
@@ -650,6 +731,7 @@ def validate_candidate(
         "valid": len(errors) == 0,
         "errors": errors,
         "warnings": warnings,
+        "experience": experience_info,
     }, ensure_ascii=False, indent=2)
 
 
@@ -690,6 +772,10 @@ def commit_candidate(
     signals_used = candidate.get("signals_used", [])
     patterns_used = candidate.get("patterns_used", [])
     reasoning_summary = str(candidate.get("reasoning_summary", "")).strip() or None
+    experience_id = str(candidate.get("experience_id", "")).strip() or None
+    exp_ver_raw = candidate.get("experience_state_version")
+    experience_state_version = int(exp_ver_raw) if exp_ver_raw is not None and str(exp_ver_raw).strip() != "" else None
+    experience_state_hash = str(candidate.get("experience_state_hash", "")).strip() or None
 
     # --- Identity binding ---
     # For remote callers: predictor_id must match caller's authorized identity
@@ -723,6 +809,9 @@ def commit_candidate(
         predictor_type=predictor_type,
         signals_used=signals_used,
         patterns_used=patterns_used,
+        experience_id=experience_id,
+        experience_state_version=experience_state_version,
+        experience_state_hash=experience_state_hash,
     )
 
     # --- Idempotency check ---
@@ -753,6 +842,9 @@ def commit_candidate(
         patterns_used=patterns_used,
         reasoning_summary=reasoning_summary,
         candidate_hash=candidate_hash,
+        experience_id=experience_id,
+        experience_state_version=experience_state_version,
+        experience_state_hash=experience_state_hash,
     )
 
     return json.dumps({
@@ -792,12 +884,16 @@ def _compute_candidate_hash(
     predictor_type: str | None,
     signals_used: list,
     patterns_used: list,
+    experience_id: str | None = None,
+    experience_state_version: int | None = None,
+    experience_state_hash: str | None = None,
 ) -> str:
     """Compute deterministic SHA-256 hash of epistemically immutable candidate fields.
 
     Fields included: world_id, domain, subject_ref, claim, probability,
     horizon, resolution_rule, model_snapshot_id, model_id, predictor_id,
-    predictor_version, predictor_type, signals_used, patterns_used.
+    predictor_version, predictor_type, signals_used, patterns_used,
+    experience_id, experience_state_version, experience_state_hash.
 
     reasoning_summary is intentionally excluded — it is metadata, not identity.
     """
@@ -816,6 +912,9 @@ def _compute_candidate_hash(
         "predictor_type": predictor_type,
         "signals_used": signals_used,
         "patterns_used": patterns_used,
+        "experience_id": experience_id,
+        "experience_state_version": experience_state_version,
+        "experience_state_hash": experience_state_hash,
     })
     return hashlib.sha256(payload.encode("utf-8")).hexdigest()
 

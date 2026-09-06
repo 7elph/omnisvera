@@ -133,7 +133,10 @@ class MemoryStore:
                     signals_used_json TEXT,
                     patterns_used_json TEXT,
                     reasoning_summary TEXT,
-                    candidate_hash TEXT
+                    candidate_hash TEXT,
+                    experience_id TEXT,
+                    experience_state_version INTEGER,
+                    experience_state_hash TEXT
                 );
                 CREATE TABLE IF NOT EXISTS prediction_resolutions (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -164,6 +167,9 @@ class MemoryStore:
                         OR (OLD.predictor_id IS NOT NULL AND OLD.predictor_id != NEW.predictor_id)
                         OR (OLD.predictor_version IS NOT NULL AND OLD.predictor_version != NEW.predictor_version)
                         OR OLD.created_at != NEW.created_at
+                        OR (OLD.experience_id IS NOT NULL AND OLD.experience_id != NEW.experience_id)
+                        OR (OLD.experience_state_version IS NOT NULL AND OLD.experience_state_version != NEW.experience_state_version)
+                        OR (OLD.experience_state_hash IS NOT NULL AND OLD.experience_state_hash != NEW.experience_state_hash)
                     BEGIN
                         SELECT RAISE(ABORT, 'prediction fields are immutable');
                     END;
@@ -253,6 +259,16 @@ class MemoryStore:
                     ON experience_update_events(status, updated_at);
                 """
             )
+            # Migration: add experience linkage to predictions
+            for col, ddl in [
+                ("experience_id", "ALTER TABLE predictions ADD COLUMN experience_id TEXT"),
+                ("experience_state_version", "ALTER TABLE predictions ADD COLUMN experience_state_version INTEGER"),
+                ("experience_state_hash", "ALTER TABLE predictions ADD COLUMN experience_state_hash TEXT"),
+            ]:
+                try:
+                    connection.execute(ddl)
+                except sqlite3.OperationalError:
+                    pass
             # Migration: add observation_hash to existing signal_observations
             try:
                 connection.execute(
@@ -613,6 +629,9 @@ class MemoryStore:
         patterns_used: list[dict[str, Any]] | None = None,
         reasoning_summary: str | None = None,
         candidate_hash: str | None = None,
+        experience_id: str | None = None,
+        experience_state_version: int | None = None,
+        experience_state_hash: str | None = None,
     ) -> int:
         if not 0.0 <= probability <= 1.0:
             raise ValueError("probability must be between 0.0 and 1.0")
@@ -633,14 +652,16 @@ class MemoryStore:
                 "(domain, snapshot_memory_id, snapshot_hash, claim, probability, "
                 "horizon, resolution_rule_json, evidence_mode, predictor_id, predictor_version, "
                 "status, created_at, world_id, subject_ref, model_id, predictor_type, "
-                "signals_used_json, patterns_used_json, reasoning_summary, candidate_hash) "
-                "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                "signals_used_json, patterns_used_json, reasoning_summary, candidate_hash, "
+                "experience_id, experience_state_version, experience_state_hash) "
+                "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
                 (domain, snapshot_memory_id, snapshot_hash, claim, probability, horizon,
                  stable_json(resolution_rule), evidence_mode, predictor_id, predictor_version,
                  "open", now, world_id, subject_ref, model_id, predictor_type,
                  stable_json(signals_used) if signals_used else None,
                  stable_json(patterns_used) if patterns_used else None,
-                 reasoning_summary, candidate_hash),
+                 reasoning_summary, candidate_hash,
+                 experience_id, experience_state_version, experience_state_hash),
             )
             return cursor.lastrowid  # type: ignore[return-value]
 
