@@ -25,6 +25,7 @@ class RegisteredTool:
     action: str
     resource: str
     required_scopes: frozenset[str]
+    description: str | None = None
 
 
 class ToolRegistry:

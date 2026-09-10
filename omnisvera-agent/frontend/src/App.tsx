@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
-import { AccessMode, getAccessMode, getAccessToken, health, rebuildIndex, setAccessMode, setAccessToken } from "./api";
-import ConclaveHub from "./pages/ConclaveHub";
+import { AccessMode, consumeAccessBootstrapFromUrl, getAccessMode, getAccessToken, health, listCampaignSessions, rebuildIndex, recordRuntimeEvent, setAccessMode, setAccessToken } from "./api";
 import SessionWorkspace from "./pages/SessionWorkspace";
+import ScenePanel from "./pages/ScenePanel";
+import CampaignMemoryPage from "./pages/CampaignMemoryPage";
 import DiceRollOverlay from "./components/DiceRollOverlay";
 
-type Page = "session" | "player" | "conclave" | "game";
+type Page = "session" | "maps" | "conclave" | "scenes" | "game";
+type CampaignView = "history" | "missions";
+type PlayerSessionView = "memory" | "table";
 
 function gameUrlWithCompanionIdentity(url: string, token: string, accessMode: AccessMode, profileId: string) {
   if (!token.trim()) return url;
@@ -16,10 +19,16 @@ function gameUrlWithCompanionIdentity(url: string, token: string, accessMode: Ac
   return `${base}#${params.toString()}`;
 }
 
+function connectedStatus(data: { access_mode: string; player_character_title?: string | null; ollama_accessible: boolean; ollama_model: string }) {
+  if (data.access_mode === "player") return `${data.player_character_title || "Jogador"} · sincronizado`;
+  return `Mestre · Ollama ${data.ollama_accessible ? "ok" : "offline"} · ${data.ollama_model}`;
+}
+
 export default function App() {
+  consumeAccessBootstrapFromUrl();
   const initialMode = getAccessMode();
   const initialToken = getAccessToken();
-  const [page, setPage] = useState<Page>(initialMode === "player" ? "player" : "session");
+  const [page, setPage] = useState<Page>(initialMode === "player" ? "conclave" : "session");
   const [status, setStatus] = useState<string>("");
   const [tokenDraft, setTokenDraft] = useState<string>(initialToken);
   const [mode, setMode] = useState<AccessMode>(initialMode);
@@ -31,6 +40,9 @@ export default function App() {
   // and the first visual may be captured before identity/animation setup.
   const [gameWebUrl, setGameWebUrl] = useState("");
   const [gameFullscreen, setGameFullscreen] = useState(false);
+  const [campaignView, setCampaignView] = useState<CampaignView>("history");
+  const [playerSessionView, setPlayerSessionView] = useState<PlayerSessionView>("memory");
+  const [playerLiveAvailable, setPlayerLiveAvailable] = useState(false);
 
   const toggleGameFullscreen = async () => {
     const frame = document.querySelector<HTMLIFrameElement>(".game-frame");
@@ -78,13 +90,10 @@ export default function App() {
           detectedMode === "gm" ? "sage" : (data.player_profile_id || ""),
         ));
         setPage((current) => {
-          if (current === "session" && detectedMode === "player") return "player";
-          if (current === "player" && detectedMode === "gm") return "session";
+          if (detectedMode === "player" && current !== "conclave") return "conclave";
           return current;
         });
-        setStatus(
-          `${data.access_mode === "player" ? (data.player_character_title || "Jogador") : "Mestre"} · Ollama ${data.ollama_accessible ? "ok" : "offline"} · ${data.ollama_model}`,
-        );
+        setStatus(connectedStatus(data));
       })
       .catch(() => {
         setAuthenticated(false);
@@ -93,8 +102,111 @@ export default function App() {
   }, []);
 
   useEffect(() => {
+    if (!authenticated || mode !== "player") {
+      setPlayerLiveAvailable(false);
+      return;
+    }
+    let active = true;
+    const refreshSessionState = async () => {
+      try {
+        const sessions = await listCampaignSessions();
+        if (!active) return;
+        const available = sessions.some((session) => session.status === "active");
+        setPlayerLiveAvailable(available);
+        if (!available) setPlayerSessionView("memory");
+      } catch {
+        // Keep the last known table state during a brief connection loss.
+      }
+    };
+    void refreshSessionState();
+    const timer = window.setInterval(() => void refreshSessionState(), 10_000);
+    const refreshNow = () => void refreshSessionState();
+    window.addEventListener("omnisvera-scene-updated", refreshNow);
+    window.addEventListener("omnisvera-session-changed", refreshNow);
+    window.addEventListener("online", refreshNow);
+    return () => {
+      active = false;
+      window.clearInterval(timer);
+      window.removeEventListener("omnisvera-scene-updated", refreshNow);
+      window.removeEventListener("omnisvera-session-changed", refreshNow);
+      window.removeEventListener("online", refreshNow);
+    };
+  }, [authenticated, mode]);
+
+  useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "auto" });
   }, [page]);
+
+  useEffect(() => {
+    const openWorkspace = (event: Event) => {
+      const target = (event as CustomEvent<"maps" | "tools" | "table" | "scenes">).detail;
+      if (mode === "player") {
+        setPage("conclave");
+        if (playerLiveAvailable && target !== "scenes") setPlayerSessionView("table");
+        return;
+      }
+      if (target === "maps") setPage("maps");
+      else if (target === "scenes") setPage("scenes");
+      else {
+        setPage("session");
+        if (target === "tools") window.setTimeout(() => window.dispatchEvent(new CustomEvent("omnisvera-open-gm-tools")), 0);
+      }
+    };
+    const openMap = () => {
+      if (mode === "gm") setPage("maps");
+      else {
+        setPage("conclave");
+        if (playerLiveAvailable) setPlayerSessionView("table");
+      }
+    };
+    const viewCharacter = (event: Event) => {
+      const characterId = String((event as CustomEvent<string>).detail || "");
+      if (mode === "player") {
+        setPage("conclave");
+        if (playerLiveAvailable) setPlayerSessionView("table");
+        return;
+      }
+      setPage("session");
+      window.setTimeout(() => window.dispatchEvent(new CustomEvent("omnisvera-open-character", { detail: characterId })), 0);
+    };
+    window.addEventListener("omnisvera-open-workspace", openWorkspace);
+    window.addEventListener("omnisvera-open-map", openMap);
+    window.addEventListener("omnisvera-view-character", viewCharacter);
+    return () => {
+      window.removeEventListener("omnisvera-open-workspace", openWorkspace);
+      window.removeEventListener("omnisvera-open-map", openMap);
+      window.removeEventListener("omnisvera-view-character", viewCharacter);
+    };
+  }, [mode, playerLiveAvailable]);
+
+  useEffect(() => {
+    if (!authenticated || mode !== "player") return;
+    const labels: Record<Page, string> = { session: "Mesa", maps: "Mapas", conclave: "Sessão", scenes: "Cenas", game: "Jogar" };
+    void recordRuntimeEvent("navigation_view", {
+      page,
+      label: labels[page],
+      device: window.innerWidth <= 720 ? "celular" : "desktop",
+      online: navigator.onLine,
+      path: window.location.pathname,
+    }).catch(() => undefined);
+  }, [authenticated, mode, page]);
+
+  useEffect(() => {
+    if (!authenticated) return;
+    const offline = () => setStatus("sem conexão · mantendo a tela atual");
+    const online = () => {
+      setStatus("conexão restaurada · sincronizando");
+      if (mode === "player") void recordRuntimeEvent("reconnected", {
+        page,
+        label: "Companion",
+        device: window.innerWidth <= 720 ? "celular" : "desktop",
+      }).catch(() => undefined);
+      void health().then(() => setStatus(mode === "player" ? "Jogador · sincronizado" : "Mestre · sincronizado")).catch(() => undefined);
+    };
+    window.addEventListener("offline", offline);
+    window.addEventListener("online", online);
+    return () => { window.removeEventListener("offline", offline); window.removeEventListener("online", online); };
+  }, [authenticated, mode, page]);
 
   function saveToken() {
     setAuthenticated(false);
@@ -114,10 +226,9 @@ export default function App() {
           detectedMode === "gm" ? "sage" : (data.player_profile_id || ""),
         ));
         setAccessPanelOpen(false);
-        setPage(detectedMode === "player" ? "player" : "session");
-        setStatus(
-          `${data.access_mode === "player" ? (data.player_character_title || "Jogador") : "Mestre"} · Ollama ${data.ollama_accessible ? "ok" : "offline"} · ${data.ollama_model}`,
-        );
+        setPage(detectedMode === "player" ? "conclave" : "session");
+        setPlayerSessionView("memory");
+        setStatus(connectedStatus(data));
         setAuthVersion((current) => current + 1);
       })
       .catch(() => {
@@ -144,23 +255,19 @@ export default function App() {
     setPage(next);
   }
 
-  function openScenePanel(sceneId?: number) {
-    if (sceneId) localStorage.setItem("omnisvera_selected_scene", String(sceneId));
-    navigate(mode === "gm" ? "session" : "player");
-  }
-
   return (
     <main className={`app-shell ${authenticated ? "authenticated" : ""}`}>
-      <header className="hero">
+      <header className="hero app-title-bar">
         <h1>OMNISVERA</h1>
+        {authenticated && !accessPanelOpen && (
+          <section className="access-summary">
+            <span><b>{mode === "player" ? "Jogador" : "Mestre"}</b><small>{status}</small></span>
+            <div className="access-summary-actions"><button className="secondary-button" onClick={() => setAccessPanelOpen(true)}>Trocar acesso</button></div>
+          </section>
+        )}
       </header>
 
-      {authenticated && !accessPanelOpen ? (
-        <section className="access-summary">
-          <span><b>{mode === "player" ? "Jogador" : "Mestre"}</b><small>{status}</small></span>
-          <div className="access-summary-actions"><button className="secondary-button" onClick={() => setAccessPanelOpen(true)}>Trocar acesso</button></div>
-        </section>
-      ) : <section className="token-bar">
+      {(!authenticated || accessPanelOpen) && <section className="token-bar">
         <div className="mode-switch">
           <button
             className={mode === "gm" ? "active" : ""}
@@ -177,7 +284,8 @@ export default function App() {
             onClick={() => {
               setMode("player");
               setAccessMode("player");
-              navigate("player");
+              navigate("conclave");
+              setPlayerSessionView("memory");
             }}
           >
             Jogador
@@ -200,14 +308,20 @@ export default function App() {
             <span>⌂</span><small>Mesa</small>
           </button>
         ) : (
-          <button className={page === "player" ? "active" : ""} onClick={() => navigate("player")}>
-            <span>⌂</span><small>Início</small>
+          <button className={page === "conclave" ? "active" : ""} onClick={() => { navigate("conclave"); setPlayerSessionView("memory"); }}>
+            <span>◉</span><small>Sessão</small>
           </button>
         )}
-        <button className={page === "conclave" ? "active" : ""} onClick={() => navigate("conclave")}>
-          <span>◈</span><small>Conclave</small>
-        </button>
-        {gameWebUrl && (
+        {mode === "gm" && <button className={page === "maps" ? "active" : ""} onClick={() => navigate("maps")}>
+          <span>▧</span><small>Mapas</small>
+        </button>}
+        {mode === "gm" && <button className={page === "conclave" ? "active" : ""} onClick={() => navigate("conclave")}>
+          <span>◉</span><small>Sessão</small>
+        </button>}
+        {mode === "gm" && <button className={page === "scenes" ? "active" : ""} onClick={() => navigate("scenes")}>
+          <span>✦</span><small>Cenas</small>
+        </button>}
+        {mode === "gm" && gameWebUrl && (
           <button className={page === "game" ? "active" : ""} onClick={() => navigate("game")}>
             <span>▶</span><small>Jogar</small>
           </button>
@@ -227,10 +341,18 @@ export default function App() {
           </div>
         </section>
       )}
-      {authenticated && page === "session" && mode === "gm" && <SessionWorkspace key={`workspace-${authVersion}-gm`} mode="gm" />}
-      {authenticated && page === "player" && mode === "player" && <SessionWorkspace key={`workspace-${authVersion}-player`} mode="player" />}
-      {authenticated && page === "conclave" && <ConclaveHub key={`conclave-${authVersion}-${mode}`} mode={mode === "player" ? "player" : "gm"} onOpenScene={openScenePanel} />}
-      {authenticated && page === "game" && gameWebUrl && (
+      {authenticated && ((mode === "gm" && ["session", "maps", "conclave", "scenes"].includes(page)) || (mode === "player" && page === "conclave")) && (
+        <section className={page === "scenes" ? "session-workspace unified-workspace scene-workspace-surface" : page === "conclave" && (mode === "gm" || playerSessionView === "memory") ? `session-workspace unified-workspace campaign-memory-surface campaign-memory-${campaignView}` : "workspace-surface"}>
+          <SessionWorkspace
+            key={`workspace-${authVersion}-${mode}`}
+            mode={mode}
+            view={page === "maps" ? "maps" : page === "scenes" || (page === "conclave" && (mode === "gm" || playerSessionView === "memory")) ? "memory" : "table"}
+          />
+          {page === "conclave" && (mode === "gm" || playerSessionView === "memory") && <CampaignMemoryPage key={`campaign-memory-${authVersion}-${mode}`} mode={mode} view={campaignView} onViewChange={setCampaignView} />}
+          {page === "scenes" && mode === "gm" && <ScenePanel key={`scene-admin-${authVersion}`} mode="gm" surface="admin" />}
+        </section>
+      )}
+      {authenticated && mode === "gm" && page === "game" && gameWebUrl && (
         <section className="panel game-panel">
           <div className="chat-header">
             <h2>Nimalis</h2>
@@ -242,7 +364,7 @@ export default function App() {
           <iframe key={gameWebUrl} title="Nimalis" src={gameWebUrl} className="game-frame" allow="fullscreen" allowFullScreen />
         </section>
       )}
-      <DiceRollOverlay />
+      <DiceRollOverlay enabled={authenticated} />
     </main>
   );
 }

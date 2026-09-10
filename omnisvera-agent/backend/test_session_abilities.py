@@ -9,10 +9,13 @@ from tempfile import TemporaryDirectory
 
 from app.character_play import (
     apply_character_action,
+    build_character_definition,
     init_character_play,
     load_session_abilities,
     seed_session_ability_resources,
 )
+from app.player_inventory import init_player_inventory, upsert_inventory
+from app.dice_rolls import resolve_character_roll
 
 
 def by_name(profile_id: str) -> dict[str, dict]:
@@ -20,6 +23,120 @@ def by_name(profile_id: str) -> dict[str, dict]:
 
 
 class SessionAbilityCatalogTests(unittest.TestCase):
+    def test_cloak_and_leather_armor_add_two_non_stacking_points_to_sheet_ac(self) -> None:
+        sheet = {"steps": [{"key": "armor", "fields": {"armor_class": 14}}]}
+        note = {"title": "Raziel", "frontmatter": {}, "content": ""}
+        inventory = [
+            {"item_path": "Items/manto.md", "item_title": "Manto Primordial", "item_type": "Manto", "quantity": 1, "equipped": True},
+            {"item_path": "Items/couro.md", "item_title": "Armadura de couro", "item_type": "Armadura leve", "quantity": 1, "equipped": True},
+        ]
+        defenses = build_character_definition(profile_id="raziel", note=note, sheet=sheet, inventory=inventory)["defenses"]
+        self.assertEqual(defenses["base_armor_class"], 14)
+        self.assertEqual(defenses["armor_class"], 16)
+        self.assertEqual(defenses["armor_modifier"], 2)
+        self.assertEqual(defenses["armor_modifier_source"]["value"], 2)
+
+    def test_plate_armor_does_not_duplicate_ac_already_recorded_on_sheet(self) -> None:
+        sheet = {"steps": [{"key": "armor", "fields": {"armor_class": 22}}]}
+        note = {"title": "Vezemir", "frontmatter": {}, "content": ""}
+        inventory = [{"item_path": "Items/placas.md", "item_title": "Armadura de placas", "item_type": "Armadura pesada", "quantity": 1, "equipped": True}]
+        defenses = build_character_definition(profile_id="vezemir", note=note, sheet=sheet, inventory=inventory)["defenses"]
+        self.assertEqual(defenses["base_armor_class"], 22)
+        self.assertEqual(defenses["armor_class"], 22)
+        self.assertEqual(defenses["armor_modifier"], 6)
+        self.assertEqual(defenses["armor_modifier_source"]["item_title"], "Armadura de placas")
+        self.assertTrue(defenses["armor_modifier_source"]["included_in_sheet"])
+
+    def test_equipped_item_rules_modify_attributes_ac_and_abilities(self) -> None:
+        sheet = {
+            "steps": [
+                {"key": "attributes", "fields": {"strength": 10, "dexterity": 12}},
+                {"key": "armor", "fields": {"armor_class": 13}},
+                {"key": "attacks", "fields": {"melee_bonus": 0}},
+                {"key": "character_class", "fields": {"hit_points": 10}},
+            ]
+        }
+        note = {"title": "Varkh", "frontmatter": {}, "content": ""}
+        inventory = [{
+            "item_path": "session-item:99", "item_title": "Manto Rúnico", "item_type": "Manto",
+            "quantity": 1, "equipped": True,
+            "effect_rules": [
+                {"id": "strength", "trigger": "while_equipped", "kind": "attribute_bonus", "target": "strength", "value": 2},
+                {"id": "armor", "trigger": "while_equipped", "kind": "armor_class_bonus", "target": "", "value": 2},
+                {"id": "sight", "trigger": "while_equipped", "kind": "grant_ability", "target": "Visão Arcana", "value": 0, "label": "Enxerga runas ocultas."},
+                {"id": "attack", "trigger": "while_equipped", "kind": "attack_bonus", "target": "melee", "value": 1},
+                {"id": "hp", "trigger": "while_equipped", "kind": "maximum_hp_bonus", "target": "", "value": 3},
+                {"id": "skill", "trigger": "while_equipped", "kind": "skill_bonus", "target": "Percepção", "value": 2},
+                {"id": "fire", "trigger": "while_equipped", "kind": "resistance", "target": "fogo", "value": 0},
+            ],
+        }]
+        definition = build_character_definition(profile_id="varkh", note=note, sheet=sheet, inventory=inventory)
+        self.assertEqual(definition["base_attributes"]["strength"], 10)
+        self.assertEqual(definition["attributes"]["strength"], 12)
+        self.assertEqual(definition["defenses"]["base_armor_class"], 13)
+        self.assertEqual(definition["defenses"]["armor_class"], 15)
+        self.assertEqual(definition["defenses"]["armor_modifier"], 2)
+        self.assertIn("Visão Arcana", {ability["name"] for ability in definition["session_abilities"]})
+        self.assertEqual(definition["attacks"][0]["attack_bonus"], 1)
+        self.assertEqual(definition["progression"]["maximum_hp_modifier"], 3)
+        self.assertEqual(definition["item_effects"]["skill_modifiers"]["Percepção"], 2)
+        self.assertEqual(definition["item_effects"]["resistances"], ["fogo"])
+
+    def test_combat_definition_binds_weapon_damage_and_support_items_to_attack(self) -> None:
+        sheet = {"steps": [{"key": "attacks", "fields": {"melee_bonus": 2, "ranged_bonus": 1}}]}
+        note = {"title": "Morthak", "frontmatter": {}, "content": ""}
+        inventory = [
+            {
+                "item_path": "session-item:staff", "item_title": "Cajado de Morthak", "item_type": "Arma",
+                "quantity": 1, "equipped": True, "equipment_slot": "Corpo a corpo", "damage_formula": "1d6",
+                "thumbnail": "zz_media/staff.png", "effect_rules": [],
+            },
+            {
+                "item_path": "session-item:ring", "item_title": "Anel de Precisão", "item_type": "Acessório",
+                "quantity": 1, "equipped": True, "equipment_slot": "Acessório", "cover": "zz_media/ring.png",
+                "effect_rules": [
+                    {"id": "attack", "trigger": "while_equipped", "kind": "attack_bonus", "target": "melee", "value": 1},
+                    {"id": "damage", "trigger": "while_equipped", "kind": "damage_bonus", "target": "melee", "value": 2},
+                ],
+            },
+        ]
+        definition = build_character_definition(profile_id="morthak", note=note, sheet=sheet, inventory=inventory)
+        melee = next(attack for attack in definition["attacks"] if attack["id"] == "melee")
+        ranged = next(attack for attack in definition["attacks"] if attack["id"] == "ranged")
+        self.assertEqual(melee["attack_bonus"], 3)
+        self.assertEqual(melee["damage"], "1d6+2")
+        self.assertEqual(melee["weapon_item_path"], "session-item:staff")
+        self.assertEqual([(item["item_path"], item["role"]) for item in melee["equipment"]], [
+            ("session-item:staff", "weapon"), ("session-item:ring", "support"),
+        ])
+        self.assertIsNone(ranged["weapon_item_path"])
+        self.assertEqual(ranged["equipment"], [])
+        self.assertEqual(resolve_character_roll(definition, inventory, "attack", "melee").formula, "1d20+3")
+        self.assertEqual(resolve_character_roll(definition, inventory, "damage", "session-item:staff").formula, "1d6+2")
+
+    def test_non_stacking_item_rules_use_the_largest_modifier(self) -> None:
+        sheet = {"steps": [{"key": "attributes", "fields": {"strength": 10}}]}
+        note = {"title": "Teste", "frontmatter": {}, "content": ""}
+        inventory = [
+            {"item_path": "one", "item_title": "Um", "quantity": 1, "equipped": True, "effect_rules": [{"id": "a", "trigger": "while_equipped", "kind": "attribute_bonus", "target": "strength", "value": 2, "stacking": "non_stack"}]},
+            {"item_path": "two", "item_title": "Dois", "quantity": 1, "equipped": True, "effect_rules": [{"id": "b", "trigger": "while_equipped", "kind": "attribute_bonus", "target": "strength", "value": 4, "stacking": "non_stack"}]},
+        ]
+        definition = build_character_definition(profile_id="test", note=note, sheet=sheet, inventory=inventory)
+        self.assertEqual(definition["attributes"]["strength"], 14)
+
+    def test_item_charges_can_be_spent_and_restore_on_inn_rest(self) -> None:
+        with TemporaryDirectory() as directory:
+            database_path = Path(directory) / "companion.sqlite3"
+            init_character_play(database_path)
+            init_player_inventory(database_path)
+            with closing(sqlite3.connect(database_path)) as connection, connection:
+                connection.execute("INSERT INTO character_states(profile_id,state_json,version,updated_at) VALUES(?,?,1,?)", ("test", json.dumps({"current_hp": 5, "maximum_hp": 5, "temporary_hp": 0, "conditions": [], "resources": []}), "2026-08-21T00:00:00+00:00"))
+            upsert_inventory(database_path, profile_id="test", item_path="relic", item_title="Relíquia", quantity=1, equipped=True, notes=None, charges_current=3, charges_max=3, recharge="inn_rest")
+            apply_character_action(database_path, character_id="test", actor_id="test", actor_role="player", action="change_charges", payload={"item_path": "relic", "charges": 2})
+            self.assertEqual(upsert_inventory(database_path, profile_id="test", item_path="relic", item_title="Relíquia", quantity=1, equipped=True, notes=None)["charges_current"], 2)
+            apply_character_action(database_path, character_id="test", actor_id="master", actor_role="gm", action="rest_at_inn", payload={})
+            self.assertEqual(upsert_inventory(database_path, profile_id="test", item_path="relic", item_title="Relíquia", quantity=1, equipped=True, notes=None)["charges_current"], 3)
+
     def test_each_character_receives_only_their_catalog(self) -> None:
         expected = {
             "raziel": {

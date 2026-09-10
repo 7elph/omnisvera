@@ -8,6 +8,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Literal
 
+from .session_context import active_game_session_id, table_exists
+
 
 ActorRole = Literal["gm", "player"]
 
@@ -282,6 +284,27 @@ def init_contract_play(database_path: Path) -> None:
             CREATE INDEX IF NOT EXISTS idx_contract_events_contract ON contract_events(contract_id,id DESC);
             """
         )
+        event_columns = {row[1] for row in connection.execute("PRAGMA table_info(contract_events)")}
+        if "game_session_id" not in event_columns:
+            connection.execute(
+                "ALTER TABLE contract_events ADD COLUMN game_session_id INTEGER"
+                + (" REFERENCES game_sessions(id)" if table_exists(connection, "game_sessions") else "")
+            )
+        connection.execute(
+            "CREATE INDEX IF NOT EXISTS idx_contract_events_game_session ON contract_events(game_session_id,id DESC)"
+        )
+        connection.execute(
+            """
+            UPDATE contract_events
+            SET game_session_id=(
+              SELECT contracts.session_id FROM contracts WHERE contracts.id=contract_events.contract_id
+            )
+            WHERE game_session_id IS NULL AND EXISTS(
+              SELECT 1 FROM contracts
+              WHERE contracts.id=contract_events.contract_id AND contracts.session_id IS NOT NULL
+            )
+            """
+        )
 
 
 def _event(
@@ -306,15 +329,27 @@ def _event(
         existing = connection.execute("SELECT * FROM contract_events WHERE event_key=?", (event_key,)).fetchone()
         if existing:
             return _record(existing) or {}
+    contract_context = connection.execute(
+        "SELECT campaign_id,session_id FROM contracts WHERE id=?",
+        (contract_id,),
+    ).fetchone()
+    if not contract_context:
+        raise ValueError("Contrato inexistente")
+    game_session_id = (
+        int(contract_context["session_id"])
+        if contract_context["session_id"] is not None
+        else active_game_session_id(connection, str(contract_context["campaign_id"]))
+    )
     cursor = connection.execute(
         """
-        INSERT INTO contract_events(event_key,contract_id,actor_id,actor_role,event_type,title,public_text,
+        INSERT INTO contract_events(event_key,contract_id,game_session_id,actor_id,actor_role,event_type,title,public_text,
           private_text,objective_id,scene_id,character_id,reward_id,visibility,created_at)
-        VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+        VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
         """,
         (
             event_key,
             contract_id,
+            game_session_id,
             actor_id,
             actor_role,
             event_type,
@@ -498,6 +533,14 @@ def list_contracts(database_path: Path, *, campaign_id: str = "omnisvera", acces
             if payload is not None:
                 result.append(payload)
         return result
+
+
+def current_operational_contract(contracts: list[dict[str, Any]]) -> dict[str, Any] | None:
+    """Select mission focus from operational contract state, never UI selection."""
+    return next((item for item in contracts if item.get("status") == "active"), None) or next(
+        (item for item in contracts if item.get("status") == "accepted"),
+        None,
+    )
 
 
 def get_contract(database_path: Path, contract_id: int, *, access_mode: str, profile_id: str | None = None) -> dict[str, Any] | None:
@@ -1185,18 +1228,19 @@ def _write_character_event(
     after: Any,
     reason: str,
     session_id: str | None,
+    game_session_id: int | None,
 ) -> int:
     cursor = connection.execute(
         """
-        INSERT INTO character_events(character_id,session_id,actor_id,actor_role,event_type,field,before_json,after_json,reason,created_at)
-        VALUES(?,?,?,?,?,?,?,?,?,?)
+        INSERT INTO character_events(character_id,session_id,game_session_id,actor_id,actor_role,event_type,field,before_json,after_json,reason,created_at)
+        VALUES(?,?,?,?,?,?,?,?,?,?,?)
         """,
-        (character_id, session_id, actor_id, "gm", event_type, field, _json(before), _json(after), reason, _now()),
+        (character_id, session_id, game_session_id, actor_id, "gm", event_type, field, _json(before), _json(after), reason, _now()),
     )
     return int(cursor.lastrowid)
 
 
-def _grant_currency(connection: sqlite3.Connection, *, character_id: str, amount: int | float, actor_id: str, reason: str, session_id: str | None) -> int:
+def _grant_currency(connection: sqlite3.Connection, *, character_id: str, amount: int | float, actor_id: str, reason: str, session_id: str | None, game_session_id: int | None) -> int:
     if amount <= 0:
         raise ValueError("Quantidade de moeda inválida")
     _row, state = _load_character_state(connection, character_id)
@@ -1204,7 +1248,7 @@ def _grant_currency(connection: sqlite3.Connection, *, character_id: str, amount
     after = before + amount
     state["coins"] = after
     connection.execute("UPDATE character_states SET state_json=?, version=version+1, updated_at=? WHERE profile_id=?", (_json(state), _now(), character_id))
-    return _write_character_event(connection, character_id=character_id, actor_id=actor_id, event_type="change_coins", field="coins", before=before, after=after, reason=reason, session_id=session_id)
+    return _write_character_event(connection, character_id=character_id, actor_id=actor_id, event_type="change_coins", field="coins", before=before, after=after, reason=reason, session_id=session_id, game_session_id=game_session_id)
 
 
 def _inventory_row(connection: sqlite3.Connection, character_id: str, item_path: str) -> dict[str, Any] | None:
@@ -1216,7 +1260,7 @@ def _inventory_row(connection: sqlite3.Connection, character_id: str, item_path:
     return record
 
 
-def _grant_item(connection: sqlite3.Connection, *, character_id: str, item_path: str, item_title: str, quantity: int, actor_id: str, reason: str, session_id: str | None) -> int:
+def _grant_item(connection: sqlite3.Connection, *, character_id: str, item_path: str, item_title: str, quantity: int, actor_id: str, reason: str, session_id: str | None, game_session_id: int | None) -> int:
     if quantity <= 0:
         raise ValueError("Quantidade de item inválida")
     before = _inventory_row(connection, character_id, item_path)
@@ -1239,7 +1283,7 @@ def _grant_item(connection: sqlite3.Connection, *, character_id: str, item_path:
         (character_id, item_path, item_title, int(after["quantity"]), int(after["equipped"]), after.get("notes"), _now()),
     )
     after = _inventory_row(connection, character_id, item_path)
-    return _write_character_event(connection, character_id=character_id, actor_id=actor_id, event_type="grant_item", field=f"inventory.{item_path}", before=before, after=after, reason=reason, session_id=session_id)
+    return _write_character_event(connection, character_id=character_id, actor_id=actor_id, event_type="grant_item", field=f"inventory.{item_path}", before=before, after=after, reason=reason, session_id=session_id, game_session_id=game_session_id)
 
 
 def _current_reputation(connection: sqlite3.Connection, *, campaign_id: str, faction_name: str, character_id: str | None, party_id: str | None) -> int:
@@ -1305,13 +1349,14 @@ def deliver_reward(database_path: Path, reward_id: int, *, request_id: str, acto
         reward_type = reward["reward_type"]
         quantity = _number(reward.get("quantity")) or 0
         reason = f"Recompensa do contrato: {contract['title']}"
+        game_session_id = int(contract["session_id"]) if contract.get("session_id") is not None else active_game_session_id(connection, contract["campaign_id"])
         character_events: list[int] = []
         reputation_entries: list[dict[str, Any]] = []
         if reward_type == "currency":
             if not character_ids:
                 raise ValueError("Destinatário inválido")
             for character_id in character_ids:
-                character_events.append(_grant_currency(connection, character_id=character_id, amount=quantity, actor_id=actor_id, reason=reason, session_id=f"contract:{contract['id']}"))
+                character_events.append(_grant_currency(connection, character_id=character_id, amount=quantity, actor_id=actor_id, reason=reason, session_id=f"contract:{contract['id']}", game_session_id=game_session_id))
         elif reward_type == "item":
             if not character_ids:
                 raise ValueError("Destinatário inválido")
@@ -1320,7 +1365,7 @@ def deliver_reward(database_path: Path, reward_id: int, *, request_id: str, acto
             if not item_name or not item_path:
                 raise ValueError("Item inválido")
             for character_id in character_ids:
-                character_events.append(_grant_item(connection, character_id=character_id, item_path=item_path, item_title=item_name, quantity=int(quantity or 1), actor_id=actor_id, reason=reason, session_id=f"contract:{contract['id']}"))
+                character_events.append(_grant_item(connection, character_id=character_id, item_path=item_path, item_title=item_name, quantity=int(quantity or 1), actor_id=actor_id, reason=reason, session_id=f"contract:{contract['id']}", game_session_id=game_session_id))
         elif reward_type == "reputation":
             faction = str(reward.get("reputation_faction") or "").strip()
             delta = int(reward.get("reputation_amount") or quantity or 0)

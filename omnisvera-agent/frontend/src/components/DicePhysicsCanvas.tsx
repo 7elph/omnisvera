@@ -2,11 +2,20 @@ import { useEffect, useRef } from "react";
 import type { BufferGeometry, Material, Mesh, Object3D, Texture, Vector3 } from "three";
 import type { Body, Quaternion as CannonQuaternion, Shape } from "cannon-es";
 import type { DiceRollEvent } from "../api";
+import { diceElapsedSeconds, DICE_SETTLE_START, DICE_SETTLE_DURATION } from "./diceTiming";
 
 export type DiceVisualRoll = Pick<DiceRollEvent, "id" | "label" | "formula" | "dice" | "individual_results" | "total"> &
   Partial<Pick<DiceRollEvent, "character_id" | "roll_type" | "modifier" | "created_at">>;
 
-type Props = { roll: DiceVisualRoll; compact?: boolean };
+type Props = { roll: DiceVisualRoll; compact?: boolean; onReady?: () => void };
+
+type PhysicsModules = [typeof import("three"), typeof import("cannon-es")];
+let physicsModulesPromise: Promise<PhysicsModules> | null = null;
+
+export function preloadDicePhysics() {
+  physicsModulesPromise ||= Promise.all([import("three"), import("cannon-es")]);
+  return physicsModulesPromise;
+}
 
 const CHARACTER_COLORS: Record<string, [number, number]> = {
   sage: [0xb878ec, 0x52286f], vezemir: [0xd08a42, 0x6b301c], raziel: [0xd34969, 0x5d1326],
@@ -47,25 +56,29 @@ function seededRandom(seedText: string) {
   };
 }
 
-export default function DicePhysicsCanvas({ roll, compact = false }: Props) {
+export default function DicePhysicsCanvas({ roll, compact = false, onReady }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) { onReady?.(); return; }
     let disposed = false;
     let animationFrame = 0;
     let cleanup = () => {};
 
-    void Promise.all([import("three"), import("cannon-es")]).then(([THREE, CANNON]) => {
+    void preloadDicePhysics().then(([THREE, CANNON]) => {
       if (disposed) return;
+      const deviceMemory = (navigator as Navigator & { deviceMemory?: number }).deviceMemory;
+      const mobile = window.matchMedia("(max-width: 760px)").matches;
+      const lowPower = mobile || (navigator.hardwareConcurrency || 8) <= 4 || (deviceMemory != null && deviceMemory <= 4);
       const disposables: Array<Material | BufferGeometry | Texture> = [];
       type FaceMark = { normal: Vector3; value: string; setValue: (value: string) => void };
       const objects: Array<{ mesh: Mesh; body: Body; faces: FaceMark[]; wanted: string; target: CannonQuaternion; settled: boolean }> = [];
-      const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true, powerPreference: "high-performance" });
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, compact ? 1.25 : 1.6));
-      renderer.shadowMap.enabled = true;
-      renderer.shadowMap.type = THREE.PCFShadowMap;
+      const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: !lowPower, powerPreference: mobile ? "low-power" : "high-performance" });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, compact ? 1.15 : mobile ? 1 : lowPower ? 1.1 : 1.35));
+      renderer.shadowMap.enabled = !lowPower;
+      if (renderer.shadowMap.enabled) renderer.shadowMap.type = THREE.PCFShadowMap;
       renderer.outputColorSpace = THREE.SRGBColorSpace;
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
       renderer.toneMappingExposure = 1.15;
@@ -76,8 +89,8 @@ export default function DicePhysicsCanvas({ roll, compact = false }: Props) {
       camera.lookAt(0, -.4, 0);
       scene.add(new THREE.HemisphereLight(0xfff1d0, 0x100d1c, compact ? 2.4 : 2.1));
       const keyLight = new THREE.DirectionalLight(0xffd596, compact ? 5 : 5.8);
-      keyLight.position.set(-5, 9, 7); keyLight.castShadow = true;
-      keyLight.shadow.mapSize.set(compact ? 512 : 1024, compact ? 512 : 1024); scene.add(keyLight);
+      keyLight.position.set(-5, 9, 7); keyLight.castShadow = !lowPower;
+      keyLight.shadow.mapSize.set(compact ? 256 : lowPower ? 256 : 512, compact ? 256 : lowPower ? 256 : 512); scene.add(keyLight);
       const rimLight = new THREE.DirectionalLight(0x86a9ff, 2.8); rimLight.position.set(7, 4, -6); scene.add(rimLight);
 
       const world = new CANNON.World({ gravity: new CANNON.Vec3(0, compact ? -22 : -18, 0) });
@@ -89,7 +102,7 @@ export default function DicePhysicsCanvas({ roll, compact = false }: Props) {
       disposables.push(floorMesh.geometry, floorMesh.material);
 
       const sides = sidesFrom(roll.dice);
-      const results = roll.individual_results.slice(0, compact ? 8 : 12);
+      const results = roll.individual_results.slice(0, compact ? 8 : mobile ? 4 : 12);
       const [primary, secondary] = colorsFor(roll);
       const critical = results.some((value) => value === sides);
       const fumble = sides === 20 && results.some((value) => value === 1);
@@ -222,9 +235,12 @@ export default function DicePhysicsCanvas({ roll, compact = false }: Props) {
       visualResults.forEach((visual, index) => {
         const random = seededRandom(`${roll.id}:${roll.created_at || ""}:${visual.wanted}:${visual.seed}`);
         const geometry = geometryFor(visual.die);
-        const material = new THREE.MeshPhysicalMaterial({ color: index % 2 ? secondary : primary, metalness: critical ? .48 : .24,
-          roughness: critical ? .18 : .3, clearcoat: .72, clearcoatRoughness: .18,
-          emissive: critical ? 0x6b4a10 : fumble ? 0x4c0710 : secondary, emissiveIntensity: critical || fumble ? .42 : .12, flatShading: true });
+        const material = mobile
+          ? new THREE.MeshStandardMaterial({ color: index % 2 ? secondary : primary, metalness: critical ? .35 : .14, roughness: critical ? .3 : .46,
+            emissive: critical ? 0x6b4a10 : fumble ? 0x4c0710 : secondary, emissiveIntensity: critical || fumble ? .3 : .08, flatShading: true })
+          : new THREE.MeshPhysicalMaterial({ color: index % 2 ? secondary : primary, metalness: critical ? .48 : .24,
+            roughness: critical ? .18 : .3, clearcoat: .72, clearcoatRoughness: .18,
+            emissive: critical ? 0x6b4a10 : fumble ? 0x4c0710 : secondary, emissiveIntensity: critical || fumble ? .42 : .12, flatShading: true });
         const mesh = new THREE.Mesh(geometry, material); mesh.castShadow = true; mesh.receiveShadow = true;
         const edges = new THREE.LineSegments(new THREE.EdgesGeometry(geometry), new THREE.LineBasicMaterial({ color: 0xf5dfad, transparent: true, opacity: .48 }));
         mesh.add(edges);
@@ -291,24 +307,30 @@ export default function DicePhysicsCanvas({ roll, compact = false }: Props) {
         ));
         body.velocity.x *= .35; body.velocity.z *= .35;
       };
-      let previousFrame = performance.now(); let elapsed = 0;
+      const settleStart = DICE_SETTLE_START;
+      const settleDuration = DICE_SETTLE_DURATION;
+      const settleEnd = settleStart + settleDuration;
+      const startedAt = performance.now();
+      let previousFrame = startedAt; let elapsed = 0;
       const render = () => {
         if (disposed) return;
         const currentFrame = performance.now();
         const delta = Math.min((currentFrame - previousFrame) / 1000, 1 / 30);
-        previousFrame = currentFrame; elapsed += delta; world.step(1 / 60, delta, 5);
+        previousFrame = currentFrame;
+        elapsed = diceElapsedSeconds(startedAt, currentFrame);
+        world.step(1 / 60, delta, 5);
         objects.forEach((object) => {
           const { mesh, body } = object;
           let finalized = false;
-          if (!object.settled && elapsed >= 1.35) {
-            const progress = Math.min(1, (elapsed - 1.35) / 1.35);
+          if (!object.settled && elapsed >= settleStart) {
+            const progress = Math.min(1, (elapsed - settleStart) / settleDuration);
             const blend = .025 + progress * .12;
             body.quaternion.slerp(object.target, blend, body.quaternion);
             const damping = 1 - progress * .12;
             body.angularVelocity.set(body.angularVelocity.x * damping, body.angularVelocity.y * damping, body.angularVelocity.z * damping);
             body.velocity.set(body.velocity.x * (1 - progress * .035), body.velocity.y, body.velocity.z * (1 - progress * .035));
           }
-          if (!object.settled && elapsed >= 2.72) {
+          if (!object.settled && elapsed >= settleEnd) {
             body.quaternion.set(object.target.x, object.target.y, object.target.z, object.target.w);
             body.velocity.set(0, 0, 0); body.angularVelocity.set(0, 0, 0); body.sleep();
             object.settled = true;
@@ -323,12 +345,13 @@ export default function DicePhysicsCanvas({ roll, compact = false }: Props) {
         renderer.render(scene, camera); animationFrame = window.requestAnimationFrame(render);
       };
       render();
+      onReady?.();
       cleanup = () => {
         window.cancelAnimationFrame(animationFrame); window.removeEventListener("resize", resize);
         objects.forEach(({ body }) => world.removeBody(body)); world.removeBody(floorBody);
         disposables.forEach((item) => item.dispose()); renderer.dispose();
       };
-    });
+    }).catch(() => { onReady?.(); });
 
     return () => { disposed = true; window.cancelAnimationFrame(animationFrame); cleanup(); };
   }, [compact, roll]);

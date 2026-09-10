@@ -22,6 +22,7 @@ Desktop.ini
 /omnisvera-agent/backend/data/*
 !/omnisvera-agent/backend/data/.gitkeep
 /omnisvera-agent/backend/runtime-*.log
+/omnisvera-agent/.opencode-local/
 /omnisvera-agent/frontend/public/nimalis_backup_*/
 /omnisvera-agent/frontend/public/nimalis/*.TMP
 /omnisvera-agent/frontend/public/nimalis/*.tmp
@@ -40,3 +41,16 @@ Desktop.ini
 /omnisvera-model/data/frozen_eval/
 __pycache__/
 *.pyc
+
+# Local dependencies, credentials and operational artifacts
+node_modules/
+.venv/
+.env
+.env.local
+*.log
+*.pid
+.codex-remote-attachments/
+/.local-tools/bin/
+/.local-tools/tools/*.db
+/.local-tools/tools/*.db-*
+/tools/ai-console/.env*

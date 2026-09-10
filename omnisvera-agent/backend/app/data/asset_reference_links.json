@@ -1,0 +1,11 @@
+{
+  "confirmed_links": [
+    {
+      "mention": "golem",
+      "context_terms": ["ruina", "aranhas"],
+      "source": "Characters/Individual/Unidade DORN-7.md",
+      "public_label": "Golem das ruínas",
+      "provenance": "Confirmação explícita do Mestre em 2026-09-08: DORN-7 é o golem."
+    }
+  ]
+}

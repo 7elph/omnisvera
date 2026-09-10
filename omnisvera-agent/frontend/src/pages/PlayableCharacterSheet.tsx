@@ -23,6 +23,10 @@ import {
   updateCharacterDefinition,
 } from "../api";
 import CharacterSheetBuilder from "./CharacterSheetBuilder";
+import CharacterNotes from "../components/CharacterNotes";
+import CurrencyCounters from "../components/CurrencyCounters";
+import ArmorClassValue from "../components/ArmorClassValue";
+import CharacterLevel from "../components/CharacterLevel";
 import { cleanItemDisplayName, iconPathForItem } from "../companionIconCatalog";
 
 type CharacterTab = "summary" | "mechanics" | "combat" | "inventory" | "story" | "gm";
@@ -145,7 +149,7 @@ function MechanicsTab({ character, rolling, onRoll }: { character: PlayableChara
       {Object.entries(ATTRIBUTE_LABELS).map(([key, label]) => <article key={key}><small>{label}</small><strong>{shown(attributes[key], "—")}</strong><em>{signed(definition.attribute_modifiers?.[key])}</em><button disabled={definition.attribute_modifiers?.[key] == null || !!rolling} aria-label={`Rolar teste de ${label}`} onClick={() => void onRoll("attribute", key)}>Rolar teste</button></article>)}
     </div></section>
     <section className="sheet-card"><h3>Defesas</h3><dl className="definition-list">
-      <div><dt>Classe de Armadura</dt><dd>{shown(definition.defenses?.armor_class)}</dd></div>
+      <div><dt>Classe de Armadura</dt><dd><ArmorClassValue defenses={definition.defenses} inventory={character.inventory} /></dd></div>
       <div><dt>Jogada de Proteção</dt><dd>{shown(definition.defenses?.saving_throw)}</dd></div>
       <div><dt>Iniciativa</dt><dd>{definition.defenses?.initiative_configured ? signed(definition.defenses.initiative) : "Não configurada"}</dd></div>
     </dl><button disabled={!definition.defenses?.saving_throw || !!rolling} onClick={() => void onRoll("saving_throw")}>Rolar proteção</button></section>
@@ -420,6 +424,7 @@ export default function PlayableCharacterSheet({ mode }: { mode: "player" | "gm"
     finally { setRolling(""); }
   }
 
+
   const visibleTabs = useMemo(() => TAB_LABELS.filter((item) => item.key !== "gm" || mode === "gm"), [mode]);
 
   if (view === "creation") return <section className="playable-sheet-page"><div className="sheet-mode-switch"><button onClick={() => setView("play")}>Ficha de jogo</button><button className="active">Criação em 10 passos</button></div><CharacterSheetBuilder mode={mode} /></section>;
@@ -429,7 +434,7 @@ export default function PlayableCharacterSheet({ mode }: { mode: "player" | "gm"
     {loading && <p className="muted">Preparando ficha...</p>}
     {error && <p className="warning-text">{error}</p>}
     {!loading && character && <>
-      <header className="character-identity-card"><Portrait character={character.definition} /><div className="character-identity-copy"><p className="eyebrow">{character.definition.campaign || "Omnisvera"}</p><h2>{character.definition.name}</h2>{character.definition.epithet && <h3>{character.definition.epithet}</h3>}<div className="identity-tags"><span>{shown(character.definition.race)}</span><span>{shown(character.definition.class_name)}</span><span>Nível {shown(character.definition.level)}</span>{character.definition.player_name && <span>Jogador: {character.definition.player_name}</span>}</div><p>{shown(character.state?.location || character.definition.location, "Localização não informada")} · {shown(character.definition.current_status, "Estado não informado")}</p><button className="secondary-button location-map-link" onClick={() => window.dispatchEvent(new CustomEvent("omnisvera-open-map"))}>Abrir no mapa</button></div><div className="always-visible-stats"><QuickStat label="PV" value={character.state?.maximum_hp === null || character.state?.maximum_hp === undefined ? "—" : `${character.state.current_hp}/${character.state.maximum_hp}`} accent /><QuickStat label="CA" value={character.definition.defenses?.armor_class} /><QuickStat label="Iniciativa" value={character.definition.defenses?.initiative_configured ? signed(character.definition.defenses?.initiative) : "N/C"} /><QuickStat label="Desloc." value={character.definition.movement} /></div></header>
+      <header className="character-identity-card"><Portrait character={character.definition} /><CharacterLevel key={character.definition.id} level={character.definition.level || 1} experience={character.definition.progression?.experience ?? null} canEdit={mode === "gm"} onSave={updateDefinition} /><div className="character-identity-copy"><p className="eyebrow">{character.definition.campaign || "Omnisvera"}</p><h2>{character.definition.name}</h2>{character.definition.epithet && <h3>{character.definition.epithet}</h3>}<div className="identity-tags"><span>{shown(character.definition.race)}</span><span>{shown(character.definition.class_name)}</span>{character.definition.player_name && <span>Jogador: {character.definition.player_name}</span>}</div><p>{shown(character.state?.location || character.definition.location, "Localização não informada")} · {shown(character.definition.current_status, "Estado não informado")}</p><button className="secondary-button location-map-link" onClick={() => window.dispatchEvent(new CustomEvent("omnisvera-open-map"))}>Abrir no mapa</button></div>{character.access_level !== "public" && <CharacterNotes key={character.definition.id} characterId={character.definition.id} />}<div className="always-visible-stats"><QuickStat label="PV" value={character.state?.maximum_hp === null || character.state?.maximum_hp === undefined ? "—" : `${character.state.current_hp}/${character.state.maximum_hp}`} accent /><span><small>CA</small><strong><ArmorClassValue defenses={character.definition.defenses} inventory={character.inventory} /></strong></span><QuickStat label="Iniciativa" value={character.definition.defenses?.initiative_configured ? signed(character.definition.defenses?.initiative) : "N/C"} /><QuickStat label="Desloc." value={character.definition.movement} /></div></header>
       {rollResult && <aside className="sheet-roll-result" aria-live="assertive"><span><small>{rollResult.label}</small><strong>{rollResult.individual_results.join(" + ")}{rollResult.modifier ? ` ${rollResult.modifier > 0 ? "+" : "−"} ${Math.abs(rollResult.modifier)}` : ""}</strong></span><b>{rollResult.total}</b><button aria-label="Fechar resultado" onClick={() => setRollResult(null)}>×</button></aside>}
       {rollError && <p className="warning-text" role="alert">{rollError}</p>}
       {character.access_level === "public" ? <section className="sheet-card public-character-view"><h3>O que você conhece</h3><TextBlock value={character.definition.public_description} empty="Este personagem ainda não revelou mais informações a você." /></section> : <>
@@ -438,7 +443,7 @@ export default function PlayableCharacterSheet({ mode }: { mode: "player" | "gm"
           {tab === "summary" && <SummaryTab character={character} />}
           {tab === "mechanics" && <MechanicsTab character={character} rolling={rolling} onRoll={roll} />}
           {tab === "combat" && <CombatTab character={character} mode={mode} rolling={rolling} onAction={action} onRoll={roll} />}
-          {tab === "inventory" && <InventoryTab character={character} mode={mode} availableItems={availableItems} rolling={rolling} onAction={action} onRoll={roll} />}
+          {tab === "inventory" && <><InventoryTab character={character} mode={mode} availableItems={availableItems} rolling={rolling} onAction={action} onRoll={roll} /><CurrencyCounters key={character.definition.id} character={character} onChange={refresh} /></>}
           {tab === "story" && <StoryTab character={character} npcs={knownNpcs} />}
           {tab === "gm" && mode === "gm" && <GmTab character={character} events={events} onDefinition={updateDefinition} onAction={action} onRevert={revert} />}
         </div>

@@ -294,14 +294,24 @@ def _build_bootstrap_payload(memory, health, handoff, worlds, model_builders, re
     )
     try:
         per_world: dict[str, list[dict]] = {}
+        flat: list[dict] = []
         for desc in worlds.list():
-            per_world[desc.world_id] = memory.experience_list_world(desc.world_id)[:5]
+            lst = memory.experience_list_world(desc.world_id)[:5]
+            per_world[desc.world_id] = lst
+            flat.extend(lst)
+        flat = flat[:20]
+        total = len(flat)
+        truncated = total < sum(len(memory.experience_list_world(d.world_id)) for d in worlds.list())
         # bounded update ledger summary
         pending = len(memory.experience_update_list(status="pending", limit=20))
         failed = len(memory.experience_update_list(status="failed", limit=20))
         payload["experience"] = {"available": True, "per_world": per_world, "pending_updates": pending, "failed_updates": failed}
-    except Exception:
+        payload["experiences"] = flat
+        payload["experience_index"] = {"available": True, "error": None, "total": total, "returned": len(flat), "truncated": truncated}
+    except Exception as e:
         payload["experience"] = {"available": False, "per_world": {}, "pending_updates": 0, "failed_updates": 0}
+        payload["experiences"] = []
+        payload["experience_index"] = {"available": False, "error": str(e)[:500], "total": None, "returned": 0, "truncated": None}
     return payload
 
 
@@ -410,6 +420,12 @@ def register_foundation_tools(
     search = SearchCoordinator(lexical, semantic)
     search.refresh()
     memory = MemoryStore(root / ".assistant-runtime" / "omnisvera-mcp" / "memory.db")
+    from .experience.updater import ExperienceUpdaterRegistry
+    from .experience.football_elo import FootballEloUpdater
+    from .experience.crypto_btc import CryptoBtcDirectionUpdater
+    memory._experience_updater_registry = ExperienceUpdaterRegistry()
+    memory._experience_updater_registry.register(FootballEloUpdater())
+    memory._experience_updater_registry.register(CryptoBtcDirectionUpdater())
     companion = CompanionAdapter(root)
     health = HealthService(root, vault, git, lexical, semantic, companion, memory)
     handoff = HandoffService(vault, git, companion, memory, health)
@@ -559,6 +575,7 @@ def register_foundation_tools(
             frozenset({"memory.read"}),
         ),
         # System tools
+        # system.manifest: Stable capabilities of the system (worlds, builders, tool catalog). For current operational state and persisted PredictorExperiences, call system.bootstrap.
         RegisteredTool(
             "system.manifest",
             lambda _ctx, _args: json.dumps(generate_manifest(
@@ -569,7 +586,9 @@ def register_foundation_tools(
             "read",
             "system://manifest",
             frozenset({"system.health.read"}),
+            description="Stable capabilities of the system (worlds, builders, tool catalog). For current operational state and persisted PredictorExperiences, call system.bootstrap.",
         ),
+        # system.bootstrap: Current operational state: identity, worlds, memories, and persisted PredictorExperiences (world_id/predictor_id/predictor_version/experience_id/latest_state_version/learned_state_schema/integrity_ok). Use this to discover which predictor_version to use for experience.latest.
         RegisteredTool(
             "system.bootstrap",
             lambda _ctx, _args: json.dumps(
@@ -580,6 +599,7 @@ def register_foundation_tools(
             "read",
             "system://bootstrap",
             frozenset({"system.health.read"}),
+            description="Current operational state: identity, worlds, memories, and persisted PredictorExperiences (world_id/predictor_id/predictor_version/experience_id/latest_state_version/learned_state_schema/integrity_ok). Use this to discover which predictor_version to use for experience.latest.",
         ),
         # Companion
         RegisteredTool(
@@ -689,26 +709,32 @@ def register_foundation_tools(
             "epistemic://snapshots",
             frozenset({"epistemic.write"}),
         ),
+        # epistemic.snapshot_from_model: Create an immutable snapshot from a complete WorldModel dict as returned by world.model (must contain world_id and state as object). Do NOT use world.context or world.context.model (summary only). Preserve additional fields.
         RegisteredTool(
             "epistemic.snapshot_from_model",
             lambda _ctx, args: epistemic.snapshot_from_model(memory, _ctx, args),
             "write",
             "epistemic://snapshots",
             frozenset({"epistemic.write"}),
+            description="Create an immutable snapshot from a complete WorldModel dict as returned by world.model (must contain world_id and state as object). Do NOT use world.context or world.context.model (summary only). Preserve additional fields.",
         ),
+        # epistemic.validate_candidate: Validate an epistemic PredictionCandidate before persistence (first step of governed route validate_candidate → commit_candidate). Candidate must use model_snapshot_id (not snapshot_id). When continuing a PredictorExperience, include exactly experience_id, experience_state_version, experience_state_hash and model_snapshot_id.
         RegisteredTool(
             "epistemic.validate_candidate",
             lambda _ctx, args: epistemic.validate_candidate(memory, _ctx, args),
             "read",
             "epistemic://predictions",
             frozenset({"epistemic.read"}),
+            description="Validate an epistemic PredictionCandidate before persistence (first step of governed route validate_candidate → commit_candidate). Candidate must use model_snapshot_id (not snapshot_id). When continuing a PredictorExperience, include exactly experience_id, experience_state_version, experience_state_hash and model_snapshot_id.",
         ),
+        # epistemic.commit_candidate: Governed remote write to persist a validated PredictionCandidate (second step after validate_candidate returns valid:true). Candidate must use model_snapshot_id (not snapshot_id). When continuing a PredictorExperience, include exactly experience_id, experience_state_version, experience_state_hash and model_snapshot_id. Enforces candidate validity, authorization binding and candidate_hash idempotence.
         RegisteredTool(
             "epistemic.commit_candidate",
             lambda _ctx, args: epistemic.commit_candidate(memory, _ctx, args),
             "write",
             "epistemic://predictions",
             frozenset({"epistemic.write"}),
+            description="Governed remote write to persist a validated PredictionCandidate (second step after validate_candidate returns valid:true). Candidate must use model_snapshot_id (not snapshot_id). When continuing a PredictorExperience, include exactly experience_id, experience_state_version, experience_state_hash and model_snapshot_id. Enforces candidate validity, authorization binding and candidate_hash idempotence.",
         ),
         RegisteredTool(
             "epistemic.create_prediction",
@@ -778,6 +804,7 @@ def register_foundation_tools(
             "experience://state",
             frozenset({"experience.write"}),
         ),
+        # experience.get: Get predictor experience by experience_id (obtain id from system.bootstrap.experiences).
         RegisteredTool(
             "experience.get",
             lambda _ctx, args: json.dumps(
@@ -787,7 +814,9 @@ def register_foundation_tools(
             "read",
             "experience://state",
             frozenset({"experience.read"}),
+            description="Get predictor experience by experience_id (obtain id from system.bootstrap.experiences).",
         ),
+        # experience.latest: Get latest experience version for a predictor/world. Discover predictor_version via system.bootstrap.experiences (or system.bootstrap.experience.per_world). Do not infer/adivinhar version like 1.0.0.
         RegisteredTool(
             "experience.latest",
             lambda _ctx, args: json.dumps(
@@ -801,6 +830,7 @@ def register_foundation_tools(
             "read",
             "experience://state",
             frozenset({"experience.read"}),
+            description="Get latest experience version for a predictor/world. Discover predictor_version via system.bootstrap.experiences (or system.bootstrap.experience.per_world). Do not infer/adivinhar version like 1.0.0.",
         ),
         RegisteredTool(
             "experience.history",

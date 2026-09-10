@@ -187,6 +187,13 @@ class CryptoWorldAdapter:
 
     def describe(self) -> WorldDescriptor:
         metadata: dict[str, Any] = {"provider": type(self._provider).__name__}
+        metadata["btc_direction"] = {
+            "predictor_id": "crypto.btc.direction", "predictor_version": "v1",
+            "reference_query": {"coin_ids": ["bitcoin"], "btc_direction": True},
+            "rule_source": "world.observe.state.btc_direction_reference",
+            "horizon": "UTC minute-aligned timestamp approximately one hour ahead",
+            "price_basis": "Coinbase BTC-USD closed one-minute candle ending at timestamp",
+        }
         if isinstance(self._provider, CoinGeckoProvider):
             metadata["provider_state"] = self._provider.status.state
             metadata["coins"] = self._provider._gecko_ids
@@ -226,6 +233,9 @@ class CryptoWorldAdapter:
             "coins": [c.as_dict() for c in coins],
             "coin_count": len(coins),
         }
+        if (query or {}).get("btc_direction") is True:
+            from .crypto_btc import reference_observation
+            state["btc_direction_reference"] = reference_observation()
 
         provenance: dict[str, Any] = {
             "adapter": self.ADAPTER_ID,

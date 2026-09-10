@@ -1,0 +1,15 @@
+{
+  "name": "omnisvera-ai-console",
+  "version": "0.1.0",
+  "description": "Omnisvera AI Console v0.1 — harness for Real AI Handoff via Ollama Cloud + MCP",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.3",
+    "cors": "^2.8.5"
+  }
+}

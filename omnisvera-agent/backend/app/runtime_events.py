@@ -17,6 +17,9 @@ RUNTIME_EVENT_TYPES = {
     "automatic_tour_changed",
     "world_incident",
     "weekly_report",
+    "navigation_view",
+    "reconnected",
+    "notification_opened",
 }
 
 

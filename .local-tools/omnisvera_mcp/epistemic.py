@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+from datetime import datetime, timezone
 from typing import Any
 
 from .core.context import CallContext
@@ -627,6 +628,62 @@ def validate_candidate(
     if not predictor_version:
         errors.append("predictor_version is required")
 
+    if predictor_id == "crypto.btc.direction":
+        from .adapters.crypto_btc import validate_rule, canonicalize_minimal
+        # Server-side canonicalization: minimal semantic + PT1H horizon → canonical absolute
+        _enriched_rule = None
+        _canonical_horizon = None
+        try:
+            validate_rule(resolution_rule, horizon)
+        except (ValueError, TypeError, KeyError) as exc:
+            try:
+                res = canonicalize_minimal(resolution_rule if isinstance(resolution_rule, dict) else {}, horizon)
+                if isinstance(res, tuple):
+                    _enriched_rule, _canonical_horizon = res
+                else:
+                    _enriched_rule, _canonical_horizon = res, horizon
+                validate_rule(_enriched_rule, _canonical_horizon)
+                candidate["_canonical_resolution_rule"] = _enriched_rule
+                candidate["_canonical_horizon"] = _canonical_horizon
+                resolution_rule = _enriched_rule
+                horizon = _canonical_horizon
+                candidate["resolution_rule"] = _enriched_rule
+                candidate["horizon"] = _canonical_horizon
+            except Exception as exc2:
+                msg2 = str(exc2)
+                # Horizon-specific hint
+                if "PT1H" in str(horizon) or "horizon" in msg2.lower():
+                    errors.append("horizon must be an absolute ISO-8601 timestamp or supported relative duration such as PT1H")
+                errors.append(str(exc))
+                if "minimal requires" in msg2:
+                    errors.append(msg2)
+                elif "BTC rule requires" not in str(exc) and msg2 not in str(exc):
+                    errors.append(msg2)
+                _enriched_rule = None
+        # If we have enriched or original valid, check additional constraints
+        if not errors or _enriched_rule is not None:
+            # Use enriched if available for remaining checks
+            effective_rule = _enriched_rule if _enriched_rule is not None else resolution_rule
+            # need to ensure horizon/timestamps still valid (validate_rule already did)
+            if candidate.get("world_id") != "crypto" or predictor_version != "v1":
+                errors.append("crypto.btc.direction requires crypto world and v1")
+            if not candidate.get("experience_id"):
+                errors.append("BTC direction requires Experience references")
+            # If enriched, ensure candidate will be persisted with canonical rule
+            if _enriched_rule is not None:
+                candidate["resolution_rule"] = _enriched_rule
+
+    # Prospective temporal integrity (advisory at validate time; authoritative at commit)
+    if horizon:
+        try:
+            h_dt = datetime.fromisoformat(horizon.replace("Z", "+00:00"))
+            if h_dt.tzinfo is None:
+                h_dt = h_dt.replace(tzinfo=timezone.utc)
+            if h_dt <= datetime.now(timezone.utc):
+                errors.append("prospective prediction horizon must be in the future at commit time")
+        except Exception:
+            pass
+
     # Snapshot validation
     snapshot_id = str(candidate.get("model_snapshot_id", "")).strip()
     if not snapshot_id:
@@ -763,6 +820,18 @@ def commit_candidate(
     claim = str(candidate.get("claim", "")).strip()
     probability = float(candidate.get("probability", 0))
     horizon = str(candidate.get("horizon", "")).strip()
+    # Prospective temporal integrity — authoritative at commit (covers validate→commit race)
+    try:
+        h_dt = datetime.fromisoformat(horizon.replace("Z", "+00:00"))
+        if h_dt.tzinfo is None:
+            h_dt = h_dt.replace(tzinfo=timezone.utc)
+        if h_dt <= datetime.now(timezone.utc):
+            raise ValueError("prospective prediction horizon must be in the future at commit time")
+    except ValueError as ve:
+        if "prospective prediction horizon" in str(ve):
+            raise
+        # Non-ISO horizon should have been canonicalized earlier; if still not parseable, surface clearly
+        raise ValueError(f"horizon must be an absolute ISO-8601 timestamp, got {horizon!r}")
     resolution_rule = candidate.get("resolution_rule", {})
     model_snapshot_id = str(candidate.get("model_snapshot_id", "")).strip()
     model_id = str(candidate.get("model_id", "")).strip() or None
@@ -778,13 +847,11 @@ def commit_candidate(
     experience_state_hash = str(candidate.get("experience_state_hash", "")).strip() or None
 
     # --- Identity binding ---
-    # For remote callers: predictor_id must match caller's authorized identity
+    # For remote callers: predictor_id must match caller's authorized identity.
+    # No cross-predictor exception — each console is bound to its predictor.
     caller_actor = _context.actor
     caller_scopes = _context.scopes
-    # Wildcard scope (local trusted) bypasses identity binding
     if "*" not in caller_scopes:
-        # Remote caller: predictor_id must be derivable from actor
-        # Policy: predictor_id must equal actor, or actor must have explicit override
         authorized_predictor = _resolve_authorized_predictor(caller_actor, _context)
         if authorized_predictor and predictor_id != authorized_predictor:
             raise ValueError(
@@ -973,6 +1040,36 @@ def resolve_due_predictions(
         }
 
         # Check if resolver is available
+        if resolver_id == "crypto.btc.direction.v1":
+            from .adapters.crypto_btc import resolve_direction
+            try:
+                if world_id != "crypto" or pred.get("predictor_id") != "crypto.btc.direction":
+                    raise ValueError("BTC resolver requires crypto predictor/world")
+                evidence = resolve_direction(pred, now=now)
+                if evidence is None:
+                    item.update(status="awaiting_evidence", reason="closed horizon candle unavailable")
+                    summary["awaiting_evidence"] += 1
+                elif dry_run:
+                    item.update(status="would_resolve", **evidence)
+                else:
+                    store.resolve_prediction(pred_id, outcome=evidence["outcome"],
+                        observed_value=evidence["evidence"]["horizon_price"],
+                        sources=[evidence["evidence"]["source"]],
+                        notes=json.dumps(evidence["evidence"], sort_keys=True))
+                    from .experience.runtime import enqueue_and_process_for_resolution
+                    from .experience.updater import ExperienceUpdaterRegistry
+                    from .experience.crypto_btc import CryptoBtcDirectionUpdater
+                    registry = ExperienceUpdaterRegistry()
+                    registry.register(CryptoBtcDirectionUpdater())
+                    update = enqueue_and_process_for_resolution(store, registry, pred_id)
+                    item.update(status="resolved", **evidence, experience_update=update)
+                    summary["resolved"] += 1
+            except Exception as exc:
+                item.update(status="failed", reason=str(exc))
+                summary["failed"] += 1
+            summary["items"].append(item)
+            continue
+
         if not resolver_id:
             # No structured resolver — cannot auto-resolve
             item["status"] = "awaiting_evidence"

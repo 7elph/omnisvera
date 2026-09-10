@@ -7,6 +7,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from .session_context import active_game_session_id
+
 
 MAP_TYPES = {"world", "continent", "territory", "region", "city", "district", "dungeon", "schematic", "custom"}
 COORDINATE_SYSTEMS = {"image", "percentage", "geographic", "abstract"}
@@ -722,7 +724,7 @@ def _move_character(connection: sqlite3.Connection, character_id: str, location_
     state=json.loads(row["state_json"]); before={"location":state.get("location"),"current_location_id":state.get("current_location_id")}
     state["location"]=location_name; state["current_location_id"]=location_id; state["active_journey_id"]=None
     now=_now(); connection.execute("UPDATE character_states SET state_json=?,version=version+1,updated_at=? WHERE profile_id=?",(json.dumps(state,ensure_ascii=False),now,character_id))
-    connection.execute("""INSERT INTO character_events(character_id,session_id,actor_id,actor_role,event_type,field,before_json,after_json,reason,created_at) VALUES(?,?,?,?,?,?,?,?,?,?)""",(character_id,None,actor_id,"gm","journey_arrival","location",json.dumps(before,ensure_ascii=False),json.dumps({"location":location_name,"current_location_id":location_id},ensure_ascii=False),f"Chegada pela viagem {journey_id}",now))
+    connection.execute("""INSERT INTO character_events(character_id,session_id,game_session_id,actor_id,actor_role,event_type,field,before_json,after_json,reason,created_at) VALUES(?,?,?,?,?,?,?,?,?,?,?)""",(character_id,None,active_game_session_id(connection),actor_id,"gm","journey_arrival","location",json.dumps(before,ensure_ascii=False),json.dumps({"location":location_name,"current_location_id":location_id},ensure_ascii=False),f"Chegada pela viagem {journey_id}",now))
 
 
 def _move_npc(connection: sqlite3.Connection, npc_id: int, location_id: int, location_name: str, actor_id: str, journey_id: int) -> None:

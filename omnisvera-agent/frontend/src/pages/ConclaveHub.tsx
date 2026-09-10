@@ -14,6 +14,7 @@ import {
   createContractScene,
   deliverContractReward,
   GameScene,
+  getCurrentOperationalContract,
   getContract,
   linkContractScene,
   listContracts,
@@ -60,8 +61,6 @@ const SECTION_STATUS = [
   { key: "available", title: "Disponíveis", statuses: ["published"] },
   { key: "accepted", title: "Aceitos", statuses: ["accepted"] },
   { key: "active", title: "Em andamento", statuses: ["active"] },
-  { key: "completed", title: "Concluídos", statuses: ["completed"] },
-  { key: "failed", title: "Falhos/abandonados", statuses: ["failed", "abandoned", "cancelled"] },
   { key: "history", title: "Histórico", statuses: ["completed", "failed", "abandoned", "cancelled"] },
 ];
 
@@ -89,9 +88,11 @@ function time(value?: string | null) {
 export default function ConclaveHub({
   mode,
   onOpenScene,
+  embedded = false,
 }: {
   mode: AccessMode;
   onOpenScene: (sceneId?: number) => void;
+  embedded?: boolean;
 }) {
   const isGm = mode === "gm";
   const [contracts, setContracts] = useState<ContractRecord[]>([]);
@@ -241,7 +242,7 @@ export default function ConclaveHub({
   }, [contracts, isGm]);
 
   const characterById = useMemo(() => new Map(characters.map((item) => [item.id, item])), [characters]);
-  const activeContract = contracts.find((item) => item.status === "active") || contracts.find((item) => item.status === "accepted");
+  const activeContract = getCurrentOperationalContract(contracts);
   const activeObjective = contract?.objectives.find((item) => item.status === "active") || contract?.objectives.find((item) => item.status === "available");
 
   async function run(operation: () => Promise<unknown>, message: string, preferredId?: number | null) {
@@ -356,9 +357,9 @@ export default function ConclaveHub({
     window.dispatchEvent(new CustomEvent("omnisvera-open-character", { detail: characterId }));
   }
 
-  if (loading) return <section className="panel conclave-page"><p className="muted">Carregando o quadro de contratos...</p></section>;
+  if (loading) return <section className={`panel conclave-page ${embedded ? "conclave-page-embedded" : ""}`}><p className="muted">Carregando o quadro de contratos...</p></section>;
 
-  return <section className="panel conclave-page">
+  return <section className={`panel conclave-page ${embedded ? "conclave-page-embedded" : ""}`}>
     <header className="conclave-hero">
       <div>
         <p className="eyebrow">Hub de campanha</p>
@@ -395,18 +396,20 @@ export default function ConclaveHub({
       <div className="contract-board">
         {SECTION_STATUS.map((section) => {
           const items = grouped[section.key] || [];
+          if (!items.length) return null;
           return <section key={section.key} className="contract-section">
             <header><h3>{section.title}</h3><span>{items.length}</span></header>
-            {items.length ? items.map((item) => <button key={`${section.key}-${item.id}`} className={`contract-card ${selectedId === item.id ? "active" : ""}`} onClick={() => void refresh(item.id)}>
+            {items.map((item) => <button key={`${section.key}-${item.id}`} className={`contract-card ${selectedId === item.id ? "active" : ""}`} onClick={() => void refresh(item.id)}>
               <strong>{item.title}</strong>
               <small>{item.issuer_name} · {item.contract_type} · {label(item.status)}</small>
               <span>{item.location_name || "Local não informado"} · Risco: {item.risk_label}</span>
               <p>{item.public_summary}</p>
               <em>{rewardSummary(item.rewards)}</em>
               <footer><span>{item.revealed_objective_count} objetivos revelados</span><span>{item.assigned_character_ids.length} personagens</span></footer>
-            </button>) : <p className="sheet-empty">{isGm ? "Nenhum contrato publicado." : "Nenhum contrato disponível no momento."}</p>}
+            </button>)}
           </section>;
         })}
+        {!contracts.length && <p className="sheet-empty">{isGm ? "Nenhuma missão cadastrada." : "Nenhuma missão disponível no momento."}</p>}
       </div>
 
       <aside className="contract-detail" aria-live="polite">

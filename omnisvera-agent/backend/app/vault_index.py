@@ -4,10 +4,15 @@ import json
 import re
 import sqlite3
 from pathlib import Path
+from threading import Lock
 from typing import Any
 
 from .access import AccessMode, is_player_safe_row, normalize_text, sanitize_player_note, sanitize_player_summary
 from .vault_reader import VaultNote
+
+
+_RESOLVE_INDEX_LOCK = Lock()
+_RESOLVE_INDEX_CACHE: dict[Path, dict[str, tuple[sqlite3.Row, ...]]] = {}
 
 
 def connect(database_path: Path) -> sqlite3.Connection:
@@ -80,6 +85,8 @@ def rebuild_index(database_path: Path, notes: list[VaultNote]) -> int:
             [(note.path,) for note in notes],
         )
         conn.execute("DELETE FROM notes WHERE path NOT IN (SELECT path FROM current_note_paths)")
+    with _RESOLVE_INDEX_LOCK:
+        _RESOLVE_INDEX_CACHE.pop(database_path.resolve(), None)
     return len(notes)
 
 
@@ -148,6 +155,17 @@ def list_notes(database_path: Path, limit: int = 500, access_mode: AccessMode = 
     filtered = [row for row in rows if _row_allowed(row, access_mode)]
     notes = [row_to_note(row) for row in filtered[:limit]]
     return [sanitize_player_summary(note) for note in notes] if access_mode == "player" else notes
+
+
+def list_item_notes(database_path: Path, limit: int = 2000) -> list[dict[str, Any]]:
+    """Return the complete GM item catalog from the current index without a costly refresh."""
+    init_db(database_path)
+    with connect(database_path) as conn:
+        rows = conn.execute(
+            "SELECT * FROM notes WHERE lower(type) = 'item' ORDER BY title COLLATE NOCASE ASC LIMIT ?",
+            (limit,),
+        ).fetchall()
+    return [row_to_note(row) for row in rows]
 
 
 def get_note(database_path: Path, note_id: int, access_mode: AccessMode = "gm") -> dict[str, Any] | None:
@@ -245,29 +263,48 @@ def _candidate_lookup_variants(value: str) -> set[str]:
     return variants | token_variants
 
 
+def _resolve_lookup_index(database_path: Path) -> dict[str, tuple[sqlite3.Row, ...]]:
+    cache_key = database_path.resolve()
+    cached = _RESOLVE_INDEX_CACHE.get(cache_key)
+    if cached is not None:
+        return cached
+
+    with _RESOLVE_INDEX_LOCK:
+        cached = _RESOLVE_INDEX_CACHE.get(cache_key)
+        if cached is not None:
+            return cached
+        init_db(database_path)
+        with connect(database_path) as conn:
+            rows = conn.execute("SELECT * FROM notes").fetchall()
+        lookup: dict[str, list[sqlite3.Row]] = {}
+        for row in rows:
+            path = row["path"]
+            values = [path, row["title"], Path(path).stem, *json.loads(row["aliases"] or "[]")]
+            candidates: set[str] = set()
+            for value in values:
+                candidates.update(_candidate_lookup_variants(str(value)))
+            for candidate in candidates:
+                lookup.setdefault(candidate, []).append(row)
+        indexed = {key: tuple(value) for key, value in lookup.items()}
+        _RESOLVE_INDEX_CACHE[cache_key] = indexed
+        return indexed
+
+
 def resolve_note(database_path: Path, target: str, access_mode: AccessMode = "gm") -> dict[str, Any] | None:
     wanted_variants = _lookup_variants(target.split("|", 1)[0])
     if not wanted_variants:
         return None
 
-    init_db(database_path)
-    with connect(database_path) as conn:
-        rows = conn.execute("SELECT * FROM notes").fetchall()
-
+    lookup = _resolve_lookup_index(database_path)
     matches: list[sqlite3.Row] = []
-    for row in rows:
-        if not _row_allowed(row, access_mode):
-            continue
-
-        path = row["path"]
-        title = row["title"]
-        stem = Path(row["path"]).stem
-        aliases = json.loads(row["aliases"] or "[]")
-        candidates: set[str] = set()
-        for value in [path, title, stem, *aliases]:
-            candidates.update(_candidate_lookup_variants(str(value)))
-
-        if wanted_variants & candidates:
+    seen_ids: set[int] = set()
+    for wanted in wanted_variants:
+        for row in lookup.get(wanted, ()):
+            if int(row["id"]) in seen_ids:
+                continue
+            seen_ids.add(int(row["id"]))
+            if not _row_allowed(row, access_mode):
+                continue
             matches.append(row)
 
     if not matches:

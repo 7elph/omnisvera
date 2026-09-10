@@ -24,6 +24,31 @@ export function setAccessMode(mode: AccessMode) {
   localStorage.setItem(MODE_KEY, mode);
 }
 
+export function consumeAccessBootstrapFromUrl(): { token: string; mode: AccessMode } | null {
+  if (typeof window === "undefined" || !window.location.hash) return null;
+  const params = new URLSearchParams(window.location.hash.slice(1));
+  const token = (params.get("token") || params.get("companion_token") || "").trim();
+  if (!token) return null;
+
+  const rawMode = params.get("mode") || params.get("companion_mode");
+  const mode: AccessMode = rawMode === "gm" ? "gm" : "player";
+  setAccessToken(token);
+  setAccessMode(mode);
+
+  // The fragment never reaches the server. Remove the credential from the
+  // address bar immediately after saving it for this browser/origin.
+  for (const key of ["token", "companion_token", "mode", "companion_mode", "profile", "companion_profile"]) {
+    params.delete(key);
+  }
+  const remainingHash = params.toString();
+  window.history.replaceState(
+    null,
+    "",
+    `${window.location.pathname}${window.location.search}${remainingHash ? `#${remainingHash}` : ""}`,
+  );
+  return { token, mode };
+}
+
 export function mediaUrlFromVaultPath(path?: string | null) {
   if (!path) return "";
   const clean = path
@@ -295,11 +320,33 @@ export type PlayerQuest = {
 };
 
 export type EditableNote = { path: string; content: string; content_hash: string; updated_at: string };
+export type ItemEffectRule = {
+  id: string;
+  trigger: "on_use" | "while_equipped";
+  kind: "heal_hp" | "restore_resource" | "add_condition" | "temporary_hp" | "attribute_bonus" | "skill_bonus" | "saving_throw_bonus" | "armor_class_bonus" | "attack_bonus" | "damage_bonus" | "movement_bonus" | "maximum_hp_bonus" | "grant_ability" | "resistance" | "immunity" | "vulnerability";
+  target?: string | null;
+  value: number;
+  formula?: string | null;
+  label?: string | null;
+  stacking?: "stack" | "highest" | "non_stack" | "replace";
+  duration?: "instant" | "round" | "scene" | "rest" | "equipped";
+  condition?: string | null;
+};
+export type ItemMechanics = {
+  equipment_slots: string[];
+  damage_formula?: string | null;
+  consume_mode: "none" | "quantity" | "charges";
+  charges_max: number;
+  recharge: "none" | "inn_rest" | "scene" | "dawn";
+  slot_limit: number;
+};
 export type InventoryItem = {
   id: number; profile_id: string; item_path: string; item_title: string;
   note_id?: number | null; thumbnail?: string | null; cover?: string | null; damage_formula?: string | null;
-  item_type?: string | null; description?: string | null; effects?: string[]; usable?: boolean;
+  item_type?: string | null; description?: string | null; effects?: string[]; effect_rules?: ItemEffectRule[]; mechanics?: ItemMechanics; usable?: boolean;
+  charges_current?: number | null; charges_max?: number | null; recharge?: string | null;
   quantity: number; equipped: boolean; notes?: string | null; updated_at: string;
+  equipment_slot?: string | null;
 };
 export type PlayerIdea = {
   id: number; author: string; title: string; concept: string; appearance?: string | null;
@@ -353,12 +400,27 @@ export type CharacterResource = {
 };
 
 export type CharacterAttack = {
+  attack_count?: number;
+  base_attack_count?: number;
   id: string;
   name: string;
   attack_bonus?: number | null;
+  base_attack_bonus?: number | null;
+  item_attack_bonus?: number | null;
   damage?: string | null;
   range?: string | null;
   notes?: string | null;
+  weapon_item_path?: string | null;
+  equipment?: Array<{
+    item_path: string;
+    item_title: string;
+    item_type?: string | null;
+    equipment_slot?: string | null;
+    thumbnail?: string | null;
+    cover?: string | null;
+    damage_formula?: string | null;
+    role: "weapon" | "support";
+  }>;
 };
 
 export type SessionAbility = {
@@ -372,6 +434,8 @@ export type SessionAbility = {
   active?: boolean;
   blocked?: boolean;
   source?: string | null;
+  requires_equipped_item?: string | null;
+  requires_target?: boolean;
   uses?: {
     resource_key: string;
     label: string;
@@ -394,12 +458,25 @@ export type PlayableCharacterDefinition = {
   player_name?: string | null;
   campaign?: string | null;
   attributes?: Record<string, number | null> | null;
+  base_attributes?: Record<string, number | null> | null;
   attribute_modifiers?: Record<string, number | null> | null;
+  item_effects?: {
+    totals: Record<string, number>;
+    breakdown: Array<{ rule_id: string; item_path: string; item_title: string; kind: string; target: string; value: number; formula?: string | null; label?: string | null; stacking: string; condition?: string | null; active: boolean }>;
+    skill_modifiers: Record<string, number>;
+    resistances: string[];
+    immunities: string[];
+    vulnerabilities: string[];
+  } | null;
   abilities?: Record<string, string> | null;
   session_abilities?: SessionAbility[] | null;
   attacks?: CharacterAttack[] | null;
   attack_notes?: string | null;
-  defenses?: { armor_class?: number | null; saving_throw?: string | number | null; initiative?: number | null; initiative_configured?: boolean } | null;
+  defenses?: {
+    armor_class?: number | null; base_armor_class?: number | null; unmodified_armor_class?: number | null; armor_modifier?: number;
+    armor_modifier_source?: { item_path: string; item_title: string; value: number; kind: string } | null;
+    saving_throw?: string | number | null; saving_throw_bonus?: number | null; initiative?: number | null; initiative_configured?: boolean;
+  } | null;
   progression?: { experience?: number | null; base_attack?: number | null; maximum_hp?: number | null } | null;
   movement?: string | null;
   base_equipment?: string[] | null;
@@ -424,6 +501,9 @@ export type PlayableCharacterState = {
   conditions: string[];
   resources: CharacterResource[];
   coins?: number | null;
+  copper_coins?: number | null;
+  silver_coins?: number | null;
+  platinum_coins?: number | null;
   location?: string | null;
   session_notes: string;
   updated_at: string;
@@ -490,6 +570,7 @@ export type SessionLedgerEntry = {
 };
 
 export type WorkspaceTokenSheet = {
+  marker?: string;
   role?: string;
   level?: number | null;
   armor_class?: number | null;
@@ -498,15 +579,44 @@ export type WorkspaceTokenSheet = {
   attacks?: Array<{ name: string; damage?: string; bonus?: string | number; notes?: string }>;
   abilities?: string[];
   notes?: string;
+  source?: { catalog_id: string; monster_id: string; url: string; license: string };
+  hit_dice?: string;
+  hit_points?: string;
+  saving_throw?: number | null;
+  morale?: number | null;
+  experience_points?: number | null;
+  treasure?: string;
+  movement?: string;
+  category?: string;
+  size?: string;
+  alignment?: string;
+  habitat?: string;
+};
+
+export type MonsterCatalogAttack = { raw: string; count: number | null; name: string; bonus: number | null; damage: string };
+export type MonsterCatalogAbility = { name: string; description: string };
+export type MonsterCatalogEntry = {
+  id: string; name: string; source_url: string; category: string; size: string; alignment: string; habitat: string;
+  encounter: string; experience: string; experience_points: number | null; treasure: string; movement: string;
+  hit_dice: string; hit_points: string; average_hp: number | null; armor_class: number | null; saving_throw: number | null; morale: number | null;
+  attacks: MonsterCatalogAttack[]; abilities: MonsterCatalogAbility[];
+  image_path?: string | null; image_attribution?: string | null; image_license?: string | null;
+  image_license_url?: string | null; image_source_url?: string | null;
+};
+export type MonsterCatalogResponse = {
+  catalog: { id: string; title: string; edition: string; source_url: string; license: string; license_url: string; attribution: string; retrieved_on: string };
+  art_collection?: { id: string; title: string; creator: string; publisher: string; source_url: string; license: string; license_url: string; modifications: string };
+  count: number; total: number; image_count: number; monsters: MonsterCatalogEntry[];
 };
 
 export type WorkspaceToken = {
   id: string;
-  token_type: "character" | "monster";
+  token_type: "character" | "monster" | "location";
   map_id?: string;
   character_id?: string | null;
   name: string;
   image_path?: string | null;
+  visible_to_players: boolean;
   color: string;
   latitude: number;
   longitude: number;
@@ -518,6 +628,53 @@ export type WorkspaceToken = {
   updated_at: string;
 };
 
+export type AttackResolution = {
+  resolution_id: string;
+  request_id: string;
+  actor_character_id: string;
+  actor_name: string;
+  attack_id: string;
+  attack_name: string;
+  target_type: "character" | "token";
+  target_id: string;
+  target_name: string;
+  roll_mode: "digital" | "physical";
+  d20: number;
+  attack_bonus: number;
+  attack_total: number;
+  target_ac: number;
+  result: "hit" | "miss";
+  damage_formula: string;
+  damage_rolls: number[];
+  damage_modifier: number;
+  damage_total: number;
+  breakdown: {
+    strikes?: Array<{ d20: number; attack_total: number; result: "hit" | "miss"; damage_total: number; damage_rolls: number[] }>;
+    effects?: CombatEffect[];
+    attack?: { base_bonus?: number; equipment_bonus?: number; effect_bonus?: number; total_bonus?: number };
+    damage?: { weapon_formula?: string; effective_formula?: string; rolls?: number[]; modifier?: number };
+    equipment?: Array<{ item_path: string; item_title: string; role: string }>;
+  };
+  status: "pending" | "confirmed";
+  confirmed: boolean;
+  created_at: string;
+  expires_at: string;
+  confirmed_at?: string | null;
+  hp_before?: number | null;
+  hp_after?: number | null;
+  ledger_id?: number | null;
+};
+
+export type CombatEffect = { id: string; target_type: "character" | "token"; target_id: string; label: string; source: string; duration: string; rounds: number | null; modifiers: Record<string, number>; updated_at: string };
+export type CombatEffectsState = { round: number; version: number; effects: CombatEffect[]; encounter?: { active?: boolean; title?: string; map_id?: string; participants?: Array<{target_type: string; target_id: string; name: string; initiative: number}> } };
+export type CombatTestView = { profile_id: string; character_name: string; receives_combat: boolean; state: CombatEffectsState };
+export type CombatTestViewsResponse = { enabled: boolean; table_mode: "digital" | "physical" | "test"; views: CombatTestView[] };
+export async function getCombatEffects(): Promise<CombatEffectsState> { return worldRequest("/combat/effects"); }
+export async function getCombatTestViews(): Promise<CombatTestViewsResponse> { return worldRequest("/gm/combat/test-views"); }
+export async function sendCombatEffectCommand(payload: { request_id: string; expected_version: number; action: string; payload: Record<string, unknown> }): Promise<CombatEffectsState> {
+  return worldRequest("/gm/combat/effects", { method: "POST", body: JSON.stringify(payload) });
+}
+
 export type SessionItem = {
   id: number;
   item_path: string;
@@ -525,10 +682,52 @@ export type SessionItem = {
   item_type: string;
   description?: string | null;
   effects: string[];
+  effect_rules: ItemEffectRule[];
+  mechanics: ItemMechanics;
   usable: boolean;
   image_path?: string | null;
   created_at: string;
   updated_at: string;
+};
+
+export type LootReward = {
+  id: string;
+  kind: string;
+  name: string;
+  quantity: number;
+  description?: string | null;
+  source_code?: string | null;
+  editable?: boolean;
+  requires_identification?: boolean;
+  gm_notes?: string | null;
+};
+
+export type LootResolution = {
+  resolution_id: string;
+  request_id: string;
+  source_type: "token" | "lair";
+  source_id: string;
+  source_name: string;
+  treasure_code: string;
+  treasure_scope: "carried" | "lair";
+  roll_mode: "digital" | "quick" | "requested";
+  rewards: LootReward[];
+  rolls: Array<Record<string, unknown>>;
+  status: "draft" | "revealed" | "distributed";
+  created_at: string;
+  revealed_at?: string | null;
+  distributed_at?: string | null;
+  allocations: Array<{ reward_id: string; character_id: string; quantity: number }>;
+  pending_requests: Array<{ task_id: string; purpose: string; formula: string; roll_request_id: number; roller_character_id: string }>;
+  finalized_at?: string | null;
+};
+
+export type WorkspaceIcon = {
+  id: string;
+  label: string;
+  category: "map" | "items";
+  path: string;
+  created_at: string;
 };
 
 export type WorkspacePresence = {
@@ -555,11 +754,22 @@ export type WorkspaceFog = {
 };
 
 export type WorkspaceSnapshot = {
-  map?: { id?: string; title: string; image_path: string; updated_at: string } | null;
+  table_mode: "digital" | "physical" | "test";
+  active_map_id?: string | null;
+  map?: WorkspaceMap | null;
   messages: WorkspaceMessage[];
   presence: WorkspacePresence[];
   tokens: WorkspaceToken[];
   fog?: WorkspaceFog;
+  view?: { zoom: number; scroll_left: number; scroll_top: number };
+};
+
+export type WorkspaceMap = {
+  id: string;
+  title: string;
+  image_path: string;
+  visible_to_players: boolean;
+  updated_at: string;
 };
 
 export type CharacterEvent = {
@@ -641,13 +851,46 @@ export type DiceRollRequest = {
 export type GameSession = {
   id: number; request_id: string; campaign_id: string; title: string; session_number?: number | null;
   status: string; started_at?: string | null; ended_at?: string | null; created_by: string;
-  private_notes?: string | null; created_at: string; version: number;
+  private_notes?: string | null; image_path?: string | null; public_summary?: string | null;
+  public_chronicle?: string | null; gm_summary?: string | null; created_at: string; version: number;
+};
+
+export type CampaignNarrativeEntry = {
+  title?: string;
+  description?: string;
+  status?: string;
+  character_id?: string;
+  name?: string;
+  quantity?: number;
+  holder_character_id?: string;
+};
+
+export type CampaignNarrative = {
+  participants: Array<{ character_id?: string | null; name: string; portrait?: string | null }>;
+  locations: CampaignNarrativeEntry[];
+  missions: CampaignNarrativeEntry[];
+  discoveries: CampaignNarrativeEntry[];
+  rewards: CampaignNarrativeEntry[];
+  items_acquired: CampaignNarrativeEntry[];
+  world_events: CampaignNarrativeEntry[];
+  character_events: CampaignNarrativeEntry[];
+  open_threads: CampaignNarrativeEntry[];
+  tags: string[];
+};
+
+export type CampaignSession = Omit<GameSession, "created_by" | "private_notes"> & {
+  created_by?: string;
+  private_notes?: string | null;
+  narrative: CampaignNarrative;
+  gm_analysis?: { source_status?: string; companion_feedback?: CampaignNarrativeEntry[] };
+  source_refs?: Array<{ path: string; sha256: string; evidence: string[] }>;
 };
 
 export type SceneParticipant = {
   id: number; scene_id: number; participant_type: string; character_id?: string | null;
   npc_name?: string | null; npc_source?: string | null; public_label: string;
   public_status?: string | null; private_status?: string | null; visible_to_players: boolean;
+  order_index: number;
   joined_at: string; left_at?: string | null; character?: PlayableCharacterSummary | null; npc?: NpcRecord | null;
 };
 
@@ -679,6 +922,12 @@ export type GameScene = {
   id: number; request_id: string; campaign_id: string; session_id?: number | null; title: string;
   location_name: string; location_source?: string | null; public_description?: string | null;
   objective?: string | null; private_notes?: string | null; resolution_summary?: string | null;
+  image_path?: string | null;
+  map_id?: string | null;
+  checklist?: Record<string, boolean>;
+  map_zoom?: number;
+  map_scroll_left?: number;
+  map_scroll_top?: number;
   status: string; visibility: DiceVisibility; created_by: string; created_at: string;
   activated_at?: string | null; closed_at?: string | null; order_index: number; version: number;
   participants: SceneParticipant[]; elements: SceneElement[]; actions: SceneAction[]; events: SceneEvent[];
@@ -737,6 +986,12 @@ export type ContractRecord = {
   scene_links: ContractSceneLink[]; rewards: ContractReward[]; events: ContractEvent[];
   revealed_objective_count: number; assigned_character_ids: string[]; npcs?: NpcContractLink[];
 };
+
+/** Operational mission focus; published contracts remain available, not current. */
+export function getCurrentOperationalContract(contracts: ContractRecord[]): ContractRecord | undefined {
+  return contracts.find((contract) => contract.status === "active")
+    || contracts.find((contract) => contract.status === "accepted");
+}
 
 export type NpcRelationship = {
   id: number; npc_id: number; target_type: "character" | "npc" | "faction" | "group";
@@ -1019,8 +1274,28 @@ export async function listPlayableCharacters(): Promise<PlayableCharacterSummary
   return response.json();
 }
 
-export async function getSessionWorkspace(): Promise<WorkspaceSnapshot> {
-  const response = await fetch(`${API_BASE}/workspace`, { headers: authHeaders() });
+export async function sendPlayerNotification(payload: { profile_id: string; title: string; message: string }): Promise<PlayerEvent> {
+  const response = await fetch(`${API_BASE}/gm/player-notifications`, {
+    method: "POST",
+    headers: authHeaders({ "Content-Type": "application/json" }),
+    body: JSON.stringify(payload),
+  });
+  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao enviar notificação");
+  return response.json();
+}
+
+export async function recordRuntimeEvent(eventType: string, payload: Record<string, unknown> = {}): Promise<void> {
+  const response = await fetch(`${API_BASE}/player/runtime/events`, {
+    method: "POST",
+    headers: authHeaders({ "Content-Type": "application/json" }),
+    body: JSON.stringify({ event_id: `${eventType}:${Date.now()}:${crypto.randomUUID?.() || Math.random().toString(36).slice(2)}`, event_type: eventType, payload }),
+  });
+  if (!response.ok) throw new Error("Falha ao registrar navegação");
+}
+
+export async function getSessionWorkspace(mapId?: string): Promise<WorkspaceSnapshot> {
+  const query = mapId ? `?map_id=${encodeURIComponent(mapId)}` : "";
+  const response = await fetch(`${API_BASE}/workspace${query}`, { headers: authHeaders() });
   if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao carregar a mesa");
   return response.json();
 }
@@ -1055,7 +1330,10 @@ export async function connectSessionRealtime(onChange: (ledgerId: number) => voi
         if (event.data === "pong") return;
         try {
           const payload = JSON.parse(String(event.data)) as { type?: string; ledger_id?: number };
-          if (payload.type === "session_changed" && Number.isFinite(payload.ledger_id)) onChange(Number(payload.ledger_id));
+          if (payload.type === "session_changed" && Number.isFinite(payload.ledger_id)) {
+            window.dispatchEvent(new CustomEvent("omnisvera-session-changed", { detail: Number(payload.ledger_id) }));
+            onChange(Number(payload.ledger_id));
+          }
         } catch { /* Mensagens desconhecidas não interrompem a sessão. */ }
       };
       socket.onclose = () => {
@@ -1081,6 +1359,11 @@ export async function heartbeatSessionWorkspace(): Promise<WorkspacePresence> {
   return response.json();
 }
 
+export async function leaveSessionWorkspace(): Promise<void> {
+  const response = await fetch(`${API_BASE}/workspace/leave`, { method: "POST", headers: authHeaders(), keepalive: true });
+  if (!response.ok) throw new Error("Falha ao registrar saída da sessão");
+}
+
 export async function sendWorkspaceMessage(text: string, messageKind: "message" | "action" = "message"): Promise<WorkspaceMessage> {
   const response = await fetch(`${API_BASE}/workspace/messages`, {
     method: "POST",
@@ -1091,7 +1374,7 @@ export async function sendWorkspaceMessage(text: string, messageKind: "message" 
   return response.json();
 }
 
-export async function uploadWorkspaceMap(payload: { title: string; filename: string; content_type: string; data_base64: string }): Promise<{ id: string; title: string; image_path: string; updated_at: string }> {
+export async function uploadWorkspaceMap(payload: { title: string; filename: string; content_type: string; data_base64: string; visible_to_players: boolean }): Promise<WorkspaceMap> {
   const response = await fetch(`${API_BASE}/gm/workspace/map`, {
     method: "POST",
     headers: authHeaders({ "Content-Type": "application/json" }),
@@ -1101,19 +1384,81 @@ export async function uploadWorkspaceMap(payload: { title: string; filename: str
   return response.json();
 }
 
-export async function listWorkspaceMaps(): Promise<Array<{ id: string; title: string; image_path: string; updated_at: string }>> {
+export async function listWorkspaceMaps(): Promise<WorkspaceMap[]> {
   const response = await fetch(`${API_BASE}/workspace/maps`, { headers: authHeaders() });
   if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao carregar mapas");
   return response.json();
 }
 
-export async function selectWorkspaceMap(mapId: string): Promise<{ id: string; title: string; image_path: string; updated_at: string }> {
+export async function listWorkspaceIcons(): Promise<WorkspaceIcon[]> {
+  const response = await fetch(`${API_BASE}/workspace/icons`, { headers: authHeaders() });
+  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao carregar ícones");
+  return response.json();
+}
+
+export async function uploadWorkspaceIcon(payload: { label: string; category: "map" | "items"; filename: string; content_type: string; data_base64: string }): Promise<WorkspaceIcon> {
+  const response = await fetch(`${API_BASE}/gm/workspace/icons`, {
+    method: "POST", headers: authHeaders({ "Content-Type": "application/json" }), body: JSON.stringify(payload),
+  });
+  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao carregar ícone");
+  return response.json();
+}
+
+export async function uploadWorkspaceIconFile(payload: { label: string; category: "map" | "items"; file: File }): Promise<WorkspaceIcon> {
+  if (payload.file.size > 25 * 1024 * 1024) throw new Error("A imagem deve possuir no máximo 25 MB.");
+  const query = new URLSearchParams({ label: payload.label, category: payload.category });
+  const url = `${API_BASE}/gm/workspace/icons/file?${query}`;
+  for (let attempt = 0; attempt < 2; attempt += 1) {
+    try {
+      const response = await fetch(url, {
+        method: "POST", headers: authHeaders({ "Content-Type": payload.file.type || "application/octet-stream" }), body: payload.file,
+      });
+      if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao carregar ícone");
+      return response.json();
+    } catch (reason) {
+      if (!(reason instanceof TypeError) || attempt > 0) {
+        if (reason instanceof TypeError) throw new Error("A conexão caiu durante o envio da imagem. Tente selecioná-la novamente.");
+        throw reason;
+      }
+      await new Promise((resolve) => window.setTimeout(resolve, 500));
+    }
+  }
+  throw new Error("Não foi possível enviar a imagem.");
+}
+
+export async function selectWorkspaceMap(mapId: string): Promise<WorkspaceMap> {
   const response = await fetch(`${API_BASE}/gm/workspace/maps/active`, { method: "PATCH", headers: authHeaders({ "Content-Type": "application/json" }), body: JSON.stringify({ map_id: mapId }) });
   if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao trocar mapa");
   return response.json();
 }
 
-export async function updateWorkspaceFog(payload: { layer: "exploration" | "battle"; enabled: boolean; revealed_cells: string[]; mist_density: Record<string, number> }): Promise<WorkspaceFogLayer> {
+export async function updateWorkspaceMapVisibility(mapId: string, visibleToPlayers: boolean): Promise<WorkspaceMap> {
+  const response = await fetch(`${API_BASE}/gm/workspace/maps/${encodeURIComponent(mapId)}/visibility`, {
+    method: "PATCH",
+    headers: authHeaders({ "Content-Type": "application/json" }),
+    body: JSON.stringify({ visible_to_players: visibleToPlayers }),
+  });
+  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao alterar a visibilidade do mapa");
+  return response.json();
+}
+
+export async function updateWorkspaceView(payload: { zoom: number; scroll_left: number; scroll_top: number }): Promise<{ zoom: number; scroll_left: number; scroll_top: number }> {
+  const response = await fetch(`${API_BASE}/gm/workspace/view`, {
+    method: "PATCH", headers: authHeaders({ "Content-Type": "application/json" }), body: JSON.stringify(payload),
+  });
+  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao salvar a posição do mapa");
+  return response.json();
+}
+
+export async function updateWorkspaceTableMode(tableMode: "digital" | "physical" | "test"): Promise<{ table_mode: "digital" | "physical" | "test" }> {
+  const response = await fetch(`${API_BASE}/gm/workspace/table-mode`, {
+    method: "PATCH", headers: authHeaders({ "Content-Type": "application/json" }), body: JSON.stringify({ table_mode: tableMode }),
+  });
+  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao alterar o modo da mesa");
+  return response.json();
+}
+
+export async function updateWorkspaceFog(payload: { map_id: string; layer: "exploration" | "battle"; enabled: boolean; revealed_cells: string[]; mist_density: Record<string, number> }): Promise<WorkspaceFogLayer> {
     const request = (method: "POST" | "PATCH") => fetch(`${API_BASE}/gm/workspace/fog`, {
       method, headers: authHeaders({ "Content-Type": "application/json" }), body: JSON.stringify(payload),
     });
@@ -1126,9 +1471,10 @@ export async function updateWorkspaceFog(payload: { layer: "exploration" | "batt
   }
 
 export async function createWorkspaceToken(payload: {
-  token_type: "character" | "monster"; character_id?: string; name: string;
+  token_type: "character" | "monster" | "location"; character_id?: string; name: string;
   map_id?: string;
   image_path?: string | null; image_filename?: string; image_data_base64?: string;
+  visible_to_players?: boolean;
   color?: string; latitude?: number; longitude?: number; current_hp?: number; maximum_hp?: number;
   conditions?: string[]; sheet?: WorkspaceTokenSheet;
 }): Promise<WorkspaceToken> {
@@ -1147,7 +1493,7 @@ export async function moveWorkspaceToken(tokenId: string, latitude: number, long
   return response.json();
 }
 
-export async function updateWorkspaceToken(tokenId: string, fields: { name?: string; image_path?: string | null; color?: string; current_hp?: number; maximum_hp?: number; conditions?: string[]; sheet?: WorkspaceTokenSheet }): Promise<WorkspaceToken> {
+export async function updateWorkspaceToken(tokenId: string, fields: { name?: string; image_path?: string | null; visible_to_players?: boolean; color?: string; current_hp?: number; maximum_hp?: number; conditions?: string[]; sheet?: WorkspaceTokenSheet }): Promise<WorkspaceToken> {
   const response = await fetch(`${API_BASE}/gm/workspace/tokens/${encodeURIComponent(tokenId)}`, {
     method: "PATCH", headers: authHeaders({ "Content-Type": "application/json" }), body: JSON.stringify(fields),
   });
@@ -1166,14 +1512,91 @@ export async function listSessionItems(): Promise<SessionItem[]> {
   return response.json();
 }
 
+export async function listWorkspaceTargetInventory(targetId: string): Promise<InventoryItem[]> {
+  const response = await fetch(`${API_BASE}/gm/workspace/inventory/${encodeURIComponent(targetId)}`, { headers: authHeaders() });
+  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao carregar o inventário");
+  return response.json();
+}
+
+export async function removeWorkspaceTargetItem(payload: { target_id: string; item_path: string; quantity: number }): Promise<InventoryItem[]> {
+  const response = await fetch(`${API_BASE}/gm/workspace/inventory/remove`, {
+    method: "POST", headers: authHeaders({ "Content-Type": "application/json" }), body: JSON.stringify(payload),
+  });
+  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao retirar o item");
+  return response.json();
+}
+
+export async function listWorkspaceItemCatalog(): Promise<NoteSummary[]> {
+  const response = await fetch(`${API_BASE}/gm/workspace/item-catalog`, { headers: authHeaders() });
+  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao carregar o catálogo de itens");
+  return response.json();
+}
+
+export async function listWorkspaceMonsterCatalog(): Promise<MonsterCatalogResponse> {
+  const response = await fetch(`${API_BASE}/gm/workspace/monster-catalog`, { headers: authHeaders() });
+  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao carregar o bestiário");
+  return response.json();
+}
+
+export async function listWorkspaceLoot(): Promise<LootResolution[]> {
+  const response = await fetch(`${API_BASE}/workspace/loot`, { headers: authHeaders() });
+  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao carregar espólios");
+  return response.json();
+}
+
+export async function resolveWorkspaceLoot(payload: {
+  request_id: string; token_id: string; scope: "carried" | "lair"; roll_mode: "digital" | "quick" | "requested"; lair_id?: string; roller_character_id?: string;
+}): Promise<LootResolution> {
+  const response = await fetch(`${API_BASE}/gm/workspace/loot/resolve`, {
+    method: "POST", headers: authHeaders({ "Content-Type": "application/json" }), body: JSON.stringify(payload),
+  });
+  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao gerar espólio");
+  return response.json();
+}
+
+export async function finalizeWorkspaceLootRolls(resolutionId: string): Promise<LootResolution> {
+  const response = await fetch(`${API_BASE}/gm/workspace/loot/${encodeURIComponent(resolutionId)}/finalize-rolls`, { method: "POST", headers: authHeaders() });
+  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Ainda existem rolagens de tesouro pendentes");
+  return response.json();
+}
+
+export async function updateWorkspaceLoot(resolutionId: string, rewards: LootReward[]): Promise<LootResolution> {
+  const response = await fetch(`${API_BASE}/gm/workspace/loot/${encodeURIComponent(resolutionId)}`, {
+    method: "PATCH", headers: authHeaders({ "Content-Type": "application/json" }), body: JSON.stringify({ rewards }),
+  });
+  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao editar espólio");
+  return response.json();
+}
+
+export async function revealWorkspaceLoot(resolutionId: string): Promise<LootResolution> {
+  const response = await fetch(`${API_BASE}/gm/workspace/loot/${encodeURIComponent(resolutionId)}/reveal`, { method: "POST", headers: authHeaders() });
+  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao revelar espólio");
+  return response.json();
+}
+
+export async function distributeWorkspaceLoot(resolutionId: string, payload: {
+  request_id: string; allocations: Array<{ reward_id: string; character_id: string; quantity: number }>;
+}): Promise<LootResolution> {
+  const response = await fetch(`${API_BASE}/gm/workspace/loot/${encodeURIComponent(resolutionId)}/distribute`, {
+    method: "POST", headers: authHeaders({ "Content-Type": "application/json" }), body: JSON.stringify(payload),
+  });
+  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao distribuir espólio");
+  return response.json();
+}
+
 export async function saveSessionItem(payload: {
-  name: string; item_type: string; description?: string; effects: string[]; usable: boolean; image_path?: string | null;
+  name: string; item_type: string; description?: string; effects: string[]; effect_rules: ItemEffectRule[]; mechanics: ItemMechanics; usable: boolean; image_path?: string | null;
 }, itemId?: number): Promise<SessionItem> {
   const response = await fetch(`${API_BASE}/gm/workspace/items${itemId ? `/${itemId}` : ""}`, {
     method: itemId ? "PATCH" : "POST", headers: authHeaders({ "Content-Type": "application/json" }), body: JSON.stringify(payload),
   });
   if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao salvar item");
   return response.json();
+}
+
+export async function deleteSessionItem(itemId: number): Promise<void> {
+  const response = await fetch(`${API_BASE}/gm/workspace/items/${itemId}`, { method: "DELETE", headers: authHeaders() });
+  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao destruir item");
 }
 
 export async function grantSessionItem(payload: {
@@ -1186,9 +1609,33 @@ export async function grantSessionItem(payload: {
   return response.json();
 }
 
+export async function rechargeSessionItems(cycle: "scene" | "dawn"): Promise<{ cycle: string; recharged: number }> {
+  const response = await fetch(`${API_BASE}/gm/workspace/items/recharge/${cycle}`, {
+    method: "POST", headers: authHeaders(),
+  });
+  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao recarregar itens");
+  return response.json();
+}
+
 export async function getPlayableCharacter(profileId: string): Promise<PlayableCharacter> {
   const response = await fetch(`${API_BASE}/characters/${encodeURIComponent(profileId)}`, { headers: authHeaders() });
   if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao carregar ficha de jogo");
+  return response.json();
+}
+
+export type CharacterNotes = { character_id: string; content: string; version: number; updated_at: string | null };
+
+export async function getCharacterNotes(profileId: string): Promise<CharacterNotes> {
+  const response = await fetch(`${API_BASE}/characters/${encodeURIComponent(profileId)}/notes`, { headers: authHeaders(), cache: "no-store" });
+  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Não foi possível carregar as anotações.");
+  return response.json();
+}
+
+export async function saveCharacterNotes(profileId: string, content: string, version: number): Promise<CharacterNotes> {
+  const response = await fetch(`${API_BASE}/characters/${encodeURIComponent(profileId)}/notes`, {
+    method: "PUT", headers: authHeaders({ "Content-Type": "application/json" }), body: JSON.stringify({ content, version }),
+  });
+  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Não foi possível salvar. Seu rascunho continua aqui.");
   return response.json();
 }
 
@@ -1262,6 +1709,34 @@ export async function rollCharacterAction(profileId: string, payload: {
   return response.json();
 }
 
+export async function resolveCharacterAttack(profileId: string, payload: {
+  request_id: string;
+  attack_id: string;
+  target_type: "character" | "token";
+  target_id: string;
+  roll_mode: "digital" | "physical";
+  d20?: number;
+  attack_count?: number;
+  d20s?: number[];
+}): Promise<AttackResolution> {
+  const response = await fetch(`${API_BASE}/characters/${encodeURIComponent(profileId)}/attacks/resolve`, {
+    method: "POST",
+    headers: authHeaders({ "Content-Type": "application/json" }),
+    body: JSON.stringify(payload),
+  });
+  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao resolver o ataque");
+  return response.json();
+}
+
+export async function confirmCharacterAttack(resolutionId: string): Promise<AttackResolution> {
+  const response = await fetch(`${API_BASE}/combat/attacks/${encodeURIComponent(resolutionId)}/confirm`, {
+    method: "POST",
+    headers: authHeaders(),
+  });
+  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao confirmar o ataque");
+  return response.json();
+}
+
 export async function listRollHistory(limit = 30): Promise<DiceRollEvent[]> {
   const response = await fetch(`${API_BASE}/rolls?limit=${Math.max(1, Math.min(limit, 100))}`, { headers: authHeaders() });
   if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao carregar histórico de rolagens");
@@ -1318,7 +1793,19 @@ async function sceneRequest<T>(path: string, init?: RequestInit): Promise<T> {
 
 export function newSceneRequestId(prefix = "scene") { return newDiceRequestId(prefix); }
 export async function listGameSessions(): Promise<GameSession[]> { return sceneRequest("/gm/sessions"); }
+export async function listCampaignSessions(): Promise<CampaignSession[]> { return sceneRequest("/sessions"); }
+export async function getCampaignSession(id: number): Promise<CampaignSession> { return sceneRequest(`/sessions/${id}`); }
 export async function createGameSession(payload: { request_id: string; title: string; session_number?: number; private_notes?: string }): Promise<GameSession> { return sceneRequest("/gm/sessions", { method: "POST", body: JSON.stringify(payload) }); }
+export async function updateGameSessionMetadata(id: number, payload: { played_on?: string | null; image_path?: string | null }): Promise<CampaignSession> { return sceneRequest(`/gm/sessions/${id}`, { method: "PATCH", body: JSON.stringify(payload) }); }
+export async function uploadGameSessionImage(id: number, file: File): Promise<CampaignSession> {
+  const response = await fetch(`${API_BASE}/gm/sessions/${id}/image`, {
+    method: "POST",
+    headers: authHeaders({ "Content-Type": file.type || "application/octet-stream" }),
+    body: file,
+  });
+  if (!response.ok) throw new Error(await response.text() || `Falha HTTP ${response.status}`);
+  return response.json();
+}
 export async function updateGameSessionStatus(id: number, status: string): Promise<GameSession> { return sceneRequest(`/gm/sessions/${id}/status`, { method: "POST", body: JSON.stringify({ status }) }); }
 export async function listScenes(): Promise<GameScene[]> { return sceneRequest("/scenes"); }
 export async function getActiveScene(): Promise<GameScene | null> { return sceneRequest("/scenes/active"); }
@@ -1339,6 +1826,8 @@ export async function rejectSceneAction(actionId: number, resolution: string): P
 export async function requestSceneActionRoll(actionId: number, payload: Record<string, unknown>): Promise<DiceRollRequest> { return sceneRequest(`/gm/scenes/actions/${actionId}/request-roll`, { method: "POST", body: JSON.stringify(payload) }); }
 export async function applySceneConsequence(sceneId: number, payload: Record<string, unknown>): Promise<{ character_event: Record<string, unknown>; scene_event: SceneEvent; scene: GameScene }> { return sceneRequest(`/gm/scenes/${sceneId}/consequences`, { method: "POST", body: JSON.stringify(payload) }); }
 export async function createSceneEvent(sceneId: number, payload: Record<string, unknown>): Promise<SceneEvent> { return sceneRequest(`/gm/scenes/${sceneId}/events`, { method: "POST", body: JSON.stringify(payload) }); }
+export async function publishScene(sceneId: number, payload: { request_id: string; publication_type: string; title: string; public_text?: string; private_text?: string }): Promise<{ event: SceneEvent; created: boolean }> { return sceneRequest(`/gm/scenes/${sceneId}/publish`, { method: "POST", body: JSON.stringify(payload) }); }
+export async function openSceneOnTable(sceneId: number, requestId: string): Promise<{ scene: GameScene; map?: { id: string; title: string; image_path: string } | null; event: SceneEvent; created: boolean }> { return sceneRequest(`/gm/scenes/${sceneId}/open-on-table`, { method: "POST", body: JSON.stringify({ request_id: requestId }) }); }
 export async function voidSceneEvent(eventId: number, reason: string): Promise<SceneEvent> { return sceneRequest(`/gm/scene-events/${eventId}/void`, { method: "POST", body: JSON.stringify({ reason }) }); }
 
 async function contractRequest<T>(path: string, init?: RequestInit): Promise<T> {

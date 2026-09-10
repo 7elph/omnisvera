@@ -1,8 +1,10 @@
 from __future__ import annotations
 
+from datetime import date
+from datetime import date
 from typing import Any
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, StrictInt
 
 
 class HealthResponse(BaseModel):
@@ -260,6 +262,12 @@ class PlayerEventReadRequest(BaseModel):
     event_ids: list[int] = Field(default_factory=list)
 
 
+class PlayerNotificationCreate(BaseModel):
+    profile_id: str = Field(default="group", min_length=1, max_length=80)
+    title: str = Field(min_length=1, max_length=180)
+    message: str = Field(min_length=1, max_length=1200)
+
+
 class PlayerQuestUpdate(BaseModel):
     profile_id: str = "group"
     note_id: int
@@ -295,6 +303,7 @@ class InventoryUpdate(BaseModel):
     note_id: int
     quantity: int = Field(default=1, ge=0, le=999)
     equipped: bool = False
+    equipment_slot: str | None = Field(default=None, max_length=80)
     notes: str | None = Field(default=None, max_length=500)
 
 
@@ -310,9 +319,15 @@ class InventoryRecord(BaseModel):
     item_type: str | None = None
     description: str | None = None
     effects: list[str] = Field(default_factory=list)
+    effect_rules: list[dict[str, Any]] = Field(default_factory=list)
+    mechanics: dict[str, Any] = Field(default_factory=dict)
     usable: bool = False
+    charges_current: int | None = None
+    charges_max: int | None = None
+    recharge: str | None = None
     quantity: int
     equipped: bool
+    equipment_slot: str | None = None
     notes: str | None = None
     updated_at: str
 
@@ -388,6 +403,9 @@ class CharacterStateResponse(BaseModel):
     conditions: list[str] = Field(default_factory=list)
     resources: list[CharacterResource] = Field(default_factory=list)
     coins: int | float | None = None
+    copper_coins: int = 0
+    silver_coins: int = 0
+    platinum_coins: int = 0
     location: str | None = None
     current_location_id: int | None = None
     active_journey_id: int | None = None
@@ -409,7 +427,9 @@ class CharacterDefinitionResponse(BaseModel):
     player_name: str | None = None
     campaign: str | None = None
     attributes: dict[str, int | float | None] | None = None
+    base_attributes: dict[str, int | float | None] | None = None
     attribute_modifiers: dict[str, int | None] | None = None
+    item_effects: dict[str, Any] | None = None
     abilities: dict[str, str] | None = None
     session_abilities: list[dict[str, Any]] | None = None
     attacks: list[dict[str, Any]] | None = None
@@ -510,19 +530,33 @@ class WorkspaceMapUpload(BaseModel):
     filename: str = Field(min_length=1, max_length=255)
     content_type: str = Field(min_length=1, max_length=100)
     data_base64: str = Field(min_length=16, max_length=16_000_000)
+    visible_to_players: bool = False
 
 
 class WorkspaceMapSelect(BaseModel):
     map_id: str = Field(min_length=1, max_length=120)
 
 
+class WorkspaceMapVisibilityUpdate(BaseModel):
+    visible_to_players: bool
+
+
+class WorkspaceIconUpload(BaseModel):
+    label: str = Field(min_length=1, max_length=120)
+    category: str = Field(pattern="^(map|items)$")
+    filename: str = Field(min_length=1, max_length=255)
+    content_type: str = Field(default="application/octet-stream", max_length=120)
+    data_base64: str = Field(min_length=1, max_length=8_000_000)
+
+
 class WorkspaceTokenCreate(BaseModel):
-    token_type: str = Field(pattern="^(character|monster)$")
+    token_type: str = Field(pattern="^(character|monster|location)$")
     character_id: str | None = Field(default=None, max_length=80)
     name: str = Field(min_length=1, max_length=120)
     image_path: str | None = Field(default=None, max_length=500)
     image_filename: str | None = Field(default=None, max_length=255)
     image_data_base64: str | None = Field(default=None, max_length=8_000_000)
+    visible_to_players: bool = True
     color: str = Field(default="#d6a858", pattern="^#[0-9A-Fa-f]{6}$")
     latitude: float = Field(default=50, ge=0, le=100)
     longitude: float = Field(default=50, ge=0, le=100)
@@ -538,9 +572,20 @@ class WorkspaceTokenPositionUpdate(BaseModel):
     longitude: float = Field(ge=0, le=100)
 
 
+class WorkspaceViewUpdate(BaseModel):
+    zoom: float = Field(default=1, ge=1, le=3)
+    scroll_left: float = Field(default=0, ge=0, le=1)
+    scroll_top: float = Field(default=0, ge=0, le=1)
+
+
+class WorkspaceTableModeUpdate(BaseModel):
+    table_mode: str = Field(pattern="^(digital|physical|test)$")
+
+
 class WorkspaceTokenUpdate(BaseModel):
     name: str | None = Field(default=None, min_length=1, max_length=120)
     image_path: str | None = Field(default=None, max_length=500)
+    visible_to_players: bool | None = None
     color: str | None = Field(default=None, pattern="^#[0-9A-Fa-f]{6}$")
     current_hp: int | None = Field(default=None, ge=0, le=99999)
     maximum_hp: int | None = Field(default=None, ge=1, le=99999)
@@ -549,10 +594,33 @@ class WorkspaceTokenUpdate(BaseModel):
 
 
 class WorkspaceFogUpdate(BaseModel):
+    map_id: str = Field(default="default", min_length=1, max_length=120)
     layer: str = Field(pattern="^(exploration|battle)$")
     enabled: bool = True
     revealed_cells: list[str] = Field(default_factory=list, max_length=768)
     mist_density: dict[str, float] = Field(default_factory=dict, max_length=768)
+
+
+class SessionItemEffectRule(BaseModel):
+    id: str = Field(min_length=1, max_length=80)
+    trigger: str = Field(pattern="^(on_use|while_equipped)$")
+    kind: str = Field(pattern="^(heal_hp|restore_resource|add_condition|temporary_hp|attribute_bonus|skill_bonus|saving_throw_bonus|armor_class_bonus|attack_bonus|damage_bonus|movement_bonus|maximum_hp_bonus|grant_ability|resistance|immunity|vulnerability)$")
+    target: str | None = Field(default=None, max_length=120)
+    value: int = Field(default=0, ge=-999, le=999)
+    formula: str | None = Field(default=None, max_length=32, pattern=r"^(?:\d{1,2}d\d{1,4}(?:[+-]\d{1,4})?|)$")
+    label: str | None = Field(default=None, max_length=500)
+    stacking: str = Field(default="stack", pattern="^(stack|highest|non_stack|replace)$")
+    duration: str = Field(default="instant", pattern="^(instant|round|scene|rest|equipped)$")
+    condition: str | None = Field(default=None, max_length=180)
+
+
+class SessionItemMechanics(BaseModel):
+    equipment_slots: list[str] = Field(default_factory=list, max_length=8)
+    damage_formula: str | None = Field(default=None, max_length=32, pattern=r"^(?:\d{1,2}d\d{1,4}(?:[+-]\d{1,4})?|)$")
+    consume_mode: str = Field(default="none", pattern="^(none|quantity|charges)$")
+    charges_max: int = Field(default=0, ge=0, le=999)
+    recharge: str = Field(default="none", pattern="^(none|inn_rest|scene|dawn)$")
+    slot_limit: int = Field(default=1, ge=1, le=8)
 
 
 class SessionItemWrite(BaseModel):
@@ -560,6 +628,8 @@ class SessionItemWrite(BaseModel):
     item_type: str = Field(default="item", min_length=1, max_length=80)
     description: str | None = Field(default=None, max_length=3000)
     effects: list[str] = Field(default_factory=list, max_length=30)
+    effect_rules: list[SessionItemEffectRule] = Field(default_factory=list, max_length=20)
+    mechanics: SessionItemMechanics = Field(default_factory=SessionItemMechanics)
     usable: bool = False
     image_path: str | None = Field(default=None, max_length=500)
 
@@ -570,6 +640,48 @@ class SessionItemGrant(BaseModel):
     quantity: int = Field(default=1, ge=1, le=999)
     equipped: bool = False
     notes: str | None = Field(default=None, max_length=500)
+
+
+class LootResolveCreate(BaseModel):
+    request_id: str = Field(min_length=8, max_length=120)
+    token_id: str = Field(min_length=1, max_length=180)
+    scope: str = Field(pattern="^(carried|lair)$")
+    roll_mode: str = Field(default="digital", pattern="^(digital|quick|requested)$")
+    lair_id: str | None = Field(default=None, max_length=180)
+    roller_character_id: str | None = Field(default=None, max_length=80)
+
+
+class LootRewardWrite(BaseModel):
+    id: str = Field(min_length=1, max_length=80)
+    kind: str = Field(min_length=1, max_length=80)
+    name: str = Field(min_length=1, max_length=180)
+    quantity: int = Field(ge=1, le=999999)
+    description: str | None = Field(default=None, max_length=1000)
+    source_code: str | None = Field(default=None, max_length=8)
+    editable: bool = True
+    requires_identification: bool = False
+    gm_notes: str | None = Field(default=None, max_length=1000)
+
+
+class LootRewardsUpdate(BaseModel):
+    rewards: list[LootRewardWrite] = Field(default_factory=list, max_length=100)
+
+
+class LootAllocation(BaseModel):
+    reward_id: str = Field(min_length=1, max_length=80)
+    character_id: str = Field(min_length=1, max_length=80)
+    quantity: int = Field(ge=1, le=999999)
+
+
+class LootDistributionCreate(BaseModel):
+    request_id: str = Field(min_length=8, max_length=120)
+    allocations: list[LootAllocation] = Field(min_length=1, max_length=200)
+
+
+class WorkspaceInventoryRemove(BaseModel):
+    target_id: str = Field(min_length=1, max_length=180)
+    item_path: str = Field(min_length=1, max_length=500)
+    quantity: int = Field(default=1, ge=1, le=999)
 
 
 class CharacterDefinitionUpdate(BaseModel):
@@ -619,6 +731,26 @@ class CharacterRollCreate(BaseModel):
     session_id: str | None = Field(default=None, max_length=120)
     scene_id: int | None = Field(default=None, ge=1)
     action_id: int | None = Field(default=None, ge=1)
+
+
+class AttackResolutionCreate(BaseModel):
+    model_config = {"extra": "forbid"}
+    request_id: str = Field(min_length=8, max_length=120)
+    attack_id: str = Field(min_length=1, max_length=120)
+    target_type: str = Field(pattern="^(character|token)$")
+    target_id: str = Field(min_length=1, max_length=180)
+    roll_mode: str = Field(pattern="^(digital|physical)$")
+    d20: int | None = Field(default=None, ge=1, le=20, strict=True)
+    attack_count: int = Field(default=1, ge=1, le=10, strict=True)
+    d20s: list[StrictInt] | None = Field(default=None, max_length=10)
+
+
+class CombatEffectCommand(BaseModel):
+    model_config = {"extra": "forbid"}
+    request_id: str = Field(min_length=8, max_length=120)
+    expected_version: int = Field(ge=0)
+    action: str = Field(pattern="^(apply|remove|round|scene|rest|start|initiative|end)$")
+    payload: dict = Field(default_factory=dict)
 
 
 class DiceRollEventResponse(BaseModel):
@@ -716,6 +848,11 @@ class GameSessionStatusUpdate(BaseModel):
     status: str
 
 
+class GameSessionMetadataUpdate(BaseModel):
+    played_on: date | None = None
+    image_path: str | None = Field(default=None, max_length=500)
+
+
 class SceneCreate(BaseModel):
     request_id: str = Field(min_length=8, max_length=120)
     session_id: int | None = Field(default=None, ge=1)
@@ -725,6 +862,12 @@ class SceneCreate(BaseModel):
     public_description: str | None = Field(default=None, max_length=2_000)
     objective: str | None = Field(default=None, max_length=500)
     private_notes: str | None = Field(default=None, max_length=2_000)
+    image_path: str | None = Field(default=None, max_length=1_000)
+    map_id: str | None = Field(default=None, max_length=180)
+    checklist: dict[str, bool] = Field(default_factory=dict)
+    map_zoom: float = Field(default=1, ge=1, le=3)
+    map_scroll_left: float = Field(default=0, ge=0, le=1)
+    map_scroll_top: float = Field(default=0, ge=0, le=1)
     visibility: str = "table"
 
 
@@ -808,6 +951,18 @@ class SceneManualEventCreate(BaseModel):
     public_text: str | None = Field(default=None, max_length=2_000)
     private_text: str | None = Field(default=None, max_length=2_000)
     visibility: str = "table"
+
+
+class ScenePublishCreate(BaseModel):
+    request_id: str = Field(min_length=8, max_length=120)
+    publication_type: str
+    title: str = Field(min_length=1, max_length=180)
+    public_text: str | None = Field(default=None, max_length=2_000)
+    private_text: str | None = Field(default=None, max_length=2_000)
+
+
+class SceneOpenOnTableCreate(BaseModel):
+    request_id: str = Field(min_length=8, max_length=120)
 
 
 class SceneVoidRequest(BaseModel):

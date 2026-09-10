@@ -47,7 +47,7 @@
         "id": "lamina-de-sangue",
         "name": "Lâmina de Sangue",
         "kind": "technique",
-        "group": "Técnicas",
+        "group": "Habilidades",
         "description": "Custo: 1 ponto de Reserva de Sangue. Reforça uma lâmina, garra ou arma leve e concede +1 no ataque ou +1d4 de dano na próxima ação ofensiva. Não acumula consigo mesma.",
         "mechanics_status": "structured",
         "source": "Classe Hemomante",
@@ -64,11 +64,12 @@
         "id": "marca-rubra",
         "name": "Marca Rubra",
         "kind": "technique",
-        "group": "Técnicas",
+        "group": "Habilidades",
         "description": "Custo: 1 ponto de Reserva de Sangue. Marca o sangue de um alvo ferido e permite reconhecê-lo ou rastreá-lo por um curto período. Falha sem sangue, ferimento ou contato significativo.",
         "mechanics_status": "structured",
         "source": "Classe Hemomante",
         "active": true,
+        "requires_target": true,
         "uses": {
           "resource_key": "reserva-de-sangue",
           "label": "Marca Rubra · usos",
@@ -111,7 +112,7 @@
         "id": "caixao",
         "name": "Caixão",
         "kind": "ability",
-        "group": "Poderes vampíricos",
+        "group": "Habilidades",
         "description": "Possui caixão ou sarcófago vinculado magicamente e só realiza descanso completo nele. Pode invocá-lo sem custo de mana; se for destruído, precisa vincular outro com uma Jogada de Proteção modificada por Sabedoria.",
         "mechanics_status": "structured",
         "source": "Old Dragon — Novas Raças, Vampiro",
@@ -137,7 +138,7 @@
         "id": "mordida",
         "name": "Mordida",
         "kind": "technique",
-        "group": "Técnicas",
+        "group": "Habilidades",
         "description": "Também chamada de absorção de sangue durante a sessão. No nível 1, cura 1d4 PV e causa ao alvo a mesma quantidade como dano. Exige um ataque normal contra a CA do alvo; a percepção posterior é resolvida por Jogada de Proteção modificada por Sabedoria.",
         "mechanics_status": "structured",
         "source": "Sessão anterior e Old Dragon — Novas Raças, Vampiro",
@@ -157,7 +158,7 @@
         "id": "forma-da-noite",
         "name": "Forma da Noite",
         "kind": "power",
-        "group": "Poderes vampíricos",
+        "group": "Habilidades",
         "description": "1 vez por dia, assume a forma de morcego, corvo ou coruja e usa a ficha da criatura. Nessa forma não pode atacar nem falar; ao chegar a 0 PV, retorna à forma normal e recebe a diferença de dano.",
         "mechanics_status": "structured",
         "source": "Old Dragon — Novas Raças, Vampiro; limite da campanha",
@@ -228,17 +229,18 @@
       {
         "id": "manipulacao-de-elementos",
         "name": "Manipulação de Elementos",
-        "kind": "power",
-        "group": "Poderes",
+        "kind": "spell",
+        "group": "Magias",
         "description": "Capacidade de manipular elementos através de suas habilidades.",
         "mechanics_status": "partial",
-        "source": "Definição da campanha"
+        "source": "Definição da campanha",
+        "requires_equipped_item": "Máscara de Médico da Peste de Varkh"
       },
       {
         "id": "transmutacao",
         "name": "Transmutação",
-        "kind": "power",
-        "group": "Poderes",
+        "kind": "spell",
+        "group": "Magias",
         "description": "Capacidade de alterar ou transformar matéria através de transmutação.",
         "mechanics_status": "partial",
         "source": "Definição da campanha"
@@ -261,7 +263,8 @@
         "description": "Reproduz vozes e sons, usando falas emprestadas para comunicar-se, distrair e enganar.",
         "mechanics_status": "partial",
         "source": "Ficha de Varkh",
-        "active": true
+        "active": true,
+        "requires_equipped_item": "Caderninho de Vozes"
       },
       {
         "id": "furtividade",

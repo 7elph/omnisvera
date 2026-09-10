@@ -1944,10 +1944,14 @@ class MemoryStore:
                         "predictor_version": latest["predictor_version"],
                         "predictor_type": latest["predictor_type"],
                         "state_version": latest["state_version"],
+                        "latest_state_version": latest["state_version"],
                         "experience_id": latest["experience_id"],
+                        "latest_experience_id": latest["experience_id"],
                         "updated_at": latest["updated_at"],
                         "performance": latest["performance"],
                         "learned_state_hash": latest["learned_state_hash"],
+                        "learned_state_schema": latest["learned_state_schema"],
+                        "integrity_ok": latest["integrity_ok"],
                     })
             return out
 

@@ -16,12 +16,23 @@ import mcp_http_server  # noqa: E402
 import mcp_server  # noqa: E402
 from omnisvera_mcp.bridge import REMOTE_TOOL_NAMES, remote_bridge_context  # noqa: E402
 
+WRITE_TOOL_NAMES = {
+    "world.capture_signals",
+    "epistemic.commit_candidate",
+    "epistemic.create_snapshot",
+    "epistemic.snapshot_from_model",
+    "epistemic.create_prediction",
+    "epistemic.resolve_prediction",
+}
+
 
 class BridgeContractTests(unittest.TestCase):
-    def test_remote_discovery_is_exactly_the_read_only_allowlist(self) -> None:
+    def test_remote_discovery_is_exactly_the_bounded_allowlist(self) -> None:
         tools = asyncio.run(mcp_http_server.mcp.list_tools())
         self.assertEqual(tuple(tool.name for tool in tools), REMOTE_TOOL_NAMES)
-        self.assertTrue(all(tool.annotations.readOnlyHint for tool in tools))
+        for tool in tools:
+            self.assertEqual(tool.annotations.readOnlyHint, tool.name not in WRITE_TOOL_NAMES)
+            self.assertEqual(tool.annotations.idempotentHint, tool.name not in WRITE_TOOL_NAMES)
         self.assertTrue(all(tool.annotations.destructiveHint is False for tool in tools))
 
     def test_effectful_local_tools_are_not_registered_remotely(self) -> None:
@@ -69,6 +80,7 @@ class BridgeContractTests(unittest.TestCase):
         self.assertEqual(mcp_server.CORE_REGISTRY.get("memory.get").resource, "memory://items")
         self.assertEqual(mcp_server.CORE_REGISTRY.get("memory.list").resource, "memory://items")
         self.assertIn("memory.read", remote_bridge_context().scopes)
+        self.assertIn("memory.write", remote_bridge_context().scopes)
 
 
 if __name__ == "__main__":

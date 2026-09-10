@@ -20,7 +20,25 @@ TESTS = Path(__file__).resolve().parent
 LOCAL_TOOLS = TESTS.parent
 ROOT = LOCAL_TOOLS.parent
 DATABASE = ROOT / ".assistant-runtime" / "omnisvera-mcp" / "memory.db"
-EXPECTED_TOOLS = ("system.health", "get_handoff", "get_companion_state", "memory.get", "memory.list")
+EXPECTED_TOOLS = (
+    "system.health", "system.manifest", "system.bootstrap",
+    "get_handoff", "get_companion_state",
+    "memory.get", "memory.list", "memory.search", "memory.recent",
+    "world.list", "world.describe", "world.observe",
+    "world.signals", "world.signal_history", "world.signal_changes",
+    "world.signal_patterns", "world.model", "world.capture_signals",
+    "epistemic.validate_candidate", "epistemic.commit_candidate",
+    "epistemic.create_snapshot", "epistemic.snapshot_from_model",
+    "epistemic.create_prediction", "epistemic.resolve_prediction",
+    "epistemic.list_predictions", "epistemic.get_prediction",
+    "epistemic.calibration_summary",
+)
+
+WRITE_TOOLS = {
+    "world.capture_signals", "epistemic.commit_candidate",
+    "epistemic.create_snapshot", "epistemic.snapshot_from_model",
+    "epistemic.create_prediction", "epistemic.resolve_prediction",
+}
 
 
 def available_port() -> int:
@@ -66,8 +84,12 @@ async def probe(url: str) -> dict[str, object]:
             names = tuple(tool.name for tool in listed.tools)
             if names != EXPECTED_TOOLS:
                 raise AssertionError(f"Unexpected remote tools: {names}")
-            if not all(tool.annotations and tool.annotations.readOnlyHint for tool in listed.tools):
-                raise AssertionError("Remote tools are not annotated read-only")
+            if not all(
+                tool.annotations
+                and tool.annotations.readOnlyHint == (tool.name not in WRITE_TOOLS)
+                for tool in listed.tools
+            ):
+                raise AssertionError("Remote read/write annotations do not match the bounded surface")
 
             health_result = await session.call_tool("system.health", {})
             health = json.loads(health_result.content[0].text)

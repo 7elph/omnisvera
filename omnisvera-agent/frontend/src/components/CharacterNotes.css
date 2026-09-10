@@ -1,0 +1,9 @@
+.character-personal-notes { margin: 0; padding: .75rem; border-bottom: 1px solid #ffffff26; color: #e4e9e9; }
+.character-personal-notes summary { cursor: pointer; font-weight: 700; }
+.character-personal-notes summary small { margin-left: .5rem; font-weight: 400; }
+.character-personal-notes p, .character-personal-notes small { font-size: .8rem; color: #b6c5cb; }
+.character-personal-notes label { display: grid; gap: .4rem; font-size: .85rem; }
+.character-personal-notes textarea { box-sizing: border-box; display: block; width: 100%; min-height: 4.5rem; resize: vertical; font: inherit; font-size: 1rem; color: #eef4f5; background: #101518; border: 1px solid #ffffff38; border-radius: 0; padding: .6rem; }
+.character-notes-actions { display: flex; gap: .5rem; flex-wrap: wrap; margin: .6rem 0; }
+.character-personal-notes button { min-height: 2.75rem; padding: .45rem .7rem; }
+.character-personal-notes [role="alert"] { color: #ffc1b7; }

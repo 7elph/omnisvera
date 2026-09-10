@@ -150,9 +150,30 @@ $env:OMNISVERA_PLAYER_TOKEN = $PlayerToken
 $env:OMNISVERA_PLAYER_PROFILES_JSON = ($PlayerProfiles | ConvertTo-Json -Depth 5 -Compress)
 $env:OMNISVERA_REBUILD_ON_STARTUP = if ($NoRebuild) { "false" } else { "true" }
 
-$localIps = Get-NetIPAddress -AddressFamily IPv4 |
-  Where-Object { $_.IPAddress -notlike "127.*" -and $_.PrefixOrigin -ne "WellKnown" } |
-  Select-Object -ExpandProperty IPAddress
+$CloudflareFile = Join-Path $Backend "data\cloudflare.json"
+if (Test-Path $CloudflareFile) {
+  try {
+    $cf = Get-Content $CloudflareFile -Raw | ConvertFrom-Json
+    $cfAccount = $cf.account_id
+    if (-not $cfAccount) { $cfAccount = $cf.CLOUDFLARE_ACCOUNT_ID }
+    $cfToken = $cf.token
+    if (-not $cfToken) { $cfToken = $cf.CLOUDFLARE_WORKERS_AI_TOKEN }
+    if ($cfAccount) { $env:CLOUDFLARE_ACCOUNT_ID = [string]$cfAccount }
+    if ($cfToken) { $env:CLOUDFLARE_WORKERS_AI_TOKEN = [string]$cfToken }
+  } catch {
+    Write-Warning "Arquivo cloudflare.json inválido; defina CLOUDFLARE_ACCOUNT_ID/TOKEN via env ou corrija o JSON."
+  }
+}
+
+$localIps = @()
+try {
+  $localIps = Get-NetIPAddress -AddressFamily IPv4 -ErrorAction Stop |
+    Where-Object { $_.IPAddress -notlike "127.*" -and $_.PrefixOrigin -ne "WellKnown" } |
+    Select-Object -ExpandProperty IPAddress
+}
+catch {
+  Write-Warning "Não foi possível listar os IPs da rede local; o servidor continuará disponível na porta configurada."
+}
 
 Write-Host ""
 Write-Host "Omnisvera Companion" -ForegroundColor Yellow

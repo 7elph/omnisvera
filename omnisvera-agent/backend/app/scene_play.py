@@ -1,10 +1,14 @@
 from __future__ import annotations
 
+import json
+import hashlib
 import sqlite3
 from contextlib import closing
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Literal
+
+from .session_context import active_game_session_id
 
 
 ActorRole = Literal["gm", "player"]
@@ -17,6 +21,12 @@ ACTION_TYPES = {"talk", "investigate", "observe", "move", "use_item", "interact"
 ACTION_STATUSES = {"declared", "awaiting_roll", "resolved", "rejected", "cancelled"}
 VISIBILITIES = {"table", "gm", "owner", "private"}
 MAX_TEXT = 2000
+SCENE_CHECKLIST_KEYS = {
+    "identity", "map", "opening", "public_image", "characters", "npcs", "creatures",
+    "scenery", "pins", "fog", "clues", "treasure", "interactive_items",
+    "initial_states", "private_notes", "transitions", "player_preview",
+}
+PUBLICATION_TYPES = {"opening", "npc", "creature", "clue", "treasure", "state", "environment", "image", "other"}
 
 
 def _now() -> str:
@@ -53,6 +63,25 @@ def _visibility(value: str) -> str:
     return value
 
 
+def _checklist(value: Any) -> dict[str, bool]:
+    if value in (None, ""):
+        return {}
+    if not isinstance(value, dict):
+        raise ValueError("Checklist da cena inválido")
+    unknown = set(value) - SCENE_CHECKLIST_KEYS
+    if unknown:
+        raise ValueError("Item de checklist da cena inválido")
+    return {key: bool(value.get(key)) for key in SCENE_CHECKLIST_KEYS if key in value}
+
+
+def _camera_value(value: Any, label: str, *, minimum: float, maximum: float) -> float:
+    try:
+        number = float(value)
+    except (TypeError, ValueError) as error:
+        raise ValueError(f"{label} inválido") from error
+    return max(minimum, min(maximum, number))
+
+
 def init_scene_play(database_path: Path) -> None:
     with closing(_connect(database_path)) as connection, connection:
         connection.executescript(
@@ -68,6 +97,13 @@ def init_scene_play(database_path: Path) -> None:
               ended_at TEXT,
               created_by TEXT NOT NULL,
               private_notes TEXT,
+              image_path TEXT,
+              public_summary TEXT,
+              public_chronicle TEXT,
+              gm_summary TEXT,
+              narrative_json TEXT NOT NULL DEFAULT '{}',
+              gm_analysis_json TEXT NOT NULL DEFAULT '{}',
+              source_refs_json TEXT NOT NULL DEFAULT '[]',
               created_at TEXT NOT NULL,
               version INTEGER NOT NULL DEFAULT 1
             );
@@ -107,6 +143,7 @@ def init_scene_play(database_path: Path) -> None:
               public_status TEXT,
               private_status TEXT,
               visible_to_players INTEGER NOT NULL DEFAULT 1,
+              order_index INTEGER NOT NULL DEFAULT 0,
               joined_at TEXT NOT NULL,
               left_at TEXT,
               UNIQUE(scene_id,character_id),
@@ -180,6 +217,57 @@ def init_scene_play(database_path: Path) -> None:
             CREATE INDEX IF NOT EXISTS idx_scene_events_scene ON scene_events(scene_id,id DESC);
             """
         )
+        participant_columns = {row[1] for row in connection.execute("PRAGMA table_info(scene_participants)")}
+        if "order_index" not in participant_columns:
+            connection.execute("ALTER TABLE scene_participants ADD COLUMN order_index INTEGER NOT NULL DEFAULT 0")
+            connection.execute("UPDATE scene_participants SET order_index=id WHERE order_index=0")
+        scene_columns = {row[1] for row in connection.execute("PRAGMA table_info(scenes)")}
+        if "image_path" not in scene_columns:
+            connection.execute("ALTER TABLE scenes ADD COLUMN image_path TEXT")
+        if "map_id" not in scene_columns:
+            connection.execute("ALTER TABLE scenes ADD COLUMN map_id TEXT")
+        if "checklist_json" not in scene_columns:
+            connection.execute("ALTER TABLE scenes ADD COLUMN checklist_json TEXT NOT NULL DEFAULT '{}'")
+        if "map_zoom" not in scene_columns:
+            connection.execute("ALTER TABLE scenes ADD COLUMN map_zoom REAL NOT NULL DEFAULT 1")
+        if "map_scroll_left" not in scene_columns:
+            connection.execute("ALTER TABLE scenes ADD COLUMN map_scroll_left REAL NOT NULL DEFAULT 0")
+        if "map_scroll_top" not in scene_columns:
+            connection.execute("ALTER TABLE scenes ADD COLUMN map_scroll_top REAL NOT NULL DEFAULT 0")
+        session_columns = {row[1] for row in connection.execute("PRAGMA table_info(game_sessions)")}
+        if "image_path" not in session_columns:
+            connection.execute("ALTER TABLE game_sessions ADD COLUMN image_path TEXT")
+        if "public_summary" not in session_columns:
+            connection.execute("ALTER TABLE game_sessions ADD COLUMN public_summary TEXT")
+        if "public_chronicle" not in session_columns:
+            connection.execute("ALTER TABLE game_sessions ADD COLUMN public_chronicle TEXT")
+        if "gm_summary" not in session_columns:
+            connection.execute("ALTER TABLE game_sessions ADD COLUMN gm_summary TEXT")
+        if "narrative_json" not in session_columns:
+            connection.execute("ALTER TABLE game_sessions ADD COLUMN narrative_json TEXT NOT NULL DEFAULT '{}'")
+        if "gm_analysis_json" not in session_columns:
+            connection.execute("ALTER TABLE game_sessions ADD COLUMN gm_analysis_json TEXT NOT NULL DEFAULT '{}'")
+        if "source_refs_json" not in session_columns:
+            connection.execute("ALTER TABLE game_sessions ADD COLUMN source_refs_json TEXT NOT NULL DEFAULT '[]'")
+        duplicate_active = connection.execute(
+            """
+            SELECT COUNT(*) AS total FROM game_sessions
+            WHERE status='active' HAVING COUNT(*)>1
+            """
+        ).fetchone()
+        if duplicate_active:
+            raise RuntimeError("Existem múltiplas sessões ativas")
+        active_index = connection.execute(
+            "SELECT sql FROM sqlite_master WHERE type='index' AND name='uq_game_sessions_one_active'"
+        ).fetchone()
+        if active_index is None or "ON game_sessions(status)" not in str(active_index["sql"] or ""):
+            connection.execute("DROP INDEX IF EXISTS uq_game_sessions_one_active")
+            connection.execute(
+                """
+                CREATE UNIQUE INDEX uq_game_sessions_one_active
+                ON game_sessions(status) WHERE status='active'
+                """
+            )
 
 
 def _record(row: sqlite3.Row | None) -> dict[str, Any] | None:
@@ -191,6 +279,24 @@ def _record(row: sqlite3.Row | None) -> dict[str, Any] | None:
             result[key] = bool(result[key])
     if "voided_at" in result:
         result["voided"] = bool(result["voided_at"])
+    if "checklist_json" in result:
+        try:
+            decoded = json.loads(result.pop("checklist_json") or "{}")
+        except json.JSONDecodeError:
+            decoded = {}
+        result["checklist"] = decoded if isinstance(decoded, dict) else {}
+    for column, public_key, fallback in (
+        ("narrative_json", "narrative", {}),
+        ("gm_analysis_json", "gm_analysis", {}),
+        ("source_refs_json", "source_refs", []),
+    ):
+        if column not in result:
+            continue
+        try:
+            decoded = json.loads(result.pop(column) or json.dumps(fallback))
+        except json.JSONDecodeError:
+            decoded = fallback
+        result[public_key] = decoded if isinstance(decoded, type(fallback)) else fallback
     return result
 
 
@@ -258,19 +364,239 @@ def list_sessions(database_path: Path, campaign_id: str = "omnisvera") -> list[d
     return [_record(row) or {} for row in rows]
 
 
+def historical_sessions_manifest_path() -> Path:
+    return Path(__file__).resolve().parents[3] / ".assistant-runtime" / "campaign-sources" / "session-records.json"
+
+
+def _verified_source_refs(manifest_path: Path, refs: Any) -> list[dict[str, Any]]:
+    if not isinstance(refs, list):
+        raise ValueError("Proveniência histórica inválida")
+    workspace_root = manifest_path.parents[2]
+    verified: list[dict[str, Any]] = []
+    for raw in refs:
+        if not isinstance(raw, dict):
+            raise ValueError("Fonte histórica inválida")
+        relative = str(raw.get("path") or "").strip().replace("\\", "/")
+        expected_hash = str(raw.get("sha256") or "").strip().upper()
+        if not relative or relative.startswith("/") or ".." in Path(relative).parts:
+            raise ValueError("Caminho de fonte histórica inválido")
+        source_path = (workspace_root / relative).resolve()
+        try:
+            source_path.relative_to(workspace_root.resolve())
+        except ValueError as error:
+            raise ValueError("Fonte histórica fora do workspace") from error
+        if not source_path.is_file():
+            raise ValueError(f"Fonte histórica ausente: {relative}")
+        actual_hash = hashlib.sha256(source_path.read_bytes()).hexdigest().upper()
+        if actual_hash != expected_hash:
+            raise ValueError(f"Hash divergente para a fonte histórica: {relative}")
+        verified.append({
+            "path": relative,
+            "sha256": actual_hash,
+            "evidence": [str(item) for item in raw.get("evidence", []) if str(item).strip()],
+        })
+    return verified
+
+
+def sync_historical_sessions(database_path: Path, manifest_path: Path | None = None) -> dict[str, int]:
+    """Create missing historical records without overwriting later GM curation.
+
+    The manifest is provenance for an initial import. Transcript hashes are
+    still verified on every run, while stable request IDs make later runs
+    create-only and idempotent.
+    """
+    manifest_path = manifest_path or historical_sessions_manifest_path()
+    if not manifest_path.is_file():
+        return {"created": 0, "updated": 0, "unchanged": 0}
+    try:
+        payload = json.loads(manifest_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as error:
+        raise ValueError("Manifesto histórico inválido") from error
+    records = payload.get("sessions") if isinstance(payload, dict) else None
+    if not isinstance(records, list):
+        raise ValueError("Manifesto histórico sem sessões")
+    campaign_id = _text(payload.get("campaign_id"), "Campanha", maximum=120, required=True) or "omnisvera"
+    source_status = str(payload.get("source_status") or "historical_evidence")
+    counters = {"created": 0, "updated": 0, "unchanged": 0}
+    init_scene_play(database_path)
+    narrative_keys = (
+        "participants", "locations", "missions", "discoveries", "rewards",
+        "items_acquired", "world_events", "character_events", "open_threads", "tags",
+    )
+    with closing(_connect(database_path)) as connection, connection:
+        connection.execute("BEGIN IMMEDIATE")
+        for raw in records:
+            if not isinstance(raw, dict):
+                raise ValueError("Registro histórico inválido")
+            request_id = _request_id(str(raw.get("request_id") or ""))
+            title = _text(raw.get("title"), "Título", maximum=180, required=True) or "Sessão"
+            session_number = int(raw.get("session_number") or 0)
+            if not 1 <= session_number <= 10000:
+                raise ValueError("Número de sessão histórica inválido")
+            status = str(raw.get("status") or "completed")
+            if status not in SESSION_STATUSES:
+                raise ValueError("Status de sessão histórica inválido")
+            narrative = {key: raw.get(key, []) for key in narrative_keys}
+            narrative_json = json.dumps(narrative, ensure_ascii=False, sort_keys=True)
+            gm_analysis_json = json.dumps({
+                "source_status": source_status,
+                "companion_feedback": raw.get("companion_feedback", []),
+            }, ensure_ascii=False, sort_keys=True)
+            source_refs_json = json.dumps(
+                _verified_source_refs(manifest_path, raw.get("source_refs", [])),
+                ensure_ascii=False,
+                sort_keys=True,
+            )
+            values = (
+                campaign_id,
+                title,
+                session_number,
+                status,
+                _text(raw.get("image_path"), "Imagem", maximum=500),
+                _text(raw.get("public_summary"), "Resumo público", maximum=4000),
+                _text(raw.get("public_chronicle"), "Crônica pública", maximum=12000),
+                _text(raw.get("gm_summary"), "Resumo do Mestre", maximum=4000),
+                narrative_json,
+                gm_analysis_json,
+                source_refs_json,
+            )
+            existing = connection.execute("SELECT * FROM game_sessions WHERE request_id=?", (request_id,)).fetchone()
+            if existing is None:
+                connection.execute(
+                    """
+                    INSERT INTO game_sessions(
+                      request_id,campaign_id,title,session_number,status,started_at,ended_at,created_by,
+                      private_notes,image_path,public_summary,public_chronicle,gm_summary,narrative_json,
+                      gm_analysis_json,source_refs_json,created_at
+                    ) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+                    """,
+                    (
+                        request_id, *values[:4], None, None, "historical-import", None,
+                        *values[4:], _now(),
+                    ),
+                )
+                counters["created"] += 1
+                continue
+            counters["unchanged"] += 1
+    return counters
+
+
+def list_visible_sessions(
+    database_path: Path,
+    *,
+    campaign_id: str = "omnisvera",
+    access_mode: str,
+) -> list[dict[str, Any]]:
+    """Return session chronology without leaking the GM planning surface.
+
+    Sessions are the temporal spine of the campaign.  Players may read only
+    sessions which have actually started, and never receive the private notes
+    or authorship metadata used by the GM preparation view.
+    """
+    sessions = list_sessions(database_path, campaign_id)
+    if access_mode == "gm":
+        return sessions
+    visible: list[dict[str, Any]] = []
+    for session in sessions:
+        if session.get("status") not in {"active", "completed"}:
+            continue
+        public = dict(session)
+        public.pop("private_notes", None)
+        public.pop("created_by", None)
+        public.pop("gm_summary", None)
+        public.pop("gm_analysis", None)
+        public.pop("source_refs", None)
+        visible.append(public)
+    return visible
+
+
+def get_visible_session(database_path: Path, session_id: int, *, access_mode: str) -> dict[str, Any]:
+    init_scene_play(database_path)
+    with closing(_connect(database_path)) as connection:
+        row = connection.execute("SELECT * FROM game_sessions WHERE id=?", (session_id,)).fetchone()
+    session = _record(row)
+    if not session or (access_mode != "gm" and session.get("status") not in {"active", "completed"}):
+        raise ValueError("Sessão não encontrada")
+    if access_mode == "gm":
+        return session
+    for key in ("private_notes", "created_by", "gm_summary", "gm_analysis", "source_refs"):
+        session.pop(key, None)
+    return session
+
+
 def change_session_status(database_path: Path, session_id: int, status: str) -> dict[str, Any]:
     if status not in SESSION_STATUSES:
         raise ValueError("Status de sessão inválido")
     init_scene_play(database_path)
     with closing(_connect(database_path)) as connection, connection:
+        connection.execute("BEGIN IMMEDIATE")
         row = connection.execute("SELECT * FROM game_sessions WHERE id=?", (session_id,)).fetchone()
         if not row:
             raise ValueError("Sessão não encontrada")
+        if status == "active":
+            other = connection.execute(
+                "SELECT id,title FROM game_sessions WHERE status='active' AND id<>? LIMIT 1",
+                (session_id,),
+            ).fetchone()
+            if other:
+                raise ValueError(
+                    f"A sessão {other['id']} ({other['title']}) já está ativa; encerre ou pause-a primeiro"
+                )
         now = _now()
         connection.execute(
             "UPDATE game_sessions SET status=?,started_at=CASE WHEN ?='active' AND started_at IS NULL THEN ? ELSE started_at END,ended_at=CASE WHEN ?='completed' THEN ? ELSE ended_at END,version=version+1 WHERE id=?",
             (status, status, now, status, now, session_id),
         )
+        if status in {"paused", "completed"}:
+            active_scenes = connection.execute(
+                "SELECT * FROM scenes WHERE session_id=? AND status='active' ORDER BY id",
+                (session_id,),
+            ).fetchall()
+            for scene_row in active_scenes:
+                scene = _record(scene_row) or {}
+                connection.execute(
+                    "UPDATE scenes SET status='paused',version=version+1 WHERE id=?",
+                    (scene["id"],),
+                )
+                _event(
+                    connection,
+                    scene=scene,
+                    actor_id="master",
+                    actor_role="gm",
+                    event_type="scene_paused",
+                    title="Cena pausada com a sessão",
+                    visibility="table",
+                    event_key=f"session-pause:{session_id}:{scene['id']}:{status}",
+                )
+        updated = connection.execute("SELECT * FROM game_sessions WHERE id=?", (session_id,)).fetchone()
+    return _record(updated) or {}
+
+
+def update_session_metadata(database_path: Path, session_id: int, fields: dict[str, Any]) -> dict[str, Any]:
+    """Update only the GM-curated presentation metadata of an existing session."""
+    allowed = {"played_on", "image_path"}
+    unknown = set(fields) - allowed
+    if unknown:
+        raise ValueError(f"Campos inválidos: {', '.join(sorted(unknown))}")
+    init_scene_play(database_path)
+    updates: dict[str, Any] = {}
+    if "played_on" in fields:
+        played_on = fields.get("played_on")
+        normalized = played_on.isoformat() if hasattr(played_on, "isoformat") else str(played_on or "").strip() or None
+        updates["started_at"] = normalized
+        updates["ended_at"] = normalized
+    if "image_path" in fields:
+        updates["image_path"] = _text(fields.get("image_path"), "Imagem", maximum=500)
+    with closing(_connect(database_path)) as connection, connection:
+        existing = connection.execute("SELECT * FROM game_sessions WHERE id=?", (session_id,)).fetchone()
+        if not existing:
+            raise ValueError("Sessão não encontrada")
+        if updates:
+            clause = ", ".join(f"{key}=?" for key in updates)
+            connection.execute(
+                f"UPDATE game_sessions SET {clause}, version=version+1 WHERE id=?",
+                (*updates.values(), session_id),
+            )
         updated = connection.execute("SELECT * FROM game_sessions WHERE id=?", (session_id,)).fetchone()
     return _record(updated) or {}
 
@@ -288,6 +614,12 @@ def create_scene(
     public_description: str | None = None,
     objective: str | None = None,
     private_notes: str | None = None,
+    image_path: str | None = None,
+    map_id: str | None = None,
+    checklist: dict[str, Any] | None = None,
+    map_zoom: float = 1,
+    map_scroll_left: float = 0,
+    map_scroll_top: float = 0,
     visibility: str = "table",
 ) -> tuple[dict[str, Any], bool]:
     request_id = _request_id(request_id)
@@ -298,20 +630,28 @@ def create_scene(
         existing = connection.execute("SELECT * FROM scenes WHERE request_id=?", (request_id,)).fetchone()
         if existing:
             return _record(existing) or {}, False
-        if session_id and not connection.execute("SELECT 1 FROM game_sessions WHERE id=?", (session_id,)).fetchone():
+        if session_id is None:
+            session_id = active_game_session_id(connection, campaign_id)
+        if session_id is not None and not connection.execute("SELECT 1 FROM game_sessions WHERE id=?", (session_id,)).fetchone():
             raise ValueError("Sessão não encontrada")
         order_index = connection.execute("SELECT COALESCE(MAX(order_index),0)+1 FROM scenes WHERE campaign_id=?", (campaign_id,)).fetchone()[0]
         cursor = connection.execute(
             """
             INSERT INTO scenes(request_id,campaign_id,session_id,title,location_name,location_source,
-              public_description,objective,private_notes,status,visibility,created_by,created_at,order_index)
-            VALUES(?,?,?,?,?,?,?,?,?,'draft',?,?,?,?)
+              public_description,objective,private_notes,image_path,map_id,checklist_json,map_zoom,map_scroll_left,map_scroll_top,
+              status,visibility,created_by,created_at,order_index)
+            VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,'draft',?,?,?,?)
             """,
             (
                 request_id, campaign_id, session_id, _text(title, "Título", maximum=180, required=True),
                 _text(location_name, "Local", maximum=180, required=True), _text(location_source, "Fonte do local", maximum=500),
                 _text(public_description, "Descrição pública"), _text(objective, "Objetivo", maximum=500),
-                _text(private_notes, "Notas privadas"), visibility, created_by, _now(), order_index,
+                _text(private_notes, "Notas privadas"), _text(image_path, "Imagem", maximum=1000),
+                _text(map_id, "Mapa", maximum=180), json.dumps(_checklist(checklist), ensure_ascii=False),
+                _camera_value(map_zoom, "Zoom", minimum=1, maximum=3),
+                _camera_value(map_scroll_left, "Posição horizontal", minimum=0, maximum=1),
+                _camera_value(map_scroll_top, "Posição vertical", minimum=0, maximum=1),
+                visibility, created_by, _now(), order_index,
             ),
         )
         scene = _record(connection.execute("SELECT * FROM scenes WHERE id=?", (cursor.lastrowid,)).fetchone()) or {}
@@ -339,7 +679,7 @@ def active_scene(database_path: Path, campaign_id: str = "omnisvera") -> dict[st
 
 
 def update_scene(database_path: Path, scene_id: int, *, expected_version: int, fields: dict[str, Any], actor_id: str = "master") -> dict[str, Any]:
-    allowed = {"title", "location_name", "location_source", "public_description", "objective", "private_notes", "visibility", "order_index"}
+    allowed = {"title", "location_name", "location_source", "public_description", "objective", "private_notes", "image_path", "map_id", "checklist", "map_zoom", "map_scroll_left", "map_scroll_top", "visibility", "order_index"}
     if set(fields) - allowed:
         raise ValueError("Campo de cena inválido")
     if "visibility" in fields:
@@ -347,9 +687,16 @@ def update_scene(database_path: Path, scene_id: int, *, expected_version: int, f
     for key in ("title", "location_name"):
         if key in fields:
             fields[key] = _text(fields[key], key, maximum=180, required=True)
-    for key in ("location_source", "public_description", "objective", "private_notes"):
+    for key in ("location_source", "public_description", "objective", "private_notes", "image_path", "map_id"):
         if key in fields:
-            fields[key] = _text(fields[key], key, maximum=500 if key in {"location_source", "objective"} else MAX_TEXT)
+            fields[key] = _text(fields[key], key, maximum=1000 if key == "image_path" else 500 if key in {"location_source", "objective"} else 180 if key == "map_id" else MAX_TEXT)
+    if "checklist" in fields:
+        fields["checklist_json"] = json.dumps(_checklist(fields.pop("checklist")), ensure_ascii=False)
+    if "map_zoom" in fields:
+        fields["map_zoom"] = _camera_value(fields["map_zoom"], "Zoom", minimum=1, maximum=3)
+    for key, label in (("map_scroll_left", "Posição horizontal"), ("map_scroll_top", "Posição vertical")):
+        if key in fields:
+            fields[key] = _camera_value(fields[key], label, minimum=0, maximum=1)
     init_scene_play(database_path)
     with closing(_connect(database_path)) as connection, connection:
         connection.execute("BEGIN IMMEDIATE")
@@ -379,6 +726,21 @@ def change_scene_status(database_path: Path, scene_id: int, status: str, *, acto
             raise ValueError("Cena não encontrada")
         now = _now()
         if status == "active":
+            current_session_id = active_game_session_id(connection, scene["campaign_id"])
+            if current_session_id is None:
+                raise ValueError("Inicie uma sessão antes de abrir uma cena na Mesa")
+            if scene.get("session_id") is None and current_session_id is not None:
+                connection.execute(
+                    "UPDATE scenes SET session_id=? WHERE id=?",
+                    (current_session_id, scene_id),
+                )
+                scene["session_id"] = current_session_id
+            elif (
+                current_session_id is not None
+                and scene.get("session_id") is not None
+                and int(scene["session_id"]) != current_session_id
+            ):
+                raise ValueError("A cena pertence a outra sessão operacional")
             others = connection.execute("SELECT * FROM scenes WHERE campaign_id=? AND status='active' AND id<>?", (scene["campaign_id"], scene_id)).fetchall()
             for other_row in others:
                 other = _record(other_row) or {}
@@ -412,16 +774,17 @@ def add_participant(database_path: Path, scene_id: int, *, participant_type: str
             existing = connection.execute("SELECT * FROM scene_participants WHERE scene_id=? AND character_id=?", (scene_id, character_id)).fetchone()
             if existing:
                 return _record(existing) or {}
+        next_order = int(connection.execute("SELECT COALESCE(MAX(order_index),0)+1 FROM scene_participants WHERE scene_id=?", (scene_id,)).fetchone()[0])
         cursor = connection.execute(
             """
             INSERT INTO scene_participants(scene_id,participant_type,character_id,npc_name,npc_source,public_label,
-              public_status,private_status,visible_to_players,joined_at) VALUES(?,?,?,?,?,?,?,?,?,?)
+              public_status,private_status,visible_to_players,order_index,joined_at) VALUES(?,?,?,?,?,?,?,?,?,?,?)
             """,
             (
                 scene_id, participant_type, character_id, _text(npc_name, "NPC", maximum=180),
                 _text(npc_source, "Fonte", maximum=500), _text(public_label, "Nome público", maximum=180, required=True),
                 _text(public_status, "Estado público", maximum=180), _text(private_status, "Estado privado", maximum=500),
-                int(visible_to_players), _now(),
+                int(visible_to_players), next_order, _now(),
             ),
         )
         participant = _record(connection.execute("SELECT * FROM scene_participants WHERE id=?", (cursor.lastrowid,)).fetchone()) or {}
@@ -430,7 +793,7 @@ def add_participant(database_path: Path, scene_id: int, *, participant_type: str
 
 
 def update_participant(database_path: Path, participant_id: int, fields: dict[str, Any], *, actor_id: str = "master") -> dict[str, Any]:
-    allowed = {"public_label", "public_status", "private_status", "visible_to_players", "left_at"}
+    allowed = {"public_label", "public_status", "private_status", "visible_to_players", "left_at", "order_index"}
     if set(fields) - allowed:
         raise ValueError("Campo de participante inválido")
     for key in ("public_label", "public_status", "private_status"):
@@ -438,6 +801,8 @@ def update_participant(database_path: Path, participant_id: int, fields: dict[st
             fields[key] = _text(fields[key], key, maximum=500, required=key == "public_label")
     if "visible_to_players" in fields:
         fields["visible_to_players"] = int(bool(fields["visible_to_players"]))
+    if "order_index" in fields:
+        fields["order_index"] = max(0, int(fields["order_index"]))
     init_scene_play(database_path)
     with closing(_connect(database_path)) as connection, connection:
         row = connection.execute("SELECT * FROM scene_participants WHERE id=?", (participant_id,)).fetchone()
@@ -639,6 +1004,48 @@ def record_manual_event(database_path: Path, *, scene_id: int, actor_id: str, ti
         return _event(connection, scene=scene, actor_id=actor_id, actor_role="gm", event_type="manual_note", title=title, public_text=public_text, private_text=private_text, visibility=visibility)
 
 
+def publish_scene_event(
+    database_path: Path,
+    *,
+    scene_id: int,
+    request_id: str,
+    publication_type: str,
+    actor_id: str,
+    title: str,
+    public_text: str | None,
+    private_text: str | None = None,
+) -> tuple[dict[str, Any], bool]:
+    request_id = _request_id(request_id)
+    if publication_type not in PUBLICATION_TYPES:
+        raise ValueError("Tipo de publicação inválido")
+    init_scene_play(database_path)
+    with closing(_connect(database_path)) as connection, connection:
+        connection.execute("BEGIN IMMEDIATE")
+        event_key = f"scene-publication:{request_id}"
+        existing = connection.execute("SELECT * FROM scene_events WHERE event_key=?", (event_key,)).fetchone()
+        if existing:
+            event = _record(existing) or {}
+            if int(event["scene_id"]) != int(scene_id):
+                raise ValueError("request_id já utilizado")
+            return event, False
+        scene = _record(connection.execute("SELECT * FROM scenes WHERE id=?", (scene_id,)).fetchone())
+        if not scene:
+            raise ValueError("Cena não encontrada")
+        event = _event(
+            connection,
+            scene=scene,
+            actor_id=actor_id,
+            actor_role="gm",
+            event_type=f"scene_publication_{publication_type}",
+            title=title,
+            public_text=public_text,
+            private_text=private_text,
+            visibility="table",
+            event_key=event_key,
+        )
+    return event, True
+
+
 def void_event(database_path: Path, event_id: int, *, actor_id: str, reason: str) -> dict[str, Any]:
     reason = _text(reason, "Motivo", maximum=500, required=True) or "Anulado"
     init_scene_play(database_path)
@@ -674,12 +1081,16 @@ def scene_view(database_path: Path, scene_id: int, *, access_mode: str, profile_
             return None
         if access_mode != "gm" and (scene["visibility"] != "table" or scene["status"] == "draft"):
             return None
-        participants = [_record(row) or {} for row in connection.execute("SELECT * FROM scene_participants WHERE scene_id=? ORDER BY id", (scene_id,)).fetchall()]
+        participants = [_record(row) or {} for row in connection.execute("SELECT * FROM scene_participants WHERE scene_id=? ORDER BY order_index,id", (scene_id,)).fetchall()]
         elements = [_record(row) or {} for row in connection.execute("SELECT * FROM scene_elements WHERE scene_id=? ORDER BY id", (scene_id,)).fetchall()]
         actions = [_record(row) or {} for row in connection.execute("SELECT * FROM scene_actions WHERE scene_id=? ORDER BY id DESC LIMIT 100", (scene_id,)).fetchall()]
         events = [_record(row) or {} for row in connection.execute("SELECT * FROM scene_events WHERE scene_id=? ORDER BY id DESC LIMIT 150", (scene_id,)).fetchall()]
     if access_mode != "gm":
-        scene.pop("private_notes", None)
+        for key in (
+            "request_id", "created_by", "location_source", "private_notes", "checklist",
+            "map_zoom", "map_scroll_left", "map_scroll_top",
+        ):
+            scene.pop(key, None)
         participants = [{key: value for key, value in item.items() if key != "private_status"} for item in participants if item.get("visible_to_players")]
         filtered_elements = []
         for item in elements:

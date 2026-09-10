@@ -3,11 +3,12 @@ from __future__ import annotations
 import json
 from collections.abc import Callable, Mapping
 from dataclasses import dataclass
-from typing import Any
+from typing import Annotated, Any
 from uuid import uuid4
 
 from mcp.server.fastmcp import FastMCP
 from mcp.types import ToolAnnotations
+from pydantic import WithJsonSchema
 
 from .core.context import CallContext
 from .core.registry import RegisteredTool, ToolRegistry
@@ -41,7 +42,7 @@ REMOTE_TOOL_NAMES = (
     "epistemic.commit_candidate",
     "epistemic.create_snapshot",
     "epistemic.snapshot_from_model",
-    "epistemic.create_prediction",
+    # epistemic.create_prediction intentionally NOT exposed remotely — local/internal only; remote must use validate → commit
     "epistemic.resolve_prediction",
     "epistemic.list_predictions",
     "epistemic.get_prediction",
@@ -149,13 +150,13 @@ def register_remote_bridge_tools(
 
     @mcp.tool(name="system.manifest", annotations=READ_ONLY)
     def system_manifest() -> str:
-        """Discover Omnisvera capabilities: worlds, model builders, tools, memory stats."""
+        """Stable capabilities of the system (worlds, builders, tool catalog). For current operational state and persisted PredictorExperiences, call system.bootstrap."""
 
         return registry.invoke("system.manifest", context_factory(), {})
 
     @mcp.tool(name="system.bootstrap", annotations=READ_ONLY)
     def system_bootstrap() -> str:
-        """Universal continuity bootstrap: system identity, capabilities, worlds, state, memories, recent changes."""
+        """Current operational state: identity, worlds, memories, and persisted PredictorExperiences (world_id/predictor_id/predictor_version/experience_id/latest_state_version/learned_state_schema/integrity_ok). Use this to discover which predictor_version to use for experience.latest."""
 
         return registry.invoke("system.bootstrap", context_factory(), {})
 
@@ -324,12 +325,12 @@ def register_remote_bridge_tools(
 
     @mcp.tool(name="experience.get", annotations=READ_ONLY)
     def experience_get(experience_id: str) -> str:
-        """Get predictor experience by experience_id (integrity verified)."""
+        """Get predictor experience by experience_id (obtain id from system.bootstrap.experiences)."""
         return registry.invoke("experience.get", context_factory(), {"experience_id": experience_id})
 
     @mcp.tool(name="experience.latest", annotations=READ_ONLY)
     def experience_latest(world_id: str, predictor_id: str, predictor_version: str) -> str:
-        """Get latest experience version for a predictor/world."""
+        """Get latest experience version for a predictor/world. Discover predictor_version via system.bootstrap.experiences (or system.bootstrap.experience.per_world). Do not infer/adivinhar version like 1.0.0."""
         return registry.invoke(
             "experience.latest", context_factory(),
             {"world_id": world_id, "predictor_id": predictor_id, "predictor_version": predictor_version},
@@ -358,7 +359,7 @@ def register_remote_bridge_tools(
 
     @mcp.tool(name="epistemic.validate_candidate", annotations=READ_ONLY)
     def epistemic_validate_candidate(candidate: dict) -> str:
-        """Validate an epistemic prediction candidate without committing."""
+        """Validate an epistemic PredictionCandidate before persistence (first step of governed remote route validate_candidate → commit_candidate). Candidate must use model_snapshot_id (not snapshot_id). When continuing a PredictorExperience, include exactly experience_id, experience_state_version, experience_state_hash and model_snapshot_id."""
 
         return registry.invoke(
             "epistemic.validate_candidate", context_factory(), {"candidate": candidate},
@@ -385,7 +386,7 @@ def register_remote_bridge_tools(
 
     @mcp.tool(name="epistemic.commit_candidate", annotations=READ_WRITE)
     def epistemic_commit_candidate(candidate: dict) -> str:
-        """Commit a validated epistemic prediction candidate. Governed write."""
+        """Governed remote write to persist a validated PredictionCandidate (second step after validate_candidate returns valid:true). Candidate must use model_snapshot_id (not snapshot_id). When continuing a PredictorExperience, include exactly experience_id, experience_state_version, experience_state_hash and model_snapshot_id. Enforces candidate validity, authorization binding and candidate_hash idempotence."""
 
         return registry.invoke(
             "epistemic.commit_candidate", context_factory(), {"candidate": candidate},
@@ -403,39 +404,17 @@ def register_remote_bridge_tools(
         return registry.invoke("epistemic.create_snapshot", context_factory(), args)
 
     @mcp.tool(name="epistemic.snapshot_from_model", annotations=READ_WRITE)
-    def epistemic_snapshot_from_model(model: dict) -> str:
-        """Create an immutable snapshot from a world model dict."""
+    def epistemic_snapshot_from_model(model: Annotated[dict, WithJsonSchema({"type": "object", "properties": {"world_id": {"type": "string"}, "state": {"type": "object"}}, "required": ["world_id", "state"], "additionalProperties": True})]) -> str:
+        """Create an immutable snapshot from a complete WorldModel dict as returned by world.model (must contain world_id and state as object). Do NOT use world.context or world.context.model (summary only). Preserve additional fields."""
 
         return registry.invoke(
             "epistemic.snapshot_from_model", context_factory(), {"model": model},
         )
 
-    @mcp.tool(name="epistemic.create_prediction", annotations=READ_WRITE)
-    def epistemic_create_prediction(
-        domain: str,
-        snapshot_id: str,
-        claim: str,
-        probability: float,
-        horizon: str,
-        resolution_rule: dict,
-        predictor_id: str = "",
-        predictor_version: str = "",
-        evidence_mode: str = "prospective",
-    ) -> str:
-        """Create a formal prediction with all required fields."""
-
-        args: dict[str, Any] = {
-            "domain": domain,
-            "snapshot_id": snapshot_id,
-            "claim": claim,
-            "probability": probability,
-            "horizon": horizon,
-            "resolution_rule": resolution_rule,
-            "predictor_id": predictor_id,
-            "predictor_version": predictor_version,
-            "evidence_mode": evidence_mode,
-        }
-        return registry.invoke("epistemic.create_prediction", context_factory(), args)
+    # epistemic.create_prediction is LOCAL-ONLY — intentionally not exposed via remote bridge.
+    # The local CORE_REGISTRY retains it (mcp_server.py); remote callers must use
+    # epistemic.validate_candidate → epistemic.commit_candidate which enforces
+    # experience_id/version/hash, candidate_hash and identity binding.
 
     @mcp.tool(name="epistemic.resolve_prediction", annotations=READ_WRITE)
     def epistemic_resolve_prediction(

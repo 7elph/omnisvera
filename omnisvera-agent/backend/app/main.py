@@ -5,6 +5,7 @@ from datetime import datetime, timezone
 import asyncio
 import base64
 import binascii
+import copy
 import re
 import json
 import threading
@@ -43,6 +44,19 @@ from .character_play import (
     revert_character_event,
     update_definition_overrides,
 )
+from .asset_generation import init_asset_generation, queue_missing_assets
+from .asset_api import init_asset_api
+from .character_notes import CharacterNotesWrite, NotesConflictError, read_notes, save_notes
+from .combat import (
+    CombatExpiredError,
+    CombatNotFoundError,
+    confirm_attack_resolution,
+    init_combat,
+    resolve_attack,
+)
+from .combat_effects import readeffects, effect_command, apply_definition_effects
+from .campaign_seed import seed_companion_contracts
+from .schemas import CombatEffectCommand
 from .config import get_settings
 from .contract_play import (
     accept_contract,
@@ -52,6 +66,7 @@ from .contract_play import (
     create_contract,
     create_objective,
     create_reward,
+    current_operational_contract,
     deliver_reward,
     get_contract,
     init_contract_play,
@@ -83,6 +98,7 @@ from .dice_rolls import (
     list_roll_requests,
     list_rolls,
     parse_formula,
+    roll_formula,
     resolve_character_roll,
     void_roll,
 )
@@ -130,7 +146,7 @@ from .player_progress import (
     mark_events_read,
     upsert_quest,
 )
-from .player_inventory import init_player_inventory, list_inventory, upsert_inventory
+from .player_inventory import init_player_inventory, list_inventory, normalize_inventory_item_mechanics, recharge_inventory, upsert_inventory
 from .player_ideas import create_idea, init_player_ideas, list_ideas, review_idea
 from .rag import answer_question
 from .runtime_events import RUNTIME_EVENT_TYPES, init_runtime_events, record_runtime_event
@@ -146,13 +162,18 @@ from .scene_play import (
     declare_action,
     get_action,
     get_scene,
+    get_visible_session,
     init_scene_play,
     link_completed_roll,
     link_roll_request,
     list_scenes,
     list_sessions,
+    list_visible_sessions,
+    sync_historical_sessions,
+    update_session_metadata,
     record_consequence,
     record_manual_event,
+    publish_scene_event,
     resolve_action,
     scene_view,
     update_element,
@@ -160,23 +181,46 @@ from .scene_play import (
     update_scene,
     void_event,
 )
+from .monster_catalog import list_monster_catalog
+from .loot import (
+    LootConflictError,
+    LootNotFoundError,
+    distribute_loot,
+    init_loot,
+    list_loot,
+    finalize_requested_loot,
+    resolve_token_loot,
+    resolve_requested_token_loot,
+    reveal_loot,
+    update_loot_rewards,
+)
 from .session_workspace import (
+    delete_session_item,
     delete_workspace_token,
     get_session_item,
     get_session_item_by_path,
     get_workspace_snapshot,
+    ensure_official_workspace_maps,
     heartbeat_workspace,
     init_session_workspace,
+    leave_workspace,
     list_workspace_maps,
+    list_workspace_icons,
     list_session_items,
     record_workspace_message,
     save_session_item,
+    session_item_inventory_holders,
+    save_workspace_icon,
     save_workspace_token,
     set_workspace_map,
     set_active_workspace_map,
+    update_workspace_map_visibility,
     update_workspace_fog,
+    update_workspace_view,
+    update_workspace_table_mode,
     update_workspace_token,
     update_workspace_token_position,
+    list_workspace_tokens,
 )
 from .session_ledger import init_session_ledger, list_session_ledger, session_ledger_version
 from .session_realtime import session_realtime
@@ -230,6 +274,7 @@ from .training_curation import (
     validate_batch,
 )
 from .schemas import (
+    AttackResolutionCreate,
     ChatRequest,
     ChatResponse,
     CharacterDefinitionUpdate,
@@ -255,6 +300,7 @@ from .schemas import (
     DiceRollRequestResponse,
     DiceRollVoidRequest,
     GameSessionCreate,
+    GameSessionMetadataUpdate,
     GameSessionStatusUpdate,
     EditableNoteResponse,
     EditableNoteUpdate,
@@ -280,6 +326,7 @@ from .schemas import (
     PlayerDiscoveryRecord,
     PlayerEventReadRequest,
     PlayerEventRecord,
+    PlayerNotificationCreate,
     PlayerProfileResponse,
     PlayerIdeaCreate,
     PlayerIdeaRecord,
@@ -301,8 +348,10 @@ from .schemas import (
     SceneElementCreate,
     SceneElementUpdate,
     SceneManualEventCreate,
+    SceneOpenOnTableCreate,
     SceneParticipantCreate,
     SceneParticipantUpdate,
+    ScenePublishCreate,
     SceneRollRequestCreate,
     SceneStatusUpdate,
     SceneUpdate,
@@ -332,16 +381,24 @@ from .schemas import (
     WorldVersionedUpdate,
     WorkspaceMapUpload,
     WorkspaceMapSelect,
+    WorkspaceMapVisibilityUpdate,
+    WorkspaceIconUpload,
     WorkspaceFogUpdate,
     WorkspaceMessageCreate,
     WorkspaceTokenCreate,
     WorkspaceTokenUpdate,
     WorkspaceTokenPositionUpdate,
+    WorkspaceViewUpdate,
+    WorkspaceTableModeUpdate,
     SessionItemWrite,
     SessionItemGrant,
+    LootResolveCreate,
+    LootRewardsUpdate,
+    LootDistributionCreate,
+    WorkspaceInventoryRemove,
 )
 from .search import search_notes
-from .vault_index import all_notes_for_search, get_note, index_signature, init_db, list_notes, rebuild_index, resolve_note, row_to_note
+from .vault_index import all_notes_for_search, get_note, index_signature, init_db, list_item_notes, list_notes, rebuild_index, resolve_note, row_to_note
 from .vault_reader import iter_markdown_notes, markdown_signature
 
 
@@ -451,18 +508,32 @@ def _personal_player_answer(question: str, access: AccessContext) -> dict | None
     if not any(term in normalized for term in personal_terms):
         return None
 
-    quests = list_quests(settings.database_path, profile_id=access.profile_id)
+    contracts = list_contracts(
+        settings.database_path,
+        access_mode="player",
+        profile_id=access.profile_id,
+    )
     events = list_events(settings.database_path, profile_id=access.profile_id, limit=12)
     actions = list_player_actions(settings.database_path, character_path=access.character_path, limit=12)
     inventory = list_inventory(settings.database_path, access.profile_id or "group")
-    active_quests = [quest for quest in quests if quest["status"] in {"accepted", "in_progress", "available"}]
+    current_contract = current_operational_contract(contracts)
+    available_contracts = [contract for contract in contracts if contract.get("status") == "published"]
     unread = [event for event in events if not event.get("read_at")]
     pending = [action for action in actions if action["status"] in {"submitted", "in_review"}]
 
     paragraphs: list[str] = []
-    if active_quests:
-        lines = [f"- **{quest['note_title']}** — {(quest.get('progress') or quest['status']).strip()}" for quest in active_quests[:4]]
-        paragraphs.append("### Seus caminhos atuais\n" + "\n".join(lines))
+    if current_contract:
+        paragraphs.append(
+            "### Missão atual\n"
+            f"- **{current_contract['title']}** — "
+            f"{current_contract.get('public_summary') or current_contract.get('public_briefing') or 'Em andamento.'}"
+        )
+    elif available_contracts:
+        lines = [
+            f"- **{contract['title']}** — {contract.get('public_summary') or 'Disponível no Conclave.'}"
+            for contract in available_contracts[:4]
+        ]
+        paragraphs.append("### Missões disponíveis\n" + "\n".join(lines))
     if unread:
         lines = [f"- **{event['title']}**: {event['message']}" for event in unread[:4]]
         paragraphs.append("### Novidades\n" + "\n".join(lines))
@@ -479,7 +550,7 @@ def _personal_player_answer(question: str, access: AccessContext) -> dict | None
         )
 
     paths: list[str] = []
-    for item in [*active_quests, *unread]:
+    for item in unread:
         path = item.get("note_path")
         if path and path not in paths:
             paths.append(path)
@@ -499,7 +570,7 @@ def _personal_player_answer(question: str, access: AccessContext) -> dict | None
         "answer": "\n\n".join(paragraphs),
         "notes_used": notes_used,
         "note_paths": [note["path"] for note in notes_used],
-        "insufficient_context": not bool(active_quests or unread or pending),
+        "insufficient_context": not bool(current_contract or available_contracts or unread or pending),
         "warning": None,
         "suggested_questions": ["Quais missões estão ativas?", "Quais rumores estão ativos?", "Quem sou eu?"],
         "fatos_confirmados": [],
@@ -624,6 +695,9 @@ def require_master(
     return AccessContext(mode="gm")
 
 
+init_asset_api(app, require_master)
+
+
 def require_training_admin(
     x_omnisvera_token: str | None = Header(default=None),
     token: str | None = Query(default=None),
@@ -673,6 +747,7 @@ def require_any(
 @app.on_event("startup")
 def startup() -> None:
     init_db(settings.database_path)
+    init_scene_play(settings.database_path)
     init_player_actions(settings.database_path)
     init_player_discoveries(settings.database_path)
     init_player_progress(settings.database_path)
@@ -681,13 +756,22 @@ def startup() -> None:
     init_character_creation(settings.database_path)
     init_character_play(settings.database_path)
     init_dice_rolls(settings.database_path)
-    init_scene_play(settings.database_path)
+    sync_historical_sessions(settings.database_path)
     init_contract_play(settings.database_path)
+    seed_companion_contracts(settings.database_path)
     init_npc_memory(settings.database_path)
     init_world_travel(settings.database_path)
     init_runtime_events(settings.database_path)
     init_session_workspace(settings.database_path)
+    ensure_official_workspace_maps(settings.database_path, settings.vault_path)
     init_session_ledger(settings.database_path)
+    init_combat(settings.database_path)
+    init_loot(settings.database_path)
+    init_asset_generation(settings.database_path)
+    try:
+        queue_missing_assets(settings.database_path)
+    except Exception:
+        pass
     if settings.training_capture_mode != "off":
         purge_unreviewed(settings.unreviewed_retention_days)
     if settings.rebuild_on_startup:
@@ -771,8 +855,15 @@ def _workspace_identity(access: AccessContext) -> tuple[str, str, str, str | Non
 
 
 @app.get("/workspace")
-def session_workspace_snapshot(access: AccessContext = Depends(require_any)) -> dict:
-    return get_workspace_snapshot(settings.database_path, is_gm=access.mode == "gm")
+def session_workspace_snapshot(
+    map_id: str | None = Query(default=None, max_length=120),
+    access: AccessContext = Depends(require_any),
+) -> dict:
+    return get_workspace_snapshot(
+        settings.database_path,
+        is_gm=access.mode == "gm",
+        map_id=map_id,
+    )
 
 
 @app.get("/workspace/ledger")
@@ -815,6 +906,18 @@ async def session_workspace_socket(websocket: WebSocket, ticket: str = Query(def
 def session_workspace_heartbeat(access: AccessContext = Depends(require_any)) -> dict:
     actor_id, actor_name, actor_role, character_id = _workspace_identity(access)
     return heartbeat_workspace(
+        settings.database_path,
+        actor_id=actor_id,
+        actor_name=actor_name,
+        actor_role=actor_role,
+        character_id=character_id,
+    )
+
+
+@app.post("/workspace/leave")
+def session_workspace_leave(access: AccessContext = Depends(require_any)) -> dict:
+    actor_id, actor_name, actor_role, character_id = _workspace_identity(access)
+    return leave_workspace(
         settings.database_path,
         actor_id=actor_id,
         actor_name=actor_name,
@@ -868,22 +971,101 @@ def gm_upload_workspace_map(
     temporary.write_bytes(content)
     temporary.replace(target)
     relative_path = target.relative_to(settings.vault_path).as_posix()
-    map_record = set_workspace_map(settings.database_path, title=title, image_path=relative_path)
+    map_record = set_workspace_map(
+        settings.database_path,
+        title=title,
+        image_path=relative_path,
+        visible_to_players=request.visible_to_players,
+    )
+    if request.visible_to_players:
+        record_workspace_message(
+            settings.database_path,
+            actor_id="master",
+            actor_name="Mestre",
+            actor_role="gm",
+            character_id="sage",
+            text=f"Mapa disponibilizado aos jogadores: {title}",
+            message_kind="action",
+        )
+    return map_record
+
+
+@app.get("/workspace/maps")
+def workspace_maps(access: AccessContext = Depends(require_any)) -> list[dict]:
+    return list_workspace_maps(
+        settings.database_path,
+        visible_to_players_only=access.mode != "gm",
+    )
+
+
+@app.get("/workspace/icons")
+def workspace_icons(_: AccessContext = Depends(require_any)) -> list[dict]:
+    return list_workspace_icons(settings.database_path)
+
+
+WORKSPACE_ICON_MAX_BYTES = 25 * 1024 * 1024
+
+
+def _store_workspace_icon(content: bytes, label: str, category: str) -> dict:
+    if not content or len(content) > WORKSPACE_ICON_MAX_BYTES:
+        raise HTTPException(status_code=400, detail="A imagem deve possuir no máximo 25 MB.")
+    if content.startswith(b"\x89PNG\r\n\x1a\n"):
+        extension = ".png"
+    elif content.startswith(b"\xff\xd8\xff"):
+        extension = ".jpg"
+    elif content.startswith(b"RIFF") and len(content) >= 12 and content[8:12] == b"WEBP":
+        extension = ".webp"
+    else:
+        raise HTTPException(status_code=400, detail="Use uma imagem PNG, JPG ou WEBP.")
+    safe_stem = _media_lookup_key(label).strip("_")[:80] or "icone"
+    target_directory = settings.vault_path / "zz_media" / "ui" / "icons" / "uploads"
+    target_directory.mkdir(parents=True, exist_ok=True)
+    target = target_directory / f"{safe_stem}_{uuid.uuid4().hex[:10]}{extension}"
+    temporary = target.with_suffix(target.suffix + ".tmp")
+    temporary.write_bytes(content)
+    temporary.replace(target)
+    relative_path = target.relative_to(settings.vault_path).as_posix()
+    icon = save_workspace_icon(
+        settings.database_path,
+        label=label.strip(),
+        category=category,
+        path=relative_path,
+    )
     record_workspace_message(
         settings.database_path,
         actor_id="master",
         actor_name="Mestre",
         actor_role="gm",
         character_id="sage",
-        text=f"Mapa da sessão alterado para: {title}",
+        text=f"Ícone carregado: {icon['label']}",
         message_kind="action",
     )
-    return map_record
+    return icon
 
 
-@app.get("/workspace/maps")
-def workspace_maps(_: AccessContext = Depends(require_any)) -> list[dict]:
-    return list_workspace_maps(settings.database_path)
+@app.post("/gm/workspace/icons")
+def gm_upload_workspace_icon(
+    request: WorkspaceIconUpload,
+    _: AccessContext = Depends(require_master),
+) -> dict:
+    try:
+        content = base64.b64decode(request.data_base64, validate=True)
+    except (binascii.Error, ValueError) as error:
+        raise HTTPException(status_code=400, detail="Imagem codificada de forma inválida.") from error
+    return _store_workspace_icon(content, request.label, request.category)
+
+
+@app.post("/gm/workspace/icons/file")
+async def gm_upload_workspace_icon_file(
+    request: Request,
+    label: str = Query(min_length=1, max_length=160),
+    category: str = Query(pattern="^(map|items)$"),
+    _: AccessContext = Depends(require_master),
+) -> dict:
+    content_length = request.headers.get("content-length", "")
+    if content_length.isdigit() and int(content_length) > WORKSPACE_ICON_MAX_BYTES:
+        raise HTTPException(status_code=400, detail="A imagem deve possuir no máximo 25 MB.")
+    return _store_workspace_icon(await request.body(), label, category)
 
 
 @app.patch("/gm/workspace/maps/active")
@@ -891,8 +1073,68 @@ def gm_select_workspace_map(request: WorkspaceMapSelect, _: AccessContext = Depe
     selected = set_active_workspace_map(settings.database_path, request.map_id)
     if selected is None:
         raise HTTPException(status_code=404, detail="Mapa não encontrado.")
-    record_workspace_message(settings.database_path, actor_id="master", actor_name="Mestre", actor_role="gm", character_id="sage", text=f"Mapa ativo: {selected['title']}", message_kind="action")
     return selected
+
+
+@app.patch("/gm/workspace/maps/{map_id}/visibility")
+def gm_update_workspace_map_visibility(
+    map_id: str,
+    request: WorkspaceMapVisibilityUpdate,
+    _: AccessContext = Depends(require_master),
+) -> dict:
+    updated = update_workspace_map_visibility(
+        settings.database_path,
+        map_id,
+        visible_to_players=request.visible_to_players,
+    )
+    if updated is None:
+        raise HTTPException(status_code=404, detail="Mapa não encontrado.")
+    record_workspace_message(
+        settings.database_path,
+        actor_id="master",
+        actor_name="Mestre",
+        actor_role="gm",
+        character_id="sage",
+        text=(
+            f"Mapa disponibilizado aos jogadores: {updated['title']}"
+            if request.visible_to_players
+            else f"Mapa retirado da visualização dos jogadores: {updated['title']}"
+        ),
+        message_kind="action",
+    )
+    return updated
+
+
+@app.patch("/gm/workspace/view")
+def gm_update_workspace_view(
+    request: WorkspaceViewUpdate,
+    _: AccessContext = Depends(require_master),
+) -> dict:
+    return update_workspace_view(
+        settings.database_path,
+        zoom=request.zoom,
+        scroll_left=request.scroll_left,
+        scroll_top=request.scroll_top,
+    )
+
+
+@app.patch("/gm/workspace/table-mode")
+def gm_update_workspace_table_mode(
+    request: WorkspaceTableModeUpdate,
+    _: AccessContext = Depends(require_master),
+) -> dict:
+    table_mode = update_workspace_table_mode(settings.database_path, request.table_mode)
+    labels = {"digital": "Digital", "physical": "Física", "test": "Teste"}
+    record_workspace_message(
+        settings.database_path,
+        actor_id="master",
+        actor_name="Mestre",
+        actor_role="gm",
+        character_id="sage",
+        text=f"Modo da mesa alterado para {labels[table_mode]}.",
+        message_kind="action",
+    )
+    return {"table_mode": table_mode}
 
 
 @app.patch("/gm/workspace/fog")
@@ -904,6 +1146,7 @@ def gm_update_workspace_fog(
     try:
         return update_workspace_fog(
             settings.database_path,
+            map_id=request.map_id,
             layer=request.layer,
             enabled=request.enabled,
             revealed_cells=request.revealed_cells,
@@ -957,6 +1200,7 @@ def gm_create_workspace_token(
         character_id=request.character_id,
         name=name,
         image_path=image_path,
+        visible_to_players=request.visible_to_players,
         color=request.color,
         latitude=request.latitude,
         longitude=request.longitude,
@@ -966,6 +1210,8 @@ def gm_create_workspace_token(
         sheet=request.sheet,
         map_id=request.map_id,
     )
+    if not request.visible_to_players:
+        return token
     record_workspace_message(
         settings.database_path,
         actor_id="master",
@@ -982,8 +1228,14 @@ def gm_create_workspace_token(
 def gm_move_workspace_token(
     token_id: str,
     request: WorkspaceTokenPositionUpdate,
-    _: AccessContext = Depends(require_master),
+    access: AccessContext = Depends(require_any),
 ) -> dict:
+    if access.mode != "gm":
+        token = next((item for item in list_workspace_tokens(settings.database_path) if item["id"] == token_id), None)
+        if token is None:
+            raise HTTPException(status_code=404, detail="Marcador não encontrado.")
+        if not token.get("character_id") or token.get("character_id") != access.profile_id:
+            raise HTTPException(status_code=403, detail="O jogador só pode mover o próprio marcador.")
     token = update_workspace_token_position(
         settings.database_path,
         token_id=token_id,
@@ -992,12 +1244,13 @@ def gm_move_workspace_token(
     )
     if token is None:
         raise HTTPException(status_code=404, detail="Marcador não encontrado.")
+    actor_id, actor_name, actor_role, character_id = _workspace_identity(access)
     record_workspace_message(
         settings.database_path,
-        actor_id="master",
-        actor_name="Mestre",
-        actor_role="gm",
-        character_id="sage",
+        actor_id=actor_id,
+        actor_name=actor_name,
+        actor_role=actor_role,
+        character_id=character_id,
         message_kind="action",
         text=f"{token['name']} movido · latitude {token['latitude']:.2f} · longitude {token['longitude']:.2f}.",
     )
@@ -1030,12 +1283,126 @@ def gm_remove_workspace_token(token_id: str, _: AccessContext = Depends(require_
 
 @app.get("/gm/workspace/items")
 def gm_list_session_items(_: AccessContext = Depends(require_master)) -> list[dict]:
-    return list_session_items(settings.database_path)
+    return [normalize_inventory_item_mechanics(item) for item in list_session_items(settings.database_path)]
+
+
+@app.get("/gm/workspace/item-catalog", response_model=list[NoteSummary])
+def gm_list_workspace_item_catalog(_: AccessContext = Depends(require_master)) -> list[dict]:
+    # The normal notes endpoint may refresh the whole Vault and take several
+    # seconds. The equipment picker must always open from the ready index.
+    return list_item_notes(settings.database_path)
+
+
+@app.get("/gm/workspace/monster-catalog")
+def gm_list_workspace_monster_catalog(
+    q: str = Query(default="", max_length=120),
+    category: str = Query(default="", max_length=80),
+    _: AccessContext = Depends(require_master),
+) -> dict:
+    return list_monster_catalog(query=q, category=category)
+
+
+@app.get("/workspace/loot")
+def workspace_loot(access: AccessContext = Depends(require_any)) -> list[dict]:
+    return list_loot(settings.database_path, access)
+
+
+@app.post("/gm/workspace/loot/resolve")
+def gm_resolve_workspace_loot(
+    request: LootResolveCreate,
+    _: AccessContext = Depends(require_master),
+) -> dict:
+    try:
+        fields = request.model_dump()
+        if request.roll_mode == "requested":
+            if not request.roller_character_id:
+                raise ValueError("Escolha o personagem que receberá as solicitações de rolagem")
+            fields.pop("roll_mode", None)
+            resolution, _created = resolve_requested_token_loot(settings.database_path, **fields)
+        else:
+            fields.pop("roller_character_id", None)
+            resolution, _created = resolve_token_loot(settings.database_path, **fields)
+    except LootNotFoundError as error:
+        raise HTTPException(status_code=404, detail=str(error)) from error
+    except LootConflictError as error:
+        raise HTTPException(status_code=409, detail=str(error)) from error
+    except (TypeError, ValueError) as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+    return resolution
+
+
+@app.post("/gm/workspace/loot/{resolution_id:path}/finalize-rolls")
+def gm_finalize_workspace_loot_rolls(
+    resolution_id: str,
+    _: AccessContext = Depends(require_master),
+) -> dict:
+    try:
+        resolution, _finalized = finalize_requested_loot(settings.database_path, resolution_id)
+    except LootNotFoundError as error:
+        raise HTTPException(status_code=404, detail=str(error)) from error
+    except LootConflictError as error:
+        raise HTTPException(status_code=409, detail=str(error)) from error
+    except (TypeError, ValueError) as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+    return resolution
+
+
+@app.patch("/gm/workspace/loot/{resolution_id:path}")
+def gm_update_workspace_loot(
+    resolution_id: str,
+    request: LootRewardsUpdate,
+    _: AccessContext = Depends(require_master),
+) -> dict:
+    try:
+        return update_loot_rewards(
+            settings.database_path, resolution_id,
+            [reward.model_dump() for reward in request.rewards],
+        )
+    except LootNotFoundError as error:
+        raise HTTPException(status_code=404, detail=str(error)) from error
+    except LootConflictError as error:
+        raise HTTPException(status_code=409, detail=str(error)) from error
+    except (TypeError, ValueError) as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.post("/gm/workspace/loot/{resolution_id:path}/reveal")
+def gm_reveal_workspace_loot(
+    resolution_id: str,
+    _: AccessContext = Depends(require_master),
+) -> dict:
+    try:
+        resolution, _revealed = reveal_loot(settings.database_path, resolution_id)
+    except LootNotFoundError as error:
+        raise HTTPException(status_code=404, detail=str(error)) from error
+    return resolution
+
+
+@app.post("/gm/workspace/loot/{resolution_id:path}/distribute")
+def gm_distribute_workspace_loot(
+    resolution_id: str,
+    request: LootDistributionCreate,
+    _: AccessContext = Depends(require_master),
+) -> dict:
+    try:
+        resolution, _distributed = distribute_loot(
+            settings.database_path, resolution_id=resolution_id, request_id=request.request_id,
+            allocations=[allocation.model_dump() for allocation in request.allocations],
+        )
+    except LootNotFoundError as error:
+        raise HTTPException(status_code=404, detail=str(error)) from error
+    except LootConflictError as error:
+        raise HTTPException(status_code=409, detail=str(error)) from error
+    except (TypeError, ValueError) as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+    return resolution
 
 
 @app.post("/gm/workspace/items")
 def gm_create_session_item(request: SessionItemWrite, _: AccessContext = Depends(require_master)) -> dict:
-    item = save_session_item(settings.database_path, **request.model_dump())
+    fields = request.model_dump()
+    fields["mechanics"] = normalize_inventory_item_mechanics(fields)["mechanics"]
+    item = save_session_item(settings.database_path, **fields)
     record_workspace_message(
         settings.database_path, actor_id="master", actor_name="Mestre", actor_role="gm",
         character_id="sage", message_kind="action", text=f"Item criado: {item['name']}.",
@@ -1049,12 +1416,35 @@ def gm_update_session_item(
     request: SessionItemWrite,
     _: AccessContext = Depends(require_master),
 ) -> dict:
-    item = save_session_item(settings.database_path, item_id=item_id, **request.model_dump())
+    fields = request.model_dump()
+    fields["mechanics"] = normalize_inventory_item_mechanics(fields)["mechanics"]
+    item = save_session_item(settings.database_path, item_id=item_id, **fields)
     record_workspace_message(
         settings.database_path, actor_id="master", actor_name="Mestre", actor_role="gm",
         character_id="sage", message_kind="action", text=f"Item editado: {item['name']}.",
     )
     return item
+
+
+@app.delete("/gm/workspace/items/{item_id}", status_code=204)
+def gm_delete_session_item(item_id: int, _: AccessContext = Depends(require_master)) -> Response:
+    item = get_session_item(settings.database_path, item_id)
+    if item is None:
+        raise HTTPException(status_code=404, detail="Item da sessão não encontrado.")
+    holders = session_item_inventory_holders(settings.database_path, item_id)
+    if holders:
+        summary = ", ".join(f"{holder['profile_id']} ({holder['quantity']}×)" for holder in holders)
+        raise HTTPException(
+            status_code=409,
+            detail=f"Retire o item destes inventários antes de destruí-lo: {summary}.",
+        )
+    if not delete_session_item(settings.database_path, item_id):
+        raise HTTPException(status_code=404, detail="Item da sessão não encontrado.")
+    record_workspace_message(
+        settings.database_path, actor_id="master", actor_name="Mestre", actor_role="gm",
+        character_id="sage", message_kind="action", text=f"Item destruído: {item['name']}.",
+    )
+    return Response(status_code=204)
 
 
 @app.post("/gm/workspace/items/grant")
@@ -1073,6 +1463,9 @@ def gm_grant_session_item(request: SessionItemGrant, _: AccessContext = Depends(
         payload={
             "item_path": item["item_path"], "item_title": item["name"],
             "quantity": request.quantity, "equipped": request.equipped, "notes": request.notes,
+            "charges_current": int((item.get("mechanics") or {}).get("charges_max") or 0) or None,
+            "charges_max": int((item.get("mechanics") or {}).get("charges_max") or 0) or None,
+            "recharge": str((item.get("mechanics") or {}).get("recharge") or "none"),
         },
         reason=f"Concedeu {request.quantity}× {item['name']}",
     )
@@ -1083,6 +1476,82 @@ def gm_grant_session_item(request: SessionItemGrant, _: AccessContext = Depends(
         text=f"{character_name} recebeu {request.quantity}× {item['name']}.",
     )
     return {"item": item, "character": _playable_character(request.character_id, AccessContext(mode="gm"))}
+
+
+@app.post("/gm/workspace/items/recharge/{cycle}")
+def gm_recharge_session_items(cycle: str, _: AccessContext = Depends(require_master)) -> dict:
+    if cycle not in {"scene", "dawn"}:
+        raise HTTPException(status_code=400, detail="Ciclo de recarga inválido.")
+    recharged = recharge_inventory(settings.database_path, cycle)
+    label = "fim de cena" if cycle == "scene" else "amanhecer"
+    record_workspace_message(
+        settings.database_path, actor_id="master", actor_name="Mestre", actor_role="gm",
+        character_id="sage", message_kind="action",
+        text=f"Cargas recarregadas por {label}: {recharged} item(ns).",
+    )
+    return {"cycle": cycle, "recharged": recharged}
+
+
+def _workspace_inventory_target(target_id: str) -> tuple[str, bool]:
+    if target_id in _character_ids():
+        character = _character_summary(_playable_character(target_id, AccessContext(mode="gm")))
+        return str(character["name"]), True
+    token = next(
+        (item for item in list_workspace_tokens(settings.database_path) if item["id"] == target_id and item["token_type"] == "monster"),
+        None,
+    )
+    if token is None:
+        raise HTTPException(status_code=404, detail="Personagem, NPC ou monstro não encontrado.")
+    return str(token["name"]), False
+
+
+@app.get("/gm/workspace/inventory/{target_id:path}", response_model=list[InventoryRecord])
+def gm_workspace_inventory(target_id: str, _: AccessContext = Depends(require_master)) -> list[dict]:
+    _workspace_inventory_target(target_id)
+    return _inventory_with_media(list_inventory(settings.database_path, target_id), access_mode="gm")
+
+
+@app.post("/gm/workspace/inventory/remove", response_model=list[InventoryRecord])
+def gm_remove_workspace_inventory_item(
+    request: WorkspaceInventoryRemove,
+    _: AccessContext = Depends(require_master),
+) -> list[dict]:
+    target_name, is_character = _workspace_inventory_target(request.target_id)
+    current = next(
+        (item for item in list_inventory(settings.database_path, request.target_id) if item["item_path"] == request.item_path),
+        None,
+    )
+    if current is None:
+        raise HTTPException(status_code=404, detail="Item não encontrado no inventário selecionado.")
+    removed = min(int(current["quantity"]), request.quantity)
+    remaining = max(0, int(current["quantity"]) - removed)
+    if is_character:
+        apply_character_action(
+            settings.database_path,
+            character_id=request.target_id,
+            actor_id="master",
+            actor_role="gm",
+            action="change_quantity",
+            payload={"item_path": request.item_path, "quantity": remaining},
+            reason=f"Mestre retirou {removed}× {current['item_title']}",
+        )
+    else:
+        upsert_inventory(
+            settings.database_path,
+            profile_id=request.target_id,
+            item_path=request.item_path,
+            item_title=current["item_title"],
+            quantity=remaining,
+            equipped=bool(current.get("equipped")) and remaining > 0,
+            equipment_slot=current.get("equipment_slot") if remaining > 0 else None,
+            notes=current.get("notes"),
+        )
+    record_workspace_message(
+        settings.database_path,
+        actor_id="master", actor_name="Mestre", actor_role="gm", character_id="sage", message_kind="action",
+        text=f"{target_name}: Mestre retirou {removed}× {current['item_title']}.",
+    )
+    return _inventory_with_media(list_inventory(settings.database_path, request.target_id), access_mode="gm")
 
 
 @app.post("/index/rebuild", response_model=RebuildResponse)
@@ -1125,7 +1594,7 @@ def player_runtime_event(
     if len(json.dumps(request.payload, ensure_ascii=False)) > 12_000:
         raise HTTPException(status_code=413, detail="Payload de evento muito grande.")
     profile_id = access.profile_id or ("sage" if access.mode == "gm" else "group")
-    return record_runtime_event(
+    recorded = record_runtime_event(
         settings.database_path,
         event_id=request.event_id,
         profile_id=profile_id,
@@ -1134,6 +1603,20 @@ def player_runtime_event(
         event_type=request.event_type,
         payload=dict(request.payload),
     )
+    if access.mode == "player" and request.event_type in {"navigation_view", "reconnected", "notification_opened"}:
+        label = str(request.payload.get("label") or request.payload.get("page") or request.event_type).strip()
+        device = str(request.payload.get("device") or "dispositivo").strip()
+        verbs = {"navigation_view": "abriu", "reconnected": "reconectou em", "notification_opened": "abriu a notificação"}
+        record_workspace_message(
+            settings.database_path,
+            actor_id=profile_id,
+            actor_name=str(access.character_title or profile_id),
+            actor_role="player",
+            character_id=profile_id,
+            message_kind="action",
+            text=f"{verbs[request.event_type]} {label} · {device}.",
+        )
+    return recorded
 
 
 # Legacy endpoints: kept as GM-only so old frontend/bookmarks do not bypass safety.
@@ -1769,6 +2252,31 @@ def player_feed(access: AccessContext = Depends(require_player)) -> list[dict]:
     return list_events(settings.database_path, profile_id=access.profile_id)
 
 
+@app.post("/gm/player-notifications", response_model=PlayerEventRecord)
+def gm_player_notification(request: PlayerNotificationCreate, _: AccessContext = Depends(require_master)) -> dict:
+    allowed_profiles = {"group", *settings.player_profiles.keys()}
+    if request.profile_id not in allowed_profiles:
+        raise HTTPException(status_code=400, detail="Jogador inválido.")
+    notification = add_event(
+        settings.database_path,
+        profile_id=request.profile_id,
+        kind="master_message",
+        title=request.title,
+        message=request.message,
+        unread=True,
+    )
+    record_workspace_message(
+        settings.database_path,
+        actor_id="master",
+        actor_name="Mestre",
+        actor_role="gm",
+        character_id="sage",
+        message_kind="action",
+        text=f"Enviou notificação: {request.title}.",
+    )
+    return notification
+
+
 @app.post("/player/feed/read")
 def player_feed_read(
     request: PlayerEventReadRequest,
@@ -1803,6 +2311,18 @@ def _inventory_with_media(items: list[dict], *, access_mode: str) -> list[dict]:
             record["description"] = frontmatter.get("description") or frontmatter.get("summary")
             raw_effects = frontmatter.get("effects") or frontmatter.get("efeitos") or []
             record["effects"] = raw_effects if isinstance(raw_effects, list) else [str(raw_effects)]
+            content = str((detail or {}).get("content") or "")
+            if not record.get("description"):
+                synopsis = re.search(r">\s*\[!world\][^\n]*\n>\s*([^\n]+)", content, flags=re.IGNORECASE)
+                if synopsis:
+                    record["description"] = synopsis.group(1).strip()
+            if not record["effects"]:
+                components = re.search(r"^##\s+Componentes\s*$([\s\S]*?)(?=^##\s+|\Z)", content, flags=re.IGNORECASE | re.MULTILINE)
+                if components:
+                    record["effects"] = [
+                        re.sub(r"\[\[([^\]|]+)(?:\|([^\]]+))?\]\]", lambda match: match.group(2) or match.group(1), line).strip()
+                        for line in re.findall(r"^\s*-\s+(.+)$", components.group(1), flags=re.MULTILINE)
+                    ]
             record["usable"] = bool(frontmatter.get("usable", frontmatter.get("usavel", False)))
             candidate_formula = frontmatter.get("base_damage") or frontmatter.get("damage")
             if candidate_formula:
@@ -1816,9 +2336,18 @@ def _inventory_with_media(items: list[dict], *, access_mode: str) -> list[dict]:
                 record["item_type"] = custom.get("item_type")
                 record["description"] = custom.get("description")
                 record["effects"] = custom.get("effects") or []
+                record["effect_rules"] = custom.get("effect_rules") or []
+                record["mechanics"] = custom.get("mechanics") or {}
                 record["usable"] = bool(custom.get("usable"))
                 record["thumbnail"] = custom.get("image_path")
-        enriched.append(record)
+                mechanics = record["mechanics"]
+                record["damage_formula"] = mechanics.get("damage_formula") or record.get("damage_formula")
+                configured_charges = int(mechanics.get("charges_max") or 0)
+                if configured_charges > 0:
+                    record["charges_max"] = int(record.get("charges_max") or configured_charges)
+                    record["charges_current"] = int(record["charges_max"] if record.get("charges_current") is None else record["charges_current"])
+                    record["recharge"] = record.get("recharge") or mechanics.get("recharge") or "none"
+        enriched.append(normalize_inventory_item_mechanics(record))
     return enriched
 
 
@@ -1931,6 +2460,11 @@ def _playable_character(profile_id: str, access: AccessContext) -> dict:
         overrides=load_definition_overrides(settings.database_path, profile_id),
         access_level=access_level,
     )
+    effect_state = readeffects(settings.database_path)
+    effects = [e for e in effect_state["effects"]
+               if e["target_type"] == "character" and e["target_id"] == profile_id]
+    definition = apply_definition_effects(definition, effects if access_level != "public" else [])
+    definition["effects_version"] = effect_state["version"]
     state = None
     if access_level != "public":
         state = get_or_create_state(
@@ -1987,6 +2521,30 @@ def playable_character(profile_id: str, access: AccessContext = Depends(require_
     return _playable_character(profile_id, access)
 
 
+def _authorize_character_notes(profile_id: str, access: AccessContext) -> None:
+    if _character_access_level(access, profile_id) == "public":
+        raise HTTPException(status_code=403, detail="Anotações disponíveis apenas ao dono da ficha e ao Mestre.")
+    if profile_id not in _character_ids():
+        raise HTTPException(status_code=404, detail="Personagem não encontrado.")
+
+
+@app.get("/characters/{profile_id}/notes")
+def character_notes_read(profile_id: str, response: Response, access: AccessContext = Depends(require_any)) -> dict:
+    _authorize_character_notes(profile_id, access)
+    response.headers["Cache-Control"] = "private, no-store"
+    return read_notes(settings.database_path, profile_id)
+
+
+@app.put("/characters/{profile_id}/notes")
+def character_notes_write(profile_id: str, request: CharacterNotesWrite, response: Response, access: AccessContext = Depends(require_any)) -> dict:
+    _authorize_character_notes(profile_id, access)
+    response.headers["Cache-Control"] = "private, no-store"
+    try:
+        return save_notes(settings.database_path, profile_id, request)
+    except NotesConflictError as error:
+        raise HTTPException(status_code=409, detail=str(error)) from error
+
+
 @app.post("/characters/{profile_id}/actions", response_model=PlayableCharacterResponse, response_model_exclude_none=True)
 def playable_character_action(
     profile_id: str,
@@ -1996,8 +2554,94 @@ def playable_character_action(
     access_level = _character_access_level(access, profile_id)
     if access_level == "public":
         raise HTTPException(status_code=403, detail="Você só pode alterar o próprio personagem.")
-    _playable_character(profile_id, access)
+    current_character = _playable_character(profile_id, access)
     payload = dict(request.payload)
+    if request.action == "equip_item":
+        item_path = str(payload.get("item_path") or "").strip()
+        equipment_slot = str(payload.get("equipment_slot") or "").strip()
+        inventory_item = next(
+            (entry for entry in current_character.get("inventory") or [] if entry.get("item_path") == item_path),
+            None,
+        )
+        mechanics = dict((inventory_item or {}).get("mechanics") or {})
+        allowed_slots = [str(slot) for slot in mechanics.get("equipment_slots") or [] if str(slot).strip()]
+        if allowed_slots and equipment_slot not in allowed_slots:
+            raise HTTPException(status_code=400, detail=f"Este item só pode ser equipado em: {', '.join(allowed_slots)}.")
+        slot_limit = int(mechanics.get("slot_limit") or (3 if equipment_slot == "Acessório" else 1))
+        occupants = [
+            entry for entry in current_character.get("inventory") or []
+            if entry.get("equipped") and entry.get("item_path") != item_path and str(entry.get("equipment_slot") or "") == equipment_slot
+        ]
+        if equipment_slot and len(occupants) >= slot_limit:
+            names = ", ".join(str(entry.get("item_title") or "item") for entry in occupants)
+            raise HTTPException(status_code=400, detail=f"O encaixe {equipment_slot} atingiu o limite de {slot_limit}: {names}.")
+    if request.action == "use_item":
+        item_path = str(payload.get("item_path") or "").strip()
+        item = get_session_item_by_path(settings.database_path, item_path)
+        inventory_item = next((entry for entry in current_character.get("inventory") or [] if entry.get("item_path") == item_path), None)
+        if item is None or inventory_item is None or int(inventory_item.get("quantity") or 0) <= 0:
+            raise HTTPException(status_code=400, detail="Item utilizável não encontrado no inventário.")
+        rules = [rule for rule in item.get("effect_rules") or [] if rule.get("trigger") == "on_use"]
+        if not item.get("usable") or not rules:
+            raise HTTPException(status_code=400, detail="Este item não possui efeito configurado para uso.")
+        resources = {str(resource.get("key") or "") for resource in (current_character.get("state") or {}).get("resources") or []}
+        mechanics = dict(item.get("mechanics") or {})
+        consume_mode = str(mechanics.get("consume_mode") or ("quantity" if item.get("usable") else "none"))
+        charges_max = int(inventory_item.get("charges_max") or mechanics.get("charges_max") or 0)
+        charges_current = int(inventory_item.get("charges_current") if inventory_item.get("charges_current") is not None else charges_max)
+        if consume_mode == "charges" and (charges_max <= 0 or charges_current <= 0):
+            raise HTTPException(status_code=400, detail="Este item está sem cargas.")
+        for rule in rules:
+            kind = str(rule.get("kind") or "")
+            target = str(rule.get("target") or "").strip()
+            formula = str(rule.get("formula") or "").strip()
+            value = roll_formula(formula)["total"] if formula else int(rule.get("value") or 0)
+            rule["resolved_value"] = value
+            if kind in {"heal_hp", "restore_resource", "temporary_hp"} and value <= 0:
+                raise HTTPException(status_code=400, detail="O valor do efeito de uso deve ser positivo.")
+            if kind == "restore_resource" and target not in resources:
+                raise HTTPException(status_code=400, detail=f"Recurso do efeito não encontrado: {target or 'não informado'}.")
+            if kind == "add_condition" and not target:
+                raise HTTPException(status_code=400, detail="Informe a condição aplicada pelo item.")
+            if kind not in {"heal_hp", "restore_resource", "add_condition", "temporary_hp"}:
+                raise HTTPException(status_code=400, detail="O item possui uma regra incompatível com o gatilho de uso.")
+        actor_id = "master" if access.mode == "gm" else str(access.profile_id)
+        for rule in rules:
+            kind = str(rule["kind"])
+            if kind == "heal_hp":
+                action, effect_payload, actor_role = "heal", {"amount": int(rule["resolved_value"])}, "gm" if access.mode == "gm" else "player"
+            elif kind == "restore_resource":
+                action, effect_payload, actor_role = "restore_resource", {"resource_key": rule["target"], "amount": int(rule["resolved_value"])}, "gm"
+            elif kind == "temporary_hp":
+                action, effect_payload, actor_role = "grant_temporary_hp", {"amount": int(rule["resolved_value"])}, "gm" if access.mode == "gm" else "player"
+            else:
+                duration_labels = {"round": "1 rodada", "scene": "até o fim da cena", "rest": "até descansar"}
+                duration = duration_labels.get(str(rule.get("duration") or ""))
+                condition = str(f"{rule['target']} ({duration})" if duration else rule["target"])[:80]
+                action, effect_payload, actor_role = "add_condition", {"condition": condition}, "gm" if access.mode == "gm" else "player"
+            apply_character_action(
+                settings.database_path, character_id=profile_id, actor_id=actor_id, actor_role=actor_role,
+                action=action, payload=effect_payload, reason=f"Efeito de {item['name']}", session_id=request.session_id,
+            )
+        if consume_mode != "none":
+            consume_action = "change_charges" if consume_mode == "charges" else "change_quantity"
+            consume_payload = (
+                {"item_path": item_path, "charges": charges_current - 1, "charges_max": charges_max, "recharge": mechanics.get("recharge") or "none"}
+                if consume_mode == "charges"
+                else {"item_path": item_path, "quantity": int(inventory_item["quantity"]) - 1}
+            )
+            apply_character_action(
+                settings.database_path, character_id=profile_id, actor_id=actor_id,
+                actor_role="gm" if access.mode == "gm" else "player", action=consume_action,
+                payload=consume_payload, reason=f"Usou {item['name']}", session_id=request.session_id,
+            )
+        record_workspace_message(
+            settings.database_path, actor_id=actor_id,
+            actor_name="Mestre" if access.mode == "gm" else str(access.character_title or access.profile_id),
+            actor_role="gm" if access.mode == "gm" else "player", character_id=profile_id,
+            message_kind="action", text=f"Usou {item['name']}.",
+        )
+        return _playable_character(profile_id, access)
     if request.action == "grant_item":
         note_id = payload.get("note_id")
         if note_id is None:
@@ -2026,6 +2670,8 @@ def playable_character_action(
         raise HTTPException(status_code=403, detail=str(error)) from error
     except (TypeError, ValueError) as error:
         raise HTTPException(status_code=400, detail=str(error)) from error
+    if request.action == "set_currency" and result["event_id"] is None:
+        return _playable_character(profile_id, access)
     public_reason = (request.reason or "").strip() or request.action.replace("_", " ")
     character_name = _character_summary(_playable_character(profile_id, AccessContext(mode="gm")))["name"]
     record_workspace_message(
@@ -2051,6 +2697,7 @@ def playable_character_events(
     events = list_character_events(settings.database_path, profile_id)
     if access_level == "owner":
         owner_visible_types = {
+            "set_currency",
             "damage",
             "heal",
             "set_hp",
@@ -2215,6 +2862,209 @@ def character_dice_roll(
     except (TypeError, ValueError) as error:
         raise HTTPException(status_code=400, detail=str(error)) from error
     return record
+
+
+def _combat_target(target_type: str, target_id: str) -> dict:
+    if target_type not in {"character", "token"}:
+        raise ValueError("Tipo de alvo inválido")
+    if target_type == "character":
+        character = _playable_character(target_id, AccessContext(mode="gm"))
+        summary = _character_summary(character)
+        return {
+            "type": "character",
+            "id": target_id,
+            "name": summary["name"],
+            "armor_class": summary.get("armor_class"),
+            "current_hp": summary.get("current_hp"),
+            "maximum_hp": summary.get("maximum_hp"),
+        }
+    token = next((item for item in list_workspace_tokens(settings.database_path) if item["id"] == target_id), None)
+    if token is None:
+        raise CombatNotFoundError("Token alvo não encontrado")
+    if token.get("token_type") == "location":
+        raise ValueError("Locais não são alvos de combate")
+    if token.get("token_type") == "character":
+        character_id = str(token.get("character_id") or "")
+        if not character_id:
+            raise ValueError("Token de personagem sem personagem associado")
+        character = _playable_character(character_id, AccessContext(mode="gm"))
+        summary = _character_summary(character)
+        return {
+            "type": "character",
+            "id": character_id,
+            "name": str(token.get("name") or summary["name"]),
+            "armor_class": summary.get("armor_class"),
+            "current_hp": summary.get("current_hp"),
+            "maximum_hp": summary.get("maximum_hp"),
+        }
+    base_ac = (token.get("sheet") or {}).get("armor_class")
+    effect_ac = sum(e["modifiers"].get("armor_class_bonus", 0) for e in readeffects(settings.database_path)["effects"]
+                    if e["target_type"] == "token" and e["target_id"] == target_id)
+    return {
+        "type": "token",
+        "id": str(token["id"]),
+        "name": str(token.get("name") or "Criatura"),
+        "armor_class": None if base_ac is None else base_ac + effect_ac,
+        "current_hp": token.get("current_hp"),
+        "maximum_hp": token.get("maximum_hp"),
+    }
+
+
+@app.post("/characters/{profile_id}/attacks/resolve")
+def resolve_character_attack(
+    profile_id: str,
+    request: AttackResolutionCreate,
+    access: AccessContext = Depends(require_any),
+) -> dict:
+    if _character_access_level(access, profile_id) == "public":
+        raise HTTPException(status_code=403, detail="Você não pode atacar por este personagem.")
+    character = _playable_character(profile_id, access)
+    actor_id, actor_role = _roll_actor(access)
+    try:
+        table = get_workspace_snapshot(settings.database_path, is_gm=access.mode == "gm")
+        expected_mode = "physical" if table.get("table_mode") == "physical" else "digital"
+        if request.roll_mode != expected_mode:
+            raise ValueError("O modo de rolagem é definido pelo mestre no painel da mesa. Atualize a página.")
+        if access.mode != "gm" and request.target_type == "token":
+            token = next((t for t in list_workspace_tokens(settings.database_path) if t["id"] == request.target_id), None)
+            if token is None:
+                raise CombatNotFoundError("Token alvo não encontrado")
+            visible = get_workspace_snapshot(settings.database_path, is_gm=False, map_id=token.get("map_id"))
+            if not any(t["id"] == request.target_id for t in visible["tokens"]):
+                raise PermissionError("Este alvo não está disponível para jogadores.")
+        resolution, _created = resolve_attack(
+            settings.database_path,
+            request_id=request.request_id,
+            actor_character_id=profile_id,
+            actor_name=str(character["definition"].get("name") or profile_id),
+            requested_by_id=actor_id,
+            requested_by_role=actor_role,
+            definition=character["definition"],
+            inventory=character["inventory"],
+            attack_id=request.attack_id,
+            target=_combat_target(request.target_type, request.target_id),
+            roll_mode=request.roll_mode,
+            physical_d20=request.d20,
+            attack_count=request.attack_count,
+            physical_d20s=request.d20s,
+        )
+    except PermissionError as error:
+        raise HTTPException(status_code=403, detail=str(error)) from error
+    except CombatNotFoundError as error:
+        raise HTTPException(status_code=404, detail=str(error)) from error
+    except (TypeError, ValueError) as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+    return resolution
+
+
+def _combat_snapshot_for_access(snapshot: dict, access: AccessContext) -> dict:
+    snapshot = copy.deepcopy(snapshot)
+    if access.mode != "gm":
+        # Only characters explicitly placed in initiative receive the live encounter.
+        # A private combat map must not erase the encounter card, but hidden tokens
+        # remain private until their map/token is visible to players.
+        snapshot["effects"] = [e for e in snapshot["effects"] if e["target_type"] == "character" and e["target_id"] == access.profile_id]
+        encounter = snapshot.get("encounter") or {}
+        participants = encounter.get("participants") or []
+        involved = bool(encounter.get("active")) and any(
+            participant.get("target_type") == "character" and participant.get("target_id") == access.profile_id
+            for participant in participants
+        )
+        if not involved:
+            snapshot["encounter"] = {}
+        else:
+            visible = get_workspace_snapshot(settings.database_path, is_gm=False, map_id=encounter.get("map_id"))
+            visible_map_matches = (visible.get("map") or {}).get("id") == encounter.get("map_id")
+            visible_tokens = {token["id"] for token in visible["tokens"]} if visible_map_matches else set()
+            encounter["participants"] = [
+                participant for participant in participants
+                if participant["target_type"] == "character" or participant["target_id"] in visible_tokens
+            ]
+    return snapshot
+
+
+@app.get("/combat/effects")
+def combat_effects_state(access: AccessContext = Depends(require_any)) -> dict:
+    return _combat_snapshot_for_access(readeffects(settings.database_path), access)
+
+
+@app.get("/gm/combat/test-views")
+def gm_combat_test_views(_: AccessContext = Depends(require_master)) -> dict:
+    workspace = get_workspace_snapshot(settings.database_path, is_gm=True)
+    enabled = workspace.get("table_mode") == "test"
+    snapshot = readeffects(settings.database_path)
+    views = []
+    if enabled:
+        for profile_id, profile in settings.player_profiles.items():
+            if not str(profile.get("character_path") or "").strip():
+                continue
+            state = _combat_snapshot_for_access(snapshot, AccessContext(mode="player", profile_id=profile_id, character_title=profile.get("character_title")))
+            views.append({
+                "profile_id": profile_id,
+                "character_name": profile.get("character_title") or profile_id,
+                "receives_combat": bool((state.get("encounter") or {}).get("active")),
+                "state": state,
+            })
+    return {"enabled": enabled, "table_mode": workspace.get("table_mode"), "views": views}
+
+
+@app.post("/gm/combat/effects")
+def gm_combat_effects(request: CombatEffectCommand, access: AccessContext = Depends(require_master)) -> dict:
+    try:
+        payload = dict(request.payload)
+        if request.action in {"apply", "rest"}:
+            target = _combat_target(str(payload.get("target_type", "")), str(payload.get("target_id", "")))
+            payload.update(target_type=target["type"], target_id=target["id"])
+        if request.action in {"start", "initiative"}:
+            participants = []
+            for participant in payload.get("participants") or []:
+                target = _combat_target(str(participant.get("target_type", "")), str(participant.get("target_id", "")))
+                participants.append({"target_type": target["type"], "target_id": target["id"], "name": target["name"], "initiative": participant.get("initiative")})
+            payload["participants"] = participants
+        if request.action == "start":
+            active_sessions = [session for session in list_sessions(settings.database_path) if session.get("status") == "active"]
+            if len(active_sessions) > 1:
+                raise ValueError("Existem múltiplas sessões ativas para a campanha")
+            current_session = active_sessions[0] if active_sessions else None
+            current_scene = active_scene(settings.database_path)
+            if current_session is not None:
+                payload["game_session_id"] = int(current_session["id"])
+            if current_scene is not None:
+                scene_session_id = current_scene.get("session_id")
+                if current_session is not None and scene_session_id not in (None, current_session["id"]):
+                    raise ValueError("A cena ativa pertence a outra sessão operacional")
+                if current_session is not None or scene_session_id is not None:
+                    payload["scene_id"] = int(current_scene["id"])
+        actor_id, actor_role = _roll_actor(access)
+        return effect_command(settings.database_path, actor_id=actor_id, actor_role=actor_role,
+                              request_id=request.request_id, expected_version=request.expected_version,
+                              action=request.action, payload=payload)
+    except (ValueError, TypeError) as error:
+        raise HTTPException(status_code=409, detail=str(error)) from error
+
+
+@app.post("/combat/attacks/{resolution_id:path}/confirm")
+def confirm_character_attack(
+    resolution_id: str,
+    access: AccessContext = Depends(require_any),
+) -> dict:
+    actor_id, actor_role = _roll_actor(access)
+    try:
+        resolution, _applied = confirm_attack_resolution(
+            settings.database_path,
+            resolution_id=resolution_id,
+            requested_by_id=actor_id,
+            requested_by_role=actor_role,
+        )
+    except PermissionError as error:
+        raise HTTPException(status_code=403, detail=str(error)) from error
+    except CombatNotFoundError as error:
+        raise HTTPException(status_code=404, detail=str(error)) from error
+    except CombatExpiredError as error:
+        raise HTTPException(status_code=409, detail=str(error)) from error
+    except (TypeError, ValueError) as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+    return resolution
 
 
 @app.get("/rolls", response_model=list[DiceRollEventResponse])
@@ -2621,6 +3471,7 @@ def gm_create_contract_scene(contract_id: int, request: ContractLinkedSceneCreat
             public_description=request.public_description,
             objective=request.objective,
             private_notes=request.private_notes,
+            image_path=request.image_path,
             visibility=request.visibility,
             created_by="master",
         )
@@ -2732,12 +3583,81 @@ def gm_list_game_sessions(_: AccessContext = Depends(require_master)) -> list[di
     return list_sessions(settings.database_path)
 
 
+@app.get("/sessions")
+def authorized_game_sessions(access: AccessContext = Depends(require_any)) -> list[dict]:
+    return list_visible_sessions(settings.database_path, access_mode=access.mode)
+
+
+@app.get("/sessions/{session_id}")
+def authorized_game_session(session_id: int, access: AccessContext = Depends(require_any)) -> dict:
+    try:
+        return get_visible_session(settings.database_path, session_id, access_mode=access.mode)
+    except ValueError as error:
+        raise HTTPException(status_code=404, detail=str(error)) from error
+
+
 @app.post("/gm/sessions/{session_id}/status")
 def gm_update_game_session_status(session_id: int, request: GameSessionStatusUpdate, _: AccessContext = Depends(require_master)) -> dict:
     try:
-        return change_session_status(settings.database_path, session_id, request.status)
+        updated = change_session_status(settings.database_path, session_id, request.status)
+        label = {
+            "active": "Sessão iniciada",
+            "paused": "Sessão pausada",
+            "completed": "Sessão encerrada",
+            "planned": "Sessão devolvida à preparação",
+        }.get(request.status, "Sessão atualizada")
+        session_title = updated.get("title") or f"Sessão {session_id}"
+        record_workspace_message(
+            settings.database_path,
+            actor_id="master",
+            actor_name="Mestre",
+            actor_role="gm",
+            character_id="sage",
+            text=f"{label}: {session_title}",
+            message_kind="action",
+        )
+        return updated
     except ValueError as error:
         raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.patch("/gm/sessions/{session_id}")
+def gm_update_game_session_metadata(session_id: int, request: GameSessionMetadataUpdate, _: AccessContext = Depends(require_master)) -> dict:
+    try:
+        return update_session_metadata(settings.database_path, session_id, request.model_dump(exclude_unset=True))
+    except ValueError as error:
+        raise HTTPException(status_code=404 if "não encontrada" in str(error) else 400, detail=str(error)) from error
+
+
+@app.post("/gm/sessions/{session_id}/image")
+async def gm_upload_game_session_image(session_id: int, request: Request, _: AccessContext = Depends(require_master)) -> dict:
+    content_length = request.headers.get("content-length", "")
+    if content_length.isdigit() and int(content_length) > WORKSPACE_ICON_MAX_BYTES:
+        raise HTTPException(status_code=400, detail="A imagem deve possuir no máximo 25 MB.")
+    content = await request.body()
+    if not content or len(content) > WORKSPACE_ICON_MAX_BYTES:
+        raise HTTPException(status_code=400, detail="A imagem deve possuir no máximo 25 MB.")
+    if content.startswith(b"\x89PNG\r\n\x1a\n"):
+        extension = ".png"
+    elif content.startswith(b"\xff\xd8\xff"):
+        extension = ".jpg"
+    elif content.startswith(b"RIFF") and len(content) >= 12 and content[8:12] == b"WEBP":
+        extension = ".webp"
+    else:
+        raise HTTPException(status_code=400, detail="Use uma imagem PNG, JPG ou WEBP.")
+    try:
+        session = get_visible_session(settings.database_path, session_id, access_mode="gm")
+    except ValueError as error:
+        raise HTTPException(status_code=404, detail=str(error)) from error
+    target_directory = settings.vault_path / "zz_media" / "sessions" / "uploads"
+    target_directory.mkdir(parents=True, exist_ok=True)
+    safe_stem = _media_lookup_key(str(session.get("title") or f"sessao_{session_id}")).strip("_")[:80] or f"sessao_{session_id}"
+    target = target_directory / f"{safe_stem}_{uuid.uuid4().hex[:10]}{extension}"
+    temporary = target.with_suffix(target.suffix + ".tmp")
+    temporary.write_bytes(content)
+    temporary.replace(target)
+    relative_path = target.relative_to(settings.vault_path).as_posix()
+    return update_session_metadata(settings.database_path, session_id, {"image_path": relative_path})
 
 
 @app.post("/gm/scenes")
@@ -2754,6 +3674,12 @@ def gm_create_scene(request: SceneCreate, access: AccessContext = Depends(requir
             public_description=request.public_description,
             objective=request.objective,
             private_notes=request.private_notes,
+            image_path=request.image_path,
+            map_id=request.map_id,
+            checklist=request.checklist,
+            map_zoom=request.map_zoom,
+            map_scroll_left=request.map_scroll_left,
+            map_scroll_top=request.map_scroll_top,
             visibility=request.visibility,
             created_by="master",
         )
@@ -2802,6 +3728,7 @@ def gm_set_scene_status(scene_id: int, request: SceneStatusUpdate, access: Acces
     try:
         change_scene_status(settings.database_path, scene_id, request.status, summary=request.summary)
         if request.status in {"resolved", "abandoned"}:
+            recharge_inventory(settings.database_path, "scene")
             record_scene_contract_event(settings.database_path, scene_id=scene_id, actor_id="master", status=request.status, summary=request.summary)
         return _scene_payload(scene_id, access) or {}
     except ValueError as error:
@@ -2833,7 +3760,21 @@ def gm_add_scene_participant(scene_id: int, request: SceneParticipantCreate, acc
 @app.patch("/gm/scene-participants/{participant_id}")
 def gm_edit_scene_participant(participant_id: int, request: SceneParticipantUpdate, _: AccessContext = Depends(require_master)) -> dict:
     try:
-        return update_participant(settings.database_path, participant_id, dict(request.fields))
+        participant = update_participant(settings.database_path, participant_id, dict(request.fields))
+        if request.fields.get("visible_to_players") is True:
+            event, created = publish_scene_event(
+                settings.database_path,
+                scene_id=int(participant["scene_id"]),
+                request_id=f"participant-reveal:{participant_id}",
+                publication_type="npc" if participant.get("participant_type") == "npc" else "creature" if participant.get("participant_type") == "creature" else "other",
+                actor_id="master",
+                title=f"Em cena: {participant['public_label']}",
+                public_text=participant.get("public_status") or "Presente",
+                private_text=participant.get("private_status"),
+            )
+            if created:
+                _record_scene_publication_in_workspace(event)
+        return participant
     except ValueError as error:
         raise HTTPException(status_code=400, detail=str(error)) from error
 
@@ -2877,7 +3818,21 @@ def gm_update_scene_element(element_id: int, request: SceneElementUpdate, _: Acc
 @app.post("/gm/scene-elements/{element_id}/reveal")
 def gm_reveal_scene_element(element_id: int, _: AccessContext = Depends(require_master)) -> dict:
     try:
-        return update_element(settings.database_path, element_id, fields={}, reveal=True)
+        element = update_element(settings.database_path, element_id, fields={}, reveal=True)
+        publication_type = "treasure" if element.get("element_type") == "object" else "clue" if element.get("element_type") == "clue" else "environment" if element.get("element_type") == "environmental_effect" else "other"
+        event, created = publish_scene_event(
+            settings.database_path,
+            scene_id=int(element["scene_id"]),
+            request_id=f"element-reveal:{element_id}",
+            publication_type=publication_type,
+            actor_id="master",
+            title=element["title"],
+            public_text=element.get("public_description"),
+            private_text=element.get("private_description"),
+        )
+        if created:
+            _record_scene_publication_in_workspace(event)
+        return element
     except ValueError as error:
         raise HTTPException(status_code=400, detail=str(error)) from error
 
@@ -2957,6 +3912,7 @@ def gm_request_scene_action_roll(action_id: int, request: SceneRollRequestCreate
             spec = resolve_character_roll(character["definition"], character["inventory"], request.roll_type, request.source_id)
             if request.label:
                 spec = RollSpec(spec.roll_type, request.label, spec.formula, spec.source, spec.source_id, spec.target_value)
+        scene = get_scene(settings.database_path, int(action["scene_id"])) or {}
         roll_request, _created = create_roll_request(
             settings.database_path,
             request_id=request.request_id,
@@ -2965,7 +3921,8 @@ def gm_request_scene_action_roll(action_id: int, request: SceneRollRequestCreate
             requested_by="master",
             spec=spec,
             visibility=request.visibility,
-            session_id=str(get_scene(settings.database_path, int(action["scene_id"])).get("session_id") or "") or None,
+            session_id=str(scene.get("session_id") or "") or None,
+            game_session_id=int(scene["session_id"]) if scene.get("session_id") is not None else None,
             scene_id=int(action["scene_id"]),
             action_id=action_id,
             target_value=request.target_value,
@@ -2991,6 +3948,9 @@ def gm_apply_scene_consequence(scene_id: int, request: SceneConsequenceCreate, a
         payload["item_path"] = note["path"]
         payload["item_title"] = note["title"]
     try:
+        scene = get_scene(settings.database_path, scene_id)
+        if not scene:
+            raise ValueError("Cena não encontrada")
         result = apply_character_action(
             settings.database_path,
             character_id=request.character_id,
@@ -3000,6 +3960,7 @@ def gm_apply_scene_consequence(scene_id: int, request: SceneConsequenceCreate, a
             payload=payload,
             reason=request.public_text or request.private_text,
             session_id=str(scene_id),
+            game_session_id=int(scene["session_id"]) if scene.get("session_id") is not None else None,
         )
         event = record_consequence(
             settings.database_path,
@@ -3025,6 +3986,97 @@ def gm_apply_scene_consequence(scene_id: int, request: SceneConsequenceCreate, a
 def gm_create_scene_event(scene_id: int, request: SceneManualEventCreate, _: AccessContext = Depends(require_master)) -> dict:
     try:
         return record_manual_event(settings.database_path, scene_id=scene_id, actor_id="master", title=request.title, public_text=request.public_text, private_text=request.private_text, visibility=request.visibility)
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+def _record_scene_publication_in_workspace(event: dict) -> None:
+    public_text = str(event.get("public_text") or "").strip()
+    title = str(event.get("title") or "Atualização da cena").strip()
+    text = f"{title}: {public_text}" if public_text else title
+    record_workspace_message(
+        settings.database_path,
+        actor_id="master",
+        actor_name="Mestre",
+        actor_role="gm",
+        character_id="sage",
+        text=text,
+        message_kind="action",
+    )
+
+
+@app.post("/gm/scenes/{scene_id}/publish")
+def gm_publish_scene(scene_id: int, request: ScenePublishCreate, _: AccessContext = Depends(require_master)) -> dict:
+    try:
+        event, created = publish_scene_event(
+            settings.database_path,
+            scene_id=scene_id,
+            request_id=request.request_id,
+            publication_type=request.publication_type,
+            actor_id="master",
+            title=request.title,
+            public_text=request.public_text,
+            private_text=request.private_text,
+        )
+        if created:
+            _record_scene_publication_in_workspace(event)
+        return {"event": event, "created": created}
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.post("/gm/scenes/{scene_id}/open-on-table")
+def gm_open_scene_on_table(scene_id: int, request: SceneOpenOnTableCreate, access: AccessContext = Depends(require_master)) -> dict:
+    try:
+        scene = get_scene(settings.database_path, scene_id)
+        if not scene:
+            raise ValueError("Cena não encontrada")
+        if scene.get("status") in {"resolved", "abandoned"}:
+            raise ValueError("Cena encerrada não pode ser aberta novamente na Mesa")
+        active_session = next(
+            (item for item in list_sessions(settings.database_path) if item.get("status") == "active"),
+            None,
+        )
+        if active_session is None:
+            raise ValueError("Inicie uma sessão antes de abrir uma cena na Mesa")
+        if scene.get("session_id") is not None and int(scene["session_id"]) != int(active_session["id"]):
+            raise ValueError("A cena pertence a outra sessão operacional")
+        selected_map = None
+        if scene.get("map_id"):
+            prepared_map = next(
+                (item for item in list_workspace_maps(settings.database_path) if item.get("id") == str(scene["map_id"])),
+                None,
+            )
+            if prepared_map is None:
+                raise ValueError("O mapa preparado para esta cena não existe mais")
+        if scene.get("status") != "active" or scene.get("session_id") is None:
+            scene = change_scene_status(settings.database_path, scene_id, "active")
+        if scene.get("map_id"):
+            update_workspace_map_visibility(
+                settings.database_path,
+                str(scene["map_id"]),
+                visible_to_players=True,
+            )
+            selected_map = set_active_workspace_map(settings.database_path, str(scene["map_id"]))
+            update_workspace_view(
+                settings.database_path,
+                zoom=float(scene.get("map_zoom") or 1),
+                scroll_left=float(scene.get("map_scroll_left") or 0),
+                scroll_top=float(scene.get("map_scroll_top") or 0),
+            )
+        event, created = publish_scene_event(
+            settings.database_path,
+            scene_id=scene_id,
+            request_id=request.request_id,
+            publication_type="opening",
+            actor_id="master",
+            title=str(scene.get("title") or "Cena iniciada"),
+            public_text=scene.get("public_description"),
+            private_text=scene.get("private_notes"),
+        )
+        if created:
+            _record_scene_publication_in_workspace(event)
+        return {"scene": _scene_payload(scene_id, access) or scene, "map": selected_map, "event": event, "created": created}
     except ValueError as error:
         raise HTTPException(status_code=400, detail=str(error)) from error
 
@@ -3203,6 +4255,7 @@ def gm_update_inventory(request: InventoryUpdate, _: AccessContext = Depends(req
         item_title=note["title"],
         quantity=request.quantity,
         equipped=request.equipped,
+        equipment_slot=request.equipment_slot,
         notes=request.notes,
     )
     add_event(

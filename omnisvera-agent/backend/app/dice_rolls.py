@@ -10,9 +10,11 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any, Callable, Literal
 
+from .session_context import active_game_session_id, table_exists
+
 
 RollVisibility = Literal["table", "gm", "owner", "private"]
-RollType = Literal["free", "attribute", "saving_throw", "attack", "damage", "ability", "item"]
+RollType = Literal["free", "attribute", "skill", "saving_throw", "attack", "damage", "ability", "item"]
 Rng = Callable[[int, int], int]
 
 MAX_FORMULA_LENGTH = 32
@@ -134,12 +136,28 @@ def init_dice_rolls(database_path: Path) -> None:
             connection.execute("ALTER TABLE dice_roll_events ADD COLUMN scene_id INTEGER")
         if "action_id" not in event_columns:
             connection.execute("ALTER TABLE dice_roll_events ADD COLUMN action_id INTEGER")
+        if "game_session_id" not in event_columns:
+            connection.execute(
+                "ALTER TABLE dice_roll_events ADD COLUMN game_session_id INTEGER"
+                + (" REFERENCES game_sessions(id)" if table_exists(connection, "game_sessions") else "")
+            )
         if "target_hidden" not in request_columns:
             connection.execute("ALTER TABLE dice_roll_requests ADD COLUMN target_hidden INTEGER NOT NULL DEFAULT 0")
         if "scene_id" not in request_columns:
             connection.execute("ALTER TABLE dice_roll_requests ADD COLUMN scene_id INTEGER")
         if "action_id" not in request_columns:
             connection.execute("ALTER TABLE dice_roll_requests ADD COLUMN action_id INTEGER")
+        if "game_session_id" not in request_columns:
+            connection.execute(
+                "ALTER TABLE dice_roll_requests ADD COLUMN game_session_id INTEGER"
+                + (" REFERENCES game_sessions(id)" if table_exists(connection, "game_sessions") else "")
+            )
+        connection.execute(
+            "CREATE INDEX IF NOT EXISTS idx_dice_roll_events_game_session ON dice_roll_events(game_session_id,id DESC)"
+        )
+        connection.execute(
+            "CREATE INDEX IF NOT EXISTS idx_dice_roll_requests_game_session ON dice_roll_requests(game_session_id,id DESC)"
+        )
 
 
 def parse_formula(formula: str) -> ParsedFormula:
@@ -223,7 +241,15 @@ def resolve_character_roll(
         target = _integer((definition.get("defenses") or {}).get("saving_throw"))
         if target is None or target <= 0:
             raise ValueError("A Jogada de Proteção não está configurada")
-        return RollSpec("saving_throw", f"{character_name} — Jogada de Proteção", "1d20", "character_saving_throw", "saving_throw", target)
+        bonus = _integer((definition.get("defenses") or {}).get("saving_throw_bonus")) or 0
+        return RollSpec("saving_throw", f"{character_name} — Jogada de Proteção", _signed_formula("1d20", bonus), "character_saving_throw", "saving_throw", target)
+
+    if roll_type == "skill":
+        skill = str(source_id or "").strip()
+        modifiers = (definition.get("item_effects") or {}).get("skill_modifiers") or {}
+        if not skill or skill not in modifiers:
+            raise ValueError("Esta perícia não possui modificador configurado")
+        return RollSpec("attribute", f"{character_name} — {skill}", _signed_formula("1d20", modifiers[skill]), "character_skill", skill)
 
     if roll_type == "attack":
         attacks = list(definition.get("attacks") or [])
@@ -242,12 +268,27 @@ def resolve_character_roll(
             item = next((entry for entry in candidates if entry.get("equipped")), None) or (candidates[0] if candidates else None)
         if item is None:
             raise ValueError("Este item não possui fórmula confirmada")
-        formula = parse_formula(str(item["damage_formula"])).formula
+        formula = resolve_item_damage_formula(definition, item)
         return RollSpec("damage" if roll_type == "damage" else "item", f"{character_name} — Dano de {item['item_title']}", formula, "inventory_item", str(item["item_path"]))
 
     if roll_type == "ability":
         raise ValueError("Esta habilidade ainda não possui fórmula estruturada confirmada")
     raise ValueError("Tipo de rolagem de personagem inválido")
+
+
+def resolve_item_damage_formula(definition: dict[str, Any], item: dict[str, Any]) -> str:
+    """Return the same effective item damage shown in the sheet and rolled in combat."""
+    parsed = parse_formula(str(item["damage_formula"]))
+    totals = (definition.get("item_effects") or {}).get("totals") or {}
+    slot = str(item.get("equipment_slot") or "").lower()
+    category = "ranged" if "dist" in slot else "melee"
+    bonus = (
+        int(totals.get(f"damage_bonus:{item.get('item_path')}", 0))
+        + int(totals.get(f"damage_bonus:{category}", 0))
+        + int(totals.get("damage_bonus:all", 0))
+    )
+    modifier = parsed.modifier + bonus
+    return f"{parsed.count}d{parsed.sides}{modifier:+d}" if modifier else f"{parsed.count}d{parsed.sides}"
 
 
 def validate_target(target_value: int | None) -> int | None:
@@ -306,6 +347,7 @@ def create_roll(
     visibility: str,
     character_id: str | None = None,
     session_id: str | None = None,
+    game_session_id: int | None = None,
     target_value: int | None = None,
     target_hidden: bool = False,
     source: str = "free",
@@ -335,18 +377,20 @@ def create_roll(
             if record["actor_id"] != actor_id:
                 raise ValueError("request_id já utilizado")
             return record, False
+        if game_session_id is None:
+            game_session_id = active_game_session_id(connection, campaign_id)
         rolled = roll_formula(parsed_formula, rng)
         outcome = None if target is None else ("success" if rolled["total"] >= target else "failure")
         cursor = connection.execute(
             """
             INSERT INTO dice_roll_events(
-              request_id,session_id,campaign_id,character_id,actor_id,actor_role,roll_type,label,
+              request_id,session_id,game_session_id,campaign_id,character_id,actor_id,actor_role,roll_type,label,
               formula,dice,modifier,individual_results_json,subtotal,total,target_value,target_hidden,outcome,
               visibility,source,source_id,scene_id,action_id,reason,created_at
-            ) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+            ) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
             """,
             (
-                request_id, session_id, campaign_id, character_id, actor_id, actor_role, roll_type,
+                request_id, session_id, game_session_id, campaign_id, character_id, actor_id, actor_role, roll_type,
                 clean_label, rolled["formula"], rolled["dice"], rolled["modifier"],
                 json.dumps(rolled["individual_results"]), rolled["subtotal"], rolled["total"],
                 target, int(bool(target_hidden)), outcome, visibility, source, source_id,
@@ -411,6 +455,7 @@ def create_roll_request(
     spec: RollSpec,
     visibility: str,
     session_id: str | None = None,
+    game_session_id: int | None = None,
     scene_id: int | None = None,
     action_id: int | None = None,
     target_value: int | None = None,
@@ -430,15 +475,17 @@ def create_roll_request(
         existing = connection.execute("SELECT * FROM dice_roll_requests WHERE request_id=?", (request_id,)).fetchone()
         if existing:
             return _request_record(existing), False
+        if game_session_id is None:
+            game_session_id = active_game_session_id(connection, campaign_id)
         cursor = connection.execute(
             """
             INSERT INTO dice_roll_requests(
-              request_id,session_id,campaign_id,character_id,requested_by,roll_type,label,formula,
+              request_id,session_id,game_session_id,campaign_id,character_id,requested_by,roll_type,label,formula,
               visibility,source,source_id,scene_id,action_id,target_value,target_hidden,reason,status,created_at,expires_at
-            ) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,'pending',?,?)
+            ) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,'pending',?,?)
             """,
             (
-                request_id, session_id, campaign_id, character_id, requested_by, spec.roll_type,
+                request_id, session_id, game_session_id, campaign_id, character_id, requested_by, spec.roll_type,
                 spec.label, parse_formula(spec.formula).formula, visibility, spec.source, spec.source_id,
                 scene_id, action_id, target, int(bool(target_hidden)), str(reason or "").strip()[:500] or None,
                 now.isoformat(), expires.isoformat(),
@@ -481,6 +528,11 @@ def complete_roll_request(
         if row is None:
             raise ValueError("Solicitação de rolagem não encontrada")
         request = _request_record(row)
+        # Authorization applies to retries/recovery too, not just a first roll.
+        if actor_role != "gm" and actor_id != request["character_id"]:
+            raise PermissionError("Esta solicitação pertence a outro personagem")
+        if actor_role != "gm" and request["visibility"] == "gm":
+            raise PermissionError("Esta solicitação é reservada ao Mestre")
         if request["status"] == "completed":
             if request.get("completion_request_id") == completion_request_id and request.get("roll_event_id"):
                 existing = get_roll(database_path, int(request["roll_event_id"]))
@@ -492,6 +544,8 @@ def complete_roll_request(
                 existing = connection.execute("SELECT * FROM dice_roll_events WHERE request_id=?", (completion_request_id,)).fetchone()
                 if existing:
                     event = _roll_record(existing)
+                    if event["source"] != "roll_request" or event["source_id"] != str(request_id):
+                        raise ValueError("Esta chave de conclusão pertence a outra rolagem")
                     connection.execute(
                         "UPDATE dice_roll_requests SET status='completed',completed_at=?,completed_by=?,roll_event_id=? WHERE id=?",
                         (_now(), actor_id, event["id"], request_id),
@@ -503,10 +557,6 @@ def complete_roll_request(
         if datetime.fromisoformat(request["expires_at"]) <= datetime.now(timezone.utc):
             connection.execute("UPDATE dice_roll_requests SET status='expired' WHERE id=?", (request_id,))
             raise ValueError("Esta solicitação expirou")
-        if actor_role != "gm" and actor_id != request["character_id"]:
-            raise PermissionError("Esta solicitação pertence a outro personagem")
-        if actor_role != "gm" and request["visibility"] == "gm":
-            raise PermissionError("Esta solicitação é reservada ao Mestre")
         connection.execute(
             "UPDATE dice_roll_requests SET status='processing',completion_request_id=? WHERE id=? AND status='pending'",
             (completion_request_id, request_id),
@@ -524,6 +574,7 @@ def complete_roll_request(
             formula=request["formula"],
             visibility=request["visibility"],
             session_id=request.get("session_id"),
+            game_session_id=request.get("game_session_id"),
             target_value=request.get("target_value"),
             target_hidden=bool(request.get("target_hidden")),
             source="roll_request",
@@ -534,6 +585,8 @@ def complete_roll_request(
             rng=rng,
             target_hidden_authorized=True,
         )
+        if event["source"] != "roll_request" or event["source_id"] != str(request_id):
+            raise ValueError("Esta chave de conclusão pertence a outra rolagem")
     except Exception:
         with closing(_connect(database_path)) as connection, connection:
             connection.execute(

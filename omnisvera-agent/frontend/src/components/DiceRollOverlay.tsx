@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from "react";
-import DicePhysicsCanvas, { DiceVisualRoll } from "./DicePhysicsCanvas";
+import DicePhysicsCanvas, { DiceVisualRoll, preloadDicePhysics } from "./DicePhysicsCanvas";
+import { DICE_OVERLAY_MS } from "./diceTiming";
 
 function rollKey(roll: DiceVisualRoll) {
   return `${roll.id}:${roll.created_at || ""}`;
 }
 
-export default function DiceRollOverlay() {
+export default function DiceRollOverlay({ enabled = true }: { enabled?: boolean }) {
   const [roll, setRoll] = useState<DiceVisualRoll | null>(null);
   const activeRef = useRef<DiceVisualRoll | null>(null);
   const queueRef = useRef<DiceVisualRoll[]>([]);
@@ -14,6 +15,8 @@ export default function DiceRollOverlay() {
   useEffect(() => { activeRef.current = roll; }, [roll]);
 
   useEffect(() => {
+    if (!enabled) return;
+    if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) void preloadDicePhysics().catch(() => undefined);
     const showRoll = (event: Event) => {
       const detail = (event as CustomEvent<DiceVisualRoll>).detail;
       if (!detail?.individual_results?.length) return;
@@ -29,7 +32,7 @@ export default function DiceRollOverlay() {
     return () => {
       window.removeEventListener("omnisvera-roll-created", showRoll);
     };
-  }, []);
+  }, [enabled]);
 
   useEffect(() => {
     if (!roll) return;
@@ -37,7 +40,7 @@ export default function DiceRollOverlay() {
       const next = queueRef.current.shift() || null;
       activeRef.current = next;
       setRoll(next);
-    }, 3400);
+    }, DICE_OVERLAY_MS);
     return () => window.clearTimeout(timer);
   }, [roll]);
 

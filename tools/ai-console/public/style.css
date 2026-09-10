@@ -1,0 +1,83 @@
+*{box-sizing:border-box} body{margin:0;font-family:system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:#0f1115;color:#e6e8eb}
+header{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-bottom:1px solid #1f2430;background:#0b0e13;position:sticky;top:0;z-index:10;flex-wrap:wrap;gap:8px}
+.title{font-weight:700;letter-spacing:.5px}
+.ver{opacity:.6;font-weight:400}
+.status{display:flex;gap:12px;align-items:center;font-size:13px;flex-wrap:wrap}
+.status span{padding:4px 8px;border-radius:999px;background:#1f2430}
+#modelSelect{background:#1f2430;color:#e6e8eb;border:1px solid #2a3347;border-radius:6px;padding:6px}
+.layout{display:grid;grid-template-columns:260px 1fr;min-height:calc(100vh - 52px)}
+aside{border-right:1px solid #1f2430;padding:12px;background:#0f1115;overflow:hidden}
+aside h3{margin:0 0 8px;font-size:12px;letter-spacing:.6px;opacity:.8}
+#toolsList{font-size:12px;line-height:1.5;max-height:60vh;overflow:auto;overflow-x:hidden;word-break:break-word}
+.tool{padding:4px 6px;border-radius:6px;background:#12151c;margin:3px 0;word-break:break-word;overflow-wrap:anywhere}
+main{display:flex;flex-direction:column;min-width:0;overflow:hidden}
+#mobileControls{display:none;padding:8px 14px;border-bottom:1px solid #1f2430;background:#0f1115}
+.showRawLabel{display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;user-select:none;margin-top:10px}
+.showRawLabel.mobile{margin-top:0}
+#chat{flex:1;overflow:auto;padding:14px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.bubble{max-width:85%;padding:10px 12px;border-radius:10px;white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-word}
+.bubble.user{align-self:flex-end;background:#1e293b}
+.bubble.ai{align-self:flex-start;background:#12151c;border:1px solid #1f2430;min-width:0}
+.toolcall{font-size:12px;background:#0b0e13;border:1px solid #1f2430;border-radius:8px;padding:8px;overflow:hidden;max-width:100%}
+.toolcall .name{font-weight:700;overflow-wrap:anywhere}
+.toolcall pre{white-space:pre-wrap;word-break:break-word;overflow-wrap:anywhere;max-height:240px;overflow:auto;background:#0f1115;padding:6px;border-radius:6px;margin:6px 0;max-width:100%;overflow-x:auto}
+/* Compact timeline when showRaw unchecked */
+.toolcall.compact{padding:6px 8px;display:flex;align-items:center;gap:8px;background:#0b0e13;border:1px solid #1f2430;border-radius:999px;font-size:12px;line-height:1;max-width:100%;overflow:hidden}
+.toolcall.compact .status-icon{font-size:13px;flex-shrink:0}
+.toolcall.compact .tool-name{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.toolcall.compact .tool-duration{opacity:.6;white-space:nowrap;flex-shrink:0}
+.toolcall.compact details{flex:1;min-width:0}
+.toolcall.compact summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:8px}
+.toolcall.compact summary::-webkit-details-marker{display:none}
+.toolcall details{width:100%}
+.toolcall details summary{cursor:pointer;font-weight:600;padding:4px 0;user-select:none}
+.toolcall details .detail-section{margin-top:6px}
+.toolcall details .detail-section .label{font-size:11px;opacity:.7;text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px}
+.toolcall details pre{font-size:11px}
+.progress-wrap{height:4px;background:#1f2430;border-radius:999px;overflow:hidden;margin:6px 14px;display:none;position:relative}
+.progress-bar{height:100%;width:0%;background:#1f6feb;transition:none}
+.progress-bar.indeterminate{width:35%;background:linear-gradient(90deg, #1f6feb 0%, #58a6ff 50%, #1f6feb 100%);animation:indeterminate 1.2s infinite ease-in-out;position:absolute;left:0;top:0;bottom:0}
+.progress-bar.error{background:#f85149 !important;animation:none !important;width:100% !important;position:static}
+@keyframes indeterminate{0%{transform:translateX(-100%)}100%{transform:translateX(350%)}}
+.progress-meta{font-size:11px;opacity:.8;margin:0 14px 6px 14px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;min-width:0}
+.progress-meta.error{color:#ff7b72}
+.bubble.ai.markdown{white-space:normal;line-height:1.6;overflow-wrap:anywhere;word-break:break-word}
+.bubble.ai.markdown h1,.bubble.ai.markdown h2,.bubble.ai.markdown h3,.bubble.ai.markdown h4{margin:10px 0 6px;line-height:1.3}
+.bubble.ai.markdown h1{font-size:1.4em;border-bottom:1px solid #1f2430;padding-bottom:4px}
+.bubble.ai.markdown h2{font-size:1.25em}
+.bubble.ai.markdown h3{font-size:1.1em}
+.bubble.ai.markdown p{margin:6px 0}
+.bubble.ai.markdown table{width:100%;border-collapse:collapse;margin:8px 0;display:block;max-width:100%;overflow-x:auto}
+.bubble.ai.markdown th,.bubble.ai.markdown td{border:1px solid #1f2430;padding:6px;text-align:left;word-break:break-word}
+.bubble.ai.markdown th{background:#1f2430}
+.bubble.ai.markdown code{background:#0f1115;padding:2px 4px;border-radius:4px;font-size:.9em;word-break:break-word;overflow-wrap:anywhere}
+.bubble.ai.markdown pre{background:#0f1115;padding:10px;border-radius:6px;overflow:auto;max-width:100%;border:1px solid #1f2430}
+.bubble.ai.markdown pre code{background:transparent;padding:0;display:block;white-space:pre;word-break:normal;overflow-wrap:normal}
+.bubble.ai.markdown ul,.bubble.ai.markdown ol{margin:6px 0;padding-left:22px}
+.bubble.ai.markdown li{margin:2px 0}
+.bubble.ai.markdown blockquote{border-left:3px solid #2a3347;margin:8px 0;padding:6px 10px;background:#0f1115;opacity:.9}
+.bubble.ai.markdown a{color:#58a6ff;word-break:break-word}
+.bubble.ai.markdown hr{border:none;border-top:1px solid #1f2430;margin:10px 0}
+.composer{border-top:1px solid #1f2430;padding:10px;display:flex;gap:8px;background:#0b0e13;flex-wrap:wrap}
+.composer textarea{flex:1;min-width:180px;background:#0f1115;color:#e6e8eb;border:1px solid #1f2430;border-radius:8px;padding:8px;resize:vertical;max-width:100%}
+.actions{display:flex;flex-direction:column;gap:6px}
+button{padding:8px 12px;border-radius:8px;border:1px solid #2a3347;background:#1f6feb;color:white;cursor:pointer}
+button.secondary{background:#1f2430}
+button:disabled{opacity:.5;cursor:not-allowed}
+@media(max-width:768px){
+  .layout{grid-template-columns:1fr;display:flex;flex-direction:column}
+  aside{border-right:none;border-bottom:1px solid #1f2430;max-height:none}
+  #toolsList{max-height:120px}
+  aside .showRawLabel{display:none}
+  #mobileControls{display:flex}
+  main{order:-1}
+  aside{order:1}
+  .bubble{max-width:96%}
+  .composer{position:sticky;bottom:0}
+  header{position:static}
+}
+@media(max-width:480px){
+  .status{font-size:11px;gap:6px}
+  #chat{padding:10px}
+  .toolcall pre{font-size:11px}
+}

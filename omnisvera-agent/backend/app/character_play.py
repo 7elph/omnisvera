@@ -10,6 +10,9 @@ from pathlib import Path
 from typing import Any, Literal
 
 from .access import sanitize_player_text
+from .dice_rolls import resolve_item_damage_formula
+from .combat_effects import init_effects, expire_rest_effects
+from .session_context import active_game_session_id, table_exists
 
 
 AccessLevel = Literal["gm", "owner", "public"]
@@ -50,6 +53,11 @@ def load_session_abilities(profile_id: str) -> list[dict[str, Any]]:
         }
         if raw_entry.get("hidden"):
             continue
+        required_item = str(raw_entry.get("requires_equipped_item") or "").strip()
+        if required_item:
+            entry["requires_equipped_item"] = required_item
+        if raw_entry.get("requires_target"):
+            entry["requires_target"] = True
         circle = raw_entry.get("circle")
         if isinstance(circle, int) and circle > 0:
             entry["circle"] = circle
@@ -69,9 +77,11 @@ def load_session_abilities(profile_id: str) -> list[dict[str, Any]]:
     return entries
 
 STATE_ACTIONS = {
+    "set_currency",
     "damage",
     "heal",
     "set_hp",
+    "grant_temporary_hp",
     "add_condition",
     "remove_condition",
     "consume_resource",
@@ -79,6 +89,7 @@ STATE_ACTIONS = {
     "equip_item",
     "unequip_item",
     "change_quantity",
+    "change_charges",
     "grant_item",
     "remove_item",
     "set_location",
@@ -87,15 +98,18 @@ STATE_ACTIONS = {
 }
 
 OWNER_ACTIONS = {
+    "set_currency",
     "damage",
     "heal",
     "set_hp",
+    "grant_temporary_hp",
     "add_condition",
     "remove_condition",
     "consume_resource",
     "equip_item",
     "unequip_item",
     "change_quantity",
+    "change_charges",
 }
 
 DEFINITION_FIELDS = {
@@ -105,6 +119,8 @@ DEFINITION_FIELDS = {
     "race",
     "class_name",
     "level",
+    "experience",
+    "attack_count",
     "attributes",
     "maximum_hp",
     "armor_class",
@@ -164,6 +180,15 @@ def init_character_play(database_path: Path) -> None:
             CREATE INDEX IF NOT EXISTS idx_character_events_character
               ON character_events(character_id, id DESC);
             """
+        )
+        event_columns = {row[1] for row in connection.execute("PRAGMA table_info(character_events)")}
+        if "game_session_id" not in event_columns:
+            connection.execute(
+                "ALTER TABLE character_events ADD COLUMN game_session_id INTEGER"
+                + (" REFERENCES game_sessions(id)" if table_exists(connection, "game_sessions") else "")
+            )
+        connection.execute(
+            "CREATE INDEX IF NOT EXISTS idx_character_events_game_session ON character_events(game_session_id,id DESC)"
         )
 
 
@@ -287,6 +312,181 @@ def _parse_equipment_names(value: Any) -> list[str]:
     return list(dict.fromkeys(entry for entry in entries if entry and len(entry) <= 120))
 
 
+def _equipped_rules(inventory: list[dict[str, Any]], kind: str) -> list[tuple[dict[str, Any], dict[str, Any]]]:
+    matches: list[tuple[dict[str, Any], dict[str, Any]]] = []
+    for item in inventory:
+        if not item.get("equipped") or int(item.get("quantity") or 0) <= 0:
+            continue
+        for rule in item.get("effect_rules") or []:
+            if rule.get("trigger") == "while_equipped" and rule.get("kind") == kind:
+                matches.append((item, rule))
+    return matches
+
+
+def _equipped_effect_summary(inventory: list[dict[str, Any]]) -> dict[str, Any]:
+    groups: dict[tuple[str, str], list[tuple[dict[str, Any], dict[str, Any]]]] = {}
+    breakdown: list[dict[str, Any]] = []
+    for item in inventory:
+        if not item.get("equipped") or int(item.get("quantity") or 0) <= 0:
+            continue
+        for rule in item.get("effect_rules") or []:
+            if rule.get("trigger") != "while_equipped":
+                continue
+            kind = str(rule.get("kind") or "")
+            target = str(rule.get("target") or "").strip()
+            condition = str(rule.get("condition") or "").strip()
+            entry = {
+                "rule_id": str(rule.get("id") or ""),
+                "item_path": str(item.get("item_path") or ""),
+                "item_title": str(item.get("item_title") or "Item equipado"),
+                "kind": kind,
+                "target": target,
+                "value": int(rule.get("value") or 0),
+                "formula": str(rule.get("formula") or "").strip() or None,
+                "label": str(rule.get("label") or "").strip() or None,
+                "stacking": str(rule.get("stacking") or "stack"),
+                "condition": condition or None,
+                "active": not condition,
+            }
+            breakdown.append(entry)
+            if not condition:
+                groups.setdefault((kind, target), []).append((item, rule))
+
+    totals: dict[str, int] = {}
+    for (kind, target), entries in groups.items():
+        values = [int(rule.get("value") or 0) for _item, rule in entries]
+        strategies = {str(rule.get("stacking") or "stack") for _item, rule in entries}
+        if "replace" in strategies:
+            selected = next(int(rule.get("value") or 0) for _item, rule in reversed(entries) if str(rule.get("stacking") or "stack") == "replace")
+        elif strategies & {"highest", "non_stack"}:
+            selected = max(values, key=lambda value: abs(value), default=0)
+        else:
+            selected = sum(values)
+        totals[f"{kind}:{target}"] = selected
+    return {"totals": totals, "breakdown": breakdown}
+
+
+def _equipped_weapon_for_attack(inventory: list[dict[str, Any]], attack_id: str) -> dict[str, Any] | None:
+    weapons = [
+        item for item in inventory
+        if item.get("equipped") and int(item.get("quantity") or 0) > 0 and item.get("damage_formula")
+        and "escudo" not in _normalize(f"{item.get('item_title')} {item.get('item_type')}")
+    ]
+    wanted_slot = "distancia" if attack_id == "ranged" else "corpo a corpo"
+    selected = next((item for item in weapons if wanted_slot in _normalize(item.get("equipment_slot"))), None)
+    if selected:
+        return selected
+    unslotted = [item for item in weapons if not str(item.get("equipment_slot") or "").strip()]
+    if attack_id == "ranged":
+        return next((item for item in unslotted if any(term in _normalize(f"{item.get('item_title')} {item.get('item_type')}") for term in ("arco", "besta", "distancia", "ranged"))), None)
+    return next((item for item in unslotted if not any(term in _normalize(f"{item.get('item_title')} {item.get('item_type')}") for term in ("arco", "besta", "distancia", "ranged"))), None)
+
+
+def _attack_equipment_sources(
+    inventory: list[dict[str, Any]],
+    item_effects: dict[str, Any],
+    attack_id: str,
+    weapon: dict[str, Any] | None,
+) -> list[dict[str, Any]]:
+    relevant_paths: list[str] = []
+    if weapon:
+        relevant_paths.append(str(weapon.get("item_path") or ""))
+    weapon_path = str((weapon or {}).get("item_path") or "")
+    for entry in item_effects.get("breakdown") or []:
+        if not entry.get("active") or entry.get("kind") not in {"attack_bonus", "damage_bonus"}:
+            continue
+        target = str(entry.get("target") or "")
+        if target in {"all", attack_id, weapon_path}:
+            path = str(entry.get("item_path") or "")
+            if path and path not in relevant_paths:
+                relevant_paths.append(path)
+    by_path = {str(item.get("item_path") or ""): item for item in inventory if item.get("equipped")}
+    return [
+        {
+            "item_path": path,
+            "item_title": str(by_path[path].get("item_title") or "Item equipado"),
+            "item_type": by_path[path].get("item_type"),
+            "equipment_slot": by_path[path].get("equipment_slot"),
+            "thumbnail": by_path[path].get("thumbnail"),
+            "cover": by_path[path].get("cover"),
+            "damage_formula": by_path[path].get("damage_formula"),
+            "role": "weapon" if path == weapon_path else "support",
+        }
+        for path in relevant_paths if path in by_path
+    ]
+
+
+def _effect_total(summary: dict[str, Any], kind: str, target: str = "") -> int:
+    totals = summary.get("totals") or {}
+    return int(totals.get(f"{kind}:{target}", 0)) + (int(totals.get(f"{kind}:all", 0)) if target and target != "all" else 0)
+
+
+def _equipped_armor_modifier(inventory: list[dict[str, Any]], effect_summary: dict[str, Any] | None = None) -> dict[str, Any] | None:
+    """Combine structured AC rules while preserving the non-stacking cloak/leather default."""
+    structured = _equipped_rules(inventory, "armor_class_bonus")
+    structured_total = _effect_total(effect_summary or _equipped_effect_summary(inventory), "armor_class_bonus")
+    structured_paths = {str(item.get("item_path") or "") for item, _rule in structured}
+    candidates: list[dict[str, Any]] = []
+    included_candidates: list[dict[str, Any]] = []
+    for item in inventory:
+        if not item.get("equipped") or int(item.get("quantity") or 0) <= 0 or str(item.get("item_path") or "") in structured_paths:
+            continue
+        title = str(item.get("item_title") or "").strip()
+        item_type = str(item.get("item_type") or "").strip()
+        normalized = _normalize(f"{title} {item_type}")
+        is_cloak = "manto" in normalized
+        is_leather_armor = "couro" in normalized and "armadura" in normalized
+        included_bonus = 8 if "armadura completa" in normalized else 6 if "armadura de placas" in normalized else 0
+        if included_bonus:
+            included_candidates.append(
+                {
+                    "item_path": str(item.get("item_path") or ""),
+                    "item_title": title,
+                    "value": included_bonus,
+                    "kind": "armadura completa" if included_bonus == 8 else "armadura de placas",
+                    "included_in_sheet": True,
+                }
+            )
+            continue
+        if not (is_cloak or is_leather_armor):
+            continue
+        candidates.append(
+            {
+                "item_path": str(item.get("item_path") or ""),
+                "item_title": title,
+                "value": 2,
+                "kind": "manto" if is_cloak else "armadura de couro",
+                "equipped_slot": str(item.get("equipment_slot") or ""),
+            }
+        )
+    legacy = 2 if candidates else 0
+    included = max(included_candidates, key=lambda item: int(item["value"])) if included_candidates else None
+    total = structured_total + legacy + int((included or {}).get("value") or 0)
+    applied_total = structured_total + legacy
+    if total == 0:
+        return None
+    if structured:
+        source_item, source_rule = structured[0]
+        return {
+            "item_path": str(source_item.get("item_path") or ""),
+            "item_title": str(source_item.get("item_title") or "Item equipado"),
+            "value": total,
+            "kind": str(source_rule.get("label") or "efeito configurado"),
+            "applied_value": applied_total,
+            "included_in_sheet": bool(included),
+        }
+    if included:
+        result = dict(included)
+        result["value"] = int(included["value"]) + legacy
+        result["applied_value"] = legacy
+        return result
+    candidates.sort(key=lambda item: (item["equipped_slot"] != "Armadura", item["item_title"]))
+    selected = dict(candidates[0])
+    selected.pop("equipped_slot", None)
+    selected["applied_value"] = legacy
+    return selected
+
+
 def _resource_key(label: str) -> str:
     key = re.sub(r"[^a-z0-9]+", "_", _normalize(label)).strip("_")
     return key or "recurso"
@@ -397,6 +597,11 @@ def build_character_definition(
     name, epithet = _split_title(note, frontmatter)
     attributes = dict(_step_fields(sheet, "attributes"))
     attributes.update(overrides.get("attributes") or {})
+    base_attributes = dict(attributes)
+    item_effects = _equipped_effect_summary(inventory)
+    for target in attributes:
+        if _number(attributes.get(target)) is not None:
+            attributes[target] = int(_number(attributes[target]) or 0) + _effect_total(item_effects, "attribute_bonus", target)
     class_fields = _step_fields(sheet, "character_class")
     race_fields = _step_fields(sheet, "race")
     attacks = _step_fields(sheet, "attacks")
@@ -410,32 +615,54 @@ def build_character_definition(
     level = int(_number(overrides.get("level") or class_fields.get("level") or frontmatter.get("level")) or 1)
     maximum_hp = _number(overrides.get("maximum_hp") if "maximum_hp" in overrides else class_fields.get("hit_points"))
     armor_class = _number(overrides.get("armor_class") if "armor_class" in overrides else armor.get("armor_class"))
+    base_maximum_hp = maximum_hp
+    maximum_hp = (maximum_hp + _effect_total(item_effects, "maximum_hp_bonus")) if maximum_hp is not None else None
+    armor_modifier_source = _equipped_armor_modifier(inventory, item_effects)
+    armor_modifier = int((armor_modifier_source or {}).get("value") or 0)
+    applied_armor_modifier = int((armor_modifier_source or {}).get("applied_value", armor_modifier) or 0)
+    effective_armor_class = int(armor_class) + applied_armor_modifier if armor_class is not None and armor_class > 0 else None
+    included_armor_modifier = armor_modifier - applied_armor_modifier
+    unmodified_armor_class = int(armor_class) - included_armor_modifier if armor_class is not None and armor_class > 0 else None
+    if armor_modifier_source and not any(entry.get("kind") == "armor_class_bonus" and entry.get("item_path") == armor_modifier_source.get("item_path") for entry in item_effects["breakdown"]):
+        item_effects["breakdown"].append({
+            "rule_id": "legacy-armor", "item_path": armor_modifier_source.get("item_path"), "item_title": armor_modifier_source.get("item_title"),
+            "kind": "armor_class_bonus", "target": "", "value": armor_modifier, "formula": None, "label": armor_modifier_source.get("kind"),
+            "stacking": "non_stack", "condition": None, "active": True, "included_in_sheet": bool(armor_modifier_source.get("included_in_sheet")),
+        })
     initiative = _number(overrides.get("initiative"))
     movement = overrides.get("movement") or race_fields.get("movement")
+    movement_bonus = _effect_total(item_effects, "movement_bonus")
+    if movement_bonus:
+        movement_value = _number(movement)
+        movement = f"{int(movement_value) + movement_bonus} metros" if movement_value is not None else f"{movement or 'Movimento'} ({movement_bonus:+d})"
     location = overrides.get("location") or _clean_link(frontmatter.get("location"))
     current_status = overrides.get("current_status") or frontmatter.get("status") or frontmatter.get("campaign_status")
 
     attack_entries: list[dict[str, Any]] = []
-    if attacks.get("melee_bonus") is not None:
+    for attack_id, field_name, label in (
+        ("melee", "melee_bonus", "Corpo a corpo"),
+        ("ranged", "ranged_bonus", "À distância"),
+    ):
+        if attacks.get(field_name) is None:
+            continue
+        base_attack_bonus = int(_number(attacks.get(field_name)) or 0)
+        item_attack_bonus = _effect_total(item_effects, "attack_bonus", attack_id)
+        weapon = _equipped_weapon_for_attack(inventory, attack_id)
+        damage = resolve_item_damage_formula({"item_effects": item_effects}, weapon) if weapon else None
         attack_entries.append(
             {
-                "id": "melee",
-                "name": "Corpo a corpo",
-                "attack_bonus": _number(attacks.get("melee_bonus")),
-                "damage": None,
+                "id": attack_id,
+                "attack_count": int(overrides.get("attack_count", 1)),
+                "base_attack_count": int(overrides.get("attack_count", 1)),
+                "name": label,
+                "attack_bonus": base_attack_bonus + item_attack_bonus,
+                "base_attack_bonus": base_attack_bonus,
+                "item_attack_bonus": item_attack_bonus,
+                "damage": damage,
                 "range": None,
-                "notes": "Dano não configurado nas fontes da ficha.",
-            }
-        )
-    if attacks.get("ranged_bonus") is not None:
-        attack_entries.append(
-            {
-                "id": "ranged",
-                "name": "À distância",
-                "attack_bonus": _number(attacks.get("ranged_bonus")),
-                "damage": None,
-                "range": None,
-                "notes": "Dano e alcance não configurados nas fontes da ficha.",
+                "notes": None if weapon else "Dano não configurado nas fontes da ficha.",
+                "weapon_item_path": str(weapon.get("item_path") or "") if weapon else None,
+                "equipment": _attack_equipment_sources(inventory, item_effects, attack_id, weapon) if access_level != "public" else [],
             }
         )
 
@@ -464,26 +691,54 @@ def build_character_definition(
         "player_name": overrides.get("player_name"),
         "campaign": overrides.get("campaign") or "Omnisvera",
         "attributes": attributes,
+        "base_attributes": base_attributes,
         "attribute_modifiers": {key: attribute_modifier(value) for key, value in attributes.items()},
+        "item_effects": {
+            **item_effects,
+            "skill_modifiers": {target: value for key, value in item_effects["totals"].items() if key.startswith("skill_bonus:") for target in [key.split(":", 1)[1]]},
+            "resistances": [entry["target"] for entry in item_effects["breakdown"] if entry["active"] and entry["kind"] == "resistance" and entry["target"]],
+            "immunities": [entry["target"] for entry in item_effects["breakdown"] if entry["active"] and entry["kind"] == "immunity" and entry["target"]],
+            "vulnerabilities": [entry["target"] for entry in item_effects["breakdown"] if entry["active"] and entry["kind"] == "vulnerability" and entry["target"]],
+        },
         "abilities": {
             "racial": _clean_text(race_fields.get("racial_abilities"), 5000),
             "class": _clean_text(class_fields.get("class_abilities"), 5000),
             "magic": _clean_text(magic.get("known_magic"), 4000),
             "magic_notes": _clean_text(magic.get("magic_notes"), 1800),
         },
-        "session_abilities": load_session_abilities(profile_id),
+        "session_abilities": load_session_abilities(profile_id) + [
+            {
+                "id": f"item:{item.get('item_path')}:{rule.get('id')}",
+                "name": str(rule.get("target") or rule.get("label") or item.get("item_title") or "Habilidade de item"),
+                "kind": "ability",
+                "group": "Habilidades de itens",
+                "description": str(rule.get("label") or f"Concedida por {item.get('item_title') or 'item equipado'}."),
+                "mechanics_status": "partial",
+                "source": str(item.get("item_title") or "Item equipado"),
+                "active": True,
+                "blocked": False,
+            }
+            for item, rule in _equipped_rules(inventory, "grant_ability")
+        ],
         "attacks": attack_entries,
         "attack_notes": _clean_text(attacks.get("attack_notes"), 1800),
         "defenses": {
-            "armor_class": int(armor_class) if armor_class is not None and armor_class > 0 else None,
+            "armor_class": effective_armor_class,
+            "base_armor_class": int(armor_class) if armor_class is not None and armor_class > 0 else None,
+            "unmodified_armor_class": unmodified_armor_class,
+            "armor_modifier": armor_modifier,
+            "armor_modifier_source": armor_modifier_source,
             "saving_throw": class_fields.get("saving_throw"),
+            "saving_throw_bonus": _effect_total(item_effects, "saving_throw_bonus"),
             "initiative": int(initiative) if initiative is not None else None,
             "initiative_configured": initiative is not None,
         },
         "progression": {
-            "experience": _number(class_fields.get("experience")),
+            "experience": _number(overrides["experience"] if "experience" in overrides else class_fields.get("experience")),
             "base_attack": _number(class_fields.get("base_attack")),
             "maximum_hp": int(maximum_hp) if maximum_hp is not None and maximum_hp > 0 else None,
+            "base_maximum_hp": int(base_maximum_hp) if base_maximum_hp is not None and base_maximum_hp > 0 else None,
+            "maximum_hp_modifier": _effect_total(item_effects, "maximum_hp_bonus"),
         },
         "movement": movement,
         "base_equipment": base_equipment,
@@ -630,17 +885,21 @@ def _write_event(
     after: Any,
     reason: str | None,
     session_id: str | None,
+    game_session_id: int | None = None,
 ) -> int:
+    if game_session_id is None:
+        game_session_id = active_game_session_id(connection)
     cursor = connection.execute(
         """
         INSERT INTO character_events(
-          character_id,session_id,actor_id,actor_role,event_type,field,
+          character_id,session_id,game_session_id,actor_id,actor_role,event_type,field,
           before_json,after_json,reason,created_at
-        ) VALUES(?,?,?,?,?,?,?,?,?,?)
+        ) VALUES(?,?,?,?,?,?,?,?,?,?,?)
         """,
         (
             character_id,
             session_id,
+            game_session_id,
             actor_id,
             actor_role,
             event_type,
@@ -692,19 +951,44 @@ def apply_character_action(
     payload: dict[str, Any],
     reason: str | None = None,
     session_id: str | None = None,
+    game_session_id: int | None = None,
 ) -> dict[str, Any]:
     if action not in STATE_ACTIONS:
         raise ValueError("Ação de ficha inválida")
     if actor_role != "gm" and (actor_id != character_id or action not in OWNER_ACTIONS):
         raise PermissionError("Este perfil não pode executar esta ação")
     init_character_play(database_path)
+    init_effects(database_path)
     with closing(_connect(database_path)) as connection, connection:
+        if action == "set_currency":
+            connection.execute("BEGIN IMMEDIATE")
         _row, state = _load_state_row(connection, character_id)
         field = action
         before: Any
         after: Any
 
-        if action == "rest_at_inn":
+        if action == "set_currency":
+            fields = {"copper": "copper_coins", "silver": "silver_coins", "gold": "coins", "platinum": "platinum_coins"}
+            currency = payload.get("currency")
+            if not isinstance(currency, str) or currency not in fields:
+                raise ValueError("Moeda inválida")
+            field = fields[currency]
+            before = state.get(field) or 0
+            after = payload.get("value")
+            if type(after) is not int or not 0 <= after <= 2_147_483_647:
+                raise ValueError("Informe um saldo inteiro, não negativo")
+            if actor_role != "gm" and after > before:
+                raise PermissionError("Somente o Mestre pode aumentar moedas")
+            if before == after:
+                return {"event_id": None, "field": field, "before": before, "after": after}
+            expected = payload.get("expected_balance")
+            if type(expected) not in {int, float} or expected != before:
+                raise ValueError("O saldo mudou. Atualize a ficha antes de aplicar novamente")
+            state[field] = after
+            _save_state(connection, character_id, state)
+
+        elif action == "rest_at_inn":
+            expire_rest_effects(connection, character_id)
             before = json.loads(json.dumps(state, ensure_ascii=False))
             state["current_hp"] = state.get("maximum_hp")
             state["temporary_hp"] = 0
@@ -716,27 +1000,36 @@ def apply_character_action(
             after = json.loads(json.dumps(state, ensure_ascii=False))
             field = "state"
             _save_state(connection, character_id, state)
+            inventory_table = connection.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='player_inventory'").fetchone()
+            if inventory_table:
+                connection.execute(
+                    "UPDATE player_inventory SET charges_current=charges_max,updated_at=? WHERE profile_id=? AND recharge='inn_rest' AND charges_max IS NOT NULL",
+                    (_now(), character_id),
+                )
 
-        elif action in {"damage", "heal", "set_hp"}:
+        elif action in {"damage", "heal", "set_hp", "grant_temporary_hp"}:
             maximum = state.get("maximum_hp")
             current = state.get("current_hp")
             if maximum is None or current is None:
                 raise ValueError("Pontos de Vida ainda não foram configurados")
             amount = int(_number(payload.get("amount")) or 0)
-            if action != "set_hp" and amount <= 0:
+            if action not in {"set_hp"} and amount <= 0:
                 raise ValueError("Informe um valor positivo")
             before = current
             if action == "damage":
                 after = max(0, current - amount)
             elif action == "heal":
                 after = min(maximum, current + amount)
-            else:
+            elif action == "set_hp":
                 requested = _number(payload.get("value"))
                 if requested is None:
                     raise ValueError("Informe o novo valor de PV")
                 after = max(0, min(maximum, int(requested)))
-            state["current_hp"] = after
-            field = "current_hp"
+            else:
+                before = int(state.get("temporary_hp") or 0)
+                after = max(before, amount)
+            state["temporary_hp" if action == "grant_temporary_hp" else "current_hp"] = after
+            field = "temporary_hp" if action == "grant_temporary_hp" else "current_hp"
             _save_state(connection, character_id, state)
 
         elif action in {"add_condition", "remove_condition"}:
@@ -807,6 +1100,10 @@ def apply_character_action(
                     "item_title": title,
                     "quantity": (int(existing.get("quantity") or 0) if existing else 0) + quantity,
                     "equipped": bool(payload.get("equipped", False)),
+                    "equipment_slot": str(payload.get("equipment_slot") or "").strip() or None,
+                    "charges_current": payload.get("charges_current") if payload.get("charges_current") is not None else (existing or {}).get("charges_current"),
+                    "charges_max": payload.get("charges_max") if payload.get("charges_max") is not None else (existing or {}).get("charges_max"),
+                    "recharge": str(payload.get("recharge") or "").strip() or (existing or {}).get("recharge"),
                     "notes": str(payload.get("notes") or "").strip() or None,
                 }
             elif action == "remove_item":
@@ -821,8 +1118,10 @@ def apply_character_action(
                 after = dict(existing)
                 if action == "equip_item":
                     after["equipped"] = True
+                    after["equipment_slot"] = str(payload.get("equipment_slot") or "").strip() or None
                 elif action == "unequip_item":
                     after["equipped"] = False
+                    after["equipment_slot"] = None
                 elif action == "change_quantity":
                     quantity = _number(payload.get("quantity"))
                     if quantity is None or not 0 <= int(quantity) <= 999:
@@ -830,14 +1129,23 @@ def apply_character_action(
                     after["quantity"] = int(quantity)
                     if int(quantity) == 0:
                         after["equipped"] = False
+                elif action == "change_charges":
+                    charges = _number(payload.get("charges"))
+                    maximum = int(after.get("charges_max") or payload.get("charges_max") or 0)
+                    if charges is None or maximum <= 0 or not 0 <= int(charges) <= maximum:
+                        raise ValueError("Cargas devem ficar entre 0 e o máximo do item")
+                    after["charges_current"] = int(charges)
+                    after["charges_max"] = maximum
+                    after["recharge"] = str(payload.get("recharge") or after.get("recharge") or "none")
             now = _now()
             connection.execute(
                 """
-                INSERT INTO player_inventory(profile_id,item_path,item_title,quantity,equipped,notes,updated_at)
-                VALUES(?,?,?,?,?,?,?)
+                INSERT INTO player_inventory(profile_id,item_path,item_title,quantity,equipped,equipment_slot,charges_current,charges_max,recharge,notes,updated_at)
+                VALUES(?,?,?,?,?,?,?,?,?,?,?)
                 ON CONFLICT(profile_id,item_path) DO UPDATE SET
                   item_title=excluded.item_title,quantity=excluded.quantity,equipped=excluded.equipped,
-                  notes=excluded.notes,updated_at=excluded.updated_at
+                  equipment_slot=excluded.equipment_slot,charges_current=excluded.charges_current,
+                  charges_max=excluded.charges_max,recharge=excluded.recharge,notes=excluded.notes,updated_at=excluded.updated_at
                 """,
                 (
                     character_id,
@@ -845,6 +1153,10 @@ def apply_character_action(
                     after["item_title"],
                     int(after.get("quantity") or 0),
                     int(bool(after.get("equipped"))),
+                    after.get("equipment_slot"),
+                    after.get("charges_current"),
+                    after.get("charges_max"),
+                    after.get("recharge"),
                     after.get("notes"),
                     now,
                 ),
@@ -863,6 +1175,7 @@ def apply_character_action(
             after=after,
             reason=reason,
             session_id=session_id,
+            game_session_id=game_session_id,
         )
     return {"event_id": event_id, "field": field, "before": before, "after": after}
 
@@ -878,9 +1191,16 @@ def update_definition_overrides(
     unknown = set(fields) - DEFINITION_FIELDS
     if unknown:
         raise ValueError(f"Campos de definição não permitidos: {', '.join(sorted(unknown))}")
+    if "experience" in fields:
+        experience = fields["experience"]
+        if type(experience) is not int or not 0 <= experience <= 2_147_483_647:
+            raise ValueError("Experiência deve ser um inteiro entre 0 e 2147483647")
+    if "attack_count" in fields:
+        if type(fields["attack_count"]) is not int or not 1 <= fields["attack_count"] <= 10:
+            raise ValueError("Ataques por ação devem ficar entre 1 e 10")
     if "level" in fields:
-        level = _number(fields["level"])
-        if level is None or not 1 <= int(level) <= 20:
+        level = fields["level"]
+        if type(level) is not int or not 1 <= level <= 20:
             raise ValueError("Nível deve ficar entre 1 e 20")
         fields["level"] = int(level)
     if "attributes" in fields:
@@ -1001,10 +1321,11 @@ def revert_character_event(
             else:
                 connection.execute(
                     """
-                    INSERT INTO player_inventory(profile_id,item_path,item_title,quantity,equipped,notes,updated_at)
-                    VALUES(?,?,?,?,?,?,?) ON CONFLICT(profile_id,item_path) DO UPDATE SET
+                    INSERT INTO player_inventory(profile_id,item_path,item_title,quantity,equipped,equipment_slot,charges_current,charges_max,recharge,notes,updated_at)
+                    VALUES(?,?,?,?,?,?,?,?,?,?,?) ON CONFLICT(profile_id,item_path) DO UPDATE SET
                       item_title=excluded.item_title,quantity=excluded.quantity,equipped=excluded.equipped,
-                      notes=excluded.notes,updated_at=excluded.updated_at
+                      equipment_slot=excluded.equipment_slot,charges_current=excluded.charges_current,
+                      charges_max=excluded.charges_max,recharge=excluded.recharge,notes=excluded.notes,updated_at=excluded.updated_at
                     """,
                     (
                         character_id,
@@ -1012,6 +1333,10 @@ def revert_character_event(
                         before["item_title"],
                         int(before.get("quantity") or 0),
                         int(bool(before.get("equipped"))),
+                        before.get("equipment_slot"),
+                        before.get("charges_current"),
+                        before.get("charges_max"),
+                        before.get("recharge"),
                         before.get("notes"),
                         _now(),
                     ),

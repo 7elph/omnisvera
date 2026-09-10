@@ -10,11 +10,82 @@ import uvicorn
 
 import mcp_server as local_core
 from omnisvera_mcp.bridge import register_remote_bridge_tools
+from omnisvera_mcp.core.context import CallContext
+from contextvars import ContextVar
+import hmac
+from pathlib import Path
+from uuid import uuid4
 
+_console_authenticated: ContextVar[bool] = ContextVar("_console_authenticated", default=False)
 
 HOST = os.getenv("OMNISVERA_MCP_HTTP_HOST", "127.0.0.1")
 PORT = int(os.getenv("OMNISVERA_MCP_HTTP_PORT", "8765"))
 PATH = "/mcp"
+
+# Internal console tokens: never exposed to browser/model/trace.
+# Football: env OMNISVERA_AI_CONSOLE_TOKEN or fallback file ai-console-token
+# Crypto:   env OMNISVERA_AI_CONSOLE_CRYPTO_TOKEN (or OMNISVERA_CRYPTO_TOKEN) or file ai-console-crypto-token
+def _load_console_token() -> str | None:
+    tok = os.getenv("OMNISVERA_AI_CONSOLE_TOKEN")
+    if tok:
+        return tok.strip()
+    try:
+        p = Path(__file__).resolve().parents[1] / ".assistant-runtime" / "omnisvera-mcp" / "ai-console-token"
+        if p.exists():
+            return p.read_text(encoding="utf-8").strip()
+    except Exception:
+        pass
+    return None
+
+_CONSOLE_TOKEN = _load_console_token()
+_CRYPTO_TOKEN_PATH = Path(__file__).resolve().parents[1] / ".assistant-runtime" / "omnisvera-mcp" / "ai-console-crypto-token"
+def _load_crypto_token():
+    for env_key in ("OMNISVERA_AI_CONSOLE_CRYPTO_TOKEN", "OMNISVERA_CRYPTO_TOKEN"):
+        token = os.getenv(env_key)
+        if token and token.strip():
+            return token.strip()
+    try:
+        if _CRYPTO_TOKEN_PATH.exists():
+            return _CRYPTO_TOKEN_PATH.read_text(encoding="utf-8").strip() or None
+    except OSError:
+        pass
+    return None
+
+_CRYPTO_TOKEN = _load_crypto_token()
+_console_predictor: ContextVar[str] = ContextVar("_console_predictor", default="football.elo")
+
+# Scopes identical to remote_bridge_context (do not weaken)
+_CONSOLE_SCOPES = frozenset(
+    {"system.health.read", "vault.handoff.read", "companion.read", "memory.read",
+     "memory.write", "world.read", "world.write", "epistemic.read", "epistemic.write",
+     "epistemic.prediction.commit", "experience.read"}
+)
+
+def _console_context() -> CallContext:
+    return CallContext(
+        actor=_console_predictor.get(),
+        client="omnisvera-ai-console",
+        transport="streamable-http",
+        scopes=_CONSOLE_SCOPES,
+        request_id=uuid4().hex,
+        project_id="omnisvera",
+    )
+
+def _normal_context() -> CallContext:
+    return CallContext(
+        actor="mia",
+        client="chatgpt-mia-bridge",
+        transport="streamable-http",
+        scopes=_CONSOLE_SCOPES,
+        request_id=uuid4().hex,
+        project_id="omnisvera",
+    )
+
+def dynamic_remote_context() -> CallContext:
+    # Called inside each tool wrapper; reads per-request ContextVar set by LegacyDiscoveryFallback
+    if _console_authenticated.get():
+        return _console_context()
+    return _normal_context()
 
 mcp = FastMCP(
     "omnisvera-mia-bridge",
@@ -23,7 +94,7 @@ mcp = FastMCP(
     streamable_http_path=PATH,
     stateless_http=True,
 )
-BRIDGE_BINDINGS = register_remote_bridge_tools(mcp, local_core.CORE_REGISTRY)
+BRIDGE_BINDINGS = register_remote_bridge_tools(mcp, local_core.CORE_REGISTRY, context_factory=dynamic_remote_context)
 
 
 SERVER_URL = os.getenv("OMNISVERA_MCP_SERVER_URL", "http://127.0.0.1:8765")
@@ -88,49 +159,89 @@ class LegacyDiscoveryFallback:
             await self._send_json(scope, receive, send, 200, PROTECTED_RESOURCE_METADATA)
             return
 
-        # --- MCP 2026 server/discover probe ---
+        # --- Determine AI Console authentication (per-request ContextVar) ---
+        # Two independent consoles: Football (football.elo) and Crypto (crypto.btc.direction)
+        # Each has its own HMAC token; identity is per-token, no cross-predictor exception.
+        _is_console = False
+        _predictor = "football.elo"
+        _token_reset = None
+        _predictor_reset = None
         if method == "POST" and path == PATH:
-            chunks: list[bytes] = []
-            while True:
-                message = await receive()
-                if message.get("type") != "http.request":
-                    await self.app(scope, receive, send)
-                    return
-                chunks.append(message.get("body", b""))
-                if not message.get("more_body", False):
-                    break
-
-            body = b"".join(chunks)
             try:
-                payload = json.loads(body)
-            except (json.JSONDecodeError, UnicodeDecodeError):
-                payload = None
+                headers = scope.get("headers") or []
+                hdict = {k.decode("utf-8", "ignore").lower(): v.decode("utf-8", "ignore") for k, v in headers}
+                caller = hdict.get("x-omnisvera-caller", "")
+                token = hdict.get("x-omnisvera-console-token", "")
+                if caller == "omnisvera-ai-console" and token:
+                    matched_predictor = None
+                    if _CONSOLE_TOKEN and hmac.compare_digest(token, _CONSOLE_TOKEN):
+                        matched_predictor = "football.elo"
+                    elif _CRYPTO_TOKEN and hmac.compare_digest(token, _CRYPTO_TOKEN):
+                        matched_predictor = "crypto.btc.direction"
+                    if matched_predictor:
+                        client_host = ""
+                        try:
+                            client_host = (scope.get("client") or [""])[0]
+                        except Exception:
+                            client_host = ""
+                        if client_host in ("127.0.0.1", "::1", "::ffff:127.0.0.1") or (HOST == "127.0.0.1" and client_host == "127.0.0.1"):
+                            _is_console = True
+                            _predictor = matched_predictor
+            except Exception:
+                _is_console = False
+                _predictor = "football.elo"
+            _token_reset = _console_authenticated.set(_is_console)
+            _predictor_reset = _console_predictor.set(_predictor if _is_console else "football.elo")
 
-            if isinstance(payload, dict) and payload.get("method") == "server/discover":
-                response = json.dumps(
-                    {
-                        "jsonrpc": "2.0",
-                        "id": payload.get("id"),
-                        "error": {"code": -32601, "message": "Method not found"},
-                    },
-                    separators=(",", ":"),
-                ).encode("utf-8")
-                await self._send_json(scope, receive, send, 404, response)
+        try:
+            # --- MCP 2026 server/discover probe ---
+            if method == "POST" and path == PATH:
+                chunks: list[bytes] = []
+                while True:
+                    message = await receive()
+                    if message.get("type") != "http.request":
+                        await self.app(scope, receive, send)
+                        return
+                    chunks.append(message.get("body", b""))
+                    if not message.get("more_body", False):
+                        break
+
+                body = b"".join(chunks)
+                try:
+                    payload = json.loads(body)
+                except (json.JSONDecodeError, UnicodeDecodeError):
+                    payload = None
+
+                if isinstance(payload, dict) and payload.get("method") == "server/discover":
+                    response = json.dumps(
+                        {
+                            "jsonrpc": "2.0",
+                            "id": payload.get("id"),
+                            "error": {"code": -32601, "message": "Method not found"},
+                        },
+                        separators=(",", ":"),
+                    ).encode("utf-8")
+                    await self._send_json(scope, receive, send, 404, response)
+                    return
+
+                replayed = False
+
+                async def replay_receive() -> dict[str, Any]:
+                    nonlocal replayed
+                    if not replayed:
+                        replayed = True
+                        return {"type": "http.request", "body": body, "more_body": False}
+                    return await receive()
+
+                await self.app(scope, replay_receive, send)
                 return
 
-            replayed = False
-
-            async def replay_receive() -> dict[str, Any]:
-                nonlocal replayed
-                if not replayed:
-                    replayed = True
-                    return {"type": "http.request", "body": body, "more_body": False}
-                return await receive()
-
-            await self.app(scope, replay_receive, send)
-            return
-
-        await self.app(scope, receive, send)
+            await self.app(scope, receive, send)
+        finally:
+            if _token_reset is not None:
+                _console_authenticated.reset(_token_reset)
+            if _predictor_reset is not None:
+                _console_predictor.reset(_predictor_reset)
 
     async def _send_json(
         self,
