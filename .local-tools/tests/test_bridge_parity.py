@@ -1,6 +1,6 @@
 """Test bridge tool parity: registration vs exposure vs execution.
 
-Verifies that all 28 remote tools are:
+Verifies that all currently allowlisted remote tools are:
 1. Registered in CORE_REGISTRY
 2. Exposed via REMOTE_TOOL_NAMES
 3. Callable via MCP protocol without Unknown tool errors
@@ -33,9 +33,11 @@ class TestBridgeParity(unittest.TestCase):
         )
 
     def test_remote_tool_count(self):
-        """REMOTE_TOOL_NAMES must have exactly 28 tools."""
+        """The current contract adds Experience and world context to the old surface."""
         from omnisvera_mcp.bridge import REMOTE_TOOL_NAMES
-        self.assertEqual(len(REMOTE_TOOL_NAMES), 28)
+        self.assertEqual(len(REMOTE_TOOL_NAMES), 31)
+        self.assertEqual(len(set(REMOTE_TOOL_NAMES)), len(REMOTE_TOOL_NAMES))
+        self.assertNotIn("epistemic.create_prediction", REMOTE_TOOL_NAMES)
 
     def test_core_registry_count(self):
         """CORE_REGISTRY must have at least 28 tools (may have extras)."""
@@ -91,9 +93,9 @@ class TestBridgeParity(unittest.TestCase):
         self.assertIsNotNone(bindings)
 
     def test_bridge_tool_count_matches(self):
-        """FastMCP instance must expose exactly 28 tools after registration."""
+        """FastMCP must expose the allowlist exactly, without duplicate names."""
         from mcp.server.fastmcp import FastMCP
-        from omnisvera_mcp.bridge import register_remote_bridge_tools
+        from omnisvera_mcp.bridge import register_remote_bridge_tools, REMOTE_TOOL_NAMES
         import mcp_server
 
         mcp = FastMCP("test-bridge")
@@ -101,7 +103,8 @@ class TestBridgeParity(unittest.TestCase):
 
         # FastMCP stores tools internally
         tool_count = len(mcp._tool_manager._tools)
-        self.assertEqual(tool_count, 28, f"FastMCP exposes {tool_count} tools, expected 28")
+        self.assertEqual(tool_count, len(REMOTE_TOOL_NAMES))
+        self.assertEqual(set(mcp._tool_manager._tools), set(REMOTE_TOOL_NAMES))
 
 
 class TestBridgeDispatch(unittest.TestCase):
@@ -176,11 +179,12 @@ class TestBridgeDispatch(unittest.TestCase):
             self.assertEqual(item["status"], "awaiting_evidence")
 
     def test_world_describe_football(self):
-        """world.describe('football') must return provider 'FakeFootballDataProvider'."""
+        """world.describe reports the provider installed by the production registry."""
         result = self.registry.invoke("world.describe", self.ctx, {"world_id": "football"})
         data = json.loads(result)
         self.assertEqual(data["world_id"], "football")
-        self.assertEqual(data["metadata"]["provider"], "FakeFootballDataProvider")
+        # Production deliberately defaults to HTTP; fake data must be injected by a fixture.
+        self.assertEqual(data["metadata"]["provider"], "HttpFootballDataProvider")
 
     def test_world_observe_football(self):
         """world.observe('football') must return a WorldObservation with schema 'football.match.v1'."""

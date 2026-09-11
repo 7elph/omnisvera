@@ -29,10 +29,12 @@ class MemoryBootstrapTests(unittest.TestCase):
         result = apply_bootstrap(self.store)
 
         self.assertEqual(result, {"inserted": 4, "skipped": 0})
-        self.assertEqual(
-            self.store.stats()["counts"],
-            {"memory_items": 4, "memory_sources": 8, "project_states": 0, "audit_events": 0},
-        )
+        counts = self.store.stats()["counts"]
+        self.assertEqual(counts["memory_items"], 4)
+        self.assertEqual(counts["memory_sources"], 8)
+        # Bootstrap must not populate any later domain tables either.
+        self.assertTrue(all(value == 0 for name, value in counts.items()
+                            if name not in {"memory_items", "memory_sources"}))
         for seed in MEMORY_SEED_V0_1:
             item = self.store.get_memory(seed["id"])
             self.assertEqual(item["type"], seed["type"])

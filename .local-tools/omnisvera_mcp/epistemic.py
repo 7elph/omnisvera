@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+from contextlib import closing
 from datetime import datetime, timezone
 from typing import Any
 
@@ -681,15 +682,15 @@ def validate_candidate(
                 h_dt = h_dt.replace(tzinfo=timezone.utc)
             if h_dt <= datetime.now(timezone.utc):
                 errors.append("prospective prediction horizon must be in the future at commit time")
-        except Exception:
-            pass
+        except (ValueError, TypeError):
+            errors.append("horizon must be an absolute ISO-8601 timestamp")
 
     # Snapshot validation
     snapshot_id = str(candidate.get("model_snapshot_id", "")).strip()
     if not snapshot_id:
         errors.append("model_snapshot_id is required")
     else:
-        with store._connect() as conn:
+        with closing(store._connect()) as conn:
             snap = conn.execute(
                 "SELECT id, content FROM memory_items WHERE id=?", (snapshot_id,),
             ).fetchone()

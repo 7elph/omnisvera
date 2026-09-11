@@ -28,6 +28,7 @@ import sys
 import types as _types
 import tempfile
 import json
+from contextlib import closing
 from pathlib import Path
 
 LOCAL_TOOLS = Path(__file__).resolve().parents[1]
@@ -183,7 +184,7 @@ def test_snapshot_adulterated():
     )
     # Tamper with snapshot content
     item = store.get_memory(snap)
-    with store._connect() as conn:
+    with closing(store._connect()) as conn, conn:
         conn.execute(
             "UPDATE memory_items SET content=? WHERE id=?",
             (json.dumps({"tampered": True}), snap),
@@ -289,7 +290,7 @@ def test_epistemic_immutable():
     pred_before = store.get_prediction(pred_id)
     # Try to update (should fail due to immutability trigger)
     try:
-        with store._connect() as conn:
+        with closing(store._connect()) as conn, conn:
             conn.execute(
                 "UPDATE predictions SET claim='hacked' WHERE id=?", (pred_id,)
             )

@@ -22,13 +22,14 @@ WRITE_TOOL_NAMES = {
     "epistemic.snapshot_from_model",
     "epistemic.create_prediction",
     "epistemic.resolve_prediction",
+    "epistemic.resolve_due_predictions",
 }
 
 
 class OpenCodeMcpTests(unittest.TestCase):
     def test_allowlist_and_identity_are_internal(self):
         tools = asyncio.run(facade.mcp.list_tools())
-        self.assertEqual(tuple(tool.name for tool in tools), REMOTE_TOOL_NAMES)
+        self.assertCountEqual([tool.name for tool in tools], REMOTE_TOOL_NAMES)
         for tool in tools:
             self.assertEqual(tool.annotations.readOnlyHint, tool.name not in WRITE_TOOL_NAMES)
             self.assertFalse(tool.annotations.destructiveHint)
@@ -62,7 +63,7 @@ class OpenCodeMcpTests(unittest.TestCase):
                 async with ClientSession(read, write) as session:
                     await session.initialize()
                     discovered = await session.list_tools()
-                    self.assertEqual(tuple(tool.name for tool in discovered.tools), REMOTE_TOOL_NAMES)
+                    self.assertCountEqual([tool.name for tool in discovered.tools], REMOTE_TOOL_NAMES)
                     result = await session.call_tool("memory.list", {"limit": 5})
                     self.assertFalse(result.isError)
                     self.assertIsInstance(json.loads(result.content[0].text), list)

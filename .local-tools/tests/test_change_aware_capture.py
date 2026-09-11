@@ -11,6 +11,7 @@ F) operational signals identifiable and excludable from domain dataset
 from __future__ import annotations
 
 import json
+from contextlib import closing
 import tempfile
 from datetime import datetime, timezone
 from pathlib import Path
@@ -298,7 +299,7 @@ class TestSchedulerGap:
             )
 
         # Query telemetry: should see gap
-        with store._connect() as conn:
+        with closing(store._connect()) as conn, conn:
             runs = conn.execute(
                 "SELECT run_id, run_started_at FROM scheduler_runs WHERE world_id='football' ORDER BY run_started_at"
             ).fetchall()
@@ -571,7 +572,7 @@ class TestTelemetry:
             signals_unchanged=0,
         )
 
-        with store._connect() as conn:
+        with closing(store._connect()) as conn, conn:
             row = conn.execute(
                 "SELECT * FROM scheduler_runs WHERE run_id='run-001'"
             ).fetchone()
@@ -598,7 +599,7 @@ class TestTelemetry:
             error="Connection timeout",
         )
 
-        with store._connect() as conn:
+        with closing(store._connect()) as conn, conn:
             row = conn.execute(
                 "SELECT * FROM scheduler_runs WHERE run_id='run-002'"
             ).fetchone()

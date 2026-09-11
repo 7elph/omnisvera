@@ -23,13 +23,14 @@ WRITE_TOOL_NAMES = {
     "epistemic.snapshot_from_model",
     "epistemic.create_prediction",
     "epistemic.resolve_prediction",
+    "epistemic.resolve_due_predictions",
 }
 
 
 class BridgeContractTests(unittest.TestCase):
     def test_remote_discovery_is_exactly_the_bounded_allowlist(self) -> None:
         tools = asyncio.run(mcp_http_server.mcp.list_tools())
-        self.assertEqual(tuple(tool.name for tool in tools), REMOTE_TOOL_NAMES)
+        self.assertCountEqual([tool.name for tool in tools], REMOTE_TOOL_NAMES)
         for tool in tools:
             self.assertEqual(tool.annotations.readOnlyHint, tool.name not in WRITE_TOOL_NAMES)
             self.assertEqual(tool.annotations.idempotentHint, tool.name not in WRITE_TOOL_NAMES)

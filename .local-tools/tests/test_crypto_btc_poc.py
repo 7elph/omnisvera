@@ -3,6 +3,8 @@ import gc
 import sys
 import tempfile
 import unittest
+import sqlite3
+from datetime import datetime, timezone
 from pathlib import Path
 from unittest.mock import patch
 
@@ -16,6 +18,11 @@ from omnisvera_mcp.experience.crypto_btc import CryptoBtcDirectionUpdater, direc
 
 class CryptoPoCTest(unittest.TestCase):
     def setUp(self):
+        # Coinbase minute fixtures and prospective commit share an explicit clock.
+        self.clock = self.enterContext(patch.object(epistemic, "datetime", wraps=datetime))
+        self.clock.now.return_value = datetime(2026, 1, 1, 0, 0, 20, tzinfo=timezone.utc)
+        self.enterContext(patch("omnisvera_mcp.memory.store.utc_now",
+                                side_effect=lambda: self.clock.now.return_value.isoformat()))
         self.tmp = tempfile.TemporaryDirectory()
         self.addCleanup(self.tmp.cleanup)
         self.addCleanup(gc.collect)
@@ -42,6 +49,37 @@ class CryptoPoCTest(unittest.TestCase):
             self.assertFalse(json.loads(epistemic.validate_candidate(self.store,self.ctx,{"candidate":bad}))["valid"])
         bad = dict(self.candidate, experience_state_hash="bad")
         self.assertFalse(json.loads(epistemic.validate_candidate(self.store,self.ctx,{"candidate":bad}))["valid"])
+
+    def test_horizon_at_commit_time_is_rejected(self):
+        self.assertTrue(json.loads(epistemic.validate_candidate(self.store, self.ctx,
+                             {"candidate": self.candidate}))["valid"])
+        self.clock.now.return_value = datetime(2026, 1, 1, 1, tzinfo=timezone.utc)
+        with self.assertRaisesRegex(ValueError, "horizon must be in the future"):
+            epistemic.commit_candidate(self.store, self.ctx, {"candidate": self.candidate})
+        self.assertEqual(self.store.stats()["counts"]["predictions"], 0)
+
+    def test_non_iso_horizon_is_invalid_before_commit(self):
+        candidate = dict(self.candidate, horizon="until tomorrow")
+        self.assertFalse(json.loads(epistemic.validate_candidate(self.store, self.ctx,
+                              {"candidate": candidate}))["valid"])
+        with self.assertRaisesRegex(ValueError, "ISO-8601"):
+            epistemic.commit_candidate(self.store, self.ctx, {"candidate": candidate})
+
+    def test_validation_closes_every_database_connection(self):
+        connections = []
+        connect = self.store._connect
+        def tracked_connect():
+            connection = connect()
+            connections.append(connection)
+            return connection
+        with patch.object(self.store, "_connect", side_effect=tracked_connect):
+            result = json.loads(epistemic.validate_candidate(self.store, self.ctx,
+                                              {"candidate": self.candidate}))
+        self.assertTrue(result["valid"])
+        self.assertTrue(connections)
+        for connection in connections:
+            with self.assertRaises(sqlite3.ProgrammingError):
+                connection.execute("SELECT 1")
 
     def test_identity_and_idempotence(self):
         wrong = CallContext(actor="football.elo",client="omnisvera-ai-console",transport="streamable-http",
@@ -71,7 +109,22 @@ class CryptoPoCTest(unittest.TestCase):
             resolve_direction(pred,now="2026-01-01T01:01:00Z",fetch=lambda a,b,c:[[a,0,0,0,200,0]])
 
     def test_dry_run_and_runtime_v2(self):
+        from omnisvera_mcp.world import CoreStateVectorBuilder
+        from omnisvera_mcp.experience.runtime import process_experience_update_event
+        from omnisvera_mcp.experience.updater import ExperienceUpdaterRegistry
+        from contextlib import closing
+        model = CoreStateVectorBuilder().build(world_id="crypto", signals=[{
+            "signal_id": "crypto.price", "entity_ref": "BTC", "value": 100,
+            "observed_at": "2026-01-01T00:00:00Z", "value_type": "number",
+        }], patterns=[])
+        snapshot = json.loads(epistemic.snapshot_from_model(self.store, self.ctx,
+                                                    {"model": model.as_dict()}))
+        self.candidate["model_snapshot_id"] = snapshot["snapshot_id"]
+        self.candidate["model_id"] = model.model_id
+        self.assertTrue(json.loads(epistemic.validate_candidate(self.store, self.ctx,
+                                    {"candidate": self.candidate}))["valid"])
         first=json.loads(epistemic.commit_candidate(self.store,self.ctx,{"candidate":self.candidate}))
+        self.clock.now.return_value = datetime(2026, 1, 1, 1, 1, tzinfo=timezone.utc)
         evidence=dict(outcome=1,evidence=dict(reference_price=100,horizon_price=110,
             reference_observed_at=self.rule["reference_observed_at"],horizon_observed_at=self.candidate["horizon"],source=SOURCE))
         def fixture(start,end,granularity):
@@ -86,6 +139,28 @@ class CryptoPoCTest(unittest.TestCase):
         self.assertEqual(latest["state_version"],2)
         self.assertEqual(latest["learned_state"],direction_state(4,2))
         self.assertTrue(latest["integrity_ok"])
+        self.assertEqual(latest["previous_experience_id"], self.exp["experience_id"])
+        persisted = self.store.get_prediction(first["prediction_id"])
+        self.assertEqual(persisted["predictor_id"], self.ctx.actor)
+        self.assertEqual(persisted["experience_id"], self.exp["experience_id"])
+        self.assertEqual(persisted["experience_state_version"], 1)
+        self.assertEqual(persisted["experience_state_hash"], self.exp["learned_state_hash"])
+        self.assertEqual(persisted["candidate_hash"], first["candidate_hash"])
+        self.assertTrue(self.store.get_memory(snapshot["snapshot_id"])["sources"])
+        events = self.store.experience_update_list(world_id="crypto")
+        self.assertEqual(len(events), 1)
+        self.assertEqual(events[0]["status"], "applied")
+        updaters = ExperienceUpdaterRegistry()
+        updaters.register(CryptoBtcDirectionUpdater())
+        for _ in range(2):
+            process_experience_update_event(self.store, updaters, events[0]["update_event_id"])
+        self.assertEqual(len(self.store.experience_history("crypto", "crypto.btc.direction", "v1")), 2)
+        with self.assertRaisesRegex(ValueError, "already resolved"):
+            self.store.resolve_prediction(first["prediction_id"], outcome=1)
+        with closing(self.store._connect()) as connection:
+            rows = connection.execute("SELECT calibration_score FROM prediction_resolutions").fetchall()
+            self.assertEqual(len(rows), 1)
+            self.assertAlmostEqual(rows[0][0], (4/7-1)**2, places=7)
         again=json.loads(epistemic.resolve_due_predictions(self.store,self.ctx,{"now":"2026-12-01T00:00:00Z"}))
         self.assertEqual(again["examined"],0)
 

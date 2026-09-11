@@ -45,7 +45,7 @@ class MemoryTests(unittest.TestCase):
     def tearDown(self):
         self.temporary.cleanup()
 
-    def test_schema_has_exactly_the_four_core_tables_and_provenance(self):
+    def test_schema_preserves_core_tables_and_versioned_domain_tables(self):
         identifier = self.store.add_memory(
             namespace="sage", item_type="decision", title="Boundary", content="Use API",
             sources=[{"source_type": "adr", "source_ref": "ADR-001", "relation": "supports"}],
@@ -55,7 +55,10 @@ class MemoryTests(unittest.TestCase):
             tables = {row[0] for row in connection.execute(
                 "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'"
             )}
-        self.assertEqual(tables, {"memory_items", "memory_sources", "project_states", "audit_events"})
+        # The Experience/signal/prediction migrations extend, not replace, Cut 3.
+        self.assertEqual(tables, {"memory_items", "memory_sources", "project_states", "audit_events",
+                                 "predictions", "prediction_resolutions", "signal_observations",
+                                 "scheduler_runs", "predictor_experiences", "experience_update_events"})
         self.assertEqual(memory["sources"][0]["source_ref"], "ADR-001")
 
     def test_equal_project_state_is_deduplicated(self):

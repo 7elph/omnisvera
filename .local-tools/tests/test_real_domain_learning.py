@@ -211,8 +211,9 @@ class RealDomainLearningTests(unittest.TestCase):
         print(f"verdict: {verdict}")
         metrics["verdict"] = verdict
         # Assertions for test
-        self.assertEqual(len(eval_set), 1520)
-        self.assertEqual(metrics["final_version"], initial["state_version"] + 1520)
+        # PRE_REG_RUN evaluates EPL_2324 only; the old four-season assertion is obsolete.
+        self.assertEqual(len(eval_set), 380)
+        self.assertEqual(metrics["final_version"], initial["state_version"] + len(eval_set))
         self.assertEqual(len(lineage), 2)
         self.assertIn(verdict, ["NO_DOMAIN_LEARNING_ADVANTAGE","CONDITIONAL_DOMAIN_LEARNING_ADVANTAGE","PRELIMINARY_DOMAIN_LEARNING_ADVANTAGE"])
         # Store for external inspection

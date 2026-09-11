@@ -29,6 +29,7 @@ import types as _types
 import hashlib
 import tempfile
 import json
+from contextlib import closing
 from pathlib import Path
 
 LOCAL_TOOLS = Path(__file__).resolve().parents[1]
@@ -329,7 +330,7 @@ def test_unique_protection():
         patterns_used=[{"signal_id": "s.a", "pattern_type": "trend"}],
     )
     try:
-        with store._connect() as conn:
+        with closing(store._connect()) as conn, conn:
             conn.execute(
                 "INSERT INTO predictions (domain, snapshot_memory_id, snapshot_hash, claim, "
                 "probability, horizon, resolution_rule_json, evidence_mode, predictor_id, "
@@ -354,7 +355,7 @@ def test_snapshot_adulterated():
         probability=0.5, horizon="1h", resolution_rule={"type": "binary"},
     )
     # Tamper snapshot
-    with store._connect() as conn:
+    with closing(store._connect()) as conn, conn:
         conn.execute("UPDATE memory_items SET content=? WHERE id=?",
                      (json.dumps({"tampered": True}), snap))
     cand = _make_candidate(snap)

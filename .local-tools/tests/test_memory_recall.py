@@ -196,8 +196,9 @@ class MemoryRecallTests(unittest.TestCase):
     def test_public_schemas_and_explicit_remote_allowlist(self):
         local = {tool.name: tool.inputSchema for tool in asyncio.run(self.mcp.list_tools())}
         remote = {tool.name: tool for tool in asyncio.run(self.remote.list_tools())}
-        self.assertEqual(set(remote), {"system.health", "get_handoff", "get_companion_state",
-                                      "memory.get", "memory.list", "memory.search", "memory.recent"})
+        from omnisvera_mcp.bridge import REMOTE_TOOL_NAMES
+        self.assertEqual(set(remote), set(REMOTE_TOOL_NAMES))
+        self.assertNotIn("epistemic.create_prediction", remote)
         for name in ("memory.search", "memory.recent"):
             self.assertEqual(local[name], remote[name].inputSchema)
             properties = local[name]["properties"]
