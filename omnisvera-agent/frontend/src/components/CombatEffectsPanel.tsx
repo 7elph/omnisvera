@@ -3,7 +3,7 @@ import { CombatEffect, CombatEffectsState, getCombatEffects, sendCombatEffectCom
 
 type Props = { mode: "gm" | "player"; characters: PlayableCharacterSummary[]; tokens: WorkspaceToken[]; onChange: () => Promise<void> };
 const modifiers = { attack_bonus: 0, damage_bonus: 0, armor_class_bonus: 0, extra_attacks: 0, hp_per_round: 0 };
-const labels = { attack_bonus: "Ataque", damage_bonus: "Dano", armor_class_bonus: "CA", extra_attacks: "Ataques adicionais", hp_per_round: "PV por rodada (+ cura / − dano)" };
+const labels = { attack_bonus: "Ataque", damage_bonus: "Dano", armor_class_bonus: "CA", extra_attacks: "Ataques adicionais", hp_per_round: "PV por rodada (+ cura / − dano)", strength_bonus: "Força", movement_multiplier: "Multiplicador de movimento" };
 const blank = { id: "", label: "", source: "", duration: "rounds", rounds: 1, modifiers };
 
 export default function CombatEffectsPanel({ mode, characters, tokens, onChange }: Props) {
