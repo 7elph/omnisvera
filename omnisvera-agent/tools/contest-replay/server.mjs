@@ -1,0 +1,4 @@
+import {createServer} from 'node:http';
+import {readFile} from 'node:fs/promises';
+const routes={'/':['index.html','text/html'],'/style.css':['style.css','text/css'],'/app.js':['app.js','text/javascript'],'/proof.json':['proof.json','application/json']};
+createServer(async(req,res)=>{const route=routes[new URL(req.url,'http://localhost').pathname];if(!route||!['GET','HEAD'].includes(req.method)){res.writeHead(404);return res.end()};try{const body=await readFile(new URL('./dist/'+route[0],import.meta.url));res.writeHead(200,{'Content-Type':route[1]+'; charset=utf-8','Cache-Control':'no-store','Content-Security-Policy':"default-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'",'X-Content-Type-Options':'nosniff'});res.end(req.method==='HEAD'?undefined:body)}catch{res.writeHead(500);res.end('Presentation artifact unavailable')}}).listen(18910,'127.0.0.1',()=>console.log('Local replay: http://127.0.0.1:18910/'));

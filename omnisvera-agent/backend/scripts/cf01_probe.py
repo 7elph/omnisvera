@@ -35,6 +35,12 @@ def checked_database(raw):
 
 
 def configure(database):
+    database = checked_database(database)
+    # A copied database alone is not an isolated rehearsal: media uploads and
+    # note edits use vault_path, while the background indexer can replace the
+    # copied notes with operational content. Never inherit either host path.
+    vault = checked_database(database.with_suffix(".vault"))
+    vault.mkdir(parents=True, exist_ok=True)
     profiles = {
         "varkh": ("Varkh Nimalis", "Varkh Nimalis"), "raziel": ("Raziel", "Raziel"),
         "vezemir": ("Vezemir", "Vezemir"), "morthak": ("Morthak", "Morthak"),
@@ -43,6 +49,10 @@ def configure(database):
         "OMNISVERA_DB_PATH": str(database), "OMNISVERA_MASTER_TOKEN": TOKENS["gm"],
         "OMNISVERA_ACCESS_TOKEN": TOKENS["gm"], "OMNISVERA_PLAYER_TOKEN": "cf01-local-generic",
         "OMNISVERA_REBUILD_ON_STARTUP": "false", "OMNISVERA_TRAINING_CAPTURE_MODE": "off",
+        "OMNISVERA_VAULT_PATH": str(vault),
+        "OMNISVERA_SEMANTIC_INDEX_PATH": str(vault / ".local-index" / "vault.jsonl"),
+        "OMNISVERA_AUTO_REFRESH_INDEX": "false",
+        "OMNISVERA_BEHAVIOR_MEMORY_ENABLED": "false",
         "OLLAMA_BASE_URL": "http://127.0.0.1:1",
         "OMNISVERA_PLAYER_PROFILES_JSON": json.dumps({
             key: {"token": TOKENS[key], "character_path": f"Characters/Individual/{filename}.md", "character_title": title}
@@ -131,6 +141,8 @@ def main():
     parser.add_argument("action", choices=("prepare", "serve", "probe"))
     parser.add_argument("--database", required=True)
     parser.add_argument("--port", type=int, default=8871)
+    parser.add_argument("--frontend-dir", type=Path,
+                        help="Optional isolated Vite build; never replaces frontend/dist")
     args = parser.parse_args()
     database = checked_database(args.database)
     if args.action == "prepare":
@@ -148,7 +160,18 @@ def main():
         configure(database)
         sys.path.insert(0, str(BACKEND))
         import uvicorn
-        uvicorn.run("app.main:app", host="127.0.0.1", port=args.port, log_level="warning")
+        from app import main as companion
+        if args.frontend_dir:
+            from starlette.staticfiles import StaticFiles
+            build = args.frontend_dir.resolve()
+            if not (build / "index.html").is_file() or not (build / "assets").is_dir():
+                parser.error("--frontend-dir must contain index.html and assets/")
+            companion.FRONTEND_DIST = build
+            asset_route = next((route for route in companion.app.routes if getattr(route, "path", None) == "/assets"), None)
+            if asset_route is None:
+                parser.error("Existing /assets mount is required for an isolated frontend override")
+            asset_route.app = StaticFiles(directory=build / "assets")
+        uvicorn.run(companion.app, host="127.0.0.1", port=args.port, log_level="warning")
 
 
 if __name__ == "__main__":

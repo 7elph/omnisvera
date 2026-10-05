@@ -2643,6 +2643,23 @@ select {
 /* Session interactions added after the compact workspace normalization. */
 .workspace-map-canvas.locked { cursor: default; overflow: hidden; touch-action: none; }
 
+/* Health overlays must override the legacy map button span rule. */
+.workspace-map-stage > button .workspace-pin-health { margin: 0; padding: 0; background: transparent; }
+.workspace-map-stage > button .workspace-pin-health-track { display: block; margin: 0; padding: 0; background: #421d25; }
+.workspace-map-stage > button .workspace-pin-health-track > span { display: block; margin: 0; padding: 0; background: #d54460; }
+.workspace-map-stage > button .workspace-pin-health-number { display: block; margin: 0; padding: 0; font-size: 10px; }
+.unified-workspace .workspace-ally-attacks > label { grid-column: 1 / -1; }
+
+/* Compact combat cards and explicit HP below, never inside the avatar flex row. */
+.workspace-attack-pending { color: var(--om-muted); font-size: .55rem; line-height: 1.3; }
+.workspace-ally-attacks > label { display: flex; align-items: center; gap: .3rem; font-size: .55rem; padding: .3rem .45rem; }
+.workspace-ally-attacks > label select { min-width: 0; flex: 1; font-size: .55rem; height: 26px; padding: .2rem; }
+.workspace-ally-attacks > [role="status"], .workspace-ally-attacks > [role="alert"] { font-size: .6rem; padding: .4rem; }
+.workspace-map-token > .workspace-pin-health { position: absolute; top: calc(100% + 3px); left: 50%; transform: translateX(-50%); width: 52px; display: grid; gap: 2px; pointer-events: none; }
+.workspace-pin-health-track { display: block; height: 5px; border: 1px solid #080a0b; background: #421d25; overflow: hidden; border-radius: 2px; }
+.workspace-pin-health-track > span { display: block; height: 100%; background: #d54460; }
+.workspace-pin-health-number { display: block; color: #fff; background: rgba(5,6,7,.9); text-align: center; font-size: 10px; line-height: 13px; font-weight: 700; border-radius: 2px; }
+
 .workspace-gm-section > summary.workspace-action-card {
   display: grid; grid-template-columns: 28px minmax(0,1fr); grid-template-rows: auto auto;
   align-items: center; column-gap: .45rem; row-gap: .1rem; padding: .42rem;
@@ -3628,6 +3645,11 @@ input, textarea, select {
 .workspace-group-title, .workspace-ability-name { align-items: center; display: inline-flex !important; gap: .26rem; }
 .workspace-group-title img { border-radius: 2px; height: .62rem; object-fit: cover; width: .62rem; }
 .workspace-ability-name img { border-radius: 3px; height: 18px; object-fit: cover; width: 18px; }
+.workspace-ability-name { cursor: help; position: relative; }
+.workspace-ability-name .workspace-ability-tip { background: #101315; border: 1px solid #3a3f45; border-radius: 8px; box-shadow: 0 8px 24px rgba(0,0,0,.55); display: none; left: 0; max-width: 300px; min-width: 220px; padding: .5rem .6rem; position: absolute; top: calc(100% + 6px); z-index: 60; }
+.workspace-ability-name:hover .workspace-ability-tip, .workspace-ability-name:focus-within .workspace-ability-tip { display: block; }
+.workspace-ability-name .workspace-ability-tip p { color: #d7dbde; font-size: .72rem; font-weight: 400; line-height: 1.45; margin: 0 0 .35rem; white-space: normal; }
+.workspace-ability-name .workspace-ability-tip small { color: #9aa0a6; font-size: .62rem; font-weight: 400; }
 .workspace-attributes > div { display: grid; gap: .25rem; grid-template-columns: repeat(3,minmax(0,1fr)); }
 .workspace-attributes > div button {
   background: #151719;
@@ -4358,3 +4380,12 @@ input, textarea, select {
 }
 
 .workspace-map-canvas.locked { cursor: default; overflow: hidden; touch-action: none; }
+.workspace-target-line { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 8; overflow: visible; }
+.workspace-target-line line { stroke: #ffd36a; stroke-width: 3px; stroke-dasharray: 8 6; vector-effect: non-scaling-stroke; }
+.workspace-target-line ellipse { fill: none; stroke: #ffd36a; stroke-width: 2px; vector-effect: non-scaling-stroke; }
+.workspace-battle-banner { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .5rem; padding: .75rem 1rem; background: #28343c; border-bottom: 2px solid #ffd36a; color: #f8f3e8; }
+.workspace-map-panel:has(> .workspace-battle-banner) { grid-template-rows: auto auto minmax(0, 1fr) auto; }
+.workspace-map-panel:has(> .workspace-battle-banner) .workspace-map-upload,
+.workspace-map-panel:has(> .workspace-battle-banner) .workspace-map-select,
+.workspace-map-panel:has(> .workspace-battle-banner) .workspace-map-public-toggle { display: none; }
+.workspace-battle-banner { font-size: .75rem; }

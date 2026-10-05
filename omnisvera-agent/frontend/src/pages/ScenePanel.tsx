@@ -2,7 +2,6 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import {
   addSceneParticipant,
   applySceneConsequence,
-  createGameSession,
   createScene,
   createSceneElement,
   declareSceneAction,
@@ -33,10 +32,10 @@ import {
   sendPlayerNotification,
   updateSceneParticipant,
   updateScene,
-  updateGameSessionStatus,
   updateSceneStatus,
   WorkspaceToken,
 } from "../api";
+import NewSessionForm from "../components/NewSessionForm";
 
 const ACTIONS = [
   ["talk", "Conversar", "☷"], ["investigate", "Investigar", "⌕"], ["observe", "Observar", "◉"],
@@ -114,7 +113,6 @@ export default function ScenePanel({ mode, surface = "admin", viewerMode = mode 
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
   const [createDraft, setCreateDraft] = useState({ title: "", location_name: "", objective: "", public_description: "", private_notes: "", image_path: "", map_id: "", checklist: { ...EMPTY_CHECKLIST }, session_id: "" });
-  const [sessionTitle, setSessionTitle] = useState("");
   const [participantId, setParticipantId] = useState("");
   const [npcId, setNpcId] = useState("");
   const [monsterTokenId, setMonsterTokenId] = useState("");
@@ -228,20 +226,22 @@ export default function ScenePanel({ mode, surface = "admin", viewerMode = mode 
     return () => window.clearInterval(timer);
   }, [surface, viewerMode, notifications.length]);
 
-  async function run(operation: () => Promise<unknown>, message: string, preferredId?: number) {
+  async function run(operation: () => Promise<unknown>, message: string, preferredId?: number | (() => number | undefined)) {
     if (busy) return;
     setBusy(true); setError(""); setNotice("");
-    try { await operation(); setNotice(message); await refresh(preferredId); }
+    try { await operation(); setNotice(message); await refresh(typeof preferredId === "function" ? preferredId() : preferredId); }
     catch (cause) { setError(cause instanceof Error ? cause.message : "A operação não pôde ser concluída."); }
     finally { setBusy(false); }
   }
 
   async function submitScene() {
+    let createdId: number | undefined;
     await run(async () => {
       const created = await createScene({ request_id: newSceneRequestId("scene"), ...createDraft, checklist: { ...createDraft.checklist, identity: true }, session_id: createDraft.session_id ? Number(createDraft.session_id) : undefined, visibility: "table" });
+      createdId = created.id;
       setCreateDraft({ title: "", location_name: "", objective: "", public_description: "", private_notes: "", image_path: "", map_id: "", checklist: { ...EMPTY_CHECKLIST }, session_id: "" });
       setSelectedId(created.id);
-    }, "Cena criada.");
+    }, "Cena criada.", () => createdId);
   }
 
   async function declare() {
@@ -389,7 +389,13 @@ export default function ScenePanel({ mode, surface = "admin", viewerMode = mode 
   </div>;
 
   if (loading) return <section className="panel scene-page"><p className="muted">Preparando painel de cena...</p></section>;
-  if (!scene) return <section className="panel scene-page scene-empty"><div className="scene-empty-icon" aria-hidden="true">◌</div><h2>Nenhuma cena ativa</h2><p>{mode === "gm" ? "Crie uma cena e prepare mapa, pins e revelações antes de abri-la para a Mesa." : "O mestre ainda não iniciou uma cena."}</p>{notice && <p className="success-text" role="status">{notice}</p>}{error && <p className="warning-text" role="alert">{error}</p>}{mode === "gm" && renderSceneCreateForm()}</section>;
+  async function sessionCreated(id: number) {
+    setSessions(await listGameSessions());
+    setCreateDraft((current) => ({ ...current, session_id: String(id) }));
+    setNotice("Sessão iniciada. Crie a cena inicial vinculada a ela e adicione o grupo.");
+  }
+
+  if (!scene) return <section className="panel scene-page scene-empty"><div className="scene-empty-icon" aria-hidden="true">◌</div><h2>Nenhuma cena ativa</h2><p>{mode === "gm" ? "Crie uma cena e prepare mapa, pins e revelações antes de abri-la para a Mesa." : "O mestre ainda não iniciou uma cena."}</p>{notice && <p className="success-text" role="status">{notice}</p>}{error && <p className="warning-text" role="alert">{error}</p>}{mode === "gm" && <><NewSessionForm onCreated={sessionCreated} />{renderSceneCreateForm(true)}</>}</section>;
 
   return <section className={`panel scene-page ${surface === "live" ? "live-session-page" : "scene-admin-page"} ${touchLocked ? "touch-locked" : ""}`}>
     {surface === "live" && <div className="live-session-toolbar"><strong>Sessão em andamento</strong><button type="button" onClick={() => void document.documentElement.requestFullscreen?.()}>Modo TV</button><button type="button" onClick={() => setTouchLocked((current) => !current)}>{touchLocked ? "Desbloquear toque" : "Bloquear toque"}</button>{viewerMode === "player" && typeof Notification !== "undefined" && Notification.permission !== "granted" && <button type="button" onClick={() => void Notification.requestPermission()}>Ativar notificações</button>}</div>}
@@ -445,7 +451,7 @@ export default function ScenePanel({ mode, surface = "admin", viewerMode = mode 
     {mode === "gm" && scene.private_notes && <section className="scene-section scene-private-prep"><header><div><small>Somente Mestre</small><h3>Preparação da cena</h3></div></header><p>{scene.private_notes}</p></section>}
 
     {mode === "gm" && <section className="scene-section scene-npc-picker"><header><div><small>Preparação</small><h3>NPCs e inimigos</h3></div></header><div className="scene-inline-form"><select aria-label="NPC participante" value={npcId} onChange={(event) => setNpcId(event.target.value)}><option value="">Selecionar NPC...</option>{npcs.map((npc) => <option key={npc.id} value={npc.id}>{npc.name}</option>)}</select><button disabled={!npcId || busy} onClick={() => { const npc = npcs.find((item) => item.id === Number(npcId)); if (npc) void run(() => addSceneParticipant(scene.id, { participant_type: "npc", npc_name: npc.name, npc_source: `npc:${npc.id}`, public_label: npc.name, public_status: npc.public_status || "Presente", visible_to_players: npc.visible_to_players }), "NPC adicionado à cena.", scene.id); }}>Adicionar NPC</button></div><div className="scene-inline-form"><select aria-label="Inimigo preparado" value={monsterTokenId} onChange={(event) => setMonsterTokenId(event.target.value)}><option value="">Inimigo do mapa preparado...</option>{preparedMapMonsters.map((token) => <option key={token.id} value={token.id}>{token.name}</option>)}</select><button disabled={!monsterTokenId || busy} onClick={() => { const token = preparedMapMonsters.find((item) => item.id === monsterTokenId); if (token) void run(() => addSceneParticipant(scene.id, { participant_type: "creature", npc_name: token.name, npc_source: `map-token:${token.id}`, public_label: token.name, public_status: "Oculto", private_status: `${token.current_hp ?? "—"}/${token.maximum_hp ?? "—"} PV`, visible_to_players: false }), "Inimigo preparado e oculto.", scene.id); }}>Preparar oculto</button></div></section>}
-    {mode === "gm" && <details className="scene-admin-details scene-create-another"><summary>Administração de sessão e nova cena</summary><div className="scene-create-form"><label>Nova sessão<input value={sessionTitle} onChange={(event) => setSessionTitle(event.target.value)} /></label><button disabled={!sessionTitle || busy} onClick={() => void run(async () => { const session = await createGameSession({ request_id: newSceneRequestId("session"), title: sessionTitle }); await updateGameSessionStatus(session.id, "active"); setSessionTitle(""); }, "Sessão criada.", scene.id)}>Criar sessão</button></div>{renderSceneCreateForm(true)}</details>}
+    {mode === "gm" && <details className="scene-admin-details scene-create-another"><summary>Nova sessão e nova cena</summary><NewSessionForm onCreated={sessionCreated} />{renderSceneCreateForm(true)}</details>}
     </aside>
 
     <div className="scene-layout">

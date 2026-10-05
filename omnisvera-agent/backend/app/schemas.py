@@ -743,13 +743,32 @@ class AttackResolutionCreate(BaseModel):
     d20: int | None = Field(default=None, ge=1, le=20, strict=True)
     attack_count: int = Field(default=1, ge=1, le=10, strict=True)
     d20s: list[StrictInt] | None = Field(default=None, max_length=10)
+    weapon_item_path: str | None = Field(default=None, min_length=1, max_length=280)
+
+
+class TechniqueUse(BaseModel):
+    model_config = {"extra": "forbid"}
+    request_id: str | None = Field(default=None, min_length=8, max_length=120)
+    mode: str | None = Field(default=None, max_length=20)
+    charges: int | None = Field(default=None, ge=1, le=5)
+    attack: str | None = Field(default=None, pattern="^(melee|ranged)$")
+    target_type: str | None = Field(default=None, pattern="^(character|token)$")
+    target_id: str | None = Field(default=None, min_length=1, max_length=180)
+    resolution_id: str | None = Field(default=None, min_length=1, max_length=120)
+    roll_mode: str | None = Field(default=None, pattern="^(digital|physical)$")
+    d20: int | None = Field(default=None, ge=1, le=20, strict=True)
+    d20s: list[StrictInt] | None = Field(default=None, max_length=10)
+    attack_count: int | None = Field(default=None, ge=1, le=10)
+    latitude: float | None = Field(default=None, ge=0, le=100)
+    longitude: float | None = Field(default=None, ge=0, le=100)
+    map_id: str | None = Field(default=None, min_length=1, max_length=120)
 
 
 class CombatEffectCommand(BaseModel):
     model_config = {"extra": "forbid"}
     request_id: str = Field(min_length=8, max_length=120)
     expected_version: int = Field(ge=0)
-    action: str = Field(pattern="^(apply|remove|round|scene|rest|start|initiative|end)$")
+    action: str = Field(pattern="^(apply|remove|round|scene|rest|start|initiative|next_turn|end)$")
     payload: dict = Field(default_factory=dict)
 
 

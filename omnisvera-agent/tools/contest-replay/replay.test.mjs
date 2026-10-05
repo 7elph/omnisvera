@@ -1,0 +1,14 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import {advance,assertProof,stepCount,visualState,technicalField} from './dist/app.js';
+const proof=JSON.parse(readFileSync(new URL('./dist/proof.json',import.meta.url)));
+test('replay stops at the last step',()=>{let step=0;for(let i=0;i<30;i++)step=advance(step);assert.equal(step,stepCount)});
+test('presentation retains governed commit and Experience linkage',()=>assert.equal(assertProof(proof).prediction.id,17));
+test('mismatched Experience fails closed',()=>assert.throws(()=>assertProof({...proof,experience:{...proof.experience,hash:'wrong'}})));
+test('trace includes a single validate and commit in order',()=>{const calls=proof.traces['002B'].map(x=>x.tool);assert.equal(calls.filter(x=>x==='epistemic.commit_candidate').length,1);assert(calls.indexOf('epistemic.validate_candidate')<calls.indexOf('epistemic.commit_candidate'))});
+test('private paths and raw credentials are absent',()=>{assert(!JSON.stringify(proof).match(/C:\\|auth\.json|access_token|refresh_token/))});
+test('terminal error and fixture limitations are visible',()=>{assert(proof.limitations.some(x=>x.includes('usage limit')));assert(proof.limitations.some(x=>x.includes('fixture')))});
+test('static local resources exist',()=>{for(const name of ['style.css','app.js','proof.json'])assert(readFileSync(new URL('./dist/'+name,import.meta.url)).length>0)});
+test('pending active completed and not-issued remain distinct',()=>{assert.equal(visualState(1,0,false),'pending');assert.equal(visualState(1,1,true),'active');assert.equal(visualState(1,2,true),'completed');assert.equal(visualState(2,3,false),'not-issued');assert.equal(visualState(7,8,false),'completed')});
+test('explanation typography differs from identifiers',()=>{for(const k of ['Prompt','Between traces','Meaning of cold start','Replay timing','signalSource','result'])assert.equal(technicalField(k),false);for(const k of ['State hash','Experience ID','Committed (UTC)','actor','Model'])assert.equal(technicalField(k),true)});

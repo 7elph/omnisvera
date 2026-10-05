@@ -172,9 +172,10 @@ class SessionAbilityCatalogTests(unittest.TestCase):
         self.assertEqual(spells["Adaga de Osso"]["mechanics_status"], "partial")
         self.assertIn("Ataque básico", spells["Adaga de Osso"]["description"])
         self.assertEqual(spells["Levantar um Esqueleto"]["mechanics_status"], "partial")
-        self.assertIn("Nenhuma regra com esse nome foi localizada", spells["Levantar um Esqueleto"]["description"])
+        self.assertIn("Ruling de mesa travado", spells["Levantar um Esqueleto"]["description"])
+        self.assertIn("2º círculo", spells["Levantar um Esqueleto"]["description"])
         self.assertEqual(spells["Animar Mortos"]["mechanics_status"], "partial")
-        self.assertIn("5º círculo", spells["Animar Mortos"]["description"])
+        self.assertIn("Ruling de mesa travado", spells["Animar Mortos"]["description"])
         self.assertIn("3º círculo", spells["Animar Mortos"]["description"])
 
     def test_prompt_only_varkh_powers_remain_mechanically_partial(self) -> None:

@@ -1,14 +1,19 @@
 import { useRef, useState } from "react";
 import "./CharacterLevel.css";
+import LevelAdvancement from "./LevelAdvancement";
+import type { PlayableCharacter } from "../api";
 
 type Props = {
-  level: number;
+  level: number | null;
   experience: number | null;
   canEdit: boolean;
+  characterId?: string;
+  confirmedLevel?: number | null;
+  onApplied?: (character: PlayableCharacter) => Promise<void>;
   onSave: (fields: { level: number; experience: number }) => Promise<void>;
 };
 
-export default function CharacterLevel({ level, experience, canEdit, onSave }: Props) {
+export default function CharacterLevel({ level, experience, canEdit, onSave, characterId, onApplied, confirmedLevel }: Props) {
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState({ level: String(level), experience: String(experience ?? 0) });
   const [saving, setSaving] = useState(false);
@@ -29,13 +34,15 @@ export default function CharacterLevel({ level, experience, canEdit, onSave }: P
   }
 
   return <div className="character-level-control">
-    <strong className="character-level-number">{level}</strong><small>Nível</small>
+    <strong className="character-level-number">{level ?? "—"}</strong><small>Nível</small>
+    {canEdit && characterId && onApplied && typeof level === "number" && <LevelAdvancement key={`${characterId}:${level}:${confirmedLevel}`} id={characterId} level={level} confirmedLevel={confirmedLevel} onApplied={onApplied} />}
     {canEdit && <button type="button" className="character-level-edit" onClick={() => {
-      setDraft({ level: String(level), experience: String(experience ?? 0) }); setError(""); setEditing(true);
-    }}>Editar nível e XP</button>}
+      setDraft({ level: level == null ? "" : String(level), experience: String(experience ?? 0) }); setError(""); setEditing(true);
+    }}>Correção manual de nível e XP</button>}
     {canEdit && editing && <div className="character-level-backdrop">
       <form className="character-level-dialog" role="dialog" aria-modal="true" aria-label="Editar nível e experiência"
         onSubmit={(event) => { event.preventDefault(); void save(); }}>
+        <p>Correção administrativa: não calcula progressão nem concede benefícios de classe.</p>
         <label>Nível<input autoFocus type="number" min={1} max={20} step={1} required value={draft.level}
           disabled={saving} onChange={(event) => setDraft({ ...draft, level: event.target.value })} /></label>
         <label>Experiência<input type="number" min={0} max={2147483647} step={1} required value={draft.experience}

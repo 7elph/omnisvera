@@ -1,3 +1,5 @@
+import { readJson } from "./readJson";
+
 const API_BASE = import.meta.env.VITE_API_BASE_URL || "";
 const TOKEN_KEY = "omnisvera_access_token";
 const MODE_KEY = "omnisvera_access_mode";
@@ -477,7 +479,7 @@ export type PlayableCharacterDefinition = {
     armor_modifier_source?: { item_path: string; item_title: string; value: number; kind: string } | null;
     saving_throw?: string | number | null; saving_throw_bonus?: number | null; initiative?: number | null; initiative_configured?: boolean;
   } | null;
-  progression?: { experience?: number | null; base_attack?: number | null; maximum_hp?: number | null } | null;
+  progression?: { experience?: number | null; base_attack?: number | null; maximum_hp?: number | null; confirmed_level?: number | null } | null;
   movement?: string | null;
   base_equipment?: string[] | null;
   public_description?: string | null;
@@ -570,6 +572,8 @@ export type SessionLedgerEntry = {
 };
 
 export type WorkspaceTokenSheet = {
+  summon?: { caster: string; technique: string; duration?: string; corpse_id?: string | null };
+  reanimation_allowed?: boolean;
   marker?: string;
   role?: string;
   level?: number | null;
@@ -649,8 +653,11 @@ export type AttackResolution = {
   damage_modifier: number;
   damage_total: number;
   breakdown: {
+    automatic_hit?: boolean;
+    resource_cost?: { key: string; amount: number; state_version: number } | null;
     strikes?: Array<{ d20: number; attack_total: number; result: "hit" | "miss"; damage_total: number; damage_rolls: number[] }>;
     effects?: CombatEffect[];
+    manual_effects?: string[];
     attack?: { base_bonus?: number; equipment_bonus?: number; effect_bonus?: number; total_bonus?: number };
     damage?: { weapon_formula?: string; effective_formula?: string; rolls?: number[]; modifier?: number };
     equipment?: Array<{ item_path: string; item_title: string; role: string }>;
@@ -666,13 +673,19 @@ export type AttackResolution = {
 };
 
 export type CombatEffect = { id: string; target_type: "character" | "token"; target_id: string; label: string; source: string; duration: string; rounds: number | null; modifiers: Record<string, number>; updated_at: string };
-export type CombatEffectsState = { round: number; version: number; effects: CombatEffect[]; encounter?: { active?: boolean; title?: string; map_id?: string; participants?: Array<{target_type: string; target_id: string; name: string; initiative: number}> } };
+export type CombatEffectsState = { round: number; version: number; effects: CombatEffect[]; encounter?: { active?: boolean; battle_mode?: boolean; action_committed?: boolean; attacks_used?: number; attack_limit?: number; title?: string; map_id?: string; turn_index?: number; turn_sequence?: number; participants?: Array<{target_type: string; target_id: string; token_id?: string; controller_id?: string; name: string; initiative: number}> } };
 export type CombatTestView = { profile_id: string; character_name: string; receives_combat: boolean; state: CombatEffectsState };
 export type CombatTestViewsResponse = { enabled: boolean; table_mode: "digital" | "physical" | "test"; views: CombatTestView[] };
 export async function getCombatEffects(): Promise<CombatEffectsState> { return worldRequest("/combat/effects"); }
+export async function getCompanionRoster(): Promise<{ allies: WorkspaceToken[]; archived_character_ids: string[] }> {
+  return readJson(`${API_BASE}/gm/companions`, authHeaders(), "Falha ao carregar aliados do Mestre");
+}
+export async function resolveMonsterAttack(tokenId: string, payload: { request_id: string; attack_id: string; target_type: "character" | "token"; target_id: string; roll_mode: "digital" | "physical"; d20?: number }): Promise<AttackResolution> {
+  return worldRequest(`/gm/combat/tokens/${encodeURIComponent(tokenId)}/attacks/resolve`, { method: "POST", body: JSON.stringify(payload) });
+}
 export async function getCombatTestViews(): Promise<CombatTestViewsResponse> { return worldRequest("/gm/combat/test-views"); }
 export async function sendCombatEffectCommand(payload: { request_id: string; expected_version: number; action: string; payload: Record<string, unknown> }): Promise<CombatEffectsState> {
-  return worldRequest("/gm/combat/effects", { method: "POST", body: JSON.stringify(payload) });
+  return worldRequest(payload.action === "next_turn" ? "/combat/next-turn" : "/gm/combat/effects", { method: "POST", body: JSON.stringify(payload) });
 }
 
 export type SessionItem = {
@@ -1269,9 +1282,7 @@ export async function reviewCharacterSheet(profileId: string, status: "approved"
 }
 
 export async function listPlayableCharacters(): Promise<PlayableCharacterSummary[]> {
-  const response = await fetch(`${API_BASE}/characters`, { headers: authHeaders() });
-  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao carregar personagens");
-  return response.json();
+  return readJson(`${API_BASE}/characters`, authHeaders(), "Falha ao carregar personagens");
 }
 
 export async function sendPlayerNotification(payload: { profile_id: string; title: string; message: string }): Promise<PlayerEvent> {
@@ -1295,15 +1306,11 @@ export async function recordRuntimeEvent(eventType: string, payload: Record<stri
 
 export async function getSessionWorkspace(mapId?: string): Promise<WorkspaceSnapshot> {
   const query = mapId ? `?map_id=${encodeURIComponent(mapId)}` : "";
-  const response = await fetch(`${API_BASE}/workspace${query}`, { headers: authHeaders() });
-  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao carregar a mesa");
-  return response.json();
+  return readJson(`${API_BASE}/workspace${query}`, authHeaders(), "Falha ao carregar a mesa");
 }
 
 export async function listSessionLedger(limit = 500): Promise<SessionLedgerEntry[]> {
-  const response = await fetch(`${API_BASE}/workspace/ledger?limit=${Math.max(1, Math.min(1000, limit))}`, { headers: authHeaders() });
-  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao carregar registro da sessão");
-  return response.json();
+  return readJson(`${API_BASE}/workspace/ledger?limit=${Math.max(1, Math.min(1000, limit))}`, authHeaders(), "Falha ao carregar registro da sessão");
 }
 
 export async function connectSessionRealtime(onChange: (ledgerId: number) => void): Promise<() => void> {
@@ -1385,15 +1392,24 @@ export async function uploadWorkspaceMap(payload: { title: string; filename: str
 }
 
 export async function listWorkspaceMaps(): Promise<WorkspaceMap[]> {
-  const response = await fetch(`${API_BASE}/workspace/maps`, { headers: authHeaders() });
-  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao carregar mapas");
-  return response.json();
+  return readJson(`${API_BASE}/workspace/maps`, authHeaders(), "Falha ao carregar mapas");
+}
+
+export async function editWorkspaceMap(mapId: string, title?: string): Promise<void> {
+  const suffix = title === undefined ? "" : `/title?title=${encodeURIComponent(title)}`;
+  const response = await fetch(`${API_BASE}/gm/workspace/maps/${encodeURIComponent(mapId)}${suffix}`, {
+    method: title === undefined ? "DELETE" : "PATCH", headers: authHeaders(),
+  });
+  if (!response.ok) { const error = await response.json(); throw new Error(error.detail || "Falha ao alterar mapa"); }
+}
+
+export async function promoteCompanion(tokenId: string): Promise<void> {
+  const response = await fetch(`${API_BASE}/gm/companions/${encodeURIComponent(tokenId)}/promote`, {method: "POST", headers: authHeaders()});
+  if (!response.ok) { const error = await response.json(); throw new Error(error.detail || "Falha ao converter ficha"); }
 }
 
 export async function listWorkspaceIcons(): Promise<WorkspaceIcon[]> {
-  const response = await fetch(`${API_BASE}/workspace/icons`, { headers: authHeaders() });
-  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao carregar ícones");
-  return response.json();
+  return readJson(`${API_BASE}/workspace/icons`, authHeaders(), "Falha ao carregar ícones");
 }
 
 export async function uploadWorkspaceIcon(payload: { label: string; category: "map" | "items"; filename: string; content_type: string; data_base64: string }): Promise<WorkspaceIcon> {
@@ -1507,9 +1523,7 @@ export async function removeWorkspaceToken(tokenId: string): Promise<void> {
 }
 
 export async function listSessionItems(): Promise<SessionItem[]> {
-  const response = await fetch(`${API_BASE}/gm/workspace/items`, { headers: authHeaders() });
-  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao carregar itens da sessão");
-  return response.json();
+  return readJson(`${API_BASE}/gm/workspace/items`, authHeaders(), "Falha ao carregar itens da sessão");
 }
 
 export async function listWorkspaceTargetInventory(targetId: string): Promise<InventoryItem[]> {
@@ -1539,9 +1553,7 @@ export async function listWorkspaceMonsterCatalog(): Promise<MonsterCatalogRespo
 }
 
 export async function listWorkspaceLoot(): Promise<LootResolution[]> {
-  const response = await fetch(`${API_BASE}/workspace/loot`, { headers: authHeaders() });
-  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao carregar espólios");
-  return response.json();
+  return readJson(`${API_BASE}/workspace/loot`, authHeaders(), "Falha ao carregar espólios");
 }
 
 export async function resolveWorkspaceLoot(payload: {
@@ -1618,9 +1630,7 @@ export async function rechargeSessionItems(cycle: "scene" | "dawn"): Promise<{ c
 }
 
 export async function getPlayableCharacter(profileId: string): Promise<PlayableCharacter> {
-  const response = await fetch(`${API_BASE}/characters/${encodeURIComponent(profileId)}`, { headers: authHeaders() });
-  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao carregar ficha de jogo");
-  return response.json();
+  return readJson(`${API_BASE}/characters/${encodeURIComponent(profileId)}`, authHeaders(), "Falha ao carregar ficha de jogo");
 }
 
 export type CharacterNotes = { character_id: string; content: string; version: number; updated_at: string | null };
@@ -1718,6 +1728,7 @@ export async function resolveCharacterAttack(profileId: string, payload: {
   d20?: number;
   attack_count?: number;
   d20s?: number[];
+  weapon_item_path?: string;
 }): Promise<AttackResolution> {
   const response = await fetch(`${API_BASE}/characters/${encodeURIComponent(profileId)}/attacks/resolve`, {
     method: "POST",
@@ -1726,6 +1737,35 @@ export async function resolveCharacterAttack(profileId: string, payload: {
   });
   if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao resolver o ataque");
   return response.json();
+}
+
+export async function useCharacterTechnique(profileId: string, techniqueId: string, payload: {
+  request_id?: string;
+  mode?: string;
+  charges?: number;
+  attack?: "melee" | "ranged";
+  target_type?: "character" | "token";
+  target_id?: string;
+  resolution_id?: string;
+  roll_mode?: "digital" | "physical";
+  d20?: number;
+  d20s?: number[];
+  attack_count?: number;
+  latitude?: number;
+  longitude?: number;
+  map_id?: string;
+}): Promise<unknown> {
+  const response = await fetch(`${API_BASE}/characters/${encodeURIComponent(profileId)}/techniques/${encodeURIComponent(techniqueId)}`, {
+    method: "POST",
+    headers: authHeaders({ "Content-Type": "application/json" }),
+    body: JSON.stringify(payload),
+  });
+  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao usar a técnica");
+  return response.json();
+}
+
+export async function listPendingAttacks(): Promise<AttackResolution[]> {
+  return readJson<AttackResolution[]>(`${API_BASE}/combat/attacks/pending`, authHeaders(), "Falha ao recuperar ataques pendentes");
 }
 
 export async function confirmCharacterAttack(resolutionId: string): Promise<AttackResolution> {
@@ -1783,6 +1823,9 @@ export async function voidDiceRoll(rollId: number, reason: string): Promise<Dice
 }
 
 async function sceneRequest<T>(path: string, init?: RequestInit): Promise<T> {
+  if (!init || !init.method || init.method === "GET") {
+    return readJson<T>(`${API_BASE}${path}`, authHeaders(), "Falha ao carregar a cena ou sessão");
+  }
   const response = await fetch(`${API_BASE}${path}`, {
     ...init,
     headers: authHeaders(init?.body ? { "Content-Type": "application/json" } : undefined),
@@ -1791,6 +1834,18 @@ async function sceneRequest<T>(path: string, init?: RequestInit): Promise<T> {
   return response.json();
 }
 
+export type LevelPreview = {
+  status: "ready" | "blocked" | "applied"; source: string; fingerprint: string | null; hit_die?: number;
+  requires_hp_roll?: boolean; target_level?: number; xp_required?: number | null; xp_current?: number | null;
+  changes: { field: string; label: string; before: string | number; after: string | number; noop?: boolean; info?: boolean; current?: string | number | null; note?: string; old_maximum?: string | number | null }[];
+  warnings: string[]; blockers: string[];
+};
+export function previewLevel(id: string, hpRoll?: number, targetLevel?: number, hpPolicy = 'preserve_current'): Promise<LevelPreview> {
+  return sceneRequest(`/gm/characters/${encodeURIComponent(id)}/level/preview`, { method: "POST", body: JSON.stringify({ hp_roll: hpRoll, target_level: targetLevel, hp_policy: hpPolicy }) });
+}
+export function confirmLevel(id: string, fingerprint: string, hpRoll?: number, targetLevel?: number, hpPolicy = 'preserve_current'): Promise<{ applied: boolean; character: PlayableCharacter }> {
+  return sceneRequest(`/gm/characters/${encodeURIComponent(id)}/level/confirm`, { method: "POST", body: JSON.stringify({ fingerprint, hp_roll: hpRoll, target_level: targetLevel, hp_policy: hpPolicy }) });
+}
 export function newSceneRequestId(prefix = "scene") { return newDiceRequestId(prefix); }
 export async function listGameSessions(): Promise<GameSession[]> { return sceneRequest("/gm/sessions"); }
 export async function listCampaignSessions(): Promise<CampaignSession[]> { return sceneRequest("/sessions"); }

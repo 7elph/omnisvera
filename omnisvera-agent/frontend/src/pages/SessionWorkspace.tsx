@@ -1,7 +1,15 @@
 import { FormEvent, PointerEvent as ReactPointerEvent, useEffect, useMemo, useRef, useState } from "react";
 import MasterAssetPanel from "./MasterAssetPanel";
+import TokenVitals from "../components/TokenVitals";
+import CompanionAllySheet from "../components/CompanionAllySheet";
+import WorkspaceMapLibrary from "../components/WorkspaceMapLibrary";
+import PendingAttacks from "../components/PendingAttacks";
+import SpellResolution from "../components/SpellResolution";
+import AttackTargetLine from "../components/AttackTargetLine";
 import {
   applyCharacterStateAction,
+  getCombatEffects,
+  CombatEffectsState,
   AttackResolution,
   confirmCharacterAttack,
   connectSessionRealtime,
@@ -9,6 +17,7 @@ import {
   deleteSessionItem,
   getPlayableCharacter,
   getSessionWorkspace,
+  getCompanionRoster,
   heartbeatSessionWorkspace,
   listPlayableCharacters,
   listSessionLedger,
@@ -35,6 +44,7 @@ import {
   NoteSummary,
   rollCharacterAction,
   resolveCharacterAttack,
+  useCharacterTechnique,
   grantSessionItem,
   rechargeSessionItems,
   resolveWorkspaceLoot,
@@ -337,6 +347,20 @@ function EffectBreakdownModal({ title, base, effective, entries, onClose, onRoll
   return <div className="workspace-item-modal-backdrop" role="presentation" onClick={onClose}><section className="workspace-effect-breakdown" role="dialog" aria-modal="true" aria-label={`Detalhes de ${title}`} onClick={(event) => event.stopPropagation()}><header><div><small>COMPOSIÇÃO DO VALOR</small><h2>{title}</h2></div><button type="button" onClick={onClose}>×</button></header><strong className="workspace-effect-equation">{base ?? "—"} base {entries.filter((entry) => entry.active).map((entry) => `${entry.value >= 0 ? "+" : "−"} ${Math.abs(entry.value)}`).join(" ")} = {effective ?? "—"}</strong>{entries.map((entry) => <article key={`${entry.item_path}:${entry.rule_id}`} className={entry.active ? "" : "conditional"}><b>{entry.item_title}</b><span>{entry.value >= 0 ? "+" : ""}{entry.value} · {entry.label || entry.kind}</span>{entry.condition && <small>Condicional: {entry.condition}</small>}</article>)}{!entries.length && <p>Nenhum modificador de item está afetando este valor.</p>}{onRoll && <button type="button" onClick={onRoll}>Jogar teste</button>}</section></div>;
 }
 
+function AbilityName({ ability, icon }: { ability: SessionAbility; icon?: string }) {
+  const uses = ability.uses;
+  return <strong className="workspace-ability-name" tabIndex={0}>{icon ? <img src={icon} alt="" /> : null}{ability.name}
+    <span className="workspace-ability-tip" role="tooltip">
+      {ability.description ? <p>{ability.description}</p> : <p>Sem descrição cadastrada.</p>}
+      <small>
+        {uses ? `Custo: ${uses.cost || 1}× ${uses.label}` : "Sem custo de recurso"}
+        {ability.mechanics_status === "partial" ? " · Parcial — Mestre adjudica" : ""}
+        {ability.source ? ` · Fonte: ${ability.source}` : ""}
+      </small>
+    </span>
+  </strong>;
+}
+
 function abilityResource(ability: SessionAbility, resources: NonNullable<PlayableCharacter["state"]>["resources"]) {
   if (ability.uses?.resource_key) {
     const wanted = ability.uses.resource_key.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLocaleLowerCase("pt-BR").replace(/[^a-z0-9]+/g, "_").replace(/^_+|_+$/g, "");
@@ -346,16 +370,9 @@ function abilityResource(ability: SessionAbility, resources: NonNullable<Playabl
   return null;
 }
 
-const ATTACK_DAMAGE_BY_CHARACTER: Record<string, Record<string, string>> = {
-  morthak: { melee: "1d4", ranged: "1d4" },
-  varkh: { melee: "1d4", ranged: "1d4" },
-  raziel: { melee: "1d4", ranged: "1d4" },
-  vezemir: { melee: "2d6", ranged: "1d6" },
-};
-
 function attackDamage(characterId: string | undefined, attack: { id?: string; damage?: string | null }, equippedMeleeDamage?: string | null) {
   const equippedDamage = (attack.id === "melee" || attack.id === "ranged") ? equippedMeleeDamage : null;
-  return attack.damage || equippedDamage || ATTACK_DAMAGE_BY_CHARACTER[String(characterId || "").toLowerCase()]?.[String(attack.id || "").toLowerCase()] || "1d4";
+  return attack.damage || equippedDamage || "Dano não configurado";
 }
 
 async function fileAsBase64(file: File) {
@@ -380,6 +397,15 @@ async function fileAsBase64(file: File) {
 
 export default function SessionWorkspace({ mode, view = "table" }: Props) {
   const [characters, setCharacters] = useState<PlayableCharacterSummary[]>([]);
+  const [allies, setAllies] = useState<WorkspaceToken[]>([]);
+  const [archivedIds, setArchivedIds] = useState<string[]>(["varkh"]);
+  const [selectedAllyId, setSelectedAllyId] = useState("");
+  useEffect(() => {
+    const promoted = () => { setSelectedAllyId(""); setSelectedId("dorn7"); localStorage.setItem("omnisvera_selected_character", "dorn7"); };
+    window.addEventListener("omnisvera-companion-promoted", promoted);
+    return () => window.removeEventListener("omnisvera-companion-promoted", promoted);
+  }, []);
+  const [npcLibraryOpen, setNpcLibraryOpen] = useState(false);
   const [selectedId, setSelectedId] = useState(() => mode === "player" ? "" : localStorage.getItem("omnisvera_selected_character") || "");
   const [character, setCharacter] = useState<PlayableCharacter | null>(null);
   const [ledger, setLedger] = useState<SessionLedgerEntry[]>([]);
@@ -388,6 +414,8 @@ export default function SessionWorkspace({ mode, view = "table" }: Props) {
   const [message, setMessage] = useState("");
   const [condition, setCondition] = useState("");
   const [attackCountById, setAttackCountById] = useState<Record<string, number>>({});
+  const [attackWeaponById, setAttackWeaponById] = useState<Record<string, string>>({});
+  const [techniqueModeById, setTechniqueModeById] = useState<Record<string, string>>({});
   const [sessionNotes, setSessionNotes] = useState("");
   const [mapTitle, setMapTitle] = useState("");
   const [mapFile, setMapFile] = useState<File | null>(null);
@@ -436,18 +464,48 @@ export default function SessionWorkspace({ mode, view = "table" }: Props) {
   const [effectBreakdownOpen, setEffectBreakdownOpen] = useState<string | null>(null);
   const [equipMenuItemPath, setEquipMenuItemPath] = useState<string | null>(null);
   const [attackTargetById, setAttackTargetById] = useState<Record<string, string>>({});
+  const [aimedAttackId, setAimedAttackId] = useState('');
+  const [battleState, setBattleState] = useState<CombatEffectsState>({ round: 1, version: 0, effects: [] });
+  const [targetLine, setTargetLine] = useState<{ actorId?: string; targetId?: string }>({});
+  const battleActive = Boolean(battleState.encounter?.active && battleState.encounter?.battle_mode);
+  const battleCurrent = battleState.encounter?.participants?.[battleState.encounter.turn_index ?? 0];
+  useEffect(() => {
+    let alive = true;
+    const load = () => getCombatEffects().then(value => { if (alive) setBattleState(value); }).catch(() => {});
+    void load(); const timer = window.setInterval(load, 3000);
+    window.addEventListener('omnisvera-session-changed', load);
+    const aim = (event: Event) => setTargetLine((event as CustomEvent).detail || {});
+    window.addEventListener('omnisvera-attack-target', aim);
+    return () => { alive = false; window.clearInterval(timer); window.removeEventListener('omnisvera-session-changed', load); window.removeEventListener('omnisvera-attack-target', aim); };
+  }, []);
+  useEffect(() => {
+    setTargetLine({}); setAttackTargetById({}); setAttackWeaponById({});
+    if (battleActive && mode === 'gm') { setGmToolsOpen(true); if (combatPanelRef.current) combatPanelRef.current.open = true; }
+    if (battleActive) window.dispatchEvent(new CustomEvent('omnisvera-open-workspace', { detail: 'table' }));
+  }, [battleActive, battleState.encounter?.turn_sequence]);
+  useEffect(() => {
+    setTargetLine({ actorId: selectedId, targetId: attackTargetById[aimedAttackId] });
+  }, [attackTargetById, aimedAttackId, selectedId]);
   const [attackPhysicalD20ById, setAttackPhysicalD20ById] = useState<Record<string, string>>({});
   const [attackResolution, setAttackResolution] = useState<AttackResolution | null>(null);
+  const spellLockRef = useRef(false);
+  const spellRequestRef = useRef<{ key: string; id: string } | null>(null);
+  const techniqueRequestRef = useRef<{ key: string; id: string } | null>(null);
   const [targetPickerAttackId, setTargetPickerAttackId] = useState<string | null>(null);
   const [targetPickerAbilityId, setTargetPickerAbilityId] = useState<string | null>(null);
   const [loadingTokenDetail, setLoadingTokenDetail] = useState(false);
   const [busy, setBusy] = useState("");
   const [error, setError] = useState("");
+  const [syncError, setSyncError] = useState("");
   const timelineRef = useRef<HTMLDivElement>(null);
   const selectedIdRef = useRef(selectedId);
   const gmToolsOpenRef = useRef(gmToolsOpen);
   const charactersRef = useRef<PlayableCharacterSummary[]>([]);
   const refreshingRef = useRef(false);
+  const overviewRequestRef = useRef(0);
+  const characterRequestRef = useRef(0);
+  const currentModeRef = useRef(mode);
+  currentModeRef.current = mode;
   const mapViewportRef = useRef<HTMLDivElement>(null);
   const mapCanvasRef = useRef<HTMLDivElement>(null);
   const draggingTokenRef = useRef<DraggingToken | null>(null);
@@ -480,11 +538,13 @@ export default function SessionWorkspace({ mode, view = "table" }: Props) {
   const archiveItemsLoadedRef = useRef(false);
 
   async function loadOverview(forceAuxiliary = false) {
+    const request = ++overviewRequestRef.current;
     const fogVersionAtRequest = fogMutationVersionRef.current;
     const fogSavePendingAtRequest = fogSavePendingRef.current;
     const shouldLoadAuxiliary = forceAuxiliary || !workspaceAuxLoadedRef.current;
-    const [summaryItems, initialSnapshot, itemItems, ledgerItems, mapItems, iconItems, lootItems] = await Promise.all([
-      listPlayableCharacters(), getSessionWorkspace(mode === "player" ? playerMapIdRef.current || undefined : undefined), mode === "gm" && shouldLoadAuxiliary ? listSessionItems().catch(() => []) : Promise.resolve(null), listSessionLedger(150), mode === "player" || shouldLoadAuxiliary ? listWorkspaceMaps().catch(() => []) : Promise.resolve(null), mode === "gm" && shouldLoadAuxiliary ? listWorkspaceIcons().catch(() => []) : Promise.resolve(null), mode === "gm" && shouldLoadAuxiliary ? listWorkspaceLoot().catch(() => []) : Promise.resolve(null),
+    const [summaryItems, initialSnapshot, itemItems, ledgerItems, mapItems, iconItems, lootItems, companionRoster] = await Promise.all([
+      listPlayableCharacters(), getSessionWorkspace(mode === "player" ? playerMapIdRef.current || undefined : undefined), mode === "gm" && shouldLoadAuxiliary ? listSessionItems().catch(() => null) : Promise.resolve(null), listSessionLedger(150), mode === "player" || shouldLoadAuxiliary ? listWorkspaceMaps().catch(() => null) : Promise.resolve(null), mode === "gm" && shouldLoadAuxiliary ? listWorkspaceIcons().catch(() => null) : Promise.resolve(null), mode === "gm" && shouldLoadAuxiliary ? listWorkspaceLoot().catch(() => null) : Promise.resolve(null),
+      mode === "gm" ? getCompanionRoster().catch(() => null) : Promise.resolve(null),
     ]);
     let snapshot = initialSnapshot;
     if (
@@ -498,6 +558,8 @@ export default function SessionWorkspace({ mode, view = "table" }: Props) {
       // until the Master opens another map.
       snapshot = await getSessionWorkspace();
     }
+    if (request !== overviewRequestRef.current || currentModeRef.current !== mode) return;
+    if (companionRoster) { setAllies(companionRoster.allies); setArchivedIds(companionRoster.archived_character_ids); }
     if (mode === "player") activeMapIdRef.current = snapshot.active_map_id || "";
     const ordered = [...summaryItems].sort((a, b) => Number(b.access_level === "owner") - Number(a.access_level === "owner"));
     const currentSelection = selectedIdRef.current;
@@ -533,7 +595,9 @@ export default function SessionWorkspace({ mode, view = "table" }: Props) {
     }
     if (iconItems) setUploadedIcons(iconItems);
     if (lootItems) setLootResolutions(lootItems);
-    if (shouldLoadAuxiliary) workspaceAuxLoadedRef.current = true;
+    // A failed read is not an empty catalog: keep the confirmed data and retry.
+    if (shouldLoadAuxiliary) workspaceAuxLoadedRef.current = mapItems !== null
+      && (mode !== "gm" || (itemItems !== null && iconItems !== null && lootItems !== null));
     ledgerLoadedRef.current = true;
     setLedger(ledgerItems);
     if (preferred && preferred !== currentSelection) {
@@ -549,6 +613,7 @@ export default function SessionWorkspace({ mode, view = "table" }: Props) {
   }
 
   async function loadCharacter() {
+    const request = ++characterRequestRef.current;
     if (mode === "gm" && gmToolsOpenRef.current) {
       setCharacter(null);
       return;
@@ -556,6 +621,7 @@ export default function SessionWorkspace({ mode, view = "table" }: Props) {
     const activeId = selectedIdRef.current;
     if (!activeId) return;
     const detail = await getPlayableCharacter(activeId);
+    if (request !== characterRequestRef.current || selectedIdRef.current !== activeId || currentModeRef.current !== mode) return;
     setCharacter(detail);
     setSessionNotes(detail.state?.session_notes || "");
   }
@@ -579,17 +645,20 @@ export default function SessionWorkspace({ mode, view = "table" }: Props) {
   }, [gmToolsOpen]);
 
   useEffect(() => {
+    let active = true;
     void heartbeatSessionWorkspace().catch(() => undefined);
-    void loadOverview().catch((reason) => setError(reason instanceof Error ? reason.message : "Falha ao carregar a mesa."));
+    void loadOverview().catch((reason) => { if (active) setError(reason instanceof Error ? reason.message : "Falha ao carregar a mesa."); });
     const heartbeat = window.setInterval(() => void heartbeatSessionWorkspace().catch(() => undefined), 20_000);
     const leave = () => { if (mode === "player") void leaveSessionWorkspace().catch(() => undefined); };
     window.addEventListener("pagehide", leave);
-    const refresh = window.setInterval(() => {
-      if (refreshingRef.current || paintingFogRef.current || fogSavePendingRef.current || draggingTokenRef.current) return;
+    const refreshFromServer = () => {
+      if (!active || refreshingRef.current || paintingFogRef.current || fogSavePendingRef.current || draggingTokenRef.current) return;
       refreshingRef.current = true;
-      void loadOverview().then(loadCharacter).catch(() => undefined).finally(() => { refreshingRef.current = false; });
-    }, 15_000);
-    return () => { window.clearInterval(heartbeat); window.clearInterval(refresh); window.removeEventListener("pagehide", leave); leave(); };
+      void loadOverview().then(() => { if (active) return loadCharacter(); }).then(() => { if (active) setSyncError(""); }).catch(() => { if (active) setSyncError("Conexão interrompida. Mantendo o último estado confirmado e tentando atualizar novamente."); }).finally(() => { refreshingRef.current = false; });
+    };
+    const refresh = window.setInterval(refreshFromServer, 15_000);
+    window.addEventListener("online", refreshFromServer);
+    return () => { active = false; overviewRequestRef.current++; characterRequestRef.current++; window.clearInterval(heartbeat); window.clearInterval(refresh); window.removeEventListener("online", refreshFromServer); window.removeEventListener("pagehide", leave); leave(); };
   }, [mode]);
 
   useEffect(() => {
@@ -602,9 +671,11 @@ export default function SessionWorkspace({ mode, view = "table" }: Props) {
   }, [mode]);
 
   useEffect(() => {
+    let active = true;
     selectedIdRef.current = selectedId;
     setCharacter(null);
-    void loadCharacter().catch((reason) => setError(reason instanceof Error ? reason.message : "Falha ao carregar o personagem."));
+    void loadCharacter().catch((reason) => { if (active) setError(reason instanceof Error ? reason.message : "Falha ao carregar o personagem."); });
+    return () => { active = false; characterRequestRef.current++; };
   }, [selectedId, mode, gmToolsOpen]);
 
   useEffect(() => {
@@ -613,7 +684,7 @@ export default function SessionWorkspace({ mode, view = "table" }: Props) {
     const refreshFromRealtime = () => {
       if (!active || refreshingRef.current || paintingFogRef.current || fogSavePendingRef.current || draggingTokenRef.current) return;
       refreshingRef.current = true;
-      void loadOverview().then(loadCharacter).catch(() => undefined).finally(() => { refreshingRef.current = false; });
+      void loadOverview().then(() => { if (active) return loadCharacter(); }).then(() => { if (active) setSyncError(""); }).catch(() => { if (active) setSyncError("Conexão interrompida. Mantendo o último estado confirmado e tentando atualizar novamente."); }).finally(() => { refreshingRef.current = false; });
     };
     void connectSessionRealtime(refreshFromRealtime).then((stop) => {
       if (active) disconnect = stop;
@@ -716,7 +787,7 @@ export default function SessionWorkspace({ mode, view = "table" }: Props) {
     if (mode !== "gm" || busy || !characters.length) return;
     setBusy("rest-all"); setError("");
     try {
-      await Promise.all(characters.map((item) => applyCharacterStateAction(
+      await Promise.all(characters.filter(item => !archivedIds.includes(item.id)).map((item) => applyCharacterStateAction(
         item.id,
         "rest_at_inn",
         {},
@@ -753,23 +824,27 @@ export default function SessionWorkspace({ mode, view = "table" }: Props) {
     if (!selectedId || busy) return;
     setBusy(`roll:${rollType}:${sourceId || ""}`); setError("");
     try {
-      const createdRoll = await rollCharacterAction(selectedId, { request_id: newDiceRequestId("workspace"), roll_type: rollType, source_id: sourceId, target_value: targetValue, visibility: "table" });
+      // Players may only declare a difficulty in a private simulation (backend rule).
+      const visibility = mode === "player" && targetValue != null ? "private" : "table";
+      const createdRoll = await rollCharacterAction(selectedId, { request_id: newDiceRequestId("workspace"), roll_type: rollType, source_id: sourceId, target_value: targetValue, visibility });
       window.dispatchEvent(new CustomEvent("omnisvera-roll-created", { detail: createdRoll }));
       await refresh();
     } catch (reason) { setError(reason instanceof Error ? reason.message : "Não foi possível realizar a ação."); }
     finally { setBusy(""); }
   }
 
-  async function resolveSelectedAttack(attackId: string) {
+  async function resolveSelectedAttack(attackId: string, selectedTarget?: WorkspaceToken) {
     if (!selectedId || busy) return;
-    const target = attackTargetFor(attackId);
+    const target = selectedTarget || attackTargetFor(attackId);
     if (!target) {
       setError("Selecione um alvo antes de resolver o ataque.");
       return;
     }
     const rollMode = workspace.table_mode === "physical" ? "physical" : "digital";
     const allowed = character?.definition.attacks?.find(a => a.id === attackId)?.attack_count || 1;
-    const count = Math.min(allowed, attackCountById[attackId] || 1);
+    const remaining = battleActive ? Math.max(0, Math.min(allowed, battleState.encounter?.attack_limit ?? allowed) - (battleState.encounter?.attacks_used || 0)) : allowed;
+    const count = Math.min(remaining, attackCountById[attackId] || 1);
+    setTargetLine({ actorId: selectedId, targetId: target.id });
     const physicalValues = (attackPhysicalD20ById[attackId] || "").trim().split(/[ ,;]+/).map(Number);
     if (rollMode === "physical" && (physicalValues.length !== count || physicalValues.some(v => !Number.isInteger(v) || v < 1 || v > 20))) {
       setError(`Informe ${count} resultado(s) bruto(s) de d20, entre 1 e 20, separados por espaço.`);
@@ -785,6 +860,7 @@ export default function SessionWorkspace({ mode, view = "table" }: Props) {
         roll_mode: rollMode,
         attack_count: count,
         ...(rollMode === "physical" ? { d20s: physicalValues } : {}),
+        ...(attackWeaponById[attackId] ? { weapon_item_path: attackWeaponById[attackId] } : {}),
       });
       setAttackResolution(resolution);
     } catch (reason) {
@@ -800,6 +876,8 @@ export default function SessionWorkspace({ mode, view = "table" }: Props) {
     try {
       const confirmed = await confirmCharacterAttack(attackResolution.resolution_id);
       setAttackResolution(confirmed);
+      setTargetLine({}); setAttackTargetById({});
+      spellRequestRef.current = null;
       await refresh();
     } catch (reason) {
       setError(reason instanceof Error ? reason.message : "Não foi possível confirmar o ataque.");
@@ -809,6 +887,29 @@ export default function SessionWorkspace({ mode, view = "table" }: Props) {
   }
 
   async function useAbility(ability: SessionAbility, target?: WorkspaceToken) {
+    if (ability.id === 'adaga-de-osso') {
+      if (!target) { setTargetPickerAbilityId(ability.id); return; }
+      await resolveSelectedAttack('adaga-de-osso', target);
+      return;
+    }
+    if (ability.id === 'animar-mortos' && !target) { setTargetPickerAbilityId(ability.id); return; }
+    if (ability.id === "misseis-magicos" && ["morthak", "dorn7"].includes(character?.definition.id || "")) {
+      if (workspace.table_mode === "physical") { setError("Mísseis automáticos disponíveis no modo Digital. No modo Físico, peça resolução assistida ao Mestre."); return; }
+      if (!target) { setTargetPickerAbilityId(ability.id); return; }
+      setTargetLine({ actorId: selectedId, targetId: target.id });
+      if (spellLockRef.current || busy || !selectedId) return;
+      spellLockRef.current = true;
+      setBusy(`ability:${ability.id}`); setError("");
+      const key = `${selectedId}:${ability.id}:${target.id}`;
+      if (spellRequestRef.current?.key !== key) spellRequestRef.current = { key, id: newDiceRequestId("spell") };
+      try {
+        setAttackResolution(await resolveCharacterAttack(selectedId, { request_id: spellRequestRef.current.id,
+          attack_id: ability.id, target_type: "token", target_id: target.id, roll_mode: "digital" }));
+        // Resource and damage are applied together by the existing confirmation endpoint.
+      } catch (reason) { setError(reason instanceof Error ? reason.message : "Falha ao conferir a magia."); }
+      finally { spellLockRef.current = false; setBusy(""); }
+      return;
+    }
     const resource = abilityResource(ability, character?.state?.resources || []);
     if (ability.requires_equipped_item && !requiredItemForAbility(ability)) {
       setError(`Equipe ${ability.requires_equipped_item} para usar ${ability.name}.`);
@@ -816,6 +917,41 @@ export default function SessionWorkspace({ mode, view = "table" }: Props) {
     }
     if (ability.blocked) {
       setError(`${ability.name} ainda está bloqueado.`);
+      return;
+    }
+    if (ability.id === "lamina-de-sangue" || ability.id === "marca-rubra" || ability.id === "mordida" || ability.id === "forca-arcana" || ability.id === "velocidade" || ability.id === "animar-mortos" || ability.id === "levantar-esqueleto" || ability.id === 'levantar-um-esqueleto') {
+      if (!selectedId || busy) return;
+      setBusy(`ability:${ability.id}`); setError("");
+      try {
+        if (ability.id === "lamina-de-sangue") {
+          if (!target) { setTargetPickerAbilityId(ability.id); return; }
+          const parts = (techniqueModeById[ability.id] || "1:ranged").split(":");
+          const resolution = await useCharacterTechnique(selectedId, ability.id, {
+            charges: Math.max(1, Math.min(5, Number(parts[0]) || 1)),
+            attack: parts[1] === "melee" ? "melee" : "ranged",
+            target_type: "token", target_id: target.id, roll_mode: "digital",
+          }) as AttackResolution;
+          setAttackResolution(resolution);
+        } else if (ability.id === "forca-arcana" || ability.id === "velocidade" || ability.id === "animar-mortos" || ability.id === "levantar-esqueleto" || ability.id === 'levantar-um-esqueleto') {
+          const key = `${selectedId}:${ability.id}:${target?.id || ''}`;
+          if (techniqueRequestRef.current?.key !== key) techniqueRequestRef.current = { key, id: newDiceRequestId('technique') };
+          await useCharacterTechnique(selectedId, ability.id, { request_id: techniqueRequestRef.current.id, map_id: workspace.map?.id,
+            ...(target ? { target_type: 'token', target_id: target.id } : {}) });
+          techniqueRequestRef.current = null;
+        } else if (ability.id === "marca-rubra") {
+          if (!target) { setTargetPickerAbilityId(ability.id); return; }
+          await useCharacterTechnique(selectedId, ability.id, { target_type: "token", target_id: target.id });
+        } else {
+          const last = attackResolution;
+          if (!last || last.actor_character_id !== selectedId || last.result !== "hit" || (last.attack_id !== "melee" && last.attack_id !== "ranged")) {
+            setError("Mordida exige um acerto corpo a corpo ou à distância confirmado nesta sessão.");
+            return;
+          }
+          await useCharacterTechnique(selectedId, ability.id, { resolution_id: last.resolution_id });
+        }
+        await refresh();
+      } catch (reason) { setError(reason instanceof Error ? reason.message : "Falha ao usar a técnica."); }
+      finally { setBusy(""); }
       return;
     }
     if (ability.id === "caixao") {
@@ -901,6 +1037,7 @@ export default function SessionWorkspace({ mode, view = "table" }: Props) {
   }
 
   async function browseWorkspaceMap(mapId: string) {
+    if (battleActive && mapId !== battleState.encounter?.map_id) { setError('Encerre o combate antes de sair da arena.'); return; }
     if (mode !== "player" || !mapId || busy) return;
     playerMapIdRef.current = mapId;
     setPlayerMapId(mapId);
@@ -947,7 +1084,7 @@ export default function SessionWorkspace({ mode, view = "table" }: Props) {
       current_hp: hp,
       maximum_hp: hp,
       color: marker.color,
-      image_path: current.image_path || monster.image_path || "",
+      image_path: monsterImage ? current.image_path : monster.image_path || "",
       marker: marker.marker,
       role: monster.category || "Inimigo",
       level,
@@ -1069,7 +1206,7 @@ export default function SessionWorkspace({ mode, view = "table" }: Props) {
   }
 
   async function openTokenDetails(token: WorkspaceToken) {
-    if (token.character_id) {
+    if (token.token_type === 'character' && token.character_id) {
       const summary = characterById.get(token.character_id);
       if (mode !== "gm" && summary?.access_level !== "owner") return;
       selectedIdRef.current = token.character_id;
@@ -1459,7 +1596,7 @@ export default function SessionWorkspace({ mode, view = "table" }: Props) {
 
   const definition = character?.definition;
   const state = character?.state;
-  const canOperate = character?.access_level !== "public";
+  const canOperate = character?.access_level !== "public" && (!battleActive || mode === 'gm' || (battleCurrent?.target_id === selectedId && !battleState.encounter?.action_committed));
   const [hpDraft, setHpDraft] = useState<number | "">(state?.current_hp ?? "");
   useEffect(() => setHpDraft(state?.current_hp ?? ""), [selectedId, state?.current_hp]);
   const inventoryRemovalControls = <form onSubmit={removeManagedItem}>
@@ -1510,7 +1647,7 @@ export default function SessionWorkspace({ mode, view = "table" }: Props) {
     return groups;
   }, {});
   const basicAttacks = abilities.filter((item) => item.kind === "attack");
-  const equipmentAttacks = basicAttacks;
+  const equipmentAttacks = basicAttacks.filter(ability => !definition?.attacks?.some(attack => attack.id === ability.id));
   const catalogResourceKeys = new Set(
     abilities
       .filter((item) => Boolean(item.uses) && item.kind !== "resource")
@@ -1530,6 +1667,18 @@ export default function SessionWorkspace({ mode, view = "table" }: Props) {
     : meleeSlotWeapons[0] || legacyMeleeWeapons[0];
   const equippedRangedWeapon = equippedWeapons.find((item) => normalizedName(item.equipment_slot || "").includes("distancia"))
     || equippedWeapons.find((item) => !item.equipment_slot && itemLooksLikeRangedWeapon(item));
+  const rangedSlotWeapons = equippedWeapons.filter((item) => normalizedName(item.equipment_slot || "").includes("distancia"));
+  const legacyRangedWeapons = equippedWeapons.filter((item) => !item.equipment_slot && itemLooksLikeRangedWeapon(item));
+  const attackWeaponCandidates = (attackId: string) => {
+    // Mesma exceção do backend: Adagas de Espectro Fantasma podem ser arremessadas.
+    const throwingRelic = attackId === "ranged"
+      ? equippedWeapons.filter((item) => item.item_path.replace("\\", "/") === "Items/Adagas de Espectro Fantasma.md")
+      : [];
+    const ordered = attackId === "ranged" ? [...rangedSlotWeapons, ...throwingRelic, ...legacyRangedWeapons] : [...meleeSlotWeapons, ...legacyMeleeWeapons];
+    const seen = new Set<string>(); const unique: typeof ordered = [];
+    for (const item of ordered) { if (!seen.has(item.item_path)) { seen.add(item.item_path); unique.push(item); } }
+    return unique;
+  };
   const itemEffectBreakdown = definition?.item_effects?.breakdown || [];
   const openBreakdownEntries = effectBreakdownOpen === "armor"
     ? itemEffectBreakdown.filter((entry) => entry.kind === "armor_class_bonus")
@@ -1548,12 +1697,13 @@ export default function SessionWorkspace({ mode, view = "table" }: Props) {
   );
   const openToken = openTokenId ? workspace.tokens.find((token) => token.id === openTokenId) || null : null;
 
-  const attackTargets = workspace.tokens.filter((token) => token.token_type !== "location" && (mode === "gm" || token.character_id !== selectedId));
+  const battleMapTokens = battleActive ? workspace.tokens.filter(token => battleState.encounter?.participants?.some(p => p.target_type === 'token' ? p.target_id === token.id : token.token_type === 'character' && (p.token_id ? p.token_id === token.id : p.target_id === token.character_id))) : workspace.tokens;
+  const attackTargets = battleMapTokens.filter((token) => token.token_type !== "location" && (mode === "gm" || token.character_id !== selectedId));
   const defaultAttackRollMode: "digital" | "physical" = workspace.table_mode === "physical" ? "physical" : "digital";
   const attackTargetFor = (attackId: string) => attackTargets.find((token) => token.id === attackTargetById[attackId]);
   const attackTargetControl = (attackId: string) => {
     const target = attackTargetFor(attackId);
-    return <button type="button" className="workspace-attack-target" onClick={() => setTargetPickerAttackId((current) => current === attackId ? null : attackId)}>{target ? `Alvo: ${target.name}` : "Selecionar alvo"}</button>;
+    return <button type="button" className="workspace-attack-target" onClick={() => { setAimedAttackId(attackId); setTargetPickerAttackId((current) => current === attackId ? null : attackId); }}>{target ? `Alvo: ${target.name}` : "Selecionar alvo"}</button>;
   };
   const requiredItemForAbility = (ability: SessionAbility) => {
     if (!ability.requires_equipped_item) return null;
@@ -1564,30 +1714,38 @@ export default function SessionWorkspace({ mode, view = "table" }: Props) {
     <button type="button" className="workspace-attack-target" onClick={() => setTargetPickerAbilityId((current) => current === ability.id ? null : ability.id)}>Selecionar alvo</button>
   );
   const selectedTargetAbility = abilities.find((ability) => ability.id === targetPickerAbilityId) || null;
+  const abilityTargets = selectedTargetAbility?.id === 'animar-mortos'
+    ? battleMapTokens.filter(token => token.token_type === 'monster' && token.current_hp === 0 && token.sheet?.reanimation_allowed && !token.sheet?.summon)
+    : attackTargets;
 
   const attackSection = <section ref={attackCatalogRef} className="workspace-action-catalog workspace-attack-catalog">
     <header><span>ATAQUES</span><small>{(definition?.attacks?.length || 0) + equipmentAttacks.length}</small></header>
     {definition?.attacks?.map((attack) => {
       const fallbackWeapon = attack.id === "ranged" ? equippedRangedWeapon : attack.id === "melee" ? equippedMeleeWeapon : null;
-      const weaponPath = attack.weapon_item_path || fallbackWeapon?.item_path;
-      const weapon = weaponPath ? character?.inventory.find((item) => item.item_path === weaponPath) || fallbackWeapon : fallbackWeapon;
+      const weaponPath = attack.weapon_item_path;
+      const candidates = (attack.id === "melee" || attack.id === "ranged") ? attackWeaponCandidates(attack.id) : [];
+      const chosenPath = attackWeaponById[attack.id] || weaponPath;
+      const weapon = chosenPath ? character?.inventory.find((item) => item.item_path === chosenPath) || fallbackWeapon : fallbackWeapon;
       const attackEquipment = attack.equipment?.length ? attack.equipment : weapon ? [{ ...weapon, role: "weapon" as const }] : [];
       const damage = attackDamage(definition?.id, attack, weapon?.damage_formula);
+      const remainingAttacks = battleActive ? Math.max(0, Math.min(attack.attack_count || 1, battleState.encounter?.attack_limit ?? (attack.attack_count || 1)) - (battleState.encounter?.attacks_used || 0)) : attack.attack_count || 1;
       const weaponTitle = attackEquipment.find((item) => item.role === "weapon")?.item_title || weapon?.item_title;
       return <article key={attack.id}>
         <div className="workspace-catalog-card-heading workspace-attack-card-heading">{attackEquipment.length > 0 && <span className="workspace-attack-equipment-icons">{attackEquipment.map((item) => { const icon = mediaUrlFromVaultPath(item.thumbnail || item.cover || iconPathForItem(item.item_title, item.item_type)); return icon ? <img key={item.item_path} src={icon} alt={cleanItemDisplayName(item.item_title)} title={`${cleanItemDisplayName(item.item_title)} · ${item.role === "weapon" ? "arma" : "suporte"}`} /> : null; })}</span>}<strong>{attack.name}</strong></div>
         <div className="workspace-catalog-card-summary"><small>{damage}{attack.range ? ` · ${attack.range}` : ""}{weaponTitle ? ` · ${cleanItemDisplayName(weaponTitle)}` : ""}</small><b>{attack.attack_bonus == null ? "—" : `${attack.attack_bonus >= 0 ? "+" : ""}${attack.attack_bonus}`}</b></div>
-        {canOperate && <div className="workspace-inline-actions">
+        {(!weaponPath || !attack.damage) && <small className="workspace-attack-pending" title={attack.id === "ranged" ? "Sem arma ou ataque à distância configurado na ficha." : "Ataque sem arma/dano configurado na ficha."}>Não configurado</small>}
+        {canOperate && weaponPath && attack.damage && <div className="workspace-inline-actions">
           {attackTargetControl(attack.id)}
-          {(attack.attack_count || 1) > 1 && <label>Ataques nesta ação<select aria-label={`Quantidade de ataques de ${attack.name}`} value={Math.min(attack.attack_count || 1, attackCountById[attack.id] || 1)} onChange={e => setAttackCountById(current => ({ ...current, [attack.id]: Number(e.target.value) }))}>{Array.from({ length: attack.attack_count || 1 }, (_, i) => <option key={i + 1} value={i + 1}>{i + 1}</option>)}</select></label>}
+          {candidates.length > 1 && <label>Arma<select aria-label={`Arma de ${attack.name}`} value={chosenPath || ""} onChange={(e) => setAttackWeaponById((current) => ({ ...current, [attack.id]: e.target.value }))}>{candidates.map((item) => <option key={item.item_path} value={item.item_path}>{cleanItemDisplayName(item.item_title)}{item.damage_formula ? ` · ${item.damage_formula}` : ""}</option>)}</select></label>}
+          {(attack.attack_count || 1) > 1 && <label>Ataques nesta ação<select aria-label={`Quantidade de ataques de ${attack.name}`} value={Math.min(remainingAttacks, attackCountById[attack.id] || 1)} onChange={e => setAttackCountById(current => ({ ...current, [attack.id]: Number(e.target.value) }))}>{Array.from({ length: remainingAttacks }, (_, i) => <option key={i + 1} value={i + 1}>{i + 1}</option>)}</select><small>{remainingAttacks} restante(s). Use 1 para escolher outro alvo no próximo golpe.</small></label>}
           {defaultAttackRollMode === "physical" && <input aria-label={`Resultado físico de ${attack.name}`} type="text" inputMode="text" value={attackPhysicalD20ById[attack.id] || ""} onChange={(event) => setAttackPhysicalD20ById((current) => ({ ...current, [attack.id]: event.target.value }))} placeholder={(attackCountById[attack.id] || 1) > 1 ? "d20 de cada golpe · ex.: 15 8" : "d20 físico"} />}
-          <button type="button" title="Calcula acerto e dano. O HP só muda após confirmar." disabled={Boolean(busy) || !attackTargetFor(attack.id) || !weaponPath} onClick={() => void resolveSelectedAttack(attack.id)}>{defaultAttackRollMode === "physical" ? "Conferir ataque" : "Rolar e conferir ataque"}</button>
+          <button type="button" title="Usa o bônus e dano da ficha; calcula acerto e dano automaticamente." disabled={Boolean(busy) || !attackTargetFor(attack.id)} onClick={() => void resolveSelectedAttack(attack.id)}>{defaultAttackRollMode === "physical" ? "Atacar com d20 físico" : "Atacar · rolar acerto e dano"}</button>
         </div>}
       </article>;
     })}
     {equipmentAttacks.map((attack) => {
       const damage = attackDamage(definition?.id, attack);
-      return <article key={attack.id}><div className="workspace-catalog-card-heading workspace-attack-card-heading"><strong>{attack.name}</strong></div><div className="workspace-catalog-card-summary"><small>{damage}</small><b>—</b></div>{canOperate && <div className="workspace-inline-actions">{attackTargetControl(attack.id)}</div>}</article>;
+      return <article key={attack.id}><div className="workspace-catalog-card-heading workspace-attack-card-heading"><strong>{attack.name}</strong></div><div className="workspace-catalog-card-summary"><small>{damage}</small></div><small className="workspace-attack-pending" title="Resolução automática ainda não configurada; selecionar alvo não aplica dano.">Resolução manual</small></article>;
     })}
     {targetPickerAttackId && <div className="workspace-attack-target-popover"><header><strong>Alvos no mapa atual</strong><button type="button" onClick={() => setTargetPickerAttackId(null)} aria-label="Fechar lista de alvos">×</button></header>{attackTargets.length ? attackTargets.map((token) => <button type="button" key={token.id} disabled={Boolean(busy)} className={attackTargetById[targetPickerAttackId] === token.id ? "active" : ""} onClick={() => { const attackId = targetPickerAttackId; setAttackTargetById((current) => ({ ...current, [attackId]: token.id })); setTargetPickerAttackId(null); }}><span style={{ color: token.color }}>{token.name}</span><small>{token.token_type === "monster" ? "Monstro / NPC" : "Personagem"} · CA {token.sheet?.armor_class ?? characterById.get(token.character_id || "")?.armor_class ?? "—"}</small></button>) : <p>Nenhum alvo disponível no mapa atual.</p>}{<button type="button" disabled={Boolean(busy)} onClick={() => { setAttackTargetById((current) => { const nextTargets = { ...current }; delete nextTargets[targetPickerAttackId]; return nextTargets; }); setTargetPickerAttackId(null); }}>Limpar alvo</button>}</div>}
   </section>;
@@ -1606,7 +1764,9 @@ export default function SessionWorkspace({ mode, view = "table" }: Props) {
       }
       if (item.source_type === "combat_action") {
         const breakdown = detail.breakdown as AttackResolution["breakdown"] | undefined;
-        detailText = (breakdown?.strikes || []).map((s, i) => `Golpe ${i + 1}: ${s.d20} + ${String(detail.attack_bonus)} = ${s.attack_total} / CA ${String(detail.target_ac)} · ${s.result === "hit" ? "acerto" : "erro"} · dano ${s.damage_total}`).join("\n");
+        detailText = breakdown?.automatic_hit
+          ? `Acerto automático · dano ${String(detail.damage_total)}${breakdown.resource_cost ? ` · ${breakdown.resource_cost.amount} uso consumido` : ""}`
+          : (breakdown?.strikes || []).map((s, i) => `Golpe ${i + 1}: ${s.d20} + ${String(detail.attack_bonus)} = ${s.attack_total} / CA ${String(detail.target_ac)} · ${s.result === "hit" ? "acerto" : "erro"} · dano ${s.damage_total}`).join("\n");
         detailText += `\nPV: ${String(detail.hp_before)} → ${String(detail.hp_after)}`;
       }
       return {
@@ -1640,7 +1800,7 @@ export default function SessionWorkspace({ mode, view = "table" }: Props) {
         <summary><span>CONTROLE DE ÍCONES E PINS</span><small>personagens, monstros e NPCs</small></summary>
         <section className="workspace-map-tools workspace-pin-controls">
           <section className="workspace-monster-catalog"><header><strong>BESTIÁRIO OFICIAL OD2</strong><small>{monsterCatalog ? `${filteredCatalogMonsters.length} exibidos · ${monsterCatalog.image_count} com arte · ${monsterCatalog.total} fichas` : "Carregando biblioteca…"}</small></header><input value={monsterCatalogSearch} onChange={(event) => setMonsterCatalogSearch(event.target.value)} placeholder="Buscar por nome, tipo ou habitat" /><div><select aria-label="Monstro do bestiário" value={selectedCatalogMonsterId} onChange={(event) => setSelectedCatalogMonsterId(event.target.value)}><option value="">Selecione uma ficha…</option>{filteredCatalogMonsters.map((monster) => <option key={monster.id} value={monster.id}>{monster.image_path ? "▣ " : ""}{monster.name} · DV {monster.hit_dice || "—"} · CA {monster.armor_class ?? "—"}</option>)}</select><button type="button" disabled={!selectedCatalogMonsterId} onClick={applyCatalogMonster}>Carregar no formulário</button></div>{selectedCatalogMonster && <article className="workspace-monster-catalog-preview">{selectedCatalogMonster.image_path ? <img src={mediaUrlFromVaultPath(selectedCatalogMonster.image_path)} alt={`Ilustração de ${selectedCatalogMonster.name}`} /> : <span aria-hidden="true">{markerForMonster(selectedCatalogMonster).marker}</span>}<div><strong>{selectedCatalogMonster.name}</strong><small>{selectedCatalogMonster.category || "Criatura"} · DV {selectedCatalogMonster.hit_dice || "—"} · CA {selectedCatalogMonster.armor_class ?? "—"}</small><small>{selectedCatalogMonster.image_attribution ? `Arte: ${selectedCatalogMonster.image_attribution} · ${selectedCatalogMonster.image_license}` : "Sem correspondência segura no pacote; você ainda pode escolher uma imagem."}</small></div></article>}{monsterDraft.source_monster_id && <small>Base carregada: {monsterDraft.name} · SRD OD2 · CC BY-SA 4.0. A imagem própria do Mestre sempre tem prioridade.</small>}</section>
-          <div><header><span>PERSONAGENS NO MAPA</span><small>arraste os avatares para posicionar</small></header><div>{characters.map((item) => { const pinned = workspace.tokens.some((token) => token.character_id === item.id); return <button type="button" key={item.id} disabled={pinned || Boolean(busy)} style={{ color: characterColor(item.id) }} onClick={() => void pinCharacter(item.id)}>{pinned ? "✓" : "+"} {item.name}</button>; })}</div><div className="workspace-pin-list">{workspace.tokens.map((token) => <div key={token.id}><span><strong style={{ color: token.color }}>{token.name}</strong><small>{token.token_type === "monster" ? "Monstro/NPC" : token.token_type === "location" ? "Local" : "Personagem"} · {token.latitude.toFixed(1)}, {token.longitude.toFixed(1)}</small></span><button type="button" onClick={() => void openTokenDetails(token)}>{token.character_id ? "Selecionar" : token.token_type === "location" ? "Detalhes" : "Ficha"}</button></div>)}</div><section className="workspace-monster-manager"><header><span>MONSTROS E NPCS NO MAPA</span><small>gerencie os marcadores criados</small></header>{workspace.tokens.filter((token) => token.token_type === "monster").map((token) => <div className="workspace-monster-row" key={token.id}><span><strong style={{ color: token.color }}>{token.sheet?.marker || "⚔"} {token.name}</strong><small>{token.current_hp ?? "—"}/{token.maximum_hp ?? "—"} PV · {token.visible_to_players ? "visível" : "oculto"} · Tesouro {token.sheet?.treasure || "—"}</small></span><button type="button" disabled={Boolean(busy)} onClick={() => void toggleMonsterVisibility(token)}>{token.visible_to_players ? "Ocultar" : "Revelar"}</button><button type="button" disabled={Boolean(busy)} onClick={() => void openTokenDetails(token)}>Ficha</button><button type="button" disabled={Boolean(busy)} onClick={() => editMonster(token)}>Editar</button>{token.current_hp === 0 && token.sheet?.treasure && token.sheet.treasure !== "-" && <button type="button" disabled={Boolean(busy)} onClick={() => void generateTokenLoot(token, "carried")}>Gerar espólio</button>}{token.current_hp === 0 && /[A-O]/i.test(token.sheet?.treasure || "") && <button type="button" disabled={Boolean(busy)} onClick={() => void generateTokenLoot(token, "lair")}>Gerar covil</button>}<button type="button" disabled={Boolean(busy)} onClick={() => void removeMonster(token)}>Remover</button></div>)}{!workspace.tokens.some((token) => token.token_type === "monster") && <p className="workspace-empty-monsters">Nenhum monstro ou NPC criado.</p>}</section></div>
+          <div><header><span>PERSONAGENS NO MAPA</span><small>arraste os avatares para posicionar</small></header><div>{characters.map((item) => { const pinned = workspace.tokens.some((token) => token.character_id === item.id); return <button type="button" key={item.id} disabled={pinned || Boolean(busy)} style={{ color: characterColor(item.id) }} onClick={() => void pinCharacter(item.id)}>{pinned ? "✓" : "+"} {item.name}</button>; })}</div><div className="workspace-pin-list">{workspace.tokens.map((token) => <div key={token.id}><span><strong style={{ color: token.color }}>{token.name}</strong><small>{token.token_type === "monster" ? "Monstro/NPC" : token.token_type === "location" ? "Local" : "Personagem"} · {token.latitude.toFixed(1)}, {token.longitude.toFixed(1)}</small></span><button type="button" onClick={() => void openTokenDetails(token)}>{token.character_id ? "Selecionar" : token.token_type === "location" ? "Detalhes" : "Ficha"}</button></div>)}</div><section className="workspace-monster-manager"><header><span>MONSTROS E NPCS NO MAPA</span><small>gerencie os marcadores criados</small></header>{workspace.tokens.filter((token) => token.token_type === "monster").map((token) => <div className="workspace-monster-row" key={token.id}><span><strong style={{ color: token.color }}>{token.sheet?.marker || "⚔"} {token.name}</strong><small>{token.current_hp ?? "—"}/{token.maximum_hp ?? "—"} PV · {token.visible_to_players ? "visível" : "oculto"} · Tesouro {token.sheet?.treasure || "—"}</small></span><button type="button" disabled={Boolean(busy)} onClick={() => void toggleMonsterVisibility(token)}>{token.visible_to_players ? "Ocultar" : "Revelar"}</button><button type="button" disabled={Boolean(busy)} onClick={() => void openTokenDetails(token)}>Ficha</button><button type="button" disabled={Boolean(busy)} onClick={() => editMonster(token)}>Editar</button>{token.current_hp === 0 && !token.sheet?.summon && treasureHasCarried(token.sheet?.treasure) && <button type="button" disabled={Boolean(busy)} onClick={() => void generateTokenLoot(token, "carried")}>Gerar espólio</button>}{token.current_hp === 0 && !token.sheet?.summon && treasureHasLair(token.sheet?.treasure) && <button type="button" disabled={Boolean(busy)} onClick={() => void generateTokenLoot(token, "lair")}>Gerar covil</button>}<button type="button" disabled={Boolean(busy)} onClick={() => void removeMonster(token)}>Remover</button></div>)}{!workspace.tokens.some((token) => token.token_type === "monster") && <p className="workspace-empty-monsters">Nenhum monstro ou NPC criado.</p>}</section></div>
           <LocationQuickPin mapId={workspace.map?.id || "default"} tokens={workspace.tokens} onChange={refresh} />
           <form className="workspace-monster-form" onSubmit={createMonster}><header><span>{editingMonsterId ? "EDITAR MONSTRO / NPC" : "CRIAR E PINAR RAPIDAMENTE"}</span><small>nome, PV e CA bastam; imagem e ficha completa são opcionais</small></header><div className="workspace-monster-quick-presets">{CREATURE_MARKERS.map((preset) => <button type="button" key={preset.label} onClick={() => setMonsterDraft((current) => ({ ...current, marker: preset.marker, role: preset.role, color: preset.color }))}><span>{preset.marker}</span>{preset.label}</button>)}</div><input value={monsterDraft.name} onChange={(event) => setMonsterDraft({ ...monsterDraft, name: event.target.value })} placeholder="Nome do monstro ou NPC" /><div className="workspace-monster-hp"><label><span>PV atual</span><input type="number" min={0} max={99999} inputMode="numeric" aria-label="PV atual restante" value={monsterDraft.current_hp} onChange={(event) => setMonsterDraft({ ...monsterDraft, current_hp: event.target.value === "" ? 0 : Number(event.target.value) })} /></label><label><span>PV máximo</span><input type="number" min={1} max={99999} inputMode="numeric" aria-label="PV máximo" value={monsterDraft.maximum_hp} onChange={(event) => setMonsterDraft({ ...monsterDraft, maximum_hp: event.target.value === "" ? 1 : Number(event.target.value) })} /></label></div><div className="workspace-monster-sheet-grid"><input value={monsterDraft.role} onChange={(event) => setMonsterDraft({ ...monsterDraft, role: event.target.value })} placeholder="Tipo / função" /><select aria-label="Símbolo do marcador" value={monsterDraft.marker} onChange={(event) => setMonsterDraft({ ...monsterDraft, marker: event.target.value })}>{CREATURE_MARKERS.map((preset) => <option key={preset.marker} value={preset.marker}>{preset.marker} {preset.label}</option>)}</select><input type="number" min={0} max={99} value={monsterDraft.armor_class} onChange={(event) => setMonsterDraft({ ...monsterDraft, armor_class: Number(event.target.value) })} placeholder="CA" /><input type="number" min={-30} max={30} value={monsterDraft.initiative} onChange={(event) => setMonsterDraft({ ...monsterDraft, initiative: Number(event.target.value) })} placeholder="Iniciativa" /></div><label className="workspace-monster-visibility"><input type="checkbox" checked={monsterDraft.visible_to_players} onChange={(event) => setMonsterDraft({ ...monsterDraft, visible_to_players: event.target.checked })} /><span>{monsterDraft.visible_to_players ? "Mostrar aos jogadores ao criar" : "Preparar oculto e revelar depois"}</span></label><details className="workspace-monster-advanced"><summary>Ficha avançada opcional</summary><input type="number" min={1} max={30} value={monsterDraft.level} onChange={(event) => setMonsterDraft({ ...monsterDraft, level: Number(event.target.value) })} placeholder="Nível" /><input value={monsterDraft.conditions} onChange={(event) => setMonsterDraft({ ...monsterDraft, conditions: event.target.value })} placeholder="Status separados por vírgula" /><textarea value={monsterDraft.description} onChange={(event) => setMonsterDraft({ ...monsterDraft, description: event.target.value })} placeholder="Descrição da ficha" /><textarea value={monsterDraft.attacks} onChange={(event) => setMonsterDraft({ ...monsterDraft, attacks: event.target.value })} placeholder="Ataques: nome | dano | bônus | observações (um por linha)" /><textarea value={monsterDraft.abilities} onChange={(event) => setMonsterDraft({ ...monsterDraft, abilities: event.target.value })} placeholder="Habilidades (uma por linha)" /><textarea value={monsterDraft.notes} onChange={(event) => setMonsterDraft({ ...monsterDraft, notes: event.target.value })} placeholder="Notas do Mestre" /></details><input type="color" value={monsterDraft.color} onChange={(event) => setMonsterDraft({ ...monsterDraft, color: event.target.value })} title="Cor do marcador" /><label><input type="file" accept="image/png,image/jpeg,image/webp" onChange={(event) => setMonsterImage(event.target.files?.[0] || null)} /><span>{monsterImage?.name || (monsterDraft.image_path ? "Imagem atual selecionada" : `${monsterDraft.marker} Usar símbolo agora ou escolher imagem`)}</span></label><button disabled={!monsterDraft.name.trim() || Boolean(busy)}>{editingMonsterId ? "Salvar ficha" : monsterDraft.visible_to_players ? "Criar, pinar e mostrar" : "Criar pin oculto"}</button>{editingMonsterId && <button type="button" onClick={() => { setEditingMonsterId(null); setMonsterDraft(EMPTY_MONSTER_DRAFT); }}>Cancelar</button>}</form>
         </section>
@@ -1655,16 +1815,23 @@ export default function SessionWorkspace({ mode, view = "table" }: Props) {
       </details>
       </>}
       {section === "master" && <section className="workspace-master-overview">
-        <header><div><small>RESUMO DA MESA</small><strong>{characters.length} personagens · {workspace.presence.filter((item) => item.online && item.actor_role === "player").length} jogadores online</strong></div><span>{workspace.map?.title || "Sem mapa ativo"}</span></header>
+        <header><div><small>RESUMO DA MESA</small><strong>{characters.filter(item => !archivedIds.includes(item.id)).length} jogadores · {allies.length} aliado(s) do Mestre · {workspace.presence.filter((item) => item.online && item.actor_role === "player").length} online</strong></div><span>{workspace.map?.title || "Sem mapa ativo"}</span></header>
         <section className={`workspace-table-mode workspace-table-mode-${workspace.table_mode}`}>
           <div><small>MODO DA MESA</small><strong>{workspace.table_mode === "digital" ? "Digital" : workspace.table_mode === "physical" ? "Física" : "Teste"}</strong><p>{workspace.table_mode === "digital" ? "O Companion faz as rolagens por padrão." : workspace.table_mode === "physical" ? "Ataques pedem o valor bruto do dado físico por padrão." : "Simula sozinho a visão dos jogadores. As alterações continuam reais."}</p></div>
           <div role="group" aria-label="Modo operacional da mesa"><button type="button" className={workspace.table_mode === "digital" ? "active" : ""} disabled={Boolean(busy)} onClick={() => void changeTableMode("digital")}>Digital</button><button type="button" className={workspace.table_mode === "physical" ? "active" : ""} disabled={Boolean(busy)} onClick={() => void changeTableMode("physical")}>Física</button><button type="button" className={workspace.table_mode === "test" ? "active" : ""} disabled={Boolean(busy)} onClick={() => void changeTableMode("test")}>Teste</button></div>
         </section>
         <nav className="workspace-master-shortcuts" aria-label="Atalhos do Mestre">
           <button type="button" onClick={() => window.dispatchEvent(new CustomEvent("omnisvera-open-dice-tray", { detail: { panel: "request", characterId: selectedId } }))}><b>⚄</b><span><strong>Pedir rolagem</strong><small>Escolher jogador e teste</small></span></button>
-          <button type="button" disabled={Boolean(busy) || !characters.length} onClick={() => void restAllCharacters()}><b>☾</b><span><strong>Descanso geral</strong><small>Restaurar os quatro personagens</small></span></button>
+          <button type="button" disabled={Boolean(busy) || !characters.length} onClick={() => void restAllCharacters()}><b>☾</b><span><strong>Descanso geral</strong><small>Restaurar jogadores ativos · não altera NPCs reservados</small></span></button>
         </nav>
-        <details ref={combatPanelRef} className="workspace-gm-section"><summary className="workspace-action-card"><b aria-hidden="true">⚔</b><span>COMBATE</span><small>Iniciativa, efeitos e multiataque</small></summary><CombatEncounterPanel mode={mode} tableMode={workspace.table_mode} mapId={workspace.map?.id || "default"} characters={characters} tokens={workspace.tokens} onChange={refresh} onPins={() => window.dispatchEvent(new CustomEvent("omnisvera-open-workspace", { detail: "maps" }))} /></details>
+        <details ref={combatPanelRef} open={battleActive || undefined} className="workspace-gm-section"><summary className="workspace-action-card"><b aria-hidden="true">⚔</b><span>COMBATE</span><small>Iniciativa, efeitos e multiataque</small></summary><CombatEncounterPanel mode={mode} tableMode={workspace.table_mode} mapId={workspace.map?.id || "default"} characters={characters} tokens={workspace.tokens} onChange={refresh} onPins={() => window.dispatchEvent(new CustomEvent("omnisvera-open-workspace", { detail: "maps" }))} />
+          {workspace.tokens.some(token => token.token_type === 'monster' && token.current_hp === 0 && !token.sheet?.summon && token.sheet?.treasure && token.sheet.treasure !== '-') && <section className="workspace-monster-manager"><header><span>ESPÓLIOS DO ENCONTRO</span><small>Carregado e covil são tabelas distintas; covil exige acesso ao local.</small></header>
+            {workspace.tokens.filter(token => token.token_type === 'monster' && token.current_hp === 0 && !token.sheet?.summon && token.sheet?.treasure && token.sheet.treasure !== '-').map(token => <div className="workspace-monster-row" key={`aftermath:${token.id}`}><strong>{token.name}</strong>
+              {treasureHasCarried(token.sheet?.treasure) && <button disabled={Boolean(busy)} onClick={() => void generateTokenLoot(token, 'carried')}>Sortear espólio carregado</button>}
+              {treasureHasLair(token.sheet?.treasure) && <button disabled={Boolean(busy)} onClick={() => void generateTokenLoot(token, 'lair')}>Sortear tesouro do covil</button>}
+            </div>)}
+          </section>}
+        </details>
       </section>}
       {section === "master" && <details ref={itemToolsRef} className="workspace-gm-section">
         <summary className="workspace-action-card"><b aria-hidden="true">◇</b><span>ITENS E LOOT</span><small>Criar, editar e distribuir espólios</small></summary>
@@ -1739,26 +1906,36 @@ export default function SessionWorkspace({ mode, view = "table" }: Props) {
   return <section className={`session-workspace unified-workspace workspace-view-${view}`}>
     <header className="party-status-header">
       {mode === "gm" ? <button type="button" className={`party-status-title party-master-summary ${gmToolsOpen ? "active" : ""}`} onClick={() => setGmToolsOpen(true)} aria-label="Abrir painel do Mestre"><span>PAINEL DO MESTRE</span><strong>Omnisvera</strong><small>{workspace.presence.filter((item) => item.online && item.actor_role === "player").length} online · abrir resumo</small></button> : <div className="party-status-title"><span>MESA ÚNICA</span><strong>Omnisvera</strong><small>{workspace.presence.filter((item) => item.online && item.actor_role === "player").length} online</small></div>}
-      <div className="party-status-list">{characters.map((item) => {
+      <div className="party-status-list">{characters.filter(item => !archivedIds.includes(item.id)).map((item) => {
         const hpPercent = item.maximum_hp ? Math.max(0, Math.min(100, Number(item.current_hp || 0) / item.maximum_hp * 100)) : 0;
         const online = Boolean(presenceByCharacter.get(item.id));
         const selectable = mode === "gm" || item.access_level === "owner";
-        return <button key={item.id} type="button" data-character={item.id} disabled={!selectable} aria-label={selectable ? `Abrir ficha de ${item.name}` : `${item.name} no grupo`} className={!gmToolsOpen && selectedId === item.id ? "active" : ""} onClick={() => { if (!selectable) return; setGmToolsOpen(false); selectedIdRef.current = item.id; setSelectedId(item.id); localStorage.setItem("omnisvera_selected_character", item.id); }}>
+        return <button key={item.id} type="button" data-character={item.id} disabled={!selectable} aria-label={selectable ? `Abrir ficha de ${item.name}` : `${item.name} no grupo`} className={!gmToolsOpen && !selectedAllyId && !npcLibraryOpen && selectedId === item.id ? "active" : ""} onClick={() => { if (!selectable) return; setSelectedAllyId(""); setNpcLibraryOpen(false); setGmToolsOpen(false); selectedIdRef.current = item.id; setSelectedId(item.id); localStorage.setItem("omnisvera_selected_character", item.id); }}>
           <span className="workspace-avatar"><CharacterPortrait character={item} /><i className={online ? "online" : "offline"} title={online ? "Online" : "Offline"} /></span>
-          <span><strong style={{ color: characterColor(item.id) }}>{item.name}</strong><small>{item.conditions.length ? item.conditions.join(" · ") : `${item.class_name || "Personagem"} · Nv. ${item.level || 1}`}</small><i><b style={{ width: `${hpPercent}%` }} /></i></span>
+          <span><strong style={{ color: characterColor(item.id) }}>{item.name}</strong><small>{item.conditions.length ? item.conditions.join(" · ") : `${item.class_name || "Personagem"} · Nv. ${item.level ?? "—"}`}</small><i><b style={{ width: `${hpPercent}%` }} /></i></span>
           <em>{item.current_hp ?? "—"}/{item.maximum_hp ?? "—"}</em>
         </button>;
-      })}</div>
+      })}{mode === "gm" && allies.map(ally => <button key={ally.id} type="button" aria-label={`Abrir ficha de ${ally.name}`} className={!gmToolsOpen && !npcLibraryOpen && selectedAllyId === ally.id ? "active" : ""} onClick={() => { setSelectedAllyId(ally.id); setNpcLibraryOpen(false); setGmToolsOpen(false); }}>
+        <span className="workspace-avatar">{ally.image_path ? <img src={mediaUrlFromVaultPath(ally.image_path)} alt={ally.name} /> : <span>◆</span>}</span>
+        <span><strong style={{ color: ally.color }}>{ally.name}</strong><small>Aliado · Mestre</small><i><b style={{ width: `${ally.maximum_hp ? Math.max(0, Math.min(100, (ally.current_hp || 0) / ally.maximum_hp * 100)) : 0}%` }} /></i></span>
+        <em>{ally.current_hp ?? "—"}/{ally.maximum_hp ?? "—"}</em>
+      </button>)}</div>
     </header>
     {mode === "player" && <div className={`workspace-table-mode-banner workspace-table-mode-${workspace.table_mode}`}>Mesa {workspace.table_mode === "digital" ? "digital" : workspace.table_mode === "physical" ? "física" : "em teste"}</div>}
 
     {error && <p className="workspace-error">{error}</p>}
+    {syncError && <p className="workspace-error" role="status">{syncError}</p>}
     <div className="session-workspace-grid">
       {view === "table" && <aside className={`workspace-character-panel ${gmToolsOpen ? "gm-tools-active" : ""}`}>
-        {mode === "gm" && gmToolsOpen ? renderGmWorkspaceTools() : character ? <>
+        <PendingAttacks onOpen={setAttackResolution} refreshKey={`${attackResolution?.resolution_id}:${attackResolution?.confirmed}`} />
+        {mode === "gm" && <button type="button" aria-expanded={npcLibraryOpen} onClick={() => { setNpcLibraryOpen(!npcLibraryOpen); setGmToolsOpen(false); }}>NPCs do Mestre</button>}
+        {mode === "gm" && gmToolsOpen ? renderGmWorkspaceTools() : mode === "gm" && npcLibraryOpen ? <section aria-label="NPCs do Mestre"><h2>NPCs do Mestre</h2><p>Fichas preservadas para uso posterior. Inventário e histórico permanecem intactos.</p>
+          {characters.filter(item => archivedIds.includes(item.id)).map(item => <button key={item.id} type="button" onClick={() => { setSelectedAllyId(""); setNpcLibraryOpen(false); selectedIdRef.current = item.id; setSelectedId(item.id); localStorage.setItem("omnisvera_selected_character", item.id); }}>Abrir ficha de {item.name} · NPC reservado</button>)}
+          {allies.map(ally => <button key={ally.id} type="button" onClick={() => { setSelectedAllyId(ally.id); setNpcLibraryOpen(false); }}>Abrir ficha de {ally.name} · aliado</button>)}
+        </section> : mode === "gm" && selectedAllyId ? (allies.find(ally => ally.id === selectedAllyId) ? <CompanionAllySheet token={allies.find(ally => ally.id === selectedAllyId)!} characters={characters.filter(item => !archivedIds.includes(item.id))} targets={workspace.tokens} physical={workspace.table_mode === "physical"} onChange={async () => { await loadOverview(); }} /> : <p>Ficha do aliado indisponível. Tentando atualizar novamente.</p>) : character ? <>
           <header className="workspace-character-identity">
             {mediaUrlFromVaultPath(definition?.portrait) ? <img src={mediaUrlFromVaultPath(definition?.portrait)} alt={`Retrato de ${definition?.name}`} /> : <span>{definition?.name.slice(0, 1)}</span>}
-            <CharacterLevel key={character.definition.id} level={definition?.level || 1} experience={definition?.progression?.experience ?? null} canEdit={mode === "gm"} onSave={async (fields) => { await refresh(await updateCharacterDefinition(character.definition.id, fields, "Edição de nível e XP")); }} />
+            <CharacterLevel characterId={character.definition.id} onApplied={refresh} key={character.definition.id} level={definition?.level ?? null} experience={definition?.progression?.experience ?? null} canEdit={mode === "gm"} onSave={async (fields) => { await refresh(await updateCharacterDefinition(character.definition.id, fields, "Edição de nível e XP")); }} />
             <div className="workspace-character-copy"><small>PERSONAGEM</small><h2 style={{ color: characterColor(definition?.id) }}>{definition?.name}</h2>{definition?.epithet && <p>{definition.epithet}</p>}<div><b>{definition?.race || "Raça"}</b><b>{definition?.class_name || "Classe"}</b></div></div>
           </header>
 
@@ -1777,11 +1954,11 @@ export default function SessionWorkspace({ mode, view = "table" }: Props) {
           {(standaloneResources.length > 0 || consumables.length > 0) && <section className="workspace-action-catalog workspace-resource-catalog"><header><span>RECURSOS</span><small>atual / máximo</small></header>{standaloneResources.map((resource) => <article key={resource.key}><span><strong>{resource.label}</strong></span><b>{resource.current}/{resource.maximum}</b>{canOperate && <button disabled={Boolean(busy) || resource.current <= 0} onClick={() => void stateAction("consume_resource", { resource_key: resource.key, amount: 1 }, `Usou ${resource.label}`)}>Usar</button>}</article>)}{consumables.map((item) => { const title = cleanItemDisplayName(item.item_title); const executesRules = item.effect_rules?.some((rule) => rule.trigger === "on_use"); const available = item.charges_max ? Number(item.charges_current ?? item.charges_max) : item.quantity; return <article key={item.item_path}><span><strong>{title}</strong></span><b>{item.charges_max ? `${available}/${item.charges_max} cargas` : item.quantity}</b>{canOperate && <button disabled={Boolean(busy) || available <= 0} onClick={() => void stateAction(executesRules ? "use_item" : "change_quantity", executesRules ? { item_path: item.item_path } : { item_path: item.item_path, quantity: Math.max(0, item.quantity - 1) }, `Usou ${title}`)}>Usar</button>}</article>; })}</section>}
 
           {attackSection}
-          {spells.length > 0 && <section className="workspace-action-catalog"><header><span>MAGIAS</span><small>{spells.length}</small></header>{spells.map((ability) => { const resource = abilityResource(ability, state?.resources || []); const requiredItem = requiredItemForAbility(ability); const requirementMissing = Boolean(ability.requires_equipped_item && !requiredItem); const requiredIcon = requiredItem ? mediaUrlFromVaultPath(requiredItem.thumbnail || requiredItem.cover || iconPathForItem(requiredItem.item_title, requiredItem.item_type)) : ""; return <article key={ability.id}><span><strong className="workspace-ability-name">{requiredIcon && <img src={requiredIcon} alt="" />}{ability.name}</strong><small>{requirementMissing ? `Requer ${ability.requires_equipped_item} equipada` : ability.circle ? `${ability.circle}º círculo` : "magia"}</small></span>{resource && <b>{resource.current}/{resource.maximum}</b>}{canOperate && <button disabled={Boolean(busy) || Boolean(resource && resource.current <= 0) || Boolean(ability.blocked) || requirementMissing} onClick={() => void useAbility(ability)}>{ability.blocked ? "Bloqueado" : requirementMissing ? "Equipar item" : "Usar"}</button>}</article>; })}</section>}
+          {spells.length > 0 && <section className="workspace-action-catalog"><header><span>MAGIAS</span><small>{spells.length}</small></header>{spells.map((ability) => { const resource = abilityResource(ability, state?.resources || []); const requiredItem = requiredItemForAbility(ability); const requirementMissing = Boolean(ability.requires_equipped_item && !requiredItem); const requiredIcon = requiredItem ? mediaUrlFromVaultPath(requiredItem.thumbnail || requiredItem.cover || iconPathForItem(requiredItem.item_title, requiredItem.item_type)) : ""; return <article key={ability.id}><span><AbilityName ability={ability} icon={requiredIcon} /><small>{requirementMissing ? `Requer ${ability.requires_equipped_item} equipada` : ability.circle ? `${ability.circle}º círculo` : "magia"}</small></span>{resource && <b>{resource.current}/{resource.maximum}</b>}{canOperate && <button disabled={Boolean(busy) || Boolean(resource && resource.current <= 0) || Boolean(ability.blocked) || requirementMissing} onClick={() => void useAbility(ability)}>{ability.blocked ? "Bloqueado" : requirementMissing ? "Equipar item" : "Usar"}</button>}</article>; })}</section>}
 
-          {Object.entries(groupedAbilities).map(([group, groupEntries]) => { const medal = definition?.id === "vezemir" && normalizedName(group) === "poderes" ? character?.inventory.find((item) => normalizedName(item.item_title).includes("medalhao")) : null; const medalIcon = medal ? mediaUrlFromVaultPath(medal.thumbnail || medal.cover || iconPathForItem(medal.item_title, medal.item_type)) : ""; return <section className="workspace-action-catalog" key={group}><header><span className="workspace-group-title">{medalIcon && <img src={medalIcon} alt="" />}{group.toUpperCase()}</span><small>{groupEntries.length}</small></header>{groupEntries.map((ability) => { const resource = abilityResource(ability, state?.resources || []); const requiredItem = requiredItemForAbility(ability); const requirementMissing = Boolean(ability.requires_equipped_item && !requiredItem); const requiredIcon = requiredItem ? mediaUrlFromVaultPath(requiredItem.thumbnail || requiredItem.cover || iconPathForItem(requiredItem.item_title, requiredItem.item_type)) : ""; return <article key={ability.id}><span><strong className="workspace-ability-name">{requiredIcon && <img src={requiredIcon} alt="" />}{ability.name}</strong>{requirementMissing ? <small>Requer {ability.requires_equipped_item} equipado</small> : !ability.active && <small>Passiva</small>}</span>{resource && <b>{resource.current}/{resource.maximum}</b>}{ability.active && canOperate && (ability.requires_target ? <div className="workspace-inline-actions">{abilityTargetControl(ability)}</div> : <button disabled={Boolean(busy) || Boolean(resource && resource.current <= 0) || Boolean(ability.blocked) || requirementMissing} onClick={() => void useAbility(ability)}>{ability.blocked ? "Bloqueado" : requirementMissing ? "Equipar item" : "Usar"}</button>)}</article>; })}</section>; })}
+          {Object.entries(groupedAbilities).map(([group, groupEntries]) => { const medal = definition?.id === "vezemir" && normalizedName(group) === "poderes" ? character?.inventory.find((item) => normalizedName(item.item_title).includes("medalhao")) : null; const medalIcon = medal ? mediaUrlFromVaultPath(medal.thumbnail || medal.cover || iconPathForItem(medal.item_title, medal.item_type)) : ""; return <section className="workspace-action-catalog" key={group}><header><span className="workspace-group-title">{medalIcon && <img src={medalIcon} alt="" />}{group.toUpperCase()}</span><small>{groupEntries.length}</small></header>{groupEntries.map((ability) => { const resource = abilityResource(ability, state?.resources || []); const requiredItem = requiredItemForAbility(ability); const requirementMissing = Boolean(ability.requires_equipped_item && !requiredItem); const requiredIcon = requiredItem ? mediaUrlFromVaultPath(requiredItem.thumbnail || requiredItem.cover || iconPathForItem(requiredItem.item_title, requiredItem.item_type)) : ""; return <article key={ability.id}><span><AbilityName ability={ability} icon={requiredIcon} />{requirementMissing ? <small>Requer {ability.requires_equipped_item} equipado</small> : !ability.active && <small>Passiva</small>}</span>{resource && <b>{resource.current}/{resource.maximum}</b>}{ability.active && canOperate && (ability.requires_target ? <div className="workspace-inline-actions">{abilityTargetControl(ability)}</div> : <>{ability.id === "lamina-de-sangue" && <><label>Lâminas<select aria-label="Lâminas declaradas" value={(techniqueModeById[ability.id] || "1:ranged").split(":")[0]} onChange={(e) => setTechniqueModeById((current) => ({ ...current, [ability.id]: `${e.target.value}:${(current[ability.id] || "1:ranged").split(":")[1] || "ranged"}` }))}>{[1, 2, 3, 4, 5].map((n) => <option key={n} value={String(n)}>{n} ({n}d4)</option>)}</select></label><label>Modo<select aria-label="Modo da Lâmina de Sangue" value={(techniqueModeById[ability.id] || "1:ranged").split(":")[1] || "ranged"} onChange={(e) => setTechniqueModeById((current) => ({ ...current, [ability.id]: `${(current[ability.id] || "1:ranged").split(":")[0] || "1"}:${e.target.value}` }))}><option value="ranged">À distância</option><option value="melee">Corpo a corpo</option></select></label></>}<button disabled={Boolean(busy) || Boolean(resource && resource.current <= 0) || Boolean(ability.blocked) || requirementMissing} onClick={() => void useAbility(ability)}>{ability.blocked ? "Bloqueado" : requirementMissing ? "Equipar item" : "Usar"}</button></>)}</article>; })}</section>; })}
 
-          {targetPickerAbilityId && selectedTargetAbility && <div className="workspace-attack-target-popover"><header><strong>Escolha o alvo de {selectedTargetAbility.name}</strong><button type="button" onClick={() => setTargetPickerAbilityId(null)} aria-label="Fechar lista de alvos">×</button></header>{attackTargets.length ? attackTargets.map((token) => <button type="button" key={token.id} disabled={Boolean(busy)} onClick={() => { setTargetPickerAbilityId(null); void useAbility(selectedTargetAbility, token); }}><span style={{ color: token.color }}>{token.name}</span><small>{token.token_type === "monster" ? "Monstro / NPC" : "Personagem"}</small></button>) : <p>Nenhum alvo disponível no mapa atual.</p>}</div>}
+          {targetPickerAbilityId && selectedTargetAbility && <div className="workspace-attack-target-popover"><header><strong>Escolha o alvo de {selectedTargetAbility.name}</strong><button type="button" onClick={() => setTargetPickerAbilityId(null)} aria-label="Fechar lista de alvos">×</button></header>{selectedTargetAbility.id === 'adaga-de-osso' && defaultAttackRollMode === 'physical' && <label>d20 físico<input aria-label="d20 físico da Adaga de Osso" type="number" min={1} max={20} value={attackPhysicalD20ById['adaga-de-osso'] || ''} onChange={event => setAttackPhysicalD20ById(current => ({ ...current, 'adaga-de-osso': event.target.value }))} /></label>}{abilityTargets.length ? abilityTargets.map((token) => <button type="button" key={token.id} disabled={Boolean(busy)} onClick={() => { setTargetPickerAbilityId(null); void useAbility(selectedTargetAbility, token); }}><span style={{ color: token.color }}>{token.name}</span><small>{token.token_type === "monster" ? "Monstro / NPC" : "Personagem"}</small></button>) : <p>{selectedTargetAbility.id === 'animar-mortos' ? 'Nenhum cadáver autorizado. Peça ao Mestre para autorizar a reanimação no painel de combate.' : 'Nenhum alvo disponível no mapa atual.'}</p>}</div>}
 
           <section className="workspace-action-catalog workspace-inventory-catalog"><header><span>INVENTÁRIO</span><small>{carriedItems.length}</small></header>{carriedItems.length ? carriedItems.map((item) => { const title = cleanItemDisplayName(item.item_title); const icon = mediaUrlFromVaultPath(item.thumbnail || item.cover || iconPathForItem(item.item_title, item.item_type)); const slots = possibleEquipmentSlots(item); const menuOpen = equipMenuItemPath === item.item_path; return <article className={item.equipped ? "equipped" : ""} key={item.item_path} role="button" tabIndex={0} onClick={() => setOpenItem(item)} onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); setOpenItem(item); } }}><div className="workspace-catalog-card-heading">{icon ? <img src={icon} alt="" /> : <span className="inventory-inline-placeholder">◈</span>}<span><strong>{title}</strong></span></div><div className="workspace-catalog-card-summary"><small>{item.equipped ? `${item.equipment_slot || "Equipado"} · clique para ler` : "Guardado · clique para ler"}</small><b>Qtd. {item.quantity}</b></div>{canOperate && (item.equipped ? <button disabled={Boolean(busy)} onClick={(event) => { event.stopPropagation(); setEquipMenuItemPath(null); void stateAction("unequip_item", { item_path: item.item_path }, `Guardou ${title}`); }}>Guardar</button> : <div className="workspace-equip-control"><button disabled={Boolean(busy)} onClick={(event) => { event.stopPropagation(); setEquipMenuItemPath(menuOpen ? null : item.item_path); }}>{menuOpen ? "Fechar" : "Equipar ▾"}</button>{menuOpen && <div className="workspace-equip-menu" onClick={(event) => event.stopPropagation()}>{slots.map((slot) => <button type="button" key={slot} onClick={() => { setEquipMenuItemPath(null); void stateAction("equip_item", { item_path: item.item_path, equipment_slot: slot }, `Equipou ${title} · ${slot}`); }}>Equipar em {slot}</button>)}</div>}</div>)}</article>; }) : <p>Nenhum item não consumível registrado.</p>}</section>
           <CurrencyCounters key={character.definition.id} character={character} onChange={refresh} />
@@ -1808,6 +1985,7 @@ export default function SessionWorkspace({ mode, view = "table" }: Props) {
       </aside>}
 
       <main className="workspace-map-panel">
+        {battleActive && <div className="workspace-battle-banner" role="status" aria-live="polite"><strong>COMBATE · Rodada {battleState.round}</strong><span>{battleCurrent?.target_id === selectedId && mode === 'player' ? 'É o seu turno' : `${mode === 'gm' && battleCurrent?.target_type === 'token' ? 'Mestre, sua vez' : 'Turno'}: ${battleCurrent?.name || 'participante oculto'}`}</span>{battleState.encounter?.action_committed && <small>Ação confirmada · conclua e passe o turno</small>}</div>}
         <header>
           <div>
             <small>IMAGEM DA SESSÃO</small>
@@ -1824,6 +2002,7 @@ export default function SessionWorkspace({ mode, view = "table" }: Props) {
             </label>}
           </div>
           <div className="workspace-map-zoom" aria-label="Zoom do mapa"><button type="button" disabled={mapZoom <= 1} onClick={() => changeMapZoom(mapZoom - .1)} aria-label="Diminuir zoom">−</button><output>{Math.round(mapZoom * 100)}%</output><button type="button" disabled={mapZoom >= 3} onClick={() => changeMapZoom(mapZoom + .1)} aria-label="Aumentar zoom">+</button><button type="button" disabled={mapZoom === 1} onClick={() => changeMapZoom(1)}>Ajustar</button></div>
+          {mode === "gm" && view !== "memory" && <WorkspaceMapLibrary maps={workspaceMaps} activeId={workspace.map?.id} onChange={() => loadOverview(true)} />}
           {mode === "gm" && view !== "memory" && <form className="workspace-map-upload" onSubmit={submitMap}>
             <input value={mapTitle} onChange={(event) => setMapTitle(event.target.value)} placeholder="Nome da imagem" />
             <label><input type="file" accept="image/png,image/jpeg,image/webp" onChange={(event) => setMapFile(event.target.files?.[0] || null)} /><span>{mapFile?.name || "Escolher imagem"}</span></label>
@@ -1833,14 +2012,15 @@ export default function SessionWorkspace({ mode, view = "table" }: Props) {
         </header>
         <div ref={mapViewportRef} className={`workspace-map-canvas ${mode === "gm" ? "editable" : "locked"}`} onScroll={() => queueWorkspaceViewSave()} onPointerMove={previewTokenMove} onPointerUp={(event) => void finishTokenMove(event)} onPointerCancel={(event) => void finishTokenMove(event)} onPointerLeave={(event) => { if (draggingTokenRef.current && event.buttons === 0) void finishTokenMove(event); }}>
           <div ref={mapCanvasRef} className={`workspace-map-stage ${mode === "gm" && view === "maps" ? "fog-editing" : ""}`} style={{ width: `${mapZoom * 100}%`, height: `${mapZoom * 100}%` }}>
+            <AttackTargetLine tokens={battleMapTokens} {...targetLine} />
             {mapImagePath ? <img src={mediaUrlFromVaultPath(mapImagePath)} alt={mapTitleShown} draggable={false} /> : <p className="workspace-map-empty">O Mestre ainda não disponibilizou mapas para os jogadores.</p>}
             <div className="workspace-map-grid" aria-hidden="true" />
             {(mode === "gm" || fogLayers.length > 0) && <div className={`workspace-map-fog ${mode === "gm" && view === "maps" ? "editor" : ""}`} style={{ gridTemplateColumns: `repeat(${fogColumns}, 1fr)`, gridTemplateRows: `repeat(${fogRows}, 1fr)` }} onPointerDown={beginFogPaint} onPointerMove={paintFog} onPointerUp={(event) => void finishFogPaint(event)} onPointerCancel={(event) => void finishFogPaint(event)} onLostPointerCapture={() => void finishFogPaint()}>
               {fogCells.map((cell) => { const density = mistDensityByCell[cell] || 0; return <div key={cell} className={`workspace-fog-cell ${fogIsRevealed(cell) ? "revealed" : "hidden"} ${density > 0 ? "mist-active" : ""}`} style={density > 0 ? { backgroundColor: `rgba(210,220,226,${Math.min(.42, density * .34)})` } : undefined} aria-hidden="true" />; })}
             </div>}
             {Object.keys(mistDensityByCell).length > 0 && <MistParticleOverlay densityByCell={mistDensityByCell} columns={fogColumns} rows={fogRows} />}
-            {workspace.tokens.map((token) => { const summary = token.character_id ? characterById.get(token.character_id) : undefined; const image = mediaUrlFromVaultPath(token.image_path || summary?.portrait); const hpCurrent = summary?.current_hp ?? token.current_hp; const hpMaximum = summary?.maximum_hp ?? token.maximum_hp; const conditions = summary?.conditions || token.conditions; return <button type="button" key={token.id} className={`workspace-map-token ${token.token_type} ${canMoveToken(token) ? "movable" : ""}`} style={{ left: `${token.longitude}%`, top: `${token.latitude}%`, borderColor: token.color, color: token.color }} onPointerDown={(event) => { if (canMoveToken(token)) { event.preventDefault(); event.stopPropagation(); event.currentTarget.setPointerCapture?.(event.pointerId); draggingTokenRef.current = { id: token.id, element: event.currentTarget, pointerId: event.pointerId, original: { latitude: token.latitude, longitude: token.longitude }, latest: { latitude: token.latitude, longitude: token.longitude } }; } }} onClick={() => void openTokenDetails(token)} title={`${token.name} · latitude ${token.latitude.toFixed(2)} · longitude ${token.longitude.toFixed(2)}${conditions.length ? ` · ${conditions.join(", ")}` : ""}`}>
-              {image ? <img src={image} alt="" draggable={false} /> : <i>{token.sheet?.marker || token.name.slice(0, 1).toUpperCase()}</i>}<strong>{token.name}</strong>{hpMaximum != null && <small>{hpCurrent ?? "—"}/{hpMaximum} PV</small>}
+            {battleMapTokens.map((token) => { const summary = token.token_type === "character" && token.character_id ? characterById.get(token.character_id) : undefined; const image = mediaUrlFromVaultPath(token.image_path || summary?.portrait); const hpCurrent = summary?.current_hp ?? token.current_hp; const hpMaximum = summary?.maximum_hp ?? token.maximum_hp; const conditions = summary?.conditions || token.conditions; return <button type="button" key={token.id} className={`workspace-map-token ${token.token_type} ${canMoveToken(token) ? "movable" : ""}`} style={{ left: `${token.longitude}%`, top: `${token.latitude}%`, borderColor: token.color, color: token.color }} onPointerDown={(event) => { if (canMoveToken(token)) { event.preventDefault(); event.stopPropagation(); event.currentTarget.setPointerCapture?.(event.pointerId); draggingTokenRef.current = { id: token.id, element: event.currentTarget, pointerId: event.pointerId, original: { latitude: token.latitude, longitude: token.longitude }, latest: { latitude: token.latitude, longitude: token.longitude } }; } }} onClick={() => void openTokenDetails(token)} title={`${token.name} · latitude ${token.latitude.toFixed(2)} · longitude ${token.longitude.toFixed(2)}${conditions.length ? ` · ${conditions.join(", ")}` : ""}`}>
+              {image ? <img src={image} alt="" draggable={false} /> : <i>{token.sheet?.marker || token.name.slice(0, 1).toUpperCase()}</i>}{hpMaximum != null && hpMaximum > 0 ? <span className="workspace-pin-health"><span className="workspace-pin-health-track" role="progressbar" aria-label={`Vida de ${token.name}`} aria-valuenow={hpCurrent ?? 0} aria-valuemin={0} aria-valuemax={hpMaximum}><span style={{ width: `${Math.max(0, Math.min(100, Number(hpCurrent || 0) / hpMaximum * 100))}%` }} /></span><span className="workspace-pin-health-number">{hpCurrent ?? "—"}/{hpMaximum}</span></span> : <strong>{token.name}</strong>}
             </button>; })}
           </div>
         </div>
@@ -1853,10 +2033,11 @@ export default function SessionWorkspace({ mode, view = "table" }: Props) {
         <div className="workspace-timeline" ref={timelineRef}>{timeline.length ? timeline.map((entry) => <article key={entry.id} className={entry.kind}><div><i>{entry.kind === "roll" ? "◈" : entry.kind === "message" ? "✦" : entry.kind === "state" ? "±" : "→"}</i><time>{formatClock(entry.timestamp)}</time></div><section><header><strong style={{ color: characterColor(entry.actorId) }}>{entry.actor}</strong><small>{entry.kind === "roll" ? "rolagem" : entry.kind === "message" ? "mensagem" : entry.kind === "state" ? "estado" : "ação"}</small></header><p>{entry.title}</p>{entry.detail && <pre>{entry.detail}</pre>}</section></article>) : <p className="workspace-empty-log">O registro da sessão começará com a primeira ação ou mensagem.</p>}</div>
       </aside>}
     </div>
-    {attackResolution && <div className="workspace-item-modal-backdrop" role="presentation" onClick={() => setAttackResolution(null)}><section className="workspace-item-modal" role="dialog" aria-modal="true" aria-label="Resolução do ataque" onClick={(event) => event.stopPropagation()}><header><div><small>RESOLUÇÃO DO ATAQUE</small><h2>{attackResolution.actor_name} → {attackResolution.target_name}</h2></div><button type="button" onClick={() => setAttackResolution(null)} aria-label="Fechar resolução">×</button></header><div className="workspace-token-modal-meta"><span>{attackResolution.roll_mode === "physical" ? "Dado físico" : "Rolagem digital"}: {attackResolution.d20}</span><span>Bônus: {attackResolution.attack_bonus >= 0 ? "+" : ""}{attackResolution.attack_bonus}</span><span>Total: {attackResolution.attack_total}</span><span>CA: {attackResolution.target_ac}</span></div><div className="workspace-item-modal-meta"><strong>{attackResolution.result === "hit" ? "ACERTO" : "ERRO"}</strong><span>Dano: {attackResolution.damage_total} ({attackResolution.damage_formula})</span>{attackResolution.confirmed && <span>HP: {attackResolution.hp_before} → {attackResolution.hp_after}</span>}</div>{attackResolution.breakdown.strikes?.map((strike, index) => <p key={index}>Golpe {index + 1}: d20 {strike.d20} + {attackResolution.attack_bonus} = {strike.attack_total} · {strike.result === "hit" ? "Acerto" : "Erro"} · dano {strike.damage_total}</p>)}<p>Base {attackResolution.breakdown.attack?.base_bonus ?? 0} · equipamento {Number(attackResolution.breakdown.attack?.equipment_bonus || 0) >= 0 ? "+" : ""}{attackResolution.breakdown.attack?.equipment_bonus ?? 0} · efeitos {Number(attackResolution.breakdown.attack?.effect_bonus || 0) >= 0 ? "+" : ""}{attackResolution.breakdown.attack?.effect_bonus ?? 0}{attackResolution.breakdown.equipment?.length ? ` · ${attackResolution.breakdown.equipment.map((item) => item.item_title).join(" + ")}` : ""}</p>{attackResolution.confirmed ? <button type="button" onClick={() => setAttackResolution(null)}>Concluído</button> : <button type="button" disabled={Boolean(busy)} onClick={() => void confirmResolvedAttack()}>{busy.startsWith("confirm:") ? "Aplicando…" : "Confirmar e aplicar"}</button>}</section></div>}
+    {attackResolution && !attackResolution.breakdown.automatic_hit && <div className="workspace-item-modal-backdrop" role="presentation" onClick={() => { if (attackResolution.confirmed) setAttackResolution(null); }}><section className="workspace-item-modal" role="dialog" aria-modal="true" aria-label="Resolução do ataque" onClick={(event) => event.stopPropagation()}><header><div><small>RESOLUÇÃO DO ATAQUE</small><h2>{attackResolution.actor_name} → {attackResolution.target_name}</h2></div><button type="button" onClick={() => setAttackResolution(null)} aria-label="Fechar resolução">×</button></header>{!attackResolution.confirmed && <p role="status"><strong>Dano ainda não aplicado.</strong> Confirme abaixo para atualizar a vida do alvo.</p>}<div className="workspace-token-modal-meta"><span>{attackResolution.roll_mode === "physical" ? "Dado físico" : "Rolagem digital"}: {attackResolution.d20}</span><span>Bônus: {attackResolution.attack_bonus >= 0 ? "+" : ""}{attackResolution.attack_bonus}</span><span>Total: {attackResolution.attack_total}</span><span>CA: {attackResolution.target_ac}</span></div><div className="workspace-item-modal-meta"><strong>{attackResolution.result === "hit" ? "ACERTO" : "ERRO"}</strong><span>Dano: {attackResolution.damage_total} ({attackResolution.damage_formula})</span>{attackResolution.confirmed && <span>HP: {attackResolution.hp_before} → {attackResolution.hp_after}</span>}</div>{attackResolution.breakdown.strikes?.map((strike, index) => <p key={index}>Golpe {index + 1}: d20 {strike.d20} + {attackResolution.attack_bonus} = {strike.attack_total} · {strike.result === "hit" ? "Acerto" : "Erro"} · dano {strike.damage_total}</p>)}<p>Base {attackResolution.breakdown.attack?.base_bonus ?? 0} · equipamento {Number(attackResolution.breakdown.attack?.equipment_bonus || 0) >= 0 ? "+" : ""}{attackResolution.breakdown.attack?.equipment_bonus ?? 0} · efeitos {Number(attackResolution.breakdown.attack?.effect_bonus || 0) >= 0 ? "+" : ""}{attackResolution.breakdown.attack?.effect_bonus ?? 0}{attackResolution.breakdown.equipment?.length ? ` · ${attackResolution.breakdown.equipment.map((item) => item.item_title).join(" + ")}` : ""}</p>{attackResolution.confirmed ? <button type="button" onClick={() => setAttackResolution(null)}>Concluído</button> : <button type="button" disabled={Boolean(busy)} onClick={() => void confirmResolvedAttack()}>{busy.startsWith("confirm:") ? "Aplicando…" : "Confirmar resultado e aplicar dano"}</button>}</section></div>}
+    {attackResolution?.breakdown.automatic_hit && <SpellResolution resolution={attackResolution} busy={Boolean(busy)} onConfirm={() => void confirmResolvedAttack()} onClose={() => setAttackResolution(null)} />}
     {effectBreakdownOpen && <EffectBreakdownModal title={effectBreakdownOpen === "armor" ? "Classe de Armadura" : ATTRIBUTES.find(([key]) => key === effectBreakdownOpen)?.[1] || effectBreakdownOpen} base={effectBreakdownOpen === "armor" ? definition?.defenses?.unmodified_armor_class ?? definition?.defenses?.base_armor_class : definition?.base_attributes?.[effectBreakdownOpen]} effective={effectBreakdownOpen === "armor" ? definition?.defenses?.armor_class : definition?.attributes?.[effectBreakdownOpen]} entries={openBreakdownEntries} onClose={() => setEffectBreakdownOpen(null)} onRoll={effectBreakdownOpen !== "armor" ? () => { const key = effectBreakdownOpen; setEffectBreakdownOpen(null); void roll("attribute", key); } : undefined} />}
 {openToken?.token_type === "location" && <div className="workspace-token-modal-backdrop" onClick={() => setOpenTokenId(null)}><section className="workspace-token-modal" role="dialog" aria-label={`Local ${openToken.name}`} onClick={e => e.stopPropagation()}><header><h2>{openToken.name}</h2><button onClick={() => setOpenTokenId(null)}>Fechar local</button></header>{openToken.image_path && <img src={mediaUrlFromVaultPath(openToken.image_path)} alt="" width={96} />}<p>{openToken.sheet?.description}</p><small>{openToken.latitude.toFixed(1)}, {openToken.longitude.toFixed(1)}</small></section></div>}
-    {openToken && openToken.token_type !== "location" && <div className="workspace-token-modal-backdrop" role="presentation" onClick={() => setOpenTokenId(null)}><section className="workspace-token-modal" role="dialog" aria-modal="true" aria-label={`Ficha de ${openToken.name}`} onClick={(event) => event.stopPropagation()}><header><div><small>{openToken.token_type === "monster" ? "MONSTRO / NPC" : "PERSONAGEM"}</small><h2 style={{ color: openToken.color }}>{openToken.name}</h2></div><button type="button" onClick={() => setOpenTokenId(null)} aria-label="Fechar ficha">×</button></header>{loadingTokenDetail ? <p>Carregando ficha…</p> : <><div className="workspace-token-modal-vitals"><strong>VIDA {openCharacterDetail?.state?.current_hp ?? openToken.current_hp ?? "—"} / {openCharacterDetail?.state?.maximum_hp ?? openToken.maximum_hp ?? "—"}</strong><span>{(openCharacterDetail?.state?.conditions || openToken.conditions).length ? (openCharacterDetail?.state?.conditions || openToken.conditions).join(" · ") : "STATUS - Nenhum"}</span></div><div className="workspace-token-modal-meta"><span>Mapa: {openToken.map_id || "default"}</span><span>Latitude: {openToken.latitude.toFixed(2)}</span><span>Longitude: {openToken.longitude.toFixed(2)}</span>{openCharacterDetail ? <><span>Classe: {openCharacterDetail.definition.class_name}</span><span>Nível: {openCharacterDetail.definition.level}</span><span>CA: <ArmorClassValue defenses={openCharacterDetail.definition.defenses} inventory={openCharacterDetail.inventory} /></span></> : <><span>Função: {openToken.sheet?.role || "Inimigo"}</span><span>Nível: {openToken.sheet?.level ?? "—"}</span><span>CA: {openToken.sheet?.armor_class ?? "—"}</span><span>Iniciativa: {openToken.sheet?.initiative ?? "—"}</span></>}</div>{openCharacterDetail ? <div className="workspace-token-modal-body"><p>{openCharacterDetail.definition.epithet || openCharacterDetail.definition.race}</p><h3>Ataques</h3>{openCharacterDetail.definition.attacks?.map((attack) => <p key={attack.id}>{attack.name} · {attack.damage || "dano não configurado"}</p>)}</div> : <div className="workspace-token-modal-body">{openToken.sheet?.description && <p>{openToken.sheet.description}</p>}{(openToken.sheet?.attacks || []).length > 0 && <><h3>Ataques</h3>{openToken.sheet?.attacks?.map((attack, index) => <p key={`${attack.name}-${index}`}>{attack.name} · {attack.damage || "dano não configurado"}{attack.bonus ? ` · ${attack.bonus}` : ""}{attack.notes ? ` · ${attack.notes}` : ""}</p>)}</>}{(openToken.sheet?.abilities || []).length > 0 && <><h3>Habilidades</h3>{openToken.sheet?.abilities?.map((ability) => <p key={ability}>{ability}</p>)}</>}{openToken.sheet?.notes && <><h3>Notas</h3><p>{openToken.sheet.notes}</p></>}</div>}</>}</section></div>}
+    {openToken && openToken.token_type !== "location" && <div className="workspace-token-modal-backdrop" role="presentation" onClick={() => setOpenTokenId(null)}><section className="workspace-token-modal" role="dialog" aria-modal="true" aria-label={`Ficha de ${openToken.name}`} onClick={(event) => event.stopPropagation()}><header><div><small>{openToken.token_type === "monster" ? "MONSTRO / NPC" : "PERSONAGEM"}</small><h2 style={{ color: openToken.color }}>{openToken.name}</h2></div><button type="button" onClick={() => setOpenTokenId(null)} aria-label="Fechar ficha">×</button></header><TokenVitals key={`${openToken.id}:${openToken.current_hp}:${openToken.maximum_hp}`} token={openToken} editable={mode === "gm"} onChange={async () => { await loadOverview(); }} />{loadingTokenDetail ? <p>Carregando ficha…</p> : <><div className="workspace-token-modal-vitals"><strong>VIDA {openCharacterDetail?.state?.current_hp ?? openToken.current_hp ?? "—"} / {openCharacterDetail?.state?.maximum_hp ?? openToken.maximum_hp ?? "—"}</strong><span>{(openCharacterDetail?.state?.conditions || openToken.conditions).length ? (openCharacterDetail?.state?.conditions || openToken.conditions).join(" · ") : "STATUS - Nenhum"}</span></div><div className="workspace-token-modal-meta"><span>Mapa: {openToken.map_id || "default"}</span><span>Latitude: {openToken.latitude.toFixed(2)}</span><span>Longitude: {openToken.longitude.toFixed(2)}</span>{openCharacterDetail ? <><span>Classe: {openCharacterDetail.definition.class_name}</span><span>Nível: {openCharacterDetail.definition.level}</span><span>CA: <ArmorClassValue defenses={openCharacterDetail.definition.defenses} inventory={openCharacterDetail.inventory} /></span></> : <><span>Função: {openToken.sheet?.role || "Inimigo"}</span><span>Nível: {openToken.sheet?.level ?? "—"}</span><span>CA: {openToken.sheet?.armor_class ?? "—"}</span><span>Iniciativa: {openToken.sheet?.initiative ?? "—"}</span></>}</div>{openCharacterDetail ? <div className="workspace-token-modal-body"><p>{openCharacterDetail.definition.epithet || openCharacterDetail.definition.race}</p><h3>Ataques</h3>{openCharacterDetail.definition.attacks?.map((attack) => <p key={attack.id}>{attack.name} · {attack.damage || "dano não configurado"}</p>)}</div> : <div className="workspace-token-modal-body">{openToken.sheet?.description && <p>{openToken.sheet.description}</p>}{(openToken.sheet?.attacks || []).length > 0 && <><h3>Ataques</h3>{openToken.sheet?.attacks?.map((attack, index) => <p key={`${attack.name}-${index}`}>{attack.name} · {attack.damage || "dano não configurado"}{attack.bonus ? ` · ${attack.bonus}` : ""}{attack.notes ? ` · ${attack.notes}` : ""}</p>)}</>}{(openToken.sheet?.abilities || []).length > 0 && <><h3>Habilidades</h3>{openToken.sheet?.abilities?.map((ability) => <p key={ability}>{ability}</p>)}</>}{openToken.sheet?.notes && <><h3>Notas</h3><p>{openToken.sheet.notes}</p></>}</div>}</>}</section></div>}
     {openItem && <div className="workspace-item-modal-backdrop" role="presentation" onClick={() => setOpenItem(null)}><section className="workspace-item-modal" role="dialog" aria-modal="true" aria-label={`Informações de ${cleanItemDisplayName(openItem.item_title)}`} onClick={(event) => event.stopPropagation()}><header><div>{mediaUrlFromVaultPath(openItem.thumbnail || openItem.cover || iconPathForItem(openItem.item_title, openItem.item_type)) && <img src={mediaUrlFromVaultPath(openItem.thumbnail || openItem.cover || iconPathForItem(openItem.item_title, openItem.item_type))} alt="" />}<div><small>{openItem.item_type || "Item"}</small><h2>{cleanItemDisplayName(openItem.item_title)}</h2></div></div><button type="button" onClick={() => setOpenItem(null)} aria-label="Fechar informações do item">×</button></header><div className="workspace-item-modal-meta"><span>{openItem.equipped ? `Equipado${openItem.equipment_slot ? ` · ${openItem.equipment_slot}` : ""}` : "Guardado"}</span><span>Quantidade: {openItem.quantity}</span>{openItem.damage_formula && <span>Dano: {openItem.damage_formula}</span>}</div>{openItem.description && <p>{openItem.description}</p>}{(openItem.effects || []).length > 0 && <div><h3>Efeitos</h3>{openItem.effects?.map((effect) => <p key={effect}>{effect}</p>)}</div>}{(openItem.effect_rules || []).length > 0 && <div><h3>Efeitos automáticos</h3>{openItem.effect_rules?.map((rule) => <p key={rule.id}>{describeItemRule(rule)}</p>)}</div>}{openItem.notes && <div><h3>Notas</h3><p>{openItem.notes}</p></div>}</section></div>}
     <DiceTray mode={mode} triggerHidden targetTokens={workspace.tokens} />
   </section>;

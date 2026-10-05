@@ -1,0 +1,22 @@
+.omnisvera-observer{font-size:16px;line-height:1.5;color:#e3e6e8}
+.omnisvera-observer .hero{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;height:auto!important;min-height:34px}
+.omnisvera-observer h2{font-size:1.35rem}.omnisvera-observer h3{font-size:1.05rem}
+.omnisvera-observer small{font-size:.85rem}.omnisvera-observer code{overflow-wrap:anywhere}
+.observer-nav{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
+.observer-nav button[aria-current]{border-color:#99bbd9;background:#283d4f}
+.observer-section-heading{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+.observer-section-heading h3{overflow-wrap:anywhere;margin:8px 0}
+.observer-filters{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;align-items:end}
+.omnisvera-observer label{display:flex;flex-direction:column;font-size:.9rem}
+.omnisvera-observer label input,.omnisvera-observer select{width:100%;margin:6px 0;min-width:0;box-sizing:border-box;font:inherit;background:#171c20;color:#e3e6e8;border:1px solid #50575f;padding:10px;border-radius:3px}
+.observer-badge{display:inline-block;background:#222e35;border:1px solid #405863;padding:3px 9px;font-size:.85rem;border-radius:2px;white-space:nowrap}
+.observer-warning{background:#3c2928;border-color:#81504b;color:#ffc4b9}
+.observer-record{padding:16px 0;border-top:1px solid #34383c;overflow-wrap:anywhere}
+.observer-record p{margin:8px 0}.omnisvera-observer details{margin:12px 0;border:1px solid #34383c;padding:12px}
+.omnisvera-observer summary{cursor:pointer;color:#c7d9e5}
+.omnisvera-observer pre{white-space:pre-wrap;overflow-wrap:anywhere;font-size:.85rem;max-height:340px;overflow:auto}
+.observer-notice{border-left:3px solid #7899b1;padding:12px;background:#19222a;overflow-wrap:anywhere}
+.observer-pagination{align-items:center;flex-wrap:wrap}.observer-link{display:block;margin:8px 0;overflow-wrap:anywhere}
+.omnisvera-observer button:focus-visible,.omnisvera-observer summary:focus-visible,.omnisvera-observer input:focus-visible{outline:2px solid #a6d3fb;outline-offset:3px}
+.observer-detail:focus{outline:none}
+@media(max-width:600px){.omnisvera-observer{padding:10px!important}.omnisvera-observer .panel{padding:14px}.observer-filters{grid-template-columns:1fr}.observer-metrics{grid-template-columns:1fr}.observer-prediction{flex-wrap:wrap}.observer-section-heading{align-items:flex-start}.observer-heading{margin:16px 0}}

@@ -47,12 +47,20 @@ function dateLabel(value?: string | null) {
   return new Date(value).toLocaleDateString("pt-BR", { day: "2-digit", month: "long", year: "numeric" });
 }
 
-function buildMemories(sessions: CampaignSession[], characters: PlayableCharacterSummary[]): SessionMemory[] {
+export function buildMemories(sessions: CampaignSession[], characters: PlayableCharacterSummary[]): SessionMemory[] {
   const characterById = new Map(characters.map((character) => [character.id, character]));
   return sessions.map((session) => {
-    const narrative = session.narrative || {
-      participants: [], locations: [], missions: [], discoveries: [], rewards: [], items_acquired: [],
-      world_events: [], character_events: [], open_threads: [], tags: [],
+    // A newly started session legitimately has narrative={} until its first recap.
+    // Default each collection, not just the container (an empty object is truthy).
+    const raw = session.narrative;
+    const narrative = {
+      participants: Array.isArray(raw?.participants) ? raw.participants : [],
+      discoveries: Array.isArray(raw?.discoveries) ? raw.discoveries : [],
+      world_events: Array.isArray(raw?.world_events) ? raw.world_events : [],
+      rewards: Array.isArray(raw?.rewards) ? raw.rewards : [],
+      items_acquired: Array.isArray(raw?.items_acquired) ? raw.items_acquired : [],
+      open_threads: Array.isArray(raw?.open_threads) ? raw.open_threads : [],
+      tags: Array.isArray(raw?.tags) ? raw.tags : [],
     };
     return {
       key: `session:${session.id}`,

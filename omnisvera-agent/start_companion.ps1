@@ -61,6 +61,7 @@ if (Test-Path $TokenFile) {
           token = [string]$property.Value.token
           character_path = [string]$property.Value.character_path
           character_title = [string]$property.Value.character_title
+          gm_controlled = [bool]$property.Value.gm_controlled
         }
       }
     }
@@ -147,7 +148,11 @@ $env:OMNISVERA_BEHAVIOR_MEMORY_AB_MODE = "behavioral"
 $env:OMNISVERA_ACCESS_TOKEN = $MasterToken
 $env:OMNISVERA_MASTER_TOKEN = $MasterToken
 $env:OMNISVERA_PLAYER_TOKEN = $PlayerToken
-$env:OMNISVERA_PLAYER_PROFILES_JSON = ($PlayerProfiles | ConvertTo-Json -Depth 5 -Compress)
+$ActivePlayerProfiles = @{}
+foreach ($profileId in $PlayerProfiles.Keys) {
+  if (-not $PlayerProfiles[$profileId].gm_controlled) { $ActivePlayerProfiles[$profileId] = $PlayerProfiles[$profileId] }
+}
+$env:OMNISVERA_PLAYER_PROFILES_JSON = ($ActivePlayerProfiles | ConvertTo-Json -Depth 5 -Compress)
 $env:OMNISVERA_REBUILD_ON_STARTUP = if ($NoRebuild) { "false" } else { "true" }
 
 $CloudflareFile = Join-Path $Backend "data\cloudflare.json"

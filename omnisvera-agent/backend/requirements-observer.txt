@@ -1,0 +1,4 @@
+# App + backend regression environment. Core still uses FastMCP v1.
+-r requirements.txt
+mcp==1.30.0
+ollama==0.6.2

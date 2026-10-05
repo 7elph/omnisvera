@@ -55,8 +55,19 @@ class FluxKleinProvider(CloudflareProvider):
         from PIL import Image
         if len(references or []) > 4:
             raise ValueError('O modelo aceita até quatro referências')
+        usable_refs: list[Path] = []
+        for path in references or []:
+            try:
+                with Image.open(path) as probe:
+                    probe.verify()
+                with Image.open(path) as sized:
+                    if min(sized.size) < 128:
+                        continue
+                usable_refs.append(path)
+            except Exception:
+                continue
         files = {"prompt": (None, prompt)}
-        for index, path in enumerate(references or []):
+        for index, path in enumerate(usable_refs):
             with Image.open(path) as original:
                 picture = original.convert('RGB')
                 picture.thumbnail((511, 511))
@@ -65,6 +76,10 @@ class FluxKleinProvider(CloudflareProvider):
             files[f'input_image_{index}'] = (f'reference_{index}.png', buffer.getvalue(), 'image/png')
         with httpx.Client(timeout=60) as client:
             resp = client.post(url, headers=headers, files=files)
+            if resp.is_error and resp.status_code == 400 and len(files) > 1:
+                # Referências pequenas ou inválidas fazem o modelo recusar;
+                # o texto do prompt sozinho já foi validado como aceito.
+                resp = client.post(url, headers=headers, files={"prompt": (None, prompt)})
             if resp.is_error:
                 raise RuntimeError(f"Cloudflare Workers AI: HTTP {resp.status_code}. Verifique o formato da solicitação, as permissões e a disponibilidade do modelo.")
             # Response may be binary image or JSON with image

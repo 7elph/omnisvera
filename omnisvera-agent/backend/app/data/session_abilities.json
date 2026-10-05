@@ -10,7 +10,7 @@
         "mechanics_status": "structured",
         "source": "Ficha de Raziel e classe Hemomante",
         "uses": {
-          "resource_key": "reserva-de-sangue",
+          "resource_key": "reserva_de_sangue",
           "label": "Reserva de Sangue",
           "maximum": 5,
           "recharge": "inn_rest"
@@ -36,7 +36,7 @@
         "source": "Ficha de Raziel",
         "active": true,
         "uses": {
-          "resource_key": "reserva-de-sangue",
+          "resource_key": "reserva_de_sangue",
           "label": "Regeneração Vampírica · usos",
           "maximum": 1,
           "recharge": "inn_rest",
@@ -48,35 +48,22 @@
         "name": "Lâmina de Sangue",
         "kind": "technique",
         "group": "Habilidades",
-        "description": "Custo: 1 ponto de Reserva de Sangue. Reforça uma lâmina, garra ou arma leve e concede +1 no ataque ou +1d4 de dano na próxima ação ofensiva. Não acumula consigo mesma.",
+        "description": "Declare de 1 a 5 lâminas e ataque corpo a corpo ou à distância (à escolha). Ao acertar o d20, causa Nd4 de dano (1d4 por lâmina). Cada uso consome as lâminas declaradas da Reserva de Sangue.",
         "mechanics_status": "structured",
         "source": "Classe Hemomante",
         "active": true,
-        "uses": {
-          "resource_key": "reserva-de-sangue",
-          "label": "Lâmina de Sangue · usos",
-          "maximum": 1,
-          "recharge": "inn_rest",
-          "cost": 1
-        }
+        "requires_target": true
       },
       {
         "id": "marca-rubra",
         "name": "Marca Rubra",
         "kind": "technique",
         "group": "Habilidades",
-        "description": "Custo: 1 ponto de Reserva de Sangue. Marca o sangue de um alvo ferido e permite reconhecê-lo ou rastreá-lo por um curto período. Falha sem sangue, ferimento ou contato significativo.",
+        "description": "Custo: 1 ponto de Lâminas de Sangue. Marca o sangue de um alvo ferido e permite reconhecê-lo ou rastreá-lo por um curto período. Falha sem sangue, ferimento ou contato significativo. Consome 1 da Reserva de Sangue.",
         "mechanics_status": "structured",
         "source": "Classe Hemomante",
         "active": true,
-        "requires_target": true,
-        "uses": {
-          "resource_key": "reserva-de-sangue",
-          "label": "Marca Rubra · usos",
-          "maximum": 1,
-          "recharge": "inn_rest",
-          "cost": 1
-        }
+        "requires_target": true
       },
       {
         "id": "nao-vida-consciente-vampiro",
@@ -139,7 +126,7 @@
         "name": "Mordida",
         "kind": "technique",
         "group": "Habilidades",
-        "description": "Também chamada de absorção de sangue durante a sessão. No nível 1, cura 1d4 PV e causa ao alvo a mesma quantidade como dano. Exige um ataque normal contra a CA do alvo; a percepção posterior é resolvida por Jogada de Proteção modificada por Sabedoria.",
+        "description": "Após um ataque normal confirmado com dano, Raziel pode morder o alvo vivo para recuperar 1d4 PV (rolagem separada, limitada ao máximo; equivale a um soco). Não consome a Reserva de Sangue; uma vez por turno; exige alvo vivo.",
         "mechanics_status": "structured",
         "source": "Sessão anterior e Old Dragon — Novas Raças, Vampiro",
         "active": true
@@ -452,9 +439,9 @@
         "kind": "spell",
         "group": "Magias",
         "circle": 2,
-        "description": "Magia autoral confirmada para Morthak no 2º círculo. Nenhuma regra com esse nome foi localizada nos cinco PDFs anexados nem no Vault; quantidade, duração, alcance e controle do esqueleto permanecem pendentes.",
+        "description": "Ruling de mesa travado: magia autoral no 2º círculo. Invoca 1 esqueleto de madeira, 1x/dia, por 1 semana ou até ser destruído; age após Morthak. Recompensa da Sessão 6: PV 10, CA 16, dano 1d6+1; bônus de acerto +2 preservado. Fraqueza a fogo: resolução manual pelo Mestre até esclarecer o 1d6+2 discutido na mesa.",
         "mechanics_status": "partial",
-        "source": "Definição da campanha",
+        "source": "Definição da campanha; Sessão 6, 02:24–02:25",
         "active": true,
         "uses": {
           "resource_key": "levantar-um-esqueleto",
@@ -469,7 +456,7 @@
         "kind": "spell",
         "group": "Magias",
         "circle": 3,
-        "description": "Na campanha, esta magia permanece organizada no 3º círculo. A referência arcana anexada a apresenta no 5º círculo: alcance de 10 metros, duração permanente e sem Jogada de Proteção; anima esqueletos ou zumbis a partir de restos intactos e permite comandos verbais simples. A adaptação de círculo ainda é uma regra da campanha.",
+        "description": "Na campanha, esta magia permanece organizada no 3º círculo. Ruling de mesa travado (livro Old Dragon, Mago Necromante): anima 1 zumbi (PV 10, CA 13, ataque +2, dano 1d6+2) por 1x/dia a partir de restos; dura 1 semana ou até ser destruído; age após Morthak e obedece a comandos verbais simples.",
         "mechanics_status": "partial",
         "source": "Definição da campanha + Tomo de Magia Arcana (5º círculo na referência)",
         "active": true,

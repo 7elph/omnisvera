@@ -1,0 +1,32 @@
+{
+  "version": "dorn-mage2-2026-10-03",
+  "source": "Ficha aprovada por Sage em 03/10/2026; Old Dragon Aprimorado, pp. 14–15, 40–42, 102, 105, 112. Constructo é adaptação de Omnisvera.",
+  "sheet": {
+    "attributes": {"strength": 14, "dexterity": 8, "constitution": 16, "intelligence": 16, "wisdom": 12, "charisma": 6},
+    "race": {
+      "race": "Constructo Arcano", "movement": "9 m",
+      "racial_abilities": "Adaptação de Omnisvera. Atributos finais já incluem +2 CON / -2 CAR; não somar novamente. Natureza: não respira, come, bebe ou dorme. Carcaça Arcana: +2 CA já incluído. Forma Imutável: imune a transformações físicas. Mente Artificial: +4 JP contra sono mágico, encantamento e controle mental. Corpo Artificial: imune a doenças naturais e venenos comuns. Recalibração: 8 horas de baixa atividade para preparar magias e descansar. Reparo: cura convencional pela metade; ferramentas permitem recuperação normal no descanso. Aplicação de imunidades, JP condicionais e cura/reparo assistida pelo Mestre. Não possui imunidades monstruosas amplas."
+    },
+    "character_class": {"class_name": "Mago", "level": 2, "hit_points": 13, "saving_throw": 14, "base_attack": 0, "experience": 2500, "class_abilities": "DV 2d4; PV (4+3)+(3+3)=13, segundo dado fixado em 3 pelo Mestre. Próximo nível: 5.000 XP. Usa adaga e cajado; armadura/escudo físico impede conjuração. Núcleo Rúnico funciona como grimório. INT16: 35% para aprender magia e +1 preparação de 1º círculo. Especialização futura não escolhida."},
+    "attacks": {"melee_bonus": 2, "attack_notes": "BA0 + FOR2 = +2. Cajado 1d6+2; adaga 1d4+2. FOR já incluída no dano cadastrado; não somar novamente. Sem Punho ou Proteger da ficha antiga. Mísseis via Magias: automático, 1d4+2, até 16m com linha de visão."},
+    "languages": {"spoken_languages": "Comum, Antigo, Anão, Dracônico", "written_languages": "Leitura/escrita específica a confirmar pelo Mestre; conhecimento de idioma não libera memórias históricas."},
+    "alignment": {"alignment": "Neutro"},
+    "equipment": {"equipment_list": "Núcleo Rúnico; Cajado Rúnico; Adaga; Kit de Reparo; Cristal de Memória danificado; Compartimento interno", "starting_gold": null, "carried_weight": null, "load_status": "Peso não definido; não inventar carga."},
+    "armor": {"armor_class": 11, "armor_breakdown": "10 -1 DES +2 Carcaça =11. Escudo Arcano ativo: CA15; não usar armadura física."},
+    "magic": {"magic_mode": "spells", "known_magic": "Detectar Magia; Escudo Arcano; Mísseis Mágicos", "magic_notes": "3 preparações de 1º círculo por dia, NÃO 3 usos de cada magia. Preparação inicial: uma de cada. Reorganizar antes da próxima recalibração com o Mestre. Detectar: raio16m, 1d6+2 turnos. Escudo: pessoal, 1d4+2 turnos, CA15 e absorção de Mísseis; efeito/duração assistidos pelo Mestre. Mísseis: 1 projétil, acerto automático, 1d4+2, alcance16m. Não confundir turnos de exploração com rodadas de combate. Terceiro protocolo é concessão narrativa aprovada."},
+    "details": {"physical_description": "Constructo arcano médio de metal e pedra, núcleo rúnico no peito.", "personality": "Analítico, literal, socialmente estranho; memórias incompletas.", "background": "Encontrado nas ruínas da primeira expedição. Aliado sob controle do Mestre. Sua ficha não revela os segredos de origem.", "goals": "Acompanhar o grupo e recuperar protocolos antigos, sem conhecer automaticamente todos os mistérios."}
+  },
+  "abilities": [
+    {"id": "detectar-magia", "name": "Detectar Magia", "kind": "spell", "group": "Magias", "circle": 1, "active": true, "blocked": false, "mechanics_status": "partial", "description": "Análise arcana em raio de 16m por 1d6+2 turnos. Usar debita a preparação; o Mestre descreve auras e controla duração, sem revelar segredos automaticamente.", "uses": {"resource_key": "dorn_detectar_magia", "label": "Detectar Magia · preparada", "maximum": 1, "recharge": "inn_rest"}},
+    {"id": "escudo-arcano", "name": "Escudo Arcano", "kind": "spell", "group": "Magias", "circle": 1, "active": true, "blocked": false, "mechanics_status": "partial", "description": "Pessoal, 1d4+2 turnos. Usar debita a preparação. Mestre aplica efeito +4 CA (CA15), sem acumular consigo, controla expiração e absorção total de Mísseis. O botão não aplica o efeito automaticamente.", "uses": {"resource_key": "dorn_escudo_arcano", "label": "Escudo Arcano · preparado", "maximum": 1, "recharge": "inn_rest"}},
+    {"id": "misseis-magicos", "name": "Mísseis Mágicos", "kind": "spell", "group": "Magias", "circle": 1, "active": true, "blocked": false, "mechanics_status": "partial", "description": "Um míssil automático: 1d4+2, alvo visível até16m. No modo Digital, selecionar alvo e confirmar aplica dano e consome preparação uma única vez. Mestre confere alcance, visão e defesas mágicas.", "uses": {"resource_key": "dorn_misseis_magicos", "label": "Mísseis Mágicos · preparado", "maximum": 1, "recharge": "inn_rest"}}
+  ],
+  "items": [
+    {"name": "Cajado Rúnico", "type": "arma", "damage": "1d6+2", "equipped": true, "description": "Dorn: dano base1d6 +FOR2 já incluída. Ataque +2. Sem bônus mágico adicional."},
+    {"name": "Adaga", "type": "arma", "damage": "1d4+2", "description": "Dorn: dano base1d4 +FOR2 já incluída. Ataque corpo a corpo +2. A adaga recebida na história não é duplicada se já houver inventário: nesse caso a migração exige revisão."},
+    {"name": "Núcleo Rúnico", "type": "item", "description": "Grimório integrado ao peito; não pode ser removido normalmente. Protocolos: Detectar Magia, Escudo Arcano e Mísseis Mágicos."},
+    {"name": "Kit de Reparo", "type": "item", "description": "Ferramentas para reparo durante recalibração; não concede cura instantânea."},
+    {"name": "Cristal de Memória danificado", "type": "item", "description": "Item narrativo, sem função mecânica conhecida."},
+    {"name": "Compartimento interno", "type": "item", "description": "Pequeno espaço interno. Capacidade não definida; não concede carga ilimitada."}
+  ]
+}

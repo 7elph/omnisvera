@@ -51,6 +51,56 @@ class MultiattackEffectsTests(TestCase):
         args.update(kwargs)
         return effect_command(self.db, **args)
 
+    def test_campaign_throwing_daggers_keep_ranged_mode_when_equipped_melee(self):
+        from app.character_play import _equipped_weapon_for_attack
+        dagger = {"item_path": "Items/Adagas de Espectro Fantasma.md", "item_title": "Adagas de Espectro Fantasma",
+                  "quantity": 1, "equipped": True, "equipment_slot": "Corpo a corpo", "damage_formula": "1d4"}
+        self.assertEqual(dagger, _equipped_weapon_for_attack([dagger], "ranged"))
+        self.assertEqual(dagger, _equipped_weapon_for_attack([dagger], "melee"))
+        self.assertIsNone(_equipped_weapon_for_attack([{**dagger, "equipped": False}], "ranged"))
+        self.assertIsNone(_equipped_weapon_for_attack([{**dagger, "item_path": "Items/Cajado.md"}], "ranged"))
+
+    def test_round_expires_orphan_effect_without_blocking_or_touching_other_hp(self):
+        for action in ("round", "next_turn"):
+            with self.subTest(action=action):
+                self.command("start", {"participants": [{"target_type": "character", "target_id": "vezemir", "initiative": 10}]})
+                missing = save_workspace_token(self.db, token_type="monster", name="Removido", latitude=10, longitude=10,
+                    current_hp=10, maximum_hp=10, sheet={"armor_class": 10})
+                applied = self.apply(target_type="token", target_id=missing["id"], label="Veneno antigo",
+                                     modifiers={"hp_per_round": -1})
+                effect_id = next(e["id"] for e in applied["effects"] if e["target_id"] == missing["id"])
+                with closing(sqlite3.connect(self.db)) as db, db:
+                    db.execute("DELETE FROM session_workspace_tokens WHERE id=?", (missing["id"],))
+                before = readeffects(self.db)
+                result = self.command(action)
+                self.assertEqual(before["round"] + 1, result["round"])
+                self.assertNotIn(effect_id, [e["id"] for e in result["effects"]])
+                with closing(sqlite3.connect(self.db)) as db:
+                    self.assertEqual(18, db.execute("SELECT current_hp FROM session_workspace_tokens WHERE id=?", (self.token["id"],)).fetchone()[0])
+                    self.assertEqual(1, db.execute("SELECT COUNT(*) FROM session_ledger WHERE detail_json LIKE ?", (f'%"expired": "{effect_id}"%',)).fetchone()[0])
+                self.command("end")
+
+    def test_next_turn_owner_only_wrap_and_idempotent_retry(self):
+        state = self.command("start", {"participants": [
+            {"target_type": "character", "target_id": "vezemir", "name": "Vezemir", "initiative": 12},
+            {"target_type": "token", "target_id": self.token["id"], "name": "Vampiro", "initiative": 3},
+        ]})
+        args = dict(actor_id="raziel", actor_role="player", allow_player=True,
+                    request_id="turn-player-001", expected_version=state["version"], action="next_turn",
+                    payload={"actor": {"target_type": "character", "target_id": "vezemir"}})
+        with self.assertRaises(PermissionError):
+            effect_command(self.db, **args)
+        args["actor_id"] = "vezemir"
+        first = effect_command(self.db, **args)
+        self.assertEqual(1, first["encounter"]["turn_index"])
+        self.assertEqual(first, effect_command(self.db, **args))
+        args.update(request_id="turn-player-002", expected_version=first["version"])
+        with self.assertRaises(PermissionError):
+            effect_command(self.db, **args)
+        final = self.command("next_turn")
+        self.assertEqual(0, final["encounter"]["turn_index"])
+        self.assertEqual(2, final["round"])
+
     def test_physical_mixed_hits_single_confirmation_concurrent_replay_and_ledger(self):
         result = self.resolve()
         self.assertEqual(["hit", "miss"], [s["result"] for s in result["breakdown"]["strikes"]])
@@ -91,7 +141,10 @@ class MultiattackEffectsTests(TestCase):
         self.assertEqual(6, result["attack_bonus"])
         self.assertEqual(9, result["damage_total"])
         self.command("round")
-        with self.assertRaises(CombatExpiredError): self.confirm(result)
+        # The actor's effect is still active with identical numbers, so an
+        # unrelated round tick no longer invalidates the pending attack.
+        _confirmed, applied = self.confirm(result)
+        self.assertTrue(applied)
         self.command("round")
         self.assertEqual([], readeffects(self.db)["effects"])
 
@@ -140,6 +193,74 @@ class MultiattackEffectsTests(TestCase):
         result = self.resolve(target={"type": "character", "id": "raziel", "name": "Raziel", "armor_class": 14, "current_hp": 14})
         confirmed, _ = self.confirm(result)
         self.assertEqual(10, confirmed["hp_after"])
+
+    def test_catalogue_poison_damage_rolls_automatically_and_keeps_rider_pending(self):
+        from app.combat import monster_attack_definition
+        token = {"id": "spider", "name": "Aranha", "sheet": {"attacks": [{"name": "Ferrão", "damage": "1d8 + Veneno", "bonus": 4}]}}
+        definition = monster_attack_definition(token, "0")
+        result = self.resolve(definition=definition, attack_id="0", actor_character_id="spider", actor_name="Aranha",
+                              requested_by_id="master", requested_by_role="gm", roll_mode="digital",
+                              attack_count=1, physical_d20s=None, rng=fixture.SequenceRng(20, 6))
+        self.assertEqual(24, result["attack_total"])
+        self.assertEqual(6, result["damage_total"])
+        self.assertEqual("1d8", result["damage_formula"])
+        self.assertEqual(["Veneno"], result["breakdown"]["manual_effects"])
+        confirmed, applied = confirm_attack_resolution(self.db, resolution_id=result["resolution_id"], requested_by_id="master", requested_by_role="gm")
+        self.assertTrue(applied)
+        self.assertEqual(12, confirmed["hp_after"])
+        self.assertEqual(["Veneno"], confirmed["breakdown"]["manual_effects"])
+        missed = self.resolve(request_id="poison-miss-test", definition=definition, attack_id="0", actor_character_id="spider", actor_name="Aranha",
+                              requested_by_id="master", requested_by_role="gm", roll_mode="digital",
+                              attack_count=1, physical_d20s=None, rng=fixture.SequenceRng(1))
+        self.assertEqual([], missed["breakdown"]["manual_effects"])
+
+    def test_monster_damage_does_not_silently_drop_unsupported_dice_or_invalid_bonus(self):
+        from app.combat import monster_attack_definition
+        for damage, bonus in [("1d8+1d6", 4), ("1d8/2", 4), ("Veneno", 4), ("1d8", None), ("1d8", True)]:
+            with self.subTest(damage=damage, bonus=bonus), self.assertRaisesRegex(ValueError, "cadastro"):
+                monster_attack_definition({"id": "x", "name": "X", "sheet": {"attacks": [{"name": "A", "damage": damage, "bonus": bonus}]}}, "0")
+
+    def test_companion_roster_is_master_only_and_reuses_existing_ally_across_maps(self):
+        dorn = save_workspace_token(self.db, token_type="monster", name="Dorn 7", latitude=10, longitude=10,
+            current_hp=7, maximum_hp=20, map_id="other-map", visible_to_players=False,
+            sheet={"armor_class": 16, "notes": "Somente Mestre"})
+        settings = replace(main.settings, database_path=self.db, master_token="test-master-token")
+        self.addCleanup(main.app.dependency_overrides.clear)
+        before = list_workspace_tokens(self.db)
+        with patch.object(main, "settings", settings), closing(TestClient(main.app)) as client:
+            self.assertEqual(401, client.get("/gm/companions").status_code)
+            main.app.dependency_overrides[main.require_any] = lambda: AccessContext(mode="player", profile_id="vezemir")
+            self.assertEqual(401, client.get("/gm/companions").status_code)
+            main.app.dependency_overrides[main.require_master] = lambda: AccessContext(mode="gm")
+            result = client.get("/gm/companions").json()
+            self.assertEqual(["varkh"], result["archived_character_ids"])
+            self.assertEqual([dorn["id"]], [t["id"] for t in result["allies"]])
+            self.assertEqual(7, result["allies"][0]["current_hp"])
+            self.assertEqual(before, list_workspace_tokens(self.db))
+
+    def test_monster_attack_api_requires_master_and_reuses_confirmation(self):
+        attacker = save_workspace_token(self.db, token_type="monster", name="Lobo", latitude=10, longitude=10,
+            current_hp=12, maximum_hp=12, sheet={"armor_class": 14, "attacks": [{"name": "Mordida", "bonus": "+2", "damage": "1d6"}]})
+        settings = replace(main.settings, database_path=self.db, master_token="test-master-token")
+        self.addCleanup(main.app.dependency_overrides.clear)
+        payload = {"request_id": "monster-attack-test", "attack_id": "0", "target_type": "token",
+                   "target_id": self.token["id"], "roll_mode": "physical", "d20": 20}
+        url = f"/gm/combat/tokens/{attacker['id']}/attacks/resolve"
+        with patch.object(main, "settings", settings), closing(TestClient(main.app)) as client:
+            self.assertEqual(401, client.post(url, json=payload).status_code)
+            main.app.dependency_overrides[main.require_any] = lambda: AccessContext(mode="player", profile_id="vezemir")
+            self.assertEqual(403, client.post(url, json=payload).status_code)
+            main.app.dependency_overrides[main.require_any] = lambda: AccessContext(mode="gm")
+            response = client.post(url, json=payload)
+            self.assertEqual(200, response.status_code, response.text)
+            result = response.json()
+            self.assertEqual(22, result["attack_total"])
+            self.assertEqual("pending", result["status"])
+            self.assertEqual(result, client.post(url, json=payload).json())
+            confirmed, applied = confirm_attack_resolution(self.db, resolution_id=result["resolution_id"], requested_by_id="master", requested_by_role="gm")
+            self.assertTrue(applied)
+            self.assertEqual(18-result["damage_total"], confirmed["hp_after"])
+            self.assertFalse(confirm_attack_resolution(self.db, resolution_id=result["resolution_id"], requested_by_id="master", requested_by_role="gm")[1])
 
     def test_api_gm_control_player_read_filter_and_hidden_location(self):
         self.apply()

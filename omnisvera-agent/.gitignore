@@ -1,0 +1,4 @@
+.venv-observer/
+.observer-runtime/
+.autonomy/runtime/
+.autonomy/history/*.json

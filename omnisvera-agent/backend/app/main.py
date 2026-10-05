@@ -12,6 +12,7 @@ import threading
 import time
 import unicodedata
 import uuid
+from typing import Any
 
 from fastapi import Depends, FastAPI, Header, HTTPException, Query, Request, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
@@ -51,12 +52,17 @@ from .combat import (
     CombatExpiredError,
     CombatNotFoundError,
     confirm_attack_resolution,
+    get_attack_resolution,
     init_combat,
     resolve_attack,
+    monster_attack_definition,
+    list_pending_attack_resolutions,
+    magic_missile_definition,
+    bone_dagger_definition,
 )
 from .combat_effects import readeffects, effect_command, apply_definition_effects
 from .campaign_seed import seed_companion_contracts
-from .schemas import CombatEffectCommand
+from .schemas import CombatEffectCommand, TechniqueUse
 from .config import get_settings
 from .contract_play import (
     accept_contract,
@@ -197,6 +203,7 @@ from .loot import (
 from .session_workspace import (
     delete_session_item,
     delete_workspace_token,
+    edit_workspace_map,
     get_session_item,
     get_session_item_by_path,
     get_workspace_snapshot,
@@ -866,6 +873,28 @@ def session_workspace_snapshot(
     )
 
 
+@app.get("/gm/companions")
+def gm_companion_roster(_: AccessContext = Depends(require_master)) -> dict:
+    # Reuse the existing allied token across maps: no duplicate HP or new PC.
+    allies = [token for token in list_workspace_tokens(settings.database_path)
+              if token["token_type"] == "monster"
+              and re.sub(r"[^a-z0-9]", "", token["name"].lower()) in {"dorn7", "unidadedorn7"}]
+    return {"allies": allies, "archived_character_ids": ["varkh"]}
+
+
+@app.post("/gm/companions/{token_id}/promote")
+def gm_promote_dorn(token_id: str, _: AccessContext = Depends(require_master)) -> dict:
+    from .companion_promotion import promote_dorn
+    summary = resolve_note(settings.database_path, "Characters/Individual/Unidade DORN-7.md", access_mode="gm")
+    note = get_note(settings.database_path, int(summary["id"]), access_mode="gm") if summary else None
+    if note is None:
+        raise HTTPException(status_code=409, detail="Nota de Dorn 7 indisponível no índice; conversão não executada.")
+    try:
+        return promote_dorn(settings.database_path, token_id=token_id, note=note)
+    except ValueError as error:
+        raise HTTPException(status_code=409, detail=str(error)) from error
+
+
 @app.get("/workspace/ledger")
 def session_workspace_ledger(
     limit: int = Query(default=500, ge=1, le=1000),
@@ -1001,6 +1030,28 @@ def workspace_maps(access: AccessContext = Depends(require_any)) -> list[dict]:
 @app.get("/workspace/icons")
 def workspace_icons(_: AccessContext = Depends(require_any)) -> list[dict]:
     return list_workspace_icons(settings.database_path)
+
+
+@app.patch("/gm/workspace/maps/{map_id}/title")
+def gm_rename_workspace_map(map_id: str, title: str = Query(min_length=1, max_length=160), _: AccessContext = Depends(require_master)) -> dict:
+    try:
+        result = edit_workspace_map(settings.database_path, map_id, title=title)
+    except ValueError as error:
+        raise HTTPException(status_code=409, detail=str(error)) from error
+    if result is None:
+        raise HTTPException(status_code=404, detail="Mapa não encontrado.")
+    return result
+
+
+@app.delete("/gm/workspace/maps/{map_id}")
+def gm_delete_workspace_map(map_id: str, _: AccessContext = Depends(require_master)) -> dict:
+    try:
+        result = edit_workspace_map(settings.database_path, map_id, delete=True)
+    except ValueError as error:
+        raise HTTPException(status_code=409, detail=str(error)) from error
+    if result is None:
+        raise HTTPException(status_code=404, detail="Mapa não encontrado.")
+    return result
 
 
 WORKSPACE_ICON_MAX_BYTES = 25 * 1024 * 1024
@@ -2296,6 +2347,52 @@ def player_quests(access: AccessContext = Depends(require_player)) -> list[dict]
     return list_quests(settings.database_path, profile_id=access.profile_id)
 
 
+_FRONTMATTER_RULE_KINDS = frozenset({
+    "attack_bonus", "damage_bonus", "armor_class_bonus", "attribute_bonus",
+    "maximum_hp_bonus", "movement_bonus", "saving_throw_bonus",
+})
+
+
+def _parse_frontmatter_effect_rules(raw: Any, *, source_path: str) -> list[dict[str, Any]]:
+    """Structured vault rules (relíquias com bônus de mesa aprovado).
+
+    Somente `trigger: while_equipped` é aplicado automaticamente; outras
+    triggers são ignoradas até existir fluxo de ativação. Kinds fora da
+    allowlist são descartados para não inventar mecânica via frontmatter.
+    """
+    if not isinstance(raw, list):
+        return []
+    rules: list[dict[str, Any]] = []
+    for entry in raw:
+        if not isinstance(entry, dict):
+            continue
+        if str(entry.get("trigger") or "") != "while_equipped":
+            continue
+        if str(entry.get("kind") or "") not in _FRONTMATTER_RULE_KINDS:
+            continue
+        try:
+            value = int(entry.get("value") or 0)
+        except (TypeError, ValueError):
+            continue
+        if value == 0:
+            continue
+        rules.append({
+            "id": str(entry.get("id") or f"vault:{source_path}:{entry.get('kind')}:{entry.get('target', '')}"),
+            "trigger": "while_equipped",
+            "item_path": source_path,
+            "item_title": str(entry.get("item_title") or ""),
+            "kind": str(entry.get("kind")),
+            "target": str(entry.get("target") or "").strip(),
+            "value": value,
+            "formula": None,
+            "label": str(entry.get("label") or "").strip() or None,
+            "stacking": str(entry.get("stacking") or "stack"),
+            "condition": None,
+            "active": True,
+        })
+    return rules
+
+
 def _inventory_with_media(items: list[dict], *, access_mode: str) -> list[dict]:
     enriched: list[dict] = []
     for item in items:
@@ -2311,6 +2408,9 @@ def _inventory_with_media(items: list[dict], *, access_mode: str) -> list[dict]:
             record["description"] = frontmatter.get("description") or frontmatter.get("summary")
             raw_effects = frontmatter.get("effects") or frontmatter.get("efeitos") or []
             record["effects"] = raw_effects if isinstance(raw_effects, list) else [str(raw_effects)]
+            record["effect_rules"] = _parse_frontmatter_effect_rules(
+                frontmatter.get("effect_rules") or [], source_path=str(record.get("item_path") or "")
+            )
             content = str((detail or {}).get("content") or "")
             if not record.get("description"):
                 synopsis = re.search(r">\s*\[!world\][^\n]*\n>\s*([^\n]+)", content, flags=re.IGNORECASE)
@@ -2464,6 +2564,13 @@ def _playable_character(profile_id: str, access: AccessContext) -> dict:
     effects = [e for e in effect_state["effects"]
                if e["target_type"] == "character" and e["target_id"] == profile_id]
     definition = apply_definition_effects(definition, effects if access_level != "public" else [])
+    if profile_id == 'morthak' and access_level != 'public':
+        try:
+            dagger = bone_dagger_definition(definition)['attacks'][0]
+        except ValueError:
+            pass  # Missing reviewed hit bonus keeps the existing explicit manual state.
+        else:
+            definition['attacks'] = [a for a in definition.get('attacks', []) if a.get('id') != 'adaga-de-osso'] + [dagger]
     definition["effects_version"] = effect_state["version"]
     state = None
     if access_level != "public":
@@ -2567,7 +2674,8 @@ def playable_character_action(
         allowed_slots = [str(slot) for slot in mechanics.get("equipment_slots") or [] if str(slot).strip()]
         if allowed_slots and equipment_slot not in allowed_slots:
             raise HTTPException(status_code=400, detail=f"Este item só pode ser equipado em: {', '.join(allowed_slots)}.")
-        slot_limit = int(mechanics.get("slot_limit") or (3 if equipment_slot == "Acessório" else 1))
+        slot_default = 3 if equipment_slot == "Acessório" else 1
+        slot_limit = max(int(mechanics.get("slot_limit") or 0), slot_default)
         occupants = [
             entry for entry in current_character.get("inventory") or []
             if entry.get("equipped") and entry.get("item_path") != item_path and str(entry.get("equipment_slot") or "") == equipment_slot
@@ -2711,6 +2819,10 @@ def playable_character_events(
         }
         events = [event for event in events if event["event_type"] in owner_visible_types]
     return events
+
+
+from .level_routes import register as register_level_routes
+register_level_routes(app, require_master, _playable_character, lambda: settings.database_path)
 
 
 @app.patch("/gm/characters/{profile_id}/definition", response_model=PlayableCharacterResponse, response_model_exclude_none=True)
@@ -2932,6 +3044,11 @@ def resolve_character_attack(
             visible = get_workspace_snapshot(settings.database_path, is_gm=False, map_id=token.get("map_id"))
             if not any(t["id"] == request.target_id for t in visible["tokens"]):
                 raise PermissionError("Este alvo não está disponível para jogadores.")
+        definition = character["definition"]
+        if request.attack_id == "misseis-magicos":
+            definition = magic_missile_definition(definition, character["state"].get("resources", []))
+        elif request.attack_id == "adaga-de-osso":
+            definition = bone_dagger_definition(definition)
         resolution, _created = resolve_attack(
             settings.database_path,
             request_id=request.request_id,
@@ -2939,7 +3056,7 @@ def resolve_character_attack(
             actor_name=str(character["definition"].get("name") or profile_id),
             requested_by_id=actor_id,
             requested_by_role=actor_role,
-            definition=character["definition"],
+            definition=definition,
             inventory=character["inventory"],
             attack_id=request.attack_id,
             target=_combat_target(request.target_type, request.target_id),
@@ -2947,6 +3064,7 @@ def resolve_character_attack(
             physical_d20=request.d20,
             attack_count=request.attack_count,
             physical_d20s=request.d20s,
+            weapon_item_path=request.weapon_item_path,
         )
     except PermissionError as error:
         raise HTTPException(status_code=403, detail=str(error)) from error
@@ -2957,6 +3075,286 @@ def resolve_character_attack(
     return resolution
 
 
+_TECHNIQUE_OWNER = {
+    "lamina-de-sangue": "raziel", "marca-rubra": "raziel", "mordida": "raziel",
+    "forca-arcana": "vezemir", "velocidade": "vezemir",
+    "animar-mortos": "morthak", "levantar-esqueleto": "morthak", "levantar-um-esqueleto": "morthak",
+}
+_BLOOD_KEY = "reserva_de_sangue"
+# Invocações necromantes: ruling travado com a mesa (livro Old Dragon, Mago
+# Necromante p. 42 — 2 DV/dia a cada 2 níveis, duração 1 semana; Morthak usa
+# por homebrew da maldição, ainda no nível 2). Muda aqui e tudo se ajusta.
+_SUMMON_DEFAULTS = {
+    "levantar-esqueleto": {"name": "Esqueleto de Madeira de Morthak", "hp": 10, "ac": 16, "marker": "💀",
+                           "attack_name": "Arma", "attack_bonus": 2, "damage": "1d6+1",
+                           "duration": "week", "resource_key": "levantar_um_esqueleto",
+                           "note": "Recompensa da Sessão 6 (02:24–02:25): 1 esqueleto com madeira, PV 10, CA 16, ataque +2 / 1d6+1; dura 1 semana. Fraqueza a fogo exige resolução manual até confirmar como aplicar 1d6+2."},
+    "animar-mortos": {"name": "Zumbi de Morthak", "hp": 10, "max_hp": 10, "ac": 13, "marker": "🧟",
+                      "attack_name": "Garra", "attack_bonus": 2, "damage": "1d6+2",
+                      "duration": "week", "resource_key": "animar_mortos",
+                      "note": "Zumbi (DV 2, PV 10, CA 13, +2/1d6+2), dura 1 semana — ruling de mesa"},
+}
+
+
+@app.post("/characters/{profile_id}/techniques/{technique_id}")
+def use_character_technique(
+    profile_id: str,
+    technique_id: str,
+    request: TechniqueUse,
+    access: AccessContext = Depends(require_any),
+) -> dict:
+    """Structured Hemomante techniques: fixed server-side payloads, no invented rules."""
+    if technique_id not in _TECHNIQUE_OWNER or profile_id != _TECHNIQUE_OWNER[technique_id]:
+        raise HTTPException(status_code=404, detail="Técnica não encontrada para este personagem.")
+    if _character_access_level(access, profile_id) == "public":
+        raise HTTPException(status_code=403, detail="Você não pode usar técnicas por este personagem.")
+    actor_id, actor_role = _roll_actor(access)
+    request_id = request.request_id or f"technique-{uuid.uuid4().hex[:16]}"
+    try:
+        if technique_id in {"animar-mortos", "levantar-esqueleto", "levantar-um-esqueleto"}:
+            from .summons import create_summon
+            canonical = "levantar-esqueleto" if technique_id == "levantar-um-esqueleto" else technique_id
+            return create_summon(settings.database_path, caster=profile_id, technique=canonical,
+                spec=_SUMMON_DEFAULTS[canonical], request_id=request_id, actor_id=actor_id, actor_role=actor_role,
+                corpse_id=request.target_id if request.target_type == "token" else None)
+        state = readeffects(settings.database_path)
+        if technique_id == "lamina-de-sangue":
+            charges = int(request.charges or 1)
+            if not 1 <= charges <= 5:
+                raise ValueError("Declare de 1 a 5 lâminas.")
+            slot = request.attack or "ranged"
+            if not request.target_type or not request.target_id:
+                raise ValueError("Selecione o alvo da Lâmina de Sangue.")
+            character = _playable_character(profile_id, AccessContext(mode="gm"))
+            slot_entry = next((a for a in character["definition"].get("attacks") or [] if a.get("id") == slot), None)
+            if slot_entry is None:
+                raise ValueError("Ataque base indisponível para a Lâmina.")
+            attack = {"id": "lamina-de-sangue", "name": f"Lâmina de Sangue ({charges})",
+                      "attack_bonus": int(slot_entry.get("attack_bonus") or 0),
+                      "damage": f"{charges}d4", "weapon_item_path": "technique:lamina-de-sangue",
+                      "resource_cost": {"key": _BLOOD_KEY, "amount": charges}}
+            definition = {**character["definition"], "attacks": [attack]}
+            target = _combat_target(request.target_type, request.target_id)
+            resolution, _ = resolve_attack(
+                settings.database_path, request_id=request_id,
+                actor_character_id=profile_id, actor_name=character["definition"].get("name") or profile_id,
+                requested_by_id=actor_id, requested_by_role=actor_role,
+                definition=definition, inventory=character.get("inventory") or [],
+                attack_id="lamina-de-sangue", target=target,
+                roll_mode=request.roll_mode or "digital",
+                physical_d20=request.d20, attack_count=request.attack_count or 1,
+                physical_d20s=request.d20s,
+            )
+            return resolution
+        if technique_id == "marca-rubra":
+            if not request.target_type or not request.target_id:
+                raise ValueError("Selecione o alvo ferido para a Marca Rubra.")
+            target = _combat_target(request.target_type, request.target_id)
+            wounded = _technique_target_wounded(target["type"], target["id"])
+            if not wounded:
+                raise ValueError("A Marca Rubra exige um alvo ferido (com sangue).")
+            payload = {"target_type": target["type"], "target_id": target["id"],
+                       "label": "Marca Rubra — rastreável (Raziel)", "source": "Marca Rubra (Lâminas de Sangue)",
+                       "duration": "scene", "modifiers": {},
+                       "resource": {"character_id": profile_id, "key": _BLOOD_KEY, "cost": 1}}
+            return effect_command(settings.database_path, actor_id=actor_id, actor_role=actor_role,
+                                  request_id=request_id, expected_version=state["version"],
+                                  action="apply", payload=payload, allow_player=True)
+        if technique_id == "mordida":
+            if not request.resolution_id:
+                raise ValueError("Informe o ataque confirmado para absorver.")
+            record = get_attack_resolution(settings.database_path, request.resolution_id)
+            if record["actor_character_id"] != profile_id or record["attack_id"] not in {"melee", "ranged"}:
+                raise ValueError("Mordida exige um ataque normal confirmado por Raziel.")
+            if record.get("status") != "confirmed":
+                raise ValueError("Confirme o acerto antes de absorver.")
+            if record["result"] != "hit" or int(record.get("damage_total") or 0) <= 0:
+                raise ValueError("Mordida exige um acerto com dano.")
+            if _technique_claimed(request.resolution_id, "Mordida"):
+                raise ValueError("Este golpe já foi absorvido.")
+            if not _technique_target_alive(record["target_type"], record["target_id"]):
+                raise ValueError("Mordida exige um alvo vivo.")
+            turn_key = _technique_battle_turn()
+            if turn_key and _technique_turn_claimed(profile_id, turn_key, "Mordida"):
+                raise ValueError("Mordida já usada neste turno.")
+            heal_roll = int(roll_formula("1d4")["total"])
+            reason = f"Mordida — absorção ({request.resolution_id})"
+            if turn_key:
+                reason += f" [turno {turn_key}]"
+            healed = apply_character_action(
+                settings.database_path, character_id=profile_id, actor_id=actor_id, actor_role=actor_role,
+                action="heal", payload={"amount": heal_roll},
+                reason=reason,
+                session_id=None,
+                # Rider on the already-committed confirm: not a new battle action.
+                skip_battle_turn=True,
+            )
+            return {"healed": healed, "heal_roll": heal_roll,
+                    "damage_absorbed": int(record["damage_total"])}
+        if technique_id in {"forca-arcana", "velocidade"}:
+            character = _playable_character(profile_id, AccessContext(mode="gm"))
+            level = character["definition"].get("level") or 1
+            if technique_id == "forca-arcana":
+                strength = int((character["definition"].get("attributes") or {}).get("strength") or 10)
+                bonus = max(1, strength // 5)
+                boosted = strength + bonus
+                duration = roll_formula(f"1d6+{level}")["total"]
+                payload = {"target_type": "character", "target_id": profile_id,
+                           "label": f"Força Arcana (For {strength}→{boosted})",
+                           "source": "Força Arcana (Vezemir)",
+                           "duration": "rounds", "rounds": duration,
+                           "modifiers": {"strength_bonus": bonus},
+                           "resource": {"character_id": profile_id, "key": "forca_arcana", "cost": 1}}
+            else:
+                duration = roll_formula(f"1d4+{level}")["total"]
+                payload = {"target_type": "character", "target_id": profile_id, "label": "Velocidade",
+                           "source": "Velocidade (Vezemir)", "duration": "rounds", "rounds": duration,
+                           "modifiers": {"movement_multiplier": 2, "armor_class_bonus": 2, "extra_attacks": 1},
+                           "resource": {"character_id": profile_id, "key": "velocidade", "cost": 1}}
+            result = effect_command(settings.database_path, actor_id=actor_id, actor_role=actor_role,
+                                    request_id=request_id, expected_version=state["version"],
+                                    action="apply", payload=payload, allow_player=True)
+            return {"effect": result, "duration_rounds": duration}
+    except PermissionError as error:
+        raise HTTPException(status_code=403, detail=str(error)) from error
+    except CombatNotFoundError as error:
+        raise HTTPException(status_code=404, detail=str(error)) from error
+    except (TypeError, ValueError) as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+def _technique_target_wounded(target_type: str, target_id: str) -> bool:
+    import sqlite3 as _sqlite
+    from contextlib import closing as _closing
+    with _closing(_sqlite.connect(settings.database_path)) as connection:
+        if target_type == "character":
+            row = connection.execute("SELECT state_json FROM character_states WHERE profile_id=?", (target_id,)).fetchone()
+            if row is None:
+                return False
+            state = json.loads(row[0])
+            current, maximum = state.get("current_hp"), state.get("maximum_hp")
+        else:
+            row = connection.execute("SELECT current_hp, maximum_hp FROM session_workspace_tokens WHERE id=?", (target_id,)).fetchone()
+            if row is None:
+                return False
+            current, maximum = row[0], row[1]
+    try:
+        return current is not None and maximum is not None and int(current) < int(maximum)
+    except (TypeError, ValueError):
+        return False
+
+
+def _technique_spend(profile_id: str, actor_id: str, actor_role: str, resource_key: str, amount: int) -> dict:
+    """Consume a character resource now (techniques spend on use, not on confirm)."""
+    import sqlite3 as _sqlite
+    from contextlib import closing as _closing
+    with _closing(_sqlite.connect(settings.database_path)) as connection:
+        row = connection.execute("SELECT state_json FROM character_states WHERE profile_id=?", (profile_id,)).fetchone()
+    resources = (json.loads(row[0]).get("resources") or []) if row else []
+    current = next((int(r.get("current") or 0) for r in resources if r.get("key") == resource_key), 0)
+    if current < amount:
+        raise ValueError("Recurso insuficiente para esta técnica.")
+    return apply_character_action(
+        settings.database_path, character_id=profile_id, actor_id=actor_id, actor_role=actor_role,
+        action="consume_resource", payload={"resource_key": resource_key, "amount": amount},
+        reason=f"Técnica — custo {resource_key}",
+        session_id=None,
+    )
+
+
+def _technique_place_after_caster(caster_id: str, token_id: str) -> None:
+    """Insert a summon right after its invoker in the active turn order."""
+    import sqlite3 as _sqlite
+    from contextlib import closing as _closing
+    with _closing(_sqlite.connect(settings.database_path)) as connection, connection:
+        row = connection.execute("SELECT encounter_json, version FROM combat_effect_clock WHERE id=1").fetchone()
+        if row is None:
+            return
+        try:
+            encounter = json.loads(row[0])
+        except (TypeError, ValueError):
+            return
+        if not encounter.get("active"):
+            return
+        participants = list(encounter.get("participants") or [])
+        index = next((i for i, p in enumerate(participants)
+                      if (p.get("target_type"), p.get("target_id")) == ("character", caster_id)), None)
+        if index is None:
+            return
+        if any((p.get("target_type"), p.get("target_id")) == ("token", token_id) for p in participants):
+            return
+        initiative = int(participants[index].get("initiative") or 0) - 1
+        participants.insert(index + 1, {"target_type": "token", "target_id": token_id, "initiative": initiative})
+        encounter["participants"] = participants
+        connection.execute("UPDATE combat_effect_clock SET encounter_json=?, version=version+1 WHERE id=1",
+                           (json.dumps(encounter, ensure_ascii=False),))
+
+
+def _technique_target_alive(target_type: str, target_id: str) -> bool:
+    """Mordida prey must be alive (HP > 0)."""
+    import sqlite3 as _sqlite
+    from contextlib import closing as _closing
+    with _closing(_sqlite.connect(settings.database_path)) as connection:
+        if target_type == "character":
+            row = connection.execute("SELECT state_json FROM character_states WHERE profile_id=?", (target_id,)).fetchone()
+            if row is None:
+                return False
+            state = json.loads(row[0])
+            current = state.get("current_hp")
+        else:
+            row = connection.execute("SELECT current_hp FROM session_workspace_tokens WHERE id=?", (target_id,)).fetchone()
+            if row is None:
+                return False
+            current = row[0]
+    try:
+        return current is not None and int(current) > 0
+    except (TypeError, ValueError):
+        return False
+
+
+def _technique_claimed(resolution_id: str, title: str) -> bool:
+    import sqlite3 as _sqlite
+    from contextlib import closing as _closing
+    with _closing(_sqlite.connect(settings.database_path)) as connection:
+        row = connection.execute(
+            "SELECT 1 FROM session_ledger WHERE (title LIKE ? OR detail_json LIKE ?)"
+            " AND (title LIKE ? OR detail_json LIKE ?) LIMIT 1",
+            (f"%{title}%", f"%{title}%", f"%{resolution_id}%", f"%{resolution_id}%"),
+        ).fetchone()
+    return row is not None
+
+
+def _technique_battle_turn() -> str | None:
+    """Current battle turn key (round + turn slot), or None outside battle."""
+    import json as _json
+    import sqlite3 as _sqlite
+    from contextlib import closing as _closing
+    with _closing(_sqlite.connect(settings.database_path)) as connection:
+        row = connection.execute("SELECT round, encounter_json FROM combat_effect_clock WHERE id=1").fetchone()
+    if row is None:
+        return None
+    try:
+        encounter = _json.loads(row[1] or "{}")
+    except ValueError:
+        return None
+    if not encounter.get("active") or not encounter.get("battle_mode"):
+        return None
+    return f"r{row[0]}i{encounter.get('turn_index', 0)}"
+
+
+def _technique_turn_claimed(profile_id: str, turn_key: str, title: str) -> bool:
+    import sqlite3 as _sqlite
+    from contextlib import closing as _closing
+    with _closing(_sqlite.connect(settings.database_path)) as connection:
+        row = connection.execute(
+            "SELECT 1 FROM session_ledger WHERE character_id=? AND (title LIKE ? OR detail_json LIKE ?)"
+            " AND (title LIKE ? OR detail_json LIKE ?) LIMIT 1",
+            (profile_id, f"%{title}%", f"%{title}%",
+             f"%[turno {turn_key}]%", f"%[turno {turn_key}]%"),
+        ).fetchone()
+    return row is not None
+
+
 def _combat_snapshot_for_access(snapshot: dict, access: AccessContext) -> dict:
     snapshot = copy.deepcopy(snapshot)
     if access.mode != "gm":
@@ -2965,6 +3363,8 @@ def _combat_snapshot_for_access(snapshot: dict, access: AccessContext) -> dict:
         # remain private until their map/token is visible to players.
         snapshot["effects"] = [e for e in snapshot["effects"] if e["target_type"] == "character" and e["target_id"] == access.profile_id]
         encounter = snapshot.get("encounter") or {}
+        encounter.pop('return_tokens', None)
+        encounter.pop('return_map_id', None)
         participants = encounter.get("participants") or []
         involved = bool(encounter.get("active")) and any(
             participant.get("target_type") == "character" and participant.get("target_id") == access.profile_id
@@ -2976,10 +3376,12 @@ def _combat_snapshot_for_access(snapshot: dict, access: AccessContext) -> dict:
             visible = get_workspace_snapshot(settings.database_path, is_gm=False, map_id=encounter.get("map_id"))
             visible_map_matches = (visible.get("map") or {}).get("id") == encounter.get("map_id")
             visible_tokens = {token["id"] for token in visible["tokens"]} if visible_map_matches else set()
+            current = participants[int(encounter.get("turn_index") or 0) % len(participants)] if participants else None
             encounter["participants"] = [
                 participant for participant in participants
                 if participant["target_type"] == "character" or participant["target_id"] in visible_tokens
             ]
+            encounter["turn_index"] = next((index for index, participant in enumerate(encounter["participants"]) if participant == current), -1)
     return snapshot
 
 
@@ -3006,6 +3408,57 @@ def gm_combat_test_views(_: AccessContext = Depends(require_master)) -> dict:
                 "state": state,
             })
     return {"enabled": enabled, "table_mode": workspace.get("table_mode"), "views": views}
+
+
+@app.post("/gm/combat/tokens/{token_id}/attacks/resolve")
+def resolve_monster_attack(token_id: str, request: AttackResolutionCreate, access: AccessContext = Depends(require_any)) -> dict:
+    try:
+        token = next((item for item in list_workspace_tokens(settings.database_path) if item["id"] == token_id), None)
+        if token is None or token.get("token_type") != "monster":
+            raise ValueError("Criatura não encontrada")
+        controller = (token.get('sheet') or {}).get('summon', {}).get('caster')
+        if access.mode != 'gm' and (controller != access.profile_id or not token.get('visible_to_players')):
+            raise HTTPException(status_code=403, detail='Você não controla esta criatura')
+        if access.mode != 'gm':
+            visible = get_workspace_snapshot(settings.database_path, is_gm=False)
+            if token_id not in {t['id'] for t in visible['tokens']}:
+                raise HTTPException(status_code=403, detail='Criatura fora do mapa visível')
+            if request.target_type == 'token' and request.target_id not in {t['id'] for t in visible['tokens']}:
+                raise HTTPException(status_code=403, detail='Alvo fora do mapa visível')
+        actor_id, actor_role = _roll_actor(access)
+        definition = monster_attack_definition(token, request.attack_id)
+        effects = readeffects(settings.database_path)
+        definition = apply_definition_effects(definition, [effect for effect in effects["effects"] if effect["target_type"] == "token" and effect["target_id"] == token_id])
+        definition["effects_version"] = effects["version"]
+        target = _combat_target(request.target_type, request.target_id)
+        if target["type"] == "token" and target["id"] == token_id:
+            raise ValueError("Escolha outro alvo")
+        resolution, _ = resolve_attack(settings.database_path, request_id=request.request_id,
+            actor_character_id=token_id, actor_name=token["name"], requested_by_id=actor_id, requested_by_role=actor_role,
+            controlling_character_id=controller,
+            definition=definition, inventory=[], attack_id=request.attack_id, target=target,
+            roll_mode=request.roll_mode, physical_d20=request.d20, attack_count=request.attack_count,
+            physical_d20s=request.d20s)
+        return resolution
+    except (ValueError, TypeError) as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.post("/combat/next-turn")
+def combat_next_turn(request: CombatEffectCommand, access: AccessContext = Depends(require_any)) -> dict:
+    if request.action != "next_turn":
+        raise HTTPException(status_code=400, detail="Este endpoint permite somente passar turno")
+    actor_id, actor_role = _roll_actor(access)
+    try:
+        snapshot = effect_command(settings.database_path, actor_id=actor_id, actor_role=actor_role,
+                                  request_id=request.request_id, expected_version=request.expected_version,
+                                  action="next_turn", payload={"actor": {"target_type": "character", "target_id": actor_id}},
+                                  allow_player=True)
+        return _combat_snapshot_for_access(snapshot, access)
+    except PermissionError as error:
+        raise HTTPException(status_code=403, detail=str(error)) from error
+    except (ValueError, TypeError) as error:
+        raise HTTPException(status_code=409, detail=str(error)) from error
 
 
 @app.post("/gm/combat/effects")
@@ -3041,6 +3494,32 @@ def gm_combat_effects(request: CombatEffectCommand, access: AccessContext = Depe
                               action=request.action, payload=payload)
     except (ValueError, TypeError) as error:
         raise HTTPException(status_code=409, detail=str(error)) from error
+
+
+@app.get("/combat/attacks/pending")
+def pending_character_attacks(access: AccessContext = Depends(require_any)) -> list[dict]:
+    actor_id, actor_role = _roll_actor(access)
+    records = list_pending_attack_resolutions(settings.database_path,
+        requested_by_id=actor_id, requested_by_role=actor_role)
+    if access.mode == "gm":
+        return records
+    # A previously visible creature may since have been hidden by the Master.
+    tokens = {token["id"]: token for token in list_workspace_tokens(settings.database_path)}
+    visible_by_map: dict[str, set[str]] = {}
+    visible = []
+    for record in records:
+        if record["target_type"] == "token":
+            token = tokens.get(record["target_id"])
+            if not token:
+                continue
+            map_id = token.get("map_id")
+            if map_id not in visible_by_map:
+                snapshot = get_workspace_snapshot(settings.database_path, is_gm=False, map_id=map_id)
+                visible_by_map[map_id] = {item["id"] for item in snapshot["tokens"]}
+            if record["target_id"] not in visible_by_map[map_id]:
+                continue
+        visible.append(record)
+    return visible
 
 
 @app.post("/combat/attacks/{resolution_id:path}/confirm")

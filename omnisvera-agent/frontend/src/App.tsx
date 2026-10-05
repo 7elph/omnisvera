@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { getCombatEffects } from './api';
 import { AccessMode, consumeAccessBootstrapFromUrl, getAccessMode, getAccessToken, health, listCampaignSessions, rebuildIndex, recordRuntimeEvent, setAccessMode, setAccessToken } from "./api";
 import SessionWorkspace from "./pages/SessionWorkspace";
 import ScenePanel from "./pages/ScenePanel";
@@ -109,10 +110,12 @@ export default function App() {
     let active = true;
     const refreshSessionState = async () => {
       try {
-        const sessions = await listCampaignSessions();
+        const [sessions, combat] = await Promise.all([listCampaignSessions(), getCombatEffects()]);
         if (!active) return;
-        const available = sessions.some((session) => session.status === "active");
+        const inBattle = Boolean(combat.encounter?.active && combat.encounter?.battle_mode);
+        const available = sessions.some((session) => session.status === "active") || inBattle;
         setPlayerLiveAvailable(available);
+        if (inBattle) setPlayerSessionView('table');
         if (!available) setPlayerSessionView("memory");
       } catch {
         // Keep the last known table state during a brief connection loss.

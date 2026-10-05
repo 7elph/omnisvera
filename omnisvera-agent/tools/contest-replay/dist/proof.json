@@ -1,0 +1,175 @@
+{
+  "anchor": "a0bcd71d04736fe438a8881dbc51e52703995748351014b8e140c8f6fe2502ca",
+  "sourceManifestHash": "e4c45d1adabf01de3561aeb576af3ef60d448320ef9426f24447c43be6771c2b",
+  "label": "AUDITED TRACE REPLAY",
+  "model": "gpt-6-astra",
+  "cli": "0.154.0-alpha.6.2",
+  "prompt": "Continue o trabalho usando somente a experiência persistida disponível no Omnisvera. Descubra pelo próprio sistema tudo de que precisar.",
+  "experience": {
+    "id": "exp-52fdd77f0f8a4e18ae442dffe0fdae7a",
+    "version": 2,
+    "hash": "f948000133d63ac60e6853812a690a43cb5378bca002fdb6c46cf4972fd54631",
+    "integrity": true
+  },
+  "prediction": {
+    "id": 17,
+    "createdAt": "2026-09-13T21:06:36.888740+00:00",
+    "horizon": "2026-09-13T21:39:00+00:00",
+    "snapshot": "mem-8ad450227f44497f80b0d9727ac2edb3",
+    "snapshotHash": "bef473a65413cfa5f3b1619df6c8f8ad8de1282ead50b9a5dd8e218c7ddd58b1",
+    "candidateHash": "ca5772d065a20389c56e4562eb08cc2843cbf442183ca9e1cb14122a02bf1ec2",
+    "experienceId": "exp-52fdd77f0f8a4e18ae442dffe0fdae7a",
+    "experienceVersion": 2,
+    "experienceHash": "f948000133d63ac60e6853812a690a43cb5378bca002fdb6c46cf4972fd54631"
+  },
+  "validation": {
+    "valid": true,
+    "warnings": [
+      "patterns_used not provided — provenance will be incomplete"
+    ],
+    "sameCandidate": true
+  },
+  "provenance": {
+    "actor": "crypto.btc.direction",
+    "client": "codex-astra-demo",
+    "transport": "streamable-http",
+    "signalSource": "Coinbase · closed 1-minute candles",
+    "signalPayloadHash": "ccbbfb7897af419673fa7908387164a6a12268ed61524cc0b2f70117038cd2ee"
+  },
+  "operationalUnchanged": true,
+  "traces": {
+    "001": [
+      {
+        "tool": "get_handoff",
+        "timestamp": "2026-09-13T02:28:39.919362+00:00",
+        "status": "denied/error"
+      },
+      {
+        "tool": "system.bootstrap",
+        "timestamp": "2026-09-13T02:28:39.977697+00:00",
+        "status": "completed"
+      },
+      {
+        "tool": "experience.latest",
+        "timestamp": "2026-09-13T02:28:46.540990+00:00",
+        "status": "completed"
+      },
+      {
+        "tool": "system.manifest",
+        "timestamp": "2026-09-13T02:28:46.598826+00:00",
+        "status": "completed"
+      },
+      {
+        "tool": "memory.recent",
+        "timestamp": "2026-09-13T02:28:46.653164+00:00",
+        "status": "denied/error"
+      },
+      {
+        "tool": "epistemic.get_prediction",
+        "timestamp": "2026-09-13T02:28:52.925960+00:00",
+        "status": "completed"
+      },
+      {
+        "tool": "world.context",
+        "timestamp": "2026-09-13T02:28:53.343630+00:00",
+        "status": "completed"
+      },
+      {
+        "tool": "world.model",
+        "timestamp": "2026-09-13T02:28:53.409312+00:00",
+        "status": "completed"
+      },
+      {
+        "tool": "experience.history",
+        "timestamp": "2026-09-13T02:28:59.237565+00:00",
+        "status": "completed"
+      }
+    ],
+    "002B": [
+      {
+        "tool": "system.manifest",
+        "timestamp": "2026-09-13T21:05:48.311702+00:00",
+        "status": "completed"
+      },
+      {
+        "tool": "system.bootstrap",
+        "timestamp": "2026-09-13T21:05:48.332304+00:00",
+        "status": "completed"
+      },
+      {
+        "tool": "get_handoff",
+        "timestamp": "2026-09-13T21:05:48.630317+00:00",
+        "status": "completed"
+      },
+      {
+        "tool": "experience.latest",
+        "timestamp": "2026-09-13T21:05:55.964182+00:00",
+        "status": "completed"
+      },
+      {
+        "tool": "memory.recent",
+        "timestamp": "2026-09-13T21:05:55.991146+00:00",
+        "status": "completed"
+      },
+      {
+        "tool": "epistemic.list_predictions",
+        "timestamp": "2026-09-13T21:05:56.018579+00:00",
+        "status": "completed"
+      },
+      {
+        "tool": "world.model",
+        "timestamp": "2026-09-13T21:06:03.266028+00:00",
+        "status": "completed"
+      },
+      {
+        "tool": "world.context",
+        "timestamp": "2026-09-13T21:06:03.294134+00:00",
+        "status": "completed"
+      },
+      {
+        "tool": "world.signal_history",
+        "timestamp": "2026-09-13T21:06:08.142295+00:00",
+        "status": "completed"
+      },
+      {
+        "tool": "experience.history",
+        "timestamp": "2026-09-13T21:06:08.210625+00:00",
+        "status": "completed"
+      },
+      {
+        "tool": "world.signal_history",
+        "timestamp": "2026-09-13T21:06:15.806916+00:00",
+        "status": "completed"
+      },
+      {
+        "tool": "epistemic.snapshot_from_model",
+        "timestamp": "2026-09-13T21:06:15.871836+00:00",
+        "status": "completed"
+      },
+      {
+        "tool": "epistemic.validate_candidate",
+        "timestamp": "2026-09-13T21:06:32.470149+00:00",
+        "status": "completed"
+      },
+      {
+        "tool": "epistemic.commit_candidate",
+        "timestamp": "2026-09-13T21:06:36.878460+00:00",
+        "status": "completed"
+      }
+    ]
+  },
+  "trace001NoPrediction": true,
+  "limitations": [
+    "Real Coinbase candles in a fixed fixture, not a live market run.",
+    "patterns_used was empty; validation warned that pattern provenance was incomplete.",
+    "The model that produced the previous Experience is not established.",
+    "Full operating-system isolation was not demonstrated.",
+    "Codex reached its usage limit after the commit; there was no final assistant response.",
+    "Initial parallel calls have different client/server ordering. This view uses server record order.",
+    "Model identity is supported by CLI metadata and tool activity, not cryptographic attestation."
+  ],
+  "transportFailure": {
+    "trace": "002A",
+    "result": "TLS UnknownIssuer; no model response or MCP activity."
+  }
+}

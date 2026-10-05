@@ -1,0 +1,24 @@
+{
+  "token_type": "monster",
+  "name": "Dorn 7",
+  "image_path": "zz_media/thumbnails/th_unidade.png",
+  "visible_to_players": false,
+  "color": "#718a86",
+  "maximum_hp": 20,
+  "current_hp": 20,
+  "sheet": {
+    "role": "Aliado — controle do Mestre",
+    "marker": "◆",
+    "armor_class": 16,
+    "saving_throw": 16,
+    "movement": "6 m por turno",
+    "description": "Constructo antigo danificado. Protetor e auxiliar do grupo. Adaptação de campanha aprovada por Sage em 25/09/2026, não ficha oficial de Old Dragon.",
+    "attacks": [
+      {"name": "Punho", "damage": "1d6+2", "bonus": "+3", "notes": "Bônus total +3; corpo a corpo; um ataque por turno. Não somar outro bônus de atributo."}
+    ],
+    "abilities": [
+      "Proteger: em vez de atacar, conceder +2 CA a um aliado adjacente até o início do próximo turno de Dorn. Não acumula consigo mesma."
+    ],
+    "notes": "Proteger: aplicação assistida pelo Mestre em Efeitos, bônus de CA +2 (armor_class_bonus), origem Dorn 7, nome Proteger, duração manual. Remover no início do próximo turno de Dorn; remover do alvo anterior ao trocar o protegido. O sistema ainda não automatiza adjacência, consumo da ação nem expiração por turno do protetor. Reparo e incapacitação aguardam definição. Sem imunidades amplas, regeneração ou ataque em área concedidos. Iniciativa deve ser definida na abertura do combate; nenhum nível ou atributo humano foi presumido."
+  }
+}

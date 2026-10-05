@@ -366,20 +366,48 @@ def _equipped_effect_summary(inventory: list[dict[str, Any]]) -> dict[str, Any]:
     return {"totals": totals, "breakdown": breakdown}
 
 
-def _equipped_weapon_for_attack(inventory: list[dict[str, Any]], attack_id: str) -> dict[str, Any] | None:
-    weapons = [
+def _equipped_weapons(inventory: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    return [
         item for item in inventory
         if item.get("equipped") and int(item.get("quantity") or 0) > 0 and item.get("damage_formula")
+        and not item.get("usable")
         and "escudo" not in _normalize(f"{item.get('item_title')} {item.get('item_type')}")
     ]
+
+
+def available_attack_weapons(inventory: list[dict[str, Any]], attack_id: str) -> list[dict[str, Any]]:
+    """Equipped weapons usable for an attack slot, in preference order.
+
+    Same ordering as the legacy auto-pick: slotted match first, then the
+    Adagas throwing exception for ranged, then unslotted by weapon kind.
+    """
+    weapons = _equipped_weapons(inventory)
     wanted_slot = "distancia" if attack_id == "ranged" else "corpo a corpo"
-    selected = next((item for item in weapons if wanted_slot in _normalize(item.get("equipment_slot"))), None)
-    if selected:
-        return selected
+    slotted = [item for item in weapons if wanted_slot in _normalize(item.get("equipment_slot"))]
     unslotted = [item for item in weapons if not str(item.get("equipment_slot") or "").strip()]
+    ranged_terms = ("arco", "besta", "distancia", "ranged")
     if attack_id == "ranged":
-        return next((item for item in unslotted if any(term in _normalize(f"{item.get('item_title')} {item.get('item_type')}") for term in ("arco", "besta", "distancia", "ranged"))), None)
-    return next((item for item in unslotted if not any(term in _normalize(f"{item.get('item_title')} {item.get('item_type')}") for term in ("arco", "besta", "distancia", "ranged"))), None)
+        # This campaign relic explicitly supports throwing (Vault item: 3/6,
+        # 1d4). Equipping it in the melee slot must not remove that mode.
+        throwing = [item for item in weapons if str(item.get("item_path") or "").replace("\\", "/") == "Items/Adagas de Espectro Fantasma.md"]
+        ranged_unslotted = [item for item in unslotted if any(term in _normalize(f"{item.get('item_title')} {item.get('item_type')}") for term in ranged_terms)]
+        ordered = [*slotted, *throwing, *ranged_unslotted]
+    else:
+        melee_unslotted = [item for item in unslotted if not any(term in _normalize(f"{item.get('item_title')} {item.get('item_type')}") for term in ranged_terms)]
+        ordered = [*slotted, *melee_unslotted]
+    seen: set[str] = set()
+    unique: list[dict[str, Any]] = []
+    for item in ordered:
+        path = str(item.get("item_path") or "")
+        if path not in seen:
+            seen.add(path)
+            unique.append(item)
+    return unique
+
+
+def _equipped_weapon_for_attack(inventory: list[dict[str, Any]], attack_id: str) -> dict[str, Any] | None:
+    candidates = available_attack_weapons(inventory, attack_id)
+    return candidates[0] if candidates else None
 
 
 def _attack_equipment_sources(
@@ -645,7 +673,7 @@ def build_character_definition(
     ):
         if attacks.get(field_name) is None:
             continue
-        base_attack_bonus = int(_number(attacks.get(field_name)) or 0)
+        base_attack_bonus = int(_number(attacks.get(field_name)) or 0) + int(overrides.get("advancement_attack_delta") or 0)
         item_attack_bonus = _effect_total(item_effects, "attack_bonus", attack_id)
         weapon = _equipped_weapon_for_attack(inventory, attack_id)
         damage = resolve_item_damage_formula({"item_effects": item_effects}, weapon) if weapon else None
@@ -666,6 +694,8 @@ def build_character_definition(
             }
         )
 
+    # Natural attacks are approved sheet data, not inventory weapons or UI formulas.
+    attack_entries.extend(dict(entry) for entry in overrides.get("natural_attacks", []))
     inventory_names = [str(item.get("item_title") or "").strip() for item in inventory]
     base_equipment = list(
         dict.fromkeys(
@@ -687,7 +717,7 @@ def build_character_definition(
         "epithet": overrides.get("epithet") or epithet,
         "race": race,
         "class_name": class_name,
-        "level": level,
+        "level": None if overrides.get("level_pending") else level,
         "player_name": overrides.get("player_name"),
         "campaign": overrides.get("campaign") or "Omnisvera",
         "attributes": attributes,
@@ -706,7 +736,7 @@ def build_character_definition(
             "magic": _clean_text(magic.get("known_magic"), 4000),
             "magic_notes": _clean_text(magic.get("magic_notes"), 1800),
         },
-        "session_abilities": load_session_abilities(profile_id) + [
+        "session_abilities": load_session_abilities(profile_id) + list(overrides.get("approved_session_abilities") or []) + [
             {
                 "id": f"item:{item.get('item_path')}:{rule.get('id')}",
                 "name": str(rule.get("target") or rule.get("label") or item.get("item_title") or "Habilidade de item"),
@@ -728,17 +758,19 @@ def build_character_definition(
             "unmodified_armor_class": unmodified_armor_class,
             "armor_modifier": armor_modifier,
             "armor_modifier_source": armor_modifier_source,
-            "saving_throw": class_fields.get("saving_throw"),
+            "saving_throw": overrides.get("advancement_saving_throw", class_fields.get("saving_throw")),
             "saving_throw_bonus": _effect_total(item_effects, "saving_throw_bonus"),
             "initiative": int(initiative) if initiative is not None else None,
             "initiative_configured": initiative is not None,
         },
         "progression": {
             "experience": _number(overrides["experience"] if "experience" in overrides else class_fields.get("experience")),
-            "base_attack": _number(class_fields.get("base_attack")),
+            "base_attack": _number(overrides.get("advancement_base_attack", class_fields.get("base_attack"))),
             "maximum_hp": int(maximum_hp) if maximum_hp is not None and maximum_hp > 0 else None,
             "base_maximum_hp": int(base_maximum_hp) if base_maximum_hp is not None and base_maximum_hp > 0 else None,
             "maximum_hp_modifier": _effect_total(item_effects, "maximum_hp_bonus"),
+            "confirmed_level": (overrides.get("level_advancement") or {}).get("target_level"),
+            "resource_maxima": dict(overrides.get("advancement_resources") or {}),
         },
         "movement": movement,
         "base_equipment": base_equipment,
@@ -827,12 +859,28 @@ def get_or_create_state(
                     state["current_hp"] = min(int(state["current_hp"]), int(confirmed_maximum))
                 changed = True
             existing_resources = {item.get("key"): item for item in state.get("resources") or []}
-            for resource in seed_all_resources(profile_id, sheet):
+            # Heal duplicate keys (keep the live first entry, never grant twice).
+            seen_keys: set[str] = set()
+            deduped: list[dict] = []
+            for item in state.get("resources") or []:
+                if item.get("key") in seen_keys:
+                    changed = True
+                    continue
+                seen_keys.add(item.get("key"))
+                deduped.append(item)
+            state["resources"] = deduped
+            existing_resources = {item.get("key"): item for item in deduped}
+            progression_maxima = definition.get('progression', {}).get('resource_maxima') or {}
+            seeded_resources = {r['key']: r for r in seed_all_resources(profile_id, sheet)}
+            for key, maximum in progression_maxima.items():
+                seeded_resources.setdefault(key, {'key': key, 'label': key, 'current': 0, 'recharge': 'inn_rest'})['maximum'] = maximum
+            for resource in seeded_resources.values():
                 existing = existing_resources.get(resource["key"])
                 if existing is None:
                     state.setdefault("resources", []).append(resource)
                     changed = True
-                elif int(existing.get("maximum") or 0) != int(resource["maximum"]):
+                elif resource["key"] in progression_maxima and int(existing.get("maximum") or 0) != int(resource["maximum"]):
+                    # Explicit advancement only: preserve what was already spent.
                     spent = max(0, int(existing.get("maximum") or 0) - int(existing.get("current") or 0))
                     existing["maximum"] = int(resource["maximum"])
                     existing["current"] = max(0, int(resource["maximum"]) - spent)
@@ -952,6 +1000,7 @@ def apply_character_action(
     reason: str | None = None,
     session_id: str | None = None,
     game_session_id: int | None = None,
+    skip_battle_turn: bool = False,
 ) -> dict[str, Any]:
     if action not in STATE_ACTIONS:
         raise ValueError("Ação de ficha inválida")
@@ -960,8 +1009,16 @@ def apply_character_action(
     init_character_play(database_path)
     init_effects(database_path)
     with closing(_connect(database_path)) as connection, connection:
-        if action == "set_currency":
+        if action == "set_currency" or actor_role == 'player':
             connection.execute("BEGIN IMMEDIATE")
+        if actor_role == 'player' and not skip_battle_turn:
+            from .battle_mode import require_battle_turn
+            from .combat_effects import effect_snapshot
+            battle = effect_snapshot(connection)
+            if (battle.get('encounter') or {}).get('active') and (battle.get('encounter') or {}).get('battle_mode'):
+                if action in {'rest_at_inn', 'restore_resource', 'set_currency'}:
+                    raise PermissionError('Esta ação não está disponível durante o combate')
+                require_battle_turn(connection, battle, character_id)
         _row, state = _load_state_row(connection, character_id)
         field = action
         before: Any
@@ -1030,6 +1087,10 @@ def apply_character_action(
                 after = max(before, amount)
             state["temporary_hp" if action == "grant_temporary_hp" else "current_hp"] = after
             field = "temporary_hp" if action == "grant_temporary_hp" else "current_hp"
+            if character_id == "dorn7" and action == "heal" and after > 0:
+                # Reparo manual fora do combate: voltar a >0 PV remove o Desativado.
+                conditions = [c for c in (state.get("conditions") or []) if c != "desativado"]
+                state["conditions"] = conditions
             _save_state(connection, character_id, state)
 
         elif action in {"add_condition", "remove_condition"}:
@@ -1234,6 +1295,8 @@ def update_definition_overrides(
         ).fetchone()
         current = json.loads(row["data_json"]) if row else {}
         before = dict(current)
+        if "level" in fields:
+            current.pop("level_pending", None)
         for key, value in fields.items():
             if key == "attributes":
                 current[key] = {**dict(current.get(key) or {}), **dict(value or {})}

@@ -59,6 +59,9 @@ def init_session_workspace(database_path: Path) -> None:
               created_at TEXT NOT NULL,
               updated_at TEXT NOT NULL
             );
+            CREATE TABLE IF NOT EXISTS deleted_workspace_maps (
+              id TEXT PRIMARY KEY, record_json TEXT NOT NULL, deleted_at TEXT NOT NULL
+            );
             CREATE TABLE IF NOT EXISTS session_workspace_messages (
               id INTEGER PRIMARY KEY AUTOINCREMENT,
               actor_id TEXT NOT NULL,
@@ -528,11 +531,42 @@ def ensure_official_workspace_maps(database_path: Path, vault_path: Path) -> lis
 def list_workspace_maps(database_path: Path, *, visible_to_players_only: bool = False) -> list[dict[str, Any]]:
     init_session_workspace(database_path)
     with closing(_connect(database_path)) as connection:
-        query = "SELECT id,title,image_path,visible_to_players,created_at,updated_at FROM session_workspace_maps"
+        query = "SELECT id,title,image_path,visible_to_players,created_at,updated_at FROM session_workspace_maps WHERE id NOT IN (SELECT id FROM deleted_workspace_maps)"
         if visible_to_players_only:
-            query += " WHERE visible_to_players=1"
+            query += " AND visible_to_players=1"
         rows = connection.execute(query + " ORDER BY created_at,id").fetchall()
     return [_map_record(row) for row in rows]
+
+
+def edit_workspace_map(database_path: Path, map_id: str, *, title: str | None = None, delete: bool = False) -> dict[str, Any] | None:
+    """Remove a library entry recoverably; never delete media, pins or fog."""
+    init_session_workspace(database_path)
+    with closing(_connect(database_path)) as connection, connection:
+        connection.execute("BEGIN IMMEDIATE")
+        record = connection.execute("SELECT * FROM session_workspace_maps WHERE id=?", (map_id,)).fetchone()
+        if record is None:
+            return None
+        if delete:
+            if map_id.startswith("official:"):
+                raise ValueError("Mapa oficial: oculte-o dos jogadores em vez de excluir.")
+            active = connection.execute("SELECT map_id FROM session_workspace_state WHERE id=1").fetchone()
+            if active and active["map_id"] == map_id:
+                raise ValueError("Selecione outro mapa antes de excluir este.")
+            if table_exists(connection, "combat_effect_clock"):
+                clock = connection.execute("SELECT encounter_json FROM combat_effect_clock LIMIT 1").fetchone()
+                encounter = json.loads(clock[0] or "{}") if clock else {}
+                if encounter.get("active") and map_id in (encounter.get("map_id"), encounter.get("return_map_id")):
+                    raise ValueError("Encerre o combate antes de excluir um mapa utilizado por ele.")
+            connection.execute("CREATE TABLE IF NOT EXISTS deleted_workspace_maps (id TEXT PRIMARY KEY, record_json TEXT NOT NULL, deleted_at TEXT NOT NULL)")
+            connection.execute("INSERT OR REPLACE INTO deleted_workspace_maps VALUES(?,?,?)", (map_id, json.dumps(dict(record)), _now()))
+            # Keep historical scene references intact; exclude only from live library.
+        else:
+            cleaned = (title or "").strip()
+            if not cleaned or len(cleaned) > 160:
+                raise ValueError("Informe um nome com 1 a 160 caracteres.")
+            connection.execute("UPDATE session_workspace_maps SET title=?,updated_at=? WHERE id=?", (cleaned, _now(), map_id))
+            connection.execute("UPDATE session_workspace_state SET map_title=?,updated_at=? WHERE map_id=?", (cleaned, _now(), map_id))
+        return {"id": map_id, "deleted": delete}
 
 
 def update_workspace_map_visibility(
@@ -556,7 +590,7 @@ def update_workspace_map_visibility(
 def set_active_workspace_map(database_path: Path, map_id: str) -> dict[str, Any] | None:
     init_session_workspace(database_path)
     with closing(_connect(database_path)) as connection, connection:
-        row = connection.execute("SELECT id,title,image_path,visible_to_players,created_at,updated_at FROM session_workspace_maps WHERE id=?", (map_id,)).fetchone()
+        row = connection.execute("SELECT id,title,image_path,visible_to_players,created_at,updated_at FROM session_workspace_maps WHERE id=? AND id NOT IN (SELECT id FROM deleted_workspace_maps)", (map_id,)).fetchone()
         if row is None:
             return None
         connection.execute("UPDATE session_workspace_state SET map_id=?,map_title=?,map_image_path=?,view_zoom=1,view_scroll_left=0,view_scroll_top=0,updated_at=? WHERE id=1", (row["id"], row["title"], row["image_path"], _now()))
@@ -894,7 +928,7 @@ def get_workspace_snapshot(
                 active_map_id = str(state_row["map_id"])
             else:
                 visible_active_map = connection.execute(
-                    "SELECT 1 FROM session_workspace_maps WHERE id=? AND visible_to_players=1",
+                    "SELECT 1 FROM session_workspace_maps WHERE id=? AND visible_to_players=1 AND id NOT IN (SELECT id FROM deleted_workspace_maps)",
                     (state_row["map_id"],),
                 ).fetchone()
                 if visible_active_map is not None:
@@ -902,14 +936,14 @@ def get_workspace_snapshot(
         selected_map = None
         requested_map_id = map_id or (str(state_row["map_id"]) if state_row else None)
         if requested_map_id:
-            visibility_clause = "" if is_gm else " AND visible_to_players=1"
+            visibility_clause = "" if is_gm else " AND visible_to_players=1 AND id NOT IN (SELECT id FROM deleted_workspace_maps)"
             selected_map = connection.execute(
                 f"SELECT id,title,image_path,visible_to_players,updated_at FROM session_workspace_maps WHERE id=?{visibility_clause}",
                 (requested_map_id,),
             ).fetchone()
         if selected_map is None and not is_gm:
             selected_map = connection.execute(
-                "SELECT id,title,image_path,visible_to_players,updated_at FROM session_workspace_maps WHERE visible_to_players=1 ORDER BY updated_at DESC,id LIMIT 1"
+                "SELECT id,title,image_path,visible_to_players,updated_at FROM session_workspace_maps WHERE visible_to_players=1 AND id NOT IN (SELECT id FROM deleted_workspace_maps) ORDER BY updated_at DESC,id LIMIT 1"
             ).fetchone()
         has_registered_maps = connection.execute("SELECT 1 FROM session_workspace_maps LIMIT 1").fetchone() is not None
         message_rows = connection.execute(
@@ -953,7 +987,16 @@ def get_workspace_snapshot(
     fog = get_workspace_fog(database_path, str(map_record["id"]) if map_record else "default")
     tokens = list_workspace_tokens(database_path, str(map_record["id"])) if map_record else []
     if not is_gm:
-        tokens = [token for token in tokens if _token_is_visible(token, fog)]
+        # Starting battle explicitly reveals selected participants, not the map's
+        # other hidden inhabitants or its fog. Manual token hiding still wins.
+        revealed_battle_tokens = set()
+        with closing(_connect(database_path)) as battle_connection:
+            if battle_connection.execute("SELECT 1 FROM sqlite_master WHERE name='combat_effect_clock'").fetchone():
+                battle_row = battle_connection.execute('SELECT encounter_json FROM combat_effect_clock WHERE id=1').fetchone()
+                battle = json.loads(battle_row[0]) if battle_row else {}
+                if battle.get('active') and battle.get('battle_mode') and battle.get('map_id') == (map_record or {}).get('id'):
+                    revealed_battle_tokens = {p['target_id'] for p in battle.get('participants', []) if p['target_type'] == 'token'}
+        tokens = [token for token in tokens if _token_is_visible(token, fog) or (token['id'] in revealed_battle_tokens and token['visible_to_players'])]
     return {
         "table_mode": str(state_row["table_mode"] or "digital") if state_row else "digital",
         "active_map_id": active_map_id,

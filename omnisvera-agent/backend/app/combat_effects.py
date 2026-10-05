@@ -12,6 +12,7 @@ from pathlib import Path
 
 from .dice_rolls import parse_formula
 from .session_ledger import append_session_ledger_event
+from .battle_mode import stage_battle, restore_exploration
 
 MODIFIERS = {
     "attack_bonus",
@@ -125,8 +126,21 @@ def _current_participant(encounter: dict) -> dict | None:
     return participants[index]
 
 
+def _expire_missing_target(db: sqlite3.Connection, effect: dict, changes: list[dict]) -> bool:
+    # A deleted token must not freeze every subsequent round. Keep the original
+    # effect for audit, but stop applying it; never redirect damage to an actor.
+    table, column = ("character_states", "profile_id") if effect["target_type"] == "character" else ("session_workspace_tokens", "id")
+    if db.execute(f"SELECT 1 FROM {table} WHERE {column}=?", (effect["target_id"],)).fetchone() is not None:
+        return False
+    db.execute("UPDATE combat_effects SET active=0 WHERE id=?", (effect["id"],))
+    changes.append({"expired": effect["id"], "reason": "target_missing", "target_type": effect["target_type"], "target_id": effect["target_id"]})
+    return True
+
+
 def _tick_round_effects(db: sqlite3.Connection, snapshot: dict, changes: list[dict], now: str) -> None:
     for effect in snapshot["effects"]:
+        if _expire_missing_target(db, effect, changes):
+            continue
         expire = False
         amount = effect["modifiers"].get("hp_per_round", 0)
         if amount:
@@ -168,6 +182,8 @@ def effect_command(path: Path, *, actor_id: str, actor_role: str, request_id: st
             if action != "start" and not encounter.get("active"):
                 raise ValueError("Nenhum combate ativo")
             if action == "end":
+                if encounter.get('battle_mode'):
+                    restore_exploration(db, encounter, now)
                 encounter["active"] = False
             elif action == "next_turn":
                 participants = encounter.get("participants") or []
@@ -176,9 +192,14 @@ def effect_command(path: Path, *, actor_id: str, actor_role: str, request_id: st
                 current = _current_participant(encounter)
                 requested_actor = payload.get("actor")
                 if actor_role == "player":
-                    if not isinstance(requested_actor, dict) or current is None or (
-                        requested_actor.get("target_type"), requested_actor.get("target_id")
-                    ) != (current.get("target_type"), current.get("target_id")):
+                    owns_turn = current is not None and current.get("target_type") == "character" and current.get("target_id") == actor_id
+                    if current and current.get('target_type') == 'token':
+                        token = db.execute('SELECT sheet_json FROM session_workspace_tokens WHERE id=?', (current['target_id'],)).fetchone()
+                        owns_turn = token is not None and json.loads(token[0] or '{}').get('summon', {}).get('caster') == actor_id
+                    if not owns_turn:
+                        raise PermissionError("Somente o participante atual pode encerrar este turno")
+                    requested_key = (requested_actor.get('target_type'), requested_actor.get('target_id')) if isinstance(requested_actor, dict) else (None, None)
+                    if current is None or requested_key not in {(current.get('target_type'), current.get('target_id')), ('character', actor_id)}:
                         raise PermissionError("Somente o participante atual pode encerrar este turno")
                 previous_index = int(encounter.get("turn_index") or 0) % len(participants)
                 next_index = (previous_index + 1) % len(participants)
@@ -188,10 +209,19 @@ def effect_command(path: Path, *, actor_id: str, actor_role: str, request_id: st
                 encounter["turn_index"] = next_index
                 encounter["turn_sequence"] = int(encounter.get("turn_sequence") or 0) + 1
                 encounter["action_committed"] = False
+                encounter["attacks_used"] = 0
+                encounter.pop("attack_limit", None)
                 encounter["turn_started_at"] = now
                 encounter["last_transition_by"] = actor_id
             else:
                 participants = payload.get("participants") or []
+                if action == 'initiative' and encounter.get('battle_mode'):
+                    if payload.get('map_id') and payload['map_id'] != encounter.get('map_id'):
+                        raise ValueError('Encerre o combate antes de trocar a arena')
+                    previous_members = {(p['target_type'], p['target_id']) for p in encounter.get('participants', [])}
+                    new_members = {(p.get('target_type'), p.get('target_id')) for p in participants}
+                    if not previous_members.issubset(new_members):
+                        raise ValueError('Encerre o combate antes de remover participantes da arena')
                 if not 1 <= len(participants) <= 100:
                     raise ValueError("Escolha os participantes do combate")
                 seen = set()
@@ -213,6 +243,13 @@ def effect_command(path: Path, *, actor_id: str, actor_role: str, request_id: st
                         if encounter.get(field) is not None:
                             context[field] = int(encounter[field])
                 ordered = sorted(participants, key=lambda p: -p["initiative"])
+                if action == 'initiative':
+                    old_participants = {(p['target_type'], p['target_id']): p for p in encounter.get('participants', [])}
+                    for participant in ordered:
+                        old = old_participants.get((participant['target_type'], participant['target_id']), {})
+                        for field in ('token_id', 'controller_id'):
+                            if field in old:
+                                participant[field] = old[field]
                 previous = _current_participant(encounter) if action == "initiative" else None
                 turn_index = next(
                     (
@@ -224,18 +261,27 @@ def effect_command(path: Path, *, actor_id: str, actor_role: str, request_id: st
                     0,
                 )
                 encounter = {
+                    **({key: encounter[key] for key in ('battle_mode', 'return_map_id', 'return_tokens') if key in encounter} if action == 'initiative' else {}),
                     "active": True,
                     "map_id": str(payload.get("map_id") or encounter.get("map_id") or "default"),
                     "title": str(payload.get("title") or encounter.get("title") or "Combate")[:120],
                     "participants": ordered,
                     "turn_index": turn_index,
-                    "turn_sequence": int(encounter.get("turn_sequence") or 0) + 1,
-                    "action_committed": False,
+                    "turn_sequence": int(encounter.get("turn_sequence") or 0) + (0 if action == 'initiative' else 1),
+                    "action_committed": encounter.get('action_committed', False) if action == 'initiative' else False,
+                    **({key: encounter[key] for key in ('attacks_used', 'attack_limit') if key in encounter} if action == 'initiative' else {}),
                     "turn_started_at": now,
                     **context,
                 }
                 if action == "start":
+                    if payload.get('battle_mode'):
+                        encounter['battle_mode'] = True
+                        stage_battle(db, encounter, now)
                     db.execute("UPDATE combat_effect_clock SET round=1 WHERE id=1")
+                elif encounter.get('battle_mode'):
+                    additions = [p for p in ordered if (p['target_type'], p['target_id']) not in previous_members]
+                    if additions:
+                        stage_battle(db, encounter, now, participants=additions)
             db.execute("UPDATE combat_effect_clock SET encounter_json=? WHERE id=1", (json.dumps(encounter),))
             changes.append({"encounter": encounter})
         elif action == "apply":
@@ -277,13 +323,14 @@ def effect_command(path: Path, *, actor_id: str, actor_role: str, request_id: st
             resource = payload.get("resource")
             resource_change = None
             if resource is not None:
-                if not isinstance(resource, dict) or resource.get("character_id") != actor_id:
+                if not isinstance(resource, dict) or not resource.get('character_id') or (actor_role != 'gm' and resource.get("character_id") != actor_id):
                     raise ValueError("Recurso de habilidade inválido")
+                resource_character_id = str(resource['character_id'])
                 resource_key = str(resource.get("key") or "").strip()
                 resource_cost = resource.get("cost")
                 if not resource_key or type(resource_cost) is not int or not 1 <= resource_cost <= 999:
                     raise ValueError("Custo de habilidade inválido")
-                state_row = db.execute("SELECT state_json FROM character_states WHERE profile_id=?", (actor_id,)).fetchone()
+                state_row = db.execute("SELECT state_json FROM character_states WHERE profile_id=?", (resource_character_id,)).fetchone()
                 if state_row is None:
                     raise ValueError("Estado do personagem não encontrado")
                 character_state = json.loads(state_row[0])
@@ -296,7 +343,7 @@ def effect_command(path: Path, *, actor_id: str, actor_role: str, request_id: st
                 character_state["resources"] = resources
                 db.execute(
                     "UPDATE character_states SET state_json=?,version=version+1,updated_at=? WHERE profile_id=?",
-                    (json.dumps(character_state, ensure_ascii=False), now, actor_id),
+                    (json.dumps(character_state, ensure_ascii=False), now, resource_character_id),
                 )
                 resource_change = {"before": before_resource, "after": resources[resource_index]}
             effect_id = payload.get("id") or f"effect:{uuid.uuid4().hex}"
@@ -329,6 +376,8 @@ def effect_command(path: Path, *, actor_id: str, actor_role: str, request_id: st
             if action == "remove" and not any(e["id"] == payload.get("id") for e in snapshot["effects"]):
                 raise ValueError("Efeito não encontrado")
             for effect in snapshot["effects"]:
+                if action == "round" and _expire_missing_target(db, effect, changes):
+                    continue
                 expire = (action == "remove" and effect["id"] == payload.get("id")) or (action == "scene" and effect["duration"] == "scene")
                 expire = expire or (action == "rest" and effect["duration"] == "rest" and effect["target_type"] == payload.get("target_type") and effect["target_id"] == payload.get("target_id"))
                 if action == "round":
@@ -360,15 +409,28 @@ def apply_definition_effects(definition: dict, effects: list[dict]) -> dict:
     result = copy.deepcopy(definition)
     totals = {key: sum(e["modifiers"].get(key, 0) for e in effects) for key in MODIFIERS}
     result["active_effects"] = effects
+    # Strength flows into melee the Old Dragon way: the raised score moves the
+    # attribute modifier, which carries both the attack roll and the damage.
+    strength_delta = 0
+    if totals["strength_bonus"]:
+        attributes = result.get("attributes") or {}
+        if attributes.get("strength") is not None:
+            try:
+                current = int(attributes["strength"])
+                strength_delta = _attribute_modifier(current + totals["strength_bonus"]) - _attribute_modifier(current)
+            except (TypeError, ValueError):
+                strength_delta = 0
     for attack in result.get("attacks") or []:
-        attack["attack_bonus"] += totals["attack_bonus"]
-        attack["effect_attack_bonus"] = totals["attack_bonus"]
+        melee_delta = strength_delta if attack.get("id") == "melee" else 0
+        attack["attack_bonus"] = int(attack.get("attack_bonus") or 0) + totals["attack_bonus"] + melee_delta
+        attack["effect_attack_bonus"] = totals["attack_bonus"] + melee_delta
         attack["attack_count"] = max(1, min(10, int(attack.get("attack_count", 1)) + totals["extra_attacks"]))
-        if attack.get("damage") and totals["damage_bonus"]:
+        damage_delta = totals["damage_bonus"] + melee_delta
+        if attack.get("damage") and damage_delta:
             parsed = parse_formula(attack["damage"])
             # Preserve all dice; only change the flat modifier.
             base = parsed.formula.split("+")[0].split("-")[0]
-            modifier = parsed.modifier + totals["damage_bonus"]
+            modifier = parsed.modifier + damage_delta
             attack["damage"] = f"{base}{modifier:+d}" if modifier else base
         attack["extra_damage_formulas"] = [
             effect["damage_bonus_formula"] for effect in effects if effect.get("damage_bonus_formula")
