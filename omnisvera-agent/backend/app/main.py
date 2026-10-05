@@ -3325,7 +3325,7 @@ def _technique_claimed(resolution_id: str, title: str) -> bool:
 
 
 def _technique_battle_turn() -> str | None:
-    """Current battle turn key (round + turn slot), or None outside battle."""
+    """Use the persisted turn sequence: round/slot restart in every encounter."""
     import json as _json
     import sqlite3 as _sqlite
     from contextlib import closing as _closing
@@ -3339,6 +3339,10 @@ def _technique_battle_turn() -> str | None:
         return None
     if not encounter.get("active") or not encounter.get("battle_mode"):
         return None
+    sequence = encounter.get("turn_sequence")
+    if sequence is not None:
+        # Initiative edits preserve this sequence even when the actor changes slot.
+        return f"r{row[0]}s{sequence}"
     return f"r{row[0]}i{encounter.get('turn_index', 0)}"
 
 

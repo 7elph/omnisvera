@@ -13,7 +13,7 @@ from fastapi.testclient import TestClient
 from app import main
 from app.access import AccessContext
 from app.combat import init_combat, resolve_attack, confirm_attack_resolution
-from app.combat_effects import init_effects, readeffects
+from app.combat_effects import effect_command, init_effects, readeffects
 from app.character_play import init_character_play
 from app.character_creation import init_character_creation
 from app.dice_rolls import init_dice_rolls
@@ -216,6 +216,31 @@ class HemomanteTechniquesTests(TechniqueFixture):
         response = self.use("raziel", "mordida", {"resolution_id": record["resolution_id"]})
         self.assertEqual(400, response.status_code)
         self.assertEqual(5, self.laminas())
+
+    def test_mordida_first_turn_of_new_encounter_does_not_reuse_previous_claim(self):
+        with closing(sqlite3.connect(self.db)) as connection, connection:
+            connection.execute("INSERT OR REPLACE INTO session_workspace_maps(id,title,image_path,visible_to_players,created_at,updated_at) VALUES('default','Arena fixture','',1,'fixture','fixture')")
+            connection.execute("INSERT INTO session_workspace_state(id,map_id,map_title,map_image_path,updated_at) VALUES(1,'default','Arena fixture','','fixture')")
+        def command(action, **payload):
+            return effect_command(self.db, actor_id="master", actor_role="gm",
+                                  request_id=f"mordida-encounter-{action}-{readeffects(self.db)['version']}",
+                                  expected_version=readeffects(self.db)["version"],
+                                  action=action, payload=payload)
+
+        for encounter_number in (1, 2):
+            with closing(sqlite3.connect(self.db)) as connection, connection:
+                connection.execute("UPDATE session_workspace_tokens SET current_hp=12 WHERE id=?",
+                                   (self.wounded["id"],))
+            command("start", map_id="default", battle_mode=True, participants=[
+                {"target_type": "character", "target_id": "raziel", "initiative": 12},
+                {"target_type": "token", "target_id": self.wounded["id"], "initiative": 5}])
+            self.assertEqual(1, readeffects(self.db)["round"])
+            self.assertEqual(0, readeffects(self.db)["encounter"]["turn_index"])
+            hit = self._confirmed_hit(f"mordida-new-encounter-{encounter_number}")
+            response = self.use("raziel", "mordida", {"resolution_id": hit["resolution_id"]})
+            self.assertEqual(200, response.status_code, response.text)
+            self.assertEqual(5, self.laminas())
+            command("end")
 
     def test_mordida_rejects_miss(self):
         miss = self._confirmed_hit("tech-mor-102", d20=2)
