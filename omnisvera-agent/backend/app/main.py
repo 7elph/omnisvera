@@ -3079,7 +3079,7 @@ def resolve_character_attack(
 
 
 _TECHNIQUE_OWNER = {
-    "lamina-de-sangue": "raziel", "marca-rubra": "raziel", "mordida": "raziel",
+    "lamina-de-sangue": "raziel", "marca-rubra": "raziel", "mordida": "raziel", "regeneracao-vampirica": "raziel",
     "forca-arcana": "vezemir", "velocidade": "vezemir",
     "animar-mortos": "morthak", "levantar-esqueleto": "morthak", "levantar-um-esqueleto": "morthak",
 }
@@ -3114,6 +3114,22 @@ def use_character_technique(
     actor_id, actor_role = _roll_actor(access)
     request_id = request.request_id or f"technique-{uuid.uuid4().hex[:16]}"
     try:
+        if technique_id == 'regeneracao-vampirica':
+            from .vampire_powers import regenerate
+            return regenerate(settings.database_path, actor_id=actor_id, actor_role=actor_role, request_id=request_id)
+        if technique_id == 'mordida':
+            from .vampire_powers import bite_definition
+            if not request.target_type or not request.target_id or request.resolution_id:
+                raise ValueError('Mordida é um ataque próprio: selecione um alvo vivo')
+            target = _combat_target(request.target_type, request.target_id)
+            if request.target_type == 'character' and request.target_id == profile_id:
+                raise ValueError('Raziel não pode morder a si mesmo')
+            definition = bite_definition(_playable_character(profile_id, AccessContext(mode='gm'))['definition'])
+            resolution, _ = resolve_attack(settings.database_path, request_id=request_id,
+                actor_character_id=profile_id, actor_name='Raziel', requested_by_id=actor_id, requested_by_role=actor_role,
+                definition=definition, inventory=[], attack_id='mordida', target=target,
+                roll_mode=request.roll_mode or 'digital', physical_d20=request.d20)
+            return resolution
         if technique_id in {"animar-mortos", "levantar-esqueleto", "levantar-um-esqueleto"}:
             from .summons import create_summon
             canonical = "levantar-esqueleto" if technique_id == "levantar-um-esqueleto" else technique_id
@@ -3163,37 +3179,6 @@ def use_character_technique(
             return effect_command(settings.database_path, actor_id=actor_id, actor_role=actor_role,
                                   request_id=request_id, expected_version=state["version"],
                                   action="apply", payload=payload, allow_player=True)
-        if technique_id == "mordida":
-            if not request.resolution_id:
-                raise ValueError("Informe o ataque confirmado para absorver.")
-            record = get_attack_resolution(settings.database_path, request.resolution_id)
-            if record["actor_character_id"] != profile_id or record["attack_id"] not in {"melee", "ranged"}:
-                raise ValueError("Mordida exige um ataque normal confirmado por Raziel.")
-            if record.get("status") != "confirmed":
-                raise ValueError("Confirme o acerto antes de absorver.")
-            if record["result"] != "hit" or int(record.get("damage_total") or 0) <= 0:
-                raise ValueError("Mordida exige um acerto com dano.")
-            if _technique_claimed(request.resolution_id, "Mordida"):
-                raise ValueError("Este golpe já foi absorvido.")
-            if not _technique_target_alive(record["target_type"], record["target_id"]):
-                raise ValueError("Mordida exige um alvo vivo.")
-            turn_key = _technique_battle_turn()
-            if turn_key and _technique_turn_claimed(profile_id, turn_key, "Mordida"):
-                raise ValueError("Mordida já usada neste turno.")
-            heal_roll = int(roll_formula("1d4")["total"])
-            reason = f"Mordida — absorção ({request.resolution_id})"
-            if turn_key:
-                reason += f" [turno {turn_key}]"
-            healed = apply_character_action(
-                settings.database_path, character_id=profile_id, actor_id=actor_id, actor_role=actor_role,
-                action="heal", payload={"amount": heal_roll},
-                reason=reason,
-                session_id=None,
-                # Rider on the already-committed confirm: not a new battle action.
-                skip_battle_turn=True,
-            )
-            return {"healed": healed, "heal_roll": heal_roll,
-                    "damage_absorbed": int(record["damage_total"])}
         if technique_id in {"forca-arcana", "velocidade"}:
             character = _playable_character(profile_id, AccessContext(mode="gm"))
             level = character["definition"].get("level") or 1

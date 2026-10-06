@@ -24,11 +24,10 @@ export default function TokenVitals({ token, editable, showPortrait = true, comp
   </div>{error && <p role="alert">{error}</p>}</>;
   return <div>
     {showPortrait && token.image_path && <img src={mediaUrlFromVaultPath(token.image_path)} alt={token.name} style={{ maxWidth: "100%", maxHeight: 260, objectFit: "contain" }} />}
-    {editable && token.token_type === "monster" && <fieldset disabled={busy}><legend>Vida da criatura · Mestre</legend>
+    {editable && token.token_type === "monster" && <details className="workspace-token-edit-dropdown"><summary>Editar vida · Mestre</summary><fieldset disabled={busy}><legend>Vida da criatura</legend>
       <label>Atual <input aria-label="Vida atual da criatura" type="number" min={0} value={hp} onChange={e => setHp(e.target.value)} /></label>
       <label>Máxima <input aria-label="Vida máxima da criatura" type="number" min={1} value={maximum} onChange={e => setMaximum(e.target.value)} /></label>
       <button type="button" onClick={() => void save()}>Salvar vida</button>
-    </fieldset>}
-    {error && <p role="alert">{error}</p>}
+    </fieldset>{error && <p role="alert">{error}</p>}</details>}
   </div>;
 }

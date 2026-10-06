@@ -574,6 +574,7 @@ export type SessionLedgerEntry = {
 export type WorkspaceTokenSheet = {
   summon?: { caster: string; technique: string; duration?: string; corpse_id?: string | null };
   reanimation_allowed?: boolean;
+  reanimated_by?: string;
   marker?: string;
   role?: string;
   level?: number | null;
@@ -653,6 +654,8 @@ export type AttackResolution = {
   damage_modifier: number;
   damage_total: number;
   breakdown: {
+    life_drain?: boolean;
+    drain_result?: { drained: number; healed: number; hp_before: number; hp_after: number };
     automatic_hit?: boolean;
     resource_cost?: { key: string; amount: number; state_version: number } | null;
     strikes?: Array<{ d20: number; attack_total: number; result: "hit" | "miss"; damage_total: number; damage_rolls: number[] }>;

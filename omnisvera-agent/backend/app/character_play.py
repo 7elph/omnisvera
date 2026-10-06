@@ -34,6 +34,17 @@ def load_session_abilities(profile_id: str, *, approved_build: str | None = None
     if not isinstance(raw_entries, list):
         return []
 
+    if profile_id == "raziel":
+        # Loaded by this runtime only, so an older running backend cannot expose
+        # the new power contract before its handlers are restarted together.
+        overrides_path = Path(__file__).with_name("data") / "raziel_vampire_powers.json"
+        overrides = json.loads(overrides_path.read_text(encoding="utf-8"))
+        raw_entries = [
+            {**entry, **overrides.get(entry.get("id"), {})}
+            if isinstance(entry, dict) else entry
+            for entry in raw_entries
+        ]
+
     entries: list[dict[str, Any]] = []
     for raw_entry in raw_entries:
         if not isinstance(raw_entry, dict):
@@ -1125,6 +1136,13 @@ def apply_character_action(
             before = dict(resources[index])
             current = int(before.get("current") or 0)
             maximum = int(before.get("maximum") or 0)
+            if character_id == 'raziel' and resource_key == 'forma_da_noite' and action == 'consume_resource':
+                animal = payload.get('animal')
+                if animal not in {'corvo', 'coruja', 'morcego'} or amount != 1:
+                    raise ValueError('Escolha corvo, coruja ou morcego para Forma da Noite')
+                if current < 1:
+                    raise ValueError('Sem usos diários de Forma da Noite')
+                reason = f'Forma da Noite: {animal} (1 uso diário)'
             new_current = current - amount if action == "consume_resource" else current + amount
             resources[index] = {**before, "current": max(0, min(maximum, new_current))}
             after = dict(resources[index])

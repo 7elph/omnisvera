@@ -90,6 +90,80 @@ class Session6CombatTests(unittest.TestCase):
         self.base.start()
         self.assertEqual(canonical['id'], readeffects(self.db)['encounter']['participants'][0]['token_id'])
 
+    def test_reanimated_wolf_completes_owned_combat_flow_without_double_spending(self):
+        self.start_morthak()
+        corpse = save_workspace_token(self.db, token_type='monster', name='Lobo', latitude=30, longitude=40,
+            current_hp=0, maximum_hp=8, map_id='arena', sheet={'armor_class': 13, 'reanimation_allowed': True})
+        spec = {**self.spec, 'resource_key': 'animar_mortos', 'attack_name': 'Garra'}
+        first = self.summon(technique='animar-mortos', spec=spec, corpse_id=corpse['id'])
+        self.assertEqual(first, self.summon(technique='animar-mortos', spec=spec, corpse_id=corpse['id']))
+        token = first['token']
+        self.assertEqual('Lobo reanimado', token['name'])
+        self.assertEqual('Garra', token['sheet']['attacks'][0]['name'])
+        self.assertEqual('morthak', token['sheet']['summon']['caster'])
+        self.assertTrue(readeffects(self.db)['encounter']['action_committed'])
+        self.base.command('next_turn')
+        self.assertEqual(token['id'], readeffects(self.db)['encounter']['participants'][1]['target_id'])
+        with patch.object(main, 'settings', replace(main.settings, database_path=self.db)):
+            main.app.dependency_overrides[main.require_any] = lambda: AccessContext(mode='player', profile_id='morthak')
+            try:
+                with TestClient(main.app) as client:
+                    reply = client.post(f"/gm/combat/tokens/{token['id']}/attacks/resolve", json={
+                        'request_id': 'wolf-owned-attack', 'attack_id': '0', 'target_type': 'token',
+                        'target_id': self.base.enemy['id'], 'roll_mode': 'physical', 'd20': 20})
+                    self.assertEqual(200, reply.status_code, reply.text)
+                    resolution = reply.json()
+                    confirmed, applied = confirm_attack_resolution(self.db, resolution_id=resolution['resolution_id'],
+                        requested_by_id='morthak', requested_by_role='player')
+                    self.assertTrue(applied)
+                    self.assertLess(confirmed['hp_after'], confirmed['hp_before'])
+                    _, repeated = confirm_attack_resolution(self.db, resolution_id=resolution['resolution_id'],
+                        requested_by_id='morthak', requested_by_role='player')
+                    self.assertFalse(repeated)
+                    reply = client.post('/combat/next-turn', json={'request_id': 'wolf-next-turn',
+                        'expected_version': readeffects(self.db)['version'], 'action': 'next_turn'})
+                    self.assertEqual(200, reply.status_code, reply.text)
+            finally:
+                main.app.dependency_overrides.clear()
+        with closing(sqlite3.connect(self.db)) as db:
+            state = json.loads(db.execute("SELECT state_json FROM character_states WHERE profile_id='morthak'").fetchone()[0])
+            self.assertEqual(0, next(r['current'] for r in state['resources'] if r['key'] == 'animar_mortos'))
+
+    def test_reanimation_without_master_approval_preserves_resource_and_corpse(self):
+        self.start_morthak()
+        corpse = save_workspace_token(self.db, token_type='monster', name='Lobo', latitude=30, longitude=40,
+            current_hp=0, maximum_hp=8, map_id='arena', sheet={'armor_class': 13})
+        spec = {**self.spec, 'resource_key': 'animar_mortos'}
+        with self.assertRaisesRegex(ValueError, 'Mestre precisa autorizar'):
+            self.summon(technique='animar-mortos', spec=spec, corpse_id=corpse['id'])
+        with closing(sqlite3.connect(self.db)) as db:
+            state = json.loads(db.execute("SELECT state_json FROM character_states WHERE profile_id='morthak'").fetchone()[0])
+            self.assertEqual(1, next(r['current'] for r in state['resources'] if r['key'] == 'animar_mortos'))
+            sheet = json.loads(db.execute('SELECT sheet_json FROM session_workspace_tokens WHERE id=?', (corpse['id'],)).fetchone()[0])
+            self.assertNotIn('reanimated_by', sheet)
+        self.assertFalse(readeffects(self.db)['encounter']['action_committed'])
+
+    def test_reanimation_replaces_corpse_turn_and_follows_caster_after_initiative_edit(self):
+        self.start_morthak()
+        corpse = save_workspace_token(self.db, token_type='monster', name='Lobo', latitude=30, longitude=40,
+            current_hp=0, maximum_hp=8, map_id='arena', sheet={'reanimation_allowed': True})
+        members = readeffects(self.db)['encounter']['participants']
+        self.base.command('initiative', participants=members + [{'target_type': 'token', 'target_id': corpse['id'], 'initiative': 1}])
+        token = self.summon(technique='animar-mortos', spec={**self.spec, 'resource_key': 'animar_mortos'}, corpse_id=corpse['id'])['token']
+        state = readeffects(self.db)
+        self.assertEqual('morthak', state['encounter']['participants'][state['encounter']['turn_index']]['target_id'])
+        self.assertNotIn(corpse['id'], [p['target_id'] for p in state['encounter']['participants']])
+        members = state['encounter']['participants']
+        for member in members:
+            if member['target_id'] == token['id']:
+                member['initiative'] = 99
+        state = self.base.command('initiative', participants=members)
+        ids = [p['target_id'] for p in state['encounter']['participants']]
+        self.assertEqual(ids.index('morthak') + 1, ids.index(token['id']))
+        self.base.command('next_turn')
+        state = readeffects(self.db)
+        self.assertEqual(token['id'], state['encounter']['participants'][state['encounter']['turn_index']]['target_id'])
+
     def test_catalog_skeleton_id_calls_real_summon(self):
         with patch.object(main, 'settings', replace(main.settings, database_path=self.db)):
             main.app.dependency_overrides[main.require_any] = lambda: AccessContext(mode='player', profile_id='morthak')
@@ -99,6 +173,34 @@ class Session6CombatTests(unittest.TestCase):
                     self.assertEqual(200, reply.status_code, reply.text)
                     self.assertEqual('default', reply.json()['token']['map_id'])
             finally: main.app.dependency_overrides.clear()
+
+    def test_reanimation_http_returns_new_sheet_and_replaces_dead_pin_in_initiative(self):
+        self.start_morthak()
+        corpse = save_workspace_token(self.db, token_type='monster', name='Lobo', latitude=30, longitude=40,
+            current_hp=0, maximum_hp=8, map_id='arena', sheet={'reanimation_allowed': True})
+        self.base.command('initiative', participants=readeffects(self.db)['encounter']['participants'] + [
+            {'target_type': 'token', 'target_id': corpse['id'], 'initiative': 1}])
+        with patch.object(main, 'settings', replace(main.settings, database_path=self.db)):
+            main.app.dependency_overrides[main.require_any] = lambda: AccessContext(mode='player', profile_id='morthak')
+            try:
+                with TestClient(main.app) as client:
+                    reply = client.post('/characters/morthak/techniques/animar-mortos', json={
+                        'request_id': 'http-reanimate-wolf', 'target_type': 'token', 'target_id': corpse['id']})
+                    self.assertEqual(200, reply.status_code, reply.text)
+                    token = reply.json()['token']
+                    self.assertEqual('Lobo reanimado', token['name'])
+                    self.assertGreater(token['current_hp'], 0)
+                    self.assertEqual('morthak', token['sheet']['summon']['caster'])
+                    self.assertTrue(token['sheet']['attacks'])
+                    ids = [p['target_id'] for p in readeffects(self.db)['encounter']['participants']]
+                    self.assertNotIn(corpse['id'], ids)
+                    self.assertEqual(ids.index('morthak') + 1, ids.index(token['id']))
+                    public = get_workspace_snapshot(self.db, is_gm=False)
+                    original = next(t for t in public['tokens'] if t['id'] == corpse['id'])
+                    self.assertEqual(token['id'], original['sheet']['reanimated_by'])
+                    self.assertEqual(token['sheet'], next(t['sheet'] for t in public['tokens'] if t['id'] == token['id']))
+            finally:
+                main.app.dependency_overrides.clear()
 
     def test_bone_dagger_has_campaign_damage_without_equipped_weapon(self):
         definition = {'id': 'morthak', 'name': 'Morthak', 'level': 2,

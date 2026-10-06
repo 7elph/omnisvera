@@ -323,6 +323,13 @@ def resolve_attack(
         guard = next((e for e in current_snapshot['effects'] if e['id'] == guard_effect_id and e.get('protocol') == 'guard'), None)
         if guard_effect_id and not guard:
             raise ValueError('Guarda consumida ou expirada')
+        if attack.get('life_drain'):
+            own = connection.execute('SELECT state_json FROM character_states WHERE profile_id=?', (actor_character_id,)).fetchone()
+            if not own or int(json.loads(own['state_json']).get('current_hp') or 0) <= 0:
+                raise ValueError('Raziel não pode morder a 0 PV')
+            target_owner = connection.execute('SELECT character_id FROM session_workspace_tokens WHERE id=?', (target.get('id'),)).fetchone() if target.get('type') == 'token' else None
+            if target.get('id') == actor_character_id or (target_owner and target_owner['character_id'] == actor_character_id):
+                raise ValueError('Raziel não pode morder a si mesmo')
         require_battle_turn(connection, current_snapshot, actor_character_id, target.get('type'), target.get('id'), attack_count=attack_count, attack_limit=int(attack.get('attack_count', 1)))
         effects_version = current_snapshot["version"]
         if definition.get("effects_version", effects_version) != effects_version:
@@ -382,6 +389,7 @@ def resolve_attack(
     breakdown = {
         "guard_effect_id": guard_effect_id,
         "guard_ally_id": guard.get('ally_id') if guard else None,
+        "life_drain": bool(attack.get('life_drain')),
         "attack_limit": int(attack.get("attack_count", 1)),
         "automatic_hit": automatic_hit,
         "resource_cost": resource_cost,
@@ -575,6 +583,18 @@ def confirm_attack_resolution(
                 raise ValueError("O alvo já está sem HP")
         hp_change = change_hp(connection, record["target_type"], record["target_id"], -int(record["damage_total"]), confirmed_at.isoformat())
         hp_after = hp_change["hp_after"]
+        if record['breakdown'].get('life_drain'):
+            if record['actor_character_id'] != 'raziel' or record['attack_id'] != 'mordida':
+                raise ValueError('Drenagem não autorizada para este ataque')
+            own = connection.execute("SELECT state_json FROM character_states WHERE profile_id='raziel'").fetchone()
+            if not own or int(json.loads(own['state_json']).get('current_hp') or 0) <= 0:
+                raise ValueError('Raziel não pode morder a 0 PV')
+            drained = max(0, int(hp_before) - int(hp_after))
+            healed = change_hp(connection, 'character', 'raziel', drained, confirmed_at.isoformat())
+            record['breakdown']['drain_result'] = {**healed, 'drained': drained,
+                'healed': int(healed['hp_after']) - int(healed['hp_before'])}
+            connection.execute('UPDATE combat_attack_resolutions SET breakdown_json=? WHERE resolution_id=?',
+                (json.dumps(record['breakdown'], ensure_ascii=False), resolution_id))
         dorn_disabled = False
         dorn_profile = record["target_id"] if record["target_type"] == "character" else None
         if dorn_profile is None:

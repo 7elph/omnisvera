@@ -1,6 +1,9 @@
 import { FormEvent, PointerEvent as ReactPointerEvent, useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import MasterAssetPanel from "./MasterAssetPanel";
 import TokenVitals from "../components/TokenVitals";
+import SummonControls from "../components/SummonControls";
+import { combatActionBlock } from "../components/combatActionAvailability";
 import CompanionAllySheet from "../components/CompanionAllySheet";
 import WorkspaceMapLibrary from "../components/WorkspaceMapLibrary";
 import DornUnitIdentity from "../components/DornUnitIdentity";
@@ -349,20 +352,31 @@ function EffectBreakdownModal({ title, base, effective, entries, onClose, onRoll
 }
 
 function AbilityName({ ability, icon }: { ability: SessionAbility; icon?: string }) {
+  const [open, setOpen] = useState(false);
   const uses = ability.uses;
-  return <strong className="workspace-ability-name" tabIndex={0}>{icon ? <img src={icon} alt="" /> : null}{ability.name}
-    <span className="workspace-ability-tip" role="tooltip">
+  useEffect(() => {
+    if (!open) return;
+    const close = (event: KeyboardEvent) => { if (event.key === 'Escape') setOpen(false); };
+    window.addEventListener('keydown', close);
+    return () => window.removeEventListener('keydown', close);
+  }, [open]);
+  return <><button type="button" className="workspace-ability-name" onClick={() => setOpen(true)} aria-haspopup="dialog">{icon ? <img src={icon} alt="" /> : null}{ability.name}</button>
+    {open && createPortal(<div className="workspace-item-modal-backdrop workspace-ability-backdrop" onClick={() => setOpen(false)}><section className="workspace-ability-detail" role="dialog" aria-modal="true" aria-label={ability.name} onClick={event => event.stopPropagation()}>
+      <header><h2>{ability.name}</h2><button type="button" autoFocus aria-label="Fechar descrição" onClick={() => setOpen(false)}>×</button></header>
       {ability.description ? <p>{ability.description}</p> : <p>Sem descrição cadastrada.</p>}
       <small>
         {uses ? `Custo: ${uses.cost || 1}× ${uses.label}` : "Sem custo de recurso"}
         {ability.mechanics_status === "partial" ? " · Parcial — Mestre adjudica" : ""}
         {ability.source ? ` · Fonte: ${ability.source}` : ""}
       </small>
-    </span>
-  </strong>;
+    </section></div>, document.body)}
+  </>;
 }
 
 function abilityResource(ability: SessionAbility, resources: NonNullable<PlayableCharacter["state"]>["resources"]) {
+  if (ability.id === "lamina-de-sangue" || ability.id === "marca-rubra") {
+    return resources.find((item) => item.key === "reserva_de_sangue") || null;
+  }
   if (ability.uses?.resource_key) {
     const wanted = ability.uses.resource_key.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLocaleLowerCase("pt-BR").replace(/[^a-z0-9]+/g, "_").replace(/^_+|_+$/g, "");
     return resources.find((item) => item.key === wanted) || null;
@@ -489,6 +503,8 @@ export default function SessionWorkspace({ mode, view = "table" }: Props) {
   }, [attackTargetById, aimedAttackId, selectedId]);
   const [attackPhysicalD20ById, setAttackPhysicalD20ById] = useState<Record<string, string>>({});
   const [attackResolution, setAttackResolution] = useState<AttackResolution | null>(null);
+  const [vampireOutcome, setVampireOutcome] = useState('');
+  const vampireLock = useRef(false);
   const spellLockRef = useRef(false);
   const spellRequestRef = useRef<{ key: string; id: string } | null>(null);
   const techniqueRequestRef = useRef<{ key: string; id: string } | null>(null);
@@ -836,6 +852,8 @@ export default function SessionWorkspace({ mode, view = "table" }: Props) {
 
   async function resolveSelectedAttack(attackId: string, selectedTarget?: WorkspaceToken) {
     if (!selectedId || busy) return;
+    const blocked = combatActionBlock(battleState, selectedId);
+    if (blocked) { setError(blocked); return; }
     const target = selectedTarget || attackTargetFor(attackId);
     if (!target) {
       setError("Selecione um alvo antes de resolver o ataque.");
@@ -845,6 +863,7 @@ export default function SessionWorkspace({ mode, view = "table" }: Props) {
     const allowed = character?.definition.attacks?.find(a => a.id === attackId)?.attack_count || 1;
     const remaining = battleActive ? Math.max(0, Math.min(allowed, battleState.encounter?.attack_limit ?? allowed) - (battleState.encounter?.attacks_used || 0)) : allowed;
     const count = Math.min(remaining, attackCountById[attackId] || 1);
+    if (count < 1) { setError("Nenhum ataque restante. Conclua e passe o turno."); return; }
     setTargetLine({ actorId: selectedId, targetId: target.id });
     const physicalValues = (attackPhysicalD20ById[attackId] || "").trim().split(/[ ,;]+/).map(Number);
     if (rollMode === "physical" && (physicalValues.length !== count || physicalValues.some(v => !Number.isInteger(v) || v < 1 || v > 20))) {
@@ -888,6 +907,33 @@ export default function SessionWorkspace({ mode, view = "table" }: Props) {
   }
 
   async function useAbility(ability: SessionAbility, target?: WorkspaceToken) {
+    if (ability.id === 'mordida' || ability.id === 'regeneracao-vampirica') {
+      const blocked = combatActionBlock(battleState, selectedId);
+      if (blocked) { setError(blocked); return; }
+      if (ability.id === 'mordida' && !target) { setTargetPickerAbilityId(ability.id); return; }
+      if (vampireLock.current || busy || !selectedId) return;
+      vampireLock.current = true; setBusy(`ability:${ability.id}`); setError(''); setVampireOutcome('');
+      const key = `${selectedId}:${ability.id}:${target?.id || ''}:${defaultAttackRollMode}:${attackPhysicalD20ById.mordida || ''}`;
+      if (techniqueRequestRef.current?.key !== key) techniqueRequestRef.current = { key, id: newDiceRequestId('vampire') };
+      try {
+        const result = await useCharacterTechnique(selectedId, ability.id, { request_id: techniqueRequestRef.current.id,
+          ...(target ? { target_type: 'token', target_id: target.id, roll_mode: defaultAttackRollMode,
+            ...(defaultAttackRollMode === 'physical' ? { d20: Number(attackPhysicalD20ById.mordida) } : {}) } : {}) });
+        techniqueRequestRef.current = null;
+        if (ability.id === 'mordida') setAttackResolution(result as AttackResolution);
+        else {
+          const healed = result as { hp_before: number; hp_after: number; heal_roll: number; blood_remaining: number };
+          setVampireOutcome(`Regeneração: 1d4 = ${healed.heal_roll} · PV ${healed.hp_before} → ${healed.hp_after} · Sangue restante: ${healed.blood_remaining}`);
+          await refresh();
+        }
+      } catch (reason) { setError(reason instanceof Error ? reason.message : 'Falha na habilidade vampírica'); }
+      finally { vampireLock.current = false; setBusy(''); }
+      return;
+    }
+    if (['animar-mortos', 'levantar-esqueleto', 'levantar-um-esqueleto'].includes(ability.id)) {
+      const blocked = combatActionBlock(battleState, selectedId);
+      if (blocked) { setError(blocked); return; }
+    }
     if (ability.id === 'adaga-de-osso') {
       if (!target) { setTargetPickerAbilityId(ability.id); return; }
       await resolveSelectedAttack('adaga-de-osso', target);
@@ -923,6 +969,7 @@ export default function SessionWorkspace({ mode, view = "table" }: Props) {
     if (ability.id === "lamina-de-sangue" || ability.id === "marca-rubra" || ability.id === "mordida" || ability.id === "forca-arcana" || ability.id === "velocidade" || ability.id === "animar-mortos" || ability.id === "levantar-esqueleto" || ability.id === 'levantar-um-esqueleto') {
       if (!selectedId || busy) return;
       setBusy(`ability:${ability.id}`); setError("");
+      let summonCreated = false;
       try {
         if (ability.id === "lamina-de-sangue") {
           if (!target) { setTargetPickerAbilityId(ability.id); return; }
@@ -936,22 +983,29 @@ export default function SessionWorkspace({ mode, view = "table" }: Props) {
         } else if (ability.id === "forca-arcana" || ability.id === "velocidade" || ability.id === "animar-mortos" || ability.id === "levantar-esqueleto" || ability.id === 'levantar-um-esqueleto') {
           const key = `${selectedId}:${ability.id}:${target?.id || ''}`;
           if (techniqueRequestRef.current?.key !== key) techniqueRequestRef.current = { key, id: newDiceRequestId('technique') };
-          await useCharacterTechnique(selectedId, ability.id, { request_id: techniqueRequestRef.current.id, map_id: workspace.map?.id,
+          const techniqueResult = await useCharacterTechnique(selectedId, ability.id, { request_id: techniqueRequestRef.current.id, map_id: workspace.map?.id,
             ...(target ? { target_type: 'token', target_id: target.id } : {}) });
           techniqueRequestRef.current = null;
+          const summoned = (techniqueResult as { token?: WorkspaceToken }).token;
+          if (summoned) {
+            summonCreated = true;
+            setWorkspace(current => ({ ...current, tokens: [
+              ...current.tokens.filter(item => item.id !== summoned.id).map(item => item.id === summoned.sheet?.summon?.corpse_id
+                ? { ...item, sheet: { ...item.sheet, reanimated_by: summoned.id } } : item),
+              summoned,
+            ] }));
+            setLoadingTokenDetail(false);
+            setOpenCharacterDetail(null);
+            setOpenTokenId(summoned.id);
+          }
         } else if (ability.id === "marca-rubra") {
           if (!target) { setTargetPickerAbilityId(ability.id); return; }
           await useCharacterTechnique(selectedId, ability.id, { target_type: "token", target_id: target.id });
-        } else {
-          const last = attackResolution;
-          if (!last || last.actor_character_id !== selectedId || last.result !== "hit" || (last.attack_id !== "melee" && last.attack_id !== "ranged")) {
-            setError("Mordida exige um acerto corpo a corpo ou à distância confirmado nesta sessão.");
-            return;
-          }
-          await useCharacterTechnique(selectedId, ability.id, { resolution_id: last.resolution_id });
         }
         await refresh();
-      } catch (reason) { setError(reason instanceof Error ? reason.message : "Falha ao usar a técnica."); }
+      } catch (reason) { setError(summonCreated
+        ? "Invocação criada. A conexão falhou ao atualizar a tela; não invoque novamente. Aguarde a sincronização para abrir a ficha no pin."
+        : reason instanceof Error ? reason.message : "Falha ao usar a técnica."); }
       finally { setBusy(""); }
       return;
     }
@@ -959,6 +1013,14 @@ export default function SessionWorkspace({ mode, view = "table" }: Props) {
       await stateAction("rest_at_inn", {}, `${character?.definition.name || "Personagem"} descansou no Caixão`);
       const refreshed = character?.state?.resources.find((item) => item.key === "caixao");
       if (refreshed) await stateAction("consume_resource", { resource_key: refreshed.key, amount: 1 }, `Usou ${ability.name}`);
+      return;
+    }
+    if (ability.id === 'forma-da-noite') {
+      if (!resource || vampireLock.current || busy) return;
+      vampireLock.current = true;
+      const animal = techniqueModeById[ability.id] || 'corvo';
+      try { await stateAction('consume_resource', { resource_key: resource.key, amount: 1, animal }, `Forma da Noite: ${animal}`); }
+      finally { vampireLock.current = false; }
       return;
     }
     if (resource) {
@@ -1207,6 +1269,8 @@ export default function SessionWorkspace({ mode, view = "table" }: Props) {
   }
 
   async function openTokenDetails(token: WorkspaceToken) {
+    const reanimated = token.sheet?.reanimated_by && workspace.tokens.find(item => item.id === token.sheet?.reanimated_by);
+    if (reanimated) token = reanimated;
     if (token.token_type === 'character' && token.character_id) {
       const summary = characterById.get(token.character_id);
       if (mode !== "gm" && summary?.access_level !== "owner") return;
@@ -1641,7 +1705,9 @@ export default function SessionWorkspace({ mode, view = "table" }: Props) {
   const characterById = useMemo(() => new Map(characters.map((item) => [item.id, item])), [characters]);
   const abilities = (definition?.session_abilities || []).filter((item) => item.id !== "hemomancia" && item.id !== "grimorio-de-mago" && !item.id.startsWith('dorn_'));
   const spells = abilities.filter((item) => item.kind === "spell");
-  const basicAbilities = abilities.filter((item) => !["spell", "resource", "attack"].includes(item.kind));
+  const basicAbilities = abilities.filter((item) => !["spell", "resource", "attack"].includes(item.kind))
+    .sort((left, right) => definition?.id === "raziel"
+      ? Number((right.group || "Habilidades") === "Habilidades") - Number((left.group || "Habilidades") === "Habilidades") : 0);
   const groupedAbilities = basicAbilities.reduce<Record<string, SessionAbility[]>>((groups, ability) => {
     const group = ability.group || "Habilidades";
     (groups[group] ||= []).push(ability);
@@ -1655,7 +1721,7 @@ export default function SessionWorkspace({ mode, view = "table" }: Props) {
       .map((item) => abilityResource(item, state?.resources || [])?.key)
       .filter((key): key is string => Boolean(key)),
   );
-  const standaloneResources = (state?.resources || []).filter((resource) => !catalogResourceKeys.has(resource.key) && !resource.label.toLocaleLowerCase("pt-BR").startsWith("magias de "));
+  const standaloneResources = (state?.resources || []).filter((resource) => resource.key === "reserva_de_sangue" || (!catalogResourceKeys.has(resource.key) && !resource.label.toLocaleLowerCase("pt-BR").startsWith("magias de ")));
   const consumables = character?.inventory.filter(isConsumable) || [];
   const carriedItems = character?.inventory.filter((item) => !isConsumable(item)) || [];
   const equippedItems = carriedItems.filter((item) => item.equipped);
@@ -1711,16 +1777,18 @@ export default function SessionWorkspace({ mode, view = "table" }: Props) {
     const wanted = normalizedName(ability.requires_equipped_item);
     return character?.inventory.find((item) => item.equipped && normalizedName(item.item_title).includes(wanted)) || null;
   };
-  const abilityTargetControl = (ability: SessionAbility) => (
-    <button type="button" className="workspace-attack-target" onClick={() => setTargetPickerAbilityId((current) => current === ability.id ? null : ability.id)}>Selecionar alvo</button>
-  );
+  const abilityTargetControl = (ability: SessionAbility) => {
+    const resource = abilityResource(ability, state?.resources || []);
+    return <button type="button" className="workspace-attack-target" disabled={Boolean(busy) || Boolean(ability.blocked) || Boolean(resource && resource.current <= 0)} onClick={() => setTargetPickerAbilityId((current) => current === ability.id ? null : ability.id)}>Selecionar alvo</button>;
+  };
   const selectedTargetAbility = abilities.find((ability) => ability.id === targetPickerAbilityId) || null;
   const abilityTargets = selectedTargetAbility?.id === 'animar-mortos'
-    ? battleMapTokens.filter(token => token.token_type === 'monster' && token.current_hp === 0 && token.sheet?.reanimation_allowed && !token.sheet?.summon)
+    ? battleMapTokens.filter(token => token.token_type === 'monster' && token.current_hp === 0 && !token.sheet?.summon && !token.sheet?.reanimated_by)
     : attackTargets;
 
   const attackSection = <section ref={attackCatalogRef} className="workspace-action-catalog workspace-attack-catalog">
     <header><span>ATAQUES</span><small>{(definition?.attacks?.length || 0) + equipmentAttacks.length}</small></header>
+    {battleActive && combatActionBlock(battleState, selectedId) && <p role="status">{combatActionBlock(battleState, selectedId)}</p>}
     {definition?.attacks?.map((attack) => {
       const fallbackWeapon = attack.id === "ranged" ? equippedRangedWeapon : attack.id === "melee" ? equippedMeleeWeapon : null;
       const weaponPath = attack.weapon_item_path;
@@ -1734,13 +1802,14 @@ export default function SessionWorkspace({ mode, view = "table" }: Props) {
       return <article key={attack.id}>
         <div className="workspace-catalog-card-heading workspace-attack-card-heading">{attackEquipment.length > 0 && <span className="workspace-attack-equipment-icons">{attackEquipment.map((item) => { const icon = mediaUrlFromVaultPath(item.thumbnail || item.cover || iconPathForItem(item.item_title, item.item_type)); return icon ? <img key={item.item_path} src={icon} alt={cleanItemDisplayName(item.item_title)} title={`${cleanItemDisplayName(item.item_title)} · ${item.role === "weapon" ? "arma" : "suporte"}`} /> : null; })}</span>}<strong>{attack.name}</strong></div>
         <div className="workspace-catalog-card-summary"><small>{damage}{attack.range ? ` · ${attack.range}` : ""}{weaponTitle ? ` · ${cleanItemDisplayName(weaponTitle)}` : ""}</small><b>{attack.attack_bonus == null ? "—" : `${attack.attack_bonus >= 0 ? "+" : ""}${attack.attack_bonus}`}</b></div>
-        {(!weaponPath || !attack.damage) && <small className="workspace-attack-pending" title={attack.id === "ranged" ? "Sem arma ou ataque à distância configurado na ficha." : "Ataque sem arma/dano configurado na ficha."}>Não configurado</small>}
+        {(!weaponPath || !attack.damage) && <small className="workspace-attack-pending">{attack.id === "ranged" ? "Sem arma à distância equipada. Equipe uma arma compatível pelo inventário." : "Ataque sem arma/dano configurado na ficha."}</small>}
+        {attack.id === "ranged" && !weaponPath && definition?.attacks?.some(entry => entry.id === "adaga-de-osso") && <p className="workspace-attack-pending">A Adaga de Osso tem seu próprio card abaixo e não exige equipar uma arma.</p>}
         {canOperate && weaponPath && attack.damage && <div className="workspace-inline-actions">
           {attackTargetControl(attack.id)}
           {candidates.length > 1 && <label>Arma<select aria-label={`Arma de ${attack.name}`} value={chosenPath || ""} onChange={(e) => setAttackWeaponById((current) => ({ ...current, [attack.id]: e.target.value }))}>{candidates.map((item) => <option key={item.item_path} value={item.item_path}>{cleanItemDisplayName(item.item_title)}{item.damage_formula ? ` · ${item.damage_formula}` : ""}</option>)}</select></label>}
           {(attack.attack_count || 1) > 1 && <label>Ataques nesta ação<select aria-label={`Quantidade de ataques de ${attack.name}`} value={Math.min(remainingAttacks, attackCountById[attack.id] || 1)} onChange={e => setAttackCountById(current => ({ ...current, [attack.id]: Number(e.target.value) }))}>{Array.from({ length: remainingAttacks }, (_, i) => <option key={i + 1} value={i + 1}>{i + 1}</option>)}</select><small>{remainingAttacks} restante(s). Use 1 para escolher outro alvo no próximo golpe.</small></label>}
           {defaultAttackRollMode === "physical" && <input aria-label={`Resultado físico de ${attack.name}`} type="text" inputMode="text" value={attackPhysicalD20ById[attack.id] || ""} onChange={(event) => setAttackPhysicalD20ById((current) => ({ ...current, [attack.id]: event.target.value }))} placeholder={(attackCountById[attack.id] || 1) > 1 ? "d20 de cada golpe · ex.: 15 8" : "d20 físico"} />}
-          <button type="button" title="Usa o bônus e dano da ficha; calcula acerto e dano automaticamente." disabled={Boolean(busy) || !attackTargetFor(attack.id)} onClick={() => void resolveSelectedAttack(attack.id)}>{defaultAttackRollMode === "physical" ? "Atacar com d20 físico" : "Atacar · rolar acerto e dano"}</button>
+          <button type="button" title={combatActionBlock(battleState, selectedId) || "Usa o bônus e dano da ficha; calcula acerto e dano automaticamente."} disabled={Boolean(busy) || !attackTargetFor(attack.id) || remainingAttacks < 1 || Boolean(combatActionBlock(battleState, selectedId))} onClick={() => void resolveSelectedAttack(attack.id)}>{defaultAttackRollMode === "physical" ? "Atacar com d20 físico" : "Atacar · rolar acerto e dano"}</button>
         </div>}
       </article>;
     })}
@@ -1952,15 +2021,16 @@ export default function SessionWorkspace({ mode, view = "table" }: Props) {
 
           <section className="workspace-attributes"><header><span>ATRIBUTOS E TESTES</span></header><div>{ATTRIBUTES.map(([key, label]) => { const itemBonus = Number(definition?.attributes?.[key] || 0) - Number(definition?.base_attributes?.[key] ?? definition?.attributes?.[key] ?? 0); return <button key={key} disabled={!canOperate || Boolean(busy)} onClick={() => void roll("attribute", key)}><span>{label}</span><strong>{definition?.attributes?.[key] ?? "—"}</strong><small>{definition?.attribute_modifiers?.[key] == null ? "N/C" : `${Number(definition.attribute_modifiers[key]) >= 0 ? "+" : ""}${definition.attribute_modifiers[key]}`}{itemBonus !== 0 ? ` · item ${itemBonus > 0 ? "+" : ""}${itemBonus}` : ""}</small></button>; })}</div><button className="workspace-save-roll" disabled={!canOperate || Boolean(busy)} onClick={() => void roll("saving_throw")}>Jogar proteção{Number(definition?.defenses?.saving_throw_bonus || 0) !== 0 ? ` · item ${Number(definition?.defenses?.saving_throw_bonus) > 0 ? "+" : ""}${definition?.defenses?.saving_throw_bonus}` : ""}</button><button className="workspace-dice-tray-button" type="button" onClick={() => window.dispatchEvent(new CustomEvent("omnisvera-open-dice-tray"))}>{diceIcon ? <img src={diceIcon} alt="" /> : <span>⚄</span>} Bandeja de dados</button></section>
 
-          {(standaloneResources.length > 0 || consumables.length > 0) && <section className="workspace-action-catalog workspace-resource-catalog"><header><span>RECURSOS</span><small>atual / máximo</small></header>{standaloneResources.map((resource) => <article key={resource.key}><span><strong>{resource.label}</strong></span><b>{resource.current}/{resource.maximum}</b>{canOperate && <button disabled={Boolean(busy) || resource.current <= 0} onClick={() => void stateAction("consume_resource", { resource_key: resource.key, amount: 1 }, `Usou ${resource.label}`)}>Usar</button>}</article>)}{consumables.map((item) => { const title = cleanItemDisplayName(item.item_title); const executesRules = item.effect_rules?.some((rule) => rule.trigger === "on_use"); const available = item.charges_max ? Number(item.charges_current ?? item.charges_max) : item.quantity; return <article key={item.item_path}><span><strong>{title}</strong></span><b>{item.charges_max ? `${available}/${item.charges_max} cargas` : item.quantity}</b>{canOperate && <button disabled={Boolean(busy) || available <= 0} onClick={() => void stateAction(executesRules ? "use_item" : "change_quantity", executesRules ? { item_path: item.item_path } : { item_path: item.item_path, quantity: Math.max(0, item.quantity - 1) }, `Usou ${title}`)}>Usar</button>}</article>; })}</section>}
+          {(standaloneResources.length > 0 || consumables.length > 0) && <section className="workspace-action-catalog workspace-resource-catalog"><header><span>RECURSOS</span><small>atual / máximo</small></header>{standaloneResources.map((resource) => <article key={resource.key}><span><strong>{resource.label}</strong></span><b>{resource.current}/{resource.maximum}</b>{canOperate && resource.key !== "reserva_de_sangue" && <button disabled={Boolean(busy) || resource.current <= 0} onClick={() => void stateAction("consume_resource", { resource_key: resource.key, amount: 1 }, `Usou ${resource.label}`)}>Usar</button>}</article>)}{consumables.map((item) => { const title = cleanItemDisplayName(item.item_title); const executesRules = item.effect_rules?.some((rule) => rule.trigger === "on_use"); const available = item.charges_max ? Number(item.charges_current ?? item.charges_max) : item.quantity; return <article key={item.item_path}><span><strong>{title}</strong></span><b>{item.charges_max ? `${available}/${item.charges_max} cargas` : item.quantity}</b>{canOperate && <button disabled={Boolean(busy) || available <= 0} onClick={() => void stateAction(executesRules ? "use_item" : "change_quantity", executesRules ? { item_path: item.item_path } : { item_path: item.item_path, quantity: Math.max(0, item.quantity - 1) }, `Usou ${title}`)}>Usar</button>}</article>; })}</section>}
 
           {attackSection}
           <DornUnitIdentity character={character} combat={battleState} onInspectItem={setOpenItem} onProtocolChange={async snapshot => { setBattleState(snapshot); await refresh(); }} onOpenMagic={() => Array.from(document.querySelectorAll('.workspace-action-catalog')).find(section => section.querySelector('header span')?.textContent === 'MAGIAS')?.scrollIntoView({ behavior: 'smooth', block: 'center' })} />
+          {vampireOutcome && <p role="status">{vampireOutcome}</p>}
           {spells.length > 0 && <section className="workspace-action-catalog"><header><span>MAGIAS</span><small>{spells.length}</small></header>{spells.map((ability) => { const resource = abilityResource(ability, state?.resources || []); const requiredItem = requiredItemForAbility(ability); const requirementMissing = Boolean(ability.requires_equipped_item && !requiredItem); const requiredIcon = requiredItem ? mediaUrlFromVaultPath(requiredItem.thumbnail || requiredItem.cover || iconPathForItem(requiredItem.item_title, requiredItem.item_type)) : ""; return <article key={ability.id}><span><AbilityName ability={ability} icon={requiredIcon} /><small>{requirementMissing ? `Requer ${ability.requires_equipped_item} equipada` : ability.circle ? `${ability.circle}º círculo` : "magia"}</small></span>{resource && <b>{resource.current}/{resource.maximum}</b>}{canOperate && <button disabled={Boolean(busy) || Boolean(resource && resource.current <= 0) || Boolean(ability.blocked) || requirementMissing} onClick={() => void useAbility(ability)}>{ability.blocked ? "Bloqueado" : requirementMissing ? "Equipar item" : "Usar"}</button>}</article>; })}</section>}
 
-          {Object.entries(groupedAbilities).map(([group, groupEntries]) => { const medal = definition?.id === "vezemir" && normalizedName(group) === "poderes" ? character?.inventory.find((item) => normalizedName(item.item_title).includes("medalhao")) : null; const medalIcon = medal ? mediaUrlFromVaultPath(medal.thumbnail || medal.cover || iconPathForItem(medal.item_title, medal.item_type)) : ""; return <section className="workspace-action-catalog" key={group}><header><span className="workspace-group-title">{medalIcon && <img src={medalIcon} alt="" />}{group.toUpperCase()}</span><small>{groupEntries.length}</small></header>{groupEntries.map((ability) => { const resource = abilityResource(ability, state?.resources || []); const requiredItem = requiredItemForAbility(ability); const requirementMissing = Boolean(ability.requires_equipped_item && !requiredItem); const requiredIcon = requiredItem ? mediaUrlFromVaultPath(requiredItem.thumbnail || requiredItem.cover || iconPathForItem(requiredItem.item_title, requiredItem.item_type)) : ""; return <article key={ability.id}><span><AbilityName ability={ability} icon={requiredIcon} />{requirementMissing ? <small>Requer {ability.requires_equipped_item} equipado</small> : !ability.active && <small>Passiva</small>}</span>{resource && <b>{resource.current}/{resource.maximum}</b>}{ability.active && canOperate && (ability.requires_target ? <div className="workspace-inline-actions">{abilityTargetControl(ability)}</div> : <>{ability.id === "lamina-de-sangue" && <><label>Lâminas<select aria-label="Lâminas declaradas" value={(techniqueModeById[ability.id] || "1:ranged").split(":")[0]} onChange={(e) => setTechniqueModeById((current) => ({ ...current, [ability.id]: `${e.target.value}:${(current[ability.id] || "1:ranged").split(":")[1] || "ranged"}` }))}>{[1, 2, 3, 4, 5].map((n) => <option key={n} value={String(n)}>{n} ({n}d4)</option>)}</select></label><label>Modo<select aria-label="Modo da Lâmina de Sangue" value={(techniqueModeById[ability.id] || "1:ranged").split(":")[1] || "ranged"} onChange={(e) => setTechniqueModeById((current) => ({ ...current, [ability.id]: `${(current[ability.id] || "1:ranged").split(":")[0] || "1"}:${e.target.value}` }))}><option value="ranged">À distância</option><option value="melee">Corpo a corpo</option></select></label></>}<button disabled={Boolean(busy) || Boolean(resource && resource.current <= 0) || Boolean(ability.blocked) || requirementMissing} onClick={() => void useAbility(ability)}>{ability.blocked ? "Bloqueado" : requirementMissing ? "Equipar item" : "Usar"}</button></>)}</article>; })}</section>; })}
+          {Object.entries(groupedAbilities).map(([group, groupEntries]) => { const medal = definition?.id === "vezemir" && normalizedName(group) === "poderes" ? character?.inventory.find((item) => normalizedName(item.item_title).includes("medalhao")) : null; const medalIcon = medal ? mediaUrlFromVaultPath(medal.thumbnail || medal.cover || iconPathForItem(medal.item_title, medal.item_type)) : ""; return <section className="workspace-action-catalog" key={group}><header><span className="workspace-group-title">{medalIcon && <img src={medalIcon} alt="" />}{group.toUpperCase()}</span><small>{groupEntries.length}</small></header>{groupEntries.map((ability) => { const resource = abilityResource(ability, state?.resources || []); const requiredItem = requiredItemForAbility(ability); const requirementMissing = Boolean(ability.requires_equipped_item && !requiredItem); const requiredIcon = requiredItem ? mediaUrlFromVaultPath(requiredItem.thumbnail || requiredItem.cover || iconPathForItem(requiredItem.item_title, requiredItem.item_type)) : ""; return <article key={ability.id}><span><AbilityName ability={ability} icon={requiredIcon} />{requirementMissing ? <small>Requer {ability.requires_equipped_item} equipado</small> : !ability.active && <small>Passiva</small>}</span>{resource && ability.id !== "regeneracao-vampirica" && <b>{resource.current}/{resource.maximum}</b>}{ability.active && canOperate && (ability.requires_target ? <div className="workspace-inline-actions">{abilityTargetControl(ability)}</div> : <>{ability.id === "forma-da-noite" && <label>Animal<select aria-label="Animal da Forma da Noite" value={techniqueModeById[ability.id] || "corvo"} onChange={event => setTechniqueModeById(current => ({ ...current, [ability.id]: event.target.value }))}><option value="corvo">Corvo</option><option value="coruja">Coruja</option><option value="morcego">Morcego</option></select></label>}{ability.id === "lamina-de-sangue" && <><label>Lâminas<select aria-label="Lâminas declaradas" value={(techniqueModeById[ability.id] || "1:ranged").split(":")[0]} onChange={(e) => setTechniqueModeById((current) => ({ ...current, [ability.id]: `${e.target.value}:${(current[ability.id] || "1:ranged").split(":")[1] || "ranged"}` }))}>{[1, 2, 3, 4, 5].map((n) => <option key={n} value={String(n)}>{n} ({n}d4)</option>)}</select></label><label>Modo<select aria-label="Modo da Lâmina de Sangue" value={(techniqueModeById[ability.id] || "1:ranged").split(":")[1] || "ranged"} onChange={(e) => setTechniqueModeById((current) => ({ ...current, [ability.id]: `${(current[ability.id] || "1:ranged").split(":")[0] || "1"}:${e.target.value}` }))}><option value="ranged">À distância</option><option value="melee">Corpo a corpo</option></select></label></>}<button disabled={Boolean(busy) || Boolean(resource && resource.current <= 0) || Boolean(ability.blocked) || requirementMissing} onClick={() => void useAbility(ability)}>{ability.blocked ? "Bloqueado" : requirementMissing ? "Equipar item" : "Usar"}</button></>)}</article>; })}</section>; })}
 
-          {targetPickerAbilityId && selectedTargetAbility && <div className="workspace-attack-target-popover"><header><strong>Escolha o alvo de {selectedTargetAbility.name}</strong><button type="button" onClick={() => setTargetPickerAbilityId(null)} aria-label="Fechar lista de alvos">×</button></header>{selectedTargetAbility.id === 'adaga-de-osso' && defaultAttackRollMode === 'physical' && <label>d20 físico<input aria-label="d20 físico da Adaga de Osso" type="number" min={1} max={20} value={attackPhysicalD20ById['adaga-de-osso'] || ''} onChange={event => setAttackPhysicalD20ById(current => ({ ...current, 'adaga-de-osso': event.target.value }))} /></label>}{abilityTargets.length ? abilityTargets.map((token) => <button type="button" key={token.id} disabled={Boolean(busy)} onClick={() => { setTargetPickerAbilityId(null); void useAbility(selectedTargetAbility, token); }}><span style={{ color: token.color }}>{token.name}</span><small>{token.token_type === "monster" ? "Monstro / NPC" : "Personagem"}</small></button>) : <p>{selectedTargetAbility.id === 'animar-mortos' ? 'Nenhum cadáver autorizado. Peça ao Mestre para autorizar a reanimação no painel de combate.' : 'Nenhum alvo disponível no mapa atual.'}</p>}</div>}
+          {targetPickerAbilityId && selectedTargetAbility && <div className="workspace-attack-target-popover"><header><strong>Escolha o alvo de {selectedTargetAbility.name}</strong><button type="button" onClick={() => setTargetPickerAbilityId(null)} aria-label="Fechar lista de alvos">×</button></header>{['adaga-de-osso', 'mordida'].includes(selectedTargetAbility.id) && defaultAttackRollMode === 'physical' && <label>d20 físico<input aria-label="d20 físico do ataque" type="number" min={1} max={20} value={attackPhysicalD20ById[selectedTargetAbility.id] || ''} onChange={event => setAttackPhysicalD20ById(current => ({ ...current, [selectedTargetAbility.id]: event.target.value }))} /></label>}{abilityTargets.length ? abilityTargets.map((token) => <button type="button" key={token.id} disabled={Boolean(busy) || (selectedTargetAbility.id === 'animar-mortos' && !token.sheet?.reanimation_allowed)} onClick={() => { if (selectedTargetAbility.id === 'animar-mortos' && !token.sheet?.reanimation_allowed) return; setTargetPickerAbilityId(null); void useAbility(selectedTargetAbility, token); }}><span style={{ color: token.color }}>{token.name}</span><small>{selectedTargetAbility.id === 'animar-mortos' ? token.sheet?.reanimation_allowed ? 'Cadáver autorizado · reanimar' : 'Aguarda autorização do Mestre em Combate → Cadáveres e reanimação' : token.token_type === "monster" ? "Monstro / NPC" : "Personagem"}</small></button>) : <p>{selectedTargetAbility.id === 'animar-mortos' ? 'Nenhum cadáver disponível neste mapa. Criaturas já reanimadas não podem ser usadas novamente.' : 'Nenhum alvo disponível no mapa atual.'}</p>}</div>}
 
           <section className="workspace-action-catalog workspace-inventory-catalog"><header><span>INVENTÁRIO</span><small>{carriedItems.length}</small></header>{carriedItems.length ? carriedItems.map((item) => { const title = cleanItemDisplayName(item.item_title); const icon = mediaUrlFromVaultPath(item.thumbnail || item.cover || iconPathForItem(item.item_title, item.item_type)); const slots = possibleEquipmentSlots(item); const menuOpen = equipMenuItemPath === item.item_path; return <article className={item.equipped ? "equipped" : ""} key={item.item_path} role="button" tabIndex={0} onClick={() => setOpenItem(item)} onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); setOpenItem(item); } }}><div className="workspace-catalog-card-heading">{icon ? <img src={icon} alt="" /> : <span className="inventory-inline-placeholder">◈</span>}<span><strong>{title}</strong></span></div><div className="workspace-catalog-card-summary"><small>{item.equipped ? `${item.equipment_slot || "Equipado"} · clique para ler` : "Guardado · clique para ler"}</small><b>Qtd. {item.quantity}</b></div>{canOperate && (item.equipped ? <button disabled={Boolean(busy)} onClick={(event) => { event.stopPropagation(); setEquipMenuItemPath(null); void stateAction("unequip_item", { item_path: item.item_path }, `Guardou ${title}`); }}>Guardar</button> : <div className="workspace-equip-control"><button disabled={Boolean(busy)} onClick={(event) => { event.stopPropagation(); setEquipMenuItemPath(menuOpen ? null : item.item_path); }}>{menuOpen ? "Fechar" : "Equipar ▾"}</button>{menuOpen && <div className="workspace-equip-menu" onClick={(event) => event.stopPropagation()}>{slots.map((slot) => <button type="button" key={slot} onClick={() => { setEquipMenuItemPath(null); void stateAction("equip_item", { item_path: item.item_path, equipment_slot: slot }, `Equipou ${title} · ${slot}`); }}>Equipar em {slot}</button>)}</div>}</div>)}</article>; }) : <p>Nenhum item não consumível registrado.</p>}</section>
           <CurrencyCounters key={character.definition.id} character={character} onChange={refresh} />
@@ -2035,11 +2105,11 @@ export default function SessionWorkspace({ mode, view = "table" }: Props) {
         <div className="workspace-timeline" ref={timelineRef}>{timeline.length ? timeline.map((entry) => <article key={entry.id} className={entry.kind}><div><i>{entry.kind === "roll" ? "◈" : entry.kind === "message" ? "✦" : entry.kind === "state" ? "±" : "→"}</i><time>{formatClock(entry.timestamp)}</time></div><section><header><strong style={{ color: characterColor(entry.actorId) }}>{entry.actor}</strong><small>{entry.kind === "roll" ? "rolagem" : entry.kind === "message" ? "mensagem" : entry.kind === "state" ? "estado" : "ação"}</small></header><p>{entry.title}</p>{entry.detail && <pre>{entry.detail}</pre>}</section></article>) : <p className="workspace-empty-log">O registro da sessão começará com a primeira ação ou mensagem.</p>}</div>
       </aside>}
     </div>
-    {attackResolution && !attackResolution.breakdown.automatic_hit && <div className="workspace-item-modal-backdrop" role="presentation" onClick={() => { if (attackResolution.confirmed) setAttackResolution(null); }}><section className="workspace-item-modal" role="dialog" aria-modal="true" aria-label="Resolução do ataque" onClick={(event) => event.stopPropagation()}><header><div><small>RESOLUÇÃO DO ATAQUE</small><h2>{attackResolution.actor_name} → {attackResolution.target_name}</h2></div><button type="button" onClick={() => setAttackResolution(null)} aria-label="Fechar resolução">×</button></header>{!attackResolution.confirmed && <p role="status"><strong>Dano ainda não aplicado.</strong> Confirme abaixo para atualizar a vida do alvo.</p>}<div className="workspace-token-modal-meta"><span>{attackResolution.roll_mode === "physical" ? "Dado físico" : "Rolagem digital"}: {attackResolution.d20}</span><span>Bônus: {attackResolution.attack_bonus >= 0 ? "+" : ""}{attackResolution.attack_bonus}</span><span>Total: {attackResolution.attack_total}</span><span>CA: {attackResolution.target_ac}</span></div><div className="workspace-item-modal-meta"><strong>{attackResolution.result === "hit" ? "ACERTO" : "ERRO"}</strong><span>Dano: {attackResolution.damage_total} ({attackResolution.damage_formula})</span>{attackResolution.confirmed && <span>HP: {attackResolution.hp_before} → {attackResolution.hp_after}</span>}</div>{attackResolution.breakdown.strikes?.map((strike, index) => <p key={index}>Golpe {index + 1}: d20 {strike.d20} + {attackResolution.attack_bonus} = {strike.attack_total} · {strike.result === "hit" ? "Acerto" : "Erro"} · dano {strike.damage_total}</p>)}<p>Base {attackResolution.breakdown.attack?.base_bonus ?? 0} · equipamento {Number(attackResolution.breakdown.attack?.equipment_bonus || 0) >= 0 ? "+" : ""}{attackResolution.breakdown.attack?.equipment_bonus ?? 0} · efeitos {Number(attackResolution.breakdown.attack?.effect_bonus || 0) >= 0 ? "+" : ""}{attackResolution.breakdown.attack?.effect_bonus ?? 0}{attackResolution.breakdown.equipment?.length ? ` · ${attackResolution.breakdown.equipment.map((item) => item.item_title).join(" + ")}` : ""}</p>{attackResolution.confirmed ? <button type="button" onClick={() => setAttackResolution(null)}>Concluído</button> : <button type="button" disabled={Boolean(busy)} onClick={() => void confirmResolvedAttack()}>{busy.startsWith("confirm:") ? "Aplicando…" : "Confirmar resultado e aplicar dano"}</button>}</section></div>}
+    {attackResolution && !attackResolution.breakdown.automatic_hit && <div className="workspace-item-modal-backdrop" role="presentation" onClick={() => { if (attackResolution.confirmed) setAttackResolution(null); }}><section className="workspace-item-modal" role="dialog" aria-modal="true" aria-label="Resolução do ataque" onClick={(event) => event.stopPropagation()}><header><div><small>RESOLUÇÃO DO ATAQUE</small><h2>{attackResolution.actor_name} → {attackResolution.target_name}</h2></div><button type="button" onClick={() => setAttackResolution(null)} aria-label="Fechar resolução">×</button></header>{!attackResolution.confirmed && <p role="status"><strong>Dano ainda não aplicado.</strong> Confirme abaixo para atualizar a vida do alvo.</p>}<div className="workspace-token-modal-meta"><span>{attackResolution.roll_mode === "physical" ? "Dado físico" : "Rolagem digital"}: {attackResolution.d20}</span><span>Bônus: {attackResolution.attack_bonus >= 0 ? "+" : ""}{attackResolution.attack_bonus}</span><span>Total: {attackResolution.attack_total}</span><span>CA: {attackResolution.target_ac}</span></div><div className="workspace-item-modal-meta"><strong>{attackResolution.result === "hit" ? "ACERTO" : "ERRO"}</strong><span>Dano: {attackResolution.damage_total} ({attackResolution.damage_formula})</span>{attackResolution.confirmed && <span>HP: {attackResolution.hp_before} → {attackResolution.hp_after}</span>}</div>{attackResolution.breakdown.life_drain && <p role="status">{attackResolution.breakdown.drain_result ? `Drenagem: ${attackResolution.breakdown.drain_result.drained} PV · Raziel: ${attackResolution.breakdown.drain_result.hp_before} → ${attackResolution.breakdown.drain_result.hp_after} (+${attackResolution.breakdown.drain_result.healed})` : "Ao confirmar, a cura será limitada ao dano efetivamente drenado e aos PV máximos de Raziel."}</p>}{attackResolution.breakdown.strikes?.map((strike, index) => <p key={index}>Golpe {index + 1}: d20 {strike.d20} + {attackResolution.attack_bonus} = {strike.attack_total} · {strike.result === "hit" ? "Acerto" : "Erro"} · dano {strike.damage_total}</p>)}<p>Base {attackResolution.breakdown.attack?.base_bonus ?? 0} · equipamento {Number(attackResolution.breakdown.attack?.equipment_bonus || 0) >= 0 ? "+" : ""}{attackResolution.breakdown.attack?.equipment_bonus ?? 0} · efeitos {Number(attackResolution.breakdown.attack?.effect_bonus || 0) >= 0 ? "+" : ""}{attackResolution.breakdown.attack?.effect_bonus ?? 0}{attackResolution.breakdown.equipment?.length ? ` · ${attackResolution.breakdown.equipment.map((item) => item.item_title).join(" + ")}` : ""}</p>{attackResolution.confirmed ? <button type="button" onClick={() => setAttackResolution(null)}>Concluído</button> : <button type="button" disabled={Boolean(busy)} onClick={() => void confirmResolvedAttack()}>{busy.startsWith("confirm:") ? "Aplicando…" : "Confirmar resultado e aplicar dano"}</button>}</section></div>}
     {attackResolution?.breakdown.automatic_hit && <SpellResolution resolution={attackResolution} busy={Boolean(busy)} onConfirm={() => void confirmResolvedAttack()} onClose={() => setAttackResolution(null)} />}
     {effectBreakdownOpen && <EffectBreakdownModal title={effectBreakdownOpen === "armor" ? "Classe de Armadura" : ATTRIBUTES.find(([key]) => key === effectBreakdownOpen)?.[1] || effectBreakdownOpen} base={effectBreakdownOpen === "armor" ? definition?.defenses?.unmodified_armor_class ?? definition?.defenses?.base_armor_class : definition?.base_attributes?.[effectBreakdownOpen]} effective={effectBreakdownOpen === "armor" ? definition?.defenses?.armor_class : definition?.attributes?.[effectBreakdownOpen]} entries={openBreakdownEntries} onClose={() => setEffectBreakdownOpen(null)} onRoll={effectBreakdownOpen !== "armor" ? () => { const key = effectBreakdownOpen; setEffectBreakdownOpen(null); void roll("attribute", key); } : undefined} />}
 {openToken?.token_type === "location" && <div className="workspace-token-modal-backdrop" onClick={() => setOpenTokenId(null)}><section className="workspace-token-modal" role="dialog" aria-label={`Local ${openToken.name}`} onClick={e => e.stopPropagation()}><header><h2>{openToken.name}</h2><button onClick={() => setOpenTokenId(null)}>Fechar local</button></header>{openToken.image_path && <img src={mediaUrlFromVaultPath(openToken.image_path)} alt="" width={96} />}<p>{openToken.sheet?.description}</p><small>{openToken.latitude.toFixed(1)}, {openToken.longitude.toFixed(1)}</small></section></div>}
-    {openToken && openToken.token_type !== "location" && <div className="workspace-token-modal-backdrop" role="presentation" onClick={() => setOpenTokenId(null)}><section className="workspace-token-modal" role="dialog" aria-modal="true" aria-label={`Ficha de ${openToken.name}`} onClick={(event) => event.stopPropagation()}><header><div><small>{openToken.token_type === "monster" ? "MONSTRO / NPC" : "PERSONAGEM"}</small><h2 style={{ color: openToken.color }}>{openToken.name}</h2></div><button type="button" onClick={() => setOpenTokenId(null)} aria-label="Fechar ficha">×</button></header><TokenVitals key={`${openToken.id}:${openToken.current_hp}:${openToken.maximum_hp}`} token={openToken} editable={mode === "gm"} onChange={async () => { await loadOverview(); }} />{loadingTokenDetail ? <p>Carregando ficha…</p> : <><div className="workspace-token-modal-vitals"><strong>VIDA {openCharacterDetail?.state?.current_hp ?? openToken.current_hp ?? "—"} / {openCharacterDetail?.state?.maximum_hp ?? openToken.maximum_hp ?? "—"}</strong><span>{(openCharacterDetail?.state?.conditions || openToken.conditions).length ? (openCharacterDetail?.state?.conditions || openToken.conditions).join(" · ") : "STATUS - Nenhum"}</span></div><div className="workspace-token-modal-meta"><span>Mapa: {openToken.map_id || "default"}</span><span>Latitude: {openToken.latitude.toFixed(2)}</span><span>Longitude: {openToken.longitude.toFixed(2)}</span>{openCharacterDetail ? <><span>Classe: {openCharacterDetail.definition.class_name}</span><span>Nível: {openCharacterDetail.definition.level}</span><span>CA: <ArmorClassValue defenses={openCharacterDetail.definition.defenses} inventory={openCharacterDetail.inventory} /></span></> : <><span>Função: {openToken.sheet?.role || "Inimigo"}</span><span>Nível: {openToken.sheet?.level ?? "—"}</span><span>CA: {openToken.sheet?.armor_class ?? "—"}</span><span>Iniciativa: {openToken.sheet?.initiative ?? "—"}</span></>}</div>{openCharacterDetail ? <div className="workspace-token-modal-body"><p>{openCharacterDetail.definition.epithet || openCharacterDetail.definition.race}</p><h3>Ataques</h3>{openCharacterDetail.definition.attacks?.map((attack) => <p key={attack.id}>{attack.name} · {attack.damage || "dano não configurado"}</p>)}</div> : <div className="workspace-token-modal-body">{openToken.sheet?.description && <p>{openToken.sheet.description}</p>}{(openToken.sheet?.attacks || []).length > 0 && <><h3>Ataques</h3>{openToken.sheet?.attacks?.map((attack, index) => <p key={`${attack.name}-${index}`}>{attack.name} · {attack.damage || "dano não configurado"}{attack.bonus ? ` · ${attack.bonus}` : ""}{attack.notes ? ` · ${attack.notes}` : ""}</p>)}</>}{(openToken.sheet?.abilities || []).length > 0 && <><h3>Habilidades</h3>{openToken.sheet?.abilities?.map((ability) => <p key={ability}>{ability}</p>)}</>}{openToken.sheet?.notes && <><h3>Notas</h3><p>{openToken.sheet.notes}</p></>}</div>}</>}</section></div>}
+    {openToken && openToken.token_type !== "location" && <div className="workspace-token-modal-backdrop" role="presentation" onClick={() => setOpenTokenId(null)}><section className="workspace-token-modal" role="dialog" aria-modal="true" aria-label={`Ficha de ${openToken.name}`} onClick={(event) => event.stopPropagation()}><header><div><small>{openToken.token_type === "monster" ? "MONSTRO / NPC" : "PERSONAGEM"}</small><h2 style={{ color: openToken.color }}>{openToken.name}</h2></div><button type="button" onClick={() => setOpenTokenId(null)} aria-label="Fechar ficha">×</button></header><SummonControls token={openToken} mode={mode} characters={characters} tokens={workspace.tokens} state={battleState} physical={workspace.table_mode === "physical"} onChange={async () => { await loadOverview(); setBattleState(await getCombatEffects()); }} /><TokenVitals key={`${openToken.id}:${openToken.current_hp}:${openToken.maximum_hp}`} token={openToken} editable={mode === "gm"} onChange={async () => { await loadOverview(); }} />{loadingTokenDetail ? <p>Carregando ficha…</p> : <><div className="workspace-token-modal-vitals"><strong>VIDA {openCharacterDetail?.state?.current_hp ?? openToken.current_hp ?? "—"} / {openCharacterDetail?.state?.maximum_hp ?? openToken.maximum_hp ?? "—"}</strong><span>{(openCharacterDetail?.state?.conditions || openToken.conditions).length ? (openCharacterDetail?.state?.conditions || openToken.conditions).join(" · ") : "STATUS - Nenhum"}</span></div><div className="workspace-token-modal-meta"><span>Mapa: {openToken.map_id || "default"}</span><span>Latitude: {openToken.latitude.toFixed(2)}</span><span>Longitude: {openToken.longitude.toFixed(2)}</span>{openCharacterDetail ? <><span>Classe: {openCharacterDetail.definition.class_name}</span><span>Nível: {openCharacterDetail.definition.level}</span><span>CA: <ArmorClassValue defenses={openCharacterDetail.definition.defenses} inventory={openCharacterDetail.inventory} /></span></> : <><span>Função: {openToken.sheet?.role || "Inimigo"}</span><span>Nível: {openToken.sheet?.level ?? "—"}</span><span>CA: {openToken.sheet?.armor_class ?? "—"}</span><span>Iniciativa: {openToken.sheet?.initiative ?? "—"}</span></>}</div>{openCharacterDetail ? <div className="workspace-token-modal-body"><p>{openCharacterDetail.definition.epithet || openCharacterDetail.definition.race}</p><h3>Ataques</h3>{openCharacterDetail.definition.attacks?.map((attack) => <p key={attack.id}>{attack.name} · {attack.damage || "dano não configurado"}</p>)}</div> : <div className="workspace-token-modal-body">{openToken.sheet?.description && <p>{openToken.sheet.description}</p>}{(openToken.sheet?.attacks || []).length > 0 && <><h3>Ataques</h3>{openToken.sheet?.attacks?.map((attack, index) => <p key={`${attack.name}-${index}`}>{attack.name} · {attack.damage || "dano não configurado"}{attack.bonus ? ` · ${attack.bonus}` : ""}{attack.notes ? ` · ${attack.notes}` : ""}</p>)}</>}{(openToken.sheet?.abilities || []).length > 0 && <><h3>Habilidades</h3>{openToken.sheet?.abilities?.map((ability) => <p key={ability}>{ability}</p>)}</>}{openToken.sheet?.notes && <><h3>Notas</h3><p>{openToken.sheet.notes}</p></>}</div>}</>}</section></div>}
     {openItem && <div className="workspace-item-modal-backdrop" role="presentation" onClick={() => setOpenItem(null)}><section className="workspace-item-modal" role="dialog" aria-modal="true" aria-label={`Informações de ${cleanItemDisplayName(openItem.item_title)}`} onClick={(event) => event.stopPropagation()}><header><div>{mediaUrlFromVaultPath(openItem.thumbnail || openItem.cover || iconPathForItem(openItem.item_title, openItem.item_type)) && <img src={mediaUrlFromVaultPath(openItem.thumbnail || openItem.cover || iconPathForItem(openItem.item_title, openItem.item_type))} alt="" />}<div><small>{openItem.item_type || "Item"}</small><h2>{cleanItemDisplayName(openItem.item_title)}</h2></div></div><button type="button" onClick={() => setOpenItem(null)} aria-label="Fechar informações do item">×</button></header><div className="workspace-item-modal-meta"><span>{openItem.equipped ? `Equipado${openItem.equipment_slot ? ` · ${openItem.equipment_slot}` : ""}` : "Guardado"}</span><span>Quantidade: {openItem.quantity}</span>{openItem.damage_formula && <span>Dano: {openItem.damage_formula}</span>}</div>{openItem.description && <p>{openItem.description}</p>}{(openItem.effects || []).length > 0 && <div><h3>Efeitos</h3>{openItem.effects?.map((effect) => <p key={effect}>{effect}</p>)}</div>}{(openItem.effect_rules || []).length > 0 && <div><h3>Efeitos automáticos</h3>{openItem.effect_rules?.map((rule) => <p key={rule.id}>{describeItemRule(rule)}</p>)}</div>}{openItem.notes && <div><h3>Notas</h3><p>{openItem.notes}</p></div>}</section></div>}
     <DiceTray mode={mode} triggerHidden targetTokens={workspace.tokens} />
   </section>;

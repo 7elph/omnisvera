@@ -250,6 +250,19 @@ def effect_command(path: Path, *, actor_id: str, actor_role: str, request_id: st
                         if encounter.get(field) is not None:
                             context[field] = int(encounter[field])
                 ordered = sorted(participants, key=lambda p: -p["initiative"])
+                # Controlled summons follow their caster, including after initiative edits.
+                summon_groups = {}
+                caster_ids = {p['target_id'] for p in ordered if p['target_type'] == 'character'}
+                for participant in ordered:
+                    if participant['target_type'] != 'token':
+                        continue
+                    row = db.execute('SELECT sheet_json FROM session_workspace_tokens WHERE id=?', (participant['target_id'],)).fetchone()
+                    caster = ((json.loads(row[0] or '{}').get('summon') or {}).get('caster')) if row else None
+                    if caster in caster_ids:
+                        summon_groups.setdefault(caster, []).append(participant)
+                summon_ids = {p['target_id'] for group in summon_groups.values() for p in group}
+                ordered = [item for participant in ordered if not (participant['target_type'] == 'token' and participant['target_id'] in summon_ids)
+                    for item in [participant, *(summon_groups.get(participant['target_id'], []) if participant['target_type'] == 'character' else [])]]
                 if action == 'initiative':
                     old_participants = {(p['target_type'], p['target_id']): p for p in encounter.get('participants', [])}
                     for participant in ordered:

@@ -106,6 +106,29 @@ class TechniqueFixture(unittest.TestCase):
 class HemomanteTechniquesTests(TechniqueFixture):
     """Raziel technique tests (inherited fixture only)."""
 
+    def test_night_form_three_animals_daily_limit_and_invalid_choice(self):
+        from app.character_play import apply_character_action, load_session_abilities
+        power = next(p for p in load_session_abilities('raziel') if p['id'] == 'forma-da-noite')
+        self.assertEqual(power['uses']['maximum'], 3)
+        state = _blood_state()
+        state['resources'].append({'key': 'forma_da_noite', 'label': 'Forma da Noite', 'current': 3, 'maximum': 3, 'recharge': 'inn_rest'})
+        with closing(sqlite3.connect(self.db)) as db, db:
+            db.execute("UPDATE character_states SET state_json=? WHERE profile_id='raziel'", (json.dumps(state),))
+        def use(animal):
+            return apply_character_action(self.db, character_id='raziel', actor_id='raziel', actor_role='player', action='consume_resource', payload={'resource_key': 'forma_da_noite', 'amount': 1, 'animal': animal})
+        with self.assertRaises(ValueError):
+            use('lobo')
+        for animal in ('corvo', 'coruja', 'morcego'):
+            use(animal)
+        with self.assertRaises(ValueError):
+            use('corvo')
+        with closing(sqlite3.connect(self.db)) as db:
+            current = json.loads(db.execute("SELECT state_json FROM character_states WHERE profile_id='raziel'").fetchone()[0])
+            self.assertEqual(next(r['current'] for r in current['resources'] if r['key'] == 'forma_da_noite'), 0)
+            reasons = [r[0] for r in db.execute("SELECT reason FROM character_events WHERE character_id='raziel'")]
+            for animal in ('corvo', 'coruja', 'morcego'):
+                self.assertTrue(any(animal in (reason or '') for reason in reasons))
+
     def test_lamina_resolves_Nd4_and_spends_on_confirm(self):
         response = self.use("raziel", "lamina-de-sangue", {
             "request_id": "tech-lam-101", "charges": 2, "attack": "ranged",
@@ -117,6 +140,9 @@ class HemomanteTechniquesTests(TechniqueFixture):
         confirm_attack_resolution(self.db, resolution_id=body["resolution_id"],
                                   requested_by_id="raziel", requested_by_role="player")
         self.assertEqual(3, self.laminas())
+        confirm_attack_resolution(self.db, resolution_id=body["resolution_id"],
+                                  requested_by_id="raziel", requested_by_role="player")
+        self.assertEqual(3, self.laminas(), "Repeated confirmation cannot spend blood twice")
     def test_lamina_rejects_bad_charges(self):
         bad = self.use("raziel", "lamina-de-sangue", {
             "request_id": "tech-lam-102", "charges": 6, "attack": "ranged",
@@ -163,89 +189,122 @@ class HemomanteTechniquesTests(TechniqueFixture):
         confirm_attack_resolution(self.db, resolution_id=record["resolution_id"],
                                   requested_by_id="raziel", requested_by_role="player")
         return record
-    def test_mordida_existing_d4_healing_once_free(self):
-        record = self._confirmed_hit("tech-mor-101")
-        self.assertEqual("hit", record["result"])
-        response = self.use("raziel", "mordida", {"resolution_id": record["resolution_id"]})
-        self.assertEqual(200, response.status_code, response.text)
-        self.assertEqual(record["damage_total"], response.json()["damage_absorbed"])
+    def bite(self, request='bite-001', d20=15):
+        return self.use('raziel', 'mordida', {'request_id': request, 'target_type': 'token',
+            'target_id': self.wounded['id'], 'roll_mode': 'physical', 'd20': d20})
+
+    def test_mordida_is_own_targeted_attack_heals_once_free(self):
+        reply = self.bite()
+        self.assertEqual(200, reply.status_code, reply.text)
+        preview = reply.json()
+        self.assertEqual('mordida', preview['attack_id'])
+        self.assertEqual('1d4', preview['damage_formula'])
         self.assertEqual(5, self.laminas())
-        with closing(sqlite3.connect(self.db)) as connection:
-            hp = json.loads(connection.execute(
-                "SELECT state_json FROM character_states WHERE profile_id='raziel'").fetchone()[0])["current_hp"]
-        self.assertGreaterEqual(response.json()['heal_roll'], 1)
-        self.assertLessEqual(response.json()['heal_roll'], 4)
-        self.assertEqual(min(16, 10 + response.json()['heal_roll']), hp)
-        again = self.use("raziel", "mordida", {"resolution_id": record["resolution_id"]})
-        self.assertEqual(400, again.status_code)
-    def test_mordida_once_per_turn_in_battle(self):
-        def set_turn(index, round_no=1):
-            encounter = {"active": True, "battle_mode": True, "map_id": "default", "title": "T",
-                         "participants": [{"target_type": "character", "target_id": "raziel", "initiative": 12},
-                                          {"target_type": "token", "target_id": self.wounded["id"], "initiative": 5}],
-                         "turn_index": index, "turn_sequence": 1, "action_committed": False}
-            with closing(sqlite3.connect(self.db)) as connection, connection:
-                connection.execute("UPDATE combat_effect_clock SET encounter_json=?, round=?, version=version+1 WHERE id=1",
-                                   (json.dumps(encounter), round_no))
-        set_turn(0)
-        with closing(sqlite3.connect(self.db)) as connection, connection:
-            connection.execute("UPDATE session_workspace_tokens SET current_hp=12 WHERE id=?",
-                               (self.wounded["id"],))
-        first = self._confirmed_hit("tech-mor-104")
-        response = self.use("raziel", "mordida", {"resolution_id": first["resolution_id"]})
-        self.assertEqual(200, response.status_code, response.text)
-        # Next round, Raziel's turn again: a new absorb is allowed.
-        set_turn(0, round_no=2)
-        second = self._confirmed_hit("tech-mor-105")
-        response2 = self.use("raziel", "mordida", {"resolution_id": second["resolution_id"]})
-        self.assertEqual(200, response2.status_code, response2.text)
-        # Same turn slot as the first absorb: blocked even with a fresh hit.
-        set_turn(0, round_no=1)
-        with closing(sqlite3.connect(self.db)) as connection, connection:
-            connection.execute("UPDATE session_workspace_tokens SET current_hp=12 WHERE id=?",
-                               (self.wounded["id"],))
-        third = self._confirmed_hit("tech-mor-106")
-        again = self.use("raziel", "mordida", {"resolution_id": third["resolution_id"]})
-        self.assertEqual(400, again.status_code)
-        self.assertIn("turno", again.json()["detail"])
+        confirmed, applied = confirm_attack_resolution(self.db, resolution_id=preview['resolution_id'],
+            requested_by_id='raziel', requested_by_role='player')
+        self.assertTrue(applied)
+        drain = confirmed['breakdown']['drain_result']
+        self.assertEqual(confirmed['hp_before'] - confirmed['hp_after'], drain['drained'])
+        self.assertEqual(min(16, 10 + drain['drained']), drain['hp_after'])
+        self.assertEqual(5, self.laminas())
+        replay, repeated = confirm_attack_resolution(self.db, resolution_id=preview['resolution_id'],
+            requested_by_id='raziel', requested_by_role='player')
+        self.assertFalse(repeated)
+        self.assertEqual(confirmed, replay)
+        self.assertEqual(preview['resolution_id'], self.bite().json()['resolution_id'])
+
+    def test_mordida_rejects_legacy_absorption_and_missing_target(self):
+        record = self._confirmed_hit('legacy-hit')
+        self.assertEqual(400, self.use('raziel', 'mordida', {'resolution_id': record['resolution_id']}).status_code)
+        self.assertEqual(400, self.use('raziel', 'mordida').status_code)
+
     def test_mordida_rejects_dead_target(self):
-        record = self._confirmed_hit("tech-mor-103")
-        with closing(sqlite3.connect(self.db)) as connection, connection:
-            connection.execute("UPDATE session_workspace_tokens SET current_hp=0 WHERE id=?",
-                               (self.wounded["id"],))
-        response = self.use("raziel", "mordida", {"resolution_id": record["resolution_id"]})
-        self.assertEqual(400, response.status_code)
+        with closing(sqlite3.connect(self.db)) as db, db:
+            db.execute('UPDATE session_workspace_tokens SET current_hp=0 WHERE id=?', (self.wounded['id'],))
+        self.assertEqual(400, self.bite().status_code)
         self.assertEqual(5, self.laminas())
 
-    def test_mordida_first_turn_of_new_encounter_does_not_reuse_previous_claim(self):
-        with closing(sqlite3.connect(self.db)) as connection, connection:
-            connection.execute("INSERT OR REPLACE INTO session_workspace_maps(id,title,image_path,visible_to_players,created_at,updated_at) VALUES('default','Arena fixture','',1,'fixture','fixture')")
-            connection.execute("INSERT INTO session_workspace_state(id,map_id,map_title,map_image_path,updated_at) VALUES(1,'default','Arena fixture','','fixture')")
+    def test_mordida_miss_does_not_heal(self):
+        preview = self.bite(d20=1).json()
+        confirmed, _ = confirm_attack_resolution(self.db, resolution_id=preview['resolution_id'],
+            requested_by_id='raziel', requested_by_role='player')
+        self.assertEqual('miss', confirmed['result'])
+        self.assertEqual(0, confirmed['breakdown']['drain_result']['healed'])
+
+    def test_mordida_cure_limited_to_remaining_target_hp(self):
+        with closing(sqlite3.connect(self.db)) as db, db:
+            db.execute('UPDATE session_workspace_tokens SET current_hp=1 WHERE id=?', (self.wounded['id'],))
+        preview = self.bite(d20=20).json()
+        confirmed, _ = confirm_attack_resolution(self.db, resolution_id=preview['resolution_id'],
+            requested_by_id='raziel', requested_by_role='player')
+        self.assertEqual(1, confirmed['breakdown']['drain_result']['healed'])
+        self.assertEqual(0, confirmed['hp_after'])
+        self.assertEqual(200, self.bite(d20=20).status_code, 'same request remains replayable after target death')
+
+    def test_mordida_consumes_turn_and_new_encounter_allows_next_bite(self):
+        with closing(sqlite3.connect(self.db)) as db, db:
+            db.execute("INSERT OR REPLACE INTO session_workspace_maps(id,title,image_path,visible_to_players,created_at,updated_at) VALUES('default','Arena','',1,'fixture','fixture')")
+            db.execute("INSERT INTO session_workspace_state(id,map_id,map_title,map_image_path,updated_at) VALUES(1,'default','Arena','','fixture')")
         def command(action, **payload):
-            return effect_command(self.db, actor_id="master", actor_role="gm",
-                                  request_id=f"mordida-encounter-{action}-{readeffects(self.db)['version']}",
-                                  expected_version=readeffects(self.db)["version"],
-                                  action=action, payload=payload)
+            state = readeffects(self.db)
+            return effect_command(self.db, actor_id='master', actor_role='gm', request_id=f"bite-{action}-{state['version']}",
+                expected_version=state['version'], action=action, payload=payload)
+        for number in (1, 2):
+            with closing(sqlite3.connect(self.db)) as db, db:
+                db.execute('UPDATE session_workspace_tokens SET current_hp=12 WHERE id=?', (self.wounded['id'],))
+            command('start', map_id='default', battle_mode=True, participants=[
+                {'target_type': 'character', 'target_id': 'raziel', 'initiative': 12},
+                {'target_type': 'token', 'target_id': self.wounded['id'], 'initiative': 5}])
+            preview = self.bite(f'bite-encounter-{number}').json()
+            confirm_attack_resolution(self.db, resolution_id=preview['resolution_id'], requested_by_id='raziel', requested_by_role='player')
+            self.assertTrue(readeffects(self.db)['encounter']['action_committed'])
+            self.assertEqual(400, self.bite(f'bite-extra-{number}').status_code)
+            command('end')
 
-        for encounter_number in (1, 2):
-            with closing(sqlite3.connect(self.db)) as connection, connection:
-                connection.execute("UPDATE session_workspace_tokens SET current_hp=12 WHERE id=?",
-                                   (self.wounded["id"],))
-            command("start", map_id="default", battle_mode=True, participants=[
-                {"target_type": "character", "target_id": "raziel", "initiative": 12},
-                {"target_type": "token", "target_id": self.wounded["id"], "initiative": 5}])
-            self.assertEqual(1, readeffects(self.db)["round"])
-            self.assertEqual(0, readeffects(self.db)["encounter"]["turn_index"])
-            hit = self._confirmed_hit(f"mordida-new-encounter-{encounter_number}")
-            response = self.use("raziel", "mordida", {"resolution_id": hit["resolution_id"]})
-            self.assertEqual(200, response.status_code, response.text)
-            self.assertEqual(5, self.laminas())
-            command("end")
+    def test_regeneration_spends_one_blood_heals_and_replays_without_double_cost(self):
+        reply = self.use('raziel', 'regeneracao-vampirica', {'request_id': 'regenerate-001'})
+        self.assertEqual(200, reply.status_code, reply.text)
+        self.assertEqual(4, self.laminas())
+        self.assertEqual(reply.json()['hp_before'] + reply.json()['healed'], reply.json()['hp_after'])
+        self.assertTrue(1 <= reply.json()['heal_roll'] <= 4)
+        self.assertEqual(reply.json(), self.use('raziel', 'regeneracao-vampirica', {'request_id': 'regenerate-001'}).json())
+        self.assertEqual(4, self.laminas())
 
-    def test_mordida_rejects_miss(self):
-        miss = self._confirmed_hit("tech-mor-102", d20=2)
-        response = self.use("raziel", "mordida", {"resolution_id": miss["resolution_id"]})
-        self.assertEqual(400, response.status_code)
+    def test_regeneration_blocks_zero_hp_full_hp_and_no_blood_without_writing(self):
+        for hp, blood in ((0, 5), (16, 5), (10, 0)):
+            with closing(sqlite3.connect(self.db)) as db, db:
+                db.execute("UPDATE character_states SET state_json=? WHERE profile_id='raziel'", (json.dumps(_blood_state(hp=hp, laminas=blood)),))
+            reply = self.use('raziel', 'regeneracao-vampirica', {'request_id': f'regenerate-block-{hp}-{blood}'})
+            self.assertEqual(400, reply.status_code, reply.text)
+            self.assertEqual(blood, self.laminas())
+
+    def test_regeneration_respects_owner(self):
+        main.app.dependency_overrides[main.require_any] = lambda: AccessContext(mode='player', profile_id='morthak')
+        self.assertEqual(403, self.use('raziel', 'regeneracao-vampirica', {'request_id': 'other-owner'}).status_code)
+
+    def test_regeneration_consumes_action_and_rejects_out_of_turn(self):
+        encounter = {'active': True, 'battle_mode': True, 'map_id': 'default', 'turn_index': 1,
+            'participants': [{'target_type': 'character', 'target_id': 'raziel'}, {'target_type': 'token', 'target_id': self.wounded['id']}],
+            'action_committed': False}
+        with closing(sqlite3.connect(self.db)) as db, db:
+            db.execute('UPDATE combat_effect_clock SET encounter_json=? WHERE id=1', (json.dumps(encounter),))
+        self.assertEqual(400, self.use('raziel', 'regeneracao-vampirica', {'request_id': 'out-turn'}).status_code)
+        self.assertEqual(5, self.laminas())
+        encounter['turn_index'] = 0
+        with closing(sqlite3.connect(self.db)) as db, db:
+            db.execute('UPDATE combat_effect_clock SET encounter_json=? WHERE id=1', (json.dumps(encounter),))
+        self.assertEqual(200, self.use('raziel', 'regeneracao-vampirica', {'request_id': 'own-turn'}).status_code)
+        self.assertTrue(readeffects(self.db)['encounter']['action_committed'])
+        self.assertEqual(400, self.bite('after-regeneration').status_code)
+        self.assertEqual(400, self.use('raziel', 'regeneracao-vampirica', {'request_id': 'extra-regen'}).status_code)
+        self.assertEqual(4, self.laminas())
+
+    def test_mordida_zero_hp_and_another_owner_rejected(self):
+        with closing(sqlite3.connect(self.db)) as db, db:
+            db.execute("UPDATE character_states SET state_json=? WHERE profile_id='raziel'", (json.dumps(_blood_state(hp=0)),))
+        self.assertEqual(400, self.bite('dead-raziel').status_code)
+        main.app.dependency_overrides[main.require_any] = lambda: AccessContext(mode='player', profile_id='morthak')
+        self.assertEqual(403, self.bite('another-owner').status_code)
     def test_wrong_owner_rejected(self):
         response = self.use("vezemir", "lamina-de-sangue", {"request_id": "tech-own-001"})
         self.assertEqual(404, response.status_code)

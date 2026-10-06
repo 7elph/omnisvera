@@ -78,6 +78,18 @@ test('monster rolls before confirmation, prevents double click and applies only 
   assert.equal(calls[1][0], 'confirm');
 });
 
+test('off-turn summon attacks stay visible but cannot send a request', async () => {
+  let calls = 0;
+  const h = harness('MonsterAttackPanel', { token: { id: 'summon', name: 'Lobo reanimado', sheet: { attacks: [{ name: 'Garra', damage: '1d6', bonus: 2 }] } }, characters: [], physical: false, blocked: true, onChange: async () => {} }, {
+    resolveMonsterAttack: async () => { calls++; }, newDiceRequestId: () => 'fixture',
+  });
+  assert.equal(h.nodes().find(n => n.type === 'fieldset').props.disabled, true);
+  assert.ok(h.nodes().some(n => n.type === 'strong' && n.props.children === 'Garra'));
+  h.nodes().find(n => n.type === 'button').props.onClick();
+  await h.flush();
+  assert.equal(calls, 0);
+});
+
 test('target line ignores summon caster alias and prefers exact pin identity', () => {
   const tokens = [
     { id: 'summon', token_type: 'monster', character_id: 'morthak', name: 'Esqueleto', longitude: 5, latitude: 5 },
@@ -104,7 +116,8 @@ test('attack UI does not invent default damage or offer inert target-only attack
   const source = fs.readFileSync('src/pages/SessionWorkspace.tsx', 'utf8');
   assert.doesNotMatch(source, /ATTACK_DAMAGE_BY_CHARACTER/);
   assert.match(source, /canOperate && weaponPath && attack.damage/);
-  assert.match(source, /Sem arma ou ataque à distância configurado/);
+  assert.match(source, /Sem arma à distância equipada/);
+  assert.match(source, /Equipe uma arma compatível pelo inventário/);
   assert.match(source, /Atacar · rolar acerto e dano/);
 });
 
@@ -155,9 +168,26 @@ test('player pin cannot edit monster HP; Master invalid HP never writes', async 
   const calls = []; const api = { mediaUrlFromVaultPath: p => p, updateWorkspaceToken: async (...args) => calls.push(args) };
   const player = harness('TokenVitals', props, api);
   assert.equal(player.nodes().some(n => n.type === 'input'), false);
+  assert.equal(player.nodes().some(n => n.type === 'details'), false);
   const gm = harness('TokenVitals', { ...props, editable: true }, api);
+  const editor = gm.nodes().find(n => n.type === 'details');
+  assert.ok(editor);
+  assert.notEqual(editor.props.open, true, 'HP editing starts collapsed');
+  assert.equal(gm.nodes().find(n => n.type === 'summary').props.children, 'Editar vida · Mestre');
   gm.nodes().find(n => n.type === 'input').props.onChange({ target: { value: '99' } }); gm.render();
   gm.nodes().find(n => n.type === 'button').props.onClick(); await gm.flush();
   assert.equal(calls.length, 0);
   assert.equal(gm.nodes().some(n => n.props.role === 'alert'), true);
+});
+
+test('collapsed monster HP editor preserves save and refresh behavior', async () => {
+  const calls = []; let refreshed = 0;
+  const gm = harness('TokenVitals', { token: { id: 'wolf', token_type: 'monster', current_hp: 3, maximum_hp: 12 }, editable: true, onChange: async () => { refreshed++; } }, { updateWorkspaceToken: async (...args) => calls.push(args) });
+  gm.nodes().find(n => n.type === 'input').props.onChange({ target: { value: '5' } }); gm.render();
+  gm.nodes().find(n => n.type === 'button').props.onClick(); await gm.flush();
+  assert.equal(calls.length, 1);
+  assert.equal(calls[0][0], 'wolf');
+  assert.equal(calls[0][1].current_hp, 5);
+  assert.equal(calls[0][1].maximum_hp, 12);
+  assert.equal(refreshed, 1);
 });

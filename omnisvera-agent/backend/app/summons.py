@@ -66,11 +66,18 @@ def create_summon(path, *, caster, technique, spec, request_id, actor_id, actor_
         commit_battle_action(db, snapshot)
         if encounter.get('active'):
             members = encounter.get('participants', [])
+            current = members[encounter.get('turn_index', 0)] if members else None
+            if corpse:
+                members = [p for p in members if not (p['target_type'] == 'token' and p['target_id'] == corpse_id)]
+                encounter['participants'] = members
             index = next((i for i, p in enumerate(members) if p['target_type'] == 'character' and p['target_id'] == caster), None)
             if index is None:
                 raise ValueError('O invocador não participa do combate')
             members.insert(index + 1, {'target_type': 'token', 'target_id': token_id, 'token_id': token_id,
                 'name': name, 'controller_id': caster, 'initiative': members[index]['initiative']})
+            if current:
+                encounter['turn_index'] = next(i for i, p in enumerate(members)
+                    if (p['target_type'], p['target_id']) == (current['target_type'], current['target_id']))
             if encounter.get('battle_mode'):
                 encounter.setdefault('return_tokens', []).append({'id': token_id, 'map_id': encounter.get('return_map_id', map_id),
                     'latitude': latitude, 'longitude': longitude, 'visible_to_players': 1, 'created': False})

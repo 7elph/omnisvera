@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { CombatEffectsState, CombatTestView, getCombatEffects, getCombatTestViews, newDiceRequestId, PlayableCharacterSummary, sendCombatEffectCommand, WorkspaceToken } from "../api";
 import CombatEffectsPanel from "./CombatEffectsPanel";
 import MonsterAttackPanel from "./MonsterAttackPanel";
+import SummonControls from "./SummonControls";
 import { listWorkspaceMaps, WorkspaceMap, updateWorkspaceToken } from '../api';
 
 type Props = { mode: "gm" | "player"; tableMode?: "digital" | "physical" | "test"; mapId: string; characters: PlayableCharacterSummary[]; tokens: WorkspaceToken[]; onChange: () => Promise<void>; onPins?: () => void; onFollowMap?: (mapId: string) => void };
@@ -26,6 +27,7 @@ export default function CombatEncounterPanel({ mode, tableMode, mapId, character
   const battleCharacters = state.encounter?.battle_mode ? characters.filter(c => members.some(p => p.target_type === 'character' && p.target_id === c.id)) : characters;
   const battleTokens = state.encounter?.battle_mode ? tokens.filter(t => members.some(p => p.target_type === 'token' && p.target_id === t.id)) : tokens;
   const currentToken = tokens.find(token => token.id === current?.target_id);
+  const controlledSummons = tokens.filter(token => token.sheet?.summon && members.some(member => member.target_type === 'token' && member.target_id === token.id) && (mode === 'gm' || token.sheet.summon.caster === ownerId));
   const myTurn = (current?.target_type === "character" && current.target_id === ownerId) || Boolean(ownerId && currentToken?.sheet?.summon?.caster === ownerId);
   const masterTurn = mode === "gm" && current?.target_type === "token";
   const participants = [...characters.map(c => ({ key: `character|${c.id}`, name: c.name })), ...tokens.filter(t => t.token_type === "monster").map(t => ({ key: `token|${t.id}`, name: t.name }))];
@@ -74,12 +76,13 @@ export default function CombatEncounterPanel({ mode, tableMode, mapId, character
     <header>{mode === "player" && <span>COMBATE EM ANDAMENTO</span>}<strong>{state.encounter?.active ? state.encounter.title : "Preparar combate"}</strong><small>Rodada {state.round}</small></header>
     {state.encounter?.active && <div role="status" aria-live="polite" style={{ padding: "12px", border: "2px solid currentColor", borderRadius: "8px", marginBlock: "12px" }}>
       <strong>{myTurn ? "É o seu turno!" : masterTurn ? `Mestre, é sua vez: ${current?.name}` : `Turno: ${current?.name || "participante oculto"}`}</strong>
-      {(mode === "gm" || myTurn) && current?.target_type === "token" && tokens.filter(t => t.id === current.target_id).map(token => <MonsterAttackPanel key={`${token.id}:${state.encounter?.turn_sequence}`} token={token} combat={mode === 'gm' ? state : undefined} characters={battleCharacters} targets={battleTokens} physical={tableMode === "physical"} done={state.encounter?.action_committed} onChange={onChange} />)}
+      {(mode === "gm" || myTurn) && current?.target_type === "token" && !currentToken?.sheet?.summon && tokens.filter(t => t.id === current.target_id).map(token => <MonsterAttackPanel key={`${token.id}:${state.encounter?.turn_sequence}`} token={token} combat={mode === 'gm' ? state : undefined} characters={battleCharacters} targets={battleTokens} physical={tableMode === "physical"} done={state.encounter?.action_committed} onChange={onChange} />)}
       {state.encounter?.attack_limit != null && <p>Ataques restantes: {Math.max(0, state.encounter.attack_limit - (state.encounter.attacks_used || 0))}</p>}
-      {(mode === "gm" || myTurn) && <button disabled={busy} onClick={() => void save("next_turn")}>Concluir e passar turno →</button>}
+      {(mode === "gm" || myTurn) && !currentToken?.sheet?.summon && <button disabled={busy} onClick={() => void save("next_turn")}>Concluir e passar turno →</button>}
     </div>}
     {mode === "player" && state.encounter?.active && encounterMapId && encounterMapId !== mapId && <button onClick={() => onFollowMap?.(encounterMapId)}>Ir ao mapa do combate</button>}
     {state.encounter?.active && <ol>{state.encounter.participants?.map((p, index) => <li aria-current={index === (state.encounter?.turn_index ?? 0) ? "step" : undefined} className={index === (state.encounter?.turn_index ?? 0) ? "current" : ""} key={`${p.target_type}|${p.target_id}`}><b>{p.initiative}</b><span>{p.name}</span>{p.target_type === "character" && p.target_id === ownerId && <small>Você</small>}</li>)}</ol>}
+    {state.encounter?.active && controlledSummons.map(token => <SummonControls key={token.id} token={token} mode={mode} characters={characters} tokens={tokens} state={state} physical={tableMode === 'physical'} onChange={async () => { setState(await getCombatEffects()); await onChange(); }} />)}
     {mode === "player" && <p>Escolha o alvo, role o ataque e confirme o resultado para aplicar o dano. Depois conclua seu turno.</p>}
     {mode === "gm" && <>
       <details className="workspace-gm-subsection" open={!state.encounter?.active}><summary>1 · Participantes e iniciativa</summary>
@@ -110,7 +113,7 @@ export default function CombatEncounterPanel({ mode, tableMode, mapId, character
       </section>}
       <button onClick={onPins}>2 · Posicionar / editar criaturas e pins</button>
       {tokens.some(token => token.token_type === 'monster' && token.current_hp === 0 && !token.sheet?.summon) && <details><summary>Cadáveres e reanimação</summary>
-        {tokens.filter(token => token.token_type === 'monster' && token.current_hp === 0 && !token.sheet?.summon).map(token => <div key={token.id}>
+        {tokens.filter(token => token.token_type === 'monster' && token.current_hp === 0 && !token.sheet?.summon && !token.sheet?.reanimated_by).map(token => <div key={token.id}>
           <strong>{token.name}</strong><button disabled={busy || Boolean(token.sheet?.reanimation_allowed)} onClick={async () => {
             setBusy(true); setError('');
             try { await updateWorkspaceToken(token.id, { sheet: { ...token.sheet, reanimation_allowed: true } }); await onChange(); }

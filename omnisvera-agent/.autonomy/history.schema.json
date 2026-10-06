@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["cycle_id", "problem", "evidence", "classification", "hypothesis", "files_changed", "tests_before", "tests_after", "result", "commit"],
+  "properties": {
+    "cycle_id": {"type": "string", "pattern": "^[a-zA-Z0-9_-]{1,80}$"},
+    "problem": {"type": "string", "maxLength": 1000},
+    "evidence": {"type": "string", "maxLength": 2000},
+    "classification": {"enum": ["GREEN", "YELLOW", "RED"]},
+    "hypothesis": {"type": "string", "maxLength": 1000},
+    "files_changed": {"type": "array", "items": {"type": "string"}, "maxItems": 5},
+    "tests_before": {"type": "object", "additionalProperties": {"enum": ["PASS", "FAIL", "INCONCLUSIVE"]}},
+    "tests_after": {"type": "object", "additionalProperties": {"enum": ["PASS", "FAIL", "INCONCLUSIVE"]}},
+    "result": {"enum": ["PASS", "FAIL", "INCONCLUSIVE", "NO_CHANGE", "PROPOSAL", "BLOCKED"]},
+    "commit": {"type": "null"}
+  }
+}

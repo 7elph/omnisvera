@@ -1,0 +1,22 @@
+{
+  "forma-da-noite": {
+    "description": "3 usos diários. Escolha corvo, coruja ou morcego. Na forma animal não pode atacar nem falar e usa a ficha da criatura; a 0 PV retorna à forma normal e recebe a diferença de dano. A escolha e o consumo são registrados; a ficha animal ainda depende de adjudicação do Mestre.",
+    "uses": { "resource_key": "forma-da-noite", "label": "Forma da Noite · usos diários", "maximum": 3, "recharge": "inn_rest", "cost": 1 }
+  },
+  "mordida": {
+    "description": "Ataque próprio corpo a corpo contra um alvo vivo: acerto contra CA, dano 1d4 e recuperação de PV limitada ao dano efetivamente drenado e aos PV máximos. Não consome sangue; usa o orçamento de ataque do turno. Dano e cura são aplicados juntos na confirmação.",
+    "mechanics_status": "structured",
+    "requires_target": true
+  },
+  "regeneracao-vampirica": {
+    "description": "Gasta 1 ponto da Reserva de Sangue e uma ação para recuperar 1d4 PV, até o máximo. Não recupera sangue, não ocorre automaticamente e não funciona a 0 PV.",
+    "mechanics_status": "structured",
+    "uses": {
+      "resource_key": "reserva_de_sangue",
+      "label": "Reserva de Sangue",
+      "maximum": 5,
+      "recharge": "inn_rest",
+      "cost": 1
+    }
+  }
+}

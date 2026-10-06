@@ -1,5 +1,13 @@
 # Omnisvera Companion
 
+## Código atual e orientação para revisão
+
+Para entender o Companion atual (fichas, combate, invocações, protocolos de
+DORN-7, recursos e interface mobile), comece por
+[docs/CURRENT_COMPANION_CODE.md](docs/CURRENT_COMPANION_CODE.md) e por
+[AGENTS.md](AGENTS.md). A descrição de MVP abaixo é histórica: o aplicativo
+atual também grava estado operacional no SQLite; não é apenas leitura.
+
 MVP local para acessar o vault Omnisvera pelo celular via navegador/PWA.
 
 ## Como funciona

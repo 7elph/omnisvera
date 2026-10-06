@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import { AttackResolution, CombatEffectsState, confirmCharacterAttack, newDiceRequestId, PlayableCharacterSummary, resolveMonsterAttack, WorkspaceToken } from "../api";
 
-export default function MonsterAttackPanel({ token, characters, targets = [], physical, done = false, combat, onChange }: { token: WorkspaceToken; characters: PlayableCharacterSummary[]; targets?: WorkspaceToken[]; physical: boolean; done?: boolean; combat?: CombatEffectsState; onChange: () => Promise<void> }) {
+export default function MonsterAttackPanel({ token, characters, targets = [], physical, done = false, blocked = false, combat, onChange }: { token: WorkspaceToken; characters: PlayableCharacterSummary[]; targets?: WorkspaceToken[]; physical: boolean; done?: boolean; blocked?: boolean; combat?: CombatEffectsState; onChange: () => Promise<void> }) {
   const [interpose, setInterpose] = useState(false);
   const [target, setTargetValue] = useState("");
   const setTarget = (value: string) => {
@@ -18,7 +18,7 @@ export default function MonsterAttackPanel({ token, characters, targets = [], ph
   const selectedToken = targets.find(t => `token:${t.id}` === target);
   const guard = combat?.effects.find(e => e.protocol === 'guard' && e.ally_id === (selectedToken?.character_id || target));
   async function act(index?: number) {
-    if (lock.current) return;
+    if (lock.current || blocked) return;
     lock.current = true; setBusy(true); setError("");
     try {
       if (index === undefined && result) {
@@ -40,6 +40,7 @@ export default function MonsterAttackPanel({ token, characters, targets = [], ph
   }
   return <section className="workspace-action-catalog workspace-attack-catalog workspace-ally-attacks" aria-label={`Ataques de ${token.name}`}>
     <header><span>ATAQUES</span><small title="Bônus e dano vêm da ficha; confirme o resultado para aplicar dano.">{physical ? "d20 físico" : "Rolagem automática"}</small></header>
+    <fieldset disabled={blocked} style={{ border: 0, padding: 0, margin: 0 }}>
     <label>Alvo <select value={target} onChange={e => setTarget(e.target.value)}><option value="">Escolha um alvo</option>{characters.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}{targets.filter(t => t.token_type === "monster" && t.id !== token.id).map(t => <option key={t.id} value={`token:${t.id}`}>{t.name}</option>)}</select></label>
     {physical && <label>d20 físico <input type="number" min={1} max={20} value={die} onChange={e => setDie(e.target.value)} /></label>}
     {guard && !result?.status && <label><input type="checkbox" checked={interpose} onChange={e => setInterpose(e.target.checked)} /> Interpor Dorn · posição permite; confirmar antes de rolar</label>}
@@ -48,6 +49,7 @@ export default function MonsterAttackPanel({ token, characters, targets = [], ph
     {done && <p>Ação concluída. Use “Concluir e passar turno”.</p>}
     {!token.sheet?.attacks?.length && <p>Nenhum ataque configurado nesta criatura. Edite sua ficha.</p>}
     {result && <div role="status"><p>{result.attack_total} contra CA {result.target_ac} · {result.result === "hit" ? "Acertou" : "Errou"} · dano {result.damage_total}</p>{result.status === "pending" ? <button disabled={busy} onClick={() => void act()}>Confirmar resultado e aplicar dano</button> : <p>Resultado confirmado. Vida: {result.hp_before} → {result.hp_after}</p>}</div>}
+    </fieldset>
     {error && <p role="alert">{error}</p>}
     {!!result?.breakdown?.manual_effects?.length && <p role="alert">Efeito adicional pendente: {result.breakdown.manual_effects.join(", ")}. O dano numérico foi calculado; resolva a proteção e as consequências descritas na ficha. Este efeito não foi aplicado automaticamente.</p>}
   </section>;
