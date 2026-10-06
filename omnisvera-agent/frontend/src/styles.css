@@ -3646,6 +3646,26 @@ input, textarea, select {
 .workspace-group-title img { border-radius: 2px; height: .62rem; object-fit: cover; width: .62rem; }
 .workspace-ability-name img { border-radius: 3px; height: 18px; object-fit: cover; width: 18px; }
 .workspace-ability-name { cursor: help; position: relative; }
+.dorn-unit-identity { display: grid; gap: .4rem; margin: .6rem 0; min-width: 0; }
+.dorn-unit-identity > p { font-size: .65rem; color: #adb5bc; margin: 0; }
+.dorn-unit-identity details { background: #151719; border: 1px solid var(--om-line-soft); padding: .55rem; min-width: 0; }
+.dorn-unit-identity summary { cursor: pointer; font-size: .68rem; font-weight: 700; }
+.dorn-unit-identity p, .dorn-unit-identity dd { font-size: .8rem; line-height: 1.5; white-space: pre-wrap; overflow-wrap: anywhere; }
+.dorn-unit-identity small { display: block; font-size: .67rem; line-height: 1.45; color: #adb5bc; }
+.dorn-unit-identity dl { display: grid; grid-template-columns: minmax(80px, .7fr) minmax(0, 1.3fr); gap: .4rem; }
+.dorn-unit-identity dt { font-size: .72rem; color: #adb5bc; }
+.dorn-unit-identity dd { margin: 0; }
+.dorn-unit-identity article { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .5rem; padding: .45rem 0; border-top: 1px solid var(--om-line-soft); }
+.dorn-unit-identity article div { min-width: 0; flex: 1 1 150px; }
+.dorn-unit-identity strong, .dorn-unit-identity article span { font-size: .76rem; overflow-wrap: anywhere; }
+.dorn-unit-identity button { min-height: 38px; font-size: .75rem; }
+.dorn-unit-identity ul { padding-left: 1.1rem; }
+.dorn-unit-identity li { font-size: .8rem; line-height: 1.5; margin: .45rem 0; overflow-wrap: anywhere; }
+.dorn-unit-identity .dorn-protocol-controls article { display: grid; gap: .4rem; }
+.dorn-protocol-controls label { display: block; font-size: .75rem; }
+.dorn-protocol-controls input:not([type=checkbox]), .dorn-protocol-controls select { display: block; width: 100%; min-width: 0; box-sizing: border-box; }
+.dorn-protocol-controls button { width: 100%; min-height: 44px; }
+.dorn-protocol-controls button:disabled { opacity: .55; cursor: not-allowed; }
 .workspace-ability-name .workspace-ability-tip { background: #101315; border: 1px solid #3a3f45; border-radius: 8px; box-shadow: 0 8px 24px rgba(0,0,0,.55); display: none; left: 0; max-width: 300px; min-width: 220px; padding: .5rem .6rem; position: absolute; top: calc(100% + 6px); z-index: 60; }
 .workspace-ability-name:hover .workspace-ability-tip, .workspace-ability-name:focus-within .workspace-ability-tip { display: block; }
 .workspace-ability-name .workspace-ability-tip p { color: #d7dbde; font-size: .72rem; font-weight: 400; line-height: 1.45; margin: 0 0 .35rem; white-space: normal; }

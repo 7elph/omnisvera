@@ -672,15 +672,15 @@ export type AttackResolution = {
   ledger_id?: number | null;
 };
 
-export type CombatEffect = { id: string; target_type: "character" | "token"; target_id: string; label: string; source: string; duration: string; rounds: number | null; modifiers: Record<string, number>; updated_at: string };
-export type CombatEffectsState = { round: number; version: number; effects: CombatEffect[]; encounter?: { active?: boolean; battle_mode?: boolean; action_committed?: boolean; attacks_used?: number; attack_limit?: number; title?: string; map_id?: string; turn_index?: number; turn_sequence?: number; participants?: Array<{target_type: string; target_id: string; token_id?: string; controller_id?: string; name: string; initiative: number}> } };
+export type CombatEffect = { id: string; target_type: "character" | "token"; target_id: string; label: string; source: string; duration: string; rounds: number | null; modifiers: Record<string, number>; updated_at: string; protocol?: 'guard' | 'vanguard'; ally_id?: string; until?: string };
+export type CombatEffectsState = { round: number; version: number; effects: CombatEffect[]; protocol_result?: { total?: number; difficulty?: number; outcome?: string; adjudication?: string }; encounter?: { active?: boolean; battle_mode?: boolean; action_committed?: boolean; attacks_used?: number; attack_limit?: number; title?: string; map_id?: string; turn_index?: number; turn_sequence?: number; participants?: Array<{target_type: string; target_id: string; token_id?: string; controller_id?: string; name: string; initiative: number}> } };
 export type CombatTestView = { profile_id: string; character_name: string; receives_combat: boolean; state: CombatEffectsState };
 export type CombatTestViewsResponse = { enabled: boolean; table_mode: "digital" | "physical" | "test"; views: CombatTestView[] };
 export async function getCombatEffects(): Promise<CombatEffectsState> { return worldRequest("/combat/effects"); }
 export async function getCompanionRoster(): Promise<{ allies: WorkspaceToken[]; archived_character_ids: string[] }> {
   return readJson(`${API_BASE}/gm/companions`, authHeaders(), "Falha ao carregar aliados do Mestre");
 }
-export async function resolveMonsterAttack(tokenId: string, payload: { request_id: string; attack_id: string; target_type: "character" | "token"; target_id: string; roll_mode: "digital" | "physical"; d20?: number }): Promise<AttackResolution> {
+export async function resolveMonsterAttack(tokenId: string, payload: { request_id: string; attack_id: string; target_type: "character" | "token"; target_id: string; roll_mode: "digital" | "physical"; d20?: number; guard_effect_id?: string }): Promise<AttackResolution> {
   return worldRequest(`/gm/combat/tokens/${encodeURIComponent(tokenId)}/attacks/resolve`, { method: "POST", body: JSON.stringify(payload) });
 }
 export async function getCombatTestViews(): Promise<CombatTestViewsResponse> { return worldRequest("/gm/combat/test-views"); }

@@ -20,8 +20,11 @@ AccessLevel = Literal["gm", "owner", "public"]
 SESSION_ABILITY_CATALOG_PATH = Path(__file__).with_name("data") / "session_abilities.json"
 
 
-def load_session_abilities(profile_id: str) -> list[dict[str, Any]]:
+def load_session_abilities(profile_id: str, *, approved_build: str | None = None) -> list[dict[str, Any]]:
     """Load player-safe abilities without embedding character-specific data in the UI."""
+    if profile_id == 'dorn7' and str(approved_build or '').startswith('dorn-mage'):
+        from .dorn_protocols import PROTOCOLS
+        return [dict(protocol) for protocol in PROTOCOLS]
     try:
         payload = json.loads(SESSION_ABILITY_CATALOG_PATH.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError):
@@ -736,7 +739,7 @@ def build_character_definition(
             "magic": _clean_text(magic.get("known_magic"), 4000),
             "magic_notes": _clean_text(magic.get("magic_notes"), 1800),
         },
-        "session_abilities": load_session_abilities(profile_id) + list(overrides.get("approved_session_abilities") or []) + [
+        "session_abilities": load_session_abilities(profile_id, approved_build=overrides.get('approved_build')) + list(overrides.get("approved_session_abilities") or []) + [
             {
                 "id": f"item:{item.get('item_path')}:{rule.get('id')}",
                 "name": str(rule.get("target") or rule.get("label") or item.get("item_title") or "Habilidade de item"),

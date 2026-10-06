@@ -744,6 +744,7 @@ class AttackResolutionCreate(BaseModel):
     attack_count: int = Field(default=1, ge=1, le=10, strict=True)
     d20s: list[StrictInt] | None = Field(default=None, max_length=10)
     weapon_item_path: str | None = Field(default=None, min_length=1, max_length=280)
+    guard_effect_id: str | None = Field(default=None, max_length=120)
 
 
 class TechniqueUse(BaseModel):
@@ -768,7 +769,7 @@ class CombatEffectCommand(BaseModel):
     model_config = {"extra": "forbid"}
     request_id: str = Field(min_length=8, max_length=120)
     expected_version: int = Field(ge=0)
-    action: str = Field(pattern="^(apply|remove|round|scene|rest|start|initiative|next_turn|end)$")
+    action: str = Field(pattern="^(apply|remove|round|scene|rest|start|initiative|next_turn|end|dorn_guard|dorn_vanguard|dorn_diagnose)$")
     payload: dict = Field(default_factory=dict)
 
 

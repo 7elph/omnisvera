@@ -159,6 +159,8 @@ def effect_command(path: Path, *, actor_id: str, actor_role: str, request_id: st
                    allow_player: bool = False) -> dict:
     if actor_role != "gm" and not (allow_player and actor_role == "player"):
         raise PermissionError("Somente o mestre controla efeitos e rodadas")
+    if action.startswith('dorn_') and actor_role != 'gm':
+        raise PermissionError('Somente o Mestre controla os protocolos de Dorn')
     if not 8 <= len(request_id) <= 120:
         raise ValueError("request_id inválido")
     fingerprint = json.dumps([actor_id, action, payload, expected_version], sort_keys=True)
@@ -175,7 +177,12 @@ def effect_command(path: Path, *, actor_id: str, actor_role: str, request_id: st
             raise ValueError("Estado dos efeitos mudou. Atualize antes de continuar.")
         now = datetime.now(timezone.utc).isoformat()
         changes = []
-        if action in {"start", "initiative", "next_turn", "end"}:
+        protocol_result = None
+        if action in {"dorn_guard", "dorn_vanguard", "dorn_diagnose"}:
+            from .dorn_protocols import command
+            protocol_result = command(db, snapshot, action, payload, now)
+            changes.append(protocol_result)
+        elif action in {"start", "initiative", "next_turn", "end"}:
             encounter = snapshot.get("encounter") or {}
             if action == "start" and encounter.get("active"):
                 raise ValueError("Já existe um combate ativo. Encerre-o ou ajuste a iniciativa.")
@@ -283,6 +290,13 @@ def effect_command(path: Path, *, actor_id: str, actor_role: str, request_id: st
                     if additions:
                         stage_battle(db, encounter, now, participants=additions)
             db.execute("UPDATE combat_effect_clock SET encounter_json=? WHERE id=1", (json.dumps(encounter),))
+            # Guard lasts until Dorn becomes current again, not until a global round tick.
+            new_current = _current_participant(encounter)
+            if action in {'start', 'end'} or (action == 'next_turn' and new_current and new_current.get('target_type') == 'character' and new_current.get('target_id') == 'dorn7'):
+                for effect in snapshot['effects']:
+                    if effect.get('protocol') == 'guard':
+                        db.execute('UPDATE combat_effects SET active=0 WHERE id=?', (effect['id'],))
+                        changes.append({'expired': effect['id']})
             changes.append({"encounter": encounter})
         elif action == "apply":
             target_type, target_id = payload.get("target_type"), payload.get("target_id")
@@ -397,6 +411,8 @@ def effect_command(path: Path, *, actor_id: str, actor_role: str, request_id: st
             raise ValueError("Ação de efeito inválida")
         db.execute("UPDATE combat_effect_clock SET version=version+1 WHERE id=1")
         result = effect_snapshot(db)
+        if protocol_result is not None:
+            result['protocol_result'] = protocol_result
         append_session_ledger_event(db, source_type="combat_effect", source_id=request_id, event_kind="state",
                                    actor_id=actor_id, actor_name="Mestre", actor_role="gm", character_id=None, title=f"Efeitos: {action}",
                                    detail={"action": action, "changes": changes, "round": result["round"]}, visibility="gm", created_at=now,

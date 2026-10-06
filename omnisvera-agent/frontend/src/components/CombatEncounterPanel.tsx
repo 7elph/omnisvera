@@ -74,7 +74,7 @@ export default function CombatEncounterPanel({ mode, tableMode, mapId, character
     <header>{mode === "player" && <span>COMBATE EM ANDAMENTO</span>}<strong>{state.encounter?.active ? state.encounter.title : "Preparar combate"}</strong><small>Rodada {state.round}</small></header>
     {state.encounter?.active && <div role="status" aria-live="polite" style={{ padding: "12px", border: "2px solid currentColor", borderRadius: "8px", marginBlock: "12px" }}>
       <strong>{myTurn ? "É o seu turno!" : masterTurn ? `Mestre, é sua vez: ${current?.name}` : `Turno: ${current?.name || "participante oculto"}`}</strong>
-      {(mode === "gm" || myTurn) && current?.target_type === "token" && tokens.filter(t => t.id === current.target_id).map(token => <MonsterAttackPanel key={`${token.id}:${state.encounter?.turn_sequence}`} token={token} characters={battleCharacters} targets={battleTokens} physical={tableMode === "physical"} done={state.encounter?.action_committed} onChange={onChange} />)}
+      {(mode === "gm" || myTurn) && current?.target_type === "token" && tokens.filter(t => t.id === current.target_id).map(token => <MonsterAttackPanel key={`${token.id}:${state.encounter?.turn_sequence}`} token={token} combat={mode === 'gm' ? state : undefined} characters={battleCharacters} targets={battleTokens} physical={tableMode === "physical"} done={state.encounter?.action_committed} onChange={onChange} />)}
       {state.encounter?.attack_limit != null && <p>Ataques restantes: {Math.max(0, state.encounter.attack_limit - (state.encounter.attacks_used || 0))}</p>}
       {(mode === "gm" || myTurn) && <button disabled={busy} onClick={() => void save("next_turn")}>Concluir e passar turno →</button>}
     </div>}

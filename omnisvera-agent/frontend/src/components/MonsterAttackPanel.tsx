@@ -1,10 +1,12 @@
 import { useRef, useState } from "react";
-import { AttackResolution, confirmCharacterAttack, newDiceRequestId, PlayableCharacterSummary, resolveMonsterAttack, WorkspaceToken } from "../api";
+import { AttackResolution, CombatEffectsState, confirmCharacterAttack, newDiceRequestId, PlayableCharacterSummary, resolveMonsterAttack, WorkspaceToken } from "../api";
 
-export default function MonsterAttackPanel({ token, characters, targets = [], physical, done = false, onChange }: { token: WorkspaceToken; characters: PlayableCharacterSummary[]; targets?: WorkspaceToken[]; physical: boolean; done?: boolean; onChange: () => Promise<void> }) {
+export default function MonsterAttackPanel({ token, characters, targets = [], physical, done = false, combat, onChange }: { token: WorkspaceToken; characters: PlayableCharacterSummary[]; targets?: WorkspaceToken[]; physical: boolean; done?: boolean; combat?: CombatEffectsState; onChange: () => Promise<void> }) {
+  const [interpose, setInterpose] = useState(false);
   const [target, setTargetValue] = useState("");
   const setTarget = (value: string) => {
     setTargetValue(value);
+    setInterpose(false);
     window.dispatchEvent(new CustomEvent('omnisvera-attack-target', { detail: { actorId: token.id, targetId: value.replace(/^token:/, '') } }));
   };
   const [die, setDie] = useState("");
@@ -13,6 +15,8 @@ export default function MonsterAttackPanel({ token, characters, targets = [], ph
   const [busy, setBusy] = useState(false);
   const lock = useRef(false);
   const retry = useRef<{ key: string; id: string } | null>(null);
+  const selectedToken = targets.find(t => `token:${t.id}` === target);
+  const guard = combat?.effects.find(e => e.protocol === 'guard' && e.ally_id === (selectedToken?.character_id || target));
   async function act(index?: number) {
     if (lock.current) return;
     lock.current = true; setBusy(true); setError("");
@@ -23,11 +27,13 @@ export default function MonsterAttackPanel({ token, characters, targets = [], ph
         await onChange();
       } else if (index !== undefined) {
         const targetToken = targets.find(t => t.id !== token.id && `token:${t.id}` === target);
-        const payload = { attack_id: String(index), target_type: targetToken ? "token" as const : "character" as const, target_id: targetToken?.id || target, roll_mode: physical ? "physical" as const : "digital" as const, ...(physical ? { d20: Number(die) } : {}) };
+        const payload = { attack_id: String(index), target_type: targetToken ? "token" as const : "character" as const, target_id: targetToken?.id || target, roll_mode: physical ? "physical" as const : "digital" as const, ...(physical ? { d20: Number(die) } : {}), ...(interpose && guard ? { guard_effect_id: guard.id } : {}) };
         const key = JSON.stringify([token.id, payload]);
         if (retry.current?.key !== key) retry.current = { key, id: newDiceRequestId("monster") };
         setResult(await resolveMonsterAttack(token.id, { ...payload, request_id: retry.current.id }));
         retry.current = null;
+        setInterpose(false);
+        await onChange();
       }
     } catch (reason) { setError(reason instanceof Error ? reason.message : "Falha no ataque"); }
     finally { lock.current = false; setBusy(false); }
@@ -36,6 +42,8 @@ export default function MonsterAttackPanel({ token, characters, targets = [], ph
     <header><span>ATAQUES</span><small title="Bônus e dano vêm da ficha; confirme o resultado para aplicar dano.">{physical ? "d20 físico" : "Rolagem automática"}</small></header>
     <label>Alvo <select value={target} onChange={e => setTarget(e.target.value)}><option value="">Escolha um alvo</option>{characters.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}{targets.filter(t => t.token_type === "monster" && t.id !== token.id).map(t => <option key={t.id} value={`token:${t.id}`}>{t.name}</option>)}</select></label>
     {physical && <label>d20 físico <input type="number" min={1} max={20} value={die} onChange={e => setDie(e.target.value)} /></label>}
+    {guard && !result?.status && <label><input type="checkbox" checked={interpose} onChange={e => setInterpose(e.target.checked)} /> Interpor Dorn · posição permite; confirmar antes de rolar</label>}
+    {result && <small>Alvo resolvido: {result.target_name} · CA {result.target_ac}</small>}
     {(token.sheet?.attacks || []).map((attack, index) => <article key={index}><div className="workspace-catalog-card-heading workspace-attack-card-heading"><strong>{attack.name}</strong></div><div className="workspace-catalog-card-summary"><small>{attack.damage || "Não configurado"}</small><b>{attack.bonus ?? "—"}</b></div><button disabled={done || busy || !target || !attack.damage || (result?.status === "pending")} onClick={() => void act(index)}>Atacar · rolar acerto e dano</button></article>)}
     {done && <p>Ação concluída. Use “Concluir e passar turno”.</p>}
     {!token.sheet?.attacks?.length && <p>Nenhum ataque configurado nesta criatura. Edite sua ficha.</p>}

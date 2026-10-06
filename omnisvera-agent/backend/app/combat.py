@@ -272,11 +272,16 @@ def resolve_attack(
     physical_d20s: list[int] | None = None,
     weapon_item_path: str | None = None,
     controlling_character_id: str | None = None,
+    guard_effect_id: str | None = None,
     rng: Rng | None = None,
     now: datetime | None = None,
 ) -> tuple[dict[str, Any], bool]:
     if requested_by_role != "gm" and requested_by_id != actor_character_id and requested_by_id != controlling_character_id:
         raise PermissionError("Você não pode atacar por este personagem")
+    if guard_effect_id and requested_by_role != 'gm':
+        raise PermissionError('Somente o Mestre pode confirmar interposição')
+    if guard_effect_id and (target.get('type'), target.get('id'), attack_count) != ('character', 'dorn7', 1):
+        raise ValueError('Interposição permite somente um ataque dirigido a Dorn')
     request_id = _validate_request_id(request_id)
     attack_id = str(attack_id or "").strip()
     attack = _attack_entry(definition, attack_id)
@@ -306,6 +311,8 @@ def resolve_attack(
         row = connection.execute("SELECT * FROM combat_attack_resolutions WHERE request_id=?", (request_id,)).fetchone()
         if row:
             record = _resolution_record(row)
+            if record['breakdown'].get('guard_effect_id') != guard_effect_id:
+                raise ValueError('request_id já utilizado para outra interposição')
             expected = (actor_character_id, requested_by_id, attack_id, target.get("type"), target.get("id"), roll_mode, str(attack.get("weapon_item_path") or ""))
             actual = tuple(record[key] for key in ("actor_character_id", "requested_by_id", "attack_id", "target_type", "target_id", "roll_mode")) + (str((record.get("breakdown") or {}).get("attack", {}).get("weapon_item_path") or ""),)
             old_strikes = record["breakdown"].get("strikes", [{"d20": record["d20"]}])
@@ -313,6 +320,9 @@ def resolve_attack(
                 raise ValueError("request_id já utilizado para outra resolução")
             return record, False
         current_snapshot = effect_snapshot(connection)
+        guard = next((e for e in current_snapshot['effects'] if e['id'] == guard_effect_id and e.get('protocol') == 'guard'), None)
+        if guard_effect_id and not guard:
+            raise ValueError('Guarda consumida ou expirada')
         require_battle_turn(connection, current_snapshot, actor_character_id, target.get('type'), target.get('id'), attack_count=attack_count, attack_limit=int(attack.get('attack_count', 1)))
         effects_version = current_snapshot["version"]
         if definition.get("effects_version", effects_version) != effects_version:
@@ -370,6 +380,8 @@ def resolve_attack(
         for item in attack.get("equipment") or []
     ]
     breakdown = {
+        "guard_effect_id": guard_effect_id,
+        "guard_ally_id": guard.get('ally_id') if guard else None,
         "attack_limit": int(attack.get("attack_count", 1)),
         "automatic_hit": automatic_hit,
         "resource_cost": resource_cost,
@@ -407,6 +419,8 @@ def resolve_attack(
         ).fetchone()
         if existing:
             record = _resolution_record(existing)
+            if record['breakdown'].get('guard_effect_id') != guard_effect_id:
+                raise ValueError('request_id já utilizado para outra interposição')
             expected = (actor_character_id, requested_by_id, attack_id, target_type, target_id, roll_mode, str(attack.get("weapon_item_path") or ""))
             actual = tuple(record[key] for key in (
                 "actor_character_id", "requested_by_id", "attack_id", "target_type", "target_id", "roll_mode"
@@ -417,6 +431,12 @@ def resolve_attack(
             return record, False
         if effect_snapshot(connection)["version"] != effects_version:
             raise ValueError("Os efeitos mudaram durante o cálculo. Tente novamente.")
+        if guard_effect_id:
+            # Consume atomically with the preview, before any attack is resolved.
+            connection.execute('UPDATE combat_effects SET active=0 WHERE id=?', (guard_effect_id,))
+            connection.execute('UPDATE combat_effect_clock SET version=version+1 WHERE id=1')
+            breakdown['effects_version'] += 1
+            breakdown['effect_ids'] = _participant_effect_state([e for e in current_snapshot['effects'] if e['id'] != guard_effect_id], actor_character_id, target_type, target_id)
         connection.execute(
             """
             INSERT INTO combat_attack_resolutions(

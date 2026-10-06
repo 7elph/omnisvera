@@ -8,6 +8,8 @@ import binascii
 import copy
 import re
 import json
+import sqlite3
+from contextlib import closing
 import threading
 import time
 import unicodedata
@@ -3059,7 +3061,8 @@ def resolve_character_attack(
             definition=definition,
             inventory=character["inventory"],
             attack_id=request.attack_id,
-            target=_combat_target(request.target_type, request.target_id),
+            target=_guard_attack_target(request, access),
+            guard_effect_id=request.guard_effect_id,
             roll_mode=request.roll_mode,
             physical_d20=request.d20,
             attack_count=request.attack_count,
@@ -3414,6 +3417,22 @@ def gm_combat_test_views(_: AccessContext = Depends(require_master)) -> dict:
     return {"enabled": enabled, "table_mode": workspace.get("table_mode"), "views": views}
 
 
+def _guard_attack_target(request: AttackResolutionCreate, access: AccessContext) -> dict:
+    target = _combat_target(request.target_type, request.target_id)
+    if not request.guard_effect_id:
+        return target
+    if access.mode != 'gm':
+        raise PermissionError('Somente o Mestre pode confirmar interposição')
+    with closing(sqlite3.connect(settings.database_path)) as db:
+        old = db.execute('SELECT breakdown_json FROM combat_attack_resolutions WHERE request_id=?', (request.request_id,)).fetchone()
+    old_data = json.loads(old[0]) if old else {}
+    guard = next((e for e in readeffects(settings.database_path)['effects'] if e['id'] == request.guard_effect_id and e.get('protocol') == 'guard'), None)
+    ally_id = old_data.get('guard_ally_id') if old_data.get('guard_effect_id') == request.guard_effect_id else guard.get('ally_id') if guard else None
+    if target['type'] != 'character' or target['id'] != ally_id:
+        raise ValueError('Este ataque não tem como alvo o aliado protegido')
+    return _combat_target('character', 'dorn7')
+
+
 @app.post("/gm/combat/tokens/{token_id}/attacks/resolve")
 def resolve_monster_attack(token_id: str, request: AttackResolutionCreate, access: AccessContext = Depends(require_any)) -> dict:
     try:
@@ -3434,16 +3453,19 @@ def resolve_monster_attack(token_id: str, request: AttackResolutionCreate, acces
         effects = readeffects(settings.database_path)
         definition = apply_definition_effects(definition, [effect for effect in effects["effects"] if effect["target_type"] == "token" and effect["target_id"] == token_id])
         definition["effects_version"] = effects["version"]
-        target = _combat_target(request.target_type, request.target_id)
+        target = _guard_attack_target(request, access)
         if target["type"] == "token" and target["id"] == token_id:
             raise ValueError("Escolha outro alvo")
         resolution, _ = resolve_attack(settings.database_path, request_id=request.request_id,
             actor_character_id=token_id, actor_name=token["name"], requested_by_id=actor_id, requested_by_role=actor_role,
             controlling_character_id=controller,
+            guard_effect_id=request.guard_effect_id,
             definition=definition, inventory=[], attack_id=request.attack_id, target=target,
             roll_mode=request.roll_mode, physical_d20=request.d20, attack_count=request.attack_count,
             physical_d20s=request.d20s)
         return resolution
+    except PermissionError as error:
+        raise HTTPException(status_code=403, detail=str(error)) from error
     except (ValueError, TypeError) as error:
         raise HTTPException(status_code=400, detail=str(error)) from error
 
@@ -3469,6 +3491,8 @@ def combat_next_turn(request: CombatEffectCommand, access: AccessContext = Depen
 def gm_combat_effects(request: CombatEffectCommand, access: AccessContext = Depends(require_master)) -> dict:
     try:
         payload = dict(request.payload)
+        if request.action == 'dorn_diagnose':
+            payload['_definition'] = _playable_character('dorn7', access)['definition']
         if request.action in {"apply", "rest"}:
             target = _combat_target(str(payload.get("target_type", "")), str(payload.get("target_id", "")))
             payload.update(target_type=target["type"], target_id=target["id"])
