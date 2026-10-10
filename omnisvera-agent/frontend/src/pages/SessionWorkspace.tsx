@@ -1,5 +1,9 @@
 import { FormEvent, PointerEvent as ReactPointerEvent, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import { LogicalGrid, GridConfiguration } from '../components/LogicalGrid';
+import { cellAt, simplePath, tokenProjection } from '../spatialGrid';
+import type { Cell, MapGrid, GridPosition, SpatialCommand } from '../spatialGrid';
+import { moveGridEntity, SpatialCommandError } from '../spatialCommands';
 import MasterAssetPanel from "./MasterAssetPanel";
 import TokenVitals from "../components/TokenVitals";
 import SummonControls from "../components/SummonControls";
@@ -95,6 +99,10 @@ import { COMPANION_ICON_CATALOG, cleanItemDisplayName, iconPathForItem } from ".
 type Props = { mode: "gm" | "player"; view?: "table" | "maps" | "memory" };
 type ItemDraft = { id: number; name: string; item_type: string; description: string; effects: string; effect_rules: ItemEffectRule[]; mechanics: ItemMechanics; usable: boolean; image_path: string };
 type DraggingToken = {
+  grid?: MapGrid;
+  position?: GridPosition;
+  combatVersion?: number;
+  combatActive?: boolean;
   id: string;
   element: HTMLButtonElement;
   pointerId: number;
@@ -481,6 +489,11 @@ export default function SessionWorkspace({ mode, view = "table" }: Props) {
   const [attackTargetById, setAttackTargetById] = useState<Record<string, string>>({});
   const [aimedAttackId, setAimedAttackId] = useState('');
   const [battleState, setBattleState] = useState<CombatEffectsState>({ round: 1, version: 0, effects: [] });
+  const [gridDestination, setGridDestination] = useState<Cell | null>(null);
+  const [gridTokenId, setGridTokenId] = useState('');
+  const [pendingGridCommand, setPendingGridCommand] = useState<{mapId:string; command:SpatialCommand} | null>(null);
+  const gridMovingRef = useRef(false);
+  const gridClickSuppressRef = useRef(false);
   const [targetLine, setTargetLine] = useState<{ actorId?: string; targetId?: string }>({});
   const battleActive = Boolean(battleState.encounter?.active && battleState.encounter?.battle_mode);
   const battleCurrent = battleState.encounter?.participants?.[battleState.encounter.turn_index ?? 0];
@@ -1421,7 +1434,36 @@ export default function SessionWorkspace({ mode, view = "table" }: Props) {
   }
 
   function canMoveToken(token: WorkspaceToken) {
+    if (workspace.map?.grid && token.token_type !== 'location') {
+      if (gridMovingRef.current || pendingGridCommand || busy) return false;
+      if (!battleState.encounter?.active) return mode === 'gm';
+      const isCurrent = token.character_id ? battleCurrent?.target_type === 'character' && battleCurrent.target_id === token.character_id : battleCurrent?.target_type === 'token' && battleCurrent.target_id === token.id;
+      return Boolean(isCurrent && battleState.encounter?.map_id === workspace.map.id && (mode === 'gm' || token.character_id === selectedId || token.sheet?.summon?.caster === selectedId));
+    }
+    if (battleState.encounter?.active && token.token_type !== 'location') return false;
     return mode === "gm" || (mode === "player" && token.character_id === selectedId);
+  }
+
+  async function confirmGridMove(mapId: string, command: SpatialCommand) {
+    if (gridMovingRef.current) return;
+    gridMovingRef.current = true;
+    setBusy(`move:${command.token_id}`);
+    try {
+      const result = await moveGridEntity(mapId, command);
+      setPendingGridCommand(null);
+      setWorkspace(current => current.map?.id !== mapId ? current : {...current,tokens:current.tokens.map(token => token.id !== command.token_id || (token.grid_position?.version || 0) > result.position.version ? token : {...token,grid_position:result.position,longitude:result.longitude,latitude:result.latitude})});
+      setBattleState(current => current.version > result.combat_version ? current : {...current,version:result.combat_version,encounter:current.encounter ? {...current.encounter,...(result.movement ? {movement:result.movement} : {})} : current.encounter});
+      await loadOverview().catch(() => setSyncError('Movimento confirmado; aguardando atualização da mesa.'));
+    } catch(reason) {
+      if (!(reason instanceof SpatialCommandError)) setPendingGridCommand({mapId,command});
+      else setPendingGridCommand(null);
+      setError(reason instanceof Error ? reason.message : 'Não foi possível confirmar o movimento.');
+    } finally {gridMovingRef.current=false;setBusy('');setGridDestination(null);}
+  }
+
+  function gridMoveCommand(token: WorkspaceToken, end: Cell, grid: MapGrid, position: GridPosition, active=Boolean(battleState.encounter?.active), combatVersion=battleState.version): SpatialCommand {
+    const start: Cell=[position.cell_x,position.cell_y];
+    return {request_id:crypto.randomUUID(),token_id:token.id,mode:active?'COMBAT_MOVE':'GM_REPOSITION',path:active?simplePath(start,end,grid.distance_rule):[start,end],expected_position_version:position.version,expected_grid_version:grid.version,expected_combat_version:combatVersion};
   }
 
   function previewTokenMove(event: ReactPointerEvent<HTMLDivElement>) {
@@ -1430,6 +1472,7 @@ export default function SessionWorkspace({ mode, view = "table" }: Props) {
     const coordinates = tokenCoordinates(event);
     if (!coordinates) return;
     dragging.latest = coordinates;
+    if (dragging.grid) {setGridDestination(cellAt(dragging.grid,coordinates.longitude,coordinates.latitude));return;}
     dragging.element.style.left = `${coordinates.longitude}%`;
     dragging.element.style.top = `${coordinates.latitude}%`;
   }
@@ -1441,6 +1484,17 @@ export default function SessionWorkspace({ mode, view = "table" }: Props) {
     if (dragging.element.hasPointerCapture?.(dragging.pointerId)) dragging.element.releasePointerCapture(dragging.pointerId);
     const coordinates = dragging.latest || tokenCoordinates(event);
     if (!coordinates) return;
+    if (dragging.grid && dragging.position) {
+      setGridDestination(null);
+      if (event.type === 'pointercancel') return;
+      const end=cellAt(dragging.grid,coordinates.longitude,coordinates.latitude);
+      if(end[0]===dragging.position.cell_x && end[1]===dragging.position.cell_y) return;
+      gridClickSuppressRef.current=true;
+      setTimeout(()=>{gridClickSuppressRef.current=false;},300);
+      const token=workspace.tokens.find(item=>item.id===dragging.id);
+      if(token) await confirmGridMove(dragging.grid.map_id,gridMoveCommand(token,end,dragging.grid,dragging.position,dragging.combatActive,dragging.combatVersion));
+      return;
+    }
     setWorkspace((current) => ({ ...current, tokens: current.tokens.map((item) => item.id === dragging.id ? { ...item, ...coordinates } : item) }));
     setBusy(`move:${dragging.id}`);
     try {
@@ -2082,16 +2136,28 @@ export default function SessionWorkspace({ mode, view = "table" }: Props) {
             <button disabled={!mapTitle.trim() || !mapFile || Boolean(busy)}>Salvar na biblioteca</button>
           </form>}
         </header>
+        {workspace.map && mode === 'gm' && <GridConfiguration key={workspace.map.id} mapId={workspace.map.id} grid={workspace.map.grid} disabled={Boolean(battleState.encounter?.active || busy)} onChange={()=>loadOverview(true)}/>}
+        {workspace.map?.grid && <div className="logical-token-controls" aria-label="Movimento por células">
+          <select aria-label="Entidade no grid" value={gridTokenId} onChange={event=>setGridTokenId(event.target.value)}><option value="">Selecionar entidade</option>{battleMapTokens.filter(token=>token.grid_position).map(token=><option value={token.id} key={token.id}>{token.name} · {token.grid_position!.cell_x}, {token.grid_position!.cell_y}</option>)}</select>
+          <button type="button" disabled={!workspace.tokens.some(token=>token.id===gridTokenId)} onClick={()=>{const token=workspace.tokens.find(item=>item.id===gridTokenId);if(token) void openTokenDetails(token);}}>Ficha da entidade</button>
+          {([['↑',0,-1],['←',-1,0],['→',1,0],['↓',0,1]] as const).map(([label,dx,dy])=>{const token=workspace.tokens.find(item=>item.id===gridTokenId);return <button key={label} type="button" aria-label={`Mover uma célula ${label}`} disabled={!token || !canMoveToken(token)} onClick={()=>{const grid=workspace.map?.grid;const position=token?.grid_position;if(grid&&position&&token) void confirmGridMove(grid.map_id,gridMoveCommand(token,[position.cell_x+dx,position.cell_y+dy],grid,position));}}>{label}</button>;})}
+          {pendingGridCommand && <button type="button" disabled={Boolean(busy)} onClick={()=>void confirmGridMove(pendingGridCommand.mapId,pendingGridCommand.command)}>Reenviar movimento pendente</button>}
+          <output>{battleState.encounter?.active ? 'Movimento do turno · ' : 'Reposicionamento do Mestre · '}{workspace.map.grid.cell_size_m} m/célula{battleState.encounter?.movement && JSON.stringify(battleState.encounter.movement.turn_key)===JSON.stringify([battleState.encounter.started_at,battleState.encounter.turn_sequence,battleCurrent?.target_type,battleCurrent?.target_id]) ? ` · ${battleState.encounter.movement.spent_m}/${battleState.encounter.movement.budget_m} m usados` : ''} · diagonal provisória</output>
+        </div>}
         <div ref={mapViewportRef} className={`workspace-map-canvas ${mode === "gm" ? "editable" : "locked"}`} onScroll={() => queueWorkspaceViewSave()} onPointerMove={previewTokenMove} onPointerUp={(event) => void finishTokenMove(event)} onPointerCancel={(event) => void finishTokenMove(event)} onPointerLeave={(event) => { if (draggingTokenRef.current && event.buttons === 0) void finishTokenMove(event); }}>
           <div ref={mapCanvasRef} className={`workspace-map-stage ${mode === "gm" && view === "maps" ? "fog-editing" : ""}`} style={{ width: `${mapZoom * 100}%`, height: `${mapZoom * 100}%` }}>
             <AttackTargetLine tokens={battleMapTokens} {...targetLine} />
             {mapImagePath ? <img src={mediaUrlFromVaultPath(mapImagePath)} alt={mapTitleShown} draggable={false} /> : <p className="workspace-map-empty">O Mestre ainda não disponibilizou mapas para os jogadores.</p>}
-            <div className="workspace-map-grid" aria-hidden="true" />
+            {workspace.map?.grid ? <LogicalGrid grid={workspace.map.grid} destination={gridDestination}/> : <div className="workspace-map-grid" aria-hidden="true" />}
             {(mode === "gm" || fogLayers.length > 0) && <div className={`workspace-map-fog ${mode === "gm" && view === "maps" ? "editor" : ""}`} style={{ gridTemplateColumns: `repeat(${fogColumns}, 1fr)`, gridTemplateRows: `repeat(${fogRows}, 1fr)` }} onPointerDown={beginFogPaint} onPointerMove={paintFog} onPointerUp={(event) => void finishFogPaint(event)} onPointerCancel={(event) => void finishFogPaint(event)} onLostPointerCapture={() => void finishFogPaint()}>
               {fogCells.map((cell) => { const density = mistDensityByCell[cell] || 0; return <div key={cell} className={`workspace-fog-cell ${fogIsRevealed(cell) ? "revealed" : "hidden"} ${density > 0 ? "mist-active" : ""}`} style={density > 0 ? { backgroundColor: `rgba(210,220,226,${Math.min(.42, density * .34)})` } : undefined} aria-hidden="true" />; })}
             </div>}
             {Object.keys(mistDensityByCell).length > 0 && <MistParticleOverlay densityByCell={mistDensityByCell} columns={fogColumns} rows={fogRows} />}
-            {battleMapTokens.map((token) => { const summary = token.token_type === "character" && token.character_id ? characterById.get(token.character_id) : undefined; const image = mediaUrlFromVaultPath(token.image_path || summary?.portrait); const hpCurrent = summary?.current_hp ?? token.current_hp; const hpMaximum = summary?.maximum_hp ?? token.maximum_hp; const conditions = summary?.conditions || token.conditions; return <button type="button" key={token.id} className={`workspace-map-token ${token.token_type} ${canMoveToken(token) ? "movable" : ""}`} style={{ left: `${token.longitude}%`, top: `${token.latitude}%`, borderColor: token.color, color: token.color }} onPointerDown={(event) => { if (canMoveToken(token)) { event.preventDefault(); event.stopPropagation(); event.currentTarget.setPointerCapture?.(event.pointerId); draggingTokenRef.current = { id: token.id, element: event.currentTarget, pointerId: event.pointerId, original: { latitude: token.latitude, longitude: token.longitude }, latest: { latitude: token.latitude, longitude: token.longitude } }; } }} onClick={() => void openTokenDetails(token)} title={`${token.name} · latitude ${token.latitude.toFixed(2)} · longitude ${token.longitude.toFixed(2)}${conditions.length ? ` · ${conditions.join(", ")}` : ""}`}>
+            {battleMapTokens.map((token) => { const summary = token.token_type === "character" && token.character_id ? characterById.get(token.character_id) : undefined; const image = mediaUrlFromVaultPath(token.image_path || summary?.portrait); const hpCurrent = summary?.current_hp ?? token.current_hp; const hpMaximum = summary?.maximum_hp ?? token.maximum_hp; const conditions = summary?.conditions || token.conditions;
+              const visual=tokenProjection(workspace.map?.grid,token.grid_position,token);
+              return <button type="button" key={token.id} data-grid-token={token.id} className={`workspace-map-token ${token.token_type} ${canMoveToken(token) ? "movable" : ""}`} style={{ left: `${visual.longitude}%`, top: `${visual.latitude}%`, borderColor: token.color, color: token.color }}
+                onPointerDown={(event) => { setGridTokenId(token.id); if (canMoveToken(token)) { event.preventDefault(); event.stopPropagation(); event.currentTarget.setPointerCapture?.(event.pointerId); draggingTokenRef.current = { id: token.id, element: event.currentTarget, pointerId: event.pointerId, original: { latitude: token.latitude, longitude: token.longitude }, latest: { latitude: token.latitude, longitude: token.longitude },grid:token.grid_position?workspace.map?.grid:undefined,position:token.grid_position,combatActive:Boolean(battleState.encounter?.active),combatVersion:battleState.version }; } }}
+                onClick={() => {if(!gridClickSuppressRef.current) void openTokenDetails(token);}} title={`${token.name}${token.grid_position ? ` · célula ${token.grid_position.cell_x}, ${token.grid_position.cell_y}` : ` · latitude ${token.latitude.toFixed(2)} · longitude ${token.longitude.toFixed(2)}`}${conditions.length ? ` · ${conditions.join(", ")}` : ""}`}>
               {image ? <img src={image} alt="" draggable={false} /> : <i>{token.sheet?.marker || token.name.slice(0, 1).toUpperCase()}</i>}{hpMaximum != null && hpMaximum > 0 ? <span className="workspace-pin-health"><span className="workspace-pin-health-track" role="progressbar" aria-label={`Vida de ${token.name}`} aria-valuenow={hpCurrent ?? 0} aria-valuemin={0} aria-valuemax={hpMaximum}><span style={{ width: `${Math.max(0, Math.min(100, Number(hpCurrent || 0) / hpMaximum * 100))}%` }} /></span><span className="workspace-pin-health-number">{hpCurrent ?? "—"}/{hpMaximum}</span></span> : <strong>{token.name}</strong>}
             </button>; })}
           </div>

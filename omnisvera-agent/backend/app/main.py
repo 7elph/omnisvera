@@ -1289,6 +1289,11 @@ def gm_move_workspace_token(
             raise HTTPException(status_code=404, detail="Marcador não encontrado.")
         if not token.get("character_id") or token.get("character_id") != access.profile_id:
             raise HTTPException(status_code=403, detail="O jogador só pode mover o próprio marcador.")
+    from .spatial_grid import reject_legacy_move
+    try:
+        reject_legacy_move(settings.database_path, token_id)
+    except ValueError as error:
+        raise HTTPException(status_code=409, detail=str(error)) from error
     token = update_workspace_token_position(
         settings.database_path,
         token_id=token_id,
@@ -3374,6 +3379,8 @@ def _combat_snapshot_for_access(snapshot: dict, access: AccessContext) -> dict:
                 if participant["target_type"] == "character" or participant["target_id"] in visible_tokens
             ]
             encounter["turn_index"] = next((index for index, participant in enumerate(encounter["participants"]) if participant == current), -1)
+            if current not in encounter['participants']:
+                encounter.pop('movement', None)
     return snapshot
 
 
@@ -5516,6 +5523,11 @@ def frontend_root():
     return {
         "message": "Frontend ainda não foi buildado. Rode npm install e npm run build em omnisvera-agent/frontend."
     }
+
+
+from .spatial_routes import register_spatial_routes
+register_spatial_routes(app, lambda: settings.database_path, require_any,
+    lambda profile_id: _playable_character(profile_id, AccessContext(mode='gm'))['definition'].get('movement'))
 
 
 @app.get("/{full_path:path}", response_model=None)

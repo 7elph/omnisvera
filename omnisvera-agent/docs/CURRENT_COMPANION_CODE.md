@@ -24,6 +24,7 @@ Publicar código não concede acesso ao Companion autenticado em execução.
 | Raziel | `backend/app/vampire_powers.py`, `backend/app/data/raziel_vampire_powers.json` |
 | Invocações | `backend/app/summons.py`, `frontend/src/components/SummonControls.tsx` |
 | Sessão, mapa e pins | `backend/app/session_workspace.py`, `frontend/src/pages/SessionWorkspace.tsx` |
+| Grid lógico e movimento | `backend/app/spatial_grid.py`, `backend/app/spatial_routes.py`, `frontend/src/spatialGrid.ts`; uso em `docs/SPATIAL_GRID_FIRST_CUT.md` |
 | Ledger e realtime | `backend/app/session_ledger.py`, `backend/app/session_realtime.py` |
 | Loot | `backend/app/loot.py` |
 | Cliente HTTP e contratos TS | `frontend/src/api.ts` |

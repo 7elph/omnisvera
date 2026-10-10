@@ -2,7 +2,8 @@ const { test } = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const css = fs.readFileSync('src/styles.css', 'utf8');
-const mobile = css.slice(css.lastIndexOf('@media (max-width: 720px) {'));
+const mobileStart = css.lastIndexOf('@media (max-width: 720px) {');
+const mobile = css.slice(mobileStart, css.indexOf('\n}', mobileStart) + 2);
 
 test('mobile map surface follows the full image instead of letterboxing a fixed-height stage', () => {
   assert.match(mobile, /workspace-map-stage:has\(> img\) \{ height: auto !important; min-height: 0/);
@@ -14,5 +15,6 @@ test('mobile map surface follows the full image instead of letterboxing a fixed-
 test('battle banner has its own row and overlays still share the image surface', () => {
   assert.match(mobile, /workspace-map-panel:has\(> \.workspace-battle-banner\) \{ min-height: 0; grid-template-rows: auto auto auto auto/);
   const source = fs.readFileSync('src/pages/SessionWorkspace.tsx', 'utf8');
-  assert.ok(source.includes('left: `${token.longitude}%`, top: `${token.latitude}%`'));
+  assert.ok(source.includes('left: `${visual.longitude}%`, top: `${visual.latitude}%`'));
+  assert.ok(source.includes('tokenProjection(workspace.map?.grid,token.grid_position,token)'));
 });

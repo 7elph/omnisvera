@@ -289,7 +289,7 @@ def effect_command(path: Path, *, actor_id: str, actor_role: str, request_id: st
                     "turn_index": turn_index,
                     "turn_sequence": int(encounter.get("turn_sequence") or 0) + (0 if action == 'initiative' else 1),
                     "action_committed": encounter.get('action_committed', False) if action == 'initiative' else False,
-                    **({key: encounter[key] for key in ('attacks_used', 'attack_limit') if key in encounter} if action == 'initiative' else {}),
+                    **({key: encounter[key] for key in ('attacks_used', 'attack_limit', 'movement') if key in encounter} if action == 'initiative' else {}),
                     "turn_started_at": now,
                     **context,
                 }

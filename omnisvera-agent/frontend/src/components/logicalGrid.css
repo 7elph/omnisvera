@@ -1,0 +1,23 @@
+.logical-map-grid { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; }
+.logical-map-grid line { stroke: rgba(219,227,241,.3); stroke-width: 1; vector-effect: non-scaling-stroke; }
+.logical-grid-destination { fill: rgba(65,174,235,.45); stroke: #9de1ff; stroke-width: 2; vector-effect: non-scaling-stroke; }
+.logical-grid-controls { margin: .5rem; font-size: .8rem; }
+.logical-grid-controls form { display: flex; flex-wrap: wrap; align-items: end; gap: .5rem; }
+.logical-grid-controls label { display: grid; gap: .2rem; }
+.logical-grid-controls input { width: 5rem; }
+.logical-token-controls { display: flex; flex-wrap: wrap; gap: .4rem; align-items: center; padding: .5rem; }
+.logical-token-controls button { min-width: 44px; min-height: 44px; }
+.logical-token-controls select { max-width: min(65vw,20rem); }
+.logical-token-controls output { flex-basis: 100%; font-size: .8rem; }
+.unified-workspace .workspace-map-panel:has(> .logical-token-controls) { display: flex; flex-direction: column; }
+.unified-workspace .workspace-map-panel:has(> .logical-token-controls) > header { height: auto !important; flex: none; flex-wrap: wrap; gap: .4rem; }
+.logical-token-controls { flex: none; }
+.unified-workspace .workspace-map-panel:has(> .logical-token-controls) > .workspace-map-canvas { flex: 1 1 auto; min-height: 240px; }
+.logical-map-grid ~ .workspace-map-token.movable { touch-action: none; }
+.unified-workspace .workspace-map-stage:has(> .logical-map-grid) { height: auto !important; min-height: 0; }
+.unified-workspace .workspace-map-stage:has(> .logical-map-grid) > img { position: relative; display: block; inset: auto; width: 100%; height: auto; }
+@media (max-width: 720px) {
+  .unified-workspace .workspace-map-panel:has(> .logical-token-controls) > .workspace-map-canvas { flex: none; min-height: 0; }
+  .unified-workspace .workspace-map-panel:has(> .logical-token-controls) > header > div:first-child { width: 100%; }
+  .unified-workspace .workspace-map-panel:has(> .logical-token-controls) .workspace-map-zoom button { min-height: 44px; min-width: 44px; }
+}

@@ -295,6 +295,8 @@ def update_workspace_token_position(
     database_path: Path, *, token_id: str, latitude: float, longitude: float
 ) -> dict[str, Any] | None:
     init_session_workspace(database_path)
+    from .spatial_grid import reject_legacy_move
+    reject_legacy_move(database_path, token_id)
     latitude = max(0.0, min(100.0, float(latitude)))
     longitude = max(0.0, min(100.0, float(longitude)))
     with closing(_connect(database_path)) as connection, connection:
@@ -986,6 +988,8 @@ def get_workspace_snapshot(
         }
     fog = get_workspace_fog(database_path, str(map_record["id"]) if map_record else "default")
     tokens = list_workspace_tokens(database_path, str(map_record["id"])) if map_record else []
+    from .spatial_grid import enrich_snapshot
+    enrich_snapshot(database_path, {'map': map_record, 'tokens': tokens})
     if not is_gm:
         # Starting battle explicitly reveals selected participants, not the map's
         # other hidden inhabitants or its fog. Manual token hiding still wins.
@@ -997,7 +1001,8 @@ def get_workspace_snapshot(
                 if battle.get('active') and battle.get('battle_mode') and battle.get('map_id') == (map_record or {}).get('id'):
                     revealed_battle_tokens = {p['target_id'] for p in battle.get('participants', []) if p['target_type'] == 'token'}
         tokens = [token for token in tokens if _token_is_visible(token, fog) or (token['id'] in revealed_battle_tokens and token['visible_to_players'])]
-    return {
+    from .spatial_grid import enrich_snapshot
+    return enrich_snapshot(database_path, {
         "table_mode": str(state_row["table_mode"] or "digital") if state_row else "digital",
         "active_map_id": active_map_id,
         "map": map_record,
@@ -1010,7 +1015,7 @@ def get_workspace_snapshot(
         "presence": presence,
         "tokens": tokens,
         "fog": fog,
-    }
+    })
 
 
 def update_workspace_table_mode(database_path: Path, table_mode: str) -> str:
