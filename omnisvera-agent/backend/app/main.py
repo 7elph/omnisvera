@@ -3686,7 +3686,7 @@ def finish_roll_request(
     return visible
 
 
-def _scene_payload(scene_id: int, access: AccessContext) -> dict | None:
+def _scene_payload(scene_id: int, access: AccessContext, *, character_cache: dict | None = None) -> dict | None:
     payload = scene_view(
         settings.database_path,
         scene_id,
@@ -3701,7 +3701,13 @@ def _scene_payload(scene_id: int, access: AccessContext) -> dict | None:
         character_id = record.get("character_id")
         if character_id:
             try:
-                record["character"] = _character_summary(_playable_character(str(character_id), access))
+                cache_key = str(character_id)
+                if character_cache is not None and cache_key in character_cache:
+                    record["character"] = character_cache[cache_key]
+                else:
+                    record["character"] = _character_summary(_playable_character(cache_key, access))
+                    if character_cache is not None:
+                        character_cache[cache_key] = record["character"]
             except (HTTPException, ValueError):
                 record["character"] = None
         npc_source = str(record.get("npc_source") or "")
@@ -4183,8 +4189,10 @@ def gm_create_scene(request: SceneCreate, access: AccessContext = Depends(requir
 @app.get("/scenes")
 def authorized_scenes(access: AccessContext = Depends(require_any)) -> list[dict]:
     result: list[dict] = []
+    # Request-local: never reuse another viewer's permissions or stale HP.
+    character_cache: dict = {}
     for scene in list_scenes(settings.database_path):
-        visible = _scene_payload(int(scene["id"]), access)
+        visible = _scene_payload(int(scene["id"]), access, character_cache=character_cache)
         if visible is not None:
             result.append(visible)
     return result

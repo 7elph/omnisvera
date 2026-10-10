@@ -11,6 +11,9 @@ from .session_workspace import _token_record
 
 
 def create_summon(path, *, caster, technique, spec, request_id, actor_id, actor_role, corpse_id=None):
+    from .character_play import attach_spell_images
+    artwork_id = 'levantar-um-esqueleto' if technique == 'levantar-esqueleto' else technique
+    artwork = attach_spell_images([{'id': artwork_id, 'kind': 'spell'}])[0].get('image_path')
     init_effects(path)
     fingerprint = json.dumps([caster, technique, corpse_id, actor_id, actor_role])
     now = datetime.now(timezone.utc)
@@ -58,7 +61,7 @@ def create_summon(path, *, caster, technique, spec, request_id, actor_id, actor_
             'treasure': '-', 'summon': {'caster': caster, 'technique': technique, 'corpse_id': corpse_id,
                 'duration': spec['duration'], 'defaults_note': spec['note']}}
         db.execute("INSERT INTO session_workspace_tokens(id,token_type,map_id,name,image_path,visible_to_players,color,latitude,longitude,current_hp,maximum_hp,conditions_json,sheet_json,created_at,updated_at) VALUES (?,'monster',?,?,?,1,'#7fb069',?,?,?,?, '[]',?,?,?)",
-            (token_id, map_id, name, corpse['image_path'] if corpse else None, latitude, longitude, spec['hp'], spec['hp'], json.dumps(sheet, ensure_ascii=False), now.isoformat(), now.isoformat()))
+            (token_id, map_id, name, corpse['image_path'] if corpse else artwork, latitude, longitude, spec['hp'], spec['hp'], json.dumps(sheet, ensure_ascii=False), now.isoformat(), now.isoformat()))
         if corpse:
             corpse_sheet['reanimated_by'] = token_id
             db.execute('UPDATE session_workspace_tokens SET sheet_json=?,updated_at=? WHERE id=?', (json.dumps(corpse_sheet), now.isoformat(), corpse_id))

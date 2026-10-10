@@ -1,10 +1,9 @@
 import { useRef, useState } from 'react';
+import DornDiagnosticControl from './DornDiagnosticControl';
 import { CombatEffectsState, newDiceRequestId, sendCombatEffectCommand } from '../api';
 
 export default function DornProtocolControls({ combat, onChange }: { combat: CombatEffectsState | null; onChange: (state: CombatEffectsState) => Promise<void> }) {
   const [ally, setAlly] = useState('');
-  const [subject, setSubject] = useState('');
-  const [difficulty, setDifficulty] = useState('12');
   const [position, setPosition] = useState(false);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState('');
@@ -41,7 +40,7 @@ export default function DornProtocolControls({ combat, onChange }: { combat: Com
       </>}
     </article>
     <article><strong>Protocolo de Vanguarda{vanguard ? ' · ATIVO' : ''}</strong><small>Exploração · até desativar ou encerrar cena</small><p>Dorn assume a frente; exposição ao perigo decidida pelo Mestre. Sem detecção ou proteção automática.</p><button disabled={disabled || (active && !vanguard)} onClick={() => void use('dorn_vanguard', { enabled: !vanguard })}>{vanguard ? 'Desativar Vanguarda' : 'Assumir Vanguarda'}</button></article>
-    <article><strong>Diagnóstico da Unidade</strong><small>Ação · teste de INT · resolução do Mestre</small><label>Mecanismo / componente<input maxLength={160} value={subject} onChange={e => setSubject(e.target.value)} /></label><label>Dificuldade (Mestre)<input type="number" min={1} max={99} value={difficulty} onChange={e => setDifficulty(e.target.value)} /></label><button disabled={disabled || !canAct || !subject.trim() || Number(difficulty) < 1 || Number(difficulty) > 99} onClick={() => void use('dorn_diagnose', { subject, difficulty: Number(difficulty) })}>Diagnosticar · rolar INT</button><small>Sem revelação automática de lore. Falha: inconclusivo.</small></article>
+    <DornDiagnosticControl combat={combat} onChange={onChange} />
     {active && !canAct && <p>Aguarde o turno de Dorn ou passe o turno já utilizado.</p>}
     {message && <p role="status">{message}</p>}
   </div>;
