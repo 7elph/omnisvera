@@ -1,0 +1,108 @@
+{
+  "schema_version": 1,
+  "canvas_width": 128,
+  "canvas_height": 168,
+  "pivot": [
+    0.5,
+    0.5
+  ],
+  "scale": 1,
+  "frames": [
+    {
+      "x": 0,
+      "y": 0,
+      "w": 128,
+      "h": 168,
+      "offset_x": 0,
+      "offset_y": 0,
+      "scale": 1
+    },
+    {
+      "x": 128,
+      "y": 0,
+      "w": 128,
+      "h": 168,
+      "offset_x": 0,
+      "offset_y": 0,
+      "scale": 1
+    },
+    {
+      "x": 256,
+      "y": 0,
+      "w": 128,
+      "h": 168,
+      "offset_x": 0,
+      "offset_y": 0,
+      "scale": 1
+    },
+    {
+      "x": 384,
+      "y": 0,
+      "w": 128,
+      "h": 168,
+      "offset_x": 0,
+      "offset_y": 0,
+      "scale": 1
+    },
+    {
+      "x": 0,
+      "y": 168,
+      "w": 128,
+      "h": 168,
+      "offset_x": 0,
+      "offset_y": 0,
+      "scale": 1
+    },
+    {
+      "x": 128,
+      "y": 168,
+      "w": 128,
+      "h": 168,
+      "offset_x": 0,
+      "offset_y": 0,
+      "scale": 1
+    },
+    {
+      "x": 256,
+      "y": 168,
+      "w": 128,
+      "h": 168,
+      "offset_x": 0,
+      "offset_y": 0,
+      "scale": 1
+    },
+    {
+      "x": 384,
+      "y": 168,
+      "w": 128,
+      "h": 168,
+      "offset_x": 0,
+      "offset_y": 0,
+      "scale": 1
+    }
+  ],
+  "animations": {
+    "idle": {
+      "frames": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "fps": 4,
+      "loop": true,
+      "direction": "down"
+    },
+    "walk_down": {
+      "frames": [
+        4,
+        5,
+        6,
+        7
+      ],
+      "fps": 7,
+      "loop": true,
+      "direction": "down"
+    }
+  }
+}

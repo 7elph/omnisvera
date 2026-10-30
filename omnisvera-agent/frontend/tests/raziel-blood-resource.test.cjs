@@ -9,10 +9,12 @@ function evaluate(fragment, context) {
   return vm.runInNewContext(code, context);
 }
 test('Raziel Habilidades precede vampire powers without changing other sheets', () => {
-  const fragment = source.slice(source.indexOf('  const basicAbilities ='), source.indexOf('  const basicAttacks ='));
-  const abilities = [{ id: 'power', kind: 'ability', group: 'Poderes vampíricos' }, { id: 'blade', kind: 'ability', group: 'Habilidades' }, { id: 'trait', kind: 'ability', group: 'Traços vampíricos' }];
-  const groups = id => evaluate(fragment + '\nObject.keys(groupedAbilities)', { abilities, definition: { id } });
-  assert.deepEqual(Array.from(groups('raziel')), ['Habilidades', 'Poderes vampíricos', 'Traços vampíricos']);
+  const fragment = source.slice(source.indexOf('  const hemomancyIds='), source.indexOf('  const basicAttacks ='));
+  const module={exports:{}};vm.runInNewContext(ts.transpileModule(fs.readFileSync('src/components/hemomancySelection.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS}}).outputText,{module,exports:module.exports});
+  const abilities = [{ id: 'regeneracao-vampirica', kind: 'ability', group: 'Poderes vampíricos' }, { id: 'caixao', kind: 'ability', group: 'Habilidades' }, { id: 'trait', kind: 'ability', group: 'Traços vampíricos' }];
+  const hemomancy={weapons:[{weapon:'arco',name:'Arco',skill:{name:'Tiro',description:''},passive:{name:'Mira',description:''}}]};
+  const groups = id => evaluate(fragment + '\nObject.keys(groupedAbilities)', { abilities, definition: { id,hemomancy },razielSheetAbilities:module.exports.razielSheetAbilities });
+  assert.deepEqual(Array.from(groups('raziel')), ['Habilidades', 'Passivas · Marca', 'Traços vampíricos']);
   assert.deepEqual(Array.from(groups('vezemir')), ['Poderes vampíricos', 'Habilidades', 'Traços vampíricos']);
 });
 test('both blood techniques reference the persisted blood pool even without uses metadata', () => {
@@ -25,9 +27,18 @@ test('both blood techniques reference the persisted blood pool even without uses
 });
 test('blood counter remains in Resources even when linked to catalog abilities', () => {
   const fragment = source.slice(source.indexOf('  const standaloneResources ='), source.indexOf('  const consumables ='));
-  const value = evaluate(fragment + '\nstandaloneResources', { state: { resources: [{ key: 'reserva_de_sangue', label: 'Reserva de Sangue', current: 5, maximum: 5 }] }, catalogResourceKeys: new Set(['reserva_de_sangue']) });
+  const value = evaluate(fragment + '\nstandaloneResources', { definition: { id: 'raziel' }, state: { resources: [{ key: 'reserva_de_sangue', label: 'Reserva de Sangue', current: 5, maximum: 5 }] }, catalogResourceKeys: new Set(['reserva_de_sangue']) });
   assert.equal(value.length, 1);
   assert.equal(value[0].maximum, 5);
   assert.ok(source.includes('resource.current}/{resource.maximum'));
   assert.ok(source.includes('canOperate && resource.key !== "reserva_de_sangue"'));
+});
+
+test('retired Dorn preparations are hidden even without ability metadata; other sheets are unchanged',()=>{
+ const fragment=source.slice(source.indexOf('  const standaloneResources ='),source.indexOf('  const consumables ='));
+ const state={resources:[{key:'dorn_levitacao',label:'Levitação · preparada'},{key:'dorn_escuridao',label:'Escuridão · preparada'},{key:'other',label:'Outro recurso'}]};
+ const list=id=>evaluate(fragment+'\nstandaloneResources',{definition:{id},state,catalogResourceKeys:new Set()});
+ assert.deepEqual(Array.from(list('dorn7'),r=>r.key),['other']);
+ assert.equal(list('morthak').length,3);
+ assert.equal(state.resources.length,3,'Only presentation changes; resources remain persisted');
 });

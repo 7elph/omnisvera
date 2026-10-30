@@ -20,12 +20,14 @@ class CharacterProgressionTests(TestCase):
     def save(self, fields):
         return update_definition_overrides(self.db, character_id="varkh", actor_id="master", fields=fields)
 
-    def test_level_and_xp_persist_and_build_without_changing_vault_or_hp(self):
-        self.save({"level": 3, "experience": 1250})
+    def test_level_without_a_base_sheet_is_rejected_not_silently_saved(self):
+        with self.assertRaisesRegex(ValueError, 'ficha-base'):
+            self.save({"level": 3, "experience": 1250})
+        self.save({"experience": 1250})
         definition = build_character_definition(profile_id="varkh",
             note={"title": "Varkh", "frontmatter": {}, "content": ""},
             sheet={"steps": []}, inventory=[], overrides=load_definition_overrides(self.db, "varkh"))
-        self.assertEqual(3, definition["level"])
+        self.assertEqual(1, definition["level"])
         self.assertEqual(1250, definition["progression"]["experience"])
         self.save({"experience": 0})
         self.assertEqual(0, load_definition_overrides(self.db, "varkh")["experience"])
@@ -33,14 +35,14 @@ class CharacterProgressionTests(TestCase):
             self.assertEqual(0, connection.execute("SELECT COUNT(*) FROM character_states").fetchone()[0])
 
     def test_invalid_or_forged_fields_do_not_partially_update(self):
-        self.save({"level": 2, "experience": 50})
+        self.save({"experience": 50})
         for fields in ({"level": 3, "experience": -1}, {"experience": 1.5}, {"experience": True},
                        {"experience": "100"}, {"level": 1.5}, {"level": True},
                        {"level": 0}, {"level": 21}, {"experience": 2147483648},
                        {"progression": {"experience": 2}}):
             with self.subTest(fields=fields), self.assertRaises(ValueError):
                 self.save(fields)
-        self.assertEqual({"level": 2, "experience": 50}, load_definition_overrides(self.db, "varkh"))
+        self.assertEqual({"experience": 50}, load_definition_overrides(self.db, "varkh"))
 
     def test_player_cannot_use_gm_progression_endpoint(self):
         settings = replace(main.settings, database_path=self.db, master_token="test-master", player_token="test-player")

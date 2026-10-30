@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from datetime import date
 from datetime import date
-from typing import Any
+from typing import Any, Literal
 
 from pydantic import BaseModel, Field, StrictInt
 
@@ -397,6 +397,10 @@ class CharacterResource(BaseModel):
 
 
 class CharacterStateResponse(BaseModel):
+    animal_form: str | None = None
+    night_form: dict[str, Any] | None = None
+    normal_current_hp: int | None = None
+    normal_maximum_hp: int | None = None
     current_hp: int | None = None
     maximum_hp: int | None = None
     temporary_hp: int = 0
@@ -415,6 +419,7 @@ class CharacterStateResponse(BaseModel):
 
 
 class CharacterDefinitionResponse(BaseModel):
+    hemomancy: dict[str, Any] | None = None
     id: str
     slug: str
     name: str
@@ -423,6 +428,8 @@ class CharacterDefinitionResponse(BaseModel):
     epithet: str | None = None
     race: str | None = None
     class_name: str | None = None
+    specialization: str | None = None
+    identity_cards: dict[str, dict[str, Any]] | None = None
     level: int | None = None
     player_name: str | None = None
     campaign: str | None = None
@@ -515,6 +522,7 @@ class PlayableCharacterSummary(BaseModel):
 
 class CharacterStateAction(BaseModel):
     action: str
+    request_id: str | None = Field(default=None, min_length=1, max_length=120)
     payload: dict[str, Any] = Field(default_factory=dict)
     reason: str | None = Field(default=None, max_length=500)
     session_id: str | None = Field(default=None, max_length=120)
@@ -602,6 +610,7 @@ class WorkspaceFogUpdate(BaseModel):
 
 
 class SessionItemEffectRule(BaseModel):
+    effect_category: str | None = Field(default=None, max_length=80)
     id: str = Field(min_length=1, max_length=80)
     trigger: str = Field(pattern="^(on_use|while_equipped)$")
     kind: str = Field(pattern="^(heal_hp|restore_resource|add_condition|temporary_hp|attribute_bonus|skill_bonus|saving_throw_bonus|armor_class_bonus|attack_bonus|damage_bonus|movement_bonus|maximum_hp_bonus|grant_ability|resistance|immunity|vulnerability)$")
@@ -615,6 +624,11 @@ class SessionItemEffectRule(BaseModel):
 
 
 class SessionItemMechanics(BaseModel):
+    damage_type: Literal['physical','slashing','piercing','bludgeoning','fire','cold','acid','lightning','poison','necrotic'] | None = None
+    magical: bool | None = None
+    material: Literal['silver','ordinary'] | None = None
+    approved_equipment_slots: list[str] | None = Field(default=None, max_length=8)
+    thrown_damage_formula: str | None = Field(default=None, max_length=32, pattern=r"^(?:\d{1,2}d\d{1,4}(?:[+-]\d{1,4})?|)$")
     equipment_slots: list[str] = Field(default_factory=list, max_length=8)
     damage_formula: str | None = Field(default=None, max_length=32, pattern=r"^(?:\d{1,2}d\d{1,4}(?:[+-]\d{1,4})?|)$")
     consume_mode: str = Field(default="none", pattern="^(none|quantity|charges)$")
@@ -689,6 +703,13 @@ class CharacterDefinitionUpdate(BaseModel):
     reason: str | None = Field(default=None, max_length=500)
 
 
+class SpecializationChoose(BaseModel):
+    model_config = {"extra": "forbid"}
+    specialization: str | None = Field(default=None, max_length=60)
+    weapon_item_path: str | None = Field(default=None, max_length=180)
+    reason: str | None = Field(default=None, max_length=500)
+
+
 class CharacterEventResponse(BaseModel):
     id: int
     character_id: str
@@ -734,6 +755,8 @@ class CharacterRollCreate(BaseModel):
 
 
 class AttackResolutionCreate(BaseModel):
+    grid_automatic: bool = False
+    blood_boost: StrictInt=Field(default=0,ge=0,le=999)
     model_config = {"extra": "forbid"}
     request_id: str = Field(min_length=8, max_length=120)
     attack_id: str = Field(min_length=1, max_length=120)
@@ -745,13 +768,24 @@ class AttackResolutionCreate(BaseModel):
     d20s: list[StrictInt] | None = Field(default=None, max_length=10)
     weapon_item_path: str | None = Field(default=None, min_length=1, max_length=280)
     guard_effect_id: str | None = Field(default=None, max_length=120)
+    range_m: float | None = Field(default=None, ge=0, le=9999)
+    range_cells: int | None = Field(default=None, ge=1, le=200)
+
+
+class NecromancerTarget(BaseModel):
+    model_config = {"extra": "forbid"}
+    type: str = Field(pattern="^(character|token)$")
+    id: str = Field(min_length=1, max_length=180)
+    distance_meters: float = Field(ge=0, le=999)
+    dv: StrictInt | None = Field(default=None, ge=1, le=99)
 
 
 class TechniqueUse(BaseModel):
     model_config = {"extra": "forbid"}
     request_id: str | None = Field(default=None, min_length=8, max_length=120)
+    definition_revision: str | None = Field(default=None, min_length=1, max_length=100)
     mode: str | None = Field(default=None, max_length=20)
-    charges: int | None = Field(default=None, ge=1, le=5)
+    charges: StrictInt | None = Field(default=None, ge=1, le=999)
     attack: str | None = Field(default=None, pattern="^(melee|ranged)$")
     target_type: str | None = Field(default=None, pattern="^(character|token)$")
     target_id: str | None = Field(default=None, min_length=1, max_length=180)
@@ -763,13 +797,18 @@ class TechniqueUse(BaseModel):
     latitude: float | None = Field(default=None, ge=0, le=100)
     longitude: float | None = Field(default=None, ge=0, le=100)
     map_id: str | None = Field(default=None, min_length=1, max_length=120)
+    use_memorized: bool | None = Field(default=None)
+    position_confirmed: bool | None = Field(default=None)
+    target_distance: float | None = Field(default=None, ge=0, le=999)
+    target_dv: int | None = Field(default=None, ge=1, le=99)
+    targets: list[NecromancerTarget] | None = Field(default=None, min_length=1, max_length=30)
 
 
 class CombatEffectCommand(BaseModel):
     model_config = {"extra": "forbid"}
     request_id: str = Field(min_length=8, max_length=120)
     expected_version: int = Field(ge=0)
-    action: str = Field(pattern="^(apply|remove|round|scene|rest|start|initiative|next_turn|end|dorn_guard|dorn_vanguard|dorn_diagnose)$")
+    action: str = Field(pattern="^(apply|remove|round|scene|rest|start|initiative|next_turn|end|monster_breath|monster_contact|parasite_remove|dorn_guard|dorn_vanguard|dorn_diagnose|dorn_spell_cast|dorn_spell_time|dorn_spell_end|dorn_levitate_move|dorn_levitate_stabilize|necro_spell_cast|necro_spell_end|necro_spell_time)$")
     payload: dict = Field(default_factory=dict)
 
 
@@ -983,6 +1022,12 @@ class ScenePublishCreate(BaseModel):
 
 class SceneOpenOnTableCreate(BaseModel):
     request_id: str = Field(min_length=8, max_length=120)
+
+
+class SceneSelectionCreate(SceneOpenOnTableCreate):
+    element_ids: list[int] = Field(default_factory=list,max_length=200)
+    token_ids: list[str] = Field(default_factory=list,max_length=200)
+    include_map: bool = False
 
 
 class SceneVoidRequest(BaseModel):
@@ -1348,3 +1393,80 @@ class LocationLinkCreate(BaseModel):
     location_id: int = Field(ge=1)
     role: str = Field(default="related", max_length=80)
     public: bool = False
+
+class MerchantCreate(BaseModel):
+    name: str = Field(min_length=1, max_length=120)
+    location: str = Field(default="", max_length=200)
+
+
+class MerchantStockCreate(BaseModel):
+    compendium_item_id: str = Field(min_length=1, max_length=120)
+    quantity: int = Field(default=1, ge=-1)
+    price_override_po: float | None = Field(default=None, ge=0)
+    notes: str = Field(default="", max_length=500)
+
+
+class MerchantHaggleRequest(BaseModel):
+    character_id: str = Field(min_length=1, max_length=80)
+    base_price_po: float = Field(gt=0)
+    roll_mode: str = Field(default="digital", pattern="^(digital|physical)$")
+    d20: int | None = Field(default=None, ge=1, le=20)
+
+
+class MerchantBuyRequest(BaseModel):
+    character_id: str = Field(min_length=1, max_length=80)
+    stock_id: str = Field(min_length=1, max_length=80)
+    quantity: int = Field(default=1, ge=1)
+    final_price_po: float = Field(ge=0)
+    expected_purse: dict[str, Any] | None = None
+
+
+class MerchantSellRequest(BaseModel):
+    character_id: str = Field(min_length=1, max_length=80)
+    item_path: str = Field(min_length=1, max_length=300)
+    quantity: int = Field(default=1, ge=1)
+    unit_price_po: float = Field(ge=0)
+    expected_purse: dict[str, Any] | None = None
+
+
+class SpellTargetRef(BaseModel):
+    type: str = Field(pattern="^(character|token)$")
+    id: str = Field(min_length=1, max_length=120)
+
+
+class SpellCastRequest(BaseModel):
+    request_id: str | None = Field(default=None, min_length=1, max_length=120, pattern=r"^[A-Za-z0-9._:-]+$")
+    caster_type: str = Field(pattern="^(character|token)$")
+    caster_id: str = Field(min_length=1, max_length=120)
+    targets: list[SpellTargetRef] = Field(min_length=1, max_length=12)
+    roll_mode: str = Field(default="digital", pattern="^(digital|physical)$")
+    d20: int | list[int] | None = None
+    damage_override: str | None = Field(default=None, max_length=40)
+    save_override: str | None = Field(default=None, pattern="^(JPD|JPC|JPS)$")
+    range_m: float | None = Field(default=None, ge=0, le=9999)
+    range_cells: int | None = Field(default=None, ge=1, le=200)
+
+
+class TokenActionExecuteRequest(BaseModel):
+    request_id: str | None = Field(default=None, min_length=1, max_length=120, pattern=r"^[A-Za-z0-9._:-]+$")
+    ability_name: str = Field(min_length=1, max_length=120)
+    targets: list[SpellTargetRef] = Field(min_length=1, max_length=12)
+    roll_mode: str = Field(default="digital", pattern="^(digital|physical)$")
+    d20: int | list[int] | None = None
+    damage_override: str | None = Field(default=None, max_length=40)
+    range_m: float | None = Field(default=None, ge=0, le=9999)
+    range_cells: int | None = Field(default=None, ge=1, le=200)
+
+
+class ActionExecuteRequest(BaseModel):
+    request_id: str | None = Field(default=None, pattern=r'^[A-Za-z0-9._:-]{1,120}$')
+    ref: str = Field(min_length=3, max_length=200)
+    targets: list[SpellTargetRef] = Field(default_factory=list, max_length=12)
+    roll_mode: str = Field(default="digital", pattern="^(digital|physical)$")
+    d20: int | list[int] | None = None
+    damage_override: str | None = Field(default=None, max_length=40)
+    save_override: str | None = Field(default=None, pattern="^(JPD|JPC|JPS)$")
+    range_m: float | None = Field(default=None, ge=0, le=9999)
+    range_cells: int | None = Field(default=None, ge=1, le=200)
+    caster_type: str | None = Field(default=None, pattern="^(character|token)$")
+    caster_id: str | None = Field(default=None, max_length=120)

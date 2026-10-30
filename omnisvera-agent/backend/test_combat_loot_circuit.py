@@ -1,4 +1,7 @@
 from unittest import TestCase
+from contextlib import closing
+import json
+import sqlite3
 import test_combat as combat_fixture
 from app.access import AccessContext
 from app.combat import confirm_attack_resolution
@@ -39,7 +42,10 @@ class CombatLootCircuitTests(TestCase):
             request_id="circuit-distribute", allocations=allocation)[1])
         self.assertFalse(distribute_loot(db, resolution_id=loot["resolution_id"],
             request_id="circuit-distribute", allocations=allocation)[1])
-        self.assertEqual(3, list_inventory(db, "vezemir")[0]["quantity"])
+        self.assertEqual([], list_inventory(db, "vezemir"))
+        with closing(sqlite3.connect(db)) as connection:
+            wallet=json.loads(connection.execute("SELECT state_json FROM character_states WHERE profile_id='vezemir'").fetchone()[0])
+        self.assertEqual(3,wallet['silver_coins'])
         ledger = list_session_ledger(db, AccessContext(mode="gm"))
         for source in ("combat_action", "loot_reveal", "loot_distribution"):
             self.assertEqual(1, len([event for event in ledger if event["source_type"] == source]))

@@ -1,5 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import Session7PreparationPanel from '../components/Session7PreparationPanel';
+import SceneLabPanel from '../components/SceneLabPanel';
+import SceneWorkshopPanel from '../components/SceneWorkshopPanel';
+import { ScenePreparationLibrary, ScenePreparationViewer } from '../components/ScenePreparationGallery';
 import {
   addSceneParticipant,
   applySceneConsequence,
@@ -23,6 +26,7 @@ import {
   NpcRecord,
   newNpcRequestId,
   openSceneOnTable,
+  openSceneSelectionOnTable,
   publishScene,
   recordNpcEncounter,
   recordRuntimeEvent,
@@ -35,6 +39,7 @@ import {
   updateScene,
   updateSceneStatus,
   WorkspaceToken,
+  WorkspaceSnapshot,
 } from "../api";
 import NewSessionForm from "../components/NewSessionForm";
 
@@ -101,6 +106,7 @@ function ParticipantCard({ participant, mode, sceneId, onRefresh }: { participan
 }
 
 export default function ScenePanel({ mode, surface = "admin", viewerMode = mode }: { mode: "gm" | "player"; surface?: "live" | "admin"; viewerMode?: "gm" | "player" }) {
+  const privateAdmin = mode === "gm" && surface === "admin";
   const [scene, setScene] = useState<GameScene | null>(null);
   const [scenes, setScenes] = useState<GameScene[]>([]);
   const [characters, setCharacters] = useState<PlayableCharacterSummary[]>([]);
@@ -132,30 +138,65 @@ export default function ScenePanel({ mode, surface = "admin", viewerMode = mode 
   const [previewPlayers, setPreviewPlayers] = useState(false);
   const [publicationDraft, setPublicationDraft] = useState({ publication_type: "opening", title: "", public_text: "", private_text: "" });
   const notificationInitializedRef = useRef(false);
+  const refreshVersion = useRef(0);
+  const selectedSceneRef = useRef<number | null>(null);
+  const [editorOpen, setEditorOpen] = useState(false);
+  const [createOpen, setCreateOpen] = useState(false);
+  const [sceneWorkspace, setSceneWorkspace] = useState<WorkspaceSnapshot | null>(null);
+  const [mapLoading, setMapLoading] = useState(false);
+  const [mapError, setMapError] = useState("");
+  const [mapReload, setMapReload] = useState(0);
+  const [visibilityDraft, setVisibilityDraft] = useState("gm");
 
   async function refresh(preferredId?: number | null) {
+    const version = ++refreshVersion.current;
     try {
       const [active, all] = await Promise.all([getActiveScene(), listScenes()]);
-      setScenes(all);
+      let nextSessions: typeof sessions | null = null;
+      let nextMaps: typeof workspaceMaps | null = null;
       if (mode === "gm") {
-        setSessions(await listGameSessions());
-        setWorkspaceMaps(await listWorkspaceMaps().catch(() => []));
-        const workspace = await getSessionWorkspace().catch(() => null);
-        setMapMonsters((workspace?.tokens || []).filter((token) => token.token_type === "monster"));
-        if (workspace?.view) setWorkspaceView(workspace.view);
+        [nextSessions, nextMaps] = await Promise.all([listGameSessions(), listWorkspaceMaps().catch(() => [])]);
       }
+      if (version !== refreshVersion.current) return;
       const wanted = surface === "live" && viewerMode === "player"
         ? active?.id ?? null
-        : preferredId ?? selectedId ?? storedSceneId() ?? active?.id ?? all[0]?.id ?? null;
-      setSelectedId(wanted);
-      if (wanted) localStorage.setItem("omnisvera_selected_scene", String(wanted));
-      setScene(wanted ? await getScene(wanted) : active);
+        : preferredId ?? selectedSceneRef.current ?? storedSceneId() ?? active?.id ?? all[0]?.id ?? null;
+      const livePlayer = surface === "live" && viewerMode === "player";
+      let next = livePlayer ? active : all.find(item => item.id === wanted) || (active?.id === wanted ? active : null);
+      if (!livePlayer && !next && preferredId) next = await getScene(preferredId);
+      if (!livePlayer && !next) next = active || all[0] || null;
+      if (version !== refreshVersion.current) return;
+      setScenes(all);
+      if (nextSessions) setSessions(nextSessions);
+      if (nextMaps) setWorkspaceMaps(nextMaps);
+      setSelectedId(next?.id ?? null);
+      selectedSceneRef.current = next?.id ?? null;
+      if (next) localStorage.setItem("omnisvera_selected_scene", String(next.id));
+      setScene(next);
+      if (mode === "gm") setMapReload(v => v + 1);
+      setError("");
       window.dispatchEvent(new CustomEvent("omnisvera-scene-updated"));
-    } catch (cause) { setError(cause instanceof Error ? cause.message : "Não foi possível carregar a cena."); }
-    finally { setLoading(false); }
+    } catch (cause) { if (version === refreshVersion.current) setError(cause instanceof Error ? cause.message : "Não foi possível carregar a cena."); }
+    finally { if (version === refreshVersion.current) setLoading(false); }
   }
 
-  useEffect(() => { void refresh(storedSceneId()); }, []);
+  useEffect(() => { void refresh(storedSceneId()); return () => { refreshVersion.current++; }; }, []);
+  useEffect(() => {
+    let cancelled = false;
+    setSceneWorkspace(null); setMapMonsters([]); setMapError("");
+    if (mode !== "gm" || !scene?.map_id) { setMapLoading(false); return; }
+    setMapLoading(true);
+    const mapId = scene.map_id;
+    void getSessionWorkspace(mapId).then(workspace => {
+      if (cancelled) return;
+      if (workspace.map?.id !== mapId) throw new Error("O mapa desta preparação não está disponível.");
+      setSceneWorkspace(workspace);
+      setMapMonsters(workspace.tokens.filter(t => t.token_type === "monster"));
+      if (workspace.view) setWorkspaceView(workspace.view);
+    }).catch(cause => { if (!cancelled) setMapError(cause instanceof Error ? cause.message : "Não foi possível carregar o mapa da preparação."); })
+      .finally(() => { if (!cancelled) setMapLoading(false); });
+    return () => { cancelled = true; };
+  }, [mode, scene?.id, scene?.map_id, mapReload]);
   useEffect(() => {
     let cancelled = false;
     void listPlayableCharacters()
@@ -180,6 +221,7 @@ export default function ScenePanel({ mode, surface = "admin", viewerMode = mode 
       private_notes: scene.private_notes || "",
       image_path: scene.image_path || "",
     });
+    setVisibilityDraft(scene.visibility === "table" ? "table" : "gm");
   }, [scene?.id, scene?.version]);
   useEffect(() => {
     let cancelled = false;
@@ -238,7 +280,7 @@ export default function ScenePanel({ mode, surface = "admin", viewerMode = mode 
   async function submitScene() {
     let createdId: number | undefined;
     await run(async () => {
-      const created = await createScene({ request_id: newSceneRequestId("scene"), ...createDraft, checklist: { ...createDraft.checklist, identity: true }, session_id: createDraft.session_id ? Number(createDraft.session_id) : undefined, visibility: "table" });
+      const created = await createScene({ request_id: newSceneRequestId("scene"), ...createDraft, checklist: { ...createDraft.checklist, identity: true }, session_id: createDraft.session_id ? Number(createDraft.session_id) : undefined, visibility: privateAdmin ? "gm" : "table" });
       createdId = created.id;
       setCreateDraft({ title: "", location_name: "", objective: "", public_description: "", private_notes: "", image_path: "", map_id: "", checklist: { ...EMPTY_CHECKLIST }, session_id: "" });
       setSelectedId(created.id);
@@ -396,9 +438,39 @@ export default function ScenePanel({ mode, surface = "admin", viewerMode = mode 
     setNotice("Sessão iniciada. Crie a cena inicial vinculada a ela e adicione o grupo.");
   }
 
-  if (!scene) return <section className="panel scene-page scene-empty"><div className="scene-empty-icon" aria-hidden="true">◌</div><h2>Nenhuma cena ativa</h2><p>{mode === "gm" ? "Crie uma cena e prepare mapa, pins e revelações antes de abri-la para a Mesa." : "O mestre ainda não iniciou uma cena."}</p>{notice && <p className="success-text" role="status">{notice}</p>}{error && <p className="warning-text" role="alert">{error}</p>}{mode === "gm" && <><NewSessionForm onCreated={sessionCreated} />{renderSceneCreateForm(true)}</>}</section>;
+  function selectPreparation(id: number) {
+    refreshVersion.current++;
+    selectedSceneRef.current = id;
+    setSelectedId(id);
+    setScene(scenes.find(item => item.id === id) || null);
+    setEditorOpen(false);
+    localStorage.setItem("omnisvera_selected_scene", String(id));
+    window.requestAnimationFrame(() => {
+      const viewer = document.getElementById("scene-preparation-viewer");
+      viewer?.scrollIntoView({ block: "start", behavior: "smooth" });
+      viewer?.focus({ preventScroll: true });
+    });
+  }
+
+  if (!scene && privateAdmin) return <section className="panel scene-page scene-admin-page">
+    <ScenePreparationLibrary scenes={scenes} maps={workspaceMaps} selectedId={null} sessions={sessions} onSelect={selectPreparation} onCreate={() => setCreateOpen(v => !v)} onRefresh={() => void refresh()} />
+    {error && <p role="alert" className="warning-text">{error}</p>}
+    {createOpen && <section className="scene-new-preparation">{renderSceneCreateForm(true)}</section>}
+    <details className="scene-new-preparation"><summary>Nova sessão</summary><NewSessionForm onCreated={sessionCreated} /></details>
+    <SceneWorkshopPanel />
+  </section>;
+
+  if (!scene) return <section className="panel scene-page scene-empty"><div className="scene-empty-icon" aria-hidden="true">◌</div><h2>Nenhuma cena ativa</h2><p>{mode === "gm" ? "Crie uma cena e prepare mapa, pins e revelações antes de abri-la para a Mesa." : "O mestre ainda não iniciou uma cena."}</p>{notice && <p className="success-text" role="status">{notice}</p>}{error && <p className="warning-text" role="alert">{error}</p>}{mode === "gm" && surface === "admin" && <SceneWorkshopPanel />}{mode === "gm" && <><NewSessionForm onCreated={sessionCreated} />{renderSceneCreateForm(true)}</>}</section>;
 
   return <section className={`panel scene-page ${surface === "live" ? "live-session-page" : "scene-admin-page"} ${touchLocked ? "touch-locked" : ""}`}>
+    {privateAdmin && <ScenePreparationLibrary scenes={scenes} maps={workspaceMaps} selectedId={scene.id} sessions={sessions} onSelect={selectPreparation} onCreate={() => setCreateOpen(v => !v)} onRefresh={() => void refresh(scene.id)} />}
+    {privateAdmin && createOpen && <section className="scene-new-preparation">{renderSceneCreateForm(true)}</section>}
+    {privateAdmin && <ScenePreparationViewer key={scene.id} scene={scene} workspace={sceneWorkspace} loading={mapLoading} error={mapError} onRetry={() => setMapReload(v => v + 1)} onPublish={async(selection,requestId)=>{await openSceneSelectionOnTable(scene.id,selection,requestId);await refresh(scene.id);setMapReload(v=>v+1);setNotice('Seleção enviada à Mesa.');}} />}
+    {privateAdmin && notice && <p className="success-text" role="status">{notice}</p>}
+    {privateAdmin && error && <p className="warning-text" role="alert">{error}</p>}
+    {privateAdmin && <SceneWorkshopPanel />}
+    {privateAdmin && <button type="button" className="scene-preparation-editor-toggle" aria-expanded={editorOpen} onClick={() => setEditorOpen(v => !v)}>{editorOpen ? "Fechar ferramentas" : "Editar preparação e ferramentas"}</button>}
+    {(!privateAdmin || editorOpen) && <div className={privateAdmin ? "scene-preparation-editor" : "scene-live-body"}>
     {surface === "live" && <div className="live-session-toolbar"><strong>Sessão em andamento</strong><button type="button" onClick={() => void document.documentElement.requestFullscreen?.()}>Modo TV</button><button type="button" onClick={() => setTouchLocked((current) => !current)}>{touchLocked ? "Desbloquear toque" : "Bloquear toque"}</button>{viewerMode === "player" && typeof Notification !== "undefined" && Notification.permission !== "granted" && <button type="button" onClick={() => void Notification.requestPermission()}>Ativar notificações</button>}</div>}
     {touchLocked && <button type="button" className="touch-unlock-button" onClick={() => setTouchLocked(false)}>Desbloquear toque</button>}
     {surface === "live" && viewerMode === "player" && notifications.slice(0, 1).map((item) => <button type="button" className="live-notification" key={item.id} onClick={() => { void markPlayerFeedRead([item.id]); void recordRuntimeEvent("notification_opened", { label: item.title, notification_id: item.id, device: window.innerWidth <= 720 ? "celular" : "desktop" }).catch(() => undefined); setNotifications((current) => current.filter((entry) => entry.id !== item.id)); }}><span>Mensagem do Mestre</span><strong>{item.title}</strong><p>{item.message}</p><small>Toque para marcar como lida</small></button>)}
@@ -409,7 +481,7 @@ export default function ScenePanel({ mode, surface = "admin", viewerMode = mode 
         <div className="campaign-now-meta">
           <button type="button" onClick={() => window.dispatchEvent(new CustomEvent("omnisvera-open-map"))}>Abrir mapa e viagens</button>
           <span>📍 {scene.location_name || "Local ainda não definido"}</span>
-          <span>👥 Grupo ainda não definido</span>
+          <span>👥 {activeParticipants.length} participantes</span>
           <button type="button" className="campaign-continue" onClick={() => window.dispatchEvent(new CustomEvent("omnisvera-open-workspace", { detail: "table" }))}>Continuar sessão</button>
         </div>
       </div>
@@ -438,6 +510,11 @@ export default function ScenePanel({ mode, surface = "admin", viewerMode = mode 
       <div className="scene-preparation-actions"><button disabled={busy || sceneLocked || checklistDone < SCENE_CHECKLIST.length} onClick={() => void run(() => openSceneOnTable(scene.id, newSceneRequestId("scene-open")), "Cena aberta na Mesa; mapa e registro publicados.", scene.id)}>Abrir cena preparada na Mesa</button></div>
       <p className="muted">Abrir na Mesa ativa o mapa e seus pins. Somente pins marcados como visíveis aparecem para os jogadores.</p>
     </section>}
+    {mode === "gm" && <section className="scene-section scene-publication-options">
+      <label>Disponibilidade da cena<select aria-label="Disponibilidade da cena" value={visibilityDraft} onChange={event => setVisibilityDraft(event.target.value)}><option value="gm">Reservada ao Mestre</option><option value="table">Disponível aos jogadores quando sair do rascunho</option></select></label>
+      <p className="muted">Rascunhos continuam ocultos. Notas privadas, pins ocultos e elementos reservados não são revelados por esta opção.</p>
+      <button disabled={busy || sceneLocked || visibilityDraft === scene.visibility} onClick={() => void run(() => updateScene(scene.id, scene.version, { visibility: visibilityDraft }), "Disponibilidade da cena atualizada.", scene.id)}>Salvar disponibilidade</button>
+    </section>}
     {mode === "gm" && <section className="scene-section scene-publication-composer">
       <header><div><small>Versão teatral</small><h3>Publicar no registro da Mesa</h3></div></header>
       <div className="scene-create-form">
@@ -458,6 +535,7 @@ export default function ScenePanel({ mode, surface = "admin", viewerMode = mode 
     <div className="scene-layout">
       <div className="scene-main-column">
         {mode === 'gm' && scene.request_id?.startsWith('session7-') && <Session7PreparationPanel scene={scene} />}
+        {mode === 'gm' && surface === 'admin' && <SceneLabPanel key={scene.id} sceneId={scene.id} />}
         <section className="scene-section"><header><div><small>Elenco em cena</small><h3>Ordem definida pelo Mestre</h3></div><b>{activeParticipants.length}</b></header><div className="scene-participant-grid">{activeParticipants.map((participant, index) => <div className={`scene-ordered-participant ${participant.public_status === "Agindo agora" ? "current" : ""}`} key={participant.id}><ParticipantCard participant={participant} mode={mode} sceneId={scene.id} onRefresh={() => refresh(scene.id)} />{mode === "gm" && <div className="scene-order-controls"><button disabled={busy || index === 0} onClick={() => void moveParticipant(index, -1)}>Subir</button><button disabled={busy || index === activeParticipants.length - 1} onClick={() => void moveParticipant(index, 1)}>Descer</button><button disabled={busy || participant.public_status === "Agindo agora"} onClick={() => void setCurrentParticipant(participant.id)}>É a vez</button></div>}</div>)}</div>{mode === "gm" && <div className="scene-inline-form"><select aria-label="Personagem participante" value={participantId} onChange={(event) => setParticipantId(event.target.value)}><option value="">Adicionar personagem...</option>{characters.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}</select><button disabled={!participantId || busy} onClick={() => { const character = characters.find((item) => item.id === participantId); if (character) void run(() => addSceneParticipant(scene.id, { participant_type: "player_character", character_id: character.id, public_label: character.name, public_status: "Presente", visible_to_players: true }), "Participante adicionado.", scene.id); }}>Adicionar</button></div>}</section>
 
         <section className="scene-section"><header><div><small>O que está em jogo</small><h3>Pistas, ameaças e caminhos</h3></div></header><div className="scene-elements">{scene.elements.length ? scene.elements.map((element) => <article key={element.id} className={`scene-element ${element.element_type}`}><span aria-hidden="true">{element.element_type === "clue" ? "⌕" : element.element_type === "threat" ? "⚠" : "◇"}</span><div><strong>{element.title}</strong><small>{statusLabel(element.status)}</small><p>{element.public_description || (mode === "gm" ? element.private_description : "")}</p></div>{mode === "gm" && element.visibility !== "table" && <button disabled={busy} onClick={() => void run(() => revealSceneElement(element.id), "Elemento revelado.", scene.id)}>Revelar</button>}</article>) : <p className="sheet-empty">Nenhum elemento revelado.</p>}</div>{mode === "gm" && <details className="scene-admin-details"><summary>Criar pista ou ameaça</summary><div className="scene-create-form"><select value={elementDraft.element_type} onChange={(event) => setElementDraft({ ...elementDraft, element_type: event.target.value })}><option value="clue">Pista</option><option value="threat">Ameaça</option><option value="objective">Objetivo</option><option value="object">Objeto</option><option value="exit">Saída</option><option value="environmental_effect">Efeito ambiental</option></select><input aria-label="Título do elemento" placeholder="Título" value={elementDraft.title} onChange={(event) => setElementDraft({ ...elementDraft, title: event.target.value })} /><textarea aria-label="Descrição pública do elemento" placeholder="Descrição pública" value={elementDraft.public_description} onChange={(event) => setElementDraft({ ...elementDraft, public_description: event.target.value })} /><textarea aria-label="Descrição privada do elemento" placeholder="Notas do Mestre" value={elementDraft.private_description} onChange={(event) => setElementDraft({ ...elementDraft, private_description: event.target.value })} /><button disabled={!elementDraft.title || busy} onClick={() => void run(() => createSceneElement(scene.id, { request_id: newSceneRequestId("element"), ...elementDraft, status: "hidden", visibility: "gm" }), "Elemento criado.", scene.id)}>Criar oculto</button></div></details>}</section>
@@ -469,5 +547,6 @@ export default function ScenePanel({ mode, surface = "admin", viewerMode = mode 
       <aside className="scene-history"><header><small>Registro persistente</small><h3>Histórico da cena</h3></header>{scene.events.length ? scene.events.map((event) => <article key={event.id} className={event.voided ? "voided" : ""}><span aria-hidden="true">{event.roll ? "⚄" : event.event_type.includes("clue") || event.event_type.includes("element") ? "⌕" : "•"}</span><div><strong>{event.title}</strong><p>{event.public_text || (mode === "gm" ? event.private_text : "")}</p>{event.roll && <em>{event.roll.dice}: {event.roll.individual_results.join(" + ")}{event.roll.modifier ? ` ${event.roll.modifier > 0 ? "+" : "−"} ${Math.abs(event.roll.modifier)}` : ""} = {event.roll.total}</em>}<small>{time(event.created_at)} · {event.visibility === "table" ? "Mesa" : "Reservado"}</small></div></article>) : <p className="sheet-empty">A cena ainda não possui eventos.</p>}</aside>
     </div>
 
+    </div>}
   </section>;
 }

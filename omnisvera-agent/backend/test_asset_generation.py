@@ -39,6 +39,11 @@ def _setup_db(db: Path):
     init_asset_generation(db)
 
 
+def _monster_gap_count() -> int:
+    from app.monster_catalog import load_monster_catalog
+    return sum(1 for monster in load_monster_catalog()["monsters"] if not monster.get("image_path"))
+
+
 class AssetGenerationTests(unittest.TestCase):
     def test_eligible_gaps_found(self):
         with TemporaryDirectory() as tmp:
@@ -54,17 +59,19 @@ class AssetGenerationTests(unittest.TestCase):
             # potions: only if files missing, they will be counted. In temp vault, they are missing, so 2
             self.assertIn("potion_hp", asset_types)
             self.assertIn("potion_mp", asset_types)
-            # Total 1+4+3+2 =10
-            self.assertEqual(len(gaps), 10)
+            # bestiary monsters without art join the queue as monster_art
+            self.assertEqual(asset_types.count("monster_art"), _monster_gap_count())
+            # Total 1+4+3+2 + monsters
+            self.assertEqual(len(gaps), 10 + _monster_gap_count())
 
     def test_missing_eligible_queued(self):
         with TemporaryDirectory() as tmp:
             db = Path(tmp) / "test.db"
             _setup_db(db)
             queued = queue_missing_assets(db)
-            self.assertEqual(len(queued), 10)
+            self.assertEqual(len(queued), 10 + _monster_gap_count())
             jobs = list_jobs(db)
-            self.assertEqual(len(jobs), 10)
+            self.assertEqual(len(jobs), 10 + _monster_gap_count())
             for job in jobs:
                 self.assertEqual(job["status"], "queued")
 
@@ -90,8 +97,8 @@ class AssetGenerationTests(unittest.TestCase):
             conn.commit()
             conn.close()
             gaps = scan_eligible_gaps(db)
-            # Now only 3 sessions + 1 scene + 3 items +2 potions =9
-            self.assertEqual(len(gaps), 9)
+            # Now only 3 sessions + 1 scene + 3 items +2 potions =9, plus monsters
+            self.assertEqual(len(gaps), 9 + _monster_gap_count())
             # Also test manual asset protection: if scene already has image, it should not be queued even if job exists
             # Queue, then try to bind
             from app.asset_generation import bind_asset_to_entity, update_job_status
@@ -129,7 +136,7 @@ class AssetGenerationTests(unittest.TestCase):
             db = Path(tmp) / "test.db"
             _setup_db(db)
             q1 = queue_missing_assets(db)
-            self.assertEqual(len(q1), 10)
+            self.assertEqual(len(q1), 10 + _monster_gap_count())
             q2 = queue_missing_assets(db)
             self.assertEqual(len(q2), 0)  # no new, deduped
             # After changing source data, should create new with different hash
@@ -152,7 +159,7 @@ class AssetGenerationTests(unittest.TestCase):
             db = Path(tmp) / "test.db"
             _setup_db(db)
             queued = queue_missing_assets(db)
-            self.assertEqual(len(queued), 10)
+            self.assertEqual(len(queued), 10 + _monster_gap_count())
 
     def test_master_ui_status(self):
         with TemporaryDirectory() as tmp:
@@ -173,7 +180,7 @@ class AssetGenerationTests(unittest.TestCase):
                         # List jobs
                         res = client.get("/gm/assets/jobs", headers={"X-Omnisvera-Token": "test-gm"})
                         self.assertEqual(200, res.status_code)
-                        self.assertEqual(10, len(res.json()))
+                        self.assertEqual(10 + _monster_gap_count(), len(res.json()))
                         # Scan
                         res2 = client.post("/gm/assets/scan", headers={"X-Omnisvera-Token": "test-gm"})
                         self.assertEqual(200, res2.status_code)

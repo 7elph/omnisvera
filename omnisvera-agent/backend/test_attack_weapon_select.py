@@ -60,9 +60,16 @@ class AttackWeaponSelectTests(unittest.TestCase):
                          [i["item_path"] for i in available_attack_weapons([potion], "melee")])
 
     def test_throwing_relic_available_ranged(self):
-        inv = [_weapon("Items/Adagas de Espectro Fantasma.md", "Adagas", "Corpo a corpo", "1d4")]
+        inv = [_weapon("Items/Adagas de Espectro Fantasma.md", "Adagas", "À distância", "1d4")]
         self.assertEqual(["Items/Adagas de Espectro Fantasma.md"],
                          [i["item_path"] for i in available_attack_weapons(inv, "ranged")])
+
+    def test_equipped_spectral_daggers_have_both_approved_modes_without_reequipping(self):
+        from app.player_inventory import normalize_inventory_item_mechanics
+        item=normalize_inventory_item_mechanics(_weapon('Items/Adagas de Espectro Fantasma.md','Adagas de Espectro Fantasma','À distância','1d4'))
+        for slot in ('melee','ranged'):
+            self.assertEqual([item['item_path']],[i['item_path'] for i in available_attack_weapons([item],slot)])
+        self.assertEqual([],available_attack_weapons([{**item,'equipped':False}],'melee'))
 
     def test_explicit_weapon_overrides_damage(self):
         inv = [_weapon("Items/Grisalma.md", "Grisalma", "Corpo a corpo", "2d6"),

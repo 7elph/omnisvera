@@ -1,0 +1,105 @@
+{
+  "generated_on": "2026-10-26",
+  "entries": [
+    {
+      "npc_id": 5,
+      "name": "Tessa Viga-Clara",
+      "generated_file": "exec-327a2813-a268-4b29-8924-c7703c24ccef.png",
+      "path": "companion-assets/npcs/tessa-20261026.png",
+      "provider": "OpenAI imagegen",
+      "prompt": "Original square tabletop RPG NPC portrait. Tessa Viga-Clara is a female dwarf construction worker in a medieval fantasy city. Show a sturdy adult dwarf woman, practical work clothes, leather work apron, a tool pouch and modest hammer, calm determined face, short stature communicated through proportions. She cares about saving people and their tools. This is an illustrative portrait, not a canonical likeness. Warm workshop lamplight, grounded painterly dark fantasy, detailed face and hands, readable bust silhouette, simple muted background. No text, no logos, no captions, no modern objects.",
+      "appearance": "illustrative_not_canonical",
+      "original_preserved": true
+    },
+    {
+      "npc_id": 6,
+      "name": "Orda Sel",
+      "generated_file": "exec-63803610-9dc8-4531-a7d6-ecc4b61890d6.png",
+      "path": "companion-assets/npcs/orda-20261026.png",
+      "provider": "OpenAI imagegen",
+      "prompt": "Original square tabletop RPG NPC portrait. Orda Sel is a female dwarf merchant in a medieval fantasy city. Show an adult dwarf woman with practical trade clothes, a ledger held naturally and a small scale in the background. Confident pragmatic expression. She keeps deliveries and wages in order. This is an illustrative portrait, not a canonical likeness. Warm shop lamplight, grounded painterly dark fantasy, detailed face and hands, readable bust silhouette, simple muted background. No text, no logos, no captions, no modern objects.",
+      "appearance": "illustrative_not_canonical",
+      "original_preserved": true
+    },
+    {
+      "npc_id": 7,
+      "name": "Brunna Calha",
+      "generated_file": "exec-edb02905-756e-4483-bd9a-43ae9ba18474.png",
+      "path": "companion-assets/npcs/brunna-20261026.png",
+      "provider": "OpenAI imagegen",
+      "prompt": "Original square NPC portrait for a medieval fantasy tabletop campaign. Grounded painterly dark fantasy, readable waist-up silhouette, detailed face and natural hands, subdued background, no writing, captions, insignia, logos or modern objects. Illustrative appearance only, not an assertion of canonical physical details. Brunna Calha is a female dwarf captain and veteran responsible for city patrols. Distinct mature face, weathered brown skin, dark gray hair in a short braid, worn steel mail and a plain navy cloak, alert composed expression. Cool city-gate light. Do not resemble a red-haired dwarf merchant or worker.",
+      "appearance": "illustrative_not_canonical",
+      "original_preserved": true
+    },
+    {
+      "npc_id": 8,
+      "name": "Edda Ruun",
+      "generated_file": "exec-b953e381-620e-489c-a19b-19088d9f2da0.png",
+      "path": "companion-assets/npcs/edda-20261026.png",
+      "provider": "OpenAI imagegen",
+      "prompt": "Original square NPC portrait for a medieval fantasy tabletop campaign. Grounded painterly dark fantasy, readable waist-up silhouette, detailed face and natural hands, subdued background, no writing, captions, insignia, logos or modern objects. Illustrative appearance only, not an assertion of canonical physical details. Edda Ruun is a female dwarf civil delegate who carefully separates eyewitness facts from rumors and inference. Older face, silver hair in a braided bun, simple indigo civic robes, spectacles, a rolled blank document. Calm thoughtful expression. Muted municipal stone interior. No armor or weapons.",
+      "appearance": "illustrative_not_canonical",
+      "original_preserved": true
+    },
+    {
+      "npc_id": 9,
+      "name": "Dagna Fio",
+      "generated_file": "exec-265a591d-5a2e-4674-9b96-edb15120b59b.png",
+      "path": "companion-assets/npcs/dagna-20261026.png",
+      "provider": "OpenAI imagegen",
+      "prompt": "Original square medieval fantasy NPC portrait, grounded painterly realism, readable waist-up silhouette, detailed natural hands and face, restrained background, no text, letters, captions, logos or modern objects. Illustrative appearance, not canonical physical details. Dagna Fio is a female dwarf scholar and artificer who examines materials with consent. Dark braided hair, bronze skin, curious face, leather apron over plum scholarly clothes, tiny brass lenses perched on her forehead, carefully holding a harmless mineral sample in tongs. Warm quiet workbench, no magical combat scene.",
+      "appearance": "illustrative_not_canonical",
+      "original_preserved": true
+    },
+    {
+      "npc_id": 10,
+      "name": "Ivo",
+      "generated_file": "exec-8d932d4f-141b-4df9-955a-8fde31be4e4a.png",
+      "path": "companion-assets/npcs/ivo-20261026.png",
+      "provider": "OpenAI imagegen",
+      "prompt": "Original square medieval fantasy NPC portrait, grounded painterly realism, readable waist-up silhouette, detailed natural hands and face, restrained background, no text, letters, captions, logos or modern objects. Illustrative appearance, not canonical physical details. Ivo is a human male novice adventurer, a young adult escorting trade cargo and hoping to earn a good recommendation. Olive skin, short curly dark hair, clean-shaven friendly nervous face, simple brown leather armor, travel cloak and plain spear resting safely at his side. Modest city dock in soft daylight, practical inexpensive equipment, no noble decorations.",
+      "appearance": "illustrative_not_canonical",
+      "original_preserved": true
+    },
+    {
+      "npc_id": 11,
+      "name": "Neri",
+      "generated_file": "exec-821901df-bd3b-493a-a99a-f3976acb8dc4.png",
+      "path": "companion-assets/npcs/neri-20261026.png",
+      "provider": "OpenAI imagegen",
+      "prompt": "Original square medieval fantasy NPC portrait. Grounded painterly realism, detailed face and natural hands, readable waist-up composition, restrained background, no writing, captions, logos or modern objects. Illustrative appearance only, not canonical physical details. Neri is a human female novice adventurer, partner of Ivo in escorting trade cargo. Young adult with deep brown skin, short tightly curled black hair, cheerful observant expression, practical green travel cloak over modest worn leather armor, simple bow and quiver carried safely. Daylit medieval dock, modest affordable equipment, no noble decorations.",
+      "appearance": "illustrative_not_canonical",
+      "original_preserved": true
+    },
+    {
+      "npc_id": 12,
+      "name": "Seris Tal",
+      "generated_file": "exec-9e39eec7-0c4b-43d0-81ed-bcf88a894edd.png",
+      "path": "companion-assets/npcs/seris-20261026.png",
+      "provider": "OpenAI imagegen",
+      "prompt": "Original square medieval fantasy NPC portrait. Grounded painterly realism, detailed face and natural hands, readable waist-up composition, restrained background, no writing, captions, logos or modern objects. Illustrative appearance only, not canonical physical details. Seris Tal is a female elf and expert veteran adventurer who works with cisterns and contracts. Clearly pointed ears, tall slender proportions, pale olive complexion, straight black hair tied back, focused mature expression, well maintained dark green travel clothes and light mail, carrying a blank rolled plan. Cool damp stone cistern arches in background, subtle elegant equipment, no text or glowing magic.",
+      "appearance": "illustrative_not_canonical",
+      "original_preserved": true
+    },
+    {
+      "npc_id": 13,
+      "name": "Maera Voss",
+      "generated_file": "exec-9b62999a-7c7d-4c0d-899b-54ff2f372991.png",
+      "path": "companion-assets/npcs/maera-20261026.png",
+      "provider": "OpenAI imagegen",
+      "prompt": "Original square medieval fantasy NPC portrait, grounded painterly dark fantasy, detailed face and natural anatomy, readable waist-up silhouette, subdued background. No writing, captions, logos or modern objects. Illustrative appearance only, not canonical physical details. Maera Voss is a female anthropomorphic OWL adventurer, an experienced research escort in unstable underground galleries. She has a real owl-like feathered head, short curved beak, large thoughtful amber eyes, soft gray and brown feathers, humanoid shoulders in practical dark leather travel armor and a hood resting behind her head. Hold an unlit old lantern naturally. No human face, no elf ears, no deer horns. Misty ancient stone gallery, composed vigilant expression.",
+      "appearance": "illustrative_not_canonical",
+      "original_preserved": true
+    },
+    {
+      "npc_id": 14,
+      "name": "Liora Tamel",
+      "generated_file": "exec-9c4ac174-4cdf-44b9-9e38-4c97be31726f.png",
+      "path": "companion-assets/npcs/liora-20261026.png",
+      "provider": "OpenAI imagegen",
+      "prompt": "Original square medieval fantasy NPC portrait, grounded painterly dark fantasy, detailed face and natural anatomy, readable waist-up silhouette, subdued background. No writing, captions, logos or modern objects. Illustrative appearance only, not canonical physical details. Liora Tamel is a female anthropomorphic DEER scrivener in the medieval city Nimalia. A gentle real deer-like face with a long muzzle, large deer ears and soft brown fur, humanoid shoulders in dignified plain teal civic clothing. No antlers. She holds a closed leather ledger and an undecorated quill. Intelligent careful demeanor, quiet archival shelves and stone window. No human face, no owl feathers, no armor or weapons, no readable marks on the ledger.",
+      "appearance": "illustrative_not_canonical",
+      "original_preserved": true
+    }
+  ]
+}

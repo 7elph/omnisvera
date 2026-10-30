@@ -1,10 +1,9 @@
 import { useRef, useState } from 'react';
-import DornDiagnosticControl from './DornDiagnosticControl';
-import { CombatEffectsState, newDiceRequestId, sendCombatEffectCommand } from '../api';
+import { CombatEffectsState, newDiceRequestId, sendCombatEffectCommand, mediaUrlFromVaultPath, type WorkspaceToken } from '../api';
+import SheetDetail from './SheetDetail';
+import SpellCard from './SpellCard';
 
-export default function DornProtocolControls({ combat, onChange }: { combat: CombatEffectsState | null; onChange: (state: CombatEffectsState) => Promise<void> }) {
-  const [ally, setAlly] = useState('');
-  const [position, setPosition] = useState(false);
+export default function DornProtocolControls({ combat, onChange, gridded = false,remaining=1 }: { combat: CombatEffectsState | null; onChange: (state: CombatEffectsState) => Promise<void>; tokens?: WorkspaceToken[]; gridded?: boolean;remaining?:number }) {
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState('');
   const lock = useRef(false);
@@ -23,24 +22,20 @@ export default function DornProtocolControls({ combat, onChange }: { combat: Com
       if (retry.current?.key !== key) retry.current = { key, id: newDiceRequestId('dorn') };
       const state = await sendCombatEffectCommand({ request_id: retry.current.id, expected_version: combat.version, action, payload });
       retry.current = null;
-      const result = state.protocol_result;
-      setMessage(result?.total != null ? `INT: ${result.total} / dificuldade ${result.difficulty} · ${result.outcome === 'success' ? 'Sucesso — Mestre define a informação objetiva.' : 'Diagnóstico inconclusivo.'}` : 'Protocolo atualizado.');
       await onChange(state);
     } catch (error) { setMessage(error instanceof Error ? error.message : 'Falha no protocolo'); }
     finally { lock.current = false; setBusy(false); }
   }
   const disabled = busy || !combat;
   return <div className="dorn-protocol-controls">
-    <article><strong>Protocolo de Guarda{guard ? ' · ATIVO' : ''}</strong><small>Ação · até o início do próximo turno de Dorn</small>
-      <p>Uma interposição, antes da rolagem. Dorn recebe o ataque sem bônus.</p>
-      {guard ? <small>Aliado: {encounter?.participants?.find(p => p.target_id === guard.ally_id)?.name || guard.ally_id}. No ataque do inimigo, confirme “Interpor Dorn” antes de rolar.</small> : <>
-        <label>Aliado<select value={ally} onChange={e => setAlly(e.target.value)}><option value="">Escolher aliado</option>{encounter?.participants?.filter(p => p.target_type === 'character' && p.target_id !== 'dorn7').map(p => <option key={p.target_id} value={p.target_id}>{p.name}</option>)}</select></label>
-        <label><input type="checkbox" checked={position} onChange={e => setPosition(e.target.checked)} /> Posição permite interposição</label>
-        <button disabled={disabled || !active || !canAct || !ally || !position} onClick={() => void use('dorn_guard', { ally_id: ally, position_confirmed: position })}>Ativar Guarda · gastar ação</button>
+    <SpellCard heading={<SheetDetail title="Protocolo de Guarda" icon={mediaUrlFromVaultPath('zz_media/ui/icons/uploads/protocolo_guarda_e51a549b42.jpg')} description="Protege todos os aliados a até 9 m até o próximo turno de Dorn. Os ataques são redirecionados para Dorn e ele recebe metade do dano. Recarga 5–6 em 1d6 no início do turno.">{`Protocolo de Guarda${guard ? ' · ATIVO' : ''}`}</SheetDetail>} summary={<b>{remaining}/1</b>}>
+      {!guard && <>
+        <div className="workspace-target-actions workspace-guard-actions">
+        <button data-card-command disabled={disabled || !active || !canAct || !gridded || remaining<1} onClick={() => void use('dorn_guard',{})}>Usar</button>
+        </div>
       </>}
-    </article>
-    <article><strong>Protocolo de Vanguarda{vanguard ? ' · ATIVO' : ''}</strong><small>Exploração · até desativar ou encerrar cena</small><p>Dorn assume a frente; exposição ao perigo decidida pelo Mestre. Sem detecção ou proteção automática.</p><button disabled={disabled || (active && !vanguard)} onClick={() => void use('dorn_vanguard', { enabled: !vanguard })}>{vanguard ? 'Desativar Vanguarda' : 'Assumir Vanguarda'}</button></article>
-    <DornDiagnosticControl combat={combat} onChange={onChange} />
+    </SpellCard>
+    <SpellCard heading={<SheetDetail title="Protocolo de Vanguarda" icon={mediaUrlFromVaultPath('zz_media/ui/icons/uploads/protocolo_vanguarda_2c8a61c1c8.jpg')} description="Dorn assume a frente da formação até desativar ou encerrar a cena.">{`Protocolo de Vanguarda${vanguard ? ' · ATIVO' : ''}`}</SheetDetail>} summary={null}><button disabled={disabled || (active && !vanguard)} onClick={() => void use('dorn_vanguard', { enabled: !vanguard })}>{vanguard ? 'Desativar Vanguarda' : 'Assumir Vanguarda'}</button></SpellCard>
     {active && !canAct && <p>Aguarde o turno de Dorn ou passe o turno já utilizado.</p>}
     {message && <p role="status">{message}</p>}
   </div>;

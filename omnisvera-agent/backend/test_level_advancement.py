@@ -180,8 +180,10 @@ class LevelAdvancementTests(TestCase):
         self.assertEqual(3, len(overrides['advancement_history']))
         first = overrides['advancement_history'][0]
         self.assertFalse(apply(self.db, self.character, first['fingerprint'], 2, 2))
-        blocked = preview(self.db, self.character, 2, 5)
-        self.assertEqual('blocked', blocked['status'])
+        plan5 = preview(self.db, self.character, 2, 5)
+        self.assertEqual('ready', plan5['status'])
+        self.assertTrue(plan5['requires_hp_roll'])
+        self.assertEqual(10, plan5['hit_die'])
 
     def _manual_bump(self, profile_id, before, after):
         from app.character_play import _write_event
@@ -247,14 +249,14 @@ class LevelAdvancementTests(TestCase):
         plan = preview(self.db, self.character, 3)
         self.assertEqual("preserve_wounds", plan["hp_policy"])
 
-    def test_skipped_level_and_unreviewed_raziel_choices_do_not_grant(self):
+    def test_beyond_table_levels_stay_blocked_for_review(self):
         with self.assertRaises(ValueError):
             preview(self.db, self.character, 2, 3)
         self.character['definition'].update(id='raziel', class_name='Hemomante', level=2)
         with closing(_connect(self.db)) as connection, connection:
             connection.execute("UPDATE character_states SET profile_id='raziel'")
             connection.execute("UPDATE character_definition_overrides SET profile_id='raziel'")
-        blocked = preview(self.db, self.character, 2, 3)
+        blocked = preview(self.db, self.character, 2, 16)
         self.assertEqual('blocked', blocked['status'])
         self.assertIsNone(blocked['fingerprint'])
         self.assertTrue(any('Mestre' in b for b in blocked['blockers']))

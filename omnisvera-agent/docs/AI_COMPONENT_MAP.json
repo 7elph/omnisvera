@@ -1,0 +1,130 @@
+{
+  "schema_version": 1,
+  "kind": "code_component_index",
+  "campaign_data": false,
+  "scope": "omnisvera-agent",
+  "approval_policy": "Proposals stay private; applying to live state requires explicit Master authorization. Player decisions are never generated as facts.",
+  "components": [
+    {
+      "id": "character_sheet",
+      "backend": ["backend/app/character_play.py", "backend/app/character_creation.py", "backend/app/level_advancement.py"],
+      "frontend": ["frontend/src/pages/SessionWorkspace.tsx", "frontend/src/components/CharacterActionReference.tsx", "frontend/src/components/CharacterLevel.tsx"],
+      "storage": ["character_sheets", "character_states", "character_definition_overrides", "character_notes", "player_inventory"],
+      "routes": [{"method":"GET","path":"/characters/{profile_id}"},{"method":"POST","path":"/characters/{profile_id}/actions"}],
+      "contracts": ["PlayableCharacterResponse", "CharacterStateAction"],
+      "scope_rule": "Owner controls own sheet; Master has administrative tools. Missing damage is an unavailable mode, never invented damage.",
+      "extension": "Discover real attacks, abilities, counters and inventory before producing a test case. Use level-derived stats and pending-roll state."
+    },
+    {
+      "id": "attack_resolution",
+      "backend": ["backend/app/combat.py", "backend/app/dice_rolls.py", "backend/app/battle_mode.py"],
+      "frontend": ["frontend/src/components/TargetSelect.tsx", "frontend/src/pages/SessionWorkspace.tsx", "frontend/src/components/PendingAttacks.tsx"],
+      "storage": ["combat_attack_resolutions"],
+      "routes": [{"method":"POST","path":"/characters/{profile_id}/attacks/resolve"},{"method":"POST","path":"/characters/{profile_id}/techniques/{technique_id}"},{"method":"POST","path":"/combat/attacks/{resolution_id}/confirm"}],
+      "contracts": ["AttackResolutionCreate", "TechniqueUse"],
+      "scope_rule": "Preview is not damage application. Confirm once; recover receipts after network failures. Do not grant extra attacks.",
+      "extension": "Reuse preview/confirm for new attacks and generated tests; do not implement damage in React."
+    },
+    {
+      "id": "effects_and_turns",
+      "backend": ["backend/app/combat_effects.py", "backend/app/battle_mode.py", "backend/app/combat_consumables.py"],
+      "frontend": ["frontend/src/components/CombatEncounterPanel.tsx", "frontend/src/components/ActiveEffectIcons.tsx", "frontend/src/components/combatActionAvailability.ts"],
+      "storage": ["combat_effect_clock", "combat_effects", "combat_effect_commands"],
+      "routes": [{"method":"GET","path":"/combat/effects"},{"method":"POST","path":"/gm/combat/effects"},{"method":"POST","path":"/combat/next-turn"}],
+      "contracts": ["CombatEffectCommand"],
+      "scope_rule": "Main action, consumable slot and movement are distinct. Exploration turns are not combat rounds.",
+      "extension": "Test consumption, duration, expiry, source stacking, zero HP and retries through native transactions."
+    },
+    {
+      "id": "spell_and_ability_catalogue",
+      "backend": ["backend/app/data/session_abilities.json", "backend/app/data/dorn7_mage3.json", "backend/app/necromancer_spells.py", "backend/app/dorn_spells.py", "backend/app/approved_resource_limits.py"],
+      "frontend": ["frontend/src/components/SpellCard.tsx", "frontend/src/components/NecromancerSpellControls.tsx", "frontend/src/components/DornSpellControls.tsx", "frontend/src/actionReference.ts"],
+      "storage": ["character_definition_overrides", "character_states"],
+      "routes": [{"method":"GET","path":"/characters/{profile_id}"},{"method":"POST","path":"/characters/{profile_id}/techniques/{technique_id}"}],
+      "contracts": ["TechniqueUse"],
+      "scope_rule": "structured is not proof of automation. Separate approved, assisted, unavailable and blocked rules.",
+      "extension": "Existing PDF catalog has a first reviewed source batch through catalog_provenance.py. Source verification is not campaign approval or native execution. Extend in small attributed batches, never infer damage from the first dice in prose."
+    },
+    {
+      "id": "items_and_loot",
+      "backend": ["backend/app/player_inventory.py", "backend/app/dice_rolls.py", "backend/app/loot.py", "backend/app/session_workspace.py"],
+      "frontend": ["frontend/src/pages/SessionWorkspace.tsx", "frontend/src/components/SpellCard.tsx"],
+      "storage": ["session_custom_items", "player_inventory", "loot_resolutions"],
+      "routes": [{"method":"GET","path":"/gm/workspace/items"},{"method":"POST","path":"/gm/workspace/items"},{"method":"POST","path":"/gm/workspace/loot/resolve"}],
+      "contracts": ["SessionItemWrite", "SessionItemMechanics", "SessionItemEffectRule"],
+      "scope_rule": "Creating a catalogue item is not granting it. Hidden loot is private until revealed. Consumables are finite.",
+      "extension": "Use existing effects, equipment slots, charges and inventory rules; distinguish item versus ability and consumable versus reusable tool."
+    },
+    {
+      "id": "summons",
+      "backend": ["backend/app/summons.py", "backend/app/session6_rewards.py"],
+      "frontend": ["frontend/src/components/SummonControls.tsx", "frontend/src/components/SkeletonReward.tsx", "frontend/src/components/MonsterAttackPanel.tsx"],
+      "storage": ["session_workspace_tokens", "character_states", "combat_attack_resolutions"],
+      "routes": [{"method":"POST","path":"/characters/{profile_id}/techniques/{technique_id}"},{"method":"POST","path":"/gm/combat/tokens/{token_id}/attacks/resolve"}],
+      "contracts": ["TechniqueUse", "WorkspaceTokenCreate"],
+      "scope_rule": "Summon uses native token, owner and turn state. Do not clone the player sheet or create duplicate active summons on retry.",
+      "extension": "Generate tests for summon limits, resource cost, pin sheet, ownership, turn insertion, duration and dismissal."
+    },
+    {
+      "id": "npc_and_monster_library",
+      "backend": ["backend/app/npc_memory.py", "backend/app/monster_catalog.py", "backend/app/data/old_dragon_srd_monsters.json", "backend/app/session_workspace.py"],
+      "frontend": ["frontend/src/pages/NpcDirectory.tsx", "frontend/src/components/MasterNpcLibrary.tsx", "frontend/src/components/CompanionAllySheet.tsx", "frontend/src/components/MonsterAttackPanel.tsx"],
+      "storage": ["npc_definitions", "npc_states", "npc_memories", "npc_relationships", "session_workspace_tokens"],
+      "routes": [{"method":"GET","path":"/npcs"},{"method":"POST","path":"/gm/npcs"},{"method":"GET","path":"/gm/workspace/monster-catalog"},{"method":"GET","path":"/gm/workspace/npc-tokens"}],
+      "contracts": ["NpcCreate", "WorkspaceTokenCreate"],
+      "scope_rule": "NPC knowledge, rumors and secrets have confidence/visibility. Catalogue monster is not spawned token. Dorn stays GM controlled.",
+      "extension": "Detailed NPC combat sheet should complement native NPC memory and token sheet, not create a third NPC database."
+    },
+    {
+      "id": "maps_grid_and_poi",
+      "backend": ["backend/app/session_workspace.py", "backend/app/spatial_grid.py", "backend/app/spatial_routes.py"],
+      "frontend": ["frontend/src/components/WorkspaceMapLibrary.tsx", "frontend/src/components/LogicalGrid.tsx", "frontend/src/components/LocationQuickPin.tsx", "frontend/src/spatialGrid.ts"],
+      "storage": ["session_workspace_maps", "session_workspace_tokens", "session_workspace_map_grids", "session_workspace_entity_positions", "session_workspace_map_fog"],
+      "routes": [{"method":"GET","path":"/workspace/maps"},{"method":"PATCH","path":"/gm/workspace/maps/active"},{"method":"POST","path":"/workspace/maps/{map_id}/grid"},{"method":"POST","path":"/workspace/maps/{map_id}/move"}],
+      "contracts": ["WorkspaceTokenCreate", "GridCommand", "MoveCommand"],
+      "scope_rule": "Background is visual; cell position is authoritative. GM reposition is not combat move. Map library remains in Maps, not central sheet.",
+      "extension": "Use location pins and scene elements for future points of interest. Walls/LOS require separate verified cut; do not infer them from pixels."
+    },
+    {
+      "id": "sessions_scenes_and_proposals",
+      "backend": ["backend/app/scene_play.py", "backend/app/session7_content.py", "backend/app/contract_play.py"],
+      "frontend": ["frontend/src/pages/ScenePanel.tsx", "frontend/src/pages/CampaignMemoryPage.tsx", "frontend/src/components/Session7PreparationPanel.tsx"],
+      "storage": ["game_sessions", "scenes", "scene_participants", "scene_elements", "scene_actions", "scene_events", "contracts"],
+      "routes": [{"method":"GET","path":"/sessions"},{"method":"POST","path":"/gm/scenes"},{"method":"PATCH","path":"/gm/scenes/{scene_id}"},{"method":"POST","path":"/gm/scenes/{scene_id}/publish"},{"method":"POST","path":"/gm/scenes/{scene_id}/open-on-table"}],
+      "contracts": ["SceneCreate", "SceneUpdate"],
+      "scope_rule": "Proposed sandbox must start as draft AND visibility=gm (default is table). Publishing/opening is a separate human-approved action.",
+      "extension": "Reuse narrative, gm_analysis and source_refs for future alternatives and evidence. Do not predict player choices as facts or replace live scene history."
+    },
+    {
+      "id": "ledger_realtime_and_rehearsal",
+      "backend": ["backend/app/session_ledger.py", "backend/app/session_realtime.py", "backend/scripts/cf01_probe.py", "backend/scripts/all_actions_simulation.py", "backend/scripts/run_sheet_test.py", "backend/scripts/sheet_rehearsal.py", "backend/scripts/agent_test_jobs.py", "backend/scripts/companion_test_mcp.py"],
+      "frontend": ["frontend/src/api.ts", "frontend/src/readJson.ts", "frontend/src/writeJson.ts", "frontend/tests/combat-simulation-physical-smoke.cjs"],
+      "storage": ["session_ledger"],
+      "routes": [{"method":"GET","path":"/workspace/ledger"}],
+      "contracts": ["CharacterStateAction", "AttackResolutionCreate"],
+      "scope_rule": "No parallel WebSocket. Technical audit differs from public narrative. TEMP rehearsal must never load live credentials or mutate live battle.",
+      "extension": "Local MCP companion-tests exposes capabilities/start/status with structured schemas, durable request receipts and a bounded TEMP runner. OpenCode is configured; other local hosts can register the same stdio command. No live credentials, arbitrary code or RPG rule approval accepted. Private Scenes proposals link verified existing-code reports, never execute proposal JSON."
+    },
+    {
+      "id": "approved_native_action_contracts",
+      "backend": ["backend/app/action_contract.py", "backend/app/action_components.py", "backend/app/action_library.py", "backend/app/native_action_manifest.py", "backend/app/action_audit_routes.py"],
+      "frontend": ["frontend/src/components/configuredGridAction.ts", "frontend/src/components/nativeSpellRevision.ts", "frontend/src/pages/SessionWorkspace.tsx"],
+      "storage": ["character_states", "combat_effect_commands"],
+      "routes": [{"method":"GET","path":"/gm/actions/manifest/{character_id}"},{"method":"GET","path":"/gm/workspace/tokens/{token_id}/action-manifest"},{"method":"GET","path":"/gm/actions/describe"}],
+      "contracts": ["CombatEffectCommand", "TechniqueUse"],
+      "internal_contracts": [{"module":"app.action_contract","name":"ActionContract"},{"module":"app.action_contract","name":"MirrorContract"},{"module":"app.action_contract","name":"StrengthContract"},{"module":"app.action_contract","name":"WebContract"},{"module":"app.action_contract","name":"DispelContract"},{"module":"app.action_contract","name":"VezemirBuffContract"},{"module":"app.morthak_action_contracts","name":"CloneContract"},{"module":"app.morthak_action_contracts","name":"DeathContract"},{"module":"app.raziel_action_contracts","name":"BloodDefenseContract"}],
+      "scope_rule": "Ten approved actions: Dorn Relampago, Reflexos, Forca Arcana, Teia, Dissipar Magia; Vezemir Forca Arcana, Velocidade; Morthak Clonagem, Magia da Morte; Raziel Sangue Defensivo. Internal metadata models are not OpenAPI request schemas. Manifest binding is not complete automation or certification; execution retains existing auth/transactions/RNG/ledger/realtime.",
+      "extension": "Reuse bounded rolls, native resource spend and revision checks inside existing handlers. No user scripts, eval or generic prose-to-damage executor."
+    },
+    {
+      "id": "private_scene_lab",
+      "backend": ["backend/app/scene_lab_store.py", "backend/app/scene_lab_routes.py", "backend/app/test_run_evidence.py", "backend/app/catalog_provenance.py", "backend/app/data/catalog_provenance.json"],
+      "frontend": ["frontend/src/components/SceneLabPanel.tsx", "frontend/src/sceneLabApi.ts"],
+      "storage": ["scene_lab_proposals", "scene_lab_revisions", "scene_lab_history", "scene_lab_receipts", "session_ledger"],
+      "routes": [{"method":"POST","path":"/gm/scenes/{scene_id}/lab/proposals"},{"method":"PUT","path":"/gm/scene-lab/proposals/{proposal_id}"},{"method":"POST","path":"/gm/scene-lab/proposals/{proposal_id}/evidence"},{"method":"POST","path":"/gm/scene-lab/proposals/{proposal_id}/decision"},{"method":"GET","path":"/gm/compendium/provenance"}],
+      "contracts": ["ProposalCreate", "ProposalUpdate", "EvidenceAttach", "ProposalDecision"],
+      "scope_rule": "GM only; revisions immutable; edit invalidates current review/evidence. Approval never publishes or executes. Evidence reads an existing terminal local MCP report, not client PASS.",
+      "extension": "Agent authors private JSON with sources, intended native handler and deterministic tests; operator reviews separately. Arbitrary proposal execution and whole-library approval are not implemented."
+    }
+  ]
+}

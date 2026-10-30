@@ -537,9 +537,22 @@ def distribute_loot(
             raise ValueError("Distribua integralmente cada recompensa antes de confirmar")
         now = _now()
         created_items: dict[str, int] = {}
+        coin_allocations: list[dict[str, Any]] = []
         for allocation in allocations:
             reward = reward_by_id[str(allocation["reward_id"])]
             reward_id = str(reward["id"])
+            character_id = str(allocation['character_id'])
+            quantity = int(allocation['quantity'])
+            from .player_inventory import currency_item_field
+            currency_field = currency_item_field(reward)
+            if currency_field:
+                state_row = connection.execute('SELECT state_json FROM character_states WHERE profile_id=?', (character_id,)).fetchone()
+                state = json.loads(state_row['state_json'])
+                state[currency_field] = int(state.get(currency_field) or 0) + quantity
+                connection.execute('UPDATE character_states SET state_json=?,version=version+1,updated_at=? WHERE profile_id=?',
+                                   (json.dumps(state, ensure_ascii=False), now, character_id))
+                coin_allocations.append({**allocation, 'currency_field': currency_field})
+                continue
             if reward_id not in created_items:
                 cursor = connection.execute(
                     """INSERT INTO session_custom_items(name,item_type,description,effects_json,effect_rules_json,mechanics_json,usable,image_path,created_at,updated_at)
@@ -558,7 +571,7 @@ def distribute_loot(
                    VALUES(?,?,?,?,0,?,?) ON CONFLICT(profile_id,item_path) DO UPDATE SET quantity=excluded.quantity,item_title=excluded.item_title,updated_at=excluded.updated_at""",
                 (character_id, item_path, reward["name"], next_quantity, f"Espólio de {item['source_name']}", now),
             )
-        detail = {"loot_resolution_id": resolution_id, "source_name": item["source_name"], "allocations": allocations, "created_item_ids": created_items}
+        detail = {"loot_resolution_id": resolution_id, "source_name": item["source_name"], "allocations": allocations, "created_item_ids": created_items, "coin_allocations": coin_allocations}
         ledger_id = append_session_ledger_event(
             connection, source_type="loot_distribution", source_id=resolution_id, event_kind="treasure",
             actor_id="master", actor_name="Mestre", actor_role="gm", character_id=None,

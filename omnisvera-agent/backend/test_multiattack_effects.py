@@ -51,11 +51,39 @@ class MultiattackEffectsTests(TestCase):
         args.update(kwargs)
         return effect_command(self.db, **args)
 
-    def test_campaign_throwing_daggers_keep_ranged_mode_when_equipped_melee(self):
+    def test_public_activation_is_idempotent_and_private_gm_effect_stays_private(self):
+        from app.session_ledger import list_session_ledger
+        payload = dict(target_type='character', target_id='vezemir', label='Velocidade', source='magia', duration='rounds', rounds=2, modifiers={}, resource={'character_id':'vezemir','key':'velocidade','cost':1})
+        # The fixture has no Velocidade pool; zero cost is invalid, so use an explicit combat actor instead.
+        payload.pop('resource')
+        self.command('start', {'participants':[{'target_type':'character','target_id':'vezemir','initiative':10}]})
+        payload['combat_actor'] = {'target_type':'character','target_id':'vezemir'}
+        state = readeffects(self.db)
+        args = dict(actor_id='vezemir',actor_role='player',request_id='public-activation-001',expected_version=state['version'],action='apply',payload=payload,allow_player=True)
+        effect_command(self.db, **args)
+        effect_command(self.db, **args)
+        for profile in ('vezemir','raziel'):
+            actions = [e for e in list_session_ledger(self.db,AccessContext(mode='player',profile_id=profile)) if e['source_type']=='ability_activation']
+            self.assertEqual(len(actions),1)
+            self.assertEqual(actions[0]['title'],'Usou Velocidade')
+        private = dict(target_type='character',target_id='vezemir',label='Segredo do Mestre',source='gm',duration='scene',modifiers={})
+        self.command('apply', private)
+        self.assertFalse(any('Segredo' in e['title'] for e in list_session_ledger(self.db,AccessContext(mode='player',profile_id='raziel'))))
+
+    def test_encounter_start_marker_survives_initiative_and_changes_next_battle(self):
+        first=self.command('start', {'participants':[{'target_type':'character','target_id':'vezemir','initiative':10}]})
+        second=self.command('initiative', {'participants':[{'target_type':'character','target_id':'vezemir','initiative':12}]})
+        self.assertEqual(first['encounter']['started_at'],second['encounter']['started_at'])
+        self.command('end')
+        third=self.command('start', {'participants':[{'target_type':'character','target_id':'vezemir','initiative':10}]})
+        self.assertNotEqual(first['encounter']['started_at'],third['encounter']['started_at'])
+
+    def test_campaign_throwing_daggers_respect_selected_equipment_mode(self):
         from app.character_play import _equipped_weapon_for_attack
         dagger = {"item_path": "Items/Adagas de Espectro Fantasma.md", "item_title": "Adagas de Espectro Fantasma",
                   "quantity": 1, "equipped": True, "equipment_slot": "Corpo a corpo", "damage_formula": "1d4"}
-        self.assertEqual(dagger, _equipped_weapon_for_attack([dagger], "ranged"))
+        self.assertIsNone(_equipped_weapon_for_attack([dagger], "ranged"))
+        self.assertEqual({**dagger, 'equipment_slot':'À distância'}, _equipped_weapon_for_attack([{**dagger, 'equipment_slot':'À distância'}], 'ranged'))
         self.assertEqual(dagger, _equipped_weapon_for_attack([dagger], "melee"))
         self.assertIsNone(_equipped_weapon_for_attack([{**dagger, "equipped": False}], "ranged"))
         self.assertIsNone(_equipped_weapon_for_attack([{**dagger, "item_path": "Items/Cajado.md"}], "ranged"))
@@ -137,7 +165,7 @@ class MultiattackEffectsTests(TestCase):
         effective = apply_definition_effects(self.definition, snapshot["effects"])
         self.assertEqual(16, effective["defenses"]["armor_class"])
         self.assertEqual(3, effective["attacks"][0]["attack_count"])
-        result = self.resolve(definition=effective, physical_d20s=[8, 1])
+        result = self.resolve(definition=effective, physical_d20s=[8, 2])
         self.assertEqual(6, result["attack_bonus"])
         self.assertEqual(9, result["damage_total"])
         self.command("round")
@@ -282,6 +310,35 @@ class MultiattackEffectsTests(TestCase):
             self.assertIsNone(main._combat_target("token", unconfigured["id"])["armor_class"])
             with closing(sqlite3.connect(self.db)) as db:
                 self.assertEqual(0, db.execute("SELECT COUNT(*) FROM session_workspace_messages").fetchone()[0])
+
+    def test_hidden_movement_and_edits_do_not_publish_workspace_messages(self):
+        hidden = save_workspace_token(self.db, token_type='monster', name='Emboscada secreta', latitude=10, longitude=20, visible_to_players=False)
+        settings = replace(main.settings, database_path=self.db)
+        main.app.dependency_overrides[main.require_any] = lambda: AccessContext(mode='gm')
+        main.app.dependency_overrides[main.require_master] = lambda: AccessContext(mode='gm')
+        self.addCleanup(main.app.dependency_overrides.clear)
+        with patch.object(main, 'settings', settings), closing(TestClient(main.app)) as client:
+            self.assertEqual(client.patch(f"/gm/workspace/tokens/{hidden['id']}/position", json={'latitude': 30, 'longitude': 40}).status_code, 200)
+            self.assertEqual(client.patch(f"/gm/workspace/tokens/{hidden['id']}", json={'name': 'Segredo alterado'}).status_code, 200)
+            with closing(sqlite3.connect(self.db)) as db:
+                self.assertEqual(db.execute('SELECT COUNT(*) FROM session_workspace_messages').fetchone()[0], 0)
+                self.assertEqual(db.execute("SELECT COUNT(*) FROM session_ledger WHERE source_type='private_pin_update' AND visibility='gm'").fetchone()[0], 2)
+            from app.session_ledger import list_session_ledger
+            self.assertFalse(any(item['source_type'] == 'private_pin_update' for item in list_session_ledger(self.db, AccessContext(mode='player', profile_id='vezemir'))))
+            self.assertEqual(client.patch(f"/gm/workspace/tokens/{self.token['id']}/position", json={'latitude': 25, 'longitude': 35}).status_code, 200)
+            with closing(sqlite3.connect(self.db)) as db:
+                self.assertEqual(db.execute('SELECT COUNT(*) FROM session_workspace_messages').fetchone()[0], 1)
+
+    def test_fog_hidden_movement_does_not_publish_name_or_coordinates(self):
+        from app.session_workspace import update_workspace_fog
+        update_workspace_fog(self.db, layer='exploration', enabled=True, revealed_cells=['0:0'], mist_density={})
+        settings = replace(main.settings, database_path=self.db)
+        main.app.dependency_overrides[main.require_any] = lambda: AccessContext(mode='gm')
+        self.addCleanup(main.app.dependency_overrides.clear)
+        with patch.object(main, 'settings', settings), closing(TestClient(main.app)) as client:
+            self.assertEqual(client.patch(f"/gm/workspace/tokens/{self.token['id']}/position", json={'latitude': 30, 'longitude': 40}).status_code, 200)
+            with closing(sqlite3.connect(self.db)) as db:
+                self.assertEqual(db.execute('SELECT COUNT(*) FROM session_workspace_messages').fetchone()[0], 0)
 
     def test_encounter_initiative_round_restart_and_end(self):
         participants = [{"target_type": "character", "target_id": "vezemir", "name": "Vezemir", "initiative": 8},

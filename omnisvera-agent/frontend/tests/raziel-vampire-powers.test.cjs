@@ -10,10 +10,12 @@ const abilities = JSON.parse(fs.readFileSync('../backend/app/data/session_abilit
 
 test('night form offers three animals and regeneration does not duplicate blood counter', () => {
   assert.equal(abilities.find(a => a.id === 'forma-da-noite').uses.maximum, 3);
-  for (const animal of ['corvo', 'coruja', 'morcego']) assert.ok(source.includes(`value="${animal}"`));
-  assert.ok(source.includes('aria-label="Animal da Forma da Noite"'));
+  const selector=fs.readFileSync('src/components/NightFormSelector.tsx','utf8');
+  for (const animal of ['corvo', 'coruja', 'morcego']) assert.ok(selector.includes(`id:'${animal}'`));
+  assert.ok(source.includes('<NightFormSelector value='));
+  assert.ok(selector.includes('aria-label="Animal da Forma da Noite"'));
   assert.ok(source.includes('amount: 1, animal'));
-  assert.ok(source.includes('resource && ability.id !== "regeneracao-vampirica" && <b>'));
+  assert.ok(source.includes("resource && !['regeneracao-vampirica', 'lamina-de-sangue'].includes(ability.id) && <b>"));
 });
 
 test('ability descriptions escape clipping containers and scroll within the viewport', () => {
@@ -32,24 +34,24 @@ test('Mordida requires an explicit target and no prior normal attack', () => {
   const branch = source.slice(start, source.indexOf("if (['animar-mortos'", start));
   assert.ok(branch.includes("ability.id === 'mordida' && !target"));
   assert.ok(branch.includes("target_type: 'token', target_id: target.id"));
-  assert.ok(branch.includes('setAttackResolution(result as AttackResolution)'));
+  assert.ok(branch.includes('showResolution(result as AttackResolution)'));
   assert.ok(!branch.includes('resolution_id: last.resolution_id'));
   assert.ok(branch.includes('vampireLock.current = true'));
   assert.ok(branch.includes('combatActionBlock'));
 });
 
 test('physical Mordida uses its own d20 and confirmed drain is visible', () => {
-  assert.ok(source.includes("['adaga-de-osso', 'mordida'].includes(selectedTargetAbility.id)"));
-  assert.ok(source.includes('attackPhysicalD20ById[selectedTargetAbility.id]'));
+  assert.ok(source.includes("['adaga-de-osso', 'mordida', 'lamina-de-sangue'].includes(ability.id)"));
+  assert.ok(source.includes('attackPhysicalD20ById[ability.id]'));
   assert.ok(source.includes('attackResolution.breakdown.drain_result.healed'));
 });
 
-test('regeneration is structured, shares the five-point blood pool, and displays actual recovery', () => {
+test('regeneration is structured, shares the ten-point blood pool, and displays actual recovery', () => {
   const regeneration = abilities.find(a => a.id === 'regeneracao-vampirica');
   assert.equal(regeneration.mechanics_status, 'structured');
   assert.equal(regeneration.uses.resource_key, 'reserva_de_sangue');
   assert.equal(regeneration.uses.cost, 1);
-  assert.equal(regeneration.uses.maximum, 5);
+  assert.equal(regeneration.uses.maximum, 10);
   assert.ok(source.includes('setVampireOutcome(`Regeneração:'));
   assert.ok(source.includes('vampireOutcome && <p role="status">'));
 });
@@ -59,6 +61,7 @@ function controller(api, overrides = {}) {
   const end = source.indexOf('  async function submitMessage(', start);
   const context = { combatActionBlock: () => '', battleState: {}, selectedId: 'raziel', busy: '',
     vampireLock: { current: false }, techniqueRequestRef: { current: null },
+    consumableActionBlock: () => '', character: {}, abilityLock: { current: false }, mutationLock: { current: false },
     defaultAttackRollMode: 'digital', attackPhysicalD20ById: {}, newDiceRequestId: () => 'vampire-request',
     setError() {}, setBusy() {}, setVampireOutcome() {}, setAttackResolution() {}, setTargetPickerAbilityId() {},
     refresh: async () => {}, useCharacterTechnique: api, ...overrides };

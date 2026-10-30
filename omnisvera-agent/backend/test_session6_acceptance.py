@@ -24,9 +24,9 @@ class SyntheticAcceptanceFixtureTests(unittest.TestCase):
                 self.assertEqual(2, conn.execute('SELECT count(*) FROM session_workspace_maps').fetchone()[0])
                 self.assertTrue(all('sintético' in r[0] for r in conn.execute('SELECT content FROM notes')))
                 state=json.loads(conn.execute("SELECT state_json FROM character_states WHERE profile_id='dorn7'").fetchone()[0])
-                self.assertEqual((13, 13), (state['current_hp'], state['maximum_hp']))
-                self.assertEqual(3, sum(r['maximum'] for r in state['resources']))
-                self.assertEqual(1, next(r['current'] for r in state['resources'] if r['key']=='dorn_misseis_magicos'))
+                self.assertEqual((20, 20), (state['current_hp'], state['maximum_hp']))
+                self.assertEqual(6, sum(r['maximum'] for r in state['resources']))
+                self.assertEqual(3, next(r['current'] for r in state['resources'] if r['key']=='dorn_misseis_magicos'))
             before=db.read_bytes()
             with self.assertRaisesRegex(ValueError, 'replace'):
                 acceptance.seed(db)

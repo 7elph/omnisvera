@@ -106,7 +106,9 @@ function resolveIcon(ids: readonly string[], value: unknown, aliases: Record<str
 
 export function iconPathForItem(name: unknown, itemType?: unknown) {
   const direct = resolveIcon(ITEM_ICON_IDS, name, ITEM_ALIASES);
-  const byType = direct || resolveIcon(ITEM_ICON_IDS, itemType, ITEM_ALIASES);
+  // Legacy catalog extraction appends the entire equipment-table row to "Vara".
+  const pole = !direct && /^vara(?:-|$)/.test(slug(name)) ? "vara-de-3-m" : null;
+  const byType = direct || pole || resolveIcon(ITEM_ICON_IDS, itemType, ITEM_ALIASES);
   return byType ? itemIconPath(byType) : null;
 }
 

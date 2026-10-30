@@ -204,7 +204,26 @@ def _token_record(row: sqlite3.Row) -> dict[str, Any]:
     item = dict(row)
     item["conditions"] = json.loads(item.pop("conditions_json") or "[]")
     item["sheet"] = json.loads(item.pop("sheet_json") or "{}")
+    from .monster_movement import movement_modes
+    item['sheet']['movement_modes']=movement_modes(item['sheet'].get('movement'))
     item["visible_to_players"] = bool(item.get("visible_to_players", 1))
+    if item['sheet'].get('disintegrated'):
+        item['sheet'].update(reanimation_allowed=False,combat_retired=True)
+        item['sheet'].pop('corpse',None)
+    elif isinstance(item['sheet'].get('source'),dict) and item['sheet']['source'].get('monster_id')=='esfera-da-aniquilacao':
+        item['current_hp']=None;item['maximum_hp']=None;item['sheet']['statless']=True
+    elif (item['sheet'].get('summon') or {}).get('dismissed'):
+        # A dismissal retires the saved unit; it is not a new corpse on the map.
+        item['sheet'].pop('corpse',None)
+        item['sheet']['reanimation_allowed']=False
+    elif item.get('token_type') != 'location' and item.get('current_hp') is not None and item['current_hp']<=0 and not item['sheet'].get('frenesi_survival'):
+        sheet=item['sheet']
+        sheet['corpse']=True
+        sheet['marker']='☠'
+        eligible=not (sheet.get('summon') or sheet.get('reanimated_by') or sheet.get('is_construct') or sheet.get('is_undead') or item.get('character_id') in {'dorn7','morthak','raziel'})
+        sheet['reanimation_allowed']=eligible and sheet.get('reanimation_allowed',True)
+    elif item.get('current_hp') is not None and (item['current_hp']>0 or item['sheet'].get('frenesi_survival')):
+        item['sheet'].pop('corpse',None)
     return item
 
 
@@ -237,7 +256,8 @@ def list_workspace_tokens(database_path: Path, map_id: str | None = None) -> lis
     init_session_workspace(database_path)
     with closing(_connect(database_path)) as connection:
         rows = connection.execute("SELECT * FROM session_workspace_tokens WHERE map_id=? ORDER BY created_at,id", (map_id,)).fetchall() if map_id else connection.execute("SELECT * FROM session_workspace_tokens ORDER BY created_at,id").fetchall()
-    return [_token_record(row) for row in rows]
+        from .night_form import apply_pin_visuals
+        return apply_pin_visuals(connection, [_token_record(row) for row in rows])
 
 
 def save_workspace_token(
@@ -278,13 +298,14 @@ def save_workspace_token(
               current_hp,maximum_hp,conditions_json,sheet_json,created_at,updated_at
             ) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
             ON CONFLICT(id) DO UPDATE SET
-              map_id=excluded.map_id,
               name=excluded.name,image_path=excluded.image_path,visible_to_players=excluded.visible_to_players,color=excluded.color,
               current_hp=excluded.current_hp,maximum_hp=excluded.maximum_hp,
               conditions_json=excluded.conditions_json,sheet_json=excluded.sheet_json,updated_at=excluded.updated_at
             """,
             values,
         )
+        from .bat_swarm import sync as sync_bat_swarm
+        sync_bat_swarm(connection, now)
         row = connection.execute("SELECT * FROM session_workspace_tokens WHERE id=?", (token_id,)).fetchone()
     if row is None:
         raise RuntimeError("Marcador não pôde ser salvo")
@@ -304,6 +325,8 @@ def update_workspace_token_position(
             "UPDATE session_workspace_tokens SET latitude=?,longitude=?,updated_at=? WHERE id=?",
             (latitude, longitude, _now(), token_id),
         )
+        from .bat_swarm import sync as sync_bat_swarm
+        sync_bat_swarm(connection, _now())
         row = connection.execute("SELECT * FROM session_workspace_tokens WHERE id=?", (token_id,)).fetchone()
     return _token_record(row) if row else None
 
@@ -337,6 +360,10 @@ def update_workspace_token(
             f"UPDATE session_workspace_tokens SET {assignments} WHERE id=?",
             (*updates.values(), token_id),
         )
+        from .battle_mode import retire_defeated
+        retire_defeated(connection, _now())
+        from .bat_swarm import sync as sync_bat_swarm
+        sync_bat_swarm(connection, _now())
         row = connection.execute("SELECT * FROM session_workspace_tokens WHERE id=?", (token_id,)).fetchone()
     return _token_record(row) if cursor.rowcount and row else None
 
@@ -345,6 +372,8 @@ def delete_workspace_token(database_path: Path, token_id: str) -> bool:
     init_session_workspace(database_path)
     with closing(_connect(database_path)) as connection, connection:
         cursor = connection.execute("DELETE FROM session_workspace_tokens WHERE id=?", (token_id,))
+        from .bat_swarm import sync as sync_bat_swarm
+        sync_bat_swarm(connection, _now())
     return cursor.rowcount > 0
 
 
@@ -356,9 +385,17 @@ def list_session_items(database_path: Path) -> list[dict[str, Any]]:
 
 
 def get_session_item(database_path: Path, item_id: int) -> dict[str, Any] | None:
-    init_session_workspace(database_path)
-    with closing(_connect(database_path)) as connection:
-        row = connection.execute("SELECT * FROM session_custom_items WHERE id=?", (item_id,)).fetchone()
+    # Catalog polling must not rewrite fog/map state for every inventory item.
+    # Bootstrap only a new database; existing catalogs are a genuinely read-only lookup.
+    try:
+        with closing(_connect(database_path)) as connection:
+            row = connection.execute("SELECT * FROM session_custom_items WHERE id=?", (item_id,)).fetchone()
+    except sqlite3.OperationalError as error:
+        if "no such table" not in str(error).lower():
+            raise
+        init_session_workspace(database_path)
+        with closing(_connect(database_path)) as connection:
+            row = connection.execute("SELECT * FROM session_custom_items WHERE id=?", (item_id,)).fetchone()
     return _item_record(row) if row else None
 
 
@@ -491,6 +528,8 @@ def set_workspace_map(
                 "INSERT INTO session_workspace_state(id,map_id,map_title,map_image_path,updated_at) VALUES(1,?,?,?,?)",
                 (map_id, title, image_path, updated_at),
             )
+        from .bat_swarm import sync as sync_bat_swarm
+        sync_bat_swarm(connection, updated_at)
     return {
         "id": map_id,
         "title": title,
@@ -596,6 +635,8 @@ def set_active_workspace_map(database_path: Path, map_id: str) -> dict[str, Any]
         if row is None:
             return None
         connection.execute("UPDATE session_workspace_state SET map_id=?,map_title=?,map_image_path=?,view_zoom=1,view_scroll_left=0,view_scroll_top=0,updated_at=? WHERE id=1", (row["id"], row["title"], row["image_path"], _now()))
+        from .bat_swarm import sync as sync_bat_swarm
+        sync_bat_swarm(connection, _now())
     return _map_record(row)
 
 
@@ -999,8 +1040,20 @@ def get_workspace_snapshot(
                 battle_row = battle_connection.execute('SELECT encounter_json FROM combat_effect_clock WHERE id=1').fetchone()
                 battle = json.loads(battle_row[0]) if battle_row else {}
                 if battle.get('active') and battle.get('battle_mode') and battle.get('map_id') == (map_record or {}).get('id'):
-                    revealed_battle_tokens = {p['target_id'] for p in battle.get('participants', []) if p['target_type'] == 'token'}
+                    revealed_battle_tokens = {p.get('token_id') or p['target_id'] for p in [*battle.get('participants', []),*battle.get('defeated', [])] if p['target_type'] == 'token' or p.get('token_id')}
         tokens = [token for token in tokens if _token_is_visible(token, fog) or (token['id'] in revealed_battle_tokens and token['visible_to_players'])]
+    # Only the granted reward's public card metadata, never the caster's inventory.
+    essence = None
+    with closing(_connect(database_path)) as connection:
+        if table_exists(connection, 'player_inventory'):
+            reward = connection.execute("SELECT c.name,c.description,c.image_path,p.equipped FROM session_custom_items c JOIN player_inventory p ON p.item_path='session-item:' || c.id WHERE p.profile_id='morthak' AND p.quantity>0 AND c.name='Essência de Mana' LIMIT 1").fetchone()
+            if reward:
+                essence = dict(reward)
+    for token in tokens:
+        if (token.get('sheet') or {}).get('summon', {}).get('caster') == 'morthak' and token['sheet']['summon'].get('technique') == 'levantar-esqueleto' and essence:
+            token['sheet']['reward_items'] = [essence]
+    from .sprite_studio import enrich_tokens
+    enrich_tokens(database_path, tokens)
     from .spatial_grid import enrich_snapshot
     return enrich_snapshot(database_path, {
         "table_mode": str(state_row["table_mode"] or "digital") if state_row else "digital",

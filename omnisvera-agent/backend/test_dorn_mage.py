@@ -35,20 +35,20 @@ class DornMageTests(unittest.TestCase):
             inventory=[], overrides=load_definition_overrides(self.db, 'dorn7'))
         self.assertEqual(definition['attributes'], SPEC['sheet']['attributes'])
         self.assertEqual(definition['attribute_modifiers']['constitution'], 3)
-        self.assertEqual((definition['level'], definition['class_name']), (2, 'Mago'))
+        self.assertEqual((definition['level'], definition['class_name']), (3, 'Mago'))
         self.assertEqual(definition['defenses']['armor_class'], 11)
         self.assertEqual(definition['defenses']['saving_throw'], 14)
-        self.assertEqual(definition['progression']['experience'], 2500)
+        self.assertEqual(definition['progression']['experience'], 0)
         self.assertFalse(any(a['name'] == 'Punho' for a in definition['attacks']))
         self.assertFalse(any(a['name'] == 'Proteger' for a in definition['session_abilities']))
         with closing(sqlite3.connect(self.db)) as db:
             state = json.loads(db.execute("SELECT state_json FROM character_states WHERE profile_id='dorn7'").fetchone()[0])
-            self.assertEqual((state['current_hp'],state['maximum_hp']), (13,13))
-            self.assertEqual(sum(r['maximum'] for r in state['resources']), 3)
-            self.assertEqual(db.execute('SELECT count(*) FROM player_inventory').fetchone()[0],6)
+            self.assertEqual((state['current_hp'],state['maximum_hp']), (20,20))
+            self.assertEqual(sum(r['maximum'] for r in state['resources']), 6)
+            self.assertEqual(db.execute('SELECT count(*) FROM player_inventory').fetchone()[0],7)
             self.assertEqual(db.execute("SELECT count(*) FROM character_events WHERE event_type='approved_build_reconciliation'").fetchone()[0],1)
         missile = magic_missile_definition(definition, state['resources'])['attacks'][0]
-        self.assertEqual(missile['damage'], '1d4+2')
+        self.assertEqual(missile['damage'], '1d4+3')
         self.assertEqual(missile['resource_cost']['key'], 'dorn_misseis_magicos')
 
     def test_changed_hp_blocks_without_partial_write(self):

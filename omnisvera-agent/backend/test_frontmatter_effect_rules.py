@@ -18,12 +18,18 @@ class FrontmatterEffectRulesTests(unittest.TestCase):
         self.assertEqual(2, rules[0]["value"])
         self.assertEqual("Items/Grisalma.md", rules[0]["item_path"])
 
-    def test_non_passive_trigger_rejected(self):
+    def test_supported_use_trigger_is_declared_without_becoming_a_passive(self):
         rules = _parse_frontmatter_effect_rules(
             [{"trigger": "on_use", "kind": "heal_hp", "target": "", "value": 4}],
             source_path="Items/Anel.md",
         )
-        self.assertEqual([], rules)
+        self.assertEqual(1,len(rules))
+        self.assertEqual('on_use',rules[0]['trigger'])
+        self.assertEqual('heal_hp',rules[0]['kind'])
+
+    def test_unknown_use_trigger_rejected(self):
+        self.assertEqual([],_parse_frontmatter_effect_rules(
+            [{'trigger':'on_use','kind':'summon_dragon','value':99}],source_path='Items/X.md'))
 
     def test_unknown_kind_rejected(self):
         rules = _parse_frontmatter_effect_rules(

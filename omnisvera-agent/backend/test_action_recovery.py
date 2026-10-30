@@ -93,11 +93,21 @@ class ActionRecoveryTests(CombatAttackResolutionTests):
 
     def test_unsupported_level_and_blocked_magic_do_not_guess(self):
         with self.assertRaises(ValueError):
-            magic_missile_definition({**self.mage, 'level': 4}, self.mage_state()['resources'])
+            magic_missile_definition({**self.mage, 'level': 16}, self.mage_state()['resources'])
         with self.assertRaises(ValueError):
             magic_missile_definition({**self.mage, 'id': 'raziel'}, self.mage_state()['resources'])
         with self.assertRaises(ValueError):
             magic_missile_definition({**self.mage, 'session_abilities': []}, self.mage_state()['resources'])
+
+    def test_level_five_missile_preserves_three_base_uses_and_single_cost(self):
+        self.mage['level']=5
+        definition=magic_missile_definition(self.mage,self.mage_state()['resources'])
+        self.assertEqual({'key':'misseis_magicos','amount':1},definition['attacks'][0]['resource_cost'])
+        attack=self.missiles('spell-level-five')
+        self.assertEqual('hit',attack['result'])
+        confirm_attack_resolution(self.database,resolution_id=attack['resolution_id'],requested_by_id='morthak',requested_by_role='player')
+        self.assertEqual(2,self.mage_state()['resources'][0]['current'])
+        self.assertEqual(3,self.mage_state()['resources'][0]['maximum'])
 
     def test_pending_api_requires_auth_and_filters_owner(self):
         self.missiles()

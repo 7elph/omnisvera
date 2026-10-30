@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "sources": {
+    "od2-tomo-arcana-1.0.0-20240514": {
+      "title": "Tomo da Magia Arcana para Old Dragon 2",
+      "file_name": "Tomo de Magia Arcana - OD2.pdf",
+      "edition": "Old Dragon 2a edição",
+      "version": "1.0.0 (14/05/2024)",
+      "sha256": "c24002d7fdd87af03435b66d065f462a9ce9112bdff9a660d649e4ee63244b51",
+      "page_count": 190,
+      "metadata_physical_pages": [3],
+      "license": "CC BY-SA 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "attribution": "Old Dragon 2a Edição © 2023 Buró Editora, Antonio Sá Neto, Dan Ramos e Fabiano Neme; Tomo escrito e diagramado por Rangel Perez Sardinha.",
+      "license_note": "Declaração reproduzida como metadado dos créditos, página 3; este lote não importa arte, logo, diagramação ou o PDF."
+    }
+  },
+  "entries": [
+    {
+      "kind": "spell",
+      "catalog_id": "arcana-relampago",
+      "source_id": "od2-tomo-arcana-1.0.0-20240514",
+      "physical_pages": [82],
+      "printed_pages": [82],
+      "review_state": "source_verified",
+      "execution_approved": false
+    },
+    {
+      "kind": "spell",
+      "catalog_id": "arcana-reflexos",
+      "source_id": "od2-tomo-arcana-1.0.0-20240514",
+      "physical_pages": [64],
+      "printed_pages": [64],
+      "review_state": "source_verified",
+      "execution_approved": false
+    },
+    {
+      "kind": "spell",
+      "catalog_id": "arcana-teia",
+      "source_id": "od2-tomo-arcana-1.0.0-20240514",
+      "physical_pages": [65, 66],
+      "printed_pages": [65, 66],
+      "review_state": "source_verified",
+      "execution_approved": false
+    },
+    {
+      "kind": "spell",
+      "catalog_id": "arcana-dissipar-magia",
+      "source_id": "od2-tomo-arcana-1.0.0-20240514",
+      "physical_pages": [71, 72],
+      "printed_pages": [71, 72],
+      "review_state": "source_verified",
+      "execution_approved": false
+    }
+  ]
+}

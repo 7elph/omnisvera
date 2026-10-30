@@ -45,7 +45,10 @@
           "name": "Rasante",
           "description": "podem realizar um ataque rasante com um ataque fácil, +2 no dano causado e -2 na CA. Causam dano dobrado em vítimas surpresas."
         }
-      ]
+      ],
+      "description": "Ave de rapina carnívora e caçadora que vive nas montanhas e florestas.",
+      "description_source_url": "https://olddragon.com.br/monstros/aguia",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "aguia-gigante",
@@ -91,7 +94,10 @@
           "name": "Agarrar",
           "description": "se preferir, a Águia Gigante pode agarrar seus alvos com suas garras em vez de causar dano. A vítima pode realizar uma JPD para evitar ser agarrada pela águia."
         }
-      ]
+      ],
+      "description": "Usada como animal de carga. Apesar do seu tamanho, é extremamente ágil.",
+      "description_source_url": "https://olddragon.com.br/monstros/aguia-gigante",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "ajudante",
@@ -117,7 +123,7 @@
           "raw": "1 × Arma ( Arma )",
           "count": 1,
           "name": "Arma",
-          "bonus": null,
+          "bonus": 0,
           "damage": "Arma"
         }
       ],
@@ -269,7 +275,10 @@
           "name": "Furtivos",
           "description": "são mestres em esconder-se nos subterrâneos com 1-3 chances em 1d6."
         }
-      ]
+      ],
+      "description": "Grandes senhores dos subterrâneos, rivalizam com os Elfos Drow pelo controle total e soberania dos reinos sob a terra.",
+      "description_source_url": "https://olddragon.com.br/monstros/anao-das-sombras",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "anao-lider",
@@ -346,7 +355,10 @@
           "damage": "3d6"
         }
       ],
-      "abilities": []
+      "abilities": [],
+      "description": "Este dinossauro possui uma das mais grossas couraças conhecidas. Ataca com sua cauda em forma de maça.",
+      "description_source_url": "https://olddragon.com.br/monstros/anquilossauro",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "aparicao",
@@ -401,7 +413,10 @@
           "name": "Tesouro",
           "description": "(V×3) + 50% de 1 item mágico."
         }
-      ]
+      ],
+      "description": "Poderosos humanos que sucumbiram à forças obscuras, e agora se alimentam do espírito e da vontade de viver de suas vítimas.",
+      "description_source_url": "https://olddragon.com.br/monstros/aparicao",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "aprendiz",
@@ -427,7 +442,7 @@
           "raw": "1 × Arma ( Arma )",
           "count": 1,
           "name": "Arma",
-          "bonus": null,
+          "bonus": 0,
           "damage": "Arma"
         }
       ],
@@ -466,7 +481,10 @@
           "name": "Veneno",
           "description": "causa morte em 1d3 turnos em caso de falha em uma JPC."
         }
-      ]
+      ],
+      "description": "Essa monstruosa caçadora peluda vive em tocas escondidas, só saindo para ir atrás de suas presas.",
+      "description_source_url": "https://olddragon.com.br/monstros/aranha-cacadora-gigante",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "aranha-camufladora-gigante",
@@ -505,7 +523,10 @@
           "name": "Surpresa",
           "description": "surpreende seus inimigos com um resultado de 1 a 4 em 1d6 devido sua camuflagem."
         }
-      ]
+      ],
+      "description": "Estas terríveis aranhas são capazes de se camuflar para atacar suas presas de surpresa.",
+      "description_source_url": "https://olddragon.com.br/monstros/aranha-camufladora-gigante",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "aranha-negra-gigante",
@@ -544,7 +565,10 @@
           "name": "Teia",
           "description": "criaturas presas na teia são considerados alvos enredados e incapazes de se mover até serem bem-sucedidos em um teste de Força Difícil."
         }
-      ]
+      ],
+      "description": "Aranha tecedora de teias gigantescas. É feroz e uma exímia caçadora das florestas e subterrâneos.",
+      "description_source_url": "https://olddragon.com.br/monstros/aranha-negra-gigante",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "arqueiro-mercenario",
@@ -621,7 +645,10 @@
           "name": "Elo Telepático",
           "description": "uma Árvore Maldita possui elo telepático com seu senhor (normalmente uma Bruxa). Tudo o que a árvore enxergar e ouvir também será visto e ouvido pela Bruxa."
         }
-      ]
+      ],
+      "description": "Criadas por Bruxas insanas com o intuito de serem seus olhos e ouvidos nos pontos mais sombrios das florestas.",
+      "description_source_url": "https://olddragon.com.br/monstros/arvore-maldita",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "baleia-assassina",
@@ -651,7 +678,10 @@
           "damage": "2d10"
         }
       ],
-      "abilities": []
+      "abilities": [],
+      "description": "Feroz e carnívora, é uma das maiores caçadoras dos oceanos",
+      "description_source_url": "https://olddragon.com.br/monstros/baleia-assassina",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "baleia-cachalote",
@@ -681,7 +711,10 @@
           "damage": "4d12"
         }
       ],
-      "abilities": []
+      "abilities": [],
+      "description": "Maior mamífero dos oceanos, é pacífica e vive em mar aberto.",
+      "description_source_url": "https://olddragon.com.br/monstros/baleia-cachalote",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "bandido",
@@ -886,7 +919,10 @@
           "name": "Inabalável",
           "description": "mortos-vivos não fazem testes de moral, a não ser quando sofrem o efeito de um Afastar Mortos-Vivos."
         }
-      ]
+      ],
+      "description": "Espírito maligno e atormentado que fica preso no local onde morreu. Busca destruir tudo que estiver vivo e próximo.",
+      "description_source_url": "https://olddragon.com.br/monstros/banshee",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "basilisco",
@@ -929,7 +965,10 @@
           "name": "Camuflagem",
           "description": "quando imóvel, surpreende o grupo em 1-4 em 1d6."
         }
-      ]
+      ],
+      "description": "Este réptil gigantesco espreita suas vítimas, surpreendendo-as com seu olhar petrificante.",
+      "description_source_url": "https://olddragon.com.br/monstros/basilisco",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "berserker",
@@ -1042,7 +1081,10 @@
           "name": "Spray Cáustico",
           "description": "oponentes a até 3 metros, que falharem em uma JPD são atingidos pelo spray de vapores, ajustando nas próximas 24 horas, os ataques como difíceis."
         }
-      ]
+      ],
+      "description": "Estes besouros das florestas atacam suas vítimas lançando um terrível spray de vapores tóxicos.",
+      "description_source_url": "https://olddragon.com.br/monstros/besouro-bombardeiro-gigante",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "besouro-de-fogo-gigante",
@@ -1072,7 +1114,10 @@
           "damage": "2d4"
         }
       ],
-      "abilities": []
+      "abilities": [],
+      "description": "Usados por criaturas do subterrâneo como montarias por conta da luz que emanam de seu corpo.",
+      "description_source_url": "https://olddragon.com.br/monstros/besouro-de-fogo-gigante",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "besteiro-mercenario",
@@ -1144,7 +1189,10 @@
           "damage": "3d6"
         }
       ],
-      "abilities": []
+      "abilities": [],
+      "description": "O maior dos dinossauros, vive nos pântanos comendo folhagens para sustentar seu corpo descomunal.",
+      "description_source_url": "https://olddragon.com.br/monstros/brontosaurus",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "bruxa",
@@ -1206,7 +1254,10 @@
           "name": "Tesouro",
           "description": "(V) + 35% de 1 item mágico."
         }
-      ]
+      ],
+      "description": "Ligadas à forças sobrenaturais, capazes de lançar terríveis maldições e destruir ossos com suas garras e dentes.",
+      "description_source_url": "https://olddragon.com.br/monstros/bruxa",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "bufalo",
@@ -1245,7 +1296,10 @@
           "name": "Carga",
           "description": "carrega ou puxa até 5.000 moedas."
         }
-      ]
+      ],
+      "description": "Grande bovino que vive em grandes rebanhos nas planícies ou pântanos.",
+      "description_source_url": "https://olddragon.com.br/monstros/bufalo",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "bugbear",
@@ -1288,7 +1342,10 @@
           "name": "Emboscar",
           "description": "surpreende seus inimigos com um resultado de 1-3 em 1d6, realizando seus ataques como ataques fáceis na primeira rodada."
         }
-      ]
+      ],
+      "description": "Parentes dos Goblins, mas maiores e perigosos. Preferem emboscar suas vítimas e atacá-las de surpresa.",
+      "description_source_url": "https://olddragon.com.br/monstros/bugbear",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "bulette",
@@ -1334,7 +1391,10 @@
           "name": "Ponto fraco",
           "description": "sua barriga é um ponto fraco, tendo CA 10."
         }
-      ]
+      ],
+      "description": "Conhecido como tubarão da terra, esta criatura surge do solo para devorar cavalos e o que quer que esteja em cima deles.",
+      "description_source_url": "https://olddragon.com.br/monstros/bulette",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "cacador-invisivel",
@@ -1380,7 +1440,10 @@
           "name": "Invisibilidade",
           "description": "o Caçador Invisível consegue manter-se invisível até mesmo durante um combate."
         }
-      ]
+      ],
+      "description": "Criatura invisível do plano Elemental do Ar. É invocada para realizar uma tarefa específica no Plano Material.",
+      "description_source_url": "https://olddragon.com.br/monstros/cacador-invisivel",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "camelo",
@@ -1419,7 +1482,10 @@
           "name": "Carga",
           "description": "carrega até 3.000 moedas ou 1.500 moedas e um montador."
         }
-      ]
+      ],
+      "description": "Montaria resistente a climas desérticos e quentes.",
+      "description_source_url": "https://olddragon.com.br/monstros/camelo",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "cao",
@@ -1454,7 +1520,10 @@
           "name": "Inteligente",
           "description": "podem aprender até 4 truques se ensinado corretamente."
         }
-      ]
+      ],
+      "description": "Animal de companhia e caça de diversos portes e tamanhos.",
+      "description_source_url": "https://olddragon.com.br/monstros/cao",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "cao-infernal",
@@ -1504,7 +1573,10 @@
           "name": "Visão extradimensional",
           "description": "possuem 50% de chance de ver alvos invisíveis ou em viagem planar."
         }
-      ]
+      ],
+      "description": "Cão gigantesco que solta fogo pela boca. Pode ser visto com Gigantes do Fogo ou em perigosas matilhas.",
+      "description_source_url": "https://olddragon.com.br/monstros/cao-infernal",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "capitao-da-guarda-patrulha-milicia",
@@ -1632,7 +1704,10 @@
           "damage": "1d4"
         }
       ],
-      "abilities": []
+      "abilities": [],
+      "description": "Mamífero feroz e onívoro que ataca criaturas muito maiores e mais fortes em busca de comida.",
+      "description_source_url": "https://olddragon.com.br/monstros/carcaju",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "cavaleiro-da-morte",
@@ -1683,7 +1758,10 @@
           "name": "Fogo Profano",
           "description": "a espada longa do Cavaleiro da Morte arde em chamas causando 1d6 de dano adicional pelo fogo."
         }
-      ]
+      ],
+      "description": "Paladinos caídos e subvertidos que cederam ao chamado do poder e da corrupção.",
+      "description_source_url": "https://olddragon.com.br/monstros/cavaleiro-da-morte",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "cavaleiro-de-guerra-mercenario",
@@ -1902,7 +1980,10 @@
           "name": "Carga",
           "description": "carrega até 4.000 moedas ou 2.000 moedas e um montador."
         }
-      ]
+      ],
+      "description": "Domesticados e treinados para carregar cavaleiros em combates.",
+      "description_source_url": "https://olddragon.com.br/monstros/cavalo-de-guerra",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "cavalo-de-montaria",
@@ -1941,7 +2022,10 @@
           "name": "Carga",
           "description": "carrega até 3.000 moedas ou 1.500 moedas e um montador."
         }
-      ]
+      ],
+      "description": "Domesticados e treinados para carregar cavaleiros por terrenos acidentados por longas distâncias.",
+      "description_source_url": "https://olddragon.com.br/monstros/cavalo-de-montaria",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "cavalo-de-tracao",
@@ -1980,7 +2064,10 @@
           "name": "Carga",
           "description": "carrega ou puxa até 4.500 moedas."
         }
-      ]
+      ],
+      "description": "Domesticado e criado para o trabalho, puxando arados, moinhos, carroças ou carruagens.",
+      "description_source_url": "https://olddragon.com.br/monstros/cavalo-de-tracao",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "cenobita",
@@ -2031,7 +2118,10 @@
           "name": "Excomungar",
           "description": "eles podem ser expulsos por meio do quebra-cabeças usado para trazê-los. Se o personagem tentar resolver o enigma, deve fazer um teste de INT difícil. Assim que resolvido, todos os Cenobitas próximos serão excomungados."
         }
-      ]
+      ],
+      "description": "Criaturas torturadoras do abismo. Alimentam-se da dor de suas vítimas.",
+      "description_source_url": "https://olddragon.com.br/monstros/cenobita",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "centauro",
@@ -2081,7 +2171,10 @@
           "name": "Carga",
           "description": "carrega até 4.000 moedas ou 2.000 moedas e um montador."
         }
-      ]
+      ],
+      "description": "Guardiões das florestas. Mestres na arte da perseguição, caça e arco. Atacam invasores sem avisar.",
+      "description_source_url": "https://olddragon.com.br/monstros/centauro",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "centopeia-gigante",
@@ -2116,7 +2209,10 @@
           "name": "Veneno",
           "description": "causa a perda de 1d4+2 pontos de Constituição em caso de falha em uma JPC."
         }
-      ]
+      ],
+      "description": "Esta criatura feroz dos subterrâneos usa seu tamanho e mobilidade para desferir seus venenos em suas vítimas.",
+      "description_source_url": "https://olddragon.com.br/monstros/centopeia-gigante",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "cerbero",
@@ -2166,7 +2262,10 @@
           "name": "Veneno",
           "description": "a cauda perfurante do Cérbero inocula Veneno Paralisante. Uma JPC evita qualquer efeito deste veneno. Uma falha no teste causa a perda de 1d6 pontos de Destreza por turno até o alvo perder todos os pontos de Destreza e morrer."
         }
-      ]
+      ],
+      "description": "Cão Infernal imenso com três cabeças. Guarda a entrada dos Planos do Caos.",
+      "description_source_url": "https://olddragon.com.br/monstros/cerbero",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "chefe-da-guarda-mercadores",
@@ -2293,7 +2392,10 @@
           "name": "Golpe potente",
           "description": "se causar, com uma clava ou pedrada, uma quantidade de dano maior do que a força do alvo, este é arremessado 1d4 metros para trás."
         }
-      ]
+      ],
+      "description": "Brutal ao defender o que é seu, um Ciclope ataca com pedras gigantescas e com poderosos golpes de tacape.",
+      "description_source_url": "https://olddragon.com.br/monstros/ciclope",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "ciclorc",
@@ -2347,7 +2449,10 @@
           "name": "Magia",
           "description": "um Ciclorc pode lançar magias como se fosse um Clérigo Xamã de 3º nível."
         }
-      ]
+      ],
+      "description": "Amaldiçoadas pelo deus Orcus, estas criaturas descendem dos Orcs e usam seus poderes mágicos contra seus inimigos.",
+      "description_source_url": "https://olddragon.com.br/monstros/ciclorc",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "cobra-constritora",
@@ -2382,7 +2487,10 @@
           "name": "Agarrar",
           "description": "Quando um ataque de mordida é bem-sucedido, a Cobra Constritora agarra a vítima causando 2d4 de dano por rodada. Um teste de força bem-sucedido livra da constrição."
         }
-      ]
+      ],
+      "description": "Típica dos pântanos, a Cobra Constritora é forte e perigosa.",
+      "description_source_url": "https://olddragon.com.br/monstros/cobra-constritora",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "cobra-cuspidora",
@@ -2424,7 +2532,10 @@
           "name": "Cegueira",
           "description": "causa cegueira por 1d6 rodadas nos alvos atingidos que falharem em um teste de JPD."
         }
-      ]
+      ],
+      "description": "Negra e reclusa, ataca quando confrontada com seu cuspe venenoso.",
+      "description_source_url": "https://olddragon.com.br/monstros/cobra-cuspidora",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "cobra-venenosa",
@@ -2459,7 +2570,10 @@
           "name": "Veneno",
           "description": "causa morte em 1d10 turnos em caso de falha em um teste de JPC."
         }
-      ]
+      ],
+      "description": "Ágil e traiçoeira, esta serpente vive em quase todos os ambientes e climas, menos nos mais extremos.",
+      "description_source_url": "https://olddragon.com.br/monstros/cobra-venenosa",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "cocatriz",
@@ -2509,7 +2623,10 @@
           "name": "Confusão",
           "description": "quando acerta com suas garras, o alvo deve passar em uma JPD ou perderá a sua ação. Caso o alvo fique confuso, o próximo ataque do Cocatriz é realizado como um ataque muito fácil."
         }
-      ]
+      ],
+      "description": "Criatura irritadiça, que pode transformar carne em pedra. Pulam no rosto dos oponentes, causando confusão e caos.",
+      "description_source_url": "https://olddragon.com.br/monstros/cocatriz",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "coiote",
@@ -2539,7 +2656,10 @@
           "damage": "1d4+1"
         }
       ],
-      "abilities": []
+      "abilities": [],
+      "description": "Canídeos pequenos e carnívoros que vivem em montanhas, florestas, planícies e desertos.",
+      "description_source_url": "https://olddragon.com.br/monstros/coiote",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "criatura-abissal",
@@ -2574,7 +2694,10 @@
           "name": "Aquática",
           "description": "respiram embaixo d’água salgada e vivem a maior parte do tempo submersos na mesma. Usam estas vantagens para atacar e surpreender seus inimigos."
         }
-      ]
+      ],
+      "description": "Peixe humanoide com pele úmida e presas assustadoras. Articulam reviver seu deus antigo e esquecido no Plano Material.",
+      "description_source_url": "https://olddragon.com.br/monstros/criatura-abissal",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "crocodilo",
@@ -2604,7 +2727,10 @@
           "damage": "1d8"
         }
       ],
-      "abilities": []
+      "abilities": [],
+      "description": "Estes ferozes répteis de couro extremamente rígido vivem em rios e pântanos dos climas mais quentes.",
+      "description_source_url": "https://olddragon.com.br/monstros/crocodilo",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "cubo-gelatinoso",
@@ -2647,7 +2773,10 @@
           "name": "Imunidades",
           "description": "imune aos efeitos do frio e da eletricidade."
         }
-      ]
+      ],
+      "description": "Cubo transparente de gelatina ácida. Move-se sorrateiramente nos corredores das masmorras absorvendo e dissolvendo tudo o que consegue fagocitar.",
+      "description_source_url": "https://olddragon.com.br/monstros/cubo-gelatinoso",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "cultista",
@@ -2822,7 +2951,10 @@
           "name": "Vulnerabilidade",
           "description": "um Derro perde um ponto de vida a cada hora exposto à luz do sol."
         }
-      ]
+      ],
+      "description": "Insanos e incansáveis vivem nas profundezas do mundo destilando sua crueldade para destruir tudo o que os opõe.",
+      "description_source_url": "https://olddragon.com.br/monstros/derro",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "destruidor",
@@ -2872,7 +3004,10 @@
           "name": "Baforada",
           "description": "1 vez ao dia, o Destruidor pode expelir uma poderosa baforada de 10d10 x2 pontos de dano."
         }
-      ]
+      ],
+      "description": "Criatura colossal que dizem servir a grandes propósitos e causas.",
+      "description_source_url": "https://olddragon.com.br/monstros/destruidor",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "devorador-de-cerebro",
@@ -2923,7 +3058,10 @@
           "name": "Infravisão",
           "description": "20 metros."
         }
-      ]
+      ],
+      "description": "Maligno e temido, alimenta-se do cérebro de qualquer ser. Escraviza inimigos que atrapalhem os seus planos.",
+      "description_source_url": "https://olddragon.com.br/monstros/devorador-de-cerebro",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "diabrete",
@@ -2966,7 +3104,10 @@
           "name": "Alterar Forma",
           "description": "um Diabrete pode alterar sua própria forma assumindo a de qualquer criatura viva de tamanho semelhante (como um porco, cachorro, ou até uma criança pequena)."
         }
-      ]
+      ],
+      "description": "Pequenos lacaios das forças dos planos inferiores usados para funções de espionagem, pequenas trapaças e sabotagens.",
+      "description_source_url": "https://olddragon.com.br/monstros/diabrete",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "doppelganger",
@@ -3009,7 +3150,10 @@
           "name": "Imunidade",
           "description": "efeitos de encantamentos ou de uma magia Sono."
         }
-      ]
+      ],
+      "description": "Humanoide inteligente capaz de assumir a forma de qualquer criatura encontrada por ele.",
+      "description_source_url": "https://olddragon.com.br/monstros/doppelganger",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "dragao-azul",
@@ -3059,7 +3203,10 @@
           "name": "Magias",
           "description": "um Dragão Azul pode conjurar magias como se fosse um Mago de 7º nível."
         }
-      ]
+      ],
+      "description": "Ancestrais, orgulhosos e poderosos. Vivem em seus covis, inteligentemente escondidos nas planícies e nos desertos. Organizam emboscadas a viajantes e admiram seus tesouros acumulados.",
+      "description_source_url": "https://olddragon.com.br/monstros/dragao-azul",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "dragao-branco",
@@ -3109,7 +3256,10 @@
           "name": "Magias",
           "description": "um Dragão Branco pode conjurar magias como se fosse um Mago de 5º nível."
         }
-      ]
+      ],
+      "description": "Ancestrais, orgulhosos e poderosos. Vivem em seus covis escondidos em geleiras e planícies geladas. Organizam emboscadas a viajantes e admiram seus tesouros acumulados.",
+      "description_source_url": "https://olddragon.com.br/monstros/dragao-branco",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "dragao-das-sombras",
@@ -3163,7 +3313,10 @@
           "name": "Infravisão",
           "description": "30 metros"
         }
-      ]
+      ],
+      "description": "Ancestrais, orgulhosos e poderosos. Vivem em seus covis escondidos de qualquer fonte de luz. Saem apenas para os subterrâneos ou durante a noite para organizar emboscadas a viajantes.",
+      "description_source_url": "https://olddragon.com.br/monstros/dragao-das-sombras",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "dragao-de-ossos",
@@ -3213,7 +3366,10 @@
           "name": "Imunidade",
           "description": "um Dragão de Ossos é imune a um Afastar Mortos-Vivos de um Clérigo."
         }
-      ]
+      ],
+      "description": "Resultado de experiências necromânticas, estes dragões mortos-vivos são umas das criaturas mais aterrorizantes já vistas pelo mundo.",
+      "description_source_url": "https://olddragon.com.br/monstros/dragao-de-ossos",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "dragao-dourado",
@@ -3263,7 +3419,10 @@
           "name": "Magias",
           "description": "um Dragão Dourado pode conjurar magias como um Mago de 7º nível."
         }
-      ]
+      ],
+      "description": "Ancestrais, orgulhosos e poderosos. Estes dragões se destacam dos demais dragões pelo seu senso de justiça e ordem. São sábios, benevolentes e muito conscientes do seu poder e lugar na sociedade.",
+      "description_source_url": "https://olddragon.com.br/monstros/dragao-dourado",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "dragao-negro",
@@ -3313,7 +3472,10 @@
           "name": "Magias",
           "description": "um Dragão Negro pode conjurar magias como se fosse um Mago de 6º nível."
         }
-      ]
+      ],
+      "description": "Ancestrais, orgulhosos e poderosos. Vivem em seus covis, inteligentemente escondidos nos pântanos e áreas alagadas. Organizam emboscadas a viajantes e admiram seus tesouros acumulados.",
+      "description_source_url": "https://olddragon.com.br/monstros/dragao-negro",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "dragao-verde",
@@ -3363,7 +3525,10 @@
           "name": "Magias",
           "description": "um Dragão Verde pode conjurar magias como se fosse um Mago 6º nível."
         }
-      ]
+      ],
+      "description": "Ancestrais, orgulhosos e poderosos. Vivem em seus covis, inteligentemente escondidos nas florestas e selvas. Organizam emboscadas a viajantes e admiram seus tesouros acumulados.",
+      "description_source_url": "https://olddragon.com.br/monstros/dragao-verde",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "dragao-vermelho",
@@ -3413,7 +3578,10 @@
           "name": "Magias",
           "description": "um Dragão Vermelho pode conjurar magias como se fosse um Mago de 7º nível."
         }
-      ]
+      ],
+      "description": "Ancestrais, orgulhosos e poderosos. Vivem em seus covis, inteligentemente escondidos nas montanhas e colinas. Organizam emboscadas a viajantes e admiram seus tesouros acumulados.",
+      "description_source_url": "https://olddragon.com.br/monstros/dragao-vermelho",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "drakold",
@@ -3463,7 +3631,10 @@
           "name": "Sacrifício",
           "description": "se conseguirem ficar 1 minuto se concentrando, conseguem explodir o próprio corpo ao invocarem a baforada. Causam 2d6+1 em um raio de 3 metros."
         }
-      ]
+      ],
+      "description": "Primitivos, vivem próximos a regiões onde dragões habitam. Atacam para defender seu território, lutando até o fim.",
+      "description_source_url": "https://olddragon.com.br/monstros/drakold",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "drider",
@@ -3517,7 +3688,10 @@
           "name": "Vulnerabilidade",
           "description": "um Drider fica completamente cego quando exposto a luz do sol, além de perder um ponto de Constituição a cada hora de exposição ao sol."
         }
-      ]
+      ],
+      "description": "Aberrações com torso de homem e corpo de aranha. São os temíveis soldados amaldiçoados da Arak-Takna.",
+      "description_source_url": "https://olddragon.com.br/monstros/drider",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "duende",
@@ -3560,7 +3734,10 @@
           "name": "Imunidades",
           "description": "a magias mentais de manipulação, controle ou ilusão, ou demais formas mágicas de interferir na mente de seres vivos."
         }
-      ]
+      ],
+      "description": "Pequenos homenzinhos persuasivos, gananciosos e adoradores de ouro.",
+      "description_source_url": "https://olddragon.com.br/monstros/duende",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "efreeti",
@@ -3603,7 +3780,10 @@
           "name": "Explosão de Fogo",
           "description": "o Efreeti pode, uma vez ao dia, causar uma explosão de fogo ao seu redor semelhante à magia Bola de Fogo."
         }
-      ]
+      ],
+      "description": "Seres mágicos e inteligentes do Plano Elemental do Fogo, com faces demoníacas e corpos em brasa.",
+      "description_source_url": "https://olddragon.com.br/monstros/efreeti",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "elefante",
@@ -3649,7 +3829,10 @@
           "name": "Carga",
           "description": "carrega ou puxa até 6.000 moedas ou 3.000 moedas e até 3 montadores."
         }
-      ]
+      ],
+      "description": "Estes animais vivem em áreas florestais e em planícies de clima quente, sempre em grandes grupos.",
+      "description_source_url": "https://olddragon.com.br/monstros/elefante",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "elemental-da-agua",
@@ -3696,7 +3879,10 @@
           "name": "Vulnerabilidade",
           "description": "um Elemental da Água leva dano dobrado de qualquer ataque proveniente de uma fonte de ar."
         }
-      ]
+      ],
+      "description": "Uma grande onda de água revolta, de forma amorfa. Flui para onde quer ir e assume qualquer forma desejada.",
+      "description_source_url": "https://olddragon.com.br/monstros/elemental-da-agua",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "elemental-da-terra",
@@ -3743,7 +3929,10 @@
           "name": "Vulnerabilidade",
           "description": "um Elemental da Terra leva dano dobrado de qualquer ataque proveniente de uma fonte de fogo."
         }
-      ]
+      ],
+      "description": "Um grande torrão de terra e pedras que formam uma massa amorfa levemente humanoide.",
+      "description_source_url": "https://olddragon.com.br/monstros/elemental-da-terra",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "elemental-do-ar",
@@ -3790,7 +3979,10 @@
           "name": "Vulnerabilidade",
           "description": "um Elemental do Ar leva dano dobrado de qualquer ataque proveniente de uma fonte de terra."
         }
-      ]
+      ],
+      "description": "Um grande redemoinho revoltoso, girando de forma amorfa e cambiante.",
+      "description_source_url": "https://olddragon.com.br/monstros/elemental-do-ar",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "elemental-do-fogo",
@@ -3837,7 +4029,10 @@
           "name": "Vulnerabilidade",
           "description": "um Elemental do Fogo leva dano dobrado de qualquer ataque proveniente de uma fonte de água."
         }
-      ]
+      ],
+      "description": "Uma grande chama de fogo, erguendo-se na forma de uma coluna amorfa.",
+      "description_source_url": "https://olddragon.com.br/monstros/elemental-do-fogo",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "elfo",
@@ -3995,7 +4190,10 @@
           "name": "Vulnerabilidade",
           "description": "sob o sol ou luz forte, todos os ataques e JP de um Drow são realizados com ajuste difícil."
         }
-      ]
+      ],
+      "description": "Elfos corrompidos dos subterrâneos. Destacam-se pela sociedade matriarcal e por serem os maiores cultuadores da Arak-Takna.",
+      "description_source_url": "https://olddragon.com.br/monstros/elfo-drow",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "elfo-lider",
@@ -4084,7 +4282,10 @@
           "name": "Moral",
           "description": "um enxame precisa ser bem-sucedido em um teste de moral quando perder metade dos seus pontos de vida. Em caso de falha, a nuvem vai se dispersar, procurando fugir do local o mais rápido possível."
         }
-      ]
+      ],
+      "description": "Nuvens de vários tipos de insetos. Ameaçam qualquer ser encontrado no caminho.",
+      "description_source_url": "https://olddragon.com.br/monstros/enxame-de-insetos",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "escorpiao-gigante",
@@ -4126,7 +4327,10 @@
           "name": "Veneno",
           "description": "causa morte em 1d3+1 turnos em caso de falha em uma JPC."
         }
-      ]
+      ],
+      "description": "Estes aracnídeos ferozes e encouraçados virem nos desertos e planícies caçando suas presas.",
+      "description_source_url": "https://olddragon.com.br/monstros/escorpiao-gigante",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "escravo-remador-pirata",
@@ -4152,14 +4356,14 @@
           "raw": "1 × Arma improvisada ( 1d4 )",
           "count": 1,
           "name": "Arma improvisada",
-          "bonus": null,
+          "bonus": 0,
           "damage": "1d4"
         },
         {
           "raw": "1 × Soco ( 1d3 )",
           "count": 1,
           "name": "Soco",
-          "bonus": null,
+          "bonus": 0,
           "damage": "1d3"
         }
       ],
@@ -4194,7 +4398,7 @@
           "raw": "1 × Toque ( Especial )",
           "count": 1,
           "name": "Toque",
-          "bonus": null,
+          "bonus": 0,
           "damage": "Especial"
         }
       ],
@@ -4211,7 +4415,10 @@
           "name": "Especial",
           "description": "não possui nenhuma estatística de combate, não possui dados de vida, nem pontos de vida. Não realiza testes de ataque nem Jogadas de Proteção."
         }
-      ]
+      ],
+      "description": "Esfera negra. Move-se flutuando lentamente, desintegrando tudo o que toca.",
+      "description_source_url": "https://olddragon.com.br/monstros/esfera-da-aniquilacao",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "esfinge",
@@ -4265,7 +4472,10 @@
           "name": "Resistência",
           "description": "só pode ser atingida por armas de prata, armas mágicas +1 ou superiores."
         }
-      ]
+      ],
+      "description": "Guardiã de caminhos e passagens, esta criatura é uma mistura de leão com homem e asas totalmente funcionais.",
+      "description_source_url": "https://olddragon.com.br/monstros/esfinge",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "espectro",
@@ -4316,7 +4526,10 @@
           "name": "Inabalável",
           "description": "mortos-vivos não fazem testes de moral, a não ser quando sofrem o efeito de um Afastar Mortos-vivos."
         }
-      ]
+      ],
+      "description": "Seres incorpóreos e poderosos. Carregam a alma atormentada para trazer o mal e o caos para os vivos.",
+      "description_source_url": "https://olddragon.com.br/monstros/espectro",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "esporo-de-gas",
@@ -4347,7 +4560,10 @@
           "name": "Explosão",
           "description": "quando um Esporo de Gás é ferido, ele causa 6d6 de dano a todos dentro de uma área de 6 metros. Cada vítima deve ser bem-sucedida em uma JPD para receber metade do dano. Este ataque não espalha esporos nas vítimas como um ataque normal faria."
         }
-      ]
+      ],
+      "description": "Estes fungos em forma de bola de gás flutuam e, pela sua aparência, são confundidos com Observadores.",
+      "description_source_url": "https://olddragon.com.br/monstros/esporo-de-gas",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "esqueleto",
@@ -4394,7 +4610,10 @@
           "name": "Inabalável",
           "description": "mortos-vivos não fazem testes de moral, a não ser quando sofrem o efeito de um Afastar Mortos-Vivos."
         }
-      ]
+      ],
+      "description": "Mortos-vivos normalmente usados como guardiões de locais antigos e esquecidos. Sem medo, atacam até caírem aos pedaços.",
+      "description_source_url": "https://olddragon.com.br/monstros/esqueleto",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "estegossauro",
@@ -4424,7 +4643,10 @@
           "damage": "2d8"
         }
       ],
-      "abilities": []
+      "abilities": [],
+      "description": "Lagartos quadrúpedes, estes herbívoros são conhecidos pelas placas no dorso e o rabo repleto de espinhos ósseos.",
+      "description_source_url": "https://olddragon.com.br/monstros/estegossauro",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "ettin",
@@ -4474,7 +4696,10 @@
           "name": "Infravisão",
           "description": "18 metros."
         }
-      ]
+      ],
+      "description": "Estes gigantes cruéis de duas cabeças percorrem longas distâncias atrás da sua iguaria favorita: carne humana!",
+      "description_source_url": "https://olddragon.com.br/monstros/ettin",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "fanatico",
@@ -4619,7 +4844,10 @@
           "name": "Xxxxxxxxxxx",
           "description": "x Xxxxxxxx xxxxx xx xxxxxxx xxx x xxxxxx xxxxxxxxxxx xxxxxxx xxxxxxxxx xx xxx xxxxx xxx x xxxxxxxx xx xxxxxxxxxx-xx, xxxxxxx-x x xxxxxxx xxxxxxxx. Xxxxxxxx xxx xxxx xxx xxxxx xx xxxxxx x xxxxxx xxxxxxxx xxxx Xxxxxxxx xxx xxxx xx 00 xxxxx, xxxx xxxxxxxx xxx XXX xx xxxxxx 0x0 xxxxxx xx Xxxxxxxxx x xxxx 00 xxxxx. Xx xxxx xxx xxxxx xxxxx xxxxx xx xxxx xxxxxx xx Xxxxxxxxx xxxxxxxxxx x xxxx x xxxxxxx xxxx xx xx xxxxxx xx xxxxx."
         }
-      ]
+      ],
+      "description": "Espíritos incapazes de descansar porque estão presos entre o Plano Material e o etéreo.",
+      "description_source_url": "https://olddragon.com.br/monstros/fantasma",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "fera-do-pantano",
@@ -4669,7 +4897,10 @@
           "name": "Saliva paralisante",
           "description": "1 vez por combate podem lançar um cuspe à 5 metros de distância capaz de paralisar a vítima por 1d4-2 rodadas, a menos que esta passe em uma JPD."
         }
-      ]
+      ],
+      "description": "Sapos antropomórficos cruéis. Costumam caçar suas vítimas em bandos.",
+      "description_source_url": "https://olddragon.com.br/monstros/fera-do-pantano",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "fera-refratora",
@@ -4704,7 +4935,10 @@
           "name": "Refração",
           "description": "a fera possui uma habilidade sobrenatural de esconder sua real posição, como se estivesse refratando sua imagem. Na prática, uma Fera Refratora está sempre a ao menos um metro da posição onde sua imagem demonstra estar. Isso causa uma penalidade de 2 nos ataques de todos os seus oponentes."
         }
-      ]
+      ],
+      "description": "Felino com pelagem negra e dois tentáculos nas costas que terminam com uma hacha repleta de espinhos!",
+      "description_source_url": "https://olddragon.com.br/monstros/fera-refratora",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "flagelo-da-podridao",
@@ -4730,11 +4964,14 @@
           "raw": "1 × Especial ( Especial )",
           "count": 1,
           "name": "Especial",
-          "bonus": null,
+          "bonus": 0,
           "damage": "Especial"
         }
       ],
-      "abilities": []
+      "abilities": [],
+      "description": "Pequenas criaturas nojentas que se alimentam de carne viva, levando uma morte lenta às suas vítimas.",
+      "description_source_url": "https://olddragon.com.br/monstros/flagelo-da-podridao",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "fogo-fatuo",
@@ -4777,7 +5014,10 @@
           "name": "Invisibilidade",
           "description": "o Fogo Fátuo pode apagar sua luz conscientemente e, assim, ficar invisível a todos por até 2d4 rodadas. Enquanto apagados, um Fogo Fátuo não é capaz de atacar seus inimigos."
         }
-      ]
+      ],
+      "description": "Pequenas esferas brilhantes que pulsam luzes amarelas enquanto dançam sobre as águas paradas dos pântanos.",
+      "description_source_url": "https://olddragon.com.br/monstros/fogo-fatuo",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "formiga-gigante",
@@ -4807,7 +5047,10 @@
           "damage": "2d6"
         }
       ],
-      "abilities": []
+      "abilities": [],
+      "description": "Estas formigas gigantes podem ser encontradas em qualquer ambiente e são perigosas quando famintas.",
+      "description_source_url": "https://olddragon.com.br/monstros/formiga-gigante",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "fungo-gritador",
@@ -4834,7 +5077,10 @@
           "name": "Grito",
           "description": "quando incomodado no seu território de raio de 3 metros do Fungo por invasão, luz ou ruídos, o Fungo Gritador emitirá um som alto e estridente por 1d3+1 rodadas. O som é inofensivo para aqueles que o escutam, mas há uma chance de 1-3 no d6 de atrair monstros na masmorra."
         }
-      ]
+      ],
+      "description": "Possuem pequenos pseudópodes e pequenas bocas que emitem som para assustar e afastar intrusos.",
+      "description_source_url": "https://olddragon.com.br/monstros/fungo-gritador",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "fungo-pigmeu",
@@ -4877,7 +5123,10 @@
           "name": "Inflamáveis",
           "description": "fogo causa dano dobrado nestas criaturas."
         }
-      ]
+      ],
+      "description": "Conhecidos como povo bolor, vivem em cavernas úmidas ou florestas escuras, sempre caçando para sobreviver.",
+      "description_source_url": "https://olddragon.com.br/monstros/fungo-pigmeu",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "fungo-violeta",
@@ -4920,7 +5169,10 @@
           "name": "Proliferar",
           "description": "ao acertar dois ataques de Mordida no mesmo alvo, o Fungo Violeta liberará esporos que entrarão no corpo da vítima que, por sua vez, morrerá em dois dias após dar vida a um Fungo Pigmeu."
         }
-      ]
+      ],
+      "description": "De inteligência primitiva, é capaz de se fixar em superfícies, caindo de surpresa em aventureiros desavisados.",
+      "description_source_url": "https://olddragon.com.br/monstros/fungo-violeta",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "gargula",
@@ -4966,7 +5218,10 @@
           "name": "Imunidades",
           "description": "Gárgulas são feridas apenas por magia e armas mágicas."
         }
-      ]
+      ],
+      "description": "Assemelhadas a estátuas e de aparência demoníaca, misturam-se em construções antigas para atacarem seus inimigos.",
+      "description_source_url": "https://olddragon.com.br/monstros/gargula",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "genio",
@@ -5009,7 +5264,10 @@
           "name": "Magia",
           "description": "um Gênio pode lançar as seguintes magias como se fosse um Mago de 3º nível: Invisibilidade, Ilusão e Criar Alimentos."
         }
-      ]
+      ],
+      "description": "Humanoides do plano elemental do ar. São conhecidos por sua sagacidade e perspicácia.",
+      "description_source_url": "https://olddragon.com.br/monstros/genio",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "ghoul",
@@ -5063,7 +5321,10 @@
           "name": "Inabalável",
           "description": "mortos-vivos não fazem testes de moral, a não ser quando sofrem o efeito de um Afastar Mortos-Vivos."
         }
-      ]
+      ],
+      "description": "Morto-vivo grotesco. Passa todo o tempo procurando carne de semi-humanos para se alimentar.",
+      "description_source_url": "https://olddragon.com.br/monstros/ghoul",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "gigante-da-colina",
@@ -5109,7 +5370,10 @@
           "name": "Golpe Potente",
           "description": "se conseguir causar, com uma pancada ou arma, uma quantidade de dano superior a força do alvo, este é arremessado 1d6 metros para trás."
         }
-      ]
+      ],
+      "description": "Com 4 metros de altura, estes gigantes aterrorizam comunidades vizinhas com seus ataques em grupo.",
+      "description_source_url": "https://olddragon.com.br/monstros/gigante-da-colina",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "gigante-da-montanha",
@@ -5158,7 +5422,10 @@
           "name": "Golpe Potente",
           "description": "se conseguir causar, com uma pancada, pedrada ou arma, uma quantidade de dano maior que a força do alvo, este é arremessado 1d4 metros para trás."
         }
-      ]
+      ],
+      "description": "Com 5 metros de altura, estes gigantes primitivos preferem atacar à distância qualquer um que cruze seu caminho.",
+      "description_source_url": "https://olddragon.com.br/monstros/gigante-da-montanha",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "gigante-da-tempestade",
@@ -5212,7 +5479,10 @@
           "name": "Golpe Potente",
           "description": "se conseguir causar, com uma pancada ou arma, uma quantidade de dano maior que a força do alvo, este é arremessado 1d8 metros para trás."
         }
-      ]
+      ],
+      "description": "Com 8 metros de altura, estes gigantes habitam tanto as nuvens quanto as profundezas dos oceanos.",
+      "description_source_url": "https://olddragon.com.br/monstros/gigante-da-tempestade",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "gigante-do-fogo",
@@ -5269,7 +5539,10 @@
           "name": "Golpe Potente",
           "description": "se conseguir causar, com uma pancada, pedrada ou arma, uma quantidade de dano maior que a força do alvo, este é arremessado 1d6 metros para trás."
         }
-      ]
+      ],
+      "description": "Com 6 metros de altura, estes gigantes militarizados são brutais em seus ataques contra as defesas inimigas.",
+      "description_source_url": "https://olddragon.com.br/monstros/gigante-do-fogo",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "gigante-do-gelo",
@@ -5330,7 +5603,10 @@
           "name": "Golpe Potente",
           "description": "se conseguir causar, com uma pancada, pedrada ou arma, uma quantidade de dano maior que a força do alvo, este é arremessado 1d6 metros para trás."
         }
-      ]
+      ],
+      "description": "Com 7 metros de altura, estes gigantes estúpidos das terras geladas adoram emboscar seus inimigos.",
+      "description_source_url": "https://olddragon.com.br/monstros/gigante-do-gelo",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "gnoll",
@@ -5372,7 +5648,10 @@
           "name": "Classe de armadura",
           "description": "Gnolls possuem CA 12 ou 15 quando usam armadura de couro batido."
         }
-      ]
+      ],
+      "description": "Humanoide cruel. Organizam-se em bandos de salteadores, roubando tudo o que julgarem ser lucrativo.",
+      "description_source_url": "https://olddragon.com.br/monstros/gnoll",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "gnomo",
@@ -5489,7 +5768,10 @@
           "name": "Infravisão",
           "description": "18 metros."
         }
-      ]
+      ],
+      "description": "Usam armas comuns e táticas simples de combate, contando com a força dos números para sobrepujar os adversários.",
+      "description_source_url": "https://olddragon.com.br/monstros/goblin",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "golem-de-carne",
@@ -5536,7 +5818,10 @@
           "name": "Fúria",
           "description": "a cada rodada que estiver em combate, um Golem de Carne tem uma chance cumulativa de 1% de se libertar do controle do seu mestre e entrar em fúria, atacando tudo e a todos que estiverem ao seu alcance."
         }
-      ]
+      ],
+      "description": "Espécie de boneco formado com pedaços de vários corpos diferentes, formando uma única criatura horrenda.",
+      "description_source_url": "https://olddragon.com.br/monstros/golem-de-carne",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "golem-de-ferro",
@@ -5582,7 +5867,10 @@
           "name": "Baforada de gás",
           "description": "uma vez a cada 7 ataques desferidos, o Golem de Ferro é capaz de lançar uma nuvem de gás venenoso causando 3d6 de dano a todos a até 6 metros de distância dele. Uma JPD pode reduzir o dano à metade."
         }
-      ]
+      ],
+      "description": "Humanoides forjados como grandes guerreiros armadurados, feitos do mais puro ferro.",
+      "description_source_url": "https://olddragon.com.br/monstros/golem-de-ferro",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "golem-de-gelo",
@@ -5621,7 +5909,10 @@
           "name": "Estilhaços de Gelo",
           "description": "quando reduzido a zero pontos de vida, um Golem de Gelo explode em estilhaços de gelo afiados. Todas as criaturas a até 3 metros de distância do Golem de Gelo recebem 3d6 pontos de dano da explosão. Uma JPD pode reduzir o dano à metade."
         }
-      ]
+      ],
+      "description": "Estátua humanoide feita de gelo coberta de espinhos de gelo afiados por todo o corpo.",
+      "description_source_url": "https://olddragon.com.br/monstros/golem-de-gelo",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "golem-de-madeira",
@@ -5660,7 +5951,10 @@
           "name": "Vulnerabilidade",
           "description": "um Golem de Madeira resiste a qualquer ataque de fogo com um penalizador de -2 e recebe um dano adicional de 1 em todo dano causado por fogo."
         }
-      ]
+      ],
+      "description": "Pequenos golens construídos com madeira em formas humanoides. Com vontade própria, agem livremente.",
+      "description_source_url": "https://olddragon.com.br/monstros/golem-de-madeira",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "golem-de-ossos",
@@ -5699,7 +5993,10 @@
           "name": "Quatro Braços",
           "description": "um Golem de Ossos possui 4 braços os quais podem ser usados para atacar até 2 oponentes diferentes. Um Golem de Ossos pode ainda usar duas armas de duas mãos e desferir dois ataques em um único oponente."
         }
-      ]
+      ],
+      "description": "Golem criado com ossos humanos de diferentes criaturas. Possui quatro braços totalmente funcionais.",
+      "description_source_url": "https://olddragon.com.br/monstros/golem-de-ossos",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "golem-de-pedra",
@@ -5738,12 +6035,17 @@
           "name": "Lentidão",
           "description": "Golens de Pedra são capazes de criar uma área de lentidão a todos ao seu redor. Todos dentro de uma área de 6 x 6 metros que não passarem em uma JPC ficarão lentos. Suas movimentações ficam reduzidas pela metade, e recebem uma penalidade de 2 em todas as jogadas e na CA. O efeito tem duração de 2d6 turnos."
         }
-      ]
+      ],
+      "description": "Grande humanoide esculpido na pedra bruta e animado em rituais arcanos.",
+      "description_source_url": "https://olddragon.com.br/monstros/golem-de-pedra",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "gorgon",
       "name": "Górgon",
       "source_url": "https://olddragon.com.br/monstros/gorgon",
+      "description": "Um touro enorme revestido por carapaça metálica, hostil e propenso a atacar de imediato.",
+      "visual_description": "An enormous quadrupedal bull. Four bovine legs ending in cloven hooves support a long horizontal animal torso. Natural curved horns and a metallic carapace. Animal anatomy; no human hands, no upright stance, no clothing or carried equipment.",
       "category": "Besta",
       "size": "Grande",
       "alignment": "Caótico",
@@ -5807,7 +6109,10 @@
           "damage": "1d4"
         }
       ],
-      "abilities": []
+      "abilities": [],
+      "description": "Primatas enormes e ferozes que vivem nas florestas tropicais.",
+      "description_source_url": "https://olddragon.com.br/monstros/gorila",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "gosma-ocre",
@@ -5850,7 +6155,10 @@
           "name": "Imunidades",
           "description": "imune aos efeitos do frio e da eletricidade. Uma Gosma Ocre atacada com eletricidade ainda pode se dividir ao meio."
         }
-      ]
+      ],
+      "description": "Criatura amorfa similar a uma ameba gigante e de cor parda.",
+      "description_source_url": "https://olddragon.com.br/monstros/gosma-ocre",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "grifo",
@@ -5892,7 +6200,10 @@
           "name": "Presa Preferencial",
           "description": "Grifos na natureza possuem como principal fonte de alimentação os cavalos selvagens. Assim, sempre que encontrar um cavalo, precisará passar em um teste de moral para não atacá-lo instintivamente."
         }
-      ]
+      ],
+      "description": "Um enorme leão alado com cabeça, patas dianteiras e asas de águia gigante.",
+      "description_source_url": "https://olddragon.com.br/monstros/grifo",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "guarda-costas-mercadores",
@@ -6020,7 +6331,10 @@
           "name": "Resistência à dano",
           "description": "ignoram 1 ponto de dano de cada ataque físico."
         }
-      ]
+      ],
+      "description": "Guerreiros fanáticos que lutam pelas forças do caos. Possuem poderes que os levam além dos limites da vida e da morte.",
+      "description_source_url": "https://olddragon.com.br/monstros/guerreiro-do-caos",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "haken",
@@ -6070,7 +6384,10 @@
           "name": "Desarmar",
           "description": "caso obtenham um resultado 20 no dado de ataque, arrancam das mãos do inimigo seu escudo ou arma (nesta ordem, caso os tenham)."
         }
-      ]
+      ],
+      "description": "Perigosa criatura com mãos de gancho. Vive nos subterrâneos e atacam os alvos de surpresa.",
+      "description_source_url": "https://olddragon.com.br/monstros/haken",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "halfling",
@@ -6286,7 +6603,10 @@
           "name": "Canto",
           "description": "a Harpia emite um canto lamurioso o qual encanta todos que estejam a até 90 metros dela. Uma JPS nega os efeitos do canto pelas próximas 24 horas, mas, em caso de falha, o alvo caminhará em direção à Harpia pelo melhor caminho possível. A única ação possível a uma pessoa sob o efeito do canto da Harpia é se defender. O efeito do encantamento dura até um turno após a interrupção do canto."
         }
-      ]
+      ],
+      "description": "Junção de ave de rapina com Bruxa que ataca qualquer criatura em seu território com seu canto lamurioso.",
+      "description_source_url": "https://olddragon.com.br/monstros/harpia",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "hidra",
@@ -6321,7 +6641,10 @@
           "name": "Múltiplas cabeças",
           "description": "Hidras são encontradas com 1d8+4 cabeças, cada uma com 1 Dado de Vida e 1 ataque. Uma Hidra perde 1 cabeça a cada 8 pontos de dano recebidos. Uma cabeça perdida se regenera dando origem a duas outras cabeças em 1d4 turnos (recuperando 2 DV e 2 ataques). Contudo, a cabeça cortada não irá se regenerar caso seja atacada com fogo ou ácido. Nesses casos, o pescoço fica inerte, não regenerando novas cabeças. Uma Hidra pode possuir no máximo 12 cabeças simultaneamente."
         }
-      ]
+      ],
+      "description": "Criatura semelhante a um lagarto imenso com várias cabeças.",
+      "description_source_url": "https://olddragon.com.br/monstros/hidra",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "hiena",
@@ -6351,7 +6674,10 @@
           "damage": "1d6"
         }
       ],
-      "abilities": []
+      "abilities": [],
+      "description": "Estes carnívoros ferozes vivem em grupos nas planícies tropicais e são peritas em caçar em grupo.",
+      "description_source_url": "https://olddragon.com.br/monstros/hiena",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "hobgoblin",
@@ -6390,7 +6716,10 @@
           "name": "Infravisão",
           "description": "18 metros."
         }
-      ]
+      ],
+      "description": "Militarizados, usam táticas avançadas de guerrilha, tornando-os em grandes forças mercenárias.",
+      "description_source_url": "https://olddragon.com.br/monstros/hobgoblin",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "homem-comum",
@@ -6416,7 +6745,7 @@
           "raw": "1 × Soco ( 1d3 )",
           "count": 1,
           "name": "Soco",
-          "bonus": null,
+          "bonus": 0,
           "damage": "1d3"
         }
       ],
@@ -6646,7 +6975,10 @@
           "name": "Drenar Energia",
           "description": "seu ataque drena 1 nível do personagem, caso este não passe em uma JPC. Uma criatura com todos seus níveis drenados por um Homem Esguio tem sua alma devorada por ele e não pode ser ressuscitada."
         }
-      ]
+      ],
+      "description": "Percorre os planos atrás de alvos para alimentar-se de suas almas ou sequestrá-los para outros planos.",
+      "description_source_url": "https://olddragon.com.br/monstros/homem-esguio",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "homem-gato",
@@ -6696,7 +7028,10 @@
           "name": "Surpresa",
           "description": "surpreendem seus inimigos com 1-4 chances em 1d6."
         }
-      ]
+      ],
+      "description": "Franzinos e delgados. São curiosos, traiçoeiros e ótimos rastreadores, escaladores e caçadores.",
+      "description_source_url": "https://olddragon.com.br/monstros/homem-gato",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "homem-javali",
@@ -6735,7 +7070,10 @@
           "name": "Convocar animais",
           "description": "um Homem-Javali pode convocar 1d3 javalis. Os animais convocados chegam em 1d4 rodadas."
         }
-      ]
+      ],
+      "description": "Licantropos furiosos e grosseiros, com aparência rústica e irascível.",
+      "description_source_url": "https://olddragon.com.br/monstros/homem-javali",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "homem-lagarto",
@@ -6777,7 +7115,10 @@
           "name": "Lutar até morrer",
           "description": "quando encurralados, recebem +1 no ataque e dano até o fim do combate."
         }
-      ]
+      ],
+      "description": "Selvagens reptilianos. Atacam de forma desordenada com lanças e fundas, devastando povoados.",
+      "description_source_url": "https://olddragon.com.br/monstros/homem-lagarto",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "homem-lobo",
@@ -6816,7 +7157,10 @@
           "name": "Convocar animais",
           "description": "um Homem-Lobo pode convocar 1d3 lobos. Os animais convocados chegam em 1d4 rodadas. Quando acompanhados por um lobisomem, o moral destes lobos é 9."
         }
-      ]
+      ],
+      "description": "Também conhecidos como Lobisomem, são de longe os Licantropos mais comuns e ferozes conhecidos.",
+      "description_source_url": "https://olddragon.com.br/monstros/homem-lobo",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "homem-rato",
@@ -6866,7 +7210,10 @@
           "name": "Transformado",
           "description": "Homens-Rato podem falar mesmo na forma monstruosa e podem usar armas de ataque. Um Homem-Rato em forma animal se transforma em um Rato Gigante."
         }
-      ]
+      ],
+      "description": "Astutos, frequentemente formando guildas de ladrões. São furtivos e preferem atacar por meio de emboscadas.",
+      "description_source_url": "https://olddragon.com.br/monstros/homem-rato",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "homem-urso",
@@ -6916,7 +7263,10 @@
           "name": "Abraço",
           "description": "se o Homem-Urso acertar os dois ataques com suas garras, conseguirá agarrar o alvo, causando 2d8 de dano enquanto estiver agarrando o alvo."
         }
-      ]
+      ],
+      "description": "Estes Licantropos mantêm sua racionalidade mesmo quando transformados. Vivem isolados ou entre ursos.",
+      "description_source_url": "https://olddragon.com.br/monstros/homem-urso",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "homunculo",
@@ -6959,7 +7309,10 @@
           "name": "Imunidades",
           "description": "um Homúnculo não é atingido por ataques que necessitem de um alvo vivo (como gases, venenos ou magias mentais como ilusões, ou demais formas mágicas de interferir na mente de seres vivos)."
         }
-      ]
+      ],
+      "description": "Constructo humanoide usado por magos para serviços como envio de mensagens, vigilância ou espionagem.",
+      "description_source_url": "https://olddragon.com.br/monstros/homunculo",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "inumano",
@@ -7010,7 +7363,10 @@
           "name": "Inabalável",
           "description": "mortos-vivos não fazem testes de moral, a não ser quando sofrem o efeito de um Afastar Mortos-Vivos."
         }
-      ]
+      ],
+      "description": "Cadáveres ambulantes possuídos por espíritos malignos. Usam sua forma física para aterrorizar os mortais.",
+      "description_source_url": "https://olddragon.com.br/monstros/inumano",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "javali",
@@ -7045,7 +7401,10 @@
           "name": "Investida",
           "description": "se ainda não engajado em combate, pode usar a manobra de investida para causar o dobro de dano com suas presas."
         }
-      ]
+      ],
+      "description": "Estes porcos selvagens e ferozes vivem nas florestas e planícies. Costumam atacar ao menor sinal de perigo.",
+      "description_source_url": "https://olddragon.com.br/monstros/javali",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "jumento-mula",
@@ -7088,7 +7447,10 @@
           "name": "Carga",
           "description": "carrega ou puxa até 2.000 moedas ou 1.000 moedas e um montador."
         }
-      ]
+      ],
+      "description": "Resultado do cruzamento entre burro e cavalo. É semelhante a um cavalo leve, mas um pouco mais rústico.",
+      "description_source_url": "https://olddragon.com.br/monstros/jumento-mula",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "kawamung",
@@ -7141,7 +7503,10 @@
           "name": "Golpe Potente",
           "description": "se causar, com uma pancada, chifre ou arma, uma quantidade de dano maior do que a força do alvo, este é arremessado 1d4 metros para trás."
         }
-      ]
+      ],
+      "description": "Guerreiros conquistadores que expandem seus impérios com o trabalho de escravos.",
+      "description_source_url": "https://olddragon.com.br/monstros/kawamung",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "kobold",
@@ -7167,7 +7532,7 @@
           "raw": "1 × Arma ( Arma )",
           "count": 1,
           "name": "Arma",
-          "bonus": null,
+          "bonus": 0,
           "damage": "Arma"
         },
         {
@@ -7183,7 +7548,10 @@
           "name": "Infravisão",
           "description": "18 metros."
         }
-      ]
+      ],
+      "description": "Humanoides pequenos e covardes que armam armadilhas para surpreenderem seus adversários.",
+      "description_source_url": "https://olddragon.com.br/monstros/kobold",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "lagarto-gigante",
@@ -7229,7 +7597,10 @@
           "name": "Infravisão",
           "description": "18 metros."
         }
-      ]
+      ],
+      "description": "Lagarto quadrúpede similar a uma iguana imensa. Carnívoro e, quando domesticado, usado como montaria.",
+      "description_source_url": "https://olddragon.com.br/monstros/lagarto-gigante",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "leao",
@@ -7266,7 +7637,10 @@
           "damage": "1d4+1"
         }
       ],
-      "abilities": []
+      "abilities": [],
+      "description": "O felino mais feroz e poderoso das planícies tropicais, ataca em grupo, inclusive humanos.",
+      "description_source_url": "https://olddragon.com.br/monstros/leao",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "lesma-mangual",
@@ -7305,7 +7679,10 @@
           "name": "Refletir Magia",
           "description": "Lesmas Manguais distorcem todas as magias lançadas diretamente sobre elas (com exceção das magias de área). Quando forem alvos de uma magia, lance 1d6 e confira na lista:"
         }
-      ]
+      ],
+      "description": "Caracóis gigantes com grandes maças ósseos no topo de sua cabeça. Percorrem os subterrâneos atrás de qualquer alimento.",
+      "description_source_url": "https://olddragon.com.br/monstros/lesma-mangual",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "lich",
@@ -7364,7 +7741,10 @@
           "name": "Tesouro",
           "description": "1d4+1 itens mágicos adicionais."
         }
-      ]
+      ],
+      "description": "O Lich é o resultado do que a cobiça por poder causa a uma mente enlouquecida pelo conhecimento obscuro.",
+      "description_source_url": "https://olddragon.com.br/monstros/lich",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "limo-cinzento",
@@ -7407,7 +7787,10 @@
           "name": "Imunidades",
           "description": "imune aos efeitos do frio e da eletricidade."
         }
-      ]
+      ],
+      "description": "Cinzenta e viscosa esta gosma escorre pelos corredores das masmorras procurando toda forma de metal para corroer.",
+      "description_source_url": "https://olddragon.com.br/monstros/limo-cinzento",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "lobo",
@@ -7442,7 +7825,10 @@
           "name": "Alcateia",
           "description": "O moral de um Lobo é 8 se estiver em grupos de 4 ou mais."
         }
-      ]
+      ],
+      "description": "Canídeos que vivem em geleiras, montanhas e florestas geladas. Vivem em grupos e fazem disso sua principal força de combate.",
+      "description_source_url": "https://olddragon.com.br/monstros/lobo",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "mamute",
@@ -7484,7 +7870,10 @@
           "name": "Investida",
           "description": "se ainda não engajado em combate, pode usar a manobra de investida para causar o dobro de dano com sua tromba."
         }
-      ]
+      ],
+      "description": "Esta criatura vive em regiões frias e geleiras onde pastoreiam as tundras e se protegem com suas enormes presas.",
+      "description_source_url": "https://olddragon.com.br/monstros/mamute",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "manticora",
@@ -7533,7 +7922,10 @@
           "name": "Explosão de Espinhos",
           "description": "uma Mantícora possui 24 espinhos em sua cauda os quais podem ser arremessados em um ataque a até 6 alvos diferentes. A cada dia, 1d6 espinhos se regeneram após lançados."
         }
-      ]
+      ],
+      "description": "Esta monstruosidade, com cabeça humana, corpo de leão, asas e uma cauda com espinhos, caça homens para se alimentar.",
+      "description_source_url": "https://olddragon.com.br/monstros/manticora",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "medusa",
@@ -7576,7 +7968,10 @@
           "name": "Resistência à magia",
           "description": "qualquer magia lançada contra a Medusa possui 1 chance em 1d6 de ser completamente ignorada."
         }
-      ]
+      ],
+      "description": "Uma linda e sedutora mulher. Seus cabelos são feitos inteiramente de sagazes serpentes, e seu olhar é realmente matador!",
+      "description_source_url": "https://olddragon.com.br/monstros/medusa",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "mercador",
@@ -7602,7 +7997,7 @@
           "raw": "1 × soco ( 1d3 )",
           "count": 1,
           "name": "soco",
-          "bonus": null,
+          "bonus": 0,
           "damage": "1d3"
         }
       ],
@@ -7666,7 +8061,10 @@
           "name": "Imunidades",
           "description": "além das imunidades comuns aos mortos-vivos, são imunes ao poder de Afastar Mortos-Vivos de um Clérigo."
         }
-      ]
+      ],
+      "description": "Árvore espinhenta e canibal. Usa seus galhos retorcidos e espinhos para se alimentar.",
+      "description_source_url": "https://olddragon.com.br/monstros/mil-galhos",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "mimico",
@@ -7708,7 +8106,10 @@
           "name": "Cola",
           "description": "qualquer coisa que toque o corpo de um Mímico ficará presa em uma poderosa cola. Um teste de Força pode soltar o objeto do corpo do Mímico. A cola perderá sua adesão por volta de 1 minuto após a morte do Mímico."
         }
-      ]
+      ],
+      "description": "Metamorfos de pele rochosa que assumem formas mundanas para surpreender seus inimigos.",
+      "description_source_url": "https://olddragon.com.br/monstros/mimico",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "minotauro",
@@ -7750,7 +8151,10 @@
           "name": "Atropelar",
           "description": "um minotauro ainda não engajado em combate pode usar a manobra de investida para causar o dobro de dano com seus chifres."
         }
-      ]
+      ],
+      "description": "Metade homem e metade touro, vive em labirintos subterrâneos, guardando seus corredores e tesouros.",
+      "description_source_url": "https://olddragon.com.br/monstros/minotauro",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "monstro-ferrugem",
@@ -7789,7 +8193,10 @@
           "name": "Imunidades",
           "description": "um Monstro Ferrugem é imune ao dano de qualquer arma não mágica."
         }
-      ]
+      ],
+      "description": "Semelhantes a enormes tatus gigantes, percorrem o subterrâneo atrás de metal para enferrujar e se alimentar.",
+      "description_source_url": "https://olddragon.com.br/monstros/monstro-ferrugem",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "morcego",
@@ -7815,7 +8222,7 @@
           "raw": "1 × Enxame ( Confusão )",
           "count": 1,
           "name": "Enxame",
-          "bonus": null,
+          "bonus": 0,
           "damage": "Confusão"
         }
       ],
@@ -7824,7 +8231,10 @@
           "name": "Confusão",
           "description": "quando 10 ou mais morcegos sobrevoam um alvo, causam nele um ataque de confusão. O alvo recebe -2 para realizar qualquer ação que não seja se debater e tentar afastar os morcegos."
         }
-      ]
+      ],
+      "description": "Pequenos mamíferos comedores de insetos que vivem em qualquer subterrâneo ou locais sem luz.",
+      "description_source_url": "https://olddragon.com.br/monstros/morcego",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "morcego-vampiro",
@@ -7850,7 +8260,7 @@
           "raw": "1 × Mordida ( 1d2 + Doença )",
           "count": 1,
           "name": "Mordida",
-          "bonus": null,
+          "bonus": 0,
           "damage": "1d2 + Doença"
         }
       ],
@@ -7859,7 +8269,10 @@
           "name": "Doença",
           "description": "Um Morcego Vampiro possui 1-2 chances em 1d6 de transmitir uma doença a um alvo mordido. Um alvo mordido que falhe em uma JPC, fica doente e com valor de força igual a 1 por 1d6 dias."
         }
-      ]
+      ],
+      "description": "Morcegos que se alimentam de sangue de animais, podendo inclusive atacar humanos.",
+      "description_source_url": "https://olddragon.com.br/monstros/morcego-vampiro",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "mumia",
@@ -7910,7 +8323,10 @@
           "name": "Doença",
           "description": "qualquer alvo que receber dano de um ataque físico de uma Múmia será infectado pela Podridão da Múmia. A Podridão impede toda cura mágica e retarda toda forma de cura não mágica a uma taxa de apenas 10% da cura normal, além de causar o apodrecimento da vítima. Apenas um Curar Doenças remove uma Podridão da Múmia."
         }
-      ]
+      ],
+      "description": "Morto-vivo embalsamado e amaldiçoado. Vive em tumbas e ruínas ancestrais, destilando seu ódio pelos vivos.",
+      "description_source_url": "https://olddragon.com.br/monstros/mumia",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "naga-negra",
@@ -7960,7 +8376,10 @@
           "name": "Imunidades",
           "description": "uma naga é imune ao dano de qualquer ácido e veneno."
         }
-      ]
+      ],
+      "description": "Possuem corpo de serpente e cabeça humana. Vivem em suas tocas, guardando lugares e tesouros.",
+      "description_source_url": "https://olddragon.com.br/monstros/naga-negra",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "nixie",
@@ -7999,7 +8418,10 @@
           "name": "Comandar Peixes",
           "description": "podem comandar até 1d10x10 peixes para fazerem suas vontades, até mesmo para atacar. Os peixes só deixarão de combater caso sejam ameaçados com fogo ou algum tipo de explosão."
         }
-      ]
+      ],
+      "description": "Fadas elementais da água. Atraem aventureiros para dentro de lagos e rios.",
+      "description_source_url": "https://olddragon.com.br/monstros/nixie",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "nobre",
@@ -8060,7 +8482,7 @@
           "raw": "1 × Arma improvisada ( 1d4 )",
           "count": 1,
           "name": "Arma improvisada",
-          "bonus": null,
+          "bonus": 0,
           "damage": "1d4"
         }
       ],
@@ -8235,7 +8657,10 @@
           "name": "Olhos secundários",
           "description": "cada um possui uma função, e apenas 3 podem usar suas habilidades ao mesmo tempo (apesar de enxergarem o tempo todo). As habilidades funcionam como se fossem usadas por um personagem de 10º nível. São elas:"
         }
-      ]
+      ],
+      "description": "Grande esfera ardilosa. Possui vários olhos, cada um com um poder diferente.",
+      "description_source_url": "https://olddragon.com.br/monstros/observador",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "ogro",
@@ -8277,7 +8702,10 @@
           "name": "Golpe Potente",
           "description": "se conseguir causar, com uma pancada ou arma, uma quantidade de dano superior a força do alvo, este é arremessado 1d4 metros para trás."
         }
-      ]
+      ],
+      "description": "Tolos, agressivos e gananciosos, servem a quem puder pagar seu preço.",
+      "description_source_url": "https://olddragon.com.br/monstros/ogro",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "oni-mago",
@@ -8328,7 +8756,10 @@
           "name": "Pavor de sua imagem",
           "description": "caso seja refletido em um espelho, seus poderes deixarão de funcionar e ele tentará fugir a todo custo."
         }
-      ]
+      ],
+      "description": "Conhecidos como Ogro Mago, são inteligentes e cruéis. Usam vestes e armas exóticas, e adoram enigmas.",
+      "description_source_url": "https://olddragon.com.br/monstros/oni-mago",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "orc",
@@ -8367,7 +8798,10 @@
           "name": "Infravisão",
           "description": "18 metros."
         }
-      ]
+      ],
+      "description": "Selvagens e brutais, visam à expansão de seus territórios por meio de invasões e constantes ataques aos outros povos.",
+      "description_source_url": "https://olddragon.com.br/monstros/orc",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "otyugh",
@@ -8417,7 +8851,10 @@
           "name": "Agarrar",
           "description": "se acertar os dois ataques com seus tentáculos, conseguirá agarrar a vítima. A cada rodada, o Otyugh baterá com a vítima no chão, causando 2d8 de dano."
         }
-      ]
+      ],
+      "description": "Estes seres glutões vivem entre lixo e excrementos, alimentando-se de tudo o que se decompõem nos subterrâneos.",
+      "description_source_url": "https://olddragon.com.br/monstros/otyugh",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "pantera",
@@ -8454,7 +8891,10 @@
           "damage": "1d4"
         }
       ],
-      "abilities": []
+      "abilities": [],
+      "description": "Um pouco menor que um Leão, a Pantera vive em florestas e planícies tropicais. Não vive em grupo.",
+      "description_source_url": "https://olddragon.com.br/monstros/pantera",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "pegaso",
@@ -8484,7 +8924,10 @@
           "damage": "1d6"
         }
       ],
-      "abilities": []
+      "abilities": [],
+      "description": "Garanhões esplêndidos dotados de duas enormes asas revestidas de penas.",
+      "description_source_url": "https://olddragon.com.br/monstros/pegaso",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "piqueiro-mercenario",
@@ -8649,7 +9092,10 @@
           "name": "Invisibilidade",
           "description": "são naturalmente invisíveis, mas qualquer ser invisível pode vê-las normalmente. Sua CA é 11 quando não estiver invisível."
         }
-      ]
+      ],
+      "description": "Fadas elementais do ar. Gostam de pregar peças e roubar coisas.",
+      "description_source_url": "https://olddragon.com.br/monstros/pixie",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "polipo-voador",
@@ -8688,7 +9134,10 @@
           "name": "Ataque Elétrico",
           "description": "ao invés de atacar, um Pólipo Voador pode desferir ataques elétricos numa linha de até 12 metros. O dano de um ataque elétrico é de 3d8 em todos que estiverem na linha reta atravessada pelo raio. Um teste de JPD pode reduzir o dano pela metade."
         }
-      ]
+      ],
+      "description": "Criatura amorfa como um emaranhado de energia negativa, repleta de tentáculos, bocas e olhos disformes.",
+      "description_source_url": "https://olddragon.com.br/monstros/polipo-voador",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "polvo-gigante",
@@ -8738,7 +9187,10 @@
           "name": "Nuvem de Tinta",
           "description": "um Polvo Gigante pode lançar na água uma nuvem de tinta preta com 20 metros de diâmetro para confundir seus perseguidores em uma fuga."
         }
-      ]
+      ],
+      "description": "Polvo gigantesco muito territorialista. Ataca embarcações em busca de alimentos e para proteger seus domínios.",
+      "description_source_url": "https://olddragon.com.br/monstros/polvo-gigante",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "ponei",
@@ -8781,7 +9233,10 @@
           "name": "Carga",
           "description": "carrega até 1.500 moedas ou 750 moedas e um montador."
         }
-      ]
+      ],
+      "description": "Aparenta ser um cavalo de baixa estatura, mas muito forte, robusto e resistente para o trabalho.",
+      "description_source_url": "https://olddragon.com.br/monstros/ponei",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "ponei-de-guerra",
@@ -8832,7 +9287,10 @@
           "name": "Carga",
           "description": "carrega até 1.500 moedas ou 750 moedas e um montador."
         }
-      ]
+      ],
+      "description": "A robustez dos Pôneis com treinamento em combate para levar cavaleiros no caos do combate.",
+      "description_source_url": "https://olddragon.com.br/monstros/ponei-de-guerra",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "povo-do-mar",
@@ -8867,7 +9325,10 @@
           "name": "Voz Melodiosa",
           "description": "podem utilizar até 3 vezes ao dia sua voz para encantar um alvo humanoide, exatamente como na magia Enfeitiçar Pessoas."
         }
-      ]
+      ],
+      "description": "Vivem em cidades submersas próximas às costas. Atacam todos que considerem inimigos.",
+      "description_source_url": "https://olddragon.com.br/monstros/povo-do-mar",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "pterossauro",
@@ -8897,7 +9358,10 @@
           "damage": "1d4"
         }
       ],
-      "abilities": []
+      "abilities": [],
+      "description": "Répteis alados e carnívoros que voam aproveitando as correntes de ar de climas quentes.",
+      "description_source_url": "https://olddragon.com.br/monstros/pterossauro",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "pudim-negro",
@@ -8940,7 +9404,10 @@
           "name": "Divisão",
           "description": "todo ataque de arma de corte que cause 8 ou mais pontos de dano ao Pudim Negro pode causar sua divisão em duas criaturas diferentes, ambas com metade dos pontos de vida da criatura atual. Estas duas novas criaturas são tratadas como criaturas diferentes, com ações, ataques e pontos de vida diferentes, porém, caso sejam derrotadas, concedem os pontos de experiência apenas uma única vez. Todas as estatísticas do Pudim Negro se mantêm inalteradas."
         }
-      ]
+      ],
+      "description": "Esta criatura semelhante a uma enorme ameba negra ataca tudo o que encontra pela frente com seus golpes ácidos.",
+      "description_source_url": "https://olddragon.com.br/monstros/pudim-negro",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "puma",
@@ -8977,7 +9444,10 @@
           "damage": "1d3"
         }
       ],
-      "abilities": []
+      "abilities": [],
+      "description": "Um pouco menor que a Pantera, vive nas montanhas temperadas e desertos rochosos. Não vive em grupo.",
+      "description_source_url": "https://olddragon.com.br/monstros/puma",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "quimera",
@@ -9026,7 +9496,10 @@
           "name": "Baforada de Dragão",
           "description": "há 1-3 chances em 1d6 de uma cabeça de dragão trocar os ataques de mordida por uma baforada de dragão de 3d6 de dano."
         }
-      ]
+      ],
+      "description": "Corpo meio leonino e meio caprino, asas dracônicas e três cabeças: uma de bode, uma de leão e uma de dragão.",
+      "description_source_url": "https://olddragon.com.br/monstros/quimera",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "raposa",
@@ -9056,7 +9529,10 @@
           "damage": "1d4"
         }
       ],
-      "abilities": []
+      "abilities": [],
+      "description": "Pequeno mamífero carnívoro que vive nas colinas e florestas temperadas.",
+      "description_source_url": "https://olddragon.com.br/monstros/raposa",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "rato",
@@ -9082,7 +9558,7 @@
           "raw": "1 × Mordida ( 1d4 + Doença )",
           "count": 1,
           "name": "Mordida",
-          "bonus": null,
+          "bonus": 0,
           "damage": "1d4 + Doença"
         }
       ],
@@ -9091,7 +9567,10 @@
           "name": "Doença",
           "description": "um rato possui 1 chance em 1d6 de transmitir Febre do Esgoto a um alvo mordido. Um alvo mordido que falhar em uma JPC, ficará doente e com valor de Constituição igual a 1 por 1d6 dias."
         }
-      ]
+      ],
+      "description": "Ratos cinza dos esgotos. Sujos, esfomeados e ferozes.",
+      "description_source_url": "https://olddragon.com.br/monstros/rato",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "rato-gigante",
@@ -9130,7 +9609,10 @@
           "name": "Medo de Fogo",
           "description": "na presença de fogo, um teste de MO deve ser feito para determinar se Ratos Gigantes fogem ou não do combate."
         }
-      ]
+      ],
+      "description": "Enormes com quase 1 metro de comprimento, feições monstruosas e muito mais ferozes do que um rato comum.",
+      "description_source_url": "https://olddragon.com.br/monstros/rato-gigante",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "remorhaz",
@@ -9169,7 +9651,10 @@
           "name": "Engolir",
           "description": "se um Remorhaz obtiver um 20 natural em seu teste de ataque, engolirá seu oponente matando-o imediatamente, sem direito a nenhuma jogada de proteção."
         }
-      ]
+      ],
+      "description": "Este agressivo verme polar devora qualquer tipo de vida que cruzar a sua frente.",
+      "description_source_url": "https://olddragon.com.br/monstros/remorhaz",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "revenant",
@@ -9220,7 +9705,10 @@
           "name": "Reconstituição",
           "description": "um Revenant retornará a vida, e continuará sua busca por justiça, 1d4 horas após ser morto. As únicas formas de evitar o retorno de um Revenant são: destruir seu cadáver com ácido ou fogo, ou a morte de seu assassino."
         }
-      ]
+      ],
+      "description": "Mortos-vivos com desejo de vingar a morte injusta que sofreram. Só descansará quando fizer justiça com as próprias mãos.",
+      "description_source_url": "https://olddragon.com.br/monstros/revenant",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "rinoceronte",
@@ -9255,7 +9743,10 @@
           "name": "Investida",
           "description": "se ainda não engajado em combate, pode usar a manobra de investida para causar o dobro de dano com seu chifre."
         }
-      ]
+      ],
+      "description": "Famoso pelo mau humor, vive nas planícies tropicais.",
+      "description_source_url": "https://olddragon.com.br/monstros/rinoceronte",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "roper",
@@ -9305,7 +9796,10 @@
           "name": "Imunidades",
           "description": "Ropers são imunes a ataques baseados em luz e eletricidade, sofrem apenas metade do dano proveniente do frio, mas possuem uma penalidade de 4 para resistir a efeitos do fogo."
         }
-      ]
+      ],
+      "description": "Estalactite de pele rochosa sempre à espreita para agarrar seus inimigos com seus longos tentáculos.",
+      "description_source_url": "https://olddragon.com.br/monstros/roper",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "sahuagin",
@@ -9342,7 +9836,10 @@
           "damage": "1d6"
         }
       ],
-      "abilities": []
+      "abilities": [],
+      "description": "Peixes humanoides e violentos que vivem em tribos próximas a comunidades costeiras.",
+      "description_source_url": "https://olddragon.com.br/monstros/sahuagin",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "salamandra",
@@ -9381,7 +9878,10 @@
           "name": "Queimar Energia",
           "description": "sua fome por energia necrótica faz com que procurem maldições para se alimentarem delas. Ficar exposto a uma Salamandra por 1 hora remove encantamentos e maldições com uma chance de 1-2 em 1d6."
         }
-      ]
+      ],
+      "description": "Cruéis e malignas, estas criaturas anfíbias são originárias do plano elemental do fogo.",
+      "description_source_url": "https://olddragon.com.br/monstros/salamandra",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "sapo-gigante",
@@ -9424,7 +9924,10 @@
           "name": "Língua Elástica",
           "description": "um Sapo Gigante pode agarrar seus inimigos com sua língua a até 3 metros de distância, trazendo-os para sua boca para desferir uma mordida."
         }
-      ]
+      ],
+      "description": "Gigantes e pacíficas, estas criaturas assustam principalmente pela voracidade.",
+      "description_source_url": "https://olddragon.com.br/monstros/sapo-gigante",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "satiro",
@@ -9463,7 +9966,10 @@
           "name": "Silvestre",
           "description": "sabem como se esconder e como se portar dentro de ambientes silvestres. Sátiros conseguem se esconder nestas situações em 90% das vezes, e jamais são surpreendidos nestes ambientes."
         }
-      ]
+      ],
+      "description": "Humanoides, meio homens e meio bodes, são famosos pelo gosto por música, dança, jogos e trapaça.",
+      "description_source_url": "https://olddragon.com.br/monstros/satiro",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "serpente",
@@ -9548,7 +10054,10 @@
           "name": "Alterar Forma",
           "description": "pode assumir a forma de qualquer criatura humanoide (M ou G). Um Shoggoth voltará a sua forma normal caso seja morto."
         }
-      ]
+      ],
+      "description": "Protoplasma amorfo, repleto de olhos terríveis, bocas ferozes e tentáculos pegajosos.",
+      "description_source_url": "https://olddragon.com.br/monstros/shoggoth",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "sibilante",
@@ -9594,7 +10103,10 @@
           "name": "Veneno",
           "description": "qualquer criatura mordida por um Sibilante deve ser bem-sucedida em uma JPC para evitar os efeitos paralisantes de seu veneno por 1d3 turnos. O veneno começa a fazer efeito 1d6+2 rodadas após a mordida."
         }
-      ]
+      ],
+      "description": "Cultistas que buscam trazer de volta os tempos ancestrais, na tentativa de despertar sua antiga divindade.",
+      "description_source_url": "https://olddragon.com.br/monstros/sibilante",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "soldado-leve-mercenario",
@@ -9742,7 +10254,10 @@
           "name": "Imunidades",
           "description": "são imunes aos efeitos de encantamentos ou de uma magia Sono, e a todo dano causado por armas não mágicas."
         }
-      ]
+      ],
+      "description": "Monstros incorpóreos semelhantes a sombras que modificam suas formas para atacar seus inimigos.",
+      "description_source_url": "https://olddragon.com.br/monstros/sombra",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "stirge",
@@ -9777,7 +10292,10 @@
           "name": "Dreno de Sangue",
           "description": "ao acertar o ataque, um Stirge consegue drenar sangue de sua vítima causando automaticamente 1d3 por rodada. O Stirge apenas soltará a vítima se esta tentar arrancá-lo ou se a vítima morrer."
         }
-      ]
+      ],
+      "description": "Imenso inseto do tamanho de um pássaro, com asas de morcego e um vertiginoso bico sugador de sangue.",
+      "description_source_url": "https://olddragon.com.br/monstros/stirge",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "tarrasque",
@@ -9853,7 +10371,10 @@
           "name": "Tesouro de Covil",
           "description": "10d6 Gemas de 1.000 PO"
         }
-      ]
+      ],
+      "description": "A lenda faminta que despertará do seu sono para trilhar a morte e espalhar a destruição por onde passar.",
+      "description_source_url": "https://olddragon.com.br/monstros/tarrasque",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "tasloi",
@@ -9879,7 +10400,7 @@
           "raw": "1 × Arma ( Arma )",
           "count": 1,
           "name": "Arma",
-          "bonus": null,
+          "bonus": 0,
           "damage": "Arma"
         },
         {
@@ -9895,7 +10416,10 @@
           "name": "Infravisão",
           "description": "18 metros."
         }
-      ]
+      ],
+      "description": "Humanoides pequenos com leve aspecto de gatos. Inimigos mortais dos Kobolds, com quem disputam territórios.",
+      "description_source_url": "https://olddragon.com.br/monstros/tasloi",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "thoul",
@@ -9945,7 +10469,10 @@
           "name": "Regeneração",
           "description": "um Thoul é capaz de regenerar 1 ponto de vida a cada rodada. Esta regeneração não é capaz de reconstituir membros amputados. Um Thoul não é capaz de regenerar nenhum dano causado por fogo ou ácido."
         }
-      ]
+      ],
+      "description": "Aberração digna da mente dos mais alucinados arcanos, misturando Trolls, Ghouls e Hobgoblins.",
+      "description_source_url": "https://olddragon.com.br/monstros/thoul",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "tigre",
@@ -9982,7 +10509,10 @@
           "damage": "1d6"
         }
       ],
-      "abilities": []
+      "abilities": [],
+      "description": "Vive em florestas de clima temperado e em montanhas isoladas. Não vive em grupos.",
+      "description_source_url": "https://olddragon.com.br/monstros/tigre",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "tigre-dente-de-sabre",
@@ -10024,7 +10554,10 @@
           "name": "Críticos Vorpais",
           "description": "se obtiver um acerto crítico em seu ataque, amputa um membro do alvo atacado. Uma JPD anula a amputação"
         }
-      ]
+      ],
+      "description": "Esta versão monstruosa do Tigre é feroz e violenta. Vive em florestas e montanhas de regiões isoladas.",
+      "description_source_url": "https://olddragon.com.br/monstros/tigre-dente-de-sabre",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "tiranossauro",
@@ -10059,7 +10592,10 @@
           "name": "Engolir",
           "description": "se um Tiranossauro obtiver um 20 natural em seu teste de ataque, engolirá seu oponente. Um alvo engolido pelo Tiranossauro morre imediatamente. Uma JPD impede que o Tiranossauro engula o alvo atacado."
         }
-      ]
+      ],
+      "description": "Este carnívoro bípede é a máquina de matar perfeita. É conhecido como rei dos dinossauros.",
+      "description_source_url": "https://olddragon.com.br/monstros/tiranossauro",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "traag",
@@ -10102,7 +10638,10 @@
           "name": "Salto Planar",
           "description": "dois Traags podem abrir uma fenda planar e saltar de um plano para outro. Um Traag sozinho não consegue realizar o Salto Planar."
         }
-      ]
+      ],
+      "description": "Possuem uma consciência coletiva, conectando todos os membros desta criatura viajante interplanar.",
+      "description_source_url": "https://olddragon.com.br/monstros/traag",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "treant",
@@ -10145,7 +10684,10 @@
           "name": "Dano Estrutural",
           "description": "um Treant é capaz de causar dano estrutural a uma construção como se fosse um aríete."
         }
-      ]
+      ],
+      "description": "Plantas antropomórficas que vivem nos ambientes silvestres protegendo suas florestas de invasores.",
+      "description_source_url": "https://olddragon.com.br/monstros/treant",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "triceratops",
@@ -10180,7 +10722,10 @@
           "name": "Carga",
           "description": "um Tricerátops pode atacar em carga. Um ataque de carga possui +2 no ataque, +2 no dano, mas causa uma redução de 2 na CA."
         }
-      ]
+      ],
+      "description": "Este encouraçado quadrúpede é dócil até precisar se defender, que é quando usa seus chifres em ataques mortais.",
+      "description_source_url": "https://olddragon.com.br/monstros/triceratops",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "troglodita",
@@ -10233,7 +10778,10 @@
           "name": "Surpresa",
           "description": "os Trogloditas conseguem alterar levemente o tom da sua pele, permitindo que consigam surpreender seus inimigos com um resultado de 1 a 4 em 1d6."
         }
-      ]
+      ],
+      "description": "Humanoides reptilianos conhecidos pela sua ferocidade em combate e pelo ódio que possuem dos humanos.",
+      "description_source_url": "https://olddragon.com.br/monstros/troglodita",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "troll",
@@ -10283,7 +10831,10 @@
           "name": "Medo de fogo e ácido",
           "description": "na presença de fogo ou ácido, o valor do Moral de um Troll é 8."
         }
-      ]
+      ],
+      "description": "Horrendos e extremamente fortes com membros longos e uma desesperadora capacidade de regeneração.",
+      "description_source_url": "https://olddragon.com.br/monstros/troll",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "tubarao",
@@ -10313,7 +10864,10 @@
           "damage": "2d10"
         }
       ],
-      "abilities": []
+      "abilities": [],
+      "description": "Grande tubarão branco, feroz, assassino e exímio caçador dos oceanos.",
+      "description_source_url": "https://olddragon.com.br/monstros/tubarao",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "urso-coruja",
@@ -10355,7 +10909,10 @@
           "name": "Abraço",
           "description": "o Urso-Coruja conseguirá agarrar seu alvo se acertar os dois ataques com suas garras, causando 2d8 de dano enquanto estiver agarrando o alvo."
         }
-      ]
+      ],
+      "description": "Com o corpo forte de um urso e a cabeça de uma coruja, este predador vive nas florestas e ataca tudo o que encontrar.",
+      "description_source_url": "https://olddragon.com.br/monstros/urso-coruja",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "urso-negro",
@@ -10397,7 +10954,10 @@
           "name": "Abraço",
           "description": "o Urso conseguirá agarrar seu alvo se acertar os dois ataques com suas garras, causando 2d8 de dano enquanto estiver agarrando o alvo."
         }
-      ]
+      ],
+      "description": "Vivem nas florestas temperadas se alimentando principalmente de peixes, frutas e raízes.",
+      "description_source_url": "https://olddragon.com.br/monstros/urso-negro",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "urso-pardo",
@@ -10439,7 +10999,10 @@
           "name": "Abraço",
           "description": "se o Urso acertar os dois ataques com suas garras, conseguirá agarrar seu alvo, causando 2d8 de dano enquanto estiver agarrando o alvo."
         }
-      ]
+      ],
+      "description": "O mais agressivo dos ursos, vivem em florestas e montanhas e se alimentam principalmente de carne.",
+      "description_source_url": "https://olddragon.com.br/monstros/urso-pardo",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "urso-polar",
@@ -10481,7 +11044,10 @@
           "name": "Abraço",
           "description": "se o Urso acertar os dois ataques com suas garras, conseguirá agarrar seu alvo, causando 2d8 de dano enquanto estiver agarrando o alvo."
         }
-      ]
+      ],
+      "description": "O maior dentre os Ursos, vivem em geleiras e climas polares. Agressivos contra invasores dos seus territórios. Alimentam-se de carne.",
+      "description_source_url": "https://olddragon.com.br/monstros/urso-polar",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "vampiro",
@@ -10548,7 +11114,10 @@
           "name": "Dreno",
           "description": "seu ataque além do dano normal, drena 2 níveis do alvo caso este não passe em uma JPC. Um alvo que tenha todos os seus níveis drenados por um Vampiro retorna como um Vampiro em 1d3 dias."
         }
-      ]
+      ],
+      "description": "Mortos-vivos poderosos. Percorrem a noite caçando suas presas para se alimentar de sangue.",
+      "description_source_url": "https://olddragon.com.br/monstros/vampiro",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "velociraptor",
@@ -10585,7 +11154,10 @@
           "damage": "1d4"
         }
       ],
-      "abilities": []
+      "abilities": [],
+      "description": "Veloz e mortal, implacável na caça. Vive em grupos nas colinas e planícies.",
+      "description_source_url": "https://olddragon.com.br/monstros/velociraptor",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "verme-da-carcaca",
@@ -10627,7 +11199,10 @@
           "name": "Paralisia",
           "description": "o alvo tocado por um dos 8 tentáculos do Verme da Carcaça deve ser bem-sucedido em uma JPC ou ficará paralisado por 2d4 turnos."
         }
-      ]
+      ],
+      "description": "Verme necrófago que percorre todo o subterrâneo atrás de carcaças de animais e de monstros para se alimentar.",
+      "description_source_url": "https://olddragon.com.br/monstros/verme-da-carcaca",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "verme-escarlate",
@@ -10670,7 +11245,10 @@
           "name": "Surpresa",
           "description": "o Verme Escarlate pode atacar vindo diretamente do chão, surpreendendo seus inimigos com um resultado de 1 a 3 em 1d6."
         }
-      ]
+      ],
+      "description": "Verme com uma boca circular repleta de presas pontiagudas usadas para cavar buracos e mastigar rochas.",
+      "description_source_url": "https://olddragon.com.br/monstros/verme-escarlate",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "vespa-gigante",
@@ -10705,7 +11283,10 @@
           "name": "Veneno",
           "description": "causa a perda de 1d4+2 pontos de Constituição em caso de falha em uma JPC."
         }
-      ]
+      ],
+      "description": "Insetos ainda mais agressivos que as abelhas, criam tocas em florestas densas e nos subterrâneos",
+      "description_source_url": "https://olddragon.com.br/monstros/vespa-gigante",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "vibora-gigante",
@@ -10755,7 +11336,10 @@
           "name": "Montaria",
           "description": "pode ser usada como montaria apta para combater, sendo capaz de realizar ataques de investida se ainda não engajada em combate, usar armaduras e atacar na mesma rodada que seu condutor."
         }
-      ]
+      ],
+      "description": "Vivem espreitando junto a água o melhor momento de atacar sua próxima refeição.",
+      "description_source_url": "https://olddragon.com.br/monstros/vibora-gigante",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "vinha-mortal",
@@ -10798,7 +11382,10 @@
           "name": "Ventriloquismo",
           "description": "usando suas flores, a Vinha consegue reproduzir qualquer som que tenha ouvido anteriormente, como gritos, chamados de socorro, conversas, sons de animais ou de objetos para atrair vítimas."
         }
-      ]
+      ],
+      "description": "Trepadeira de cipós resistentes, folhagem densa e simpáticas flores alaranjadas de perfume doce.",
+      "description_source_url": "https://olddragon.com.br/monstros/vinha-mortal",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "worg",
@@ -10844,7 +11431,10 @@
           "name": "Montaria",
           "description": "pode ser usado como montaria apta para combater, sendo capaz de realizar ataques de investida se ainda não engajado em combate, usar armaduras e atacar na mesma rodada que seu condutor."
         }
-      ]
+      ],
+      "description": "Lobo gigante cruel, agressivo e muito feroz, usado como montaria de guerra por criaturas caóticas.",
+      "description_source_url": "https://olddragon.com.br/monstros/worg",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "wyvern",
@@ -10886,7 +11476,10 @@
           "name": "Veneno",
           "description": "seu ferrão inocula veneno mortal, capaz de matar em até 1d6+2 rodadas todos os que não passarem em um teste de JPC."
         }
-      ]
+      ],
+      "description": "Estes lagartos alados possuem um mortífero ferrão na ponta da cauda e asas no lugar das patas dianteiras.",
+      "description_source_url": "https://olddragon.com.br/monstros/wyvern",
+      "description_license": "CC BY-SA 4.0"
     },
     {
       "id": "zumbi",
@@ -10964,7 +11557,10 @@
           "name": "Xxx",
           "description": "xxxxxxxxxxxxxxx xx xxx xxxx x xxxxxxxx, xxx xxx xxxxx xxxxxxxxxxxxx xxxxxx xxxx xxxxx, xxxxxxxx-xx xxx xxxxxxx xx xxxxxxxx xxxx xxxxxxx. Xxxxxxx xx xxxxxxx, xxxxx xx xxx 0x xx xx Xxxxxx-Xxxxx Xxx xxx xxxxxxxxx xx xxxxxx xxx-xxxxxxxx, xxxxxxx xxx xxxxxx xx 0 xx 0x0 xx xxxxx xxxxxxxxxx xxxxx xxxxxxx, xxxxxxxx-xx xx Xxxxxxxxx, xxxxxxxxxxx xxxx x xxxxxxxx."
         }
-      ]
+      ],
+      "description": "Morto-vivo sem inteligência. Avança para cima de suas vítimas com o único intuito de destroçá-las com garras e dentes.",
+      "description_source_url": "https://olddragon.com.br/monstros/zumbi",
+      "description_license": "CC BY-SA 4.0"
     }
   ]
 }

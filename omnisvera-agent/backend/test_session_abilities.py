@@ -198,7 +198,7 @@ class SessionAbilityCatalogTests(unittest.TestCase):
 
     def test_campaign_use_counters_are_structured_as_resources(self) -> None:
         expected = {
-            "raziel": {"reserva_de_sangue": 5, "forma_da_noite": 3},
+            "raziel": {"reserva_de_sangue": 10, "forma_da_noite": 3},
             "morthak": {"misseis_magicos": 3},
             "vezemir": {"forca_arcana": 1, "velocidade": 1},
         }

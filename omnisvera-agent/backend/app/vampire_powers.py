@@ -10,13 +10,16 @@ from .dice_rolls import roll_formula
 from .session_ledger import append_session_ledger_event
 
 
+def bite_damage(level):
+    return '2d10' if level>=16 else '2d6' if level>=8 else '1d6' if level>=5 else '1d4'
+
+
 def bite_definition(definition):
     melee = next((a for a in definition.get('attacks', []) if a['id'] == 'melee'), None)
     if not melee or melee.get('attack_bonus') is None:
         raise ValueError('Bônus corpo a corpo não configurado para Raziel')
-    # The 1d4 contract is approved now; future racial scaling is not enabled.
     attack = {'id': 'mordida', 'name': 'Mordida', 'attack_bonus': int(melee['attack_bonus']) - int(melee.get('item_attack_bonus') or 0),
-        'damage': '1d4', 'weapon_item_path': 'technique:mordida', 'life_drain': True}
+        'damage': bite_damage(int(definition.get('level') or 1)), 'weapon_item_path': 'technique:mordida', 'life_drain': True}
     return {**definition, 'attacks': [attack]}
 
 
@@ -32,6 +35,8 @@ def regenerate(path, *, actor_id, actor_role, request_id, rng=None):
             if old['fingerprint'] != fingerprint:
                 raise ValueError('Requisição já utilizada para outra ação')
             return json.loads(old['response_json'])
+        from .night_form import require_humanoid
+        require_humanoid(db,'raziel','usar poderes da ficha humanoide')
         snapshot = effect_snapshot(db)
         require_battle_turn(db, snapshot, 'raziel')
         if int((snapshot.get('encounter') or {}).get('attacks_used') or 0):

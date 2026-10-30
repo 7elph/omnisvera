@@ -26,6 +26,7 @@ class MoveCommand(BaseModel):
     expected_position_version: int
     expected_grid_version: int
     expected_combat_version: int | None = None
+    movement_mode: Literal['walk','fly','swim','climb','burrow'] | None = None
 
 
 def register_spatial_routes(app, get_path, require_any, load_movement):

@@ -26,7 +26,7 @@ export default function PendingAttacks({ onOpen, refreshKey }: {
     return () => { alive = false; window.clearInterval(timer); window.removeEventListener("online", load); window.removeEventListener("omnisvera-session-changed", load); };
   }, [refreshKey]);
   if (!items.length && !error) return null;
-  return <details className="workspace-gm-subsection">
+  return <details open={items.length > 0} className="workspace-gm-subsection">
     <summary>Ataques aguardando confirmação ({items.length})</summary>
     <small>O dano ainda não foi aplicado. Reabra o resultado; não role novamente.</small>
     {items.map(item => <button type="button" key={item.resolution_id} onClick={() => onOpen(item)}>

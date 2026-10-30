@@ -52,17 +52,24 @@ def seed(database):
             db.execute('INSERT INTO character_sheets(profile_id,character_path,character_title,status,data_json,updated_at) VALUES(?,?,?,?,?,?)',
                        (profile,path,title,'approved',json.dumps(data),'fixture'))
             if profile == 'dorn7':
-                overrides = {'level':2,'maximum_hp':13,'armor_class':11,'race':'Constructo Arcano','class_name':'Mago',
+                overrides = {'level':3,'maximum_hp':20,'armor_class':11,'race':'Constructo Arcano','class_name':'Mago',
+                             'approved_build':SPEC['version'],'construct_traits':True,'prepared_magic_override':True,
                              'attributes':data['attributes'], 'approved_session_abilities':SPEC['abilities']}
                 db.execute('INSERT INTO character_definition_overrides VALUES(?,?,?)',(profile,json.dumps(overrides),'fixture'))
-                state={'current_hp':13,'maximum_hp':13,'temporary_hp':0,'conditions':[],
+                state={'current_hp':20,'maximum_hp':20,'temporary_hp':0,'conditions':[],
                        'resources':[{'key':a['uses']['resource_key'],'label':a['uses']['label'],
-                                     'current':1,'maximum':1,'recharge':'inn_rest'} for a in SPEC['abilities']]}
+                                     'current':a['uses']['maximum'],'maximum':a['uses']['maximum'],'recharge':'inn_rest'} for a in SPEC['abilities'] if a.get('uses')]}
                 db.execute('INSERT INTO character_states VALUES(?,?,1,?)',(profile,json.dumps(state),'fixture'))
-        weapon = save_session_item(database,name=f'Arma fixture {title}',item_type='Arma',description='Teste sintético',
-                    effects=[],mechanics={'equipment_slots':['arma corpo a corpo'],'damage_formula':'1d6','consume_mode':'none'},usable=False)
-        upsert_inventory(database,profile_id=profile,item_path=f"session-item:{weapon['id']}",item_title=weapon['name'],
-                         quantity=1,equipped=True,equipment_slot='arma corpo a corpo',notes='fixture')
+        items = SPEC['items'] if profile == 'dorn7' else [{'name':f'Arma fixture {title}','type':'Arma','damage':'1d6','equipped':True,'description':'Teste sintético'}]
+        for entry in items:
+            weapon = save_session_item(database,name=entry['name'],item_type=entry['type'],description=entry['description'],
+                effects=[],mechanics={'equipment_slots':entry.get('equipment_slots') or (['Corpo a corpo'] if entry.get('damage') else []),
+                    'damage_formula':entry.get('damage',''),'consume_mode':'none'},usable=False)
+            if entry.get('thrown_damage'):
+                with closing(sqlite3.connect(database)) as db,db:
+                    db.execute("UPDATE session_custom_items SET mechanics_json=json_set(mechanics_json,'$.thrown_damage_formula',?) WHERE id=?",(entry['thrown_damage'],weapon['id']))
+            upsert_inventory(database,profile_id=profile,item_path=f"session-item:{weapon['id']}",item_title=weapon['name'],
+                             quantity=1,equipped=bool(entry.get('equipped')),equipment_slot='arma corpo a corpo' if entry.get('equipped') else None,notes='fixture')
         save_workspace_token(database,token_type='character',character_id=profile,name=title,
                          latitude=20,longitude=20+10*len(title),map_id=maps[0]['id'],visible_to_players=True,current_hp=hp,maximum_hp=hp)
     print(json.dumps({'seed':'PASS','source':'synthetic only','database':str(database),'maps':[m['id'] for m in maps]}))
@@ -105,12 +112,14 @@ def probe(database, port):
         assert synthetic_notes == 5 and local_maps and remote_maps == local_maps, 'HTTP server is not the nominated synthetic fixture'
         require(gm.patch('/gm/workspace/table-mode', json={'table_mode':'physical'}))
         views={p:character(p) for p in ('vezemir','raziel','morthak','varkh','dorn7')}
-        assert views['dorn7']['definition']['level']==2
+        assert views['dorn7']['definition']['level']==3
         assert views['dorn7']['definition']['defenses']['armor_class']==11
-        assert views['dorn7']['state']['maximum_hp']==13
+        assert views['dorn7']['state']['maximum_hp']==20
         marks['dorn_sheet']='PASS'
         # Reconcile/advance only synthetic characters, retaining spent resources.
         for p in views:
+            if p == 'dorn7':
+                continue  # Approved level-3 override is not downgraded by S6 replay.
             if p == 'varkh':
                 blocked = gm.post(f'/gm/characters/{p}/level/preview',json={'target_level':2,'hp_roll':2})
                 assert blocked.status_code == 400 and 'não foi conferida' in blocked.json()['detail'], blocked.text

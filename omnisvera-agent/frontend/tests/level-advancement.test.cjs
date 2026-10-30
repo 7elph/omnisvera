@@ -62,7 +62,9 @@ test('lost response retains the same confirmation fingerprint for safe retry', a
 
 test('advancement is exposed only behind the Master guard', () => {
   const source = fs.readFileSync('src/components/CharacterLevel.tsx', 'utf8');
-  assert.match(source, /canEdit && characterId && onApplied && typeof level === "number" && <LevelAdvancement/);
+  assert.match(source, /canEdit && typeof level === 'number' && <button/);
+  assert.match(source, /Subir nível/);
+  assert.match(source, /PV que exigem dado ficam pendentes/);
 });
 
 test('confirmed level offers next level with explicit target instead of editing the label', async () => {

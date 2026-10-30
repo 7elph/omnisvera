@@ -1,4 +1,49 @@
 {
+  "action_contracts": {
+    "morthak": {
+      "clonagem": {
+        "schema_version": 1,
+        "revision": "morthak-clonagem-campaign-v1",
+        "approval": {"kind":"campaign","reference":"docs/APPROVED_SKILLS_2026-10-13.md"},
+        "executor": {"binding":"morthak_clonagem"},
+        "targeting": {"kind":"self","min_targets":1,"max_targets":1,"unique_by":"entity","include_self":true},
+        "range": {"mode":"ranged","meters":{"base":10}},
+        "area": "spawn_near_caster",
+        "duration": "rounds",
+        "action_budget": "native_main_action",
+        "costs": [
+          {"type":"resource","key":"clonagem","amount":1,"recharge":"inn_rest"},
+          {"type":"inventory","item_title":"Fragmento de Cristal Arcano","amount":1,"consumable":true}
+        ],
+        "resolution": {
+          "effect":"physical_clones",
+          "clone_count":{"source":"clonagem_circle","min_circle":5,"max_circle":9,"subtract":3},
+          "hp":{"maximum_divisor":4,"minimum":1,"rounding":"floor"},
+          "execution_rounds":1,"duration_rounds":5,"max_active_groups":1,
+          "concentration":true,"magical_equipment":false,"can_cast":false,
+          "can_use_magic_items":false,"attacks_per_round":1,"disappear_at_zero":true
+        }
+      },
+      "magia-da-morte": {
+        "schema_version":1,
+        "revision":"morthak-magia-da-morte-campaign-v1",
+        "approval":{"kind":"campaign","reference":"docs/APPROVED_SKILLS_2026-10-13.md"},
+        "executor":{"binding":"morthak_magia_da_morte"},
+        "targeting":{"kind":"eligible_creatures","min_targets":1,"max_targets":12,"unique_by":"entity","include_self":false},
+        "range":{"mode":"ranged","meters":{"base":3,"per_level":1}},
+        "area":"nearest_eligible_creatures","duration":"instant","action_budget":"native_main_action",
+        "costs":[
+          {"type":"resource","key":"magia_da_morte","amount":1,"recharge":"inn_rest"},
+          {"type":"current_hp_fraction","retained_divisor":10,"rounding":"floor","ignore_temporary_hp":true}
+        ],
+        "resolution":{
+          "effect":"instant_death","victim_limit":{"dice":"2d6"},"max_hit_dice":4,
+          "save":{"attribute":"constitution","on_success":"negates"},
+          "include_allies":true,"order":"distance_then_entity_id"
+        }
+      }
+    }
+  },
   "characters": {
     "raziel": [
       {
@@ -6,13 +51,13 @@
         "name": "Reserva de Sangue",
         "kind": "resource",
         "group": "Poderes vampíricos",
-        "description": "Reserva atual: 5 pontos. Raziel conhece 2 técnicas e pode manter 1 técnica ativa por cena. A recuperação depende de descanso e alimentação, conforme a situação aprovada pelo Mestre.",
+        "description": "Reserva máxima: 10 pontos. Habilidades de sangue custam 1 ponto por ativação, exceto o reforço x2/x3 (2/3 pontos). Uma arma ofensiva ativa; ataques básicos com a arma já invocada não cobram novamente.",
         "mechanics_status": "structured",
         "source": "Ficha de Raziel e classe Hemomante",
         "uses": {
           "resource_key": "reserva_de_sangue",
           "label": "Reserva de Sangue",
-          "maximum": 5,
+          "maximum": 10,
           "recharge": "inn_rest"
         }
       },
@@ -59,7 +104,7 @@
         "name": "Marca Rubra",
         "kind": "technique",
         "group": "Habilidades",
-        "description": "Custo: 1 ponto de Lâminas de Sangue. Marca o sangue de um alvo ferido e permite reconhecê-lo ou rastreá-lo por um curto período. Falha sem sangue, ferimento ou contato significativo. Consome 1 da Reserva de Sangue.",
+        "description": "Alcance 9 m; cruz de cinco células, centro e quatro vizinhas cardinais. Marca inimigos vivos com sangue, inclusive com PV cheios. Custo total 1 de sangue pela área. Tiro do Coração contra um marcado prepara Revanche pelo Escudo.",
         "mechanics_status": "structured",
         "source": "Classe Hemomante",
         "active": true,
@@ -100,7 +145,7 @@
         "name": "Caixão",
         "kind": "ability",
         "group": "Habilidades",
-        "description": "Possui caixão ou sarcófago vinculado magicamente e só realiza descanso completo nele. Pode invocá-lo sem custo de mana; se for destruído, precisa vincular outro com uma Jogada de Proteção modificada por Sabedoria.",
+        "description": "Possui caixão ou sarcófago vinculado magicamente e só realiza descanso completo nele. Fora de combate, usar restaura a própria ficha e gasta o uso de Caixão. Apenas descanso concedido pelo Mestre recarrega esse uso; não revive com 0 PV. Pode invocá-lo sem custo de mana; se for destruído, precisa vincular outro com uma Jogada de Proteção modificada por Sabedoria.",
         "mechanics_status": "structured",
         "source": "Old Dragon — Novas Raças, Vampiro",
         "active": true,
@@ -162,17 +207,17 @@
         "name": "Sentido do Sangue",
         "kind": "ability",
         "group": "Poderes vampíricos",
-        "description": "Pode perceber sangue recente, ferimentos graves ou morte próxima quando isso for relevante. Pode conceder pista, bônus situacional ou permissão narrativa para detectar rastros.",
-        "mechanics_status": "partial",
-        "source": "Raça Vampiro adaptada para Omnisvera",
+        "description": "Faro de Sangue ativo (decisão S8): ataques de sangue ganham +1 contra alvos feridos, automático. Segue permitindo pista e bônus situacional narrativo.",
+        "mechanics_status": "structured",
+        "source": "Raça Vampiro adaptada para Omnisvera + Mesa S8",
         "active": true,
         "uses": {
           "resource_key": "sentido-do-sangue",
-          "label": "Sentido do Sangue · bloqueado",
+          "label": "Sentido do Sangue",
           "maximum": 1,
           "recharge": "inn_rest"
         },
-        "blocked": true
+        "blocked": false
       },
       {
         "id": "corpo-predatorio",
@@ -210,6 +255,103 @@
         "mechanics_status": "structured",
         "source": "Old Dragon — Novas Raças, Vampiro",
         "active": false
+      },
+      {
+        "id": "sangue-defensivo",
+        "action_contract": {
+          "schema_version": 1,
+          "revision": "raziel-sangue-defensivo-campaign-v2",
+          "approval": {"kind": "campaign", "reference": "docs/ACTION_COMPLETION_2026-10-12.md"},
+          "executor": {"binding": "raziel_sangue_defensivo"},
+          "targeting": {"kind": "self", "min_targets": 1, "max_targets": 1, "unique_by": "entity", "include_self": true},
+          "range": {"mode": "self", "meters": 0},
+          "area": "self",
+          "duration": "rounds",
+          "action_budget": "native_resource_turn_gate",
+          "costs": [{"type": "resource", "key": "reserva_de_sangue", "amount": 1, "recharge": "inn_rest"}],
+          "resolution": {"effect": "armor_class_bonus", "armor_class_bonus": 2, "rounds": 1}
+        },
+        "name": "Sangue Defensivo",
+        "kind": "technique",
+        "group": "Habilidades",
+        "description": "Escudo de sangue: custo 1, +2 CA por 1 rodada.",
+        "mechanics_status": "structured",
+        "source": "Aprovação explícita do Mestre, 12/10/2026",
+        "uses": { "resource_key": "reserva_de_sangue", "label": "Reserva de Sangue", "maximum": 10, "cost": 1, "recharge": "inn_rest" },
+        "active": true,
+        "blocked": false
+      },
+      {
+        "id": "arma-de-sangue",
+        "name": "Arma de Sangue",
+        "kind": "technique",
+        "group": "Habilidades",
+        "description": "Arma de Sangue: ataque corpo a corpo, BA da ficha, dano 1d8. Consome 1 Reserva de Sangue ao confirmar, inclusive no erro. Custo revisado pelo Mestre em 24/10/2026.",
+        "mechanics_status": "structured",
+        "source": "Aprovação explícita do Mestre, 12/10/2026",
+        "requires_target": true,
+        "uses": { "resource_key": "reserva_de_sangue", "label": "Reserva de Sangue", "maximum": 10, "cost": 1, "recharge": "inn_rest" },
+        "active": true,
+        "blocked": false
+      },
+      {
+        "id": "garras-predatorias",
+        "name": "Garras Predatórias",
+        "kind": "technique",
+        "group": "Habilidades",
+        "description": "Garras Predatórias: ataque corpo a corpo, BA da ficha, dano 1d6. Consome 1 Reserva de Sangue ao confirmar, inclusive no erro. Valores aprovados pelo Mestre em 12/10/2026.",
+        "mechanics_status": "structured",
+        "source": "Aprovação explícita do Mestre, 12/10/2026",
+        "requires_target": true,
+        "uses": { "resource_key": "reserva_de_sangue", "label": "Reserva de Sangue", "maximum": 10, "cost": 1, "recharge": "inn_rest" },
+        "active": true,
+        "blocked": false
+      },
+      {
+        "id": "investida-predatoria",
+        "name": "Investida Predatória",
+        "kind": "technique",
+        "group": "Habilidades",
+        "description": "Investida Predatória: ataque corpo a corpo, BA da ficha +2, dano 2d4. Consome 1 Reserva de Sangue ao confirmar, inclusive no erro. Não concede deslocamento automático. Custo revisado pelo Mestre em 24/10/2026.",
+        "mechanics_status": "structured",
+        "source": "Aprovação explícita do Mestre, 12/10/2026",
+        "requires_target": true,
+        "uses": { "resource_key": "reserva_de_sangue", "label": "Reserva de Sangue", "maximum": 10, "cost": 1, "recharge": "inn_rest" },
+        "active": true,
+        "blocked": false
+      },
+      {
+        "id": "faro-de-sangue",
+        "name": "Faro de Sangue",
+        "kind": "technique",
+        "group": "Habilidades",
+        "description": "Sentido do Sangue como facilitador (decisão S8): ataques de sangue ganham +1 contra alvos feridos. Passivo, sem custo.",
+        "mechanics_status": "structured",
+        "source": "Mesa S8",
+        "active": true,
+        "blocked": false
+      },
+      {
+        "id": "tecnica-de-predador",
+        "name": "Técnica de Predador",
+        "kind": "technique",
+        "group": "Habilidades",
+        "description": "Marco nv5 do Hemomante. Custo 2 Reserva de Sangue: amplificar reflexos vampíricos; bônus situacional em perseguição, intimidação, salto, escalada ou ataque surpresa. BLOQUEADO: escolha do jogador/Mestre pendente (S8).",
+        "mechanics_status": "partial",
+        "source": "Classes/Hemomante.md (técnicas intermediárias)",
+        "active": false,
+        "blocked": true
+      },
+      {
+        "id": "marca-rubra-aprimorada",
+        "name": "Marca Rubra aprimorada",
+        "kind": "technique",
+        "group": "Habilidades",
+        "description": "Marco nv3 do Hemomante. Regras ainda indefinidas no documento da classe. BLOQUEADO: definição do Mestre pendente; não escolher nem automatizar (S8).",
+        "mechanics_status": "proposal",
+        "source": "Classes/Hemomante.md (marco sem regras)",
+        "active": false,
+        "blocked": true
       }
     ],
     "varkh": [
@@ -288,6 +430,20 @@
       {
         "id": "forca-arcana",
         "name": "Força Arcana",
+        "action_contract": {
+          "schema_version": 1, "revision": "vezemir-forca-arcana-campaign-v1",
+          "approval": {"kind": "campaign", "reference": "docs/THREE_SHEETS_AUDIT_2026-10-15.md"},
+          "executor": {"binding": "vezemir_forca_arcana"},
+          "targeting": {"kind": "self", "min_targets": 1, "max_targets": 1, "unique_by": "entity", "include_self": true},
+          "range": {"mode": "self", "meters": 0},
+          "area": "self", "duration": "rounds", "action_budget": "native_resource_turn_gate",
+          "costs": [{"type": "resource", "key": "forca_arcana", "amount": 1, "recharge": "inn_rest"}],
+          "resolution": {
+            "effect": "strength_bonus", "strength_divisor": 5, "minimum_bonus": 1,
+            "rounding": "floor", "source_attribute": "effective_strength",
+            "lifetime": {"count": 1, "sides": 6, "add": {"per_level": 1}, "multiplier": 1}
+          }
+        },
         "kind": "power",
         "group": "Poderes",
         "description": "Toque; duração de 1d6 + nível; concede 1 ponto adicional para cada 5 pontos de Força já possuídos.",
@@ -303,6 +459,19 @@
       {
         "id": "velocidade",
         "name": "Velocidade",
+        "action_contract": {
+          "schema_version": 1, "revision": "vezemir-velocidade-campaign-v1",
+          "approval": {"kind": "campaign", "reference": "docs/THREE_SHEETS_AUDIT_2026-10-15.md"},
+          "executor": {"binding": "vezemir_velocidade"},
+          "targeting": {"kind": "self", "min_targets": 1, "max_targets": 1, "unique_by": "entity", "include_self": true},
+          "range": {"mode": "self", "meters": 0},
+          "area": "self", "duration": "rounds", "action_budget": "native_resource_turn_gate",
+          "costs": [{"type": "resource", "key": "velocidade", "amount": 1, "recharge": "inn_rest"}],
+          "resolution": {
+            "effect": "speed_buff", "modifiers": {"movement_multiplier": 2, "armor_class_bonus": 2, "extra_attacks": 1},
+            "lifetime": {"count": 1, "sides": 4, "add": {"per_level": 1}, "multiplier": 1}
+          }
+        },
         "kind": "power",
         "group": "Poderes",
         "description": "Toque; duração de 1d4 + nível; dobra a movimentação, concede +2 na CA e um ataque adicional.",
@@ -439,7 +608,7 @@
         "kind": "spell",
         "group": "Magias",
         "circle": 2,
-        "description": "Ruling de mesa travado: magia autoral no 2º círculo. Invoca 1 esqueleto de madeira, 1x/dia, por 1 semana ou até ser destruído; age após Morthak. Recompensa da Sessão 6: PV 10, CA 16, dano 1d6+1; bônus de acerto +2 preservado. Fraqueza a fogo: resolução manual pelo Mestre até esclarecer o 1d6+2 discutido na mesa.",
+        "description": "Ruling de mesa travado: magia autoral no 2º círculo. Invoca 1 esqueleto de madeira, 1x/dia, por 1 semana ou até ser destruído; age após Morthak. Recompensa da Sessão 6: PV 10, CA 16, dano 1d6+1; bônus de acerto +2 preservado. Fraqueza a fogo: 1d6, sem bônus; resolução manual pelo Mestre (decisão S8: retirado o +2).",
         "mechanics_status": "partial",
         "source": "Definição da campanha; Sessão 6, 02:24–02:25",
         "active": true,

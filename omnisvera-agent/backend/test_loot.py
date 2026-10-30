@@ -128,10 +128,56 @@ class LootResolutionTests(unittest.TestCase):
         self.assertTrue(first)
         self.assertFalse(second)
         self.assertEqual("distributed", repeated["status"])
-        self.assertEqual(3, list_inventory(self.database, "vezemir")[0]["quantity"])
+        self.assertEqual([], list_inventory(self.database, "vezemir"))
+        with closing(sqlite3.connect(self.database)) as db:
+            state = json.loads(db.execute("SELECT state_json FROM character_states WHERE profile_id='vezemir'").fetchone()[0])
+            self.assertEqual(state['silver_coins'], 3)
+            self.assertEqual(db.execute("SELECT version FROM character_states WHERE profile_id='vezemir'").fetchone()[0], 2)
         entries = [entry for entry in list_session_ledger(self.database, AccessContext(mode="gm")) if entry["source_type"] == "loot_distribution"]
         self.assertEqual(1, len(entries))
         self.assertEqual(distributed["distribution_ledger_id"], entries[0]["id"])
+
+    def test_all_coin_denominations_credit_wallet_but_relic_stays_inventory(self):
+        from app.loot import update_loot_rewards
+        resolution, _ = resolve_token_loot(self.database, request_id='all-coins-loot',
+            token_id=self.token['id'], scope='carried', roll_mode='digital', rng=SequenceRng(1,1,1))
+        rewards = [dict(id=kind, kind=kind, name=kind, quantity=2) for kind in ['pc','pp','po','pl']]
+        rewards += [dict(id='cache', kind='currency', name='Peças de ouro', quantity=20),
+                    dict(id='relic', kind='item', name='Moeda Misteriosa', quantity=1)]
+        update_loot_rewards(self.database, resolution['resolution_id'], rewards)
+        reveal_loot(self.database, resolution['resolution_id'])
+        allocations = [dict(reward_id=r['id'],character_id='vezemir',quantity=r['quantity']) for r in rewards]
+        for key in ['all-coins-dist', 'all-coins-retry']:
+            distribute_loot(self.database, resolution_id=resolution['resolution_id'], request_id=key, allocations=allocations)
+        with closing(sqlite3.connect(self.database)) as db:
+            state=json.loads(db.execute("SELECT state_json FROM character_states WHERE profile_id='vezemir'").fetchone()[0])
+        self.assertEqual([state[k] for k in ['copper_coins','silver_coins','coins','platinum_coins']], [2,2,22,2])
+        self.assertEqual([i['item_title'] for i in list_inventory(self.database,'vezemir')], ['Moeda Misteriosa'])
+
+    def test_legacy_coin_recovery_requires_evidence_preserves_other_state_and_retries(self):
+        from app.currency_recovery import recover_coin_loot
+        from app.player_inventory import upsert_inventory
+        from app.session_ledger import append_session_ledger_event
+        with closing(sqlite3.connect(self.database)) as db, db:
+            cursor=db.execute("INSERT INTO session_custom_items(name,item_type,effects_json,usable,created_at,updated_at) VALUES('Peças de ouro','currency','[]',0,'now','now')")
+            iid=cursor.lastrowid
+        path=f'session-item:{iid}'
+        upsert_inventory(self.database,profile_id='vezemir',item_path=path,item_title='Peças de ouro',quantity=20,equipped=False,notes='Saques antigos')
+        kwargs=dict(profile_id='vezemir',item_path=path,quantity=20,expected_purse=dict(coins=0,silver_coins=0,copper_coins=0,platinum_coins=0))
+        with self.assertRaises(ValueError):recover_coin_loot(self.database,**kwargs)
+        with closing(sqlite3.connect(self.database)) as db, db:
+            append_session_ledger_event(db,source_type='loot_distribution',source_id='old-loot',event_kind='treasure',actor_id='master',actor_name='Mestre',actor_role='gm',character_id=None,title='Saques antigos',detail=dict(created_item_ids={'gold':iid},allocations=[dict(reward_id='gold',character_id='vezemir',quantity=20)]),visibility='table',created_at='now')
+        with self.assertRaises(ValueError):recover_coin_loot(self.database,**{**kwargs,'expected_purse':dict(coins=1)})
+        with self.assertRaises(ValueError):recover_coin_loot(self.database,**kwargs,restored_purse=dict(coins=99,silver_coins=0,copper_coins=0,platinum_coins=0))
+        result=recover_coin_loot(self.database,**kwargs)
+        self.assertEqual(result['after']['coins'],20)
+        self.assertTrue(recover_coin_loot(self.database,**kwargs)['replayed'])
+        self.assertEqual([], list_inventory(self.database,'vezemir'))
+        with closing(sqlite3.connect(self.database)) as db:
+            state=json.loads(db.execute("SELECT state_json FROM character_states WHERE profile_id='vezemir'").fetchone()[0])
+            self.assertEqual(state['current_hp'],20)
+            self.assertEqual(state['coins'],20)
+            self.assertEqual(db.execute("SELECT count(*) FROM session_ledger WHERE source_type='currency_recovery'").fetchone()[0],1)
 
     def test_lair_is_generated_once_and_living_token_is_rejected(self) -> None:
         lair, created = resolve_token_loot(

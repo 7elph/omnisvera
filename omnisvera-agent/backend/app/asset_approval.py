@@ -64,5 +64,9 @@ def approve_job(settings, job_id, expected_image_path):
         if table:
             # An existing chosen image is never overwritten by approving a new option.
             conn.execute(f"UPDATE {table} SET image_path=? WHERE id=? AND (image_path IS NULL OR image_path='')", (relative, int(job["entity_id"])))
+        if job["entity_type"] == "compendium_monster":
+            # Bestiary overlay file; an approved link is never overwritten.
+            from .monster_catalog import bind_monster_ai_art
+            bind_monster_ai_art(job["entity_id"], relative)
         conn.execute("UPDATE asset_generation_jobs SET status='approved',image_path=?,error=NULL,updated_at=? WHERE id=?", (relative, _now(), job_id))
         return dict(conn.execute("SELECT * FROM asset_generation_jobs WHERE id=?", (job_id,)).fetchone())

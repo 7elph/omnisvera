@@ -5,6 +5,7 @@ import unittest
 from contextlib import closing
 from pathlib import Path
 from tempfile import TemporaryDirectory
+from unittest.mock import patch
 
 from app.access import AccessContext
 from app.character_play import init_character_play
@@ -14,6 +15,24 @@ from app.session_workspace import init_session_workspace, record_workspace_messa
 
 
 class SessionLedgerTests(unittest.TestCase):
+    def test_migration_holds_writer_lock_before_checking_legacy_columns(self):
+        from app import session_ledger
+        with TemporaryDirectory() as temporary:
+            database=Path(temporary)/'legacy-ledger.sqlite3'
+            init_character_play(database);init_dice_rolls(database);init_session_workspace(database)
+            statements=[]
+            original=session_ledger._connect
+            def traced(path):
+                connection=original(path)
+                connection.set_trace_callback(statements.append)
+                return connection
+            with patch.object(session_ledger,'_connect',side_effect=traced):
+                init_session_ledger(database)
+            queries=[statement.strip().upper() for statement in statements]
+            self.assertIn('BEGIN IMMEDIATE',queries)
+            check=next(index for index,statement in enumerate(queries) if statement.startswith('PRAGMA TABLE_INFO(SESSION_LEDGER)'))
+            self.assertLess(queries.index('BEGIN IMMEDIATE'),check)
+
     def test_backfill_triggers_and_visibility_share_one_append_only_log(self) -> None:
         with TemporaryDirectory() as temporary:
             database = Path(temporary) / "ledger.sqlite3"

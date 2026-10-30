@@ -11,29 +11,176 @@ RULES = {
     "vezemir": {"class": "Guerreiro", "die": 10, "ba1": 1, "ba2": 2, "jp": 16,
                 "source": "Old Dragon 1E Aprimorada (2017), pp. 32–34, T3-3"},
     "raziel": {"class": "Hemomante", "die": 8, "ba1": 1, "ba2": 1, "jp": 15,
-               "source": "Classes/Hemomante.md, tabela de mesa, nível 2"},
+               "source": "Classes/Hemomante.md, tabela de mesa 1-20 (Sage)"},
     "morthak": {"class": "Mago", "die": 4, "ba1": 0, "ba2": 0, "jp": 14,
                 "source": "Old Dragon 1E Aprimorada (2017), pp. 13–15, 40–42, T3-6; Races/Morto-Vivo Esqueleto.md"},
     "dorn7": {"class": "Mago", "die": 4, "ba1": 0, "ba2": 0, "jp": 14,
               "source": "Old Dragon 1E Aprimorada (2017), T3-6; CAMPANHA/DORN_7_MAGO_2_APROVADO.md"},
 }
 
-# Stop before specialization choices at level 5. Raziel's level 3 requires a
-# new technique and interpretation of the approved blood adaptation, not a guess.
+# Campaign scale is OD1 (Apr morado T3-3/T3-6): Guerreiro nv5 (5,15) XP16000,
+# Mago nv5 (2,13) XP20000. OD2 consulted only for specialization mechanics,
+# never for BA/JP numbers. Raziel stays to nv2: Hemomante 3+ has no approved
+# table; Raziel advances via an explicit progression_contract instead.
 TABLES = {
-    "vezemir": {1: (1, 16), 2: (2, 16), 3: (3, 16), 4: (4, 15)},
-    "raziel": {1: (1, 15), 2: (1, 15)},
-    "morthak": {1: (0, 14), 2: (0, 14), 3: (1, 14), 4: (1, 13)},
-    "dorn7": {1: (0, 14), 2: (0, 14), 3: (1, 14), 4: (1, 13)},
+    # Guerreiro OD1 T3-3 (BA simples; multiataque +7/+1 etc. a partir do nv7
+    # segue em proposta: attack_count existe, bônus decrescente não).
+    "vezemir": {1: (1, 16), 2: (2, 16), 3: (3, 16), 4: (4, 15), 5: (5, 15),
+                6: (6, 15), 7: (7, 14), 8: (8, 14), 9: (9, 14), 10: (10, 13),
+                11: (10, 13), 12: (11, 13), 13: (11, 12), 14: (12, 12), 15: (12, 12)},
+    "raziel": {1: (1, 15), 2: (1, 15), 3: (2, 15), 4: (2, 14), 5: (2, 14)},
+    "morthak": {1: (0, 14), 2: (0, 14), 3: (1, 14), 4: (1, 13), 5: (2, 13),
+                6: (2, 13), 7: (3, 12), 8: (3, 12), 9: (3, 12), 10: (4, 11),
+                11: (4, 11), 12: (4, 11), 13: (5, 10), 14: (5, 10), 15: (5, 10)},
+    "dorn7": {1: (0, 14), 2: (0, 14), 3: (1, 14), 4: (1, 13), 5: (2, 13),
+              6: (2, 13), 7: (3, 12), 8: (3, 12), 9: (3, 12), 10: (4, 11),
+              11: (4, 11), 12: (4, 11), 13: (5, 10), 14: (5, 10), 15: (5, 10)},
+}
+
+# PV fixos pós-nome (OD1): sem rolagem de dados a partir do nv10.
+# Sem bônus de CON aplicado: sem regra localizada; Mestre decide.
+HP_FIXED = {
+    "vezemir": {10: 2, 11: 2, 12: 4, 13: 4, 14: 5, 15: 5},
+    "morthak": {10: 1, 11: 1, 12: 1, 13: 1, 14: 1, 15: 2},
+    "dorn7": {10: 1, 11: 1, 12: 1, 13: 1, 14: 1, 15: 2},
+}
+
+# Espaços-base de Mago por círculo (OD1 T3-6). Bônus de INT só até o 3º
+# círculo (sem regra localizada para o 4º+): +2/+1/+0 base do código atual.
+MAGE_SLOTS = {
+    1: [1], 2: [2], 3: [2, 1], 4: [2, 2], 5: [2, 2, 1], 6: [3, 2, 2],
+    7: [3, 2, 2, 1], 8: [3, 3, 2, 2], 9: [3, 3, 2, 2, 1], 10: [3, 3, 3, 2, 2],
+    11: [4, 3, 3, 2, 2, 1], 12: [4, 3, 3, 3, 2, 2], 13: [4, 4, 3, 3, 2, 2, 1],
+    14: [4, 4, 3, 3, 3, 2, 2], 15: [5, 4, 4, 3, 3, 2, 2, 1],
 }
 
 # Total acumulado de XP por nível (Old Dragon). Hemomante é homebrew de mesa
 # sem tabela publicada: sem requisito exibido até definição do Mestre.
 XP_REQUIRED = {
-    "vezemir": {3: 4000, 4: 8000},
-    "morthak": {3: 5000, 4: 10000},
-    "dorn7": {3: 5000, 4: 10000},
+    "vezemir": {3: 4000, 4: 8000, 5: 16000, 6: 32000, 7: 64000, 8: 128000,
+                9: 256000, 10: 304000, 11: 408000, 12: 516000, 13: 632000,
+                14: 704000, 15: 808000},
+    "morthak": {3: 5000, 4: 10000, 5: 20000, 6: 40000, 7: 80000, 8: 160000,
+                9: 310000, 10: 460000, 11: 510000, 12: 660000, 13: 710000,
+                14: 860000, 15: 910000},
+    "dorn7": {3: 5000, 4: 10000, 5: 20000, 6: 40000, 7: 80000, 8: 160000,
+              9: 310000, 10: 460000, 11: 510000, 12: 660000, 13: 710000,
+              14: 860000, 15: 910000},
+    "raziel": {3: 3000, 4: 6000, 5: 12000, 6: 24000, 7: 48000, 8: 100000,
+               9: 200000, 10: 300000, 11: 400000, 12: 500000, 13: 600000,
+               14: 700000, 15: 800000},
 }
+
+# Especializações validadas. Só entradas deste catálogo podem ser registradas;
+# qualquer outra escolha falha fechado. Aquisição tardia no nv5 autorizada.
+SPECIALIZATIONS = {
+    "necromante": {
+        "name": "Necromante",
+        "class": "Mago",
+        "source": "Old Dragon 2, Livro Básico 1 p.45 (especialização de Mago desde o nv1; sem pré-requisito publicado)",
+        "locked_to": "morthak",
+        "note": "Morthak já é Necromante: nenhuma nova escolha pedida. Abre mão dos círculos 7º-9º; recebe exclusivas por nível.",
+        "benefits": [
+            "Toque Sombrio: ataque de toque contra alvo vivo, 1d4 de dano e possibilidade de drenar FOR com JPC. Usos e custo adicional aparecem no card da magia.",
+            "Aterrorizar: criaturas com menos de 2 DV resistem com JPS; a falha torna os testes difíceis. Alcance, duração e usos aparecem no card da magia.",
+        ],
+        "restrictions": ["Abre mão dos círculos de magia 7º, 8º e 9º."],
+    },
+}
+
+def validate_specialization_choice(profile_id, class_name, spec):
+    """Normalized choice or ValueError. Only catalog options, matching class,
+    honoring locked_to. None clears."""
+    wanted = (spec or "").strip() or None
+    if wanted is None:
+        return None
+    entry = SPECIALIZATIONS.get(wanted)
+    if entry is None:
+        raise ValueError("Especialização sem catálogo validado; escolha apenas opções aprovadas")
+    if entry.get("class") != class_name:
+        raise ValueError("Especialização incompatível com a classe")
+    locked = entry.get("locked_to")
+    if locked is not None and locked != profile_id:
+        raise ValueError("Especialização reservada a outro personagem")
+    return wanted
+
+
+# Especializações de Guerreiro OD1 (Aprimorado, Homem de Armas): aquisição
+# tardia autorizada no nv5. Regras extraídas do PDF da edição da campanha.
+WARRIOR_SPECIALIZATIONS = {
+    "guerreiro-arma": {
+        "name": "Guerreiro de Arma",
+        "class": "Guerreiro", "min_level": 5,
+        "source": "OD1 Aprimorado (arma de escolha no nv5; +1 a cada 5 nv; crito nv8; re-rolagem nv16)",
+        "requires": {"weapon_choice": True},
+        "benefits": ["+1 ataque e dano com a arma escolhida (nv5-9; +2 no nv10+)"],
+        "restrictions": ["Bônus vale só com a arma escolhida e equipada"],
+        "upcoming": ["nv8: margem de crítico -1", "nv16: re-rolar 1 ataque/dia (propostas)"],
+        "abilities": {5: [{"id": "maestria-em-arma", "name": "Maestria em Arma", "kind": "ability",
+                           "group": "Especialização",
+                           "description": "+1 ataque e dano com a arma escolhida enquanto empunhada.",
+                           "mechanics_status": "structured", "source": "OD1 Aprimorado",
+                           "active": True, "blocked": False}]},
+    },
+    "barbaro": {
+        "name": "Bárbaro",
+        "class": "Guerreiro", "min_level": 5,
+        "source": "OD1 Aprimorado (rejeita armadura superior a cota de malha; +2 JP-CON)",
+        "requires": {},
+        "benefits": ["+2 em Jogadas de Proteção modificadas por Constituição"],
+        "restrictions": ["Sem armadura superior a cota de malha", "Abandono das regras sociais (narrativo)"],
+        "upcoming": ["nv8: frenesi 2x/dia (proposta)"],
+        "abilities": {5: [{"id": "selvageria", "name": "Selvageria", "kind": "ability",
+                           "group": "Especialização",
+                           "description": "+2 JP-CON; sem armadura superior a cota de malha.",
+                           "mechanics_status": "structured", "source": "OD1 Aprimorado",
+                           "active": True, "blocked": False}]},
+    },
+    "paladino": {
+        "name": "Paladino",
+        "class": "Guerreiro", "min_level": 5, "alignment": "ordeiro",
+        "source": "OD1 Aprimorado (causa, detectar caos, bônus vs caóticas)",
+        "requires": {"alignment": "ordeiro"},
+        "benefits": ["Detectar o caos a 1 km (concentração)",
+                     "+1 a cada 3 CAR em ataques vs caóticas"],
+        "restrictions": ["Dedicação à causa; perde 2 nv com item caótico; perde 3 nv e poderes se deixar ordeiro"],
+        "upcoming": ["nv8: +1d6/3CAR + aura 3 m (proposta)", "nv16: aura em aliados (proposta)"],
+        "abilities": {5: [{"id": "causa-do-paladino", "name": "Causa do Paladino", "kind": "ability",
+                           "group": "Especialização",
+                           "description": "Detectar o caos; +1/3 CAR vs caóticas. Aplicação contra caóticas assistida pelo Mestre (sem alinhamento em monstros).",
+                           "mechanics_status": "partial", "source": "OD1 Aprimorado",
+                           "active": True, "blocked": False}]},
+    },
+}
+SPECIALIZATIONS.update(WARRIOR_SPECIALIZATIONS)
+
+# Propostas NÃO validas para escolha: documentadas, nunca oferecidas.
+PROPOSED_SPECIALIZATIONS = {}
+
+# Habilidades e recursos por nível vindos de especialização/tabela, aplicados
+# por level_recalculation.recalculate via overrides['level_abilities'].
+# Recarga diária = inn_rest (descanso da campanha); sem recarga automática.
+NECROMANCER_ABILITIES_5 = [
+    {"id": "toque-sombrio", "name": "Toque Sombrio", "kind": "spell", "group": "Magias de Necromante",
+     "circle": 1, "active": True, "blocked": False, "mechanics_status": "structured",
+     "description": "Regra da campanha: alvo vivo adjacente no grid, ataque de toque 1d4. No início dos turnos seguintes, 1–3 em 1d6 causa perda de 1 PV. Zero PV mata; termina com morte ou fim do combate.",
+     "uses": {"resource_key": "toque_sombrio", "label": "Toque Sombrio · uso diário", "maximum": 1, "recharge": "inn_rest"},
+     "source": "Old Dragon 2, LB1 p.135; 1 uso/dia + extras consumindo magia memorizada."},
+    {"id": "aterrorizar", "name": "Aterrorizar", "kind": "spell", "group": "Magias de Necromante",
+     "circle": 1, "active": True, "blocked": False, "mechanics_status": "structured",
+     "description": "Regra da campanha: raio 9m+3m/nível pelo grid; dura 1d6+nível turnos individuais do alvo. Criaturas com menos de 2 DV: JPS nega; falha aplica −2 em todos os testes d20. Encerra ao fim do combate.",
+     "uses": {"resource_key": "aterrorrizar", "label": "Aterrorizar · uso diário", "maximum": 1, "recharge": "inn_rest"},
+     "source": "Old Dragon 2, LB1 p.107; 1 uso/dia + extras consumindo magia memorizada."},
+]
+NECROMANCER_ABILITIES_5 += [
+    {'id':'clonagem','name':'Clonagem','kind':'spell','group':'Magias de Necromante','circle':5,'active':True,'blocked':False,'mechanics_status':'structured',
+     'description':'Exceção aprovada no nível 5: um uso por descanso diário e um Fragmento de Cristal Arcano consumível. Executa em 1 rodada; cria até 2 clones em células livres até 10 m. PV 25% dos máximos, ataque básico não mágico, movimento normal. Dura 5 rodadas, exige concentração; cópias não conjuram nem ativam itens.',
+     'uses':{'resource_key':'clonagem','label':'Clonagem','maximum':1,'recharge':'inn_rest'},'source':'Magia original aprovada pelo Mestre em 13/10'},
+    {'id':'magia-da-morte','name':'Magia da Morte','kind':'spell','group':'Magias de Necromante','circle':5,'active':True,'blocked':False,'mechanics_status':'structured',
+     'description':'Exceção aprovada no nível 5: um uso por descanso diário. Até 2d6 criaturas com DV≤4 em 3 m+1 m/nível, por proximidade. JPC evita a morte. Texto literal inclui aliados elegíveis. O conjurador perde 90% dos PV atuais; sobra arredondada para baixo.',
+     'uses':{'resource_key':'magia_da_morte','label':'Magia da Morte','maximum':1,'recharge':'inn_rest'},'source':'Regra de campanha aprovada pelo Mestre em 13/10'},
+]
+NECROMANCER_RESOURCES_5 = {"toque_sombrio": 1, "aterrorrizar": 1,"clonagem":1,"magia_da_morte":1}
 
 
 def manual_level_event(connection, profile_id, level):
@@ -77,6 +224,8 @@ def preview(database_path, character, hp_roll=None, target_level=None, hp_policy
     init_character_play(database_path)
     with closing(_connect(database_path)) as connection:
         baseline = stored(connection, profile_id)
+        if baseline['overrides'].get('pending_progression'):
+            blockers.append('PV pendentes: o controlador deve concluir a solicitação de rolagem antes de conferir outro avanço')
         manual = manual_level_event(connection, profile_id, level)
         try:
             sheet_row = connection.execute("SELECT data_json FROM character_sheets WHERE profile_id=?", (profile_id,)).fetchone()
@@ -94,7 +243,7 @@ def preview(database_path, character, hp_roll=None, target_level=None, hp_policy
     if type(target_level) is not int or target_level < 2:
         raise ValueError("Nível inválido para progressão.")
     if target_level not in TABLES[profile_id]:
-        reason = ("Hemomante nv3+ exige nova técnica e interpretação da adaptação de sangue: definir com o Mestre."
+        reason = ("Hemomante além do nv5: tabela de mesa vai até o 20, mas técnicas e marcos exigem definição com o Mestre."
                   if profile_id == "raziel" else
                   "Nível ainda não automatizado: conferir escolhas de especialização/técnicas e adaptações antes de avançar.")
         return {"status": "blocked", "source": rule["source"], "target_level": target_level,
@@ -141,6 +290,12 @@ def preview(database_path, character, hp_roll=None, target_level=None, hp_policy
     if base_hp is None or ba is None:
         raise ValueError("PV máximo/base de ataque ausentes; é necessária reconciliação da ficha")
     hp_after = int(base_hp)
+    fixed_hp = HP_FIXED.get(profile_id, {}).get(target_level)
+    if needs_hp and fixed_hp is not None:
+        # PV fixo pós-nome (OD1): sem rolagem, sem CON (Mestre decide).
+        hp_after += int(fixed_hp)
+        warnings.append(f"PV fixo de {fixed_hp} no nível {target_level} (OD1, sem dado e sem CON).")
+        needs_hp = False
     if needs_hp:
         if type(hp_roll) is not int or not 1 <= hp_roll <= rule["die"]:
             blockers.append(f"Informe o resultado natural de 1d{rule['die']} para os PV do nível {target_level}.")
@@ -172,8 +327,9 @@ def preview(database_path, character, hp_roll=None, target_level=None, hp_policy
             blockers.append('Inteligência fora da faixa conferida para magias adicionais; revisão necessária.')
         else:
             bonus = 2 if intelligence >= 18 else 1 if intelligence >= 16 else 0
-            slots = {2: [2 + bonus], 3: [2 + bonus, 1 + (1 if intelligence >= 20 else 0)],
-                     4: [2 + bonus, 2 + (1 if intelligence >= 20 else 0)]}[target_level]
+            int_bonus = [bonus, 1 if intelligence >= 20 else 0, 1 if intelligence >= 17 else 0]
+            base = MAGE_SLOTS[target_level]
+            slots = [value + (int_bonus[i] if i < 3 else 0) for i, value in enumerate(base)]
             current_resources = {r['key']: r for r in baseline['state'].get('resources', [])}
             for circle, maximum in enumerate(slots, 1):
                 key = f'magias_de_{circle}o_circulo'

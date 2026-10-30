@@ -3,6 +3,7 @@ from __future__ import annotations
 import sqlite3
 import re
 import unicodedata
+import json
 from contextlib import closing
 from datetime import datetime, timezone
 from pathlib import Path
@@ -22,11 +23,22 @@ def _normalized_item_text(value: Any) -> str:
 def normalize_inventory_item_mechanics(item: dict[str, Any]) -> dict[str, Any]:
     """Fill safe mechanics omitted by legacy/custom inventory records."""
     record = dict(item)
+    from .hp_potions import is_compatible, normalize
+    if is_compatible(record):
+        return normalize(record)
     mechanics = dict(record.get("mechanics") or {})
+    if mechanics.get('family_schema')==1 and mechanics.get('family')=='ammunition':
+        return {**record,'damage_formula':None,'mechanics':mechanics}
+    if currency_item_field(record):
+        record['item_type'] = 'currency'
+        record['mechanics'] = {**mechanics, 'equipment_slots': []}
+        record['usable'] = False
+        return record
     text = _normalized_item_text(f"{record.get('item_title') or record.get('name') or ''} {record.get('item_type') or ''}")
 
     damage_formula = str(record.get("damage_formula") or mechanics.get("damage_formula") or "").strip()
-    if not damage_formula:
+    # Healing dice in a consumable's description are not weapon damage.
+    if not damage_formula and not any(word in text for word in ('consumivel', 'kit de reparo', 'pocao', 'potion')):
         raw_effects = record.get("effects") or []
         effects = raw_effects if isinstance(raw_effects, list) else [raw_effects]
         candidates = [*effects, record.get("description") or ""]
@@ -42,18 +54,42 @@ def normalize_inventory_item_mechanics(item: dict[str, Any]) -> dict[str, Any]:
         or any(term in text for term in ("cajado", "bordao", "espada", "machado", "adaga", "lanca", "martelo", "maca", "mangual", "foice", "sabre", "tridente", "arco", "besta"))
         or (bool(damage_formula) and "escudo" not in text and "muralha" not in text)
     )
-    if "escudo" in text or "muralha" in text:
+    if mechanics.get('family_schema')==1:
+        mechanics['equipment_slots']=mechanics.get('approved_equipment_slots') or mechanics.get('equipment_slots') or []
+    elif "escudo" in text or "muralha" in text:
         mechanics["equipment_slots"] = ["Mão secundária"]
+    elif "manto primordial" in text:
+        mechanics["equipment_slots"] = ["Acessório"]
     elif "armadura" in text or "manto" in text:
         mechanics["equipment_slots"] = ["Armadura"]
     elif is_weapon:
         # Weapon category describes what the item is; the player chooses how it
         # is being used in this loadout. Keep this rule identical for Vault and
         # session-created items so every character gets both combat slots.
-        mechanics["equipment_slots"] = ["Corpo a corpo", "À distância"]
+        mechanics["equipment_slots"] = mechanics.get('approved_equipment_slots') or ["Corpo a corpo", "À distância"]
+
+    if str(record.get('item_path') or '').replace('\\', '/') == 'Items/Adagas de Espectro Fantasma.md':
+        # The existing relic explicitly uses the base dagger in both melee and
+        # throwing. Equipment slot is a loadout choice, not loss of a mode.
+        mechanics['attack_modes'] = ['melee', 'ranged']
+        mechanics.setdefault('thrown_damage_formula', damage_formula)
 
     record["mechanics"] = mechanics
-    return record
+    from .inventory_conditions import project_condition
+    return project_condition(record)
+
+
+def currency_item_field(item: dict[str, Any]) -> str | None:
+    """Only explicit denominations; relics, purses and valuables are not cash."""
+    kind = _normalized_item_text(item.get('item_type') or item.get('kind')).strip()
+    fields = {'pc': 'copper_coins', 'pp': 'silver_coins', 'po': 'coins', 'pl': 'platinum_coins'}
+    if kind in fields:
+        return fields[kind]
+    name = _normalized_item_text(item.get('item_title') or item.get('name')).strip()
+    for metal, field in [('cobre','copper_coins'), ('prata','silver_coins'), ('ouro','coins'), ('platina','platinum_coins')]:
+        if re.fullmatch(rf'(?:pecas?|moedas?) de {metal}(?:\s*\([a-z]{{2}}\))?', name):
+            return field
+    return None
 
 
 def _connect(path: Path) -> sqlite3.Connection:
@@ -94,12 +130,24 @@ def init_player_inventory(database_path: Path) -> None:
             except sqlite3.OperationalError as error:
                 if "duplicate column" not in str(error).lower():
                     raise
+        from .inventory_conditions import init_schema
+        init_schema(connection)
 
 
 def upsert_inventory(database_path: Path, *, profile_id: str, item_path: str, item_title: str, quantity: int, equipped: bool, notes: str | None, equipment_slot: str | None = None, charges_current: int | None = None, charges_max: int | None = None, recharge: str | None = None) -> dict[str, Any]:
     init_player_inventory(database_path)
     now = datetime.now(timezone.utc).isoformat()
     with closing(_connect(database_path)) as connection, connection:
+        previous=connection.execute('SELECT id,quantity FROM player_inventory WHERE profile_id=? AND item_path=?',(profile_id,item_path)).fetchone()
+        if previous and quantity>0:
+            from .inventory_conditions import read_condition
+            condition=read_condition(connection,previous['id'])
+            if previous['quantity']<=0:
+                # Replenishing a fully destroyed item creates a fresh physical
+                # unit even though the native unique inventory row is reused.
+                connection.execute('DELETE FROM inventory_item_conditions WHERE inventory_id=?',(previous['id'],))
+            elif condition and condition.get('selection',{}).get('magical') and quantity>previous['quantity']:
+                raise ValueError('Não mescle outra unidade com um item mágico corroído; separe as instâncias primeiro')
         connection.execute(
             """
             INSERT INTO player_inventory(profile_id,item_path,item_title,quantity,equipped,equipment_slot,charges_current,charges_max,recharge,notes,updated_at)
@@ -119,13 +167,18 @@ def upsert_inventory(database_path: Path, *, profile_id: str, item_path: str, it
     return result
 
 
-def list_inventory(database_path: Path, profile_id: str) -> list[dict[str, Any]]:
+def list_inventory(database_path: Path, profile_id: str, *, include_empty: bool = False) -> list[dict[str, Any]]:
     init_player_inventory(database_path)
     with closing(_connect(database_path)) as connection, connection:
-        rows = connection.execute("SELECT * FROM player_inventory WHERE profile_id=? AND quantity>0 ORDER BY equipped DESC,item_title", (profile_id,)).fetchall()
+        quantity_filter = '' if include_empty else ' AND i.quantity>0'
+        rows = connection.execute(f'''SELECT i.*,c.data_json AS condition_json,c.version AS condition_version
+            FROM player_inventory i LEFT JOIN inventory_item_conditions c ON c.inventory_id=i.id
+            WHERE i.profile_id=?{quantity_filter} ORDER BY i.equipped DESC,i.item_title''',(profile_id,)).fetchall()
     result = [dict(row) for row in rows]
     for item in result:
         item["equipped"] = bool(item["equipped"])
+        raw=item.pop('condition_json');version=item.pop('condition_version')
+        if raw:item['_instance_condition']={**json.loads(raw),'version':int(version)}
     return result
 
 

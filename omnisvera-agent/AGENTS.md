@@ -56,3 +56,15 @@ checks acima após cada etapa e não faça `git push` automaticamente.
 - Depois, adicionar grade tática configurável e snap opcional para personagens e inimigos.
 
 Ao terminar uma tarefa, informe arquivos alterados, checks executados e riscos restantes.
+
+## Ensaios operados por IA
+
+Para testar fichas por agente, leia `docs/AI_TEST_TOOLS.md` e prefira as
+ferramentas MCP locais `companion-tests` registradas em `opencode.json`.
+O agente executa e interpreta o ensaio; não repasse essa operação ao Mestre.
+Use somente a fixture isolada. Resultado de teste não autoriza alterar regras
+ou estado operacional, e PASS parcial não certifica toda a ficha.
+Para auditoria de ficha/combate, use `companion_test_start` com `ui: true` e
+os quatro atores. Confira `report.ui_smoke`: sem aceitação visual explícita,
+não declare a interface pronta só porque cenários de API passaram. Não gera
+imagens ou propostas automaticamente; dependência ausente é INCONCLUSIVE.

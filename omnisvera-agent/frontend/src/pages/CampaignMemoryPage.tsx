@@ -12,6 +12,7 @@ import {
   mediaUrlFromVaultPath,
   PlayableCharacterSummary,
   updateGameSessionMetadata,
+  updateGameSessionStatus,
   uploadGameSessionImage,
 } from "../api";
 import ConclaveHub from "./ConclaveHub";
@@ -107,7 +108,10 @@ export default function CampaignMemoryPage({ mode, view, onViewChange }: Props) 
 
   useEffect(() => {
     let cancelled = false;
+    let pending = false;
     const load = async (initial = false) => {
+      if (cancelled || pending) return;
+      pending = true;
       if (initial) setLoading(true);
       try {
         const [sessionRows, active, contractRows, roster] = await Promise.all([
@@ -125,6 +129,7 @@ export default function CampaignMemoryPage({ mode, view, onViewChange }: Props) 
       } catch (cause) {
         if (!cancelled && initial) setError(cause instanceof Error ? cause.message : "Não foi possível carregar a memória da campanha.");
       } finally {
+        pending = false;
         if (!cancelled && initial) setLoading(false);
       }
     };
@@ -173,6 +178,19 @@ export default function CampaignMemoryPage({ mode, view, onViewChange }: Props) 
       setSessionEditBusy(false);
     }
   }
+
+  async function setSessionStatus(status: 'active' | 'completed') {
+    if (!selected || mode !== 'gm' || sessionEditBusy) return;
+    setSessionEditBusy(true);
+    setError('');
+    try {
+      await updateGameSessionStatus(selected.session.id, status);
+      setSessions(await listCampaignSessions());
+      window.dispatchEvent(new Event('omnisvera-session-changed'));
+      setSessionEditNotice(status === 'active' ? 'Sessão iniciada.' : 'Sessão finalizada. Estado salvo.');
+    } catch (cause) { setError(cause instanceof Error ? cause.message : 'Não foi possível atualizar a sessão.'); }
+    finally { setSessionEditBusy(false); }
+  }
   const activeContract = getCurrentOperationalContract(contracts);
   const activeSession = sessions.find((session) => session.status === "active") || null;
   // A scene is live only inside an operational session. This also protects the
@@ -184,7 +202,7 @@ export default function CampaignMemoryPage({ mode, view, onViewChange }: Props) 
   const currentParticipants = liveScene?.participants || [];
   const ownerCharacterId = characters.find((character) => character.access_level === "owner")?.id || null;
   const canOpenTable = mode === "gm" || Boolean(activeSession);
-  const latest = memories.slice(0, 4);
+  const latest = memories;
   const recap = [...latest].reverse().map((memory) => memory.summary).filter((text) => !text.startsWith("Esta sessão ainda")).join("\n\n");
   const stories = [
     ...contracts.filter((contract) => ["published", "accepted", "active"].includes(contract.status)).map((contract) => ({ key: `contract:${contract.id}`, title: contract.title, text: contract.public_summary || contract.public_briefing })),
@@ -199,7 +217,7 @@ export default function CampaignMemoryPage({ mode, view, onViewChange }: Props) 
       <div className="party-status-title"><span>AGORA</span><strong>{currentTitle}</strong><small>{activeContract?.risk_label || "Campanha em andamento"}</small></div>
       <div className="campaign-memory-now-bar">
         <p>{currentSummary}</p>
-        <div className="campaign-now-meta"><div className="campaign-view-switch" aria-label="Conteúdo da sessão"><button type="button" className={view === "history" ? "active" : ""} onClick={() => onViewChange("history")}>Histórico</button><button type="button" className={view === "missions" ? "active" : ""} onClick={() => onViewChange("missions")}>Missões</button></div><button type="button">📍 {currentLocation}</button><span>👥 {currentParticipants.length ? currentParticipants.map((item) => item.public_label).join(" • ") : "Grupo ainda não definido"}</span>{mode === "player" && <button type="button" disabled={!canOpenTable} onClick={() => window.dispatchEvent(new CustomEvent("omnisvera-open-workspace", { detail: "table" }))}>Minha ficha</button>}<button type="button" className="campaign-continue" disabled={!canOpenTable} onClick={() => window.dispatchEvent(new CustomEvent("omnisvera-open-workspace", { detail: "table" }))}>{canOpenTable ? "Continuar sessão" : "Aguardando Mestre"}</button></div>
+        <div className="campaign-now-meta"><div className="campaign-view-switch" aria-label="Conteúdo da sessão"><button type="button" className={view === "history" ? "active" : ""} onClick={() => onViewChange("history")}>Histórico</button><button type="button" className={view === "missions" ? "active" : ""} onClick={() => onViewChange("missions")}>Missões</button></div><button type="button">📍 {currentLocation}</button><span>👥 {currentParticipants.length ? currentParticipants.map((item) => item.public_label).join(" • ") : "Grupo ainda não definido"}</span>{mode === "player" && <button type="button" disabled={!ownerCharacterId} onClick={() => window.dispatchEvent(new CustomEvent("omnisvera-open-workspace", { detail: "sheet" }))}>Minha ficha</button>}<button type="button" className="campaign-continue" disabled={!canOpenTable} onClick={() => window.dispatchEvent(new CustomEvent("omnisvera-open-workspace", { detail: "table" }))}>{canOpenTable ? "Continuar sessão" : "Aguardando Mestre"}</button></div>
       </div>
     </header>
 
@@ -216,6 +234,7 @@ export default function CampaignMemoryPage({ mode, view, onViewChange }: Props) 
         <div className="campaign-memory-scroll">{selected ? <>
           <button type="button" className="campaign-back" onClick={() => setSelectedKey(null)}>← Voltar para a campanha</button>
           <header className="campaign-detail-hero">{selected.image && <img src={mediaUrlFromVaultPath(selected.image)} alt="" />}<div><small>{selected.number ? `SESSÃO ${selected.number}` : "MEMÓRIA DA CAMPANHA"}</small><h1>{selected.title}</h1><time>{dateLabel(selected.date)}</time></div></header>
+          {mode === 'gm' && <section className="campaign-session-actions" aria-label="Controles da sessão"><button disabled={sessionEditBusy || selected.status === 'active'} onClick={() => void setSessionStatus('active')}>Iniciar sessão</button><button disabled={sessionEditBusy || !['active','paused'].includes(selected.status)} onClick={() => void setSessionStatus('completed')}>Finalizar sessão</button>{sessionEditNotice && <p role="status">{sessionEditNotice}</p>}</section>}
           <section className="campaign-chronicle"><small>CRÔNICA</small>{selected.chronicle.split("\n\n").map((paragraph) => <p key={paragraph}>{paragraph}</p>)}</section>
           <section className="campaign-detail-section"><small>PARTICIPANTES</small><div className="campaign-character-grid">{selected.participants.length ? selected.participants.map((participant) => {
             const canOpenCharacter = mode === "gm" || Boolean(participant.id && participant.id === ownerCharacterId);

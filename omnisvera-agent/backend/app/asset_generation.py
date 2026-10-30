@@ -20,6 +20,7 @@ STYLE_PRESETS = {
     "omnisvera.session.v1": "dark medieval high fantasy, grounded painterly realism, professional RPG illustration, dramatic cinematic lighting, coherent material detail, serious worldbuilding tone, no text, no logo, no watermark, widescreen environment, cinematic composition",
     "omnisvera.item.v1": "dark medieval high fantasy, grounded painterly realism, professional RPG illustration, dramatic cinematic lighting, coherent material detail, serious worldbuilding tone, no text, no logo, no watermark, single object centered, clearly readable at small size, detailed fantasy item illustration, restrained background",
     "omnisvera.potion.v1": "dark medieval high fantasy, grounded painterly realism, professional RPG illustration, dramatic cinematic lighting, coherent material detail, serious worldbuilding tone, no text, no logo, no watermark, single object centered, clearly readable at small size, detailed fantasy item illustration, restrained background, clearly identifiable potion, readable silhouette",
+    "omnisvera.monster.v1": "dark medieval high fantasy, grounded painterly realism, professional RPG illustration, dramatic cinematic lighting, coherent material detail, serious worldbuilding tone, no text, no logo, no watermark, single creature centered, full-body monster portrait, readable silhouette",
 }
 
 ELIGIBLE_ASSET_TYPES = {
@@ -28,6 +29,7 @@ ELIGIBLE_ASSET_TYPES = {
     "item_art",
     "potion_hp",
     "potion_mp",
+    "monster_art",
 }
 
 # Mapping for eligible special items (by name slug)
@@ -136,6 +138,17 @@ def scan_eligible_gaps(database_path: Path | None = None) -> list[dict[str, Any]
             if not exists:
                 data = {"potion_type": potion_type}
                 gaps.append({"entity_type": "ui_icon", "entity_id": potion_type, "asset_type": potion_type, "style_version": "omnisvera.potion.v1", "source_data": data, "source_hash": _source_hash(data), "display_name": display})
+        # bestiary monsters without any art (Oozejar pack or approved FLUX)
+        from .monster_catalog import load_monster_catalog
+        for monster in load_monster_catalog()["monsters"]:
+            if monster.get("image_path"):
+                continue
+            data = {"name": monster["name"], "category": monster.get("category") or "",
+                    "size": monster.get("size") or "", "habitat": monster.get("habitat") or "",
+                    "hit_dice": monster.get("hit_dice") or ""}
+            gaps.append({"entity_type": "compendium_monster", "entity_id": monster["id"], "asset_type": "monster_art",
+                         "style_version": "omnisvera.monster.v1", "source_data": data, "source_hash": _source_hash(data),
+                         "display_name": monster["name"]})
     return gaps
 
 def queue_missing_assets(database_path: Path | None = None) -> list[dict[str, Any]]:
@@ -217,4 +230,8 @@ def bind_asset_to_entity(job: dict[str, Any], image_path: str, database_path: Pa
         elif entity_type == "ui_icon":
             # For potions, image_path is the file to create, no DB binding
             pass
+        elif entity_type == "compendium_monster":
+            # Bestiary overlay file; an approved link is never overwritten.
+            from .monster_catalog import bind_monster_ai_art
+            bind_monster_ai_art(entity_id, image_path)
         conn.commit()

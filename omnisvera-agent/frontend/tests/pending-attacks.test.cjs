@@ -23,7 +23,7 @@ test('reconnect recovers the same pending result without resolving or confirming
   const render = () => { cursor = 0; tree = module.exports.default({ onOpen: item => { opened = item; } }); while (effects.length) cleanup = effects.shift()(); };
   render(); await new Promise(setImmediate); render();
   assert.equal(tree.type, 'details');
-  assert.equal(tree.props.open, undefined, 'technical recovery is collapsed');
+  assert.equal(tree.props.open, true, 'a reserved attack must remain easy to resume');
   assert.equal(reads, 1);
   walk(tree).find(n => n.type === 'button').props.onClick();
   assert.equal(opened.resolution_id, 'unchanged-preview');

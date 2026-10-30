@@ -9,6 +9,14 @@ No operational tokens are loaded. Restart serve after backend changes.
 """
 from __future__ import annotations
 
+if __name__ == '__main__':
+    from memory_guard import join_owned_job_from_env
+    join_owned_job_from_env()
+
+# Guarded: importing this module from the stdio MCP must never print to transport.
+if __name__ == '__main__':
+    print('FIXTURE_STARTUP={"stage":"cf01_module_entry"}', flush=True)
+
 import argparse
 import json
 import os
@@ -26,12 +34,55 @@ BACKEND = Path(__file__).resolve().parents[1]
 TOKENS = {role: f"cf01-local-{role}" for role in ("gm", "varkh", "raziel", "vezemir", "morthak")}
 
 
+def startup_checkpoint(stage, *, process=None, stream=None):
+    """Bounded runtime facts in existing private logs, never environment/argv.
+
+    No health body, paths to data, credentials or caller content are accepted.
+    These checkpoints are diagnostics, not test results or certification.
+    """
+    allowed = {'runner_spawn_requested','runner_spawned','runner_main',
+        'fixture_spawn_requested','fixture_spawned','fixture_health_timeout',
+        'fixture_health_stopped','fixture_health_ready','cf01_main',
+        'cf01_configure_start','cf01_configure_done','cf01_app_import_start',
+        'cf01_app_import_done','cf01_uvicorn_start'}
+    if stage not in allowed:
+        raise ValueError('Unknown private startup stage')
+    record={'stage':stage,'pid':os.getpid(),'parent_pid':os.getppid(),
+            'executable':sys.executable,'python_version':sys.version.split()[0]}
+    if process is not None:
+        record.update(child_pid=process.pid,child_exit_code=process.poll())
+    print('FIXTURE_STARTUP='+json.dumps(record,ensure_ascii=True),
+          file=stream if stream is not None else sys.stdout,flush=True)
+
+
 def checked_database(raw):
     database = Path(raw).resolve()
     # Test tools cannot open an operational database for writing, even by mistake.
     if Path(tempfile.gettempdir()).resolve() not in database.parents:
         raise ValueError("CF-01 database must be under the OS temporary directory")
     return database
+
+
+def fixture_environment(database) -> dict[str, str]:
+    """Fresh child environment, never host Python hooks or operational secrets.
+
+    configure() still owns in-process fixture setup. This additionally prevents
+    a long-lived agent host from leaking its launcher/proxy/runtime into children.
+    """
+    database = checked_database(database)
+    vault = checked_database(database.with_suffix('.vault'))
+    allowed = {'PATH','PATHEXT','SYSTEMROOT','WINDIR','COMSPEC','TEMP','TMP',
+               'USERPROFILE','LOCALAPPDATA','APPDATA','HOMEDRIVE','HOMEPATH',
+               'PROGRAMFILES','PROGRAMFILES(X86)','PROGRAMDATA','PUBLIC','LANG','LC_ALL'}
+    env = {key:value for key,value in os.environ.items() if key.upper() in allowed}
+    env.update({'OMNISVERA_AI_WORKSHOP_DB':str(checked_database(database.with_suffix('.workshop.sqlite3'))), 'AI_WORKSHOP_CONFIG_FILE':str(checked_database(database.with_suffix('.workshop-config.json'))),'OMNISVERA_DB_PATH':str(database),'OMNISVERA_VAULT_PATH':str(vault),
+        'OMNISVERA_MASTER_TOKEN':TOKENS['gm'],'OMNISVERA_ACCESS_TOKEN':TOKENS['gm'],
+        'OMNISVERA_PLAYER_TOKEN':'cf01-local-generic',
+        'OMNISVERA_REBUILD_ON_STARTUP':'false','OMNISVERA_AUTO_REFRESH_INDEX':'false',
+        'OMNISVERA_TRAINING_CAPTURE_MODE':'off','OMNISVERA_BEHAVIOR_MEMORY_ENABLED':'false',
+        'OMNISVERA_SEMANTIC_INDEX_PATH':str(vault/'.local-index/vault.jsonl'),
+        'OLLAMA_BASE_URL':'http://127.0.0.1:1'})
+    return env
 
 
 def configure(database):
@@ -46,6 +97,8 @@ def configure(database):
         "vezemir": ("Vezemir", "Vezemir"), "morthak": ("Morthak", "Morthak"),
     }
     os.environ.update({
+        "OMNISVERA_AI_WORKSHOP_DB": str(checked_database(database.with_suffix(".workshop.sqlite3"))),
+        "AI_WORKSHOP_CONFIG_FILE": str(checked_database(database.with_suffix(".workshop-config.json"))),
         "OMNISVERA_DB_PATH": str(database), "OMNISVERA_MASTER_TOKEN": TOKENS["gm"],
         "OMNISVERA_ACCESS_TOKEN": TOKENS["gm"], "OMNISVERA_PLAYER_TOKEN": "cf01-local-generic",
         "OMNISVERA_REBUILD_ON_STARTUP": "false", "OMNISVERA_TRAINING_CAPTURE_MODE": "off",
@@ -137,6 +190,7 @@ def probe(database, port):
 
 
 def main():
+    startup_checkpoint('cf01_main')
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("action", choices=("prepare", "serve", "probe"))
     parser.add_argument("--database", required=True)
@@ -157,10 +211,14 @@ def main():
     if args.action == "probe":
         probe(database, args.port)
     else:
+        startup_checkpoint('cf01_configure_start')
         configure(database)
+        startup_checkpoint('cf01_configure_done')
         sys.path.insert(0, str(BACKEND))
+        startup_checkpoint('cf01_app_import_start')
         import uvicorn
         from app import main as companion
+        startup_checkpoint('cf01_app_import_done')
         if args.frontend_dir:
             from starlette.staticfiles import StaticFiles
             build = args.frontend_dir.resolve()
@@ -171,6 +229,7 @@ def main():
             if asset_route is None:
                 parser.error("Existing /assets mount is required for an isolated frontend override")
             asset_route.app = StaticFiles(directory=build / "assets")
+        startup_checkpoint('cf01_uvicorn_start')
         uvicorn.run(companion.app, host="127.0.0.1", port=args.port, log_level="warning")
 
 

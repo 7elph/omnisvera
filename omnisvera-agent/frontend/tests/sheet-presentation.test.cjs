@@ -9,8 +9,9 @@ const read=file=>fs.readFileSync(path.join(__dirname,'../src',file),'utf8');
 function loadValue() {
   const module={exports:{}};
   const jsx=(type,props)=>({type,props});
+  let failed=[];
   vm.runInNewContext(ts.transpileModule(read('components/ArmorClassValue.tsx'),{compilerOptions:{module:ts.ModuleKind.CommonJS,jsx:ts.JsxEmit.ReactJSX}}).outputText,
-    {module,exports:module.exports,require:name=>name==='../api' ? {mediaUrlFromVaultPath:p=>p ? `/media/${p}` : ''} : name==='../companionIconCatalog' ? {iconPathForItem:()=> 'armor-fallback.png'} : {jsx,jsxs:jsx}});
+    {module,exports:module.exports,require:name=>name==='react' ? {useState:()=>[failed,next=>{failed=typeof next==='function'?next(failed):next;}]} : name==='../api' ? {mediaUrlFromVaultPath:p=>p ? `/media/${p}` : ''} : name==='../companionIconCatalog' ? {iconPathForItem:()=> 'armor-fallback.png'} : {jsx,jsxs:jsx}});
   return module.exports;
 }
 
@@ -35,14 +36,41 @@ test('CA restores the equipped armor icon, preferring thumbnail then cover then 
   assert.equal(tree.props.children[0],14);
   assert.equal(tree.props.children[1].type,'img');
   assert.equal(tree.props.children[1].props.src,'/media/thumb.png');
-  assert.equal(tree.props.children[1].props.alt,'Manto');
+  assert.equal(tree.props.children[1].props.alt,'');
+  assert.equal(tree.props.children[1].props['aria-label'],'Manto');
   assert.equal(tree.props.children[2].props['aria-label'],'Bônus de CA +2');
   assert.equal(Value({defenses,inventory:[{...item,thumbnail:null}]}).props.children[1].props.src,'/media/cover.png');
   assert.equal(Value({defenses,inventory:[]}).props.children[1].props.src,'/media/armor-fallback.png');
   assert.equal(Value({defenses:{armor_class:12},inventory:[item]}).props.children[1],undefined);
 });
 
-test('all character sheet views share CA display and keep coins below inventory',()=>{
+test('broken CA art falls back without spilling the item name over the stat',()=>{
+  const {default:Value}=loadValue();
+  const defenses={armor_class:22,unmodified_armor_class:20,armor_modifier_source:{item_path:'armor',item_title:'Nome de armadura muito longo',value:2}};
+  const inventory=[{item_path:'armor',item_title:'Armadura',thumbnail:'missing.png'}];
+  let tree=Value({defenses,inventory});
+  let icon=tree.props.children[1];
+  assert.equal(icon.props.alt,'','Broken image must not render a long alt label');
+  assert.equal(icon.props.style.width,24);
+  assert.equal(typeof icon.props.onError,'function');
+  icon.props.onError();
+  tree=Value({defenses,inventory});
+  icon=tree.props.children[1];
+  assert.equal(icon.props.src,'/media/armor-fallback.png');
+  icon.props.onError();
+  tree=Value({defenses,inventory});
+  icon=tree.props.children[1];
+  assert.equal(icon.type,'svg');
+  assert.equal(icon.props['aria-label'],defenses.armor_modifier_source.item_title);
+  assert.equal(icon.props.style.width,24);
+  assert.equal(tree.props.children[0],22);
+  assert.equal(tree.props.children[2].props['aria-label'],'Bônus de CA +2');
+  const recovered=Value({defenses,inventory:[{...inventory[0],thumbnail:'available.png'}]});
+  assert.equal(recovered.props.children[1].type,'img');
+  assert.equal(recovered.props.children[1].props.src,'/media/available.png');
+});
+
+test('all character sheet views share CA; Mesa balances precede inventory, full sheet keeps its editor',()=>{
   const mesa=read('pages/SessionWorkspace.tsx');
   const sheet=read('pages/PlayableCharacterSheet.tsx');
   assert.ok(!mesa.includes('Detalhar CA'));
@@ -51,9 +79,9 @@ test('all character sheet views share CA display and keep coins below inventory'
   assert.ok(mesa.includes('<ArmorClassValue defenses={openCharacterDetail.definition.defenses} inventory={openCharacterDetail.inventory} />'));
   assert.ok(sheet.includes('<ArmorClassValue defenses={character.definition.defenses} inventory={character.inventory} />'));
   assert.ok(sheet.includes('<ArmorClassValue defenses={definition.defenses} inventory={character.inventory} />'));
-  assert.ok(mesa.indexOf('<CurrencyCounters')>mesa.indexOf('workspace-action-catalog workspace-inventory-catalog'));
+  assert.ok(mesa.indexOf('<CurrencyCounters')<mesa.indexOf('workspace-action-catalog workspace-inventory-catalog'));
   assert.match(sheet, /tab === "inventory"[^\n]+<InventoryTab[^\n]+<CurrencyCounters/);
   const coins=read('components/CurrencyCounters.tsx');
-  assert.ok(coins.includes('<details className="workspace-gm-subsection" aria-label="Moedas">'));
-  assert.ok(!coins.includes('<details className="workspace-gm-subsection" aria-label="Moedas" open'));
+  assert.ok(coins.includes('expanded = false'));
+  assert.ok(coins.includes('aria-label="Moedas" open={expanded || undefined}'));
 });

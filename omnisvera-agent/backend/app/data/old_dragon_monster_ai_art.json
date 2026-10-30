@@ -1,0 +1,15 @@
+{
+ "schema_version": 1,
+ "collection": {
+  "id": "mesa-omnisvera-generated",
+  "title": "Arte gerada para a mesa Omnisvera",
+  "creator": "Mesa Omnisvera",
+  "license": "Uso interno de mesa"
+ },
+ "mappings": {
+  "gorgon": "companion-assets/bestiary/gorgon-20261026.png"
+ },
+ "attributions": {
+  "gorgon": "Mesa Omnisvera - OpenAI imagegen"
+ }
+}

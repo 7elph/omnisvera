@@ -36,6 +36,25 @@ def build_prompt(asset_type: str, style_version: str, source_data: dict) -> str:
         else:
             parts.append("mana potion, deep blue/cyan arcane liquid, clearly identifiable mana potion, readable silhouette")
         parts.append("single potion bottle centered, detailed")
+    elif asset_type == "monster_art":
+        if source_data.get("visual_description"):
+            parts.insert(0, "SUBJECT ANATOMY (priority): " + source_data["visual_description"])
+        if source_data.get("description"):
+            parts.append(f"Physical identity from official description: {source_data['description']}")
+        if source_data.get("name"):
+            parts.append(f"Creature: {source_data['name']}")
+        for field in ("category", "size", "habitat"):
+            if source_data.get(field):
+                parts.append(f"{field.capitalize()}: {source_data[field]}")
+        if source_data.get("hit_dice"):
+            parts.append(f"Bulk/power hint: {source_data['hit_dice']} hit dice")
+        if source_data.get('attacks'):
+            parts.append('Canonical attacks: ' + '; '.join(source_data['attacks']))
+        if source_data.get('abilities'):
+            parts.append('Canonical traits: ' + '; '.join(
+                f"{a['name']}: {a['description']}" for a in source_data['abilities']))
+        parts.append('Creature, not an adventurer. Do not add humanoid armor, weapons or clothing without explicit source support')
+        parts.append("single creature centered, full-body monster portrait, readable silhouette")
     # Filter empty
     prompt = ", ".join(p for p in parts if p)
     return prompt

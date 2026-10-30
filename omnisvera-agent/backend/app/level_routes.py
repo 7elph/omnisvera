@@ -14,7 +14,24 @@ class LevelConfirmation(LevelRequest):
     fingerprint: str = Field(min_length=64, max_length=64, pattern=r"^[0-9a-f]{64}$")
 
 
+class ManualHpAcknowledgement(BaseModel):
+    model_config=ConfigDict(extra='forbid')
+    level: StrictInt=Field(ge=2,le=20)
+    reason: str=Field(min_length=1,max_length=500)
+
+
 def register(app, require_master, character_loader, database_path):
+    @app.post('/gm/characters/{profile_id}/level/manual-hp')
+    def manual_hp(profile_id: str, request: ManualHpAcknowledgement, access=Depends(require_master)):
+        from contextlib import closing
+        from .character_play import _connect
+        from .level_recalculation import acknowledge_manual_hp
+        character_loader(profile_id,access)
+        try:
+            with closing(_connect(database_path())) as db,db:
+                db.execute('BEGIN IMMEDIATE')
+                return acknowledge_manual_hp(db,profile_id,request.level,actor_id='master',actor_role='gm',reason=request.reason)
+        except ValueError as error:raise HTTPException(409,str(error)) from error
     @app.post("/gm/characters/{profile_id}/level/preview")
     def preview(profile_id: str, request: LevelRequest, access=Depends(require_master)):
         try:

@@ -36,6 +36,24 @@ def resolve_asset_context(settings, job):
         if table and not record:
             context['blocking'].append('Entidade do asset não encontrada')
             return context
+        if job['entity_type'] == 'compendium_monster':
+            from .monster_catalog import get_catalog_monster
+            monster = get_catalog_monster(job['entity_id'])
+            if monster is None:
+                context['blocking'].append('Monstro do bestiário não encontrado')
+                return context
+            # Canonical monster facts only; prompt_builder renders them.
+            context['source'] = {'name': monster['name'], 'category': monster.get('category') or '',
+                                'size': monster.get('size') or '', 'habitat': monster.get('habitat') or '',
+                                'hit_dice': monster.get('hit_dice') or '',
+                                'description': monster.get('description') or '',
+                                'visual_description': monster.get('visual_description') or ''}
+            context['source']['attacks'] = [a.get('raw') or a.get('name', '') for a in monster.get('attacks', [])]
+            context['source']['abilities'] = [
+                {'name': a.get('name', ''), 'description': a.get('description', '')}
+                for a in monster.get('abilities', [])]
+            context['warnings'].append('Anatomia visual sem referência original: conferir antes de aprovar')
+            return context
         source = record[0] if record else {'potion_type': job['asset_type']}
         context['source'] = {k: source[k] for k in ('title', 'name', 'item_type', 'description', 'location_name', 'public_description', 'public_summary', 'potion_type') if k in source}
         notes = rows('notes')

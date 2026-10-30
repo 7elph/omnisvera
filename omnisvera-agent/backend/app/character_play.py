@@ -20,6 +20,22 @@ AccessLevel = Literal["gm", "owner", "public"]
 SESSION_ABILITY_CATALOG_PATH = Path(__file__).with_name("data") / "session_abilities.json"
 
 
+def attach_spell_images(abilities: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Shared presentation metadata only; preserve each character's spell contract."""
+    from .level_advancement import NECROMANCER_ABILITIES_5
+    descriptions = {a['id']: a['description'] for a in NECROMANCER_ABILITIES_5}
+    abilities = [{**a,'description':descriptions[a['id']]} if a.get('id') in descriptions else a for a in abilities]
+    try:
+        images = json.loads((SESSION_ABILITY_CATALOG_PATH.parent / 'spell_images.json').read_text(encoding='utf-8'))
+    except (OSError, json.JSONDecodeError):
+        return abilities
+    return [
+        {**ability, 'image_path': images[ability['id']]}
+        if ability.get('kind') in {'spell', 'power', 'ability', 'attack', 'technique', 'resource', 'passive'} and ability.get('id') in images else ability
+        for ability in abilities
+    ]
+
+
 def load_session_abilities(profile_id: str, *, approved_build: str | None = None) -> list[dict[str, Any]]:
     """Load player-safe abilities without embedding character-specific data in the UI."""
     if profile_id == 'dorn7' and str(approved_build or '').startswith('dorn-mage'):
@@ -31,6 +47,11 @@ def load_session_abilities(profile_id: str, *, approved_build: str | None = None
         return []
 
     raw_entries = (payload.get("characters") or {}).get(profile_id, [])
+    if profile_id == 'vezemir':
+        raw_entries = list(raw_entries) + [
+            {'id':'frenesi','name':'Frenesi','kind':'ability','group':'Habilidades','active':True,'mechanics_status':'structured','description':'1d4+1 rodadas, +2 FOR. Um uso manual diário; ativação automática abaixo de 50% PV uma vez por descanso, sem gastar o manual. A primeira ativação diária permite agir até −9 PV; −10 PV derruba.','uses':{'resource_key':'frenesi','label':'Frenesi · manual','maximum':1,'recharge':'inn_rest'}},
+            {'id':'provocacao','name':'Provocação','kind':'ability','group':'Habilidades','active':True,'mechanics_status':'structured','description':'Raio automático: 1d4 + número de inimigos, em metros. JP normal no início do turno: falha obriga atacar Vezemir. −1 redução de dano por inimigo afetado. Uma morte provocada durante Frenesi recupera este uso.','uses':{'resource_key':'provocacao','label':'Provocação','maximum':1,'recharge':'inn_rest'}},
+        ]
     if not isinstance(raw_entries, list):
         return []
 
@@ -88,9 +109,10 @@ def load_session_abilities(profile_id: str, *, approved_build: str | None = None
                 if _number(uses.get("cost")) is not None:
                     entry["uses"]["cost"] = max(1, int(_number(uses.get("cost")) or 1))
         entries.append(entry)
-    return entries
+    return attach_spell_images(entries)
 
 STATE_ACTIONS = {
+    "end_night_form",
     "set_currency",
     "damage",
     "heal",
@@ -109,9 +131,12 @@ STATE_ACTIONS = {
     "set_location",
     "set_session_notes",
     "rest_at_inn",
+    "rest_in_coffin",
 }
 
 OWNER_ACTIONS = {
+    "rest_in_coffin",
+    "end_night_form",
     "set_currency",
     "damage",
     "heal",
@@ -143,6 +168,8 @@ DEFINITION_FIELDS = {
     "location",
     "current_status",
     "gm_fields",
+    "specialization",
+    "progression_contract",
 }
 
 
@@ -337,7 +364,7 @@ def _equipped_rules(inventory: list[dict[str, Any]], kind: str) -> list[tuple[di
     return matches
 
 
-def _equipped_effect_summary(inventory: list[dict[str, Any]]) -> dict[str, Any]:
+def _equipped_effect_summary(inventory: list[dict[str, Any]],actor_class: str | None = None) -> dict[str, Any]:
     groups: dict[tuple[str, str], list[tuple[dict[str, Any], dict[str, Any]]]] = {}
     breakdown: list[dict[str, Any]] = []
     for item in inventory:
@@ -349,6 +376,9 @@ def _equipped_effect_summary(inventory: list[dict[str, Any]]) -> dict[str, Any]:
             kind = str(rule.get("kind") or "")
             target = str(rule.get("target") or "").strip()
             condition = str(rule.get("condition") or "").strip()
+            family_active=None
+            if condition.startswith('family:not_class:') and (item.get('mechanics') or {}).get('family_schema')==1 and actor_class is not None:
+                family_active=condition.rsplit(':',1)[1] not in _normalize(actor_class)
             entry = {
                 "rule_id": str(rule.get("id") or ""),
                 "item_path": str(item.get("item_path") or ""),
@@ -360,10 +390,10 @@ def _equipped_effect_summary(inventory: list[dict[str, Any]]) -> dict[str, Any]:
                 "label": str(rule.get("label") or "").strip() or None,
                 "stacking": str(rule.get("stacking") or "stack"),
                 "condition": condition or None,
-                "active": not condition,
+                "active": family_active if family_active is not None else not condition,
             }
             breakdown.append(entry)
-            if not condition:
+            if (family_active if family_active is not None else not condition):
                 groups.setdefault((kind, target), []).append((item, rule))
 
     totals: dict[str, int] = {}
@@ -392,23 +422,24 @@ def _equipped_weapons(inventory: list[dict[str, Any]]) -> list[dict[str, Any]]:
 def available_attack_weapons(inventory: list[dict[str, Any]], attack_id: str) -> list[dict[str, Any]]:
     """Equipped weapons usable for an attack slot, in preference order.
 
-    Same ordering as the legacy auto-pick: slotted match first, then the
-    Adagas throwing exception for ranged, then unslotted by weapon kind.
+    Explicit slots are authoritative except separately approved attack modes.
+    Unslotted legacy weapons may fall back to inferred throwing/ranged mode.
     """
     weapons = _equipped_weapons(inventory)
     wanted_slot = "distancia" if attack_id == "ranged" else "corpo a corpo"
     slotted = [item for item in weapons if wanted_slot in _normalize(item.get("equipment_slot"))]
+    approved_modes = [item for item in weapons if attack_id in (item.get('mechanics') or {}).get('attack_modes', [])]
     unslotted = [item for item in weapons if not str(item.get("equipment_slot") or "").strip()]
     ranged_terms = ("arco", "besta", "distancia", "ranged")
     if attack_id == "ranged":
         # This campaign relic explicitly supports throwing (Vault item: 3/6,
         # 1d4). Equipping it in the melee slot must not remove that mode.
-        throwing = [item for item in weapons if str(item.get("item_path") or "").replace("\\", "/") == "Items/Adagas de Espectro Fantasma.md"]
+        throwing = [item for item in unslotted if (item.get('mechanics') or {}).get('thrown_damage_formula') or str(item.get("item_path") or "").replace("\\", "/") == "Items/Adagas de Espectro Fantasma.md"]
         ranged_unslotted = [item for item in unslotted if any(term in _normalize(f"{item.get('item_title')} {item.get('item_type')}") for term in ranged_terms)]
-        ordered = [*slotted, *throwing, *ranged_unslotted]
+        ordered = [*slotted, *approved_modes, *throwing, *ranged_unslotted]
     else:
         melee_unslotted = [item for item in unslotted if not any(term in _normalize(f"{item.get('item_title')} {item.get('item_type')}") for term in ranged_terms)]
-        ordered = [*slotted, *melee_unslotted]
+        ordered = [*slotted, *approved_modes, *melee_unslotted]
     seen: set[str] = set()
     unique: list[dict[str, Any]] = []
     for item in ordered:
@@ -455,6 +486,7 @@ def _attack_equipment_sources(
             "role": "weapon" if path == weapon_path else "support",
         }
         for path in relevant_paths if path in by_path
+        and (path == weapon_path or not by_path[path].get('damage_formula'))
     ]
 
 
@@ -501,7 +533,8 @@ def _equipped_armor_modifier(inventory: list[dict[str, Any]], effect_summary: di
                 "equipped_slot": str(item.get("equipment_slot") or ""),
             }
         )
-    legacy = 2 if candidates else 0
+    catalog_leather=any(i.get('equipped') and i.get('quantity',0)>0 and (i.get('mechanics') or {}).get('family_schema')==1 and i.get('item_title')=='Armadura de couro' for i in inventory)
+    legacy = 2 if candidates and not catalog_leather else 0
     included = max(included_candidates, key=lambda item: int(item["value"])) if included_candidates else None
     total = structured_total + legacy + int((included or {}).get("value") or 0)
     applied_total = structured_total + legacy
@@ -640,7 +673,8 @@ def build_character_definition(
     attributes = dict(_step_fields(sheet, "attributes"))
     attributes.update(overrides.get("attributes") or {})
     base_attributes = dict(attributes)
-    item_effects = _equipped_effect_summary(inventory)
+    family_class=overrides.get('class_name') or _step_fields(sheet,'character_class').get('class_name') or frontmatter.get('class') or ''
+    item_effects = _equipped_effect_summary(inventory,actor_class=family_class+' '+str(overrides.get('specialization') or ''))
     for target in attributes:
         if _number(attributes.get(target)) is not None:
             attributes[target] = int(_number(attributes[target]) or 0) + _effect_total(item_effects, "attribute_bonus", target)
@@ -665,6 +699,10 @@ def build_character_definition(
     effective_armor_class = int(armor_class) + applied_armor_modifier if armor_class is not None and armor_class > 0 else None
     included_armor_modifier = armor_modifier - applied_armor_modifier
     unmodified_armor_class = int(armor_class) - included_armor_modifier if armor_class is not None and armor_class > 0 else None
+    if overrides.get('equipment_defense_anchor') and armor_class is not None and armor_class>0:
+        from .item_families import anchored_defense
+        effective_armor_class=anchored_defense(overrides['equipment_defense_anchor'],armor_class,armor_modifier,attributes,inventory)
+        unmodified_armor_class=effective_armor_class-armor_modifier
     if armor_modifier_source and not any(entry.get("kind") == "armor_class_bonus" and entry.get("item_path") == armor_modifier_source.get("item_path") for entry in item_effects["breakdown"]):
         item_effects["breakdown"].append({
             "rule_id": "legacy-armor", "item_path": armor_modifier_source.get("item_path"), "item_title": armor_modifier_source.get("item_title"),
@@ -688,18 +726,32 @@ def build_character_definition(
         if attacks.get(field_name) is None:
             continue
         base_attack_bonus = int(_number(attacks.get(field_name)) or 0) + int(overrides.get("advancement_attack_delta") or 0)
+        if profile_id=='raziel':base_attack_bonus=max(6,base_attack_bonus)
+        if profile_id == 'vezemir' and level >= 5:
+            ba = int(overrides.get('advancement_base_attack', class_fields.get('base_attack', level)) or 0)
+            base_attack_bonus = ba + attribute_modifier(int(attributes.get('strength' if attack_id == 'melee' else 'dexterity') or 10))
         item_attack_bonus = _effect_total(item_effects, "attack_bonus", attack_id)
         weapon = _equipped_weapon_for_attack(inventory, attack_id)
-        damage = resolve_item_damage_formula({"item_effects": item_effects}, weapon) if weapon else None
+        mastery = overrides.get("specialization_mastery") or {}
+        mastery_bonus = 0
+        if mastery and weapon and mastery.get("weapon_item_path") == weapon.get("item_path"):
+            mastery_bonus = int(mastery.get("attack_bonus") or 0)
+        damage = resolve_item_damage_formula({"item_effects": item_effects, 'attack_slot': attack_id}, weapon) if weapon else None
+        if mastery_bonus and damage:
+            match = re.search(r"([+-]\d+)\s*$", str(damage))
+            bump = int(mastery.get("damage_bonus") or 0)
+            if match and bump:
+                damage = str(damage)[:match.start()] + f"{int(match.group(1)) + bump:+d}"
         attack_entries.append(
             {
                 "id": attack_id,
                 "attack_count": int(overrides.get("attack_count", 1)),
                 "base_attack_count": int(overrides.get("attack_count", 1)),
                 "name": label,
-                "attack_bonus": base_attack_bonus + item_attack_bonus,
+                "attack_bonus": base_attack_bonus + item_attack_bonus + mastery_bonus,
                 "base_attack_bonus": base_attack_bonus,
                 "item_attack_bonus": item_attack_bonus,
+                "mastery_attack_bonus": mastery_bonus,
                 "damage": damage,
                 "range": None,
                 "notes": None if weapon else "Dano não configurado nas fontes da ficha.",
@@ -725,12 +777,13 @@ def build_character_definition(
     result: dict[str, Any] = {
         "id": profile_id,
         "slug": profile_id,
-        "name": name,
+        "name": overrides.get('name') or name,
         "portrait": frontmatter.get("thumbnail") or frontmatter.get("portrait") or frontmatter.get("cover"),
         "cover": frontmatter.get("cover"),
         "epithet": overrides.get("epithet") or epithet,
         "race": race,
         "class_name": class_name,
+        "specialization": overrides.get("specialization"),
         "level": None if overrides.get("level_pending") else level,
         "player_name": overrides.get("player_name"),
         "campaign": overrides.get("campaign") or "Omnisvera",
@@ -750,7 +803,7 @@ def build_character_definition(
             "magic": _clean_text(magic.get("known_magic"), 4000),
             "magic_notes": _clean_text(magic.get("magic_notes"), 1800),
         },
-        "session_abilities": load_session_abilities(profile_id, approved_build=overrides.get('approved_build')) + list(overrides.get("approved_session_abilities") or []) + [
+        "session_abilities": load_session_abilities(profile_id, approved_build=overrides.get('approved_build')) + list(overrides.get("approved_session_abilities") or []) + list(overrides.get('level_abilities') or []) + list(overrides.get('specialization_abilities') or []) + [
             {
                 "id": f"item:{item.get('item_path')}:{rule.get('id')}",
                 "name": str(rule.get("target") or rule.get("label") or item.get("item_title") or "Habilidade de item"),
@@ -774,17 +827,27 @@ def build_character_definition(
             "armor_modifier_source": armor_modifier_source,
             "saving_throw": overrides.get("advancement_saving_throw", class_fields.get("saving_throw")),
             "saving_throw_bonus": _effect_total(item_effects, "saving_throw_bonus"),
+            "conditional_saving_throw_bonuses": {**({'magical_sleep': 4, 'charm': 4, 'mind_control': 4} if overrides.get('construct_traits') else {}),
+                                                   **({'constitution': 2} if overrides.get('specialization') == 'barbaro' else {})},
+            "armor_breakdown": armor.get('armor_breakdown'),
             "initiative": int(initiative) if initiative is not None else None,
             "initiative_configured": initiative is not None,
         },
         "progression": {
             "experience": _number(overrides["experience"] if "experience" in overrides else class_fields.get("experience")),
             "base_attack": _number(overrides.get("advancement_base_attack", class_fields.get("base_attack"))),
+            "sheet_level": int(_number(class_fields.get('level')) or level),
+            "sheet_base_attack": _number(class_fields.get('base_attack')),
+            "sheet_saving_throw": _number(class_fields.get('saving_throw')),
+            "sheet_maximum_hp": _number(class_fields.get('hit_points')),
             "maximum_hp": int(maximum_hp) if maximum_hp is not None and maximum_hp > 0 else None,
             "base_maximum_hp": int(base_maximum_hp) if base_maximum_hp is not None and base_maximum_hp > 0 else None,
             "maximum_hp_modifier": _effect_total(item_effects, "maximum_hp_bonus"),
             "confirmed_level": (overrides.get("level_advancement") or {}).get("target_level"),
             "resource_maxima": dict(overrides.get("advancement_resources") or {}),
+            "pending_rolls": list(overrides.get('pending_progression') or []),
+            "approved_build": overrides.get('approved_build'),
+            "magic_access": overrides.get('magic_access'),
         },
         "movement": movement,
         "base_equipment": base_equipment,
@@ -801,6 +864,70 @@ def build_character_definition(
         "definition_updated_at": note.get("updated_at"),
         "gm_fields": dict(overrides.get("gm_fields") or {}) if access_level == "gm" else None,
     }
+    if profile_id == 'dorn7' and str(overrides.get('approved_build') or '').startswith('dorn-mage3'):
+        # Refresh presentation only; never rewrite resources or approved choices on reads.
+        from .dorn_mage import SPEC
+        spell_metadata = {a['id']: a for a in SPEC['abilities'] if a['id'] in {'levitacao','escuridao','relampago','dorn-reparo'}}
+        for ability in result['session_abilities']:
+            current = spell_metadata.get(ability.get('id'))
+            if current:
+                for key in ('description','mechanics_status'):
+                    ability[key] = current[key]
+                if ability.get('id') == 'relampago':
+                    from .action_library import native_action_contract, lightning_description
+                    contract = native_action_contract('technique:dorn7:relampago', int(result['level']))
+                    ability.update(action_contract=contract, description=lightning_description(contract))
+            if ability.get('id') in {'reflexos','forca-arcana','teia','dissipar-magia'}:
+                from .action_library import native_action_contract
+                ability['action_contract'] = native_action_contract('technique:dorn7:'+ability['id'], int(result['level']))
+                if ability['id']=='reflexos':ability['description']='Cria 1d4+1 reflexos. Um ataque que acertaria Dorn tem 90% de chance de consumir um reflexo; não protege de área nem do 20 natural inevitável de jogadores.'
+    if profile_id == 'morthak':
+        from .session6_rewards import missile_maximum
+        maximum = missile_maximum(inventory)
+        result['progression']['resource_maxima']['misseis_magicos'] = maximum
+        for ability in result['session_abilities']:
+            if ability.get('id') in {'clonagem','magia-da-morte'}:
+                from .action_library import native_action_contract
+                ability['action_contract'] = native_action_contract('technique:morthak:'+ability['id'], int(result['level']))
+            if ability.get('id') == 'misseis-magicos':
+                ability['uses'] = {**(ability.get('uses') or {}), 'maximum': maximum}
+    if profile_id=='vezemir':
+        for ability in result['session_abilities']:
+            if ability.get('id') in {'forca-arcana','velocidade'}:
+                from .action_library import native_action_contract
+                ability['action_contract'] = native_action_contract('technique:vezemir:'+ability['id'], int(result['level']))
+            if ability.get('id') == 'maestria-em-arma':
+                ability.update(active=False,kind='passive',description='Passiva: +1 no ataque e +1 no dano enquanto Grisalma está equipada. Bônus de maestria aplicado automaticamente, sem consumir ação ou uso.')
+        result['progression']['racial_traits']={'darkvision':True,'secret_door_detection':True,'rest_duration_multiplier':0.5}
+        passives=[('visao-no-escuro-elfica','Visão no escuro','Passiva racial aprovada para Vezemir: visão em escuridão. Não remove a fog controlada pelo Mestre.'),
+            ('percepcao-de-portas-escondidas','Detecção de portas escondidas','Percepção racial de portas e passagens escondidas. O Mestre apresenta o indício/teste apropriado; não revela automaticamente conteúdo privado do mapa.'),
+            ('descanso-elfico','Descanso élfico','Vezemir completa o descanso em metade do tempo normal (multiplicador 0,5). Recuperação pelo descanso concedido pelo Mestre.')]
+        existing={a.get('id') for a in result['session_abilities']}
+        for identity,name,description in passives:
+            if identity not in existing:result['session_abilities'].append({'id':identity,'name':name,'description':description,'kind':'passive','group':'Traços raciais','active':False,'blocked':False,'mechanics_status':'structured','source':'Aprovação do Mestre para Vezemir (Meio-Elfo)'})
+    result['identity_cards'] = {
+        'race': {'name': race or 'Raça', 'description': sanitize_player_text(result['abilities']['racial'])},
+        'class': {'name': class_name or 'Classe', 'description': sanitize_player_text(result['abilities']['class'])},
+    }
+    result['session_abilities'] = attach_spell_images(result['session_abilities'])
+    if profile_id=='raziel':
+        from .hemomancy import pack
+        result['hemomancy'] = pack()
+        result['progression']['resource_maxima']['reserva_de_sangue']=10
+        result['progression']['resource_maxima']['velocidade']=1
+        result['session_abilities']=[{**a,'description':'Marca em cruz de cinco células, alcance 9 m; inimigos vivos com sangue, mesmo sem ferimentos. Custo total 1; Tiro do Coração aproveita a marca.'} if a.get('id')=='marca-rubra' else a for a in result['session_abilities']]
+        if not any(a.get('id')=='velocidade' for a in result['session_abilities']):
+            result['session_abilities'].append(dict(id='velocidade',name='Velocidade',kind='ability',group='Habilidades',active=True,blocked=False,mechanics_status='structured',description='1d4 + nível rodadas: dobra movimento, +2 CA e um ataque adicional. Um uso por descanso.',uses={'resource_key':'velocidade','label':'Velocidade','maximum':1,'recharge':'inn_rest'}))
+        result['session_abilities'].append(dict(id='convergencia-rubra',name='Convergência Rubra',kind='passive',group='Passivas · Marca',active=False,blocked=False,mechanics_status='structured',description='Completar Feridas e Marca libera uma vez por combate +2 BA e +1d6 no próximo ataque.'))
+        from .vampire_powers import bite_damage
+        for ability in result['session_abilities']:
+            if ability.get('id')=='sangue-defensivo':
+                from .action_library import native_action_contract
+                ability['action_contract'] = native_action_contract('technique:raziel:sangue-defensivo', int(result['level']))
+            if ability.get('id')=='mordida':
+                ability['description']=f"Ataque corpo a corpo contra alvo vivo: dano e drenagem {bite_damage(int(level or 1))} no nível {level}. Cura limitada ao dano efetivamente causado e aos PV máximos. Sem custo de sangue; confirmação e orçamento de ataque nativos."
+            if ability.get('id')=='lamina-de-sangue':
+                ability['description']='Declare de 1 até toda a Reserva de Sangue disponível. Cada lâmina causa 1d4; ataque corpo a corpo ou à distância. O sangue é consumido na confirmação, inclusive se errar.'
     if access_level == "public":
         return {
             key: result[key]
@@ -826,12 +953,18 @@ def build_character_definition(
 def _initial_state(profile_id: str, sheet: dict[str, Any], definition: dict[str, Any]) -> dict[str, Any]:
     maximum_hp = definition.get("progression", {}).get("maximum_hp")
     equipment = _step_fields(sheet, "equipment")
+    resources = seed_all_resources(profile_id, sheet)
+    from .session6_rewards import synchronize_resource
+    for resource in resources:
+        maximum = (definition.get('progression', {}).get('resource_maxima') or {}).get(resource['key'])
+        if maximum is not None:
+            synchronize_resource(resource, int(maximum))
     return {
         "current_hp": maximum_hp,
         "maximum_hp": maximum_hp,
         "temporary_hp": 0,
         "conditions": [],
-        "resources": seed_all_resources(profile_id, sheet),
+        "resources": resources,
         "coins": _number(equipment.get("starting_gold")),
         "location": definition.get("location"),
         "session_notes": "",
@@ -895,9 +1028,8 @@ def get_or_create_state(
                     changed = True
                 elif resource["key"] in progression_maxima and int(existing.get("maximum") or 0) != int(resource["maximum"]):
                     # Explicit advancement only: preserve what was already spent.
-                    spent = max(0, int(existing.get("maximum") or 0) - int(existing.get("current") or 0))
-                    existing["maximum"] = int(resource["maximum"])
-                    existing["current"] = max(0, int(resource["maximum"]) - spent)
+                    from .session6_rewards import synchronize_resource
+                    synchronize_resource(existing, int(resource["maximum"]))
                     existing["label"] = resource["label"]
                     if resource.get("recharge"):
                         existing["recharge"] = resource["recharge"]
@@ -989,6 +1121,15 @@ def _save_state(connection: sqlite3.Connection, profile_id: str, state: dict[str
         "UPDATE character_states SET state_json=?, version=version+1, updated_at=? WHERE profile_id=?",
         (json.dumps(state, ensure_ascii=False), _now(), profile_id),
     )
+    if profile_id=='vezemir':
+        from .vezemir_skills import cleanup_lifeline
+        cleanup_lifeline(connection,_now())
+    if profile_id=='morthak':
+        from .morthak_high_spells import cleanup
+        cleanup(connection,_now())
+    if state.get('current_hp') == 0:
+        from .battle_mode import retire_defeated
+        retire_defeated(connection, _now())
 
 
 def _inventory_row(connection: sqlite3.Connection, profile_id: str, item_path: str) -> dict[str, Any] | None:
@@ -1015,16 +1156,33 @@ def apply_character_action(
     session_id: str | None = None,
     game_session_id: int | None = None,
     skip_battle_turn: bool = False,
+    request_id: str | None = None,
+    equipment_defense_anchor: dict | None = None,
 ) -> dict[str, Any]:
     if action not in STATE_ACTIONS:
         raise ValueError("Ação de ficha inválida")
     if actor_role != "gm" and (actor_id != character_id or action not in OWNER_ACTIONS):
         raise PermissionError("Este perfil não pode executar esta ação")
+    if action == 'rest_in_coffin' and character_id != 'raziel':
+        raise ValueError('Caixão pertence a Raziel')
     init_character_play(database_path)
     init_effects(database_path)
     with closing(_connect(database_path)) as connection, connection:
-        if action == "set_currency" or actor_role == 'player':
+        if action == "set_currency" or actor_role == 'player' or request_id:
             connection.execute("BEGIN IMMEDIATE")
+        fingerprint = json.dumps(['character_state', actor_id, actor_role, character_id, action, payload, reason, session_id], sort_keys=True)
+        if request_id:
+            if not 1 <= len(request_id) <= 120:
+                raise ValueError('request_id inválido')
+            previous = connection.execute('SELECT fingerprint,response_json FROM combat_effect_commands WHERE request_id=?', (request_id,)).fetchone()
+            if previous:
+                if previous[0] != fingerprint:
+                    raise ValueError('request_id já utilizado com outro conteúdo')
+                return {**json.loads(previous[1]), 'replayed': True}
+        def finish(response):
+            if request_id:
+                connection.execute('INSERT INTO combat_effect_commands VALUES(?,?,?)', (request_id, fingerprint, json.dumps(response)))
+            return response
         if actor_role == 'player' and not skip_battle_turn:
             from .battle_mode import require_battle_turn
             from .combat_effects import effect_snapshot
@@ -1035,6 +1193,16 @@ def apply_character_action(
                 require_battle_turn(connection, battle, character_id)
         _row, state = _load_state_row(connection, character_id)
         field = action
+        if action == 'end_night_form':
+            if character_id != 'raziel':
+                raise ValueError('Forma da Noite pertence a Raziel')
+            before = state.get('animal_form')
+            if before is None:
+                return finish({'event_id':None,'field':'animal_form','before':None,'after':None})
+            from .night_form import end
+            end(state)
+            _save_state(connection, character_id, state)
+            return finish({'event_id': _write_event(connection, character_id=character_id, actor_id=actor_id, actor_role=actor_role, event_type='state_action', field='animal_form', before=before, after=None, reason='Retorno da Forma da Noite', session_id=session_id), 'field':'animal_form','before':before,'after':None})
         before: Any
         after: Any
 
@@ -1051,34 +1219,89 @@ def apply_character_action(
             if actor_role != "gm" and after > before:
                 raise PermissionError("Somente o Mestre pode aumentar moedas")
             if before == after:
-                return {"event_id": None, "field": field, "before": before, "after": after}
+                return finish({"event_id": None, "field": field, "before": before, "after": after})
             expected = payload.get("expected_balance")
             if type(expected) not in {int, float} or expected != before:
                 raise ValueError("O saldo mudou. Atualize a ficha antes de aplicar novamente")
             state[field] = after
             _save_state(connection, character_id, state)
 
-        elif action == "rest_at_inn":
-            expire_rest_effects(connection, character_id)
+        elif action in {"rest_at_inn", "rest_in_coffin"}:
+            if payload.get('reset_monsters'):
+                if actor_role != 'gm' or action != 'rest_at_inn':
+                    raise PermissionError('Somente o descanso geral do Mestre restaura usos dos monstros')
+            coffin = action == 'rest_in_coffin'
+            if coffin:
+                if character_id != 'raziel':
+                    raise ValueError('Caixão pertence a Raziel')
+                if not request_id:
+                    raise ValueError('Caixão exige uma chave idempotente')
+                from .combat_effects import effect_snapshot
+                if (effect_snapshot(connection).get('encounter') or {}).get('active'):
+                    raise ValueError('Caixão não pode ser usado durante combate')
+                if int(state.get('current_hp') or 0) <= 0:
+                    raise ValueError('Descanso não revive um personagem com 0 PV')
+                counter = next((r for r in state.get('resources') or [] if r.get('key') == 'caixao'), None)
+                if not counter or int(counter.get('current') or 0) < 1:
+                    raise ValueError('Caixão gasto: aguarde o descanso do Mestre')
+            expire_rest_effects(connection, character_id, complete=not coffin)
+            if not coffin and actor_role == 'gm':
+                from .map_commerce import complete_lodging
+                complete_lodging(connection, character_id)
+                state['commerce_rest_epoch'] = int(state.get('commerce_rest_epoch') or 0) + 1
+                if payload.get('reset_monsters'):
+                    from .monster_runtime import full_rest
+                    full_rest(connection, _now())
             before = json.loads(json.dumps(state, ensure_ascii=False))
             state["current_hp"] = state.get("maximum_hp")
             state["temporary_hp"] = 0
             state["conditions"] = []
+            if character_id=='vezemir' and not coffin:
+                state.pop('daily_skill_flags',None)
+            from .night_form import end
+            end(state)
             state["resources"] = [
-                {**resource, "current": int(resource.get("maximum") or 0)}
+                {**resource, "current": (int(resource.get('current') or 0) - 1 if coffin and resource.get('key') == 'caixao' else int(resource.get("maximum") or 0)), **({'equipment_spent_overflow': 0} if 'equipment_spent_overflow' in resource else {})}
                 for resource in state.get("resources") or []
             ]
             after = json.loads(json.dumps(state, ensure_ascii=False))
             field = "state"
             _save_state(connection, character_id, state)
             inventory_table = connection.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='player_inventory'").fetchone()
-            if inventory_table:
+            if inventory_table and not coffin:
+                # inn_rest is the Master's rest cycle. The personal coffin
+                # restores Raziel, not an extra daily use of charged items.
                 connection.execute(
                     "UPDATE player_inventory SET charges_current=charges_max,updated_at=? WHERE profile_id=? AND recharge='inn_rest' AND charges_max IS NOT NULL",
                     (_now(), character_id),
                 )
 
         elif action in {"damage", "heal", "set_hp", "grant_temporary_hp"}:
+            from .night_form import current_form, change_animal_hp
+            form=current_form(state) if character_id=='raziel' else None
+            if form:
+                amount=int(_number(payload.get('amount')) or 0)
+                if action=='grant_temporary_hp':
+                    if amount<=0:raise ValueError('Informe um valor positivo')
+                    before=int(form.get('temporary_hp') or 0);after=max(before,amount)
+                    state['night_form']={**form,'temporary_hp':after};change={}
+                else:
+                    if action=='set_hp':
+                        requested=_number(payload.get('value'))
+                        if requested is None:raise ValueError('Informe o novo valor de PV')
+                        amount=max(0,min(int(form['maximum_hp']),int(requested)))-int(form['current_hp'])
+                    else:
+                        if amount<=0:raise ValueError('Informe um valor positivo')
+                        if action=='damage':amount=-amount
+                        else:
+                            from .construct_rules import validate_healing
+                            validate_healing(connection,character_id,payload.get('effect_category'))
+                    change=change_animal_hp(state,amount);before=change['hp_before'];after=change['hp_after']
+                _save_state(connection,character_id,state)
+                event=_write_event(connection,character_id=character_id,actor_id=actor_id,actor_role=actor_role,
+                    event_type='state_action',field='animal_hp',before=before,after=after,
+                    reason=reason or ('Retorno da Forma da Noite; dano excedente aplicado' if change.get('night_form_returned') else action),session_id=session_id)
+                return finish({'event_id':event,'field':'animal_hp','before':before,'after':after,**change})
             maximum = state.get("maximum_hp")
             current = state.get("current_hp")
             if maximum is None or current is None:
@@ -1088,14 +1311,22 @@ def apply_character_action(
                 raise ValueError("Informe um valor positivo")
             before = current
             if action == "damage":
-                after = max(0, current - amount)
+                if character_id=='vezemir':
+                    from .vezemir_skills import hp_result,damage_penalty
+                    after=hp_result(connection,state,current-amount-damage_penalty(connection),current,maximum,_now())
+                else:after = max(0, current - amount)
             elif action == "heal":
+                from .construct_rules import validate_healing
+                validate_healing(connection, character_id, payload.get('effect_category'))
                 after = min(maximum, current + amount)
             elif action == "set_hp":
                 requested = _number(payload.get("value"))
                 if requested is None:
                     raise ValueError("Informe o novo valor de PV")
-                after = max(0, min(maximum, int(requested)))
+                if character_id=='vezemir':
+                    from .vezemir_skills import hp_result
+                    after=hp_result(connection,state,int(requested),current,maximum,_now())
+                else:after = max(0, min(maximum, int(requested)))
             else:
                 before = int(state.get("temporary_hp") or 0)
                 after = max(before, amount)
@@ -1108,6 +1339,9 @@ def apply_character_action(
             _save_state(connection, character_id, state)
 
         elif action in {"add_condition", "remove_condition"}:
+            if action == 'add_condition':
+                from .construct_rules import validate_effect
+                validate_effect(connection, character_id, payload.get('effect_category'))
             condition = str(payload.get("condition") or "").strip()
             if not condition or len(condition) > 80:
                 raise ValueError("Condição inválida")
@@ -1143,6 +1377,8 @@ def apply_character_action(
                 if current < 1:
                     raise ValueError('Sem usos diários de Forma da Noite')
                 reason = f'Forma da Noite: {animal} (1 uso diário)'
+                from .night_form import start
+                start(state,animal)
             new_current = current - amount if action == "consume_resource" else current + amount
             resources[index] = {**before, "current": max(0, min(maximum, new_current))}
             after = dict(resources[index])
@@ -1199,6 +1435,9 @@ def apply_character_action(
                     raise ValueError("Item não encontrado no inventário")
                 after = dict(existing)
                 if action == "equip_item":
+                    from .player_inventory import currency_item_field
+                    if currency_item_field(existing):
+                        raise ValueError("Moedas pertencem à bolsa, não podem ser equipadas")
                     after["equipped"] = True
                     after["equipment_slot"] = str(payload.get("equipment_slot") or "").strip() or None
                 elif action == "unequip_item":
@@ -1213,12 +1452,21 @@ def apply_character_action(
                         after["equipped"] = False
                 elif action == "change_charges":
                     charges = _number(payload.get("charges"))
+                    if actor_role != 'gm':
+                        stored_maximum=int(after.get('charges_max') or 0)
+                        current=after.get('charges_current')
+                        current=stored_maximum if current is None else int(current)
+                        if (stored_maximum<=0 or charges is not None and int(charges)>current or
+                            payload.get('charges_max') is not None and _number(payload['charges_max'])!=stored_maximum or
+                            payload.get('recharge') is not None and str(payload['recharge'])!=str(after.get('recharge') or 'none')):
+                            raise PermissionError('Somente o Mestre pode recuperar ou reconfigurar cargas; use o descanso autorizado')
                     maximum = int(after.get("charges_max") or payload.get("charges_max") or 0)
                     if charges is None or maximum <= 0 or not 0 <= int(charges) <= maximum:
                         raise ValueError("Cargas devem ficar entre 0 e o máximo do item")
                     after["charges_current"] = int(charges)
                     after["charges_max"] = maximum
-                    after["recharge"] = str(payload.get("recharge") or after.get("recharge") or "none")
+                    if actor_role == 'gm':
+                        after["recharge"] = str(payload.get("recharge") or after.get("recharge") or "none")
             now = _now()
             connection.execute(
                 """
@@ -1245,6 +1493,12 @@ def apply_character_action(
             )
             after = _inventory_row(connection, character_id, item_path)
             field = f"inventory.{item_path}"
+            if equipment_defense_anchor is not None and action in {'equip_item','unequip_item'}:
+                stored=connection.execute('SELECT data_json FROM character_definition_overrides WHERE profile_id=?',(character_id,)).fetchone()
+                override=json.loads(stored[0]) if stored else {}
+                if 'equipment_defense_anchor' not in override:
+                    override['equipment_defense_anchor']=dict(equipment_defense_anchor)
+                    connection.execute('INSERT INTO character_definition_overrides(profile_id,data_json,updated_at) VALUES(?,?,?) ON CONFLICT(profile_id) DO UPDATE SET data_json=excluded.data_json,updated_at=excluded.updated_at',(character_id,json.dumps(override),now))
 
         event_id = _write_event(
             connection,
@@ -1259,7 +1513,8 @@ def apply_character_action(
             session_id=session_id,
             game_session_id=game_session_id,
         )
-    return {"event_id": event_id, "field": field, "before": before, "after": after}
+        result = finish({"event_id": event_id, "field": field, "before": before, "after": after})
+    return result
 
 
 def update_definition_overrides(
@@ -1269,6 +1524,7 @@ def update_definition_overrides(
     actor_id: str,
     fields: dict[str, Any],
     reason: str | None = None,
+    definition: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     unknown = set(fields) - DEFINITION_FIELDS
     if unknown:
@@ -1307,9 +1563,45 @@ def update_definition_overrides(
         if set(gm_fields) - allowed:
             raise ValueError("Campo de Mestre inválido")
         fields["gm_fields"] = {key: str(value or "")[:5000] for key, value in gm_fields.items()}
+    if "specialization" in fields:
+        from .level_advancement import SPECIALIZATIONS
+        spec = fields["specialization"]
+        if spec is not None and (type(spec) is not str or not spec.strip() or len(spec) > 60):
+            raise ValueError("Especialização inválida")
+        if isinstance(spec, str) and spec.strip() not in SPECIALIZATIONS:
+            raise ValueError("Especialização sem catálogo validado; escolha apenas opções aprovadas")
+    if "progression_contract" in fields:
+        contract = fields["progression_contract"]
+        if contract is not None:
+            if type(contract) is not dict:
+                raise ValueError("Contrato de progressão inválido")
+            levels = contract.get("levels") or {}
+            if not levels or any(type(int(k)) is not int for k in levels):
+                raise ValueError("Contrato sem níveis válidos")
+            for key, value in levels.items():
+                if (not isinstance(value, (list, tuple)) or len(value) != 2
+                        or not all(type(int(v)) is int for v in value)):
+                    raise ValueError(f"Contrato inválido no nível {key}")
+            if type(contract.get("die")) is not int or not 1 <= contract["die"] <= 20:
+                raise ValueError("Dado de vida do contrato inválido")
+            if type(contract.get("source")) is not str or not contract["source"].strip():
+                raise ValueError("Contrato sem fonte declarada")
 
     init_character_play(database_path)
+    if 'level' in fields and definition is None:
+        with closing(_connect(database_path)) as source:
+            sheetrow = source.execute('SELECT data_json FROM character_sheets WHERE profile_id=?', (character_id,)).fetchone() if table_exists(source, 'character_sheets') else None
+        if sheetrow is None:
+            raise ValueError('É necessária uma ficha-base para recalcular nível; nenhum valor foi alterado')
+        from .character_creation import list_sheets
+        sheet = next(s for s in list_sheets(database_path) if s['profile_id'] == character_id)
+        definition = build_character_definition(profile_id=character_id, note={'title': character_id, 'frontmatter': {}, 'content': ''},
+            sheet=sheet, inventory=[], overrides=load_definition_overrides(database_path, character_id))
+    if 'level' in fields and definition is not None:
+        from .dice_rolls import init_dice_rolls
+        init_dice_rolls(database_path)
     with closing(_connect(database_path)) as connection, connection:
+        connection.execute('BEGIN IMMEDIATE')
         row = connection.execute(
             "SELECT data_json FROM character_definition_overrides WHERE profile_id=?",
             (character_id,),
@@ -1326,6 +1618,9 @@ def update_definition_overrides(
             else:
                 current[key] = value
         now = _now()
+        if 'level' in fields and definition is not None:
+            from .level_recalculation import recalculate
+            recalculate(connection, character_id, definition, before, current, fields['level'], now)
         connection.execute(
             """
             INSERT INTO character_definition_overrides(profile_id,data_json,updated_at)
@@ -1347,6 +1642,80 @@ def update_definition_overrides(
             session_id=None,
         )
     return current
+
+
+def choose_specialization(
+    database_path: Path,
+    *,
+    character_id: str,
+    spec: str | None,
+    actor_id: str,
+    actor_role: str,
+    weapon_item_path: str | None = None,
+    reason: str | None = None,
+    definition: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    """Validated specialization choice with retroactive grants. Idempotent.
+    Only catalog options; honors min_level, alignment, locked_to and class."""
+    from .level_advancement import SPECIALIZATIONS, validate_specialization_choice
+    if definition is None:
+        raise ValueError("Ficha necessária para validar a especialização")
+    wanted = validate_specialization_choice(character_id, definition.get("class_name"), spec)
+    init_character_play(database_path)
+    with closing(_connect(database_path)) as connection, connection:
+        row = connection.execute(
+            "SELECT data_json FROM character_definition_overrides WHERE profile_id=?", (character_id,)).fetchone()
+        before = json.loads(row[0]) if row else {}
+        if (before.get("specialization") or None) == wanted and wanted is not None:
+            return {"applied": False, "specialization": wanted}
+        current = dict(before)
+        if wanted is None:
+            current.pop("specialization", None)
+            current.pop("specialization_abilities", None)
+            current.pop("specialization_mastery", None)
+        else:
+            entry = SPECIALIZATIONS[wanted]
+            level = int(definition.get("level") or 1)
+            if level < int(entry.get("min_level") or 1):
+                raise ValueError(f"{entry.get('name', wanted)} exige nível {entry.get('min_level')}")
+            required_alignment = entry.get("alignment")
+            if required_alignment:
+                sheet_row = connection.execute(
+                    "SELECT data_json FROM character_sheets WHERE profile_id=?", (character_id,)).fetchone() \
+                    if connection.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='character_sheets'").fetchone() else None
+                sheet = json.loads(sheet_row[0]) if sheet_row else {}
+                raw_alignment = sheet.get("alignment")
+                alignment = (raw_alignment.get("alignment") if isinstance(raw_alignment, dict)
+                             else raw_alignment) or ""
+                if str(alignment).strip().lower() != str(required_alignment).lower():
+                    raise ValueError(f"Exige alinhamento {required_alignment}; ficha registra {alignment or 'indefinido'}")
+            granted = []
+            for key in sorted(entry.get("abilities") or {}, key=int):
+                if int(key) <= level:
+                    granted.extend(entry["abilities"][key])
+            current["specialization"] = wanted
+            current["specialization_abilities"] = json.loads(json.dumps(granted))
+            current.pop("specialization_mastery", None)
+            if entry.get("requires", {}).get("weapon_choice"):
+                if not weapon_item_path:
+                    raise ValueError("Escolha a arma da Maestria no inventário")
+                inv_row = connection.execute(
+                    "SELECT item_title FROM player_inventory WHERE profile_id=? AND item_path=?",
+                    (character_id, weapon_item_path)).fetchone()
+                if inv_row is None:
+                    raise ValueError("Arma não encontrada no inventário")
+                current["specialization_mastery"] = {"weapon_item_path": weapon_item_path,
+                                                     "attack_bonus": 1, "damage_bonus": 1}
+        now = _now()
+        connection.execute(
+            "INSERT INTO character_definition_overrides(profile_id,data_json,updated_at)"
+            " VALUES(?,?,?) ON CONFLICT(profile_id) DO UPDATE SET data_json=excluded.data_json,updated_at=excluded.updated_at",
+            (character_id, json.dumps(current, ensure_ascii=False), now))
+        _write_event(connection, character_id=character_id, actor_id=actor_id, actor_role=actor_role,
+                     event_type="definition_update", field="specialization", before=before, after=current,
+                     reason=reason or f"Especialização: {wanted or 'removida'}", session_id=None)
+    return {"applied": True, "specialization": wanted,
+            "abilities": [a.get("id") for a in current.get("specialization_abilities") or []]}
 
 
 def revert_character_event(

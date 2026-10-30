@@ -60,3 +60,20 @@ class BattleModeTests(unittest.TestCase):
             self.start()
         self.assertFalse(readeffects(self.db)['encounter'].get('active'))
         self.assertEqual(get_workspace_snapshot(self.db, is_gm=True)['tokens'], self.initial['tokens'])
+
+    def test_start_preserves_existing_pin_positions(self):
+        self.start()
+        during = get_workspace_snapshot(self.db, is_gm=True)
+        enemy = next(t for t in during['tokens'] if t['id'] == self.enemy['id'])
+        self.assertEqual((enemy['latitude'], enemy['longitude']), (35, 60))
+
+    def test_confirmed_attack_records_shared_turn_identity(self):
+        state = self.start()
+        attack = self.attack()
+        confirm_attack_resolution(self.db, resolution_id=attack['resolution_id'], requested_by_id='vezemir', requested_by_role='player')
+        import json
+        with closing(sqlite3.connect(self.db)) as db:
+            detail = json.loads(db.execute("SELECT detail_json FROM session_ledger WHERE source_type='combat_action' ORDER BY id DESC LIMIT 1").fetchone()[0])
+        self.assertEqual(detail['turn_sequence'], state['encounter']['turn_sequence'])
+        self.assertEqual(detail['turn_started_at'], state['encounter']['turn_started_at'])
+        self.assertEqual(detail['target_id'], self.enemy['id'])

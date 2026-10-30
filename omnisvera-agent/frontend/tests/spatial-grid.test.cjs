@@ -33,7 +33,9 @@ test('native workspace awaits backend confirmation and cancels mobile pointer in
   assert.match(submit,/setPendingGridCommand\(\{mapId,command\}\)/);
   assert.match(source,/event.type === 'pointercancel'/);
   assert.match(source,/tokenProjection\(workspace.map\?\.grid,token.grid_position,token\)/);
-  assert.match(source,/Mover uma célula/);
+  assert.ok(!source.includes('Mover uma célula'));
+  assert.match(source,/onPointerMove=\{previewTokenMove\}/);
+  assert.match(source,/onPointerUp=\{\(event\) => void finishTokenMove\(event\)\}/);
 });
 test('movement command carries cells, versions and stable retry identity, rejects HTTP failures',async()=>{
   const calls=[];const mod={exports:{}};

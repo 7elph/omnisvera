@@ -26,7 +26,7 @@ import test_combat as fixture
 def _blood_state(hp=10, maximum=16, laminas=5):
     return {"current_hp": hp, "maximum_hp": maximum, "temporary_hp": 0,
             "conditions": [], "resources": [{"key": "reserva_de_sangue", "label": "Reserva de Sangue",
-                                             "current": laminas, "maximum": 5, "recharge": "inn_rest"}]}
+                                             "current": laminas, "maximum": 10, "recharge": "inn_rest"}]}
 
 
 class TechniqueFixture(unittest.TestCase):
@@ -106,6 +106,63 @@ class TechniqueFixture(unittest.TestCase):
 class HemomanteTechniquesTests(TechniqueFixture):
     """Raziel technique tests (inherited fixture only)."""
 
+    def test_night_form_pin_images_persist_and_original_returns(self):
+        from app.character_play import apply_character_action
+        from app.session_workspace import list_workspace_tokens
+        from app.night_form import IMAGES
+        state=_blood_state(); state['resources'].append({'key':'forma_da_noite','current':3,'maximum':3,'recharge':'inn_rest'})
+        with closing(sqlite3.connect(self.db)) as db,db:
+            db.execute("UPDATE character_states SET state_json=? WHERE profile_id='raziel'",(json.dumps(state),))
+        pin=save_workspace_token(self.db,token_type='character',character_id='raziel',name='Raziel',image_path='original.jpg',latitude=30,longitude=70)
+        other=save_workspace_token(self.db,token_type='character',character_id='morthak',name='Morthak',image_path='morthak.jpg',latitude=50,longitude=50)
+        for animal in ('coruja','morcego','corvo'):
+            apply_character_action(self.db,character_id='raziel',actor_id='raziel',actor_role='player',action='consume_resource',payload={'resource_key':'forma_da_noite','amount':1,'animal':animal})
+            tokens={t['id']:t for t in list_workspace_tokens(self.db)}
+            self.assertEqual(IMAGES[animal],tokens[pin['id']]['image_path'])
+            self.assertEqual((30,70),(tokens[pin['id']]['latitude'],tokens[pin['id']]['longitude']))
+            self.assertEqual('morthak.jpg',tokens[other['id']]['image_path'])
+        with closing(sqlite3.connect(self.db)) as db:
+            self.assertEqual('original.jpg',db.execute('SELECT image_path FROM session_workspace_tokens WHERE id=?',(pin['id'],)).fetchone()[0])
+        apply_character_action(self.db,character_id='raziel',actor_id='raziel',actor_role='player',action='end_night_form',payload={})
+        self.assertEqual('original.jpg',next(t for t in list_workspace_tokens(self.db) if t['id']==pin['id'])['image_path'])
+        with closing(sqlite3.connect(self.db)) as db:
+            final=json.loads(db.execute("SELECT state_json FROM character_states WHERE profile_id='raziel'").fetchone()[0])
+            self.assertEqual(0,next(r['current'] for r in final['resources'] if r['key']=='forma_da_noite'))
+
+    def test_toggle_off_restores_all_map_pins_with_no_daily_uses_left(self):
+        from app.character_play import apply_character_action
+        from app.session_workspace import list_workspace_tokens
+        from app.night_form import IMAGES
+        state=_blood_state();state['animal_form']='corvo';state['resources'].append({'key':'forma_da_noite','current':0,'maximum':3})
+        with closing(sqlite3.connect(self.db)) as db,db:
+            db.execute("UPDATE character_states SET state_json=? WHERE profile_id='raziel'",(json.dumps(state),))
+        for map_id in ('map-a','map-b'):
+            save_workspace_token(self.db,token_type='character',character_id='raziel',name='Raziel',image_path=f'{map_id}-original.jpg',map_id=map_id,latitude=30,longitude=70)
+            self.assertEqual(IMAGES['corvo'],list_workspace_tokens(self.db,map_id)[0]['image_path'])
+        apply_character_action(self.db,character_id='raziel',actor_id='raziel',actor_role='player',action='end_night_form',payload={})
+        for map_id in ('map-a','map-b'):
+            self.assertEqual(f'{map_id}-original.jpg',list_workspace_tokens(self.db,map_id)[0]['image_path'])
+        again=apply_character_action(self.db,character_id='raziel',actor_id='raziel',actor_role='player',action='end_night_form',payload={})
+        self.assertIsNone(again['event_id'])
+        with closing(sqlite3.connect(self.db)) as db:
+            final=json.loads(db.execute("SELECT state_json FROM character_states WHERE profile_id='raziel'").fetchone()[0])
+            self.assertNotIn('animal_form',final)
+            self.assertEqual(0,next(r['current'] for r in final['resources'] if r['key']=='forma_da_noite'))
+
+    def test_other_player_cannot_end_raziel_form(self):
+        from app.character_play import apply_character_action
+        with self.assertRaises(PermissionError):
+            apply_character_action(self.db,character_id='raziel',actor_id='morthak',actor_role='player',action='end_night_form',payload={})
+
+    def test_invalid_animal_changes_neither_visual_nor_resource(self):
+        from app.character_play import apply_character_action
+        state=_blood_state(); state['resources'].append({'key':'forma_da_noite','current':3,'maximum':3})
+        with closing(sqlite3.connect(self.db)) as db,db:db.execute("UPDATE character_states SET state_json=? WHERE profile_id='raziel'",(json.dumps(state),))
+        with self.assertRaises(ValueError):apply_character_action(self.db,character_id='raziel',actor_id='raziel',actor_role='player',action='consume_resource',payload={'resource_key':'forma_da_noite','amount':1,'animal':'lobo'})
+        with closing(sqlite3.connect(self.db)) as db:
+            final=json.loads(db.execute("SELECT state_json FROM character_states WHERE profile_id='raziel'").fetchone()[0])
+            self.assertNotIn('animal_form',final);self.assertEqual(3,final['resources'][-1]['current'])
+
     def test_night_form_three_animals_daily_limit_and_invalid_choice(self):
         from app.character_play import apply_character_action, load_session_abilities
         power = next(p for p in load_session_abilities('raziel') if p['id'] == 'forma-da-noite')
@@ -164,18 +221,17 @@ class HemomanteTechniquesTests(TechniqueFixture):
         with self.assertRaises(Exception):
             confirm_attack_resolution(self.db, resolution_id=response.json()["resolution_id"],
                                       requested_by_id="raziel", requested_by_role="player")
-    def test_marca_requires_wounded_target(self):
+    def test_mark_requires_logical_grid_without_spending(self):
         healthy = self.use("raziel", "marca-rubra", {"request_id": "tech-mar-101",
                                                      "target_type": "token", "target_id": self.healthy["id"]})
         self.assertEqual(400, healthy.status_code)
         self.assertEqual(5, self.laminas())
         wounded = self.use("raziel", "marca-rubra", {"request_id": "tech-mar-102",
                                                      "target_type": "token", "target_id": self.wounded["id"]})
-        self.assertEqual(200, wounded.status_code, wounded.text)
-        self.assertEqual(4, self.laminas())
+        self.assertEqual(400, wounded.status_code, wounded.text)
+        self.assertEqual(5, self.laminas())
         marks = [e for e in readeffects(self.db)["effects"] if e["target_id"] == self.wounded["id"]]
-        self.assertEqual(1, len(marks))
-        self.assertEqual("scene", marks[0]["duration"])
+        self.assertEqual(0, len(marks))
     def _confirmed_hit(self, request_id, d20=15, dmg_rng=(4,)):
         definition = {"attacks": [{"id": "melee", "name": "Corpo a corpo", "attack_bonus": 3,
                                    "damage": "1d6", "weapon_item_path": "Items/Grisalma.md"}],
@@ -223,6 +279,14 @@ class HemomanteTechniquesTests(TechniqueFixture):
             db.execute('UPDATE session_workspace_tokens SET current_hp=0 WHERE id=?', (self.wounded['id'],))
         self.assertEqual(400, self.bite().status_code)
         self.assertEqual(5, self.laminas())
+
+    def test_mordida_rejects_bloodless_summon_and_construct_pin(self):
+        for sheet, owner in (({'has_blood':False}, None), ({'summon':{'caster':'morthak','technique':'levantar-esqueleto'}}, None), ({}, 'dorn7'), ({}, 'morthak')):
+            with closing(sqlite3.connect(self.db)) as db, db:
+                db.execute('UPDATE session_workspace_tokens SET sheet_json=?,character_id=? WHERE id=?', (json.dumps(sheet), owner, self.wounded['id']))
+            reply = self.bite(request='bloodless-' + str(owner) + str(len(sheet)))
+            self.assertEqual(400, reply.status_code, reply.text)
+            self.assertIn('sangue', reply.text)
 
     def test_mordida_miss_does_not_heal(self):
         preview = self.bite(d20=1).json()
@@ -311,6 +375,25 @@ class HemomanteTechniquesTests(TechniqueFixture):
 
 
 class VezemirPowersTests(TechniqueFixture):
+    def test_strength_retry_reuses_original_bonus_and_duration(self):
+        payload = {'request_id': 'integrity-strength-retry'}
+        first = self.use('vezemir', 'forca-arcana', payload)
+        self.assertEqual(200, first.status_code, first.text)
+        second = self.use('vezemir', 'forca-arcana', payload)
+        self.assertEqual(200, second.status_code, second.text)
+        self.assertEqual(first.json(), second.json())
+        self.assertEqual(0, self._resource('forca_arcana'))
+        collision = self.use('vezemir', 'velocidade', payload)
+        self.assertEqual(400, collision.status_code)
+        self.assertEqual(1, self._resource('velocidade'))
+
+    def test_velocity_retry_reuses_result_after_server_version_changes(self):
+        payload = {'request_id':'integrity-velocity-retry'}
+        first = self.use('vezemir', 'velocidade', payload)
+        self.assertEqual(200, first.status_code, first.text)
+        second = self.use('vezemir', 'velocidade', payload)
+        self.assertEqual(200, second.status_code, second.text)
+        self.assertEqual(first.json(), second.json())
     def setUp(self) -> None:
         super().setUp()
         with closing(sqlite3.connect(self.db)) as connection, connection:

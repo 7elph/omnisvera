@@ -36,9 +36,9 @@ test('prepared encounter excludes Varkh and reserve and uses native command', ()
   assert.ok(source.includes('Encerre o combate salvo primeiro'));
 });
 
-test('Dorn diagnostic uses current native turn budget and does not expose lore', () => {
+test('legacy diagnostic remains guarded but is no longer mounted in the sheet', () => {
   const html = renderToStaticMarkup(React.createElement(component('DornDiagnosticControl'), { combat: { version: 1, encounter: { active: true, turn_index: 0, participants: [{ target_type: 'character', target_id: 'raziel' }] } }, onChange: async () => {} }));
   assert.match(html, /Diagnóstico da Unidade/);
   assert.match(html, /<button disabled=""/);
-  assert.ok(fs.readFileSync('src/components/DornProtocolControls.tsx', 'utf8').includes('<DornDiagnosticControl'));
+  assert.ok(!fs.readFileSync('src/components/DornProtocolControls.tsx', 'utf8').includes('<DornDiagnosticControl'));
 });

@@ -17,10 +17,10 @@ export default function TokenVitals({ token, editable, showPortrait = true, comp
     finally { setBusy(false); }
   }
   if (compact && editable) return <><div className="workspace-hp-quick-controls" aria-label="Ajuste rápido de vida">
-    <button type="button" disabled={busy} onClick={() => setHp(String(Math.max(0, Number(hp) - 1)))}>−</button>
+    <button type="button" aria-label="Diminuir PV" disabled={busy} onClick={() => setHp(String(Math.max(0, Number(hp) - 1)))}>−</button>
     <input aria-label="PV" type="number" min={0} max={Number(maximum)} value={hp} onChange={e => setHp(e.target.value)} />
-    <button type="button" disabled={busy} onClick={() => setHp(String(Math.min(Number(maximum), Number(hp) + 1)))}>+</button>
-    <button type="button" disabled={busy} onClick={() => void save()}>Aplicar</button>
+    <button type="button" aria-label="Aumentar PV" disabled={busy} onClick={() => setHp(String(Math.min(Number(maximum), Number(hp) + 1)))}>+</button>
+    <button type="button" aria-label="Confirmar PV" title="Confirmar PV" disabled={busy} onClick={() => void save()}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" /></svg></button>
   </div>{error && <p role="alert">{error}</p>}</>;
   return <div>
     {showPortrait && token.image_path && <img src={mediaUrlFromVaultPath(token.image_path)} alt={token.name} style={{ maxWidth: "100%", maxHeight: 260, objectFit: "contain" }} />}

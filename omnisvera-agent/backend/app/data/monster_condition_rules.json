@@ -1,0 +1,8 @@
+{
+  "revision": "approved-2026-10-25-exposures",
+  "overrides": {
+    "medusa": {"Olhar Petrificante": {"range_m": 15}},
+    "gorgon": {"Baforada Petrificante": {"duration_unit": "permanent"}},
+    "roper": {"Veneno": {"duration_starts_after_onset": true}}
+  }
+}

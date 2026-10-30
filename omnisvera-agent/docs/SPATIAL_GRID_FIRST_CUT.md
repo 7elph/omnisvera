@@ -11,8 +11,12 @@ da superfície da imagem**, política de distância e versão. A imagem não cri
 identifica personagem/NPC/invocação: não existe um segundo catálogo de entidades.
 Footprint inicial 1×1. Sem colisões entre tokens neste corte; sobreposição é permitida.
 
-Na Mesa/Mapas, o Mestre abre **Grid … / Configurar grid lógico** e ajusta dimensões,
-escala e origem, fora de combate. No mapa, selecione uma entidade e arraste ou use
+Os seis mapas S7 já estão prontos: não exigem configuração do Mestre. Biblioteca,
+busca, envio de imagem e ajustes avançados ficam somente na aba **Mapas**, no painel
+lateral. O seletor rápido **Mapa ativo** permanece no cabeçalho da Mesa e de Mapas,
+sem trazer o gerenciamento para o centro. Durante combate, a troca de arena fica
+bloqueada até encerrar o encontro. Para outros mapas, abra **Ajustes
+avançados** e ajuste dimensões, escala e origem, fora de combate. Selecione uma entidade e arraste ou use
 as setas de uma célula. **Ficha da entidade** oferece acesso sem depender de acertar
 um pin pequeno no celular. Fora de combate, só o Mestre reposiciona; em combate,
 só a entidade do turno se move (jogador controla apenas seu personagem/invocação).
@@ -108,5 +112,14 @@ realtime entre dois clientes locais, zoom/seleção/setas mobile e rejeição po
 Mobile é viewport touch emulada, não telefone físico. Build mantém aviso de chunks grandes.
 
 Os seis grids operacionais foram configurados com backup SQLite e comparação dos
-dados nativos preservados. O backend 8787 não foi reiniciado neste corte: carregar
-as rotas novas exige reinício controlado do backend, preservando o banco existente.
+dados nativos preservados. No ajuste seguinte, o reinício autorizado do backend 8787
+carregou as rotas novas; fichas, inventários, sessões, cenas, mapas, pins, posições,
+estado de combate e arquivo de acessos foram comparados e preservados.
+
+Gerenciamento de mapas: lista pesquisável com rolagem própria e atualização
+independente das fichas. Upload tem estado próprio, aceita até 10 MB e limpa o seletor
+de arquivo após confirmação. Escritas têm deadline de 30 segundos, sem retry automático;
+em resposta incerta, atualize a lista antes de reenviar. Validação do ajuste: 468 testes
+backend, 215 frontend, typecheck e build. Smoke isolado comprovou lista/abertura,
+dois uploads seguidos, lista em viewport mobile e acesso mesmo com catálogo de
+personagens travado. `frontend/tests/map-management-smoke.cjs` usa apenas CF-01/8871.

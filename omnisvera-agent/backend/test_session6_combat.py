@@ -84,6 +84,61 @@ class Session6CombatTests(unittest.TestCase):
         self.assertEqual('Lobo reanimado', first['token']['name'])
         with self.assertRaises(ValueError): self.summon(technique='animar-mortos', spec=spec, corpse_id=corpse['id'], request_id='another-summon')
 
+    def test_reuse_living_skeleton_other_map_without_spending_and_keeps_cap(self):
+        first = self.summon()
+        with closing(sqlite3.connect(self.db)) as db, db:
+            db.execute('UPDATE session_workspace_tokens SET map_id=? WHERE id=?', ('old-map',first['token']['id']))
+        reused = self.summon(request_id='reuse-existing-skeleton', reuse_existing=True)
+        self.assertTrue(reused['existing'])
+        self.assertEqual(first['token']['id'],reused['token']['id'])
+        self.assertEqual(reused,self.summon(request_id='reuse-existing-skeleton', reuse_existing=True))
+        with closing(sqlite3.connect(self.db)) as db:
+            state=json.loads(db.execute("SELECT state_json FROM character_states WHERE profile_id='morthak'").fetchone()[0])
+            self.assertEqual(0,state['resources'][0]['current'])
+            self.assertEqual(1,db.execute("SELECT count(*) FROM session_workspace_tokens WHERE json_extract(sheet_json,'$.summon.technique')='levantar-esqueleto'").fetchone()[0])
+        with self.assertRaisesRegex(ValueError,'Apenas um'):
+            self.summon(request_id='cannot-duplicate-skeleton')
+
+    def test_grid_automatic_attack_confirms_once_even_at_physical_table(self):
+        from app.spatial_grid import configure_grid
+        save_workspace_token(self.db,token_type='character',character_id='vezemir',name='Vezemir',latitude=45,longitude=50,map_id='arena')
+        with closing(sqlite3.connect(self.db)) as db, db:
+            db.execute('UPDATE session_workspace_tokens SET map_id=? WHERE id=?',('arena',self.base.enemy['id']))
+        configure_grid(self.db,actor_id='master',role='gm',request_id='grid-auto-test',map_id='arena',config={'cols':10,'rows':10,'cell_size_m':1.5})
+        # Keep both positions adjacent and the table physical; only this command is digital.
+        with closing(sqlite3.connect(self.db)) as db, db:
+            db.execute("UPDATE session_workspace_entity_positions SET cell_x=4,cell_y=4 WHERE map_id='arena'")
+            db.execute("UPDATE session_workspace_state SET table_mode='physical' WHERE id=1")
+            db.execute("UPDATE session_workspace_state SET map_id='arena' WHERE id=1")
+        character={'definition':self.base.base.definition,'inventory':self.base.base.inventory,'state':{'resources':[]}}
+        main.app.dependency_overrides[main.require_any]=lambda:AccessContext(mode='player',profile_id='vezemir')
+        self.addCleanup(main.app.dependency_overrides.clear)
+        with patch.object(main,'settings',replace(main.settings,database_path=self.db)),patch.object(main,'_playable_character',return_value=character):
+            with TestClient(main.app) as client:
+                payload={'request_id':'grid-auto-attack-fixture','attack_id':'melee','target_type':'token','target_id':self.base.enemy['id'],'roll_mode':'digital','grid_automatic':True}
+                reply=client.post('/characters/vezemir/attacks/resolve',json=payload)
+                self.assertEqual(200,reply.status_code,reply.text)
+                self.assertTrue(reply.json()['confirmed'])
+                self.assertEqual(reply.json(),client.post('/characters/vezemir/attacks/resolve',json=payload).json())
+
+    def test_dismiss_owned_summon_is_idempotent_and_removes_turn_without_refund(self):
+        from app.summons import dismiss_summon
+        self.start_morthak();token=self.summon()['token']
+        kwargs=dict(caster='morthak',token_id=token['id'],request_id='dismiss-skeleton-fixture',actor_id='morthak',actor_role='player')
+        with self.assertRaises(PermissionError):dismiss_summon(self.db,**{**kwargs,'actor_id':'raziel'})
+        first=dismiss_summon(self.db,**kwargs)
+        self.assertEqual(first,dismiss_summon(self.db,**kwargs))
+        self.assertNotIn(token['id'],[p['target_id'] for p in readeffects(self.db)['encounter']['participants']])
+        from app.session_workspace import list_workspace_tokens
+        projected=next(t for t in list_workspace_tokens(self.db) if t['id']==token['id'])
+        self.assertNotIn('corpse',projected['sheet'],'Dispensar não é uma morte: não recriar pin de cadáver')
+        self.assertFalse(projected['sheet'].get('reanimation_allowed'))
+        with closing(sqlite3.connect(self.db)) as db:
+            row=db.execute('SELECT current_hp,sheet_json FROM session_workspace_tokens WHERE id=?',(token['id'],)).fetchone()
+            self.assertEqual(0,row[0]);self.assertTrue(json.loads(row[1])['combat_retired'])
+            state=json.loads(db.execute("SELECT state_json FROM character_states WHERE profile_id='morthak'").fetchone()[0])
+            self.assertEqual(0,state['resources'][0]['current'])
+
     def test_character_pin_bound_to_arena_not_other_map(self):
         save_workspace_token(self.db, token_type='character', character_id='vezemir', name='Velho', latitude=1, longitude=1)
         canonical = save_workspace_token(self.db, token_type='character', character_id='vezemir', name='Atual', latitude=20, longitude=20, map_id='arena')
@@ -129,10 +184,10 @@ class Session6CombatTests(unittest.TestCase):
             state = json.loads(db.execute("SELECT state_json FROM character_states WHERE profile_id='morthak'").fetchone()[0])
             self.assertEqual(0, next(r['current'] for r in state['resources'] if r['key'] == 'animar_mortos'))
 
-    def test_reanimation_without_master_approval_preserves_resource_and_corpse(self):
+    def test_explicit_master_veto_preserves_resource_and_corpse(self):
         self.start_morthak()
         corpse = save_workspace_token(self.db, token_type='monster', name='Lobo', latitude=30, longitude=40,
-            current_hp=0, maximum_hp=8, map_id='arena', sheet={'armor_class': 13})
+            current_hp=0, maximum_hp=8, map_id='arena', sheet={'armor_class': 13, 'reanimation_allowed':False})
         spec = {**self.spec, 'resource_key': 'animar_mortos'}
         with self.assertRaisesRegex(ValueError, 'Mestre precisa autorizar'):
             self.summon(technique='animar-mortos', spec=spec, corpse_id=corpse['id'])

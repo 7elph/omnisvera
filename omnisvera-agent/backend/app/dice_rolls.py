@@ -242,6 +242,7 @@ def resolve_character_roll(
         if target is None or target <= 0:
             raise ValueError("A Jogada de Proteção não está configurada")
         bonus = _integer((definition.get("defenses") or {}).get("saving_throw_bonus")) or 0
+        bonus += int(((definition.get('defenses') or {}).get('conditional_saving_throw_bonuses') or {}).get(source_id, 0))
         return RollSpec("saving_throw", f"{character_name} — Jogada de Proteção", _signed_formula("1d20", bonus), "character_saving_throw", "saving_throw", target)
 
     if roll_type == "skill":
@@ -278,10 +279,11 @@ def resolve_character_roll(
 
 def resolve_item_damage_formula(definition: dict[str, Any], item: dict[str, Any]) -> str:
     """Return the same effective item damage shown in the sheet and rolled in combat."""
-    parsed = parse_formula(str(item["damage_formula"]))
     totals = (definition.get("item_effects") or {}).get("totals") or {}
     slot = str(item.get("equipment_slot") or "").lower()
-    category = "ranged" if "dist" in slot else "melee"
+    category = definition.get('attack_slot') or ("ranged" if "dist" in slot else "melee")
+    thrown = (item.get('mechanics') or {}).get('thrown_damage_formula') if category == 'ranged' else None
+    parsed = parse_formula(str(thrown or item['damage_formula']))
     bonus = (
         int(totals.get(f"damage_bonus:{item.get('item_path')}", 0))
         + int(totals.get(f"damage_bonus:{category}", 0))
@@ -528,6 +530,8 @@ def complete_roll_request(
         if row is None:
             raise ValueError("Solicitação de rolagem não encontrada")
         request = _request_record(row)
+        if request.get('source') == 'level_progression' and request['visibility'] == 'gm' and actor_role != 'gm':
+            raise PermissionError('Esta progressão pertence ao Mestre')
         # Authorization applies to retries/recovery too, not just a first roll.
         if actor_role != "gm" and actor_id != request["character_id"]:
             raise PermissionError("Esta solicitação pertence a outro personagem")
@@ -537,6 +541,8 @@ def complete_roll_request(
             if request.get("completion_request_id") == completion_request_id and request.get("roll_event_id"):
                 existing = get_roll(database_path, int(request["roll_event_id"]))
                 if existing:
+                    from .level_recalculation import complete_hp
+                    complete_hp(connection, request, existing)
                     return existing, False
             raise ValueError("Esta solicitação já foi concluída")
         if request["status"] == "processing":
@@ -546,6 +552,8 @@ def complete_roll_request(
                     event = _roll_record(existing)
                     if event["source"] != "roll_request" or event["source_id"] != str(request_id):
                         raise ValueError("Esta chave de conclusão pertence a outra rolagem")
+                    from .level_recalculation import complete_hp
+                    complete_hp(connection, request, event)
                     connection.execute(
                         "UPDATE dice_roll_requests SET status='completed',completed_at=?,completed_by=?,roll_event_id=? WHERE id=?",
                         (_now(), actor_id, event["id"], request_id),
@@ -601,6 +609,8 @@ def complete_roll_request(
             raise RuntimeError("Solicitação desapareceu durante a conclusão")
         if current["status"] == "completed":
             if current["completion_request_id"] == completion_request_id:
+                from .level_recalculation import complete_hp
+                complete_hp(connection, request, event)
                 return event, False
             raise ValueError("Esta solicitação já foi concluída")
         connection.execute(
@@ -610,4 +620,6 @@ def complete_roll_request(
             """,
             (_now(), actor_id, completion_request_id, event["id"], request_id, completion_request_id),
         )
+        from .level_recalculation import complete_hp
+        complete_hp(connection, request, event)
     return event, created

@@ -27,6 +27,8 @@ def _connect(database_path: Path) -> sqlite3.Connection:
 def init_session_ledger(database_path: Path) -> None:
     public_types = ",".join(f"'{item}'" for item in sorted(PUBLIC_CHARACTER_EVENTS))
     with closing(_connect(database_path)) as connection, connection:
+        # Serialize legacy column inspection and ALTER on concurrent startup.
+        connection.execute('BEGIN IMMEDIATE')
         connection.execute(
             """
             CREATE TABLE IF NOT EXISTS session_ledger (
@@ -236,7 +238,6 @@ def _decode_detail(raw: str | None) -> dict[str, Any] | None:
 
 
 def list_session_ledger(database_path: Path, access: AccessContext, *, limit: int = 500) -> list[dict[str, Any]]:
-    init_session_ledger(database_path)
     clauses = ["voided_at IS NULL"]
     params: list[Any] = []
     if access.mode != "gm":
@@ -248,8 +249,17 @@ def list_session_ledger(database_path: Path, access: AccessContext, *, limit: in
         SELECT * FROM session_ledger WHERE {' AND '.join(clauses)} ORDER BY id DESC LIMIT ?
       ) ORDER BY id ASC
     """
-    with closing(_connect(database_path)) as connection:
-        rows = connection.execute(query, params).fetchall()
+    # Startup/writes maintain triggers and backfill. Polling an existing log
+    # must not drop/recreate triggers and scan the complete source history.
+    try:
+        with closing(_connect(database_path)) as connection:
+            rows = connection.execute(query, params).fetchall()
+    except sqlite3.OperationalError as error:
+        if "no such table: session_ledger" not in str(error):
+            raise
+        init_session_ledger(database_path)
+        with closing(_connect(database_path)) as connection:
+            rows = connection.execute(query, params).fetchall()
     result = []
     for row in rows:
         item = dict(row)

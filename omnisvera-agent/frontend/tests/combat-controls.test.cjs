@@ -3,15 +3,24 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const vm = require('node:vm');
 const ts = require('typescript');
+const commandModule = { exports: {} };
+vm.runInNewContext(ts.transpileModule(fs.readFileSync('src/commandRetry.ts', 'utf8'), {
+  compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2020 },
+}).outputText, { module: commandModule, exports: commandModule.exports });
+const { createCommandRetry } = commandModule.exports;
 function harness(file, props, api) {
+  api = { commandRecoveryOptions: () => undefined, ...api };
   const slots = []; let cursor = 0, tree;
   const react = {
+    useEffect() {},
     useState(initial) { const i = cursor++; if (!(i in slots)) slots[i] = initial; return [slots[i], v => { slots[i] = v; }]; },
     useRef(initial) { const i = cursor++; return slots[i] ??= { current: initial }; },
   };
-  const module = { exports: {} }, jsx = (type, props) => ({ type, props: props || {} });
+  const module = { exports: {} }, jsx = (type, props) => typeof type === 'function' ? type(props) : ({ type, props: props || {} });
+  const targetModule = {exports:{}};
+  vm.runInNewContext(ts.transpileModule(fs.readFileSync('src/components/TargetSelect.tsx','utf8'), {compilerOptions:{module:ts.ModuleKind.CommonJS,jsx:ts.JsxEmit.ReactJSX}}).outputText, {module:targetModule,exports:targetModule.exports,require:n=>n==='react'?react:n==='react/jsx-runtime'?{jsx,jsxs:jsx}:api});
   const code = ts.transpileModule(fs.readFileSync(`src/components/${file}.tsx`, 'utf8'), { compilerOptions: { module: ts.ModuleKind.CommonJS, jsx: ts.JsxEmit.ReactJSX } }).outputText;
-  vm.runInNewContext(code, { module, exports: module.exports, window: { dispatchEvent() {} }, CustomEvent: class { constructor(type, options) { this.type = type; this.detail = options?.detail; } }, require: n => n === 'react' ? react : n === 'react/jsx-runtime' ? { jsx, jsxs: jsx } : api });
+  vm.runInNewContext(code, { module, exports: module.exports, window: { dispatchEvent() {} }, CustomEvent: class { constructor(type, options) { this.type = type; this.detail = options?.detail; } }, require: n => n === 'react' ? react : n === 'react/jsx-runtime' ? { jsx, jsxs: jsx } : n.includes('TargetSelect') ? targetModule.exports : n.includes('commandRetry') ? commandModule.exports : api });
   const walk = n => !n || typeof n !== 'object' ? [] : Array.isArray(n) ? n.flatMap(walk) : [n, ...walk(n.props.children)];
   const render = () => { cursor = 0; tree = module.exports.default(props); };
   render(); return { nodes: () => walk(tree), render, flush: async () => { await new Promise(setImmediate); render(); } };
@@ -38,6 +47,37 @@ test('magic preview requires confirmation and never presents a fabricated hit ro
   assert.equal(h.nodes().find(n => n.props.children === 'Confirmar uso e aplicar dano').props.disabled, true);
   resolution.confirmed = true; h.render();
   assert.equal(h.nodes().some(n => n.props.children === 'Confirmar uso e aplicar dano'), false);
+});
+
+test('monster confirmation stays confirmed when the following screen refresh fails', async () => {
+  let confirmations = 0;
+  const pending = { resolution_id: 'attack:test', status: 'pending', attack_total: 20, target_ac: 14, result: 'hit', damage_total: 3 };
+  const h = harness('MonsterAttackPanel', { token: { id: 'test-enemy', name: 'Enemy', sheet: { attacks: [{ name: 'Test', damage: '1d6' }] } }, characters: [{ id: 'raziel', name: 'Raziel' }], physical: false, onChange: async () => { throw new Error('offline'); } }, {
+    newDiceRequestId: () => 'local-test-id', resolveMonsterAttack: async () => pending,
+    confirmCharacterAttack: async () => { confirmations++; return { ...pending, status: 'confirmed', hp_before: 10, hp_after: 7 }; },
+  });
+  h.nodes().find(node => node.type === 'select').props.onChange({ target: { value: 'raziel' } }); h.render();
+  h.nodes().find(node => node.type === 'button' && node.props.children === 'Atacar · rolar acerto e dano').props.onClick(); await h.flush();
+  h.nodes().find(node => node.type === 'button' && node.props.children === 'Confirmar resultado e aplicar dano').props.onClick(); await h.flush();
+  assert.equal(confirmations, 1);
+  assert.equal(h.nodes().some(node => node.props.children === 'Confirmar resultado e aplicar dano'), false);
+  assert.match(JSON.stringify(h.nodes()), /Ataque confirmado/);
+});
+
+test('a pending monster preview can be hidden without rerolling or confirming', async () => {
+  let rolls = 0, confirmations = 0;
+  const pending = { resolution_id: 'attack:test', status: 'pending', attack_total: 20, target_ac: 14, result: 'hit', damage_total: 3 };
+  const h = harness('MonsterAttackPanel', { token: { id: 'test-enemy', name: 'Enemy', sheet: { attacks: [{ name: 'Test', damage: '1d6' }] } }, characters: [{ id: 'raziel', name: 'Raziel' }], physical: false, onChange: async () => {} }, {
+    newDiceRequestId: () => 'local-test-id', resolveMonsterAttack: async () => { rolls++; return pending; },
+    confirmCharacterAttack: async () => { confirmations++; throw new Error('turn changed'); },
+  });
+  h.nodes().find(node => node.type === 'select').props.onChange({ target: { value: 'raziel' } }); h.render();
+  h.nodes().find(node => node.type === 'button' && node.props.children === 'Atacar · rolar acerto e dano').props.onClick(); await h.flush();
+  h.nodes().find(node => node.type === 'button' && node.props.children === 'Confirmar resultado e aplicar dano').props.onClick(); await h.flush();
+  assert.equal(rolls, 1); assert.equal(confirmations, 1);
+  h.nodes().find(node => node.type === 'button' && node.props.children === 'Ocultar prévia · rolagem permanece').props.onClick(); h.render();
+  assert.equal(rolls, 1); assert.equal(confirmations, 1);
+  assert.equal(h.nodes().find(node => node.type === 'button' && node.props.children === 'Atacar · rolar acerto e dano').props.disabled, false);
 });
 
 test('current allied turn receives map token targets', () => {
@@ -90,6 +130,48 @@ test('off-turn summon attacks stay visible but cannot send a request', async () 
   assert.equal(calls, 0);
 });
 
+test('creature grid spells and abilities roll digitally without requesting an invisible physical die', async () => {
+  const source = fs.readFileSync('src/components/MonsterAttackPanel.tsx', 'utf8');
+  const start = source.indexOf('  async function conjureNamed(');
+  const end = source.indexOf('  useEffect(', start);
+  for (const [range, manual] of [[{ mode: 'ranged', range_m: 9 }, false], [{ mode: 'melee' }, false], [undefined, true]]) {
+    const calls = [], errors = [];
+    const ctx = {
+      genericCommands: { current: createCommandRetry(() => 'fixture-generic-id') }, combat: undefined,
+      lock: { current: false }, blocked: false, done: false, physical: true, die: manual ? '17' : '',
+      token: { id: 'summon' }, target: 'enemy', splitTarget: id => ({ type: 'token', id }),
+      setBusy() {}, setError: value => { if (value) errors.push(value); }, setExecResult() {}, onChange: async () => {},
+      castCompendiumSpell: async (...args) => { calls.push(args); return {}; },
+      executeTokenAction: async (...args) => { calls.push(args); return {}; },
+    };
+    const actions = vm.runInNewContext(ts.transpileModule(source.slice(start, end) + '\n({conjureNamed, executeUsable})', { compilerOptions: { target: ts.ScriptTarget.ES2020 } }).outputText, ctx);
+    await actions.conjureNamed('Conjuração', 'spell-id', 'Magia', 'enemy', range);
+    await actions.executeUsable('Habilidade', 'enemy', range);
+    assert.equal(errors.length, 0); assert.equal(calls.length, 2);
+    for (const [, payload] of calls) {
+      assert.equal(payload.roll_mode, manual ? 'physical' : 'digital');
+      assert.deepEqual(payload.d20 && Array.from(payload.d20), manual ? [17] : undefined);
+      assert.equal(payload.targets[0].id, 'enemy');
+    }
+  }
+});
+
+test('grimoire picker remains usable on the grid when the table uses physical dice', () => {
+  const source = fs.readFileSync('src/components/MonsterAttackPanel.tsx', 'utf8');
+  const start = source.indexOf('function ConjurePicker('), end = source.indexOf('export default function', start);
+  for (const gridded of [true, false]) {
+    let slot = 0, armed = 0;
+    const states = [{ spells: [{ id: 'spell', name: 'Magia', circle: 1, tradition: 'arcane' }] }, '', 'spell', ''];
+    const module = { exports: {} }, jsx = (type, props) => ({ type, props });
+    const code = ts.transpileModule("import {useState,useEffect,useRef} from 'react';\nexport default " + source.slice(start, end), { compilerOptions: { module: ts.ModuleKind.CommonJS, jsx: ts.JsxEmit.ReactJSX } }).outputText;
+    vm.runInNewContext(code, { module, exports: module.exports, createCommandRetry, commandRecoveryOptions: () => undefined, newDiceRequestId: () => 'picker-fixture-id', require: name => name === 'react' ? { useState: () => [states[slot++], () => {}], useEffect() {}, useRef: initial => ({ current: initial }) } : { jsx, jsxs: jsx } });
+    const tree = module.exports.default({ tradition: 'arcane', tokenId: 'summon', target: 'enemy', die: '', physical: true, disabled: false, gridded, onArm: () => { armed++; } });
+    const button = tree.props.children.find(node => node?.type === 'button');
+    assert.equal(button.props.disabled, !gridded);
+    if (gridded) { button.props.onClick(); assert.equal(armed, 1); }
+  }
+});
+
 test('target line ignores summon caster alias and prefers exact pin identity', () => {
   const tokens = [
     { id: 'summon', token_type: 'monster', character_id: 'morthak', name: 'Esqueleto', longitude: 5, latitude: 5 },
@@ -116,9 +198,8 @@ test('attack UI does not invent default damage or offer inert target-only attack
   const source = fs.readFileSync('src/pages/SessionWorkspace.tsx', 'utf8');
   assert.doesNotMatch(source, /ATTACK_DAMAGE_BY_CHARACTER/);
   assert.match(source, /canOperate && weaponPath && attack.damage/);
-  assert.match(source, /Sem arma à distância equipada/);
-  assert.match(source, /Equipe uma arma compatível pelo inventário/);
-  assert.match(source, /Atacar · rolar acerto e dano/);
+  assert.match(source, /Arma não equipada/);
+  assert.ok(source.includes('>Atacar</button>'));
 });
 
 test('allied token can attack an enemy without converting it to a player or targeting itself', async () => {

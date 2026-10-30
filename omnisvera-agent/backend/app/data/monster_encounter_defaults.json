@@ -1,0 +1,201 @@
+{
+  "schema_version": 1,
+  "kind": "campaign_encounter_choices",
+  "approved_on": "2026-10-27",
+  "note": "Escolhas de encontro aprovadas pelo Mestre, editáveis antes de criar o pin. Não são repertórios ou equipamentos obrigatórios da SRD. Dados da arma vêm do catálogo OD1 já utilizado na campanha; BA e bônus de dano permanecem os da criatura OD2.",
+  "profiles": {
+    "ajudante": {
+      "weapon_item_id": "arma-corpo-espada-curta"
+    },
+    "anao-das-sombras": {
+      "weapon_item_id": "arma-corpo-espada-longa"
+    },
+    "aprendiz": {
+      "weapon_item_id": "arma-corpo-espada-curta"
+    },
+    "bugbear": {
+      "weapon_item_id": "arma-corpo-machado-de-batalha"
+    },
+    "centauro": {
+      "weapon_item_id": "arma-corpo-espada-longa"
+    },
+    "drakold": {
+      "weapon_item_id": "arma-corpo-espada-curta"
+    },
+    "duende": {
+      "weapon_item_id": "arma-corpo-espada-curta"
+    },
+    "esqueleto": {
+      "weapon_item_id": "arma-corpo-espada-longa"
+    },
+    "fungo-pigmeu": {
+      "weapon_item_id": "arma-corpo-espada-curta"
+    },
+    "gigante-da-colina": {
+      "weapon_item_id": "arma-corpo-machado-de-batalha"
+    },
+    "gigante-da-montanha": {
+      "weapon_item_id": "arma-corpo-machado-de-batalha"
+    },
+    "gigante-da-tempestade": {
+      "weapon_item_id": "arma-corpo-machado-de-batalha"
+    },
+    "gigante-do-fogo": {
+      "weapon_item_id": "arma-corpo-machado-de-batalha"
+    },
+    "gigante-do-gelo": {
+      "weapon_item_id": "arma-corpo-machado-de-batalha"
+    },
+    "gnoll": {
+      "weapon_item_id": "arma-corpo-espada-longa"
+    },
+    "goblin": {
+      "weapon_item_id": "arma-corpo-espada-curta"
+    },
+    "golem-de-ossos": {
+      "weapon_item_id": "arma-corpo-machado-de-batalha"
+    },
+    "harpia": {
+      "weapon_item_id": "arma-corpo-espada-longa"
+    },
+    "homem-lagarto": {
+      "weapon_item_id": "arma-corpo-espada-longa"
+    },
+    "kobold": {
+      "weapon_item_id": "arma-corpo-espada-curta"
+    },
+    "nixie": {
+      "weapon_item_id": "arma-corpo-espada-curta"
+    },
+    "ogro": {
+      "weapon_item_id": "arma-corpo-machado-de-batalha"
+    },
+    "oni-mago": {
+      "weapon_item_id": "arma-corpo-machado-de-batalha",
+      "spell_ids": [
+        "arcana-dardos-misticos",
+        "arcana-toque-chocante",
+        "arcana-bola-de-fogo"
+      ]
+    },
+    "orc": {
+      "weapon_item_id": "arma-corpo-espada-longa"
+    },
+    "pixie": {
+      "weapon_item_id": "arma-corpo-espada-curta"
+    },
+    "povo-do-mar": {
+      "weapon_item_id": "arma-corpo-espada-longa"
+    },
+    "tasloi": {
+      "weapon_item_id": "arma-corpo-espada-curta"
+    },
+    "thoul": {
+      "weapon_item_id": "arma-corpo-espada-longa"
+    },
+    "troglodita": {
+      "weapon_item_id": "arma-corpo-espada-longa"
+    },
+    "bruxa": {
+      "spell_ids": [
+        "arcana-dardos-misticos",
+        "arcana-toque-chocante",
+        "arcana-bola-de-fogo"
+      ]
+    },
+    "ciclorc": {
+      "spell_ids": [
+        "divina-dardo-de-brasa"
+      ]
+    },
+    "devorador-de-cerebro": {
+      "spell_ids": [
+        "divina-dardo-de-brasa"
+      ]
+    },
+    "dragao-azul": {
+      "spell_ids": [
+        "arcana-dardos-misticos",
+        "arcana-toque-chocante",
+        "arcana-bola-de-fogo"
+      ]
+    },
+    "dragao-branco": {
+      "spell_ids": [
+        "arcana-dardos-misticos",
+        "arcana-toque-chocante",
+        "arcana-bola-de-fogo"
+      ]
+    },
+    "dragao-das-sombras": {
+      "spell_ids": [
+        "arcana-dardos-misticos",
+        "arcana-toque-chocante",
+        "arcana-bola-de-fogo"
+      ]
+    },
+    "dragao-dourado": {
+      "spell_ids": [
+        "arcana-dardos-misticos",
+        "arcana-toque-chocante",
+        "arcana-bola-de-fogo"
+      ]
+    },
+    "dragao-negro": {
+      "spell_ids": [
+        "arcana-dardos-misticos",
+        "arcana-toque-chocante",
+        "arcana-bola-de-fogo"
+      ]
+    },
+    "dragao-verde": {
+      "spell_ids": [
+        "arcana-dardos-misticos",
+        "arcana-toque-chocante",
+        "arcana-bola-de-fogo"
+      ]
+    },
+    "dragao-vermelho": {
+      "spell_ids": [
+        "arcana-dardos-misticos",
+        "arcana-toque-chocante",
+        "arcana-bola-de-fogo"
+      ]
+    },
+    "drider": {
+      "spell_ids": [
+        "divina-dardo-de-brasa"
+      ]
+    },
+    "efreeti": {
+      "spell_ids": [
+        "arcana-dardos-misticos",
+        "arcana-toque-chocante"
+      ]
+    },
+    "esfinge": {
+      "spell_ids": [
+        "arcana-dardos-misticos",
+        "arcana-toque-chocante",
+        "arcana-bola-de-fogo"
+      ]
+    },
+    "lich": {
+      "spell_ids": [
+        "arcana-dardos-misticos",
+        "arcana-toque-chocante",
+        "arcana-bola-de-fogo"
+      ]
+    },
+    "naga-negra": {
+      "spell_ids": [
+        "arcana-dardos-misticos",
+        "arcana-toque-chocante",
+        "arcana-bola-de-fogo"
+      ]
+    },
+    "serpente": {
+      "variant": "nonvenomous"
+    }
+  }
+}

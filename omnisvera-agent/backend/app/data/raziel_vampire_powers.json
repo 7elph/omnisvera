@@ -1,6 +1,6 @@
 {
   "forma-da-noite": {
-    "description": "3 usos diários. Escolha corvo, coruja ou morcego. Na forma animal não pode atacar nem falar e usa a ficha da criatura; a 0 PV retorna à forma normal e recebe a diferença de dano. A escolha e o consumo são registrados; a ficha animal ainda depende de adjudicação do Mestre.",
+    "description": "3 usos diários. Corvo, coruja ou morcego: base provisória aprovada de 1 PV, CA 14, JP 4 e voo 9 m. Sem ataques, fala ou poderes humanoides. A 0 PV retorna automaticamente à forma normal e aplica o dano excedente. Desativar não cura nem devolve usos.",
     "uses": { "resource_key": "forma-da-noite", "label": "Forma da Noite · usos diários", "maximum": 3, "recharge": "inn_rest", "cost": 1 }
   },
   "mordida": {
@@ -14,7 +14,7 @@
     "uses": {
       "resource_key": "reserva_de_sangue",
       "label": "Reserva de Sangue",
-      "maximum": 5,
+      "maximum": 10,
       "recharge": "inn_rest",
       "cost": 1
     }

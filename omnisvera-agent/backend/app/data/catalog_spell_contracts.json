@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "spells": {
+    "divina-curar-ferimentos-leves-r": {
+      "family": "healing_hp",
+      "mode": "normal",
+      "formula": "1d8",
+      "source_sha256": "87db4b36f1dcc47ca4844146d979d6048e41b45e7f6ef2d519485ac3f2369907",
+      "source": "Tomo da Magia Divina OD2"
+    },
+    "divina-curar-ferimentos-graves-r": {
+      "family": "healing_hp",
+      "mode": "normal",
+      "formula": "2d8+1",
+      "source_sha256": "13f2d6141b42e0ac694a999ca2be6ed3836072f85604d226cdbdc558fdd6d269",
+      "source": "Tomo da Magia Divina OD2"
+    },
+    "divina-curar-ferimentos-criticos-r": {
+      "family": "healing_hp",
+      "mode": "normal",
+      "formula": "3d8+3",
+      "source_sha256": "d7f69f2e9d25f92a0f95ed617eadaffb68364102f4ba464a0a74ac026b71e119",
+      "source": "Tomo da Magia Divina OD2"
+    },
+    "divina-remover-paralisia": {
+      "family": "condition_cure",
+      "mode": "single_target",
+      "condition": "paralyzed",
+      "range_m_per_level": 10,
+      "source_sha256": "3b4ca717a706a001dae5a65c6fe7ad14856910e02e451b0b02f3d3f875d197f1",
+      "source": "Tomo da Magia Divina OD2"
+    }
+  }
+}

@@ -52,6 +52,36 @@ class DornProtocolTests(unittest.TestCase):
         self.assertEqual(result['effects'][0]['modifiers'], {})
         with self.assertRaises(ValueError): self.guard()
 
+    def test_native_attack_redirects_guard_automatically_and_retry_uses_receipt(self):
+        self.start(); self.guard(); self.command('next_turn')
+        request = main.AttackResolutionCreate(request_id='auto-guard-001',attack_id='melee',target_type='character',target_id='ally',roll_mode='digital')
+        resolver=lambda kind,key: {'type':kind,'id':key,'name':key,'armor_class':11 if key=='dorn7' else 17,'current_hp':13}
+        with patch.object(main,'settings',replace(main.settings,database_path=self.db)), patch.object(main,'_combat_target',side_effect=resolver):
+            self.assertEqual(main._guard_attack_target(request,AccessContext(mode='gm'))['id'],'dorn7')
+            self.assertEqual(request.guard_effect_id,'dorn:guard')
+            record,_ = self.attack(request='auto-guard-001')
+            replay = main.AttackResolutionCreate(request_id='auto-guard-001',attack_id='melee',target_type='character',target_id='ally',roll_mode='digital')
+            self.assertEqual(main._guard_attack_target(replay,AccessContext(mode='gm'))['id'],'dorn7')
+            self.assertEqual(replay.guard_effect_id,'dorn:guard')
+
+    def test_grid_guard_rejects_unpositioned_ally_without_spending_action(self):
+        self.start()
+        before=readeffects(self.db)
+        with self.assertRaisesRegex(ValueError,'grid|Posicione'):
+            self.command('dorn_guard',ally_id='ally',position_confirmed=True,grid_selection=True)
+        self.assertEqual(readeffects(self.db),before)
+
+    def test_guard_cannot_be_bypassed_by_direct_attack(self):
+        self.start(); self.guard(); self.command('next_turn')
+        with self.assertRaisesRegex(ValueError,'Guarda'):
+            self.attack(request='bypass-guard',guard=None,target='ally')
+
+    def test_interception_validates_forced_target_before_redirect_not_after(self):
+        self.start(battle_mode=True); self.guard(); self.command('next_turn')
+        with patch('app.vezemir_skills.target_allowed', side_effect=lambda db,actor,kind,key: kind=='character' and key=='ally'):
+            result,_=self.attack(request='guard-forced-target')
+        self.assertEqual(result['target_id'],'dorn7')
+
     def test_guard_exhausts_real_battle_budget(self):
         self.start(battle_mode=True); self.guard()
         with self.assertRaisesRegex(ValueError, 'turno já foi confirmada'):
@@ -81,7 +111,8 @@ class DornProtocolTests(unittest.TestCase):
         self.assertFalse(readeffects(self.db)['effects'])
         self.assertEqual(self.attack()[0], record)
         result, _ = confirm_attack_resolution(self.db,resolution_id=record['resolution_id'],requested_by_id='master',requested_by_role='gm')
-        self.assertEqual(result['hp_after'], 11)
+        self.assertEqual(result['breakdown']['strikes'][0]['critical_multiplier'], 2)
+        self.assertEqual(result['hp_after'], 16)
         with self.assertRaises(ValueError): self.attack('second-interposition')
         ordinary, _ = self.attack('ordinary-attack', guard=None, target='ally')
         self.assertEqual(ordinary['target_id'], 'ally')
@@ -125,7 +156,7 @@ class DornProtocolTests(unittest.TestCase):
                 self.assertEqual(record['target_id'],'dorn7'); self.assertEqual(record['target_ac'],11)
                 self.assertEqual(client.post(url,json=payload).json(),record)
                 confirmed, _ = confirm_attack_resolution(self.db,resolution_id=record['resolution_id'],requested_by_id=record['requested_by_id'],requested_by_role='gm')
-                self.assertLess(confirmed['hp_after'],13)
+                self.assertLess(confirmed['hp_after'],20)
                 payload['request_id'] = 'second-http-interpose'
                 self.assertEqual(client.post(url,json=payload).status_code,400)
             finally:

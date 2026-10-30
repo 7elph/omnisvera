@@ -222,6 +222,8 @@ def init_scene_play(database_path: Path) -> None:
             connection.execute("ALTER TABLE scene_participants ADD COLUMN order_index INTEGER NOT NULL DEFAULT 0")
             connection.execute("UPDATE scene_participants SET order_index=id WHERE order_index=0")
         scene_columns = {row[1] for row in connection.execute("PRAGMA table_info(scenes)")}
+        if 'archived' not in scene_columns:
+            connection.execute('ALTER TABLE scenes ADD COLUMN archived INTEGER NOT NULL DEFAULT 0')
         if "image_path" not in scene_columns:
             connection.execute("ALTER TABLE scenes ADD COLUMN image_path TEXT")
         if "map_id" not in scene_columns:
@@ -568,6 +570,9 @@ def change_session_status(database_path: Path, session_id: int, status: str) -> 
                     visibility="table",
                     event_key=f"session-pause:{session_id}:{scene['id']}:{status}",
                 )
+        if status == "completed":
+            from .combat_effects import expire_session_effects
+            expire_session_effects(connection, session_id, now, current_session=row['status'] == 'active')
         updated = connection.execute("SELECT * FROM game_sessions WHERE id=?", (session_id,)).fetchone()
     return _record(updated) or {}
 
@@ -665,11 +670,27 @@ def get_scene(database_path: Path, scene_id: int) -> dict[str, Any] | None:
         return _record(connection.execute("SELECT * FROM scenes WHERE id=?", (scene_id,)).fetchone())
 
 
-def list_scenes(database_path: Path, campaign_id: str = "omnisvera") -> list[dict[str, Any]]:
+def list_scenes(database_path: Path, campaign_id: str = "omnisvera", *, include_archived: bool = False) -> list[dict[str, Any]]:
     init_scene_play(database_path)
     with closing(_connect(database_path)) as connection:
-        rows = connection.execute("SELECT * FROM scenes WHERE campaign_id=? ORDER BY order_index DESC,id DESC", (campaign_id,)).fetchall()
+        rows = connection.execute("SELECT * FROM scenes WHERE campaign_id=? AND (? OR archived=0) ORDER BY order_index DESC,id DESC", (campaign_id, include_archived)).fetchall()
     return [_record(row) or {} for row in rows]
+
+
+def archive_scene(database_path: Path, scene_id: int, archived: bool = True) -> dict:
+    init_scene_play(database_path)
+    with closing(_connect(database_path)) as connection, connection:
+        connection.execute('BEGIN IMMEDIATE')
+        scene = _record(connection.execute('SELECT * FROM scenes WHERE id=?', (scene_id,)).fetchone())
+        if not scene:
+            raise ValueError('Cena não encontrada')
+        if archived and scene['status'] == 'active':
+            raise ValueError('Pause a cena antes de arquivar')
+        if bool(scene.get('archived')) == archived:
+            return scene
+        connection.execute('UPDATE scenes SET archived=?,version=version+1 WHERE id=?', (int(archived), scene_id))
+        _event(connection, scene=scene, actor_id='master', actor_role='gm', event_type='scene_archived' if archived else 'scene_restored', title='Cena arquivada' if archived else 'Cena restaurada', visibility='gm')
+        return _record(connection.execute('SELECT * FROM scenes WHERE id=?', (scene_id,)).fetchone())
 
 
 def active_scene(database_path: Path, campaign_id: str = "omnisvera") -> dict[str, Any] | None:
@@ -890,6 +911,9 @@ def declare_action(database_path: Path, scene_id: int, *, request_id: str, chara
             if record["actor_id"] != actor_id:
                 raise ValueError("request_id já utilizado")
             return record, False
+        if character_id=='raziel' and action_type in {'talk','attack'}:
+            from .night_form import require_humanoid
+            require_humanoid(connection,character_id,'falar ou atacar')
         scene = _record(connection.execute("SELECT * FROM scenes WHERE id=?", (scene_id,)).fetchone())
         if not scene:
             raise ValueError("Cena não encontrada")
@@ -1087,7 +1111,7 @@ def scene_view(database_path: Path, scene_id: int, *, access_mode: str, profile_
         events = [_record(row) or {} for row in connection.execute("SELECT * FROM scene_events WHERE scene_id=? ORDER BY id DESC LIMIT 150", (scene_id,)).fetchall()]
     if access_mode != "gm":
         for key in (
-            "request_id", "created_by", "location_source", "private_notes", "checklist",
+            "request_id", "created_by", "location_source", "private_notes", "objective", "checklist",
             "map_zoom", "map_scroll_left", "map_scroll_top",
         ):
             scene.pop(key, None)

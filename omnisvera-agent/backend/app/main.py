@@ -189,7 +189,15 @@ from .scene_play import (
     update_scene,
     void_event,
 )
-from .monster_catalog import list_monster_catalog
+from .monster_catalog import get_catalog_monster, list_monster_catalog
+from .monster_actions import build_action_map
+from .action_range import approach_preview, enforce_action_range, ring_for_action
+from .merchant import add_stock, buy, create_merchant, haggle, list_merchants, remove_stock, sell
+from .spell_engine import cast_spell, execute_token_action
+from .action_library import describe_action, execute_action
+from .spell_catalog import list_spell_catalog
+from .ability_catalog import list_ability_catalog
+from .item_catalog import list_item_catalog as list_item_compendium
 from .loot import (
     LootConflictError,
     LootNotFoundError,
@@ -287,6 +295,7 @@ from .schemas import (
     ChatRequest,
     ChatResponse,
     CharacterDefinitionUpdate,
+    SpecializationChoose,
     CharacterEventResponse,
     CharacterStateAction,
     CharacterSheetResponse,
@@ -358,6 +367,7 @@ from .schemas import (
     SceneElementUpdate,
     SceneManualEventCreate,
     SceneOpenOnTableCreate,
+    SceneSelectionCreate,
     SceneParticipantCreate,
     SceneParticipantUpdate,
     ScenePublishCreate,
@@ -405,6 +415,14 @@ from .schemas import (
     LootRewardsUpdate,
     LootDistributionCreate,
     WorkspaceInventoryRemove,
+    MerchantCreate,
+    MerchantStockCreate,
+    MerchantHaggleRequest,
+    MerchantBuyRequest,
+    MerchantSellRequest,
+    ActionExecuteRequest,
+    SpellCastRequest,
+    TokenActionExecuteRequest,
 )
 from .search import search_notes
 from .vault_index import all_notes_for_search, get_note, index_signature, init_db, list_item_notes, list_notes, rebuild_index, resolve_note, row_to_note
@@ -775,6 +793,8 @@ def startup() -> None:
     ensure_official_workspace_maps(settings.database_path, settings.vault_path)
     init_session_ledger(settings.database_path)
     init_combat(settings.database_path)
+    from .dorn_spells import upgrade_darkness_restraints
+    upgrade_darkness_restraints(settings.database_path)
     init_loot(settings.database_path)
     init_asset_generation(settings.database_path)
     try:
@@ -881,7 +901,16 @@ def gm_companion_roster(_: AccessContext = Depends(require_master)) -> dict:
     allies = [token for token in list_workspace_tokens(settings.database_path)
               if token["token_type"] == "monster"
               and re.sub(r"[^a-z0-9]", "", token["name"].lower()) in {"dorn7", "unidadedorn7"}]
-    return {"allies": allies, "archived_character_ids": ["varkh"]}
+    return {"allies": allies, "archived_character_ids": ["varkh"],
+            "gm_character_ids": [key for key in _character_ids()
+                                 if key not in settings.player_profiles or settings.player_profiles[key].get("gm_controlled")]}
+
+
+@app.get("/gm/workspace/npc-tokens")
+def gm_npc_token_reference(_: AccessContext = Depends(require_master)) -> list[dict]:
+    """Read existing NPC/creature pins across maps; never reveal or duplicate them."""
+    return [token for token in list_workspace_tokens(settings.database_path)
+            if token["token_type"] == "monster"]
 
 
 @app.post("/gm/companions/{token_id}/promote")
@@ -897,12 +926,41 @@ def gm_promote_dorn(token_id: str, _: AccessContext = Depends(require_master)) -
         raise HTTPException(status_code=409, detail=str(error)) from error
 
 
+def _session_action_catalog(profile_id):
+    # Presentation metadata only; never cache HP, resources or effect duration.
+    key = (str(settings.database_path.resolve()), profile_id)
+    return copy.deepcopy(_action_catalog_reads.run(
+        key, lambda: _load_session_action_catalog(profile_id), ttl=30))
+
+
+def _load_session_action_catalog(profile_id):
+    if profile_id not in _character_ids():
+        return []
+    sheet = _sheet_for_character(profile_id)
+    summary = resolve_note(settings.database_path, sheet['character_path'], access_mode='gm')
+    if not summary:
+        return []
+    note = get_note(settings.database_path, int(summary['id']), access_mode='gm')
+    if not note:
+        return []
+    inventory = _inventory_with_media(list_inventory(settings.database_path, profile_id, include_empty=True), access_mode='player')
+    definition = build_character_definition(profile_id=profile_id, note=note, sheet=sheet, inventory=inventory,
+        overrides=load_definition_overrides(settings.database_path, profile_id), access_level='owner')
+    return list(definition.get('session_abilities') or []) + [
+        {'id': item['item_path'], 'name': item.get('item_title') or '', 'description': item.get('description') or '',
+         'image_path': item.get('thumbnail') or item.get('cover')}
+        for item in inventory
+    ]
+
+
 @app.get("/workspace/ledger")
 def session_workspace_ledger(
     limit: int = Query(default=500, ge=1, le=1000),
     access: AccessContext = Depends(require_any),
 ) -> list[dict]:
-    return list_session_ledger(settings.database_path, access, limit=limit)
+    from .action_cards import attach_action_cards
+    # The ledger authorization/void filters run first. Only referenced cards leave this endpoint.
+    return attach_action_cards(list_session_ledger(settings.database_path, access, limit=limit), _session_action_catalog)
 
 
 @app.post("/workspace/realtime-ticket")
@@ -1289,11 +1347,16 @@ def gm_move_workspace_token(
             raise HTTPException(status_code=404, detail="Marcador não encontrado.")
         if not token.get("character_id") or token.get("character_id") != access.profile_id:
             raise HTTPException(status_code=403, detail="O jogador só pode mover o próprio marcador.")
+    moving = next((item for item in list_workspace_tokens(settings.database_path) if item['id'] == token_id), None)
     from .spatial_grid import reject_legacy_move
     try:
         reject_legacy_move(settings.database_path, token_id)
     except ValueError as error:
         raise HTTPException(status_code=409, detail=str(error)) from error
+    if moving:
+        identity = ('character', moving['character_id']) if moving.get('character_id') else ('token', token_id)
+        if any((effect.get('reward') == 'vines' or effect.get('immobilized')) and (effect['target_type'], effect['target_id']) == identity for effect in readeffects(settings.database_path)['effects']):
+            raise HTTPException(status_code=409, detail='Este alvo está imobilizado; a JP ocorre no início do turno.')
     token = update_workspace_token_position(
         settings.database_path,
         token_id=token_id,
@@ -1302,6 +1365,9 @@ def gm_move_workspace_token(
     )
     if token is None:
         raise HTTPException(status_code=404, detail="Marcador não encontrado.")
+    if not token.get("visible_to_players") or not any(item['id'] == token_id for item in get_workspace_snapshot(settings.database_path, map_id=token.get('map_id'))['tokens']):
+        _record_private_pin_update(token, access)
+        return token
     actor_id, actor_name, actor_role, character_id = _workspace_identity(access)
     record_workspace_message(
         settings.database_path,
@@ -1324,12 +1390,27 @@ def gm_update_workspace_token(
     token = update_workspace_token(settings.database_path, token_id=token_id, **request.model_dump(exclude_unset=True))
     if token is None:
         raise HTTPException(status_code=404, detail="Marcador não encontrado.")
+    if not token.get("visible_to_players") or not any(item['id'] == token_id for item in get_workspace_snapshot(settings.database_path, map_id=token.get('map_id'))['tokens']):
+        _record_private_pin_update(token, _)
+        return token
     record_workspace_message(
         settings.database_path,
         actor_id="master", actor_name="Mestre", actor_role="gm", character_id="sage", message_kind="action",
         text=f"Marcador {token['name']} atualizado.",
     )
     return token
+
+
+def _record_private_pin_update(token: dict, access: AccessContext) -> None:
+    from datetime import datetime, timezone
+    from .session_ledger import append_session_ledger_event
+    actor_id, actor_name, actor_role, character_id = _workspace_identity(access)
+    with closing(sqlite3.connect(settings.database_path)) as connection, connection:
+        append_session_ledger_event(connection, source_type='private_pin_update', source_id=uuid.uuid4().hex,
+            event_kind='action', actor_id=actor_id, actor_name=actor_name, actor_role=actor_role,
+            character_id=character_id, title=f"Marcador oculto atualizado: {token['name']}",
+            detail={'token_id': token['id'], 'latitude': token['latitude'], 'longitude': token['longitude']},
+            visibility='gm', created_at=datetime.now(timezone.utc).isoformat())
 
 
 @app.delete("/gm/workspace/tokens/{token_id:path}", status_code=204)
@@ -1358,6 +1439,360 @@ def gm_list_workspace_monster_catalog(
     _: AccessContext = Depends(require_master),
 ) -> dict:
     return list_monster_catalog(query=q, category=category)
+
+
+@app.get("/gm/compendium/spells")
+def gm_list_compendium_spells(
+    q: str = Query(default="", max_length=120),
+    tradition: str = Query(default="", max_length=20),
+    circle: int | None = Query(default=None, ge=0, le=9),
+    _: AccessContext = Depends(require_master),
+) -> dict:
+    return list_spell_catalog(query=q, tradition=tradition, circle=circle)
+
+
+@app.get("/gm/compendium/abilities")
+def gm_list_compendium_abilities(
+    q: str = Query(default="", max_length=120),
+    spec: str = Query(default="", max_length=80),
+    _: AccessContext = Depends(require_master),
+) -> dict:
+    return list_ability_catalog(query=q, spec=spec)
+
+
+@app.get("/gm/compendium/items")
+def gm_list_compendium_items(
+    q: str = Query(default="", max_length=120),
+    category: str = Query(default="", max_length=80),
+    _: AccessContext = Depends(require_master),
+) -> dict:
+    return list_item_compendium(query=q, category=category)
+
+
+@app.get("/gm/compendium/monsters/{monster_id}/actions")
+def gm_get_compendium_monster_actions(
+    monster_id: str,
+    _: AccessContext = Depends(require_master),
+) -> dict:
+    monster = get_catalog_monster(monster_id)
+    if monster is None:
+        raise HTTPException(status_code=404, detail="Monstro não encontrado no bestiário")
+    from .monster_catalog import load_monster_catalog
+    from .monster_rules import compile_monster_rules
+    result = build_action_map(
+        monster["name"],
+        monster.get("attacks") or [],
+        [(ability.get("name") or "", ability.get("description") or "")
+         for ability in monster.get("abilities") or []], monster_id=monster["id"],
+    )
+    catalog = load_monster_catalog()
+    art_usage = sum(1 for item in catalog["monsters"] if monster.get("image_path") and item.get("image_path") == monster["image_path"])
+    result["rulebook"] = compile_monster_rules(monster, catalog["catalog"], art_usage_count=art_usage)
+    return result
+
+
+@app.get("/gm/grid/range")
+def gm_grid_range(ref: str = Query(default="", max_length=200),
+                  attacker_token_id: str = Query(default="", max_length=120),
+                  attacker_character_id: str = Query(default="", max_length=120),
+                  map_id: str = Query(default="default", max_length=120),
+                  slot: str | None = Query(default=None, pattern="^(melee|touch|ranged)$"),
+                  max_range_m: float | None = Query(default=None, ge=0, le=9999),
+                  range_override_m: float | None = Query(default=None, ge=0, le=9999),
+                  access: AccessContext = Depends(require_any)) -> dict:
+    try:
+        visible = get_workspace_snapshot(settings.database_path, map_id=map_id, is_gm=access.mode == 'gm')
+        if access.mode != 'gm':
+            if range_override_m is not None or max_range_m is not None:
+                raise PermissionError('Somente o Mestre pode declarar alcance')
+            controlled_pin = next((t for t in visible.get('tokens', []) if t['id'] == attacker_token_id and (t.get('sheet') or {}).get('summon', {}).get('caster') == access.profile_id), None)
+            if ref.startswith('token:') and controlled_pin and ref.startswith(f'token:{attacker_token_id}:'):
+                owner = access.profile_id
+            elif ref.startswith(('character:', 'technique:')):
+                owner = ref.split(':', 2)[1]
+            else:
+                raise PermissionError('Use uma ação da sua ficha')
+            if _character_access_level(access, owner) == 'public':
+                raise PermissionError('Você não pode mirar por este personagem')
+            if attacker_character_id and attacker_character_id != owner:
+                raise PermissionError('Invocador não corresponde à ação')
+            if attacker_token_id and not controlled_pin and not any(t['id'] == attacker_token_id and t.get('character_id') == owner for t in visible.get('tokens', [])):
+                raise PermissionError('Pin não pertence ao seu personagem')
+        resolved_slot, resolved_max = slot, max_range_m
+        native_contract = None
+        include_self = ref in {'technique:dorn7:forca-arcana','technique:dorn7:dissipar-magia'}
+        target_kind='corpse' if ref=='technique:morthak:animar-mortos' else 'living'
+        attacker_character = attacker_character_id
+        action_ref = ref
+        if ref.startswith("character:"):
+            from .combat import attack_slot_and_max
+            _, profile_id, _, attack_id = (ref.split(":", 3) + [""])[:4]
+            character = _playable_character(profile_id, access)
+            resolved_slot, resolved_max = attack_slot_and_max(
+                attack_id, slot, character["definition"].get("level"))
+            if attack_id in {'melee','ranged'}:
+                from .item_families import weapon_range
+                item_slot,item_max=weapon_range(attack_id,character['inventory'])
+                if item_max is not None:resolved_slot,resolved_max=item_slot,item_max
+            attacker_character = profile_id
+            action_ref = ""
+        elif ref.startswith("technique:"):
+            from .combat import attack_slot_and_max
+            _, profile_id, ability_id = (ref.split(":", 2) + ["", ""])[:3]
+            character = _playable_character(profile_id, access)
+            resolved_slot, resolved_max = attack_slot_and_max(
+                ability_id, slot, character["definition"].get("level"))
+            if profile_id == 'dorn7' and ability_id == 'dorn_guard':
+                resolved_slot, resolved_max = 'ranged', 9
+            if profile_id == 'raziel' and ability_id == 'marca-rubra':
+                resolved_slot, resolved_max = 'ranged', 9
+                range_override_m = None  # Approved cross/arrow pipeline, never client range.
+            if profile_id == 'raziel' and ability_id.startswith('hemomancia-'):
+                from .hemomancy import action
+                weapon, _ = action(ability_id)
+                resolved_slot = 'ranged' if weapon['range_m'] else 'melee'
+                resolved_max = weapon['range_m']
+                range_override_m = None
+            if profile_id=='dorn7' and ability_id in {'relampago','forca-arcana','teia','dissipar-magia'}:
+                from .action_library import native_action_contract
+                native_contract = native_action_contract(ref,int(character['definition'].get('level') or 1))
+                resolved_slot=native_contract['range']['mode']
+                resolved_max=native_contract['range'].get('meters')
+                include_self=native_contract['targeting']['include_self']
+                range_override_m=None  # Contracted actions never trust a client range.
+            if profile_id == 'morthak' and ability_id in {'aterrorizar','clonagem','magia-da-morte'}:
+                level=int(character['definition'].get('level') or 1)
+                resolved_slot='ranged'
+                resolved_max={'aterrorizar':9+3*level,'clonagem':10,'magia-da-morte':3+level}[ability_id]
+            if profile_id=='vezemir' and ability_id=='pulseira-de-vinhas':
+                resolved_slot, resolved_max=attack_slot_and_max(ability_id,'ranged')
+            if profile_id=='morthak' and ability_id=='animar-mortos':
+                resolved_slot,resolved_max='ranged',None  # Preserve the existing same-map corpse selection.
+            attacker_character = attacker_character or profile_id
+            action_ref = ""
+        ring=ring_for_action(settings.database_path, ref=action_ref,
+                               attacker_token_id=attacker_token_id, map_id=map_id,
+                               attacker_character_id=attacker_character,
+                               slot_override=resolved_slot, max_override=resolved_max,
+                               range_override_m=range_override_m, role=access.mode, include_self=include_self,target_kind=target_kind)
+        ring['max_targets']=native_contract['targeting']['max_targets'] if native_contract else 1
+        if native_contract:
+            ring['contract']=native_contract
+            ring['map_id']=map_id
+            identities={t['id']:('character:'+t['character_id'] if t.get('character_id') else 'token:'+t['id']) for t in visible.get('tokens',[])}
+            for candidate in ring.get('targets',[]):
+                candidate['entity_key']=identities[candidate['id']]
+        if ref == 'technique:dorn7:dorn_guard':
+            members = {p['target_id'] for p in readeffects(settings.database_path).get('encounter', {}).get('participants', []) if p['target_type'] == 'character' and p['target_id'] != 'dorn7'}
+            by_id = {token['id']: token for token in visible.get('tokens', [])}
+            for candidate in ring.get('targets', []):
+                if by_id.get(candidate['id'], {}).get('character_id') not in members:
+                    candidate.update(valid=False, reason='Escolha um aliado participante')
+        return ring
+    except PermissionError as error:
+        raise HTTPException(status_code=403, detail=str(error)) from error
+    except (ValueError, PermissionError) as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.get("/gm/grid/approach")
+def gm_grid_approach(map_id: str = Query(default="default", max_length=120),
+                     token_id: str = Query(default="", max_length=120),
+                     target_type: str = Query(default="token", pattern="^(character|token)$"),
+                     target_id: str = Query(default="", max_length=180),
+                     mode: str = Query(default="melee", pattern="^(melee|touch|ranged)$"),
+                     range_m: float | None = Query(default=None, ge=0, le=9999),
+                     range_cells: int | None = Query(default=None, ge=1, le=200),
+                     _: AccessContext = Depends(require_master)) -> dict:
+    try:
+        return approach_preview(settings.database_path, map_id=map_id, token_id=token_id,
+                                target_type=target_type, target_id=target_id,
+                                mode=mode, range_m=range_m, range_cells=range_cells)
+    except (ValueError, PermissionError) as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.get("/gm/workspace/tokens/{token_id}/actions")
+def gm_get_workspace_token_actions(
+    token_id: str,
+    access: AccessContext = Depends(require_any),
+) -> dict:
+    token = next((item for item in list_workspace_tokens(settings.database_path) if item["id"] == token_id), None)
+    if token is None or token.get("token_type") != "monster":
+        raise HTTPException(status_code=404, detail="Criatura não encontrada")
+    sheet = token.get("sheet") or {}
+    if access.mode != 'gm':
+        visible = get_workspace_snapshot(settings.database_path, is_gm=False, map_id=token.get('map_id'))
+        if sheet.get('summon', {}).get('caster') != access.profile_id or not any(t['id'] == token_id for t in visible.get('tokens', [])):
+            raise HTTPException(status_code=403, detail='Você não controla esta criatura')
+    origin = sheet.get('source')
+    monster_id = origin.get('monster_id') if isinstance(origin, dict) else None
+    result=build_action_map(token.get("name") or "Criatura", sheet.get("attacks") or [], sheet.get("abilities") or [], monster_id=monster_id)
+    if access.mode=='gm':
+        from .monster_runtime import token_monster,action_contracts
+        from .monster_action_specs import monster_action_specs
+        with closing(sqlite3.connect(settings.database_path)) as db:
+            monster,_=token_monster(db,token_id)
+            native=action_contracts(db,token_id) if monster else {}
+        if monster:
+            result['native_breaths']=native
+            from .monster_riders import combat_rider_specs
+            on_hit=combat_rider_specs(monster)['on_hit']
+            names={spec['name'].casefold() for spec in on_hit}
+            result['active_abilities']=[entry for entry in result['active_abilities'] if entry['name'].casefold() not in names]
+            result['on_hit_riders']=[{key:spec[key] for key in ('name','effect','attack_indices')} for spec in on_hit]
+    return result
+
+
+@app.get('/gm/combat/spells/dispel-preview')
+def gm_spell_dispel_preview(target_token_id:str=Query(min_length=1,max_length=180),_:AccessContext=Depends(require_master))->dict:
+    from .spell_effect_runtime import dispel_preview
+    from .combat_effects import effect_snapshot
+    try:
+        with closing(sqlite3.connect(settings.database_path)) as db:
+            db.execute('BEGIN')
+            return dispel_preview(db,effect_snapshot(db),target_token_id)
+    except (ValueError,TypeError) as error:
+        raise HTTPException(status_code=400,detail=str(error)) from error
+
+
+@app.get('/gm/workspace/tokens/{token_id}/contact-preview')
+def gm_monster_contact_preview(token_id:str,aim_token_id:str=Query(max_length=180),_:AccessContext=Depends(require_master))->dict:
+    from .monster_contacts import preview
+    from .monster_runtime import token_monster
+    from .combat_effects import effect_snapshot
+    try:
+        with closing(sqlite3.connect(settings.database_path)) as db:
+            monster,_=token_monster(db,token_id)
+        target_ac=_combat_target('token',aim_token_id)['armor_class'] if (monster or {}).get('id')=='monstro-ferrugem' else None
+        with closing(sqlite3.connect(settings.database_path)) as db:
+            db.execute('BEGIN')
+            return preview(db,effect_snapshot(db),token_id,aim_token_id,target_ac=target_ac)
+    except (ValueError,TypeError) as error:
+        raise HTTPException(status_code=400,detail=str(error)) from error
+
+
+@app.get('/gm/workspace/tokens/{token_id}/breath-preview')
+def gm_monster_breath_preview(token_id:str,ability_name:str=Query(max_length=160),aim_token_id:str=Query(max_length=180),_:AccessContext=Depends(require_master)) -> dict:
+    from .monster_runtime import preview
+    from .combat_effects import effect_snapshot
+    try:
+        with closing(sqlite3.connect(settings.database_path)) as db:
+            db.execute('BEGIN')
+            snapshot=effect_snapshot(db)
+            contract,units,map_id=preview(db,snapshot,token_id,ability_name,aim_token_id)
+            return dict(contract=contract,targets=[dict(pin_id=u['pin'],name=u['name'],target_type=u['type'],target_id=u['id']) for u in units],map_id=map_id,version=snapshot['version'])
+    except (ValueError,PermissionError) as error:
+        raise HTTPException(status_code=400,detail=str(error)) from error
+
+
+@app.get("/gm/merchants")
+def gm_list_merchants(_: AccessContext = Depends(require_master)) -> list[dict]:
+    return list_merchants(settings.database_path)
+
+
+@app.post("/gm/merchants")
+def gm_create_merchant(request: MerchantCreate, _: AccessContext = Depends(require_master)) -> dict:
+    try:
+        return create_merchant(settings.database_path, name=request.name, location=request.location)
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.post("/gm/merchants/{merchant_id}/stock")
+def gm_add_merchant_stock(merchant_id: str, request: MerchantStockCreate, _: AccessContext = Depends(require_master)) -> dict:
+    try:
+        return add_stock(settings.database_path, merchant_id=merchant_id, compendium_item_id=request.compendium_item_id,
+                         quantity=request.quantity, price_override_po=request.price_override_po, notes=request.notes)
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.delete("/gm/merchants/{merchant_id}/stock/{stock_id}")
+def gm_remove_merchant_stock(merchant_id: str, stock_id: str, _: AccessContext = Depends(require_master)) -> dict:
+    try:
+        remove_stock(settings.database_path, stock_id=stock_id)
+    except ValueError as error:
+        raise HTTPException(status_code=404, detail=str(error)) from error
+    return {"removed": stock_id, "merchant_id": merchant_id}
+
+
+@app.post("/gm/merchants/{merchant_id}/haggle")
+def gm_merchant_haggle(merchant_id: str, request: MerchantHaggleRequest, _: AccessContext = Depends(require_master)) -> dict:
+    try:
+        return {"merchant_id": merchant_id, **haggle(settings.database_path, character_id=request.character_id,
+                                                     base_price_po=request.base_price_po, roll_mode=request.roll_mode, d20=request.d20)}
+    except (ValueError, PermissionError) as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.post("/gm/merchants/{merchant_id}/buy")
+def gm_merchant_buy(merchant_id: str, request: MerchantBuyRequest, _: AccessContext = Depends(require_master)) -> dict:
+    try:
+        return buy(settings.database_path, merchant_id=merchant_id, stock_id=request.stock_id,
+                   character_id=request.character_id, quantity=request.quantity,
+                   final_price_po=request.final_price_po, expected_purse=request.expected_purse)
+    except (ValueError, PermissionError) as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.post("/gm/merchants/{merchant_id}/sell")
+def gm_merchant_sell(merchant_id: str, request: MerchantSellRequest, _: AccessContext = Depends(require_master)) -> dict:
+    try:
+        return sell(settings.database_path, merchant_id=merchant_id, character_id=request.character_id,
+                    item_path=request.item_path, quantity=request.quantity,
+                    unit_price_po=request.unit_price_po, expected_purse=request.expected_purse)
+    except (ValueError, PermissionError) as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.post("/gm/compendium/spells/{spell_id}/cast")
+def gm_cast_compendium_spell(spell_id: str, request: SpellCastRequest, _: AccessContext = Depends(require_master)) -> dict:
+    try:
+        return cast_spell(settings.database_path, spell_id=spell_id, caster_type=request.caster_type,
+                          caster_id=request.caster_id, targets=[item.model_dump() for item in request.targets],
+                          roll_mode=request.roll_mode, d20=request.d20, damage_override=request.damage_override,
+                          save_override=request.save_override, range_m=request.range_m, range_cells=request.range_cells,
+                          request_id=request.request_id)
+    except (ValueError, PermissionError) as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.post("/gm/workspace/tokens/{token_id}/actions/execute")
+def gm_execute_token_action(token_id: str, request: TokenActionExecuteRequest, _: AccessContext = Depends(require_master)) -> dict:
+    try:
+        return execute_token_action(settings.database_path, token_id=token_id, ability_name=request.ability_name,
+                                    targets=[item.model_dump() for item in request.targets],
+                                    roll_mode=request.roll_mode, d20=request.d20, damage_override=request.damage_override,
+                                    range_m=request.range_m, range_cells=request.range_cells, request_id=request.request_id)
+    except (ValueError, PermissionError) as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.get("/gm/actions/describe")
+def gm_describe_action(ref: str = Query(default="", max_length=200), _: AccessContext = Depends(require_master)) -> dict:
+    try:
+        return describe_action(settings.database_path, ref)
+    except (ValueError, PermissionError) as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.get("/gm/commerce/readiness")
+def gm_commerce_readiness(access: AccessContext = Depends(require_master)) -> dict:
+    from .map_commerce import offer_readiness_report
+    return offer_readiness_report(settings.database_path, access)
+
+
+@app.post("/gm/actions/execute")
+def gm_execute_action(request: ActionExecuteRequest, _: AccessContext = Depends(require_master)) -> dict:
+    try:
+        return execute_action(settings.database_path, request.ref,
+                              targets=[item.model_dump() for item in request.targets],
+                              roll_mode=request.roll_mode, d20=request.d20, damage_override=request.damage_override,
+                              save_override=request.save_override, range_m=request.range_m, range_cells=request.range_cells,
+                              caster_type=request.caster_type, caster_id=request.caster_id, request_id=request.request_id)
+    except (ValueError, PermissionError) as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
 
 
 @app.get("/workspace/loot")
@@ -2363,15 +2798,24 @@ _FRONTMATTER_RULE_KINDS = frozenset({
 def _parse_frontmatter_effect_rules(raw: Any, *, source_path: str) -> list[dict[str, Any]]:
     """Structured vault rules (relíquias com bônus de mesa aprovado).
 
-    Somente `trigger: while_equipped` é aplicado automaticamente; outras
-    triggers são ignoradas até existir fluxo de ativação. Kinds fora da
-    allowlist são descartados para não inventar mecânica via frontmatter.
+    Aplica bônus while_equipped e efeitos on_use explicitamente suportados
+    pelo consumidor nativo. Kinds desconhecidos e condições on_use não
+    automatizadas são ignorados, sem inventar mecânica via frontmatter.
     """
     if not isinstance(raw, list):
         return []
     rules: list[dict[str, Any]] = []
     for entry in raw:
         if not isinstance(entry, dict):
+            continue
+        if entry.get('trigger')=='on_use':
+            from .item_families import USE_KINDS
+            if entry.get('kind') not in USE_KINDS or entry.get('condition'):continue
+            try:
+                formula=parse_formula(str(entry['formula'])).formula if entry.get('formula') else None
+                value=int(entry.get('value') or 0)
+            except (ValueError,TypeError):continue
+            rules.append({**entry,'id':str(entry.get('id') or f"vault:{source_path}:use:{len(rules)}"),'item_path':source_path,'formula':formula,'value':value})
             continue
         if str(entry.get("trigger") or "") != "while_equipped":
             continue
@@ -2431,6 +2875,8 @@ def _inventory_with_media(items: list[dict], *, access_mode: str) -> list[dict]:
                         for line in re.findall(r"^\s*-\s+(.+)$", components.group(1), flags=re.MULTILINE)
                     ]
             record["usable"] = bool(frontmatter.get("usable", frontmatter.get("usavel", False)))
+            record['usable']=record['usable'] or any(r.get('trigger')=='on_use' for r in record['effect_rules'])
+            if isinstance(frontmatter.get('mechanics'),dict):record['mechanics']=dict(frontmatter['mechanics'])
             candidate_formula = frontmatter.get("base_damage") or frontmatter.get("damage")
             if candidate_formula:
                 try:
@@ -2454,8 +2900,14 @@ def _inventory_with_media(items: list[dict], *, access_mode: str) -> list[dict]:
                     record["charges_max"] = int(record.get("charges_max") or configured_charges)
                     record["charges_current"] = int(record["charges_max"] if record.get("charges_current") is None else record["charges_current"])
                     record["recharge"] = record.get("recharge") or mechanics.get("recharge") or "none"
+        from .map_commerce import catalog_inventory
+        catalog = catalog_inventory(str(record.get('item_path') or ''))
+        if catalog and not record.get('mechanics'):
+            record.update(catalog)
         enriched.append(normalize_inventory_item_mechanics(record))
-    return enriched
+    from .hp_potions import coalesce_inventory
+    from .item_families import project_ammunition
+    return coalesce_inventory(project_ammunition(enriched))
 
 
 @app.get("/player/inventory", response_model=list[InventoryRecord])
@@ -2546,8 +2998,26 @@ def _character_access_level(access: AccessContext, profile_id: str) -> str:
     return "public"
 
 
-def _playable_character(profile_id: str, access: AccessContext) -> dict:
-    sheet = _sheet_for_character(profile_id)
+def _identity_card_media(label):
+    key = (str(settings.database_path.resolve()), 'identity-media', label)
+    def load():
+        reference = resolve_note(settings.database_path, label, access_mode='gm')
+        if not reference:
+            return None
+        detail = get_note(settings.database_path, int(reference['id']), access_mode='gm') or {}
+        return detail.get('thumbnail') or detail.get('cover')
+    return _action_catalog_reads.run(key, load, ttl=30)
+
+
+def _playable_character(profile_id: str, access: AccessContext, *, read_only: bool = False) -> dict:
+    if read_only:
+        # Do not use _ensure_profile_sheet/get_or_create_sheet in audit reads.
+        sheet = next((item for item in list_sheets(settings.database_path)
+                      if item['profile_id'] == profile_id), None)
+        if sheet is None:
+            raise HTTPException(status_code=404, detail='Ficha de personagem não encontrada.')
+    else:
+        sheet = _sheet_for_character(profile_id)
     summary = resolve_note(settings.database_path, sheet["character_path"], access_mode="gm")
     if summary is None:
         raise HTTPException(status_code=404, detail="Nota de origem do personagem não encontrada.")
@@ -2568,6 +3038,9 @@ def _playable_character(profile_id: str, access: AccessContext) -> dict:
         access_level=access_level,
     )
     effect_state = readeffects(settings.database_path)
+    if access_level != 'public':
+        for card in (definition.get('identity_cards') or {}).values():
+            card['image_path'] = _identity_card_media(card['name'])
     effects = [e for e in effect_state["effects"]
                if e["target_type"] == "character" and e["target_id"] == profile_id]
     definition = apply_definition_effects(definition, effects if access_level != "public" else [])
@@ -2581,12 +3054,24 @@ def _playable_character(profile_id: str, access: AccessContext) -> dict:
     definition["effects_version"] = effect_state["version"]
     state = None
     if access_level != "public":
-        state = get_or_create_state(
-            settings.database_path,
-            profile_id=profile_id,
-            sheet=sheet,
-            definition=definition,
-        )
+        if read_only:
+            # Audit must not seed/recharge resources or reconcile HP as a GET
+            # side effect. Schema initializers elsewhere retain legacy behavior.
+            with closing(sqlite3.connect(settings.database_path.resolve().as_uri() + '?mode=ro', uri=True, timeout=30)) as connection:
+                exists = connection.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='character_states'").fetchone()
+                row = connection.execute('SELECT state_json,version,updated_at FROM character_states WHERE profile_id=?', (profile_id,)).fetchone() if exists else None
+            if row:
+                state = {**json.loads(row[0]), 'version': row[1], 'updated_at': row[2]}
+        else:
+            state = get_or_create_state(
+                settings.database_path,
+                profile_id=profile_id,
+                sheet=sheet,
+                definition=definition,
+            )
+        if profile_id=='raziel' and state is not None:
+            from .night_form import project
+            definition,state=project(definition,state)
     return compose_character_view(
         definition=definition,
         state=state,
@@ -2618,11 +3103,25 @@ def _character_summary(record: dict) -> dict:
     }
 
 
+from .concurrent_reads import ConcurrentReads
+
+_character_summary_reads = ConcurrentReads()
+_action_catalog_reads = ConcurrentReads()
+
+
 @app.get("/characters", response_model=list[PlayableCharacterSummary])
-def playable_characters(access: AccessContext = Depends(require_any)) -> list[dict]:
+def playable_characters(access: AccessContext = Depends(require_any), read_only: bool = False) -> list[dict]:
+    def load():
+        return [_character_summary(_playable_character(profile_id, AccessContext(mode="gm"), read_only=True) if read_only else _playable_character(profile_id, AccessContext(mode="gm")))
+                for profile_id in _character_ids()]
+
+    # No TTL cache: discard after overlapping reads finish. Filter separate
+    # copies so an owner's private resources never cross into another response.
+    records = _character_summary_reads.run(str(settings.database_path.resolve()) + (':readonly' if read_only else ''), load)
     summaries: list[dict] = []
-    for profile_id in _character_ids():
-        summary = _character_summary(_playable_character(profile_id, AccessContext(mode="gm")))
+    for record in records:
+        summary = copy.deepcopy(record)
+        profile_id = summary['id']
         summary["access_level"] = _character_access_level(access, profile_id)
         if summary["access_level"] == "public":
             summary["resources"] = []
@@ -2631,8 +3130,8 @@ def playable_characters(access: AccessContext = Depends(require_any)) -> list[di
 
 
 @app.get("/characters/{profile_id}", response_model=PlayableCharacterResponse, response_model_exclude_none=True)
-def playable_character(profile_id: str, access: AccessContext = Depends(require_any)) -> dict:
-    return _playable_character(profile_id, access)
+def playable_character(profile_id: str, access: AccessContext = Depends(require_any), read_only: bool = False) -> dict:
+    return _playable_character(profile_id, access, read_only=read_only)
 
 
 def _authorize_character_notes(profile_id: str, access: AccessContext) -> None:
@@ -2678,11 +3177,14 @@ def playable_character_action(
             None,
         )
         mechanics = dict((inventory_item or {}).get("mechanics") or {})
+        if mechanics.get('family')=='ammunition':raise HTTPException(400,'Munição é usada pelo lançador; não pode ser equipada como arma')
+        from .player_inventory import currency_item_field
+        if currency_item_field(inventory_item or {}):
+            raise HTTPException(status_code=400, detail="Moedas pertencem à bolsa, não podem ser equipadas.")
         allowed_slots = [str(slot) for slot in mechanics.get("equipment_slots") or [] if str(slot).strip()]
         if allowed_slots and equipment_slot not in allowed_slots:
             raise HTTPException(status_code=400, detail=f"Este item só pode ser equipado em: {', '.join(allowed_slots)}.")
-        slot_default = 3 if equipment_slot == "Acessório" else 1
-        slot_limit = max(int(mechanics.get("slot_limit") or 0), slot_default)
+        slot_limit = 5 if equipment_slot == "Acessório" else max(int(mechanics.get("slot_limit") or 0), 1)
         occupants = [
             entry for entry in current_character.get("inventory") or []
             if entry.get("equipped") and entry.get("item_path") != item_path and str(entry.get("equipment_slot") or "") == equipment_slot
@@ -2690,72 +3192,48 @@ def playable_character_action(
         if equipment_slot and len(occupants) >= slot_limit:
             names = ", ".join(str(entry.get("item_title") or "item") for entry in occupants)
             raise HTTPException(status_code=400, detail=f"O encaixe {equipment_slot} atingiu o limite de {slot_limit}: {names}.")
+    equipment_anchor=None
+    if request.action in {'equip_item','unequip_item'}:
+        view=_playable_character(profile_id,access,read_only=True)
+        equipment=next((i for i in view['inventory'] if i['item_path']==payload.get('item_path')),None)
+        mechanic=(equipment or {}).get('mechanics') or {}
+        if mechanic.get('family') in {'armor','shield'} or any(s in {'Armadura','Mão secundária'} for s in mechanic.get('equipment_slots',[])):
+            if not load_definition_overrides(settings.database_path,profile_id).get('equipment_defense_anchor'):
+                from .item_families import armor_anchor
+                try:equipment_anchor=armor_anchor(view)
+                except ValueError as error:
+                    if mechanic.get('family_schema')==1:raise HTTPException(400,str(error)) from error
     if request.action == "use_item":
         item_path = str(payload.get("item_path") or "").strip()
+        from .combat_consumables import replay_inventory_use
+        try:
+            replay=replay_inventory_use(settings.database_path,character_id=profile_id,
+                actor_id='master' if access.mode=='gm' else str(access.profile_id),actor_role=access.mode,
+                request_id=request.request_id,item_path=item_path)
+        except ValueError as error:raise HTTPException(400,str(error)) from error
+        if replay is not None:return _playable_character(profile_id,access)
         item = get_session_item_by_path(settings.database_path, item_path)
-        inventory_item = next((entry for entry in current_character.get("inventory") or [] if entry.get("item_path") == item_path), None)
-        if item is None or inventory_item is None or int(inventory_item.get("quantity") or 0) <= 0:
+        from .hp_potions import ITEM_PATH as HP_POTION_PATH, use_descriptor
+        if item is None and item_path == HP_POTION_PATH:
+            item = use_descriptor()
+        if item is None:
+            view=_playable_character(profile_id,access,read_only=True)
+            item=next((i for i in view['inventory'] if i['item_path']==item_path and i.get('usable')),None)
+            if item is not None:item={**item,'name':item.get('name') or item['item_title']}
+        if item is None:
             raise HTTPException(status_code=400, detail="Item utilizável não encontrado no inventário.")
-        rules = [rule for rule in item.get("effect_rules") or [] if rule.get("trigger") == "on_use"]
-        if not item.get("usable") or not rules:
-            raise HTTPException(status_code=400, detail="Este item não possui efeito configurado para uso.")
-        resources = {str(resource.get("key") or "") for resource in (current_character.get("state") or {}).get("resources") or []}
-        mechanics = dict(item.get("mechanics") or {})
-        consume_mode = str(mechanics.get("consume_mode") or ("quantity" if item.get("usable") else "none"))
-        charges_max = int(inventory_item.get("charges_max") or mechanics.get("charges_max") or 0)
-        charges_current = int(inventory_item.get("charges_current") if inventory_item.get("charges_current") is not None else charges_max)
-        if consume_mode == "charges" and (charges_max <= 0 or charges_current <= 0):
-            raise HTTPException(status_code=400, detail="Este item está sem cargas.")
-        for rule in rules:
-            kind = str(rule.get("kind") or "")
-            target = str(rule.get("target") or "").strip()
-            formula = str(rule.get("formula") or "").strip()
-            value = roll_formula(formula)["total"] if formula else int(rule.get("value") or 0)
-            rule["resolved_value"] = value
-            if kind in {"heal_hp", "restore_resource", "temporary_hp"} and value <= 0:
-                raise HTTPException(status_code=400, detail="O valor do efeito de uso deve ser positivo.")
-            if kind == "restore_resource" and target not in resources:
-                raise HTTPException(status_code=400, detail=f"Recurso do efeito não encontrado: {target or 'não informado'}.")
-            if kind == "add_condition" and not target:
-                raise HTTPException(status_code=400, detail="Informe a condição aplicada pelo item.")
-            if kind not in {"heal_hp", "restore_resource", "add_condition", "temporary_hp"}:
-                raise HTTPException(status_code=400, detail="O item possui uma regra incompatível com o gatilho de uso.")
-        actor_id = "master" if access.mode == "gm" else str(access.profile_id)
-        for rule in rules:
-            kind = str(rule["kind"])
-            if kind == "heal_hp":
-                action, effect_payload, actor_role = "heal", {"amount": int(rule["resolved_value"])}, "gm" if access.mode == "gm" else "player"
-            elif kind == "restore_resource":
-                action, effect_payload, actor_role = "restore_resource", {"resource_key": rule["target"], "amount": int(rule["resolved_value"])}, "gm"
-            elif kind == "temporary_hp":
-                action, effect_payload, actor_role = "grant_temporary_hp", {"amount": int(rule["resolved_value"])}, "gm" if access.mode == "gm" else "player"
-            else:
-                duration_labels = {"round": "1 rodada", "scene": "até o fim da cena", "rest": "até descansar"}
-                duration = duration_labels.get(str(rule.get("duration") or ""))
-                condition = str(f"{rule['target']} ({duration})" if duration else rule["target"])[:80]
-                action, effect_payload, actor_role = "add_condition", {"condition": condition}, "gm" if access.mode == "gm" else "player"
-            apply_character_action(
-                settings.database_path, character_id=profile_id, actor_id=actor_id, actor_role=actor_role,
-                action=action, payload=effect_payload, reason=f"Efeito de {item['name']}", session_id=request.session_id,
-            )
-        if consume_mode != "none":
-            consume_action = "change_charges" if consume_mode == "charges" else "change_quantity"
-            consume_payload = (
-                {"item_path": item_path, "charges": charges_current - 1, "charges_max": charges_max, "recharge": mechanics.get("recharge") or "none"}
-                if consume_mode == "charges"
-                else {"item_path": item_path, "quantity": int(inventory_item["quantity"]) - 1}
-            )
-            apply_character_action(
-                settings.database_path, character_id=profile_id, actor_id=actor_id,
-                actor_role="gm" if access.mode == "gm" else "player", action=consume_action,
-                payload=consume_payload, reason=f"Usou {item['name']}", session_id=request.session_id,
-            )
-        record_workspace_message(
-            settings.database_path, actor_id=actor_id,
-            actor_name="Mestre" if access.mode == "gm" else str(access.character_title or access.profile_id),
-            actor_role="gm" if access.mode == "gm" else "player", character_id=profile_id,
-            message_kind="action", text=f"Usou {item['name']}.",
-        )
+        from .combat_consumables import use_inventory_item
+        import uuid
+        try:
+            use_inventory_item(settings.database_path, character_id=profile_id,
+                actor_id="master" if access.mode == "gm" else str(access.profile_id),
+                actor_role="gm" if access.mode == "gm" else "player",
+                request_id=request.request_id or 'item:' + uuid.uuid4().hex,
+                item={**item, 'item_path': item_path}, session_id=request.session_id)
+        except PermissionError as error:
+            raise HTTPException(status_code=403, detail=str(error)) from error
+        except (TypeError, ValueError) as error:
+            raise HTTPException(status_code=400, detail=str(error)) from error
         return _playable_character(profile_id, access)
     if request.action == "grant_item":
         note_id = payload.get("note_id")
@@ -2780,12 +3258,14 @@ def playable_character_action(
             payload=payload,
             reason=request.reason,
             session_id=request.session_id,
+            request_id=request.request_id,
+            equipment_defense_anchor=equipment_anchor,
         )
     except PermissionError as error:
         raise HTTPException(status_code=403, detail=str(error)) from error
     except (TypeError, ValueError) as error:
         raise HTTPException(status_code=400, detail=str(error)) from error
-    if request.action == "set_currency" and result["event_id"] is None:
+    if result.get('replayed') or (request.action in {'set_currency', 'end_night_form'} and result['event_id'] is None):
         return _playable_character(profile_id, access)
     public_reason = (request.reason or "").strip() or request.action.replace("_", " ")
     character_name = _character_summary(_playable_character(profile_id, AccessContext(mode="gm")))["name"]
@@ -2812,6 +3292,7 @@ def playable_character_events(
     events = list_character_events(settings.database_path, profile_id)
     if access_level == "owner":
         owner_visible_types = {
+            "use_item",
             "set_currency",
             "damage",
             "heal",
@@ -2823,6 +3304,7 @@ def playable_character_events(
             "unequip_item",
             "change_quantity",
             "rest_at_inn",
+            "rest_in_coffin",
         }
         events = [event for event in events if event["event_type"] in owner_visible_types]
     return events
@@ -2832,13 +3314,24 @@ from .level_routes import register as register_level_routes
 register_level_routes(app, require_master, _playable_character, lambda: settings.database_path)
 
 
+@app.post('/gm/characters/dorn7/approved-build', response_model=PlayableCharacterResponse)
+def gm_apply_dorn_approved_build(access: AccessContext = Depends(require_master)) -> dict:
+    _playable_character('dorn7', access)
+    from .dorn_mage import apply_dorn_mage
+    try:
+        apply_dorn_mage(settings.database_path)
+    except ValueError as error:
+        raise HTTPException(status_code=409, detail=str(error)) from error
+    return _playable_character('dorn7', access)
+
+
 @app.patch("/gm/characters/{profile_id}/definition", response_model=PlayableCharacterResponse, response_model_exclude_none=True)
 def gm_update_playable_character_definition(
     profile_id: str,
     request: CharacterDefinitionUpdate,
     access: AccessContext = Depends(require_master),
 ) -> dict:
-    _playable_character(profile_id, access)
+    previous_character = _playable_character(profile_id, access)
     try:
         update_definition_overrides(
             settings.database_path,
@@ -2846,6 +3339,7 @@ def gm_update_playable_character_definition(
             actor_id="master",
             fields=dict(request.fields),
             reason=request.reason,
+            definition=previous_character['definition'],
         )
     except ValueError as error:
         raise HTTPException(status_code=400, detail=str(error)) from error
@@ -2856,6 +3350,91 @@ def gm_update_playable_character_definition(
         text=f"{character_name}: {(request.reason or 'ficha ajustada pelo Mestre').strip()}.",
     )
     return _playable_character(profile_id, access)
+
+
+@app.post("/gm/characters/{profile_id}/specialization")
+def gm_choose_specialization(
+    profile_id: str,
+    request: SpecializationChoose,
+    access: AccessContext = Depends(require_master),
+) -> dict:
+    """Validated specialization choice. Only catalog options; locked stays locked."""
+    from .character_play import choose_specialization
+    character = _playable_character(profile_id, access)
+    try:
+        return choose_specialization(
+            settings.database_path, character_id=profile_id, spec=request.specialization,
+            actor_id="master", actor_role="gm", weapon_item_path=request.weapon_item_path,
+            reason=request.reason, definition=character["definition"])
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.get("/characters/{profile_id}/specializations")
+def list_specialization_options(
+    profile_id: str,
+    access: AccessContext = Depends(require_any),
+) -> dict:
+    """Eligible options with requirements, benefits and restrictions. Owner or GM."""
+    from .level_advancement import SPECIALIZATIONS
+    if _character_access_level(access, profile_id) == "public":
+        raise HTTPException(status_code=403, detail="Você não pode ver escolhas por este personagem.")
+    character = _playable_character(profile_id, AccessContext(mode="gm"))
+    definition = character["definition"]
+    sheet_alignment = ""
+    try:
+        import sqlite3
+        from contextlib import closing
+        with closing(sqlite3.connect(str(settings.database_path))) as db:
+            row = db.execute("SELECT data_json FROM character_sheets WHERE profile_id=?", (profile_id,)).fetchone()
+            raw = (json.loads(row[0]).get("alignment") if row else None) or ""
+            sheet_alignment = (raw.get("alignment") if isinstance(raw, dict) else raw) or ""
+    except Exception:
+        sheet_alignment = ""
+    level = int(definition.get("level") or 1)
+    current = (definition.get("specialization") or "").strip() or None
+    options = []
+    for key, entry in SPECIALIZATIONS.items():
+        if entry.get("class") != definition.get("class_name"):
+            continue
+        locked = entry.get("locked_to")
+        if locked is not None and locked != profile_id:
+            continue
+        reasons = []
+        if level < int(entry.get("min_level") or 1):
+            reasons.append(f"exige nível {entry.get('min_level')}")
+        if entry.get("alignment") and str(sheet_alignment).strip().lower() != str(entry["alignment"]).lower():
+            reasons.append(f"exige alinhamento {entry['alignment']}")
+        eligible = not reasons
+        options.append({"id": key, "name": str(entry.get("name") or key), "eligible": eligible,
+                        "reasons": reasons, "benefits": list(entry.get("benefits") or []),
+                        "restrictions": list(entry.get("restrictions") or []),
+                        "requires": dict(entry.get("requires") or {}),
+                        "upcoming": list(entry.get("upcoming") or []),
+                        "source": entry.get("source"), "current": current == key})
+    return {"current": current, "options": options}
+
+
+@app.post("/characters/{profile_id}/specialization")
+def choose_own_specialization(
+    profile_id: str,
+    request: SpecializationChoose,
+    access: AccessContext = Depends(require_any),
+) -> dict:
+    """Owner (or GM) confirms a validated specialization. Idempotent."""
+    from .character_play import choose_specialization
+    if _character_access_level(access, profile_id) == "public":
+        raise HTTPException(status_code=403, detail="Você não pode escolher por este personagem.")
+    actor_id, actor_role = _roll_actor(access)
+    character = _playable_character(profile_id, AccessContext(mode="gm"))
+    try:
+        return choose_specialization(
+            settings.database_path, character_id=profile_id, spec=request.specialization,
+            actor_id=actor_id, actor_role="gm" if actor_role == "gm" else "player",
+            weapon_item_path=request.weapon_item_path, reason=request.reason,
+            definition=character["definition"])
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
 
 
 @app.post("/gm/characters/{profile_id}/events/{event_id}/revert", response_model=PlayableCharacterResponse, response_model_exclude_none=True)
@@ -3029,6 +3608,33 @@ def _combat_target(target_type: str, target_id: str) -> dict:
     }
 
 
+@app.get("/characters/{profile_id}/attacks/{attack_id}/targets")
+def attack_targets(
+    profile_id: str,
+    attack_id: str,
+    attacker_token_id: str | None = None,
+    map_id: str | None = None,
+    slot: str | None = None,
+    access: AccessContext = Depends(require_any),
+) -> dict:
+    """Valid targets in range for an attack, so the UI can offer map clicks
+    instead of the manual picker. Falls back to manual when ungridded."""
+    if _character_access_level(access, profile_id) == "public":
+        raise HTTPException(status_code=403, detail="Você não pode atacar por este personagem.")
+    character = _playable_character(profile_id, access)
+    from .combat import attack_slot_and_max
+    resolved_slot, max_range_m = attack_slot_and_max(
+        attack_id, slot, character["definition"].get("level"))
+    from .spatial_grid import targets_in_range
+    try:
+        return targets_in_range(settings.database_path, actor_character_id=profile_id,
+                                attacker_token_id=attacker_token_id, map_id=map_id,
+                                slot=resolved_slot, max_range_m=max_range_m,
+                                role=access.mode)
+    except (TypeError, ValueError) as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
 @app.post("/characters/{profile_id}/attacks/resolve")
 def resolve_character_attack(
     profile_id: str,
@@ -3037,12 +3643,18 @@ def resolve_character_attack(
 ) -> dict:
     if _character_access_level(access, profile_id) == "public":
         raise HTTPException(status_code=403, detail="Você não pode atacar por este personagem.")
+    from .combat import replay_attack_request
+    replay_actor,_replay_role=_roll_actor(access)
+    try:replay=replay_attack_request(settings.database_path,request_id=request.request_id,character_id=profile_id,actor_id=replay_actor,intent=request.model_dump(exclude={'request_id'}))
+    except PermissionError as error:raise HTTPException(403,str(error)) from error
+    except ValueError as error:raise HTTPException(400,str(error)) from error
+    if replay is not None:return replay
     character = _playable_character(profile_id, access)
     actor_id, actor_role = _roll_actor(access)
     try:
         table = get_workspace_snapshot(settings.database_path, is_gm=access.mode == "gm")
         expected_mode = "physical" if table.get("table_mode") == "physical" else "digital"
-        if request.roll_mode != expected_mode:
+        if request.roll_mode != expected_mode and not (request.grid_automatic and request.roll_mode == 'digital'):
             raise ValueError("O modo de rolagem é definido pelo mestre no painel da mesa. Atualize a página.")
         if access.mode != "gm" and request.target_type == "token":
             token = next((t for t in list_workspace_tokens(settings.database_path) if t["id"] == request.target_id), None)
@@ -3052,13 +3664,31 @@ def resolve_character_attack(
             if not any(t["id"] == request.target_id for t in visible["tokens"]):
                 raise PermissionError("Este alvo não está disponível para jogadores.")
         definition = character["definition"]
+        max_range_m = None
         if request.attack_id == "misseis-magicos":
             definition = magic_missile_definition(definition, character["state"].get("resources", []))
+            max_range_m = next((a.get("max_range_m") for a in definition.get("attacks", [])
+                                if a.get("id") == "misseis-magicos"), None)
         elif request.attack_id == "adaga-de-osso":
             definition = bone_dagger_definition(definition)
+            from .combat import CAMPAIGN_RANGED_METERS
+            max_range_m=CAMPAIGN_RANGED_METERS['adaga-de-osso']
+        from .spatial_grid import check_attack_range
+        range_slot="melee" if request.attack_id=="melee" else "ranged"
+        if request.attack_id in {'melee','ranged'}:
+            from .item_families import weapon_range
+            item_slot,item_max=weapon_range(request.attack_id,character['inventory'],request.weapon_item_path)
+            if item_max is not None:range_slot,max_range_m=item_slot,item_max
+        checked_range = check_attack_range(settings.database_path, actor_character_id=profile_id,
+                           target_type=request.target_type, target_id=request.target_id,
+                           slot=range_slot,
+                           max_range_m=max_range_m)
+        if request.grid_automatic and (request.roll_mode != 'digital' or not checked_range.get('checked')):
+            raise ValueError('Resolução automática exige dados digitais e posições no grid')
         resolution, _created = resolve_attack(
             settings.database_path,
             request_id=request.request_id,
+            request_intent=request.model_dump(exclude={'request_id'}),
             actor_character_id=profile_id,
             actor_name=str(character["definition"].get("name") or profile_id),
             requested_by_id=actor_id,
@@ -3073,7 +3703,11 @@ def resolve_character_attack(
             attack_count=request.attack_count,
             physical_d20s=request.d20s,
             weapon_item_path=request.weapon_item_path,
+            blood_boost=request.blood_boost,
         )
+        if request.grid_automatic:
+            resolution, _ = confirm_attack_resolution(settings.database_path,
+                resolution_id=resolution['resolution_id'], requested_by_id=actor_id, requested_by_role=actor_role)
     except PermissionError as error:
         raise HTTPException(status_code=403, detail=str(error)) from error
     except CombatNotFoundError as error:
@@ -3084,11 +3718,20 @@ def resolve_character_attack(
 
 
 _TECHNIQUE_OWNER = {
+    'dispensar-invocacao': 'morthak',
+    'dorn-reparo': 'dorn7',
     "lamina-de-sangue": "raziel", "marca-rubra": "raziel", "mordida": "raziel", "regeneracao-vampirica": "raziel",
+    "garras-predatorias": "raziel", "investida-predatoria": "raziel", "arma-de-sangue": "raziel",
+    "sangue-defensivo": "raziel",
     "forca-arcana": "vezemir", "velocidade": "vezemir",
     "animar-mortos": "morthak", "levantar-esqueleto": "morthak", "levantar-um-esqueleto": "morthak",
+    "toque-sombrio": "morthak", "aterrorizar": "morthak",
+    "clonagem":"morthak","magia-da-morte":"morthak",
+    "frenesi": "vezemir", "provocacao": "vezemir",
 }
 _BLOOD_KEY = "reserva_de_sangue"
+from .hemomancy import ACTION_IDS as _HEMOMANCY_ACTIONS
+_TECHNIQUE_OWNER.update({identity: 'raziel' for identity in _HEMOMANCY_ACTIONS})
 # Invocações necromantes: ruling travado com a mesa (livro Old Dragon, Mago
 # Necromante p. 42 — 2 DV/dia a cada 2 níveis, duração 1 semana; Morthak usa
 # por homebrew da maldição, ainda no nível 2). Muda aqui e tudo se ajusta.
@@ -3096,12 +3739,40 @@ _SUMMON_DEFAULTS = {
     "levantar-esqueleto": {"name": "Esqueleto de Madeira de Morthak", "hp": 10, "ac": 16, "marker": "💀",
                            "attack_name": "Arma", "attack_bonus": 2, "damage": "1d6+1",
                            "duration": "week", "resource_key": "levantar_um_esqueleto",
-                           "note": "Recompensa da Sessão 6 (02:24–02:25): 1 esqueleto com madeira, PV 10, CA 16, ataque +2 / 1d6+1; dura 1 semana. Fraqueza a fogo exige resolução manual até confirmar como aplicar 1d6+2."},
+                           "note": "Recompensa da Sessão 6 (02:24–02:25): 1 esqueleto com madeira, PV 10, CA 16, ataque +2 / 1d6+1; dura 1 semana. Fraqueza a fogo 1d6, sem bônus, com resolução manual (decisão S8: retirado o +2)."},
     "animar-mortos": {"name": "Zumbi de Morthak", "hp": 10, "max_hp": 10, "ac": 13, "marker": "🧟",
                       "attack_name": "Garra", "attack_bonus": 2, "damage": "1d6+2",
                       "duration": "week", "resource_key": "animar_mortos",
                       "note": "Zumbi (DV 2, PV 10, CA 13, +2/1d6+2), dura 1 semana — ruling de mesa"},
 }
+
+
+@app.post("/characters/vezemir/vines")
+def use_vine_bracelet(request: TechniqueUse, access: AccessContext = Depends(require_any)) -> dict:
+    if _character_access_level(access, 'vezemir') == 'public':
+        raise HTTPException(status_code=403, detail='Apenas Vezemir ou o Mestre pode usar a pulseira')
+    try:
+        target = _combat_target(request.target_type or '', request.target_id or '')
+        if target['type'] == 'character':
+            defenses = _playable_character(target['id'], AccessContext(mode='gm'))['definition']['defenses']
+        else:
+            token = next(t for t in list_workspace_tokens(settings.database_path) if t['id'] == target['id'])
+            if access.mode != 'gm' and not token.get('visible_to_players'):
+                raise ValueError('Alvo não visível')
+            defenses = token.get('sheet') or {}
+        jp = int(defenses.get('saving_throw') or 0)
+        if jp <= 0:
+            raise ValueError('Configure a JP normal do alvo antes de usar a pulseira')
+        snapshot = readeffects(settings.database_path)
+        actor_id, actor_role = _roll_actor(access)
+        return effect_command(settings.database_path, actor_id=actor_id, actor_role=actor_role,
+            request_id=request.request_id or f'vines-{uuid.uuid4().hex}', expected_version=snapshot['version'],
+            action='vine_cast', allow_player=True, payload={'target_type': target['type'], 'target_id': target['id'],
+                '_saving_throw': jp, '_saving_throw_bonus': int(defenses.get('saving_throw_bonus') or 0), '_target_name': target['name']})
+    except PermissionError as error:
+        raise HTTPException(status_code=403, detail=str(error)) from error
+    except (ValueError, TypeError, StopIteration) as error:
+        raise HTTPException(status_code=409, detail=str(error)) from error
 
 
 @app.post("/characters/{profile_id}/techniques/{technique_id}")
@@ -3112,13 +3783,58 @@ def use_character_technique(
     access: AccessContext = Depends(require_any),
 ) -> dict:
     """Structured Hemomante techniques: fixed server-side payloads, no invented rules."""
-    if technique_id not in _TECHNIQUE_OWNER or profile_id != _TECHNIQUE_OWNER[technique_id]:
+    raziel_special=profile_id=='raziel' and technique_id in {'reforco','velocidade'}
+    if not raziel_special and (technique_id not in _TECHNIQUE_OWNER or profile_id != _TECHNIQUE_OWNER[technique_id]):
         raise HTTPException(status_code=404, detail="Técnica não encontrada para este personagem.")
     if _character_access_level(access, profile_id) == "public":
         raise HTTPException(status_code=403, detail="Você não pode usar técnicas por este personagem.")
     actor_id, actor_role = _roll_actor(access)
     request_id = request.request_id or f"technique-{uuid.uuid4().hex[:16]}"
     try:
+        if raziel_special:
+            result=effect_command(settings.database_path,actor_id=actor_id,actor_role=actor_role,request_id=request_id,
+                expected_version=readeffects(settings.database_path)['version'],action='raziel_skill',
+                payload={'skill':technique_id,'mode':request.mode},allow_player=True)
+            return _combat_snapshot_for_access(result,access)
+        if technique_id in _HEMOMANCY_ACTIONS:
+            from .hemomancy import use_weapon
+            result = use_weapon(settings.database_path, technique_id, request, actor_id, actor_role,
+                lambda: _playable_character(profile_id, access, read_only=True), _combat_target)
+            return _combat_snapshot_for_access(result, access) if technique_id.startswith('hemomancia-escudo') else result
+        if technique_id=='sangue-defensivo':
+            from .combat_effects import replay_technique_effect
+            from .raziel_action_contracts import BLOOD_DEFENSE_SOURCE, native_blood_defense_payload
+            # A stored command survives later form, state and definition changes.
+            # Authorization above still applies; this only recovers its receipt.
+            previous=replay_technique_effect(settings.database_path,actor_id=actor_id,
+                request_id=request_id,source=BLOOD_DEFENSE_SOURCE,target_id=profile_id)
+            if previous is not None:
+                return {'effect':previous,'duration_rounds':1}
+            blood_defense_payload=native_blood_defense_payload(request.definition_revision)
+        if technique_id == 'marca-rubra':
+            # Stable intent reaches the native receipt before mutable validation.
+            result = effect_command(settings.database_path, actor_id=actor_id, actor_role=actor_role,
+                request_id=request_id, expected_version=readeffects(settings.database_path)['version'],
+                action='hemomancy_mark', payload={'target_type':request.target_type,'target_id':request.target_id},
+                allow_player=True)
+            return _combat_snapshot_for_access(result, access)
+        if technique_id=='dispensar-invocacao':
+            from .summons import dismiss_summon
+            if request.target_type!='token' or not request.target_id:raise ValueError('Selecione a invocação')
+            return dismiss_summon(settings.database_path,caster=profile_id,token_id=request.target_id,request_id=request_id,actor_id=actor_id,actor_role=actor_role)
+        if profile_id=='raziel':
+            import sqlite3
+            from contextlib import closing
+            from .night_form import require_humanoid
+            with closing(sqlite3.connect(settings.database_path)) as db:
+                require_humanoid(db,profile_id,'usar técnicas da ficha humanoide')
+        if technique_id in {'frenesi','provocacao'}:
+            snapshot=readeffects(settings.database_path)
+            result=effect_command(settings.database_path,actor_id=actor_id,actor_role=actor_role,request_id=request_id,expected_version=snapshot['version'],action='vezemir_skill',payload={'skill':technique_id},allow_player=True)
+            return _combat_snapshot_for_access(result,access)
+        if technique_id == 'dorn-reparo':
+            from .construct_rules import repair
+            return repair(settings.database_path, actor_id=actor_id, actor_role=actor_role, request_id=request_id)
         if technique_id == 'regeneracao-vampirica':
             from .vampire_powers import regenerate
             return regenerate(settings.database_path, actor_id=actor_id, actor_role=actor_role, request_id=request_id)
@@ -3130,6 +3846,9 @@ def use_character_technique(
             if request.target_type == 'character' and request.target_id == profile_id:
                 raise ValueError('Raziel não pode morder a si mesmo')
             definition = bite_definition(_playable_character(profile_id, AccessContext(mode='gm'))['definition'])
+            from .spatial_grid import check_attack_range
+            check_attack_range(settings.database_path, actor_character_id=profile_id,
+                               target_type=request.target_type, target_id=request.target_id, slot="melee")
             resolution, _ = resolve_attack(settings.database_path, request_id=request_id,
                 actor_character_id=profile_id, actor_name='Raziel', requested_by_id=actor_id, requested_by_role=actor_role,
                 definition=definition, inventory=[], attack_id='mordida', target=target,
@@ -3138,27 +3857,39 @@ def use_character_technique(
         if technique_id in {"animar-mortos", "levantar-esqueleto", "levantar-um-esqueleto"}:
             from .summons import create_summon
             canonical = "levantar-esqueleto" if technique_id == "levantar-um-esqueleto" else technique_id
+            if request.mode == 'replace' and (canonical != 'levantar-esqueleto' or request.target_type != 'token' or not request.target_id):
+                raise ValueError('Identifique o esqueleto anterior antes de confirmar a substituição')
             return create_summon(settings.database_path, caster=profile_id, technique=canonical,
                 spec=_SUMMON_DEFAULTS[canonical], request_id=request_id, actor_id=actor_id, actor_role=actor_role,
-                corpse_id=request.target_id if request.target_type == "token" else None)
+                corpse_id=request.target_id if canonical == 'animar-mortos' and request.target_type == "token" else None,
+                reuse_existing=request.mode == 'reuse',
+                replace_token_id=request.target_id if request.mode == 'replace' and request.target_type == 'token' else None)
         state = readeffects(settings.database_path)
         if technique_id == "lamina-de-sangue":
             charges = int(request.charges or 1)
-            if not 1 <= charges <= 5:
-                raise ValueError("Declare de 1 a 5 lâminas.")
             slot = request.attack or "ranged"
             if not request.target_type or not request.target_id:
                 raise ValueError("Selecione o alvo da Lâmina de Sangue.")
             character = _playable_character(profile_id, AccessContext(mode="gm"))
+            blood=next((r for r in character['state'].get('resources',[]) if r['key']==_BLOOD_KEY),None)
+            if not blood or not 1<=charges<=int(blood['current']):
+                raise ValueError('Declare de 1 até a Reserva de Sangue disponível')
             slot_entry = next((a for a in character["definition"].get("attacks") or [] if a.get("id") == slot), None)
             if slot_entry is None:
                 raise ValueError("Ataque base indisponível para a Lâmina.")
-            attack = {"id": "lamina-de-sangue", "name": f"Lâmina de Sangue ({charges})",
-                      "attack_bonus": int(slot_entry.get("attack_bonus") or 0),
+            target = _combat_target(request.target_type, request.target_id)
+            faro = 1 if _technique_target_wounded(target["type"], target["id"]) else 0
+            attack = {"id": "lamina-de-sangue", "name": f"Lâmina de Sangue ({charges})" + (" +1 Faro" if faro else ""),
+                      "attack_bonus": int(slot_entry.get("attack_bonus") or 0) + faro,
                       "damage": f"{charges}d4", "weapon_item_path": "technique:lamina-de-sangue",
                       "resource_cost": {"key": _BLOOD_KEY, "amount": charges}}
             definition = {**character["definition"], "attacks": [attack]}
-            target = _combat_target(request.target_type, request.target_id)
+            from .spatial_grid import check_attack_range
+            from .combat import CAMPAIGN_RANGED_METERS
+            check_attack_range(settings.database_path, actor_character_id=profile_id,
+                               target_type=request.target_type, target_id=request.target_id,
+                               slot="melee" if slot == "melee" else "ranged",
+                               max_range_m=CAMPAIGN_RANGED_METERS['lamina-de-sangue'] if slot=='ranged' else None)
             resolution, _ = resolve_attack(
                 settings.database_path, request_id=request_id,
                 actor_character_id=profile_id, actor_name=character["definition"].get("name") or profile_id,
@@ -3170,44 +3901,118 @@ def use_character_technique(
                 physical_d20s=request.d20s,
             )
             return resolution
-        if technique_id == "marca-rubra":
-            if not request.target_type or not request.target_id:
-                raise ValueError("Selecione o alvo ferido para a Marca Rubra.")
-            target = _combat_target(request.target_type, request.target_id)
-            wounded = _technique_target_wounded(target["type"], target["id"])
-            if not wounded:
-                raise ValueError("A Marca Rubra exige um alvo ferido (com sangue).")
-            payload = {"target_type": target["type"], "target_id": target["id"],
-                       "label": "Marca Rubra — rastreável (Raziel)", "source": "Marca Rubra (Lâminas de Sangue)",
-                       "duration": "scene", "modifiers": {},
-                       "resource": {"character_id": profile_id, "key": _BLOOD_KEY, "cost": 1}}
-            return effect_command(settings.database_path, actor_id=actor_id, actor_role=actor_role,
-                                  request_id=request_id, expected_version=state["version"],
-                                  action="apply", payload=payload, allow_player=True)
-        if technique_id in {"forca-arcana", "velocidade"}:
-            character = _playable_character(profile_id, AccessContext(mode="gm"))
-            level = character["definition"].get("level") or 1
-            if technique_id == "forca-arcana":
-                strength = int((character["definition"].get("attributes") or {}).get("strength") or 10)
-                bonus = max(1, strength // 5)
-                boosted = strength + bonus
-                duration = roll_formula(f"1d6+{level}")["total"]
-                payload = {"target_type": "character", "target_id": profile_id,
-                           "label": f"Força Arcana (For {strength}→{boosted})",
-                           "source": "Força Arcana (Vezemir)",
-                           "duration": "rounds", "rounds": duration,
-                           "modifiers": {"strength_bonus": bonus},
-                           "resource": {"character_id": profile_id, "key": "forca_arcana", "cost": 1}}
-            else:
-                duration = roll_formula(f"1d4+{level}")["total"]
-                payload = {"target_type": "character", "target_id": profile_id, "label": "Velocidade",
-                           "source": "Velocidade (Vezemir)", "duration": "rounds", "rounds": duration,
-                           "modifiers": {"movement_multiplier": 2, "armor_class_bonus": 2, "extra_attacks": 1},
-                           "resource": {"character_id": profile_id, "key": "velocidade", "cost": 1}}
+        if technique_id == "sangue-defensivo":
             result = effect_command(settings.database_path, actor_id=actor_id, actor_role=actor_role,
                                     request_id=request_id, expected_version=state["version"],
-                                    action="apply", payload=payload, allow_player=True)
+                                    action="apply", payload=blood_defense_payload, allow_player=True)
+            return {"effect": result, "duration_rounds": 1}
+        if technique_id in {"garras-predatorias", "investida-predatoria", "arma-de-sangue"}:
+            if not request.target_type or not request.target_id:
+                raise ValueError("Selecione o alvo.")
+            character = _playable_character(profile_id, AccessContext(mode="gm"))
+            melee = next((a for a in character["definition"].get("attacks") or [] if a.get("id") == "melee"), None)
+            if melee is None or melee.get("attack_bonus") is None:
+                raise ValueError("Ataque base indisponível.")
+            specs = {"garras-predatorias": ("Garras Predatórias", 0, "1d6", 1),
+                     "investida-predatoria": ("Investida Predatória", 2, "2d4", 1),
+                     "arma-de-sangue": ("Arma de Sangue", 0, "1d8", 1)}
+            name, bonus, damage, cost = specs[technique_id]
+            target = _combat_target(request.target_type, request.target_id)
+            if _technique_target_wounded(target["type"], target["id"]):
+                bonus += 1
+            attack = {"id": technique_id, "name": f"{name} (+{bonus - int(specs[technique_id][1])} Faro)" if bonus > specs[technique_id][1] else name,
+                      "attack_bonus": int(melee.get("attack_bonus") or 0) + bonus, "damage": damage,
+                      "weapon_item_path": f"technique:{technique_id}",
+                      "resource_cost": {"key": _BLOOD_KEY, "amount": cost}}
+            definition = {**character["definition"], "attacks": [attack]}
+            from .spatial_grid import check_attack_range
+            check_attack_range(settings.database_path, actor_character_id=profile_id,
+                               target_type=request.target_type, target_id=request.target_id,
+                               slot="touch" if technique_id == "toque-sombrio" else "melee")
+            resolution, _ = resolve_attack(
+                settings.database_path, request_id=request_id,
+                actor_character_id=profile_id, actor_name=character["definition"].get("name") or profile_id,
+                requested_by_id=actor_id, requested_by_role=actor_role,
+                definition=definition, inventory=character.get("inventory") or [],
+                attack_id=technique_id, target=target,
+                roll_mode=request.roll_mode or "digital", physical_d20=request.d20)
+            return resolution
+        if technique_id in {"forca-arcana", "velocidade"}:
+            from .combat_effects import replay_technique_effect
+            source = 'Força Arcana (Vezemir)' if technique_id == 'forca-arcana' else 'Velocidade (Vezemir)'
+            previous = replay_technique_effect(settings.database_path, actor_id=actor_id,
+                request_id=request_id, source=source, target_id=profile_id)
+            if previous is not None:
+                duration = next(e['rounds'] for e in previous['effects'] if e['target_type'] == 'character' and e['target_id'] == profile_id and e['source'] == source)
+                return {'effect': previous, 'duration_rounds': duration}
+            from .vezemir_skills import native_buff_contract, native_buff_payload
+            # Check revision before legacy playable reads can reconcile resources.
+            native_buff_contract(technique_id, definition_revision=request.definition_revision)
+            character = _playable_character(profile_id, AccessContext(mode="gm"))
+            payload = native_buff_payload(technique_id, character['definition'], request.definition_revision)
+            try:
+                result = effect_command(settings.database_path, actor_id=actor_id, actor_role=actor_role,
+                                        request_id=request_id, expected_version=state["version"],
+                                        action="apply", payload=payload, allow_player=True)
+            except ValueError:
+                # Another identical request can commit after the early lookup
+                # and before we read derived strength. Recover only its receipt;
+                # the helper still rejects a different actor, source or target.
+                result = replay_technique_effect(settings.database_path, actor_id=actor_id,
+                    request_id=request_id, source=source, target_id=profile_id)
+                if result is None:
+                    raise
+            duration = next(e['rounds'] for e in result['effects'] if e['target_type'] == 'character' and e['target_id'] == profile_id and e['source'] == payload['source'])
             return {"effect": result, "duration_rounds": duration}
+        if technique_id in {"toque-sombrio", "aterrorizar", "clonagem", "magia-da-morte"}:
+            from . import necromancer_spells as necro
+            if technique_id in {'clonagem','magia-da-morte'}:
+                result=effect_command(settings.database_path,actor_id=actor_id,actor_role=actor_role,request_id=request_id,expected_version=state['version'],action='necro_spell_cast',payload={'spell_id':technique_id,**({'mode':'end'} if technique_id=='clonagem' and request.mode=='end' else {}),**({'definition_revision':request.definition_revision} if request.definition_revision is not None else {})},allow_player=True)
+                return _combat_snapshot_for_access(result,access)
+            if technique_id == 'toque-sombrio' and (not request.target_type or not request.target_id):
+                raise ValueError("Selecione o alvo da magia.")
+            if technique_id == "toque-sombrio":
+                from .spatial_grid import check_attack_range as _touch_range
+                checked = _touch_range(settings.database_path, actor_character_id=profile_id,
+                                       target_type=request.target_type, target_id=request.target_id,
+                                       slot="touch")
+                auto_reach = bool(checked.get('checked'))
+                if not auto_reach and (request.mode == 'automatic' or request.position_confirmed is not True):
+                    raise ValueError('Posicione os pins no grid ou confirme com o Mestre o alcance sem grid')
+                import sqlite3 as _necro_sqlite
+                from contextlib import closing as _necro_closing
+                with _necro_closing(_necro_sqlite.connect(settings.database_path)) as _necro_db:
+                    necro.require_visible_target(_necro_db,request.target_type,request.target_id,actor_role)
+                character = _playable_character(profile_id, AccessContext(mode="gm"))
+                melee = next((a for a in character["definition"].get("attacks") or [] if a.get("id") == "melee"), None)
+                if melee is None or melee.get("attack_bonus") is None:
+                    raise ValueError("Ataque base indisponível para o Toque Sombrio.")
+                target = _combat_target(request.target_type, request.target_id)
+                attack = {"id": "toque-sombrio", "name": "Toque Sombrio",
+                          "attack_bonus": int(melee.get("attack_bonus") or 0) - int(melee.get('item_attack_bonus') or 0) + 2, "damage": "1d4",
+                          "manual_effects": ['Ataque de toque: ajuste fácil +2; alcance conferido pelo grid.' if auto_reach else 'Ataque de toque: ajuste fácil +2; alcance conferido com o Mestre.'],
+                          "weapon_item_path": "technique:toque-sombrio", "damage_kind": "spell", "magical": True,
+                          "use_memorized": bool(request.use_memorized)}
+                definition = {**character["definition"], "attacks": [attack]}
+                resolution, _ = resolve_attack(
+                    settings.database_path, request_id=request_id,
+                    actor_character_id=profile_id, actor_name=character["definition"].get("name") or profile_id,
+                    requested_by_id=actor_id, requested_by_role=actor_role,
+                    definition=definition, inventory=character.get("inventory") or [],
+                    attack_id="toque-sombrio", target=target,
+                    roll_mode=request.roll_mode or "digital", physical_d20=request.d20)
+                if request.mode == 'automatic':
+                    resolution, _ = confirm_attack_resolution(settings.database_path,
+                        resolution_id=resolution['resolution_id'],requested_by_id=actor_id,requested_by_role=actor_role)
+                return resolution
+            payload = {"spell_id": "aterrorizar", "targets": [t.model_dump() for t in request.targets] if request.targets else ([{"type": request.target_type, "id": request.target_id,
+                        "distance_meters": request.target_distance, "dv": request.target_dv}] if request.target_id else []),
+                       "position_confirmed": bool(request.position_confirmed),
+                       "use_memorized": bool(request.use_memorized)}
+            result = effect_command(settings.database_path, actor_id=actor_id, actor_role=actor_role,
+                                  request_id=request_id, expected_version=state["version"],
+                                  action="necro_spell_cast", payload=payload, allow_player=True)
+            return _combat_snapshot_for_access(result, access)
     except PermissionError as error:
         raise HTTPException(status_code=403, detail=str(error)) from error
     except CombatNotFoundError as error:
@@ -3354,6 +4159,8 @@ def _technique_turn_claimed(profile_id: str, turn_key: str, title: str) -> bool:
 
 def _combat_snapshot_for_access(snapshot: dict, access: AccessContext) -> dict:
     snapshot = copy.deepcopy(snapshot)
+    active_effects = snapshot['effects']
+    icon_targets = {(e['target_type'], e['target_id']) for e in active_effects}
     if access.mode != "gm":
         # Only characters explicitly placed in initiative receive the live encounter.
         # A private combat map must not erase the encounter card, but hidden tokens
@@ -3381,6 +4188,44 @@ def _combat_snapshot_for_access(snapshot: dict, access: AccessContext) -> dict:
             encounter["turn_index"] = next((index for index, participant in enumerate(encounter["participants"]) if participant == current), -1)
             if current not in encounter['participants']:
                 encounter.pop('movement', None)
+        public_characters = {profile_id for profile_id, profile in settings.player_profiles.items()
+                             if profile.get('character_path') and not profile.get('gm_controlled')}
+        public_characters.add(access.profile_id)
+        public_map = get_workspace_snapshot(settings.database_path, is_gm=False,
+                                            map_id=encounter.get('map_id') if involved else None)
+        icon_targets = {('character', profile) for profile in public_characters}
+        icon_targets.update(('token', token['id']) for token in public_map['tokens'])
+        icon_targets.update(('character', token['character_id']) for token in public_map['tokens'] if token.get('character_id'))
+        from .monster_conditions import public_effect
+        controlled={token['id'] for token in public_map['tokens'] if ((token.get('sheet') or {}).get('summon') or {}).get('caster')==access.profile_id}
+        snapshot['effects'].extend(e for e in active_effects if e.get('monster_condition') and e['target_type']=='token' and e['target_id'] in controlled)
+        snapshot['effects']=[public_effect(e) if e.get('monster_condition') else e for e in snapshot['effects']]
+    from .action_cards import active_effect_icons
+    if access.mode == 'gm' or ('character', 'raziel') in icon_targets:
+        import sqlite3
+        from contextlib import closing
+        with closing(sqlite3.connect(settings.database_path)) as db:
+            row = db.execute("SELECT state_json FROM character_states WHERE profile_id='raziel'").fetchone()
+        animal = json.loads(row[0]).get('animal_form') if row else None
+        if animal:
+            icon_targets.add(('character', 'raziel'))
+            active_effects = [*active_effects, {'id': 'night-form:raziel', 'target_type': 'character',
+                'target_id': 'raziel', 'label': 'Forma da Noite', 'source': 'Raziel',
+                'duration': 'manual', 'rounds': None, 'animal': animal}]
+    snapshot['active_effect_icons'] = active_effect_icons(
+        [e for e in active_effects if (e['target_type'], e['target_id']) in icon_targets],
+        _session_action_catalog, _character_ids())
+    map_effects=[e for e in active_effects if e.get('web_area') or e.get('spell')=='reflexos']
+    if not map_effects:
+        snapshot['map_spell_effects']=[]
+        return snapshot
+    view=get_workspace_snapshot(settings.database_path,is_gm=access.mode=='gm',map_id=(snapshot.get('encounter') or {}).get('map_id'))
+    visible_map=(view.get('map') or {}).get('id')
+    visible_actors={('token',t['id']) for t in view['tokens']}
+    visible_actors.update(('character',t['character_id']) for t in view['tokens'] if t.get('character_id'))
+    snapshot['map_spell_effects']=[{k:e.get(k) for k in ('id','target_type','target_id','spell','images_remaining','web_area')}
+        for e in map_effects if (e['target_type'],e['target_id']) in visible_actors
+        and ((e.get('web_area') or {}).get('map_id')==visible_map or (e.get('spell')=='reflexos' and e.get('map_id',visible_map)==visible_map))]
     return snapshot
 
 
@@ -3411,18 +4256,32 @@ def gm_combat_test_views(_: AccessContext = Depends(require_master)) -> dict:
 
 def _guard_attack_target(request: AttackResolutionCreate, access: AccessContext) -> dict:
     target = _combat_target(request.target_type, request.target_id)
-    if not request.guard_effect_id:
+    if access.mode != 'gm' and not request.guard_effect_id:
         return target
     if access.mode != 'gm':
         raise PermissionError('Somente o Mestre pode confirmar interposição')
     with closing(sqlite3.connect(settings.database_path)) as db:
         old = db.execute('SELECT breakdown_json FROM combat_attack_resolutions WHERE request_id=?', (request.request_id,)).fetchone()
     old_data = json.loads(old[0]) if old else {}
+    if not request.guard_effect_id:
+        saved_guard = old_data.get('guard_effect_id')
+        if saved_guard and target.get('type') == 'character' and target.get('id') == old_data.get('guard_ally_id'):
+            request.guard_effect_id = saved_guard
+        else:
+            from .dorn_protocols import protects_ally
+            with closing(sqlite3.connect(settings.database_path)) as db:
+                automatic = next((e for e in readeffects(settings.database_path)['effects'] if target.get('type')=='character' and protects_ally(db,e,target.get('id'))),None)
+            if not automatic:
+                return target
+            dorn = _combat_target('character', 'dorn7')
+            if int(dorn.get('current_hp') or 0) <= 0:
+                return target
+            request.guard_effect_id = automatic['id']
     guard = next((e for e in readeffects(settings.database_path)['effects'] if e['id'] == request.guard_effect_id and e.get('protocol') == 'guard'), None)
-    ally_id = old_data.get('guard_ally_id') if old_data.get('guard_effect_id') == request.guard_effect_id else guard.get('ally_id') if guard else None
+    ally_id = old_data.get('guard_ally_id') if old_data.get('guard_effect_id') == request.guard_effect_id else (target.get('id') if guard and guard.get('area_guard') else guard.get('ally_id') if guard else None)
     if target['type'] != 'character' or target['id'] != ally_id:
         raise ValueError('Este ataque não tem como alvo o aliado protegido')
-    return _combat_target('character', 'dorn7')
+    return {**_combat_target('character', 'dorn7'),'guard_ally_id':ally_id}
 
 
 @app.post("/gm/combat/tokens/{token_id}/attacks/resolve")
@@ -3442,6 +4301,11 @@ def resolve_monster_attack(token_id: str, request: AttackResolutionCreate, acces
                 raise HTTPException(status_code=403, detail='Alvo fora do mapa visível')
         actor_id, actor_role = _roll_actor(access)
         definition = monster_attack_definition(token, request.attack_id)
+        if request.range_m is not None or request.range_cells is not None:
+            enforce_action_range(settings.database_path, attacker_token_id=token_id,
+                                 target_type=request.target_type, target_id=request.target_id,
+                                 mode="ranged" if request.range_cells != 1 else "melee",
+                                 range_m=request.range_m, range_cells=request.range_cells)
         effects = readeffects(settings.database_path)
         definition = apply_definition_effects(definition, [effect for effect in effects["effects"] if effect["target_type"] == "token" and effect["target_id"] == token_id])
         definition["effects_version"] = effects["version"]
@@ -3460,6 +4324,22 @@ def resolve_monster_attack(token_id: str, request: AttackResolutionCreate, acces
         raise HTTPException(status_code=403, detail=str(error)) from error
     except (ValueError, TypeError) as error:
         raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.post("/combat/parasite/remove")
+def combat_remove_parasite(request: CombatEffectCommand, access: AccessContext = Depends(require_any)) -> dict:
+    if request.action != 'parasite_remove':
+        raise HTTPException(status_code=400,detail='Ação inválida')
+    actor_id,actor_role=_roll_actor(access)
+    try:
+        result=effect_command(settings.database_path,actor_id=actor_id,actor_role=actor_role,
+            request_id=request.request_id,expected_version=request.expected_version,
+            action=request.action,payload=request.payload,allow_player=True)
+        return _combat_snapshot_for_access(result,access)
+    except PermissionError as error:
+        raise HTTPException(status_code=403,detail=str(error)) from error
+    except (ValueError,TypeError) as error:
+        raise HTTPException(status_code=409,detail=str(error)) from error
 
 
 @app.post("/combat/next-turn")
@@ -3483,6 +4363,13 @@ def combat_next_turn(request: CombatEffectCommand, access: AccessContext = Depen
 def gm_combat_effects(request: CombatEffectCommand, access: AccessContext = Depends(require_master)) -> dict:
     try:
         payload = dict(request.payload)
+        if request.action=='monster_contact':
+            payload={k:v for k,v in payload.items() if not k.startswith('_server_')}
+            with closing(sqlite3.connect(settings.database_path)) as db:
+                from .monster_runtime import token_monster
+                monster,_=token_monster(db,str(payload.get('token_id') or ''))
+            if (monster or {}).get('id')=='monstro-ferrugem':
+                payload['_server_target_ac']=_combat_target('token',str(payload.get('target_pin_id') or ''))['armor_class']
         if request.action == 'dorn_diagnose':
             payload['_definition'] = _playable_character('dorn7', access)['definition']
         if request.action in {"apply", "rest"}:
@@ -3712,7 +4599,7 @@ def _scene_payload(scene_id: int, access: AccessContext, *, character_cache: dic
                 if character_cache is not None and cache_key in character_cache:
                     record["character"] = character_cache[cache_key]
                 else:
-                    record["character"] = _character_summary(_playable_character(cache_key, access))
+                    record["character"] = _character_summary(_playable_character(cache_key, access, read_only=True))
                     if character_cache is not None:
                         character_cache[cache_key] = record["character"]
             except (HTTPException, ValueError):
@@ -4211,6 +5098,20 @@ def authorized_active_scene(access: AccessContext = Depends(require_any)) -> dic
     return _scene_payload(int(scene["id"]), access) if scene else None
 
 
+@app.post('/gm/scenes/{scene_id}/archive')
+def gm_archive_scene(scene_id: int, archived: bool = True, _: AccessContext = Depends(require_master)) -> dict:
+    from .scene_play import archive_scene
+    try:
+        return archive_scene(settings.database_path, scene_id, archived)
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.get('/gm/scenes/archived')
+def gm_archived_scenes(_: AccessContext = Depends(require_master)) -> list[dict]:
+    return [scene for scene in list_scenes(settings.database_path, include_archived=True) if scene.get('archived')]
+
+
 @app.get("/scenes/{scene_id}")
 def authorized_scene(scene_id: int, access: AccessContext = Depends(require_any)) -> dict:
     payload = _scene_payload(scene_id, access)
@@ -4530,6 +5431,17 @@ def gm_publish_scene(scene_id: int, request: ScenePublishCreate, _: AccessContex
         return {"event": event, "created": created}
     except ValueError as error:
         raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.post('/gm/scenes/{scene_id}/selection-on-table')
+def gm_open_scene_selection(scene_id:int,request:SceneSelectionCreate,access:AccessContext=Depends(require_master))->dict:
+    from .scene_selection import open_selection
+    try:
+        result=open_selection(settings.database_path,scene_id,**request.model_dump(),actor_id=access.profile_id or 'master')
+        selected_map=next((m for m in list_workspace_maps(settings.database_path) if m['id']==result['map_id']),None)
+        event={k:v for k,v in result['event'].items() if k!='private_text'}
+        return {'scene':_scene_payload(scene_id,access),'map':selected_map,'event':event,'created':result['created']}
+    except ValueError as error:raise HTTPException(409,str(error)) from error
 
 
 @app.post("/gm/scenes/{scene_id}/open-on-table")
@@ -5475,11 +6387,19 @@ def gm_void_world_journey_event(event_id: int, request: NpcEventVoidRequest, _: 
 
 
 @app.get("/media/{media_path:path}", response_model=None)
-def vault_media(media_path: str, _: AccessContext = Depends(require_any)):
+def vault_media(media_path: str, _: AccessContext = Depends(require_any), preview_size: int | None = Query(default=None)):
+    if preview_size is not None and preview_size not in {128, 768}:
+        raise HTTPException(status_code=400, detail='Tamanho de prévia inválido')
     requested = _resolve_media_file(media_path)
+    if requested is None and preview_size is not None:
+        from .image_previews import resolve_app_art
+        requested = resolve_app_art(media_path, Path(__file__).resolve().parents[2] / 'frontend/public/companion-assets')
     if requested is None:
         raise HTTPException(status_code=404, detail="Mídia não encontrada.")
 
+    if preview_size is not None:
+        from .image_previews import preview_file
+        return FileResponse(preview_file(requested, preview_size), headers={'Cache-Control': 'private, max-age=300'})
     return FileResponse(requested)
 
 
@@ -5515,6 +6435,9 @@ if NIMALIS_GAME_DIST.exists():
     app.mount("/nimalis", StaticFiles(directory=NIMALIS_GAME_DIST, html=True), name="nimalis_game")
 
 
+app.mount('/companion-assets', StaticFiles(directory=Path(__file__).resolve().parents[2] / 'frontend/public/companion-assets', check_dir=False), name='companion_ability_art')
+
+
 @app.get("/", response_model=None)
 def frontend_root():
     index = FRONTEND_DIST / "index.html"
@@ -5526,8 +6449,30 @@ def frontend_root():
 
 
 from .spatial_routes import register_spatial_routes
+from .commerce_routes import register as register_commerce_routes
+register_commerce_routes(app, lambda: settings.database_path, require_any)
 register_spatial_routes(app, lambda: settings.database_path, require_any,
     lambda profile_id: _playable_character(profile_id, AccessContext(mode='gm'))['definition'].get('movement'))
+
+from .action_audit_routes import build_action_audit_router
+from .scene_lab_routes import build_scene_lab_router
+from .ai_workshop_routes import build_workshop_router, workshop_database_path
+from .test_run_evidence import read_test_run_evidence
+
+app.include_router(build_action_audit_router(
+    lambda: settings.database_path,
+    require_master,
+    lambda profile_id, access: _playable_character(profile_id, access, read_only=True),
+    lambda token_id, access: next((token for token in list_workspace_tokens(settings.database_path)
+                                  if token['id'] == token_id), None),
+))
+app.include_router(build_scene_lab_router(lambda: settings.database_path, require_master, read_test_run_evidence))
+app.include_router(build_workshop_router(
+    workshop_database_path,
+    lambda: settings.database_path, require_master))
+
+from .sprite_studio import register as register_sprite_studio
+register_sprite_studio(app, lambda: settings.database_path, require_any)
 
 
 @app.get("/{full_path:path}", response_model=None)

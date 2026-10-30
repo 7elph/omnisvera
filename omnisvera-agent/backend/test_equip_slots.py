@@ -103,13 +103,25 @@ class EquipSlotTests(unittest.TestCase):
                                       "payload": {"item_path": item_path,
                                                   "equipment_slot": "Acessório"}})
 
-    def test_accessory_floor_is_three_despite_item_limit_one(self):
+    def test_accessory_limit_is_five_despite_item_limit_one(self):
         response = self.equip(f"session-item:{self.moeda_id}")
         self.assertEqual(200, response.status_code, response.text)
         response = self.equip("Items/Anel.md")
         self.assertEqual(200, response.status_code, response.text)
         response = self.equip("Items/Broche.md")
-        self.assertEqual(400, response.status_code)
+        self.assertEqual(200, response.status_code)
+        upsert_inventory(self.db,profile_id='vezemir',item_path='Items/Extra.md',item_title='Extra',quantity=1,equipped=True,notes=None,equipment_slot='Acessório')
+        upsert_inventory(self.db,profile_id='vezemir',item_path='Items/Medalhao2.md',item_title='Medalhao2',quantity=1,equipped=False,notes=None)
+        response=self.equip('Items/Medalhao2.md')
+        self.assertEqual(400,response.status_code)
+
+    def test_currency_cannot_be_equipped_but_mysterious_coin_can(self):
+        for title in ['Peças de ouro', 'Peça de Prata (PP)']:
+            upsert_inventory(self.db, profile_id='vezemir', item_path='loot:coins',
+                             item_title=title, quantity=13, equipped=False, notes=None)
+            response = self.equip('loot:coins')
+            self.assertEqual(400, response.status_code, response.text)
+        self.assertEqual(200, self.equip(f'session-item:{self.moeda_id}').status_code)
 
 
 if __name__ == "__main__":

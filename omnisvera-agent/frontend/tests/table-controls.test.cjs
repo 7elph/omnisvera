@@ -54,14 +54,15 @@ test('location form uses ready catalog, real pin endpoint, map and double-submit
 test('table controls keep master combat separate from sheets and use table roll mode', () => {
   const source=fs.readFileSync(path.join(__dirname,'../src/pages/SessionWorkspace.tsx'),'utf8');
   assert.ok(source.includes('ref={combatPanelRef}'));
-  assert.equal(source.split('<summary className="workspace-action-card"><b aria-hidden="true">').length - 1, 4);
-  assert.equal((source.match(/<span>COMBATE<\/span>/g)||[]).length, 1);
+  assert.equal(source.split('<summary className="workspace-action-card"><MasterToolHeading').length - 1, 6);
+  assert.ok(source.includes('title="Cola de ações"'));
+  assert.equal((source.match(/title="Combate"/g)||[]).length, 1);
   assert.ok(!source.includes('<strong>Combate</strong>'));
   assert.ok(!source.includes('<strong>Itens e loot</strong>'));
   assert.ok(!source.includes('<strong>Mapa e criaturas</strong>'));
   assert.ok(!source.includes('<strong>Preparar cena</strong>'));
-  assert.ok(source.includes('<span>EDIÇÃO DO MESTRE</span>'));
-  assert.ok(source.includes('<span>ASSETS IA</span>'));
+  assert.ok(source.includes('title="Edição do Mestre"'));
+  assert.ok(source.includes('title="Assets IA"'));
   assert.ok(!source.includes('setAttackRollModeById'));
   assert.ok(!source.includes('Modo de rolagem de'));
   assert.ok(source.includes('item.source_type === "combat_action"'));

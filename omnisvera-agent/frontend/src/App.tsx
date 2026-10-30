@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 import { getCombatEffects } from './api';
-import { AccessMode, consumeAccessBootstrapFromUrl, getAccessMode, getAccessToken, health, listCampaignSessions, rebuildIndex, recordRuntimeEvent, setAccessMode, setAccessToken } from "./api";
+import { AccessMode, consumeAccessBootstrapFromUrl, getAccessMode, getAccessToken, health, HttpError, listCampaignSessions, rebuildIndex, recordRuntimeEvent, setAccessMode, setAccessToken } from "./api";
 import SessionWorkspace from "./pages/SessionWorkspace";
 import ScenePanel from "./pages/ScenePanel";
 import CampaignMemoryPage from "./pages/CampaignMemoryPage";
 import DiceRollOverlay from "./components/DiceRollOverlay";
 
-type Page = "session" | "maps" | "conclave" | "scenes" | "game";
+type Page = "session" | "maps" | "npcs" | "conclave" | "scenes" | "game";
 type CampaignView = "history" | "missions";
-type PlayerSessionView = "memory" | "table";
+type PlayerSessionView = "memory" | "table" | "sheet";
 
 function gameUrlWithCompanionIdentity(url: string, token: string, accessMode: AccessMode, profileId: string) {
   if (!token.trim()) return url;
@@ -22,7 +22,7 @@ function gameUrlWithCompanionIdentity(url: string, token: string, accessMode: Ac
 
 function connectedStatus(data: { access_mode: string; player_character_title?: string | null; ollama_accessible: boolean; ollama_model: string }) {
   if (data.access_mode === "player") return `${data.player_character_title || "Jogador"} · sincronizado`;
-  return `Mestre · Ollama ${data.ollama_accessible ? "ok" : "offline"} · ${data.ollama_model}`;
+  return `Mestre · Ollama ${data.ollama_accessible ? "serviço online" : "offline"} · ${data.ollama_model}`;
 }
 
 export default function App() {
@@ -78,8 +78,14 @@ export default function App() {
       setStatus("token necessário");
       return;
     }
-    health()
-      .then((data) => {
+    let alive = true, pending = false, verified = false, invalid = false;
+    const reconnectSavedAccess = async () => {
+      if (!alive || pending || verified || invalid || getAccessToken() !== token) return;
+      pending = true;
+      try {
+        const data = await health();
+        if (!alive || getAccessToken() !== token) return;
+        verified = true;
         const detectedMode: AccessMode = data.access_mode === "player" ? "player" : "gm";
         setMode(detectedMode);
         setAccessMode(detectedMode);
@@ -95,11 +101,20 @@ export default function App() {
           return current;
         });
         setStatus(connectedStatus(data));
-      })
-      .catch(() => {
+      } catch (error) {
+        if (!alive || getAccessToken() !== token) return;
+        invalid = error instanceof HttpError && (error.status === 401 || error.status === 403);
         setAuthenticated(false);
-        setStatus("token inválido ou backend indisponível");
-      });
+        setStatus(invalid ? "Token inválido. Confira seu acesso." : "Conexão indisponível · tentando reconectar automaticamente");
+      } finally { pending = false; }
+    };
+    void reconnectSavedAccess();
+    const resume = () => { if (document.visibilityState === "visible") void reconnectSavedAccess(); };
+    const timer = window.setInterval(() => void reconnectSavedAccess(), 10_000);
+    window.addEventListener("online", reconnectSavedAccess);
+    window.addEventListener("focus", reconnectSavedAccess);
+    document.addEventListener("visibilitychange", resume);
+    return () => { alive = false; window.clearInterval(timer); window.removeEventListener("online", reconnectSavedAccess); window.removeEventListener("focus", reconnectSavedAccess); document.removeEventListener("visibilitychange", resume); };
   }, []);
 
   useEffect(() => {
@@ -108,7 +123,10 @@ export default function App() {
       return;
     }
     let active = true;
+    let pending = false;
     const refreshSessionState = async () => {
+      if (!active || pending) return;
+      pending = true;
       try {
         const [sessions, combat] = await Promise.all([listCampaignSessions(), getCombatEffects()]);
         if (!active) return;
@@ -116,10 +134,10 @@ export default function App() {
         const available = sessions.some((session) => session.status === "active") || inBattle;
         setPlayerLiveAvailable(available);
         if (inBattle) setPlayerSessionView('table');
-        if (!available) setPlayerSessionView("memory");
+        if (!available) setPlayerSessionView(current => current === "table" ? "sheet" : current);
       } catch {
         // Keep the last known table state during a brief connection loss.
-      }
+      } finally { pending = false; }
     };
     void refreshSessionState();
     const timer = window.setInterval(() => void refreshSessionState(), 10_000);
@@ -142,13 +160,15 @@ export default function App() {
 
   useEffect(() => {
     const openWorkspace = (event: Event) => {
-      const target = (event as CustomEvent<"maps" | "tools" | "table" | "scenes">).detail;
+      const target = (event as CustomEvent<"maps" | "npcs" | "tools" | "table" | "scenes" | "sheet">).detail;
       if (mode === "player") {
         setPage("conclave");
+        if (target === "sheet") { setPlayerSessionView("sheet"); return; }
         if (playerLiveAvailable && target !== "scenes") setPlayerSessionView("table");
         return;
       }
       if (target === "maps") setPage("maps");
+      else if (target === "npcs") setPage("npcs");
       else if (target === "scenes") setPage("scenes");
       else {
         setPage("session");
@@ -166,7 +186,7 @@ export default function App() {
       const characterId = String((event as CustomEvent<string>).detail || "");
       if (mode === "player") {
         setPage("conclave");
-        if (playerLiveAvailable) setPlayerSessionView("table");
+        setPlayerSessionView(playerLiveAvailable ? "table" : "sheet");
         return;
       }
       setPage("session");
@@ -184,7 +204,7 @@ export default function App() {
 
   useEffect(() => {
     if (!authenticated || mode !== "player") return;
-    const labels: Record<Page, string> = { session: "Mesa", maps: "Mapas", conclave: "Sessão", scenes: "Cenas", game: "Jogar" };
+    const labels: Record<Page, string> = { session: "Mesa", maps: "Mapas", npcs: "NPCs", conclave: "Sessão", scenes: "Cenas", game: "Jogar" };
     void recordRuntimeEvent("navigation_view", {
       page,
       label: labels[page],
@@ -306,6 +326,9 @@ export default function App() {
       </section>}
 
       <nav className="tabs" aria-label="Navegação principal">
+        {mode === "player" && <button className={page === "conclave" && playerSessionView === "sheet" ? "active" : ""} onClick={() => { navigate("conclave"); setPlayerSessionView("sheet"); }}>
+          <span>▤</span><small>Ficha</small>
+        </button>}
         {mode === "gm" ? (
           <button className={page === "session" ? "active" : ""} onClick={() => navigate("session")}>
             <span>⌂</span><small>Mesa</small>
@@ -318,6 +341,7 @@ export default function App() {
         {mode === "gm" && <button className={page === "maps" ? "active" : ""} onClick={() => navigate("maps")}>
           <span>▧</span><small>Mapas</small>
         </button>}
+        {mode === 'gm' && <button className={page === 'npcs' ? 'active' : ''} onClick={() => navigate('npcs')}><span>♟</span><small>NPCs</small></button>}
         {mode === "gm" && <button className={page === "conclave" ? "active" : ""} onClick={() => navigate("conclave")}>
           <span>◉</span><small>Sessão</small>
         </button>}
@@ -340,17 +364,18 @@ export default function App() {
         <section className="panel">
           <div className="chat-header">
             <h2>Token necessário</h2>
+            <p role="status">{status || "Verificando conexão…"}</p>
             <p>Digite o token de acesso no campo acima e clique em "Salvar token" para começar.</p>
           </div>
         </section>
       )}
-      {authenticated && ((mode === "gm" && ["session", "maps", "conclave", "scenes"].includes(page)) || (mode === "player" && page === "conclave")) && (
-        <section className={page === "scenes" ? "session-workspace unified-workspace scene-workspace-surface" : page === "conclave" && (mode === "gm" || playerSessionView === "memory") ? `session-workspace unified-workspace campaign-memory-surface campaign-memory-${campaignView}` : "workspace-surface"}>
-          <SessionWorkspace
+      {authenticated && ((mode === "gm" && ["session", "maps", "npcs", "conclave", "scenes"].includes(page)) || (mode === "player" && page === "conclave")) && (
+        <section className={page === "scenes" ? "workspace-surface scene-preparation-surface" : page === "conclave" && (mode === "gm" || playerSessionView === "memory") ? `session-workspace unified-workspace campaign-memory-surface campaign-memory-${campaignView}` : "workspace-surface"}>
+          {page !== "scenes" && <SessionWorkspace
             key={`workspace-${authVersion}-${mode}`}
             mode={mode}
-            view={page === "maps" ? "maps" : page === "scenes" || (page === "conclave" && (mode === "gm" || playerSessionView === "memory")) ? "memory" : "table"}
-          />
+            view={page === "npcs" ? "npcs" : page === "maps" ? "maps" : (page === "conclave" && (mode === "gm" || playerSessionView === "memory")) ? "memory" : mode === "player" && playerSessionView === "sheet" ? "sheet" : "table"}
+          />}
           {page === "conclave" && (mode === "gm" || playerSessionView === "memory") && <CampaignMemoryPage key={`campaign-memory-${authVersion}-${mode}`} mode={mode} view={campaignView} onViewChange={setCampaignView} />}
           {page === "scenes" && mode === "gm" && <ScenePanel key={`scene-admin-${authVersion}`} mode="gm" surface="admin" />}
         </section>

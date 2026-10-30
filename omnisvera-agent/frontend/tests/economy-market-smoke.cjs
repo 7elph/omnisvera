@@ -1,0 +1,56 @@
+// Prepared native market, two real UI clients, TEMP only. No operational tokens.
+const assert=require('node:assert/strict'),fs=require('node:fs'),os=require('node:os'),path=require('node:path'),{randomUUID}=require('node:crypto');
+const {chromium,request}=require(require.resolve('playwright',{paths:[process.env.OMNISVERA_QA_MODULES||process.cwd()]}));
+(async()=>{
+ const base=process.env.OMNISVERA_SHEET_QA_URL;assert.match(base||'',/^http:\/\/127\.0\.0\.1:\d+$/);assert.ok(![8787,8788].includes(Number(new URL(base).port)));
+ const api=await request.newContext({baseURL:base,extraHTTPHeaders:{'X-Omnisvera-Token':'cf01-local-gm'}});
+ const call=async(method,url,data,client=api)=>{const r=await client[method](url,{data});assert.ok(r.ok(),`${method} ${url}: ${await r.text()}`);return r.json();};
+ const health=await call('get','/health');assert.ok(path.resolve(health.database_path).startsWith(path.resolve(os.tmpdir())+path.sep));
+ const out=fs.mkdtempSync(path.join(os.tmpdir(),'omni-economy-')),screenshots=[],checks=[],errors=[];let browser,gm,player;
+ const deadline=setTimeout(()=>{console.error('Finite market smoke deadline');void browser?.close().finally(()=>process.exit(1));},280000);deadline.unref();
+ try{
+  const combat=await call('get','/combat/effects');if(combat.encounter?.active)await call('post','/gm/combat/effects',{request_id:randomUUID(),expected_version:combat.version,action:'end',payload:{}});
+  const map=(await call('get','/workspace/maps')).find(m=>m.id==='official:nimalis');assert.ok(map);
+  await call('patch','/gm/workspace/maps/active',{map_id:map.id});await call('patch',`/gm/workspace/maps/${encodeURIComponent(map.id)}/visibility`,{visible_to_players:true});
+  const shops=await call('get','/gm/merchants'),thoradin=shops.find(s=>s.name==='Equipamentos de Thoradin'),conclave=shops.find(s=>s.name==='Conclave dos Errantes');assert.ok(thoradin&&conclave);
+  const store=await call('get',`/workspace/tokens/${encodeURIComponent(thoradin.token_id)}/commerce?character_id=raziel`);
+  const hp=store[0].offers.find(o=>o.name==='Poção de HP');assert.equal(hp.price_copper,500);
+  const guild=await call('get',`/workspace/tokens/${encodeURIComponent(conclave.token_id)}/commerce?character_id=raziel`);
+  assert.ok(guild[0].offers.length);assert.ok(guild[0].offers.every(o=>o.trade_group==='arcane'));assert.equal(guild[0].responsible_npc.name,'Klhauss');
+  browser=await chromium.launch({headless:true,channel:process.platform==='win32'?'chrome':undefined});
+  async function open(role,width){const ctx=await browser.newContext({viewport:{width,height:1000},isMobile:width===390,hasTouch:width===390});await ctx.addInitScript(role=>{localStorage.setItem('omnisvera_access_token','cf01-local-'+role);localStorage.setItem('omnisvera_access_mode',role==='gm'?'gm':'player');localStorage.setItem('omnisvera_selected_character','raziel');},role);const page=await ctx.newPage();page.setDefaultTimeout(20000);page.on('pageerror',e=>errors.push(e.message));await page.goto(base);await page.locator('.app-shell.authenticated').waitFor();return{ctx,page,role};}
+  gm=await open('gm',1440);player=await open('raziel',390);
+  async function openShop(view,shop){await view.page.getByRole('navigation',{name:'Navegação principal'}).getByRole('button',{name:view.role==='gm'?/Mapas$/:/Sessão$/}).click();const pin=view.page.locator(`[data-grid-token="${shop.token_id}"]`);await pin.scrollIntoViewIfNeeded();await pin.click();const offers=view.page.getByRole('region',{name:`Ofertas de ${shop.name}`,exact:true});await offers.waitFor();const dialog=view.page.getByRole('dialog').filter({has:offers});const commerce=dialog.getByRole('region',{name:'Comércio e serviços',exact:true});return{...view,dialog,offers,commerce};}
+  async function closeShop(view){const close=view.dialog.getByRole('button',{name:/^(Fechar ficha|Fechar local)$/});await close.click();await view.dialog.waitFor({state:'hidden'});}
+  async function compactCapture(view,name){await view.dialog.evaluate(el=>{el.scrollTop=0;});const size=await view.dialog.evaluate(el=>({width:el.clientWidth,content:el.scrollWidth}));assert.ok(size.content<=size.width+2,`Horizontal overflow: ${JSON.stringify(size)}`);const pictures=await view.commerce.locator('.commerce-item-image').evaluateAll(images=>images.map(el=>({w:el.getBoundingClientRect().width,h:el.getBoundingClientRect().height})));assert.ok(pictures.length);assert.ok(pictures.every(s=>s.w<=48&&s.h<=48),JSON.stringify(pictures));await view.dialog.screenshot({path:path.join(out,name)});screenshots.push(path.join(out,name));}
+  async function confirm(view){const response=view.page.waitForResponse(r=>r.request().method()==='POST'&&/\/commerce\/quotes\/[^/]+\/confirm$/.test(new URL(r.url()).pathname));void response.catch(()=>{});await view.commerce.getByRole('group',{name:'Confirmar negociação'}).getByRole('button',{name:'Confirmar',exact:true}).click();const r=await response;assert.ok(r.ok(),await r.text());const receipt=await r.json();await view.commerce.locator(`[data-commerce-receipt="${receipt.receipt_id}"]`).waitFor();return receipt;}
+  const offer=(view,name)=>view.offers.locator('.commerce-offers article').filter({has:view.page.getByText(name,{exact:true})}).first().getByRole('button').first();
+  const wallet=s=>Object.fromEntries(['coins','silver_coins','copper_coins','platinum_coins'].map(k=>[k,s[k]||0]));
+  const copper=s=>(s.coins||0)*100+(s.silver_coins||0)*10+(s.copper_coins||0)+(s.platinum_coins||0)*10000;
+  const initial=await call('get','/characters/raziel');const beforeWallet=wallet(initial.state);
+  let p=await openShop(player,thoradin),g=await openShop(gm,thoradin);
+  const sword=offer(p,'Espada longa').locator('img');await sword.scrollIntoViewIfNeeded();await p.page.waitForFunction(img=>img.complete&&img.naturalWidth>0,await sword.elementHandle());assert.match(await sword.getAttribute('src'),/espada-longa\.png/);checks.push('actual stocked item image instead of generic fallback');
+  await compactCapture(p,'thoradin-offers-mobile.png');
+  await offer(p,'Poção de HP').click();await p.commerce.getByRole('button',{name:'Cancelar',exact:true}).click();assert.deepEqual(wallet((await call('get','/characters/raziel')).state),beforeWallet);
+  await p.commerce.getByLabel('Quantidade da negociação').fill('2');await offer(p,'Poção de HP').click();const bought=await confirm(p);assert.equal(bought.total_copper,1000);assert.equal(copper(bought.purse_before)-copper(bought.purse_after),1000);
+  const replayResponse=await player.ctx.request.post(base+`/commerce/quotes/${bought.receipt_id}/confirm`,{headers:{'X-Omnisvera-Token':'cf01-local-raziel'},data:{request_id:randomUUID()}});assert.ok(replayResponse.ok());const replay=await replayResponse.json();assert.equal(replay.receipt_id,bought.receipt_id);assert.equal(replay.total_copper,1000);
+  await g.page.waitForFunction(({id,quantity})=>document.querySelector(`.commerce-offers article button strong`)&&[...document.querySelectorAll('.commerce-offers article')].some(row=>row.querySelector('strong')?.textContent==='Poção de HP'&&row.querySelector('[aria-label="Estoque disponível"]')?.textContent===`${quantity} disponíveis`),{id:hp.id,quantity:hp.quantity-2});
+  checks.push('player purchase two HP at 5 PO','cancel unchanged wallet','receipt before/after','confirmation replay exactly once','GM second-client stock realtime');
+  await p.commerce.getByLabel('Quantidade da negociação').fill('1');await p.commerce.getByRole('button',{name:'Barganhar Poção de HP',exact:true}).click();const negotiated=await confirm(p);assert.equal(negotiated.total_copper,Math.round(500*negotiated.bargain.multiplier));checks.push('server-priced bargain and real roll displayed');
+  await p.offers.getByRole('button',{name:'Vender',exact:true}).click();const blocked=p.offers.locator('details.commerce-blocked');await blocked.locator('summary').click();assert.ok((await blocked.innerText()).includes('Guarde o item'));
+  await offer(p,'Poção de HP').click();const sold=await confirm(p);assert.equal(sold.total_copper,250);assert.equal(copper(sold.purse_after)-copper(sold.purse_before),250);checks.push('native HP sale credits 50 percent','equipped and unpriced sale reasons visible');
+  await p.offers.getByRole('button',{name:'Serviços',exact:true}).click();await p.offers.getByRole('button',{name:/Avaliação de equipamentos/}).click();const assessed=await confirm(p);assert.equal(assessed.total_copper,0);assert.ok(assessed.appraisal?.length);await p.commerce.getByText(/Ver avaliação/).click();checks.push('appraisal executes without inventing prices');
+  await p.dialog.screenshot({path:path.join(out,'thoradin-player-mobile.png')});screenshots.push(path.join(out,'thoradin-player-mobile.png'));
+  await closeShop(p);await closeShop(g);p=await openShop(player,conclave);g=await openShop(gm,conclave);
+  await compactCapture(p,'conclave-offers-mobile.png');
+  assert.ok(await p.offers.getByText('Klhauss',{exact:true}).count());await p.offers.getByRole('button',{name:'Vender',exact:true}).click();assert.equal(await p.offers.locator('.commerce-offers article').filter({hasText:'Poção de HP'}).count(),0);
+  await p.offers.getByRole('button',{name:'Comprar',exact:true}).click();await offer(p,'Pó do desaparecimento').click();const powder=await confirm(p);assert.equal(powder.total_copper,1000);
+  await p.offers.getByRole('button',{name:'Vender',exact:true}).click();await offer(p,'Pó do desaparecimento').click();const resale=await confirm(p);assert.equal(resale.total_copper,500);checks.push('Conclave arcane-only buyer/seller','Klhauss inside Conclave pin','campaign price cannot inflate resale to book value');
+  await p.offers.getByRole('button',{name:'Serviços',exact:true}).click();await p.offers.getByRole('button',{name:/Reserva de quarto coletivo/}).click();const room=await confirm(p);assert.equal(room.service_status,'reserved');assert.equal(room.total_copper,5);
+  await p.commerce.locator('details.commerce-history > summary').click();await p.commerce.getByText(/reembolso de 18 PO/).first().waitFor();checks.push('catalogue lodging reserves without instant rest','prior refund visible in native history');
+  await p.dialog.screenshot({path:path.join(out,'conclave-player-mobile.png')});screenshots.push(path.join(out,'conclave-player-mobile.png'));await g.dialog.screenshot({path:path.join(out,'conclave-gm-desktop.png')});screenshots.push(path.join(out,'conclave-gm-desktop.png'));
+  const finalWallet=wallet((await call('get','/characters/raziel')).state);await player.page.reload();await player.page.locator('.app-shell.authenticated').waitFor();assert.deepEqual(wallet((await call('get','/characters/raziel')).state),finalWallet);checks.push('reload preserves wallet and confirmed orders');
+  assert.deepEqual(errors,[]);console.log(JSON.stringify({status:'PASS',checks,screenshots,visual_acceptance:'pending_agent_image_review',production_modified:false}));
+ }catch(error){if(player?.page)await player.page.screenshot({path:path.join(out,'failure.png'),timeout:5000}).catch(()=>{});console.error(JSON.stringify({status:'FAIL',reason:error.message,evidence:out}));throw error;}
+ finally{clearTimeout(deadline);await player?.ctx.close();await gm?.ctx.close();await browser?.close();await api.dispose();}
+})().catch(error=>{console.error(error);process.exitCode=1;});

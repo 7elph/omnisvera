@@ -4,7 +4,7 @@ import json
 import re
 import secrets
 import sqlite3
-from contextlib import closing
+from contextlib import closing, nullcontext
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any, Callable, Literal
@@ -19,6 +19,7 @@ from .battle_mode import require_battle_turn, commit_battle_action
 RollMode = Literal["digital", "physical"]
 Rng = Callable[[int, int], int]
 RESOLUTION_TTL_MINUTES = 15
+SPECTRAL_DAGGERS_PATH = 'Items/Adagas de Espectro Fantasma.md'
 
 
 class CombatNotFoundError(ValueError):
@@ -169,20 +170,51 @@ def monster_attack_definition(token: dict, attack_id: str) -> dict:
     if match:
         damage, effect = match.groups()
         manual_effects.append(effect.strip())
+    from .monster_actions import build_action_map
+    sheet = token.get('sheet') or {}
+    origin = sheet.get('source')
+    monster_id = origin.get('monster_id') if isinstance(origin, dict) else None
+    parsed = build_action_map(token['name'], attacks, sheet.get('abilities') or [], monster_id=monster_id or sheet.get('id'))['attacks'][int(attack_id)]
+    if parsed.get('execution_kind') in {'native_contact','passive_grid'}:
+        raise ValueError('Use o contato especial ou a passiva no grid; este caso não é um ataque de dano')
+    effect_only = bool(parsed.get('effect_only'))
     try:
-        damage = parse_formula(damage).formula
+        damage = '0' if effect_only else parse_formula(damage).formula
         bonus_raw = attack.get("bonus")
         if isinstance(bonus_raw, bool) or not re.fullmatch(r"[+-]?\d+", str(bonus_raw).strip()):
             raise ValueError("Bônus ausente")
         bonus = int(str(bonus_raw).strip())
     except ValueError as error:
         raise ValueError(f"O ataque {attack.get('name') or attack_id} está incompleto na ficha da criatura. O Mestre precisa revisar seu dano e bônus no cadastro; não é necessário digitar uma fórmula durante o ataque.") from error
-    return {"name": token["name"], "attacks": [{
+    from .action_range import _ranged_name_re
+    slot=attack.get('slot')
+    if slot not in {'melee','ranged','touch'}:
+        slot='ranged' if _ranged_name_re().search(str(attack.get('name') or '')) else 'melee'
+    return {"name": token["name"], "attributes": dict((token.get('sheet') or {}).get('attributes') or {}), "attacks": [{
         "id": attack_id, "name": attack.get("name") or "Ataque", "damage": damage,
+        "slot":slot,
         "attack_bonus": bonus, "base_attack_bonus": bonus,
         "weapon_item_path": f"token:{token['id']}:attack:{attack_id}",
         "manual_effects": manual_effects,
+        "effect_only": effect_only,
+        **{key:attack[key] for key in ('damage_type','damage_kind','magical','material','raw','notes') if key in attack},
     }]}
+
+
+MELEE_ATTACK_IDS = frozenset({"melee", "mordida", "garras-predatorias", "investida-predatoria",
+                               "arma-de-sangue", "lamina-de-sangue"})
+TOUCH_ATTACK_IDS = frozenset({"toque-sombrio"})
+CAMPAIGN_RANGED_METERS = {'adaga-de-osso':9,'lamina-de-sangue':9,'pulseira-de-vinhas':9}
+
+
+def attack_slot_and_max(attack_id: str, slot: str | None, level: int | None = None):
+    """Slot ('melee'|'touch'|'ranged') and approved max range for target listing
+    and validation. Unknown maxima stay None: Mestre adjudica."""
+    resolved = slot or ("touch" if attack_id in TOUCH_ATTACK_IDS
+                        else "ranged" if attack_id in {"ranged", "adaga-de-osso", "misseis-magicos"}
+                        else "melee")
+    maximum = 10 + 3 * level if attack_id == "misseis-magicos" and isinstance(level, int) else CAMPAIGN_RANGED_METERS.get(attack_id) if resolved=='ranged' else None
+    return resolved, maximum
 
 
 def bone_dagger_definition(definition: dict) -> dict:
@@ -202,15 +234,15 @@ def bone_dagger_definition(definition: dict) -> dict:
 
 
 def magic_missile_definition(definition: dict, resources: list[dict]) -> dict:
-    """Reviewed OD1 Aprimorado p.112, single-projectile levels only.
+    """Campaign missile activation, with the existing daily counter.
 
     Preserve the campaign's existing per-spell resource instead of inventing
     or refilling daily slots. Range/line of sight and magical defenses remain
     Master adjudications, explicitly displayed before confirmation.
     """
     level = definition.get("level")
-    if definition.get("id") not in {"morthak", "dorn7"} or type(level) is not int or not 1 <= level <= 3:
-        raise ValueError("Mísseis automáticos conferidos apenas para Morthak e Dorn nos níveis 1–3")
+    if definition.get("id") not in {"morthak", "dorn7"} or type(level) is not int or not 1 <= level <= 15:
+        raise ValueError("Nível de Morthak/Dorn fora da progressão conferida (1–15)")
     ability = next((a for a in definition.get("session_abilities", []) if a.get("id") == "misseis-magicos"), None)
     if not ability or ability.get("blocked"):
         raise ValueError("Magia indisponível nesta ficha")
@@ -219,9 +251,9 @@ def magic_missile_definition(definition: dict, resources: list[dict]) -> dict:
     if not resource:
         raise ValueError("Contador de Mísseis Mágicos não configurado")
     return {**definition, "active_effects": [], "attacks": [{
-        "id": "misseis-magicos", "name": "Mísseis Mágicos", "damage": f"1d4+{level}",
+        "id": "misseis-magicos", "name": "Mísseis Mágicos", "damage": f"1d4+{min(level,5)}",
         "attack_bonus": 0, "weapon_item_path": "spell:misseis-magicos", "automatic_hit": True,
-        "resource_cost": {"key": key, "amount": 1},
+        "resource_cost": {"key": key, "amount": 1}, "max_range_m": 10 + 3 * level,
         "manual_effects": [f"Conferir linha de visão, alcance de {10 + 3 * level} m e defesas mágicas antes de aplicar. Escudo arcano pode impedir este dano."],
     }]}
 
@@ -248,13 +280,59 @@ def _resolve_weapon_override(
         raise ValueError("Arma não disponível para este ataque (equipe-a e confira o dano)")
     attack = dict(attack)
     attack["damage"] = resolve_item_damage_formula(
-        {"item_effects": definition.get("item_effects")}, weapon
+        {"item_effects": definition.get("item_effects"), 'attack_slot': attack_id}, weapon
     )
     attack["weapon_item_path"] = str(weapon.get("item_path") or "")
     return attack
 
 
-def resolve_attack(
+def _require_blood_target(connection, target_type, target_id):
+    owner = target_id if target_type == 'character' else None
+    sheet = {}
+    if target_type == 'token':
+        token = connection.execute('SELECT character_id,sheet_json FROM session_workspace_tokens WHERE id=?', (target_id,)).fetchone()
+        if token:
+            owner = token['character_id']
+            sheet = json.loads(token['sheet_json'] or '{}')
+    necromantic = (sheet.get('summon') or {}).get('technique') in {'levantar-esqueleto', 'animar-mortos'}
+    if owner in {'morthak', 'dorn7'} or sheet.get('has_blood') is False or necromantic or sheet.get('reanimated_by'):
+        raise ValueError('Mordida exige um alvo com sangue; esqueletos e constructos não fornecem cura')
+
+
+def _assert_preview_turn(record, snapshot):
+    from .battle_mode import turn_identity
+    saved, current = record['breakdown'].get('combat_turn'), turn_identity(snapshot)
+    if saved is not None:
+        if saved != current:
+            raise CombatExpiredError('Esta prévia pertence a outro turno')
+    elif current is not None:
+        encounter = snapshot['encounter']
+        if current[-1] != record['actor_character_id'] or record['created_at'] < encounter.get('turn_started_at', ''):
+            raise CombatExpiredError('Esta prévia anterior não pertence ao turno atual')
+
+
+def resolve_attack(database_path: Path, **kwargs) -> tuple[dict[str, Any], bool]:
+    # Dice, preview reservation and receipt share one lock: concurrent tabs
+    # cannot generate multiple previews before either has reserved the turn.
+    init_combat(database_path)
+    init_effects(database_path)
+    with closing(_connect(database_path)) as connection, connection:
+        connection.execute('BEGIN IMMEDIATE')
+        return _resolve_attack(database_path, connection=connection, **kwargs)
+
+def replay_attack_request(database_path,*,request_id,character_id,actor_id,intent):
+    with closing(_connect(database_path)) as db:
+        if not db.execute("SELECT 1 FROM sqlite_master WHERE name='combat_attack_resolutions'").fetchone():return None
+        row=db.execute('SELECT * FROM combat_attack_resolutions WHERE request_id=?',(request_id,)).fetchone()
+    if row is None:return None
+    record=_resolution_record(row);stored=record['breakdown'].get('request_intent')
+    if stored is None:return None
+    if record['actor_character_id']!=character_id or record['requested_by_id']!=actor_id:raise PermissionError('Resolução pertence a outro acesso')
+    if stored!=intent:raise ValueError('request_id já utilizado com outro ataque')
+    return record
+
+
+def _resolve_attack(
     database_path: Path,
     *,
     request_id: str,
@@ -271,10 +349,13 @@ def resolve_attack(
     attack_count: int = 1,
     physical_d20s: list[int] | None = None,
     weapon_item_path: str | None = None,
+    blood_boost: int = 0,
     controlling_character_id: str | None = None,
+    request_intent: dict | None = None,
     guard_effect_id: str | None = None,
     rng: Rng | None = None,
     now: datetime | None = None,
+    connection: sqlite3.Connection,
 ) -> tuple[dict[str, Any], bool]:
     if requested_by_role != "gm" and requested_by_id != actor_character_id and requested_by_id != controlling_character_id:
         raise PermissionError("Você não pode atacar por este personagem")
@@ -286,7 +367,23 @@ def resolve_attack(
     attack_id = str(attack_id or "").strip()
     attack = _attack_entry(definition, attack_id)
     attack = _resolve_weapon_override(definition, inventory, attack, attack_id, weapon_item_path)
+    if type(blood_boost) is not int or not 0<=blood_boost<=999:raise ValueError('Reforço de sangue inválido')
+    if blood_boost:
+        if actor_character_id!='raziel' or attack_id not in {'melee','ranged'} or attack_count!=1:
+            raise ValueError('Reforço de sangue exige um ataque de arma equipada de Raziel')
+        if not any(i.get('item_path')==attack.get('weapon_item_path') for i in available_attack_weapons(inventory,attack_id)):
+            raise ValueError('Equipe uma arma válida antes de reforçá-la')
+        attack={**attack,'blood_boost':blood_boost,'resource_cost':{'key':'reserva_de_sangue','amount':blood_boost}}
+    from .night_form import require_humanoid
+    require_humanoid(connection,actor_character_id)
+    spectral_drain = actor_character_id == 'raziel' and attack_id in {'melee', 'ranged'} and any(
+        str(item.get('item_path') or '').replace('\\', '/') == SPECTRAL_DAGGERS_PATH
+        and item.get('item_path') == attack.get('weapon_item_path')
+        for item in available_attack_weapons(inventory, attack_id)
+    )
     automatic_hit = bool(attack.get("automatic_hit"))
+    from .item_families import ammunition_contract,consume_ammunition
+    ammunition=ammunition_contract(inventory,attack.get('weapon_item_path'),attack_count,definition.get('movement'))
     if automatic_hit and roll_mode != "digital":
         raise ValueError("Esta magia automatizada requer modo Digital; no modo Físico use a resolução assistida")
     if type(attack_count) is not int or not 1 <= attack_count <= min(10, int(attack.get("attack_count", 1))):
@@ -305,9 +402,7 @@ def resolve_attack(
             raise ValueError("Não informe d20 físico em uma rolagem digital")
         dice = []
     # Valid replays return stored dice, including after target death. Never reroll a request.
-    init_combat(database_path)
-    init_effects(database_path)
-    with closing(_connect(database_path)) as connection:
+    with nullcontext(connection):
         row = connection.execute("SELECT * FROM combat_attack_resolutions WHERE request_id=?", (request_id,)).fetchone()
         if row:
             record = _resolution_record(row)
@@ -316,24 +411,81 @@ def resolve_attack(
             expected = (actor_character_id, requested_by_id, attack_id, target.get("type"), target.get("id"), roll_mode, str(attack.get("weapon_item_path") or ""))
             actual = tuple(record[key] for key in ("actor_character_id", "requested_by_id", "attack_id", "target_type", "target_id", "roll_mode")) + (str((record.get("breakdown") or {}).get("attack", {}).get("weapon_item_path") or ""),)
             old_strikes = record["breakdown"].get("strikes", [{"d20": record["d20"]}])
-            if actual != expected or len(old_strikes) != attack_count or (roll_mode == "physical" and [s["d20"] for s in old_strikes] != dice):
+            if actual != expected or len(old_strikes) != attack_count or int((record['breakdown'].get('attack') or {}).get('blood_boost') or 0)!=blood_boost or (roll_mode == "physical" and [s["d20"] for s in old_strikes] != dice):
                 raise ValueError("request_id já utilizado para outra resolução")
             return record, False
         current_snapshot = effect_snapshot(connection)
+        from .battle_mode import turn_identity, require_actor_alive
+        combat_turn = turn_identity(current_snapshot)
+        pending_id = (current_snapshot.get('encounter') or {}).get('pending_attack')
+        if combat_turn is not None and not pending_id:
+            legacy = connection.execute("SELECT * FROM combat_attack_resolutions WHERE actor_character_id=? AND status='pending' AND created_at>=? ORDER BY created_at LIMIT 1",
+                (actor_character_id, current_snapshot['encounter'].get('turn_started_at', ''))).fetchone()
+            if legacy and _resolution_record(legacy)['breakdown'].get('combat_turn') is None:
+                legacy_record = _resolution_record(legacy)
+                legacy_record['breakdown']['combat_turn'] = combat_turn
+                pending_id = legacy_record['resolution_id']
+                current_snapshot['encounter']['pending_attack'] = pending_id
+                connection.execute('UPDATE combat_attack_resolutions SET breakdown_json=? WHERE resolution_id=?', (json.dumps(legacy_record['breakdown']), pending_id))
+                connection.execute('UPDATE combat_effect_clock SET encounter_json=?,version=version+1 WHERE id=1', (json.dumps(current_snapshot['encounter']),))
+        if combat_turn is not None and pending_id:
+            pending = connection.execute('SELECT * FROM combat_attack_resolutions WHERE resolution_id=?', (pending_id,)).fetchone()
+            if pending:
+                record = _resolution_record(pending)
+                same = (record['actor_character_id'] == actor_character_id and record['requested_by_id'] == requested_by_id
+                    and record['attack_id'] == attack_id and record['target_type'] == target.get('type')
+                    and record['target_id'] == target.get('id') and record['roll_mode'] == roll_mode
+                    and record['breakdown'].get('guard_effect_id') == guard_effect_id
+                    and str(record['breakdown'].get('attack', {}).get('weapon_item_path') or '') == str(attack.get('weapon_item_path') or '')
+                    and int(record['breakdown'].get('attack',{}).get('blood_boost') or 0)==blood_boost
+                    and len(record['breakdown'].get('strikes') or [record]) == attack_count)
+                if same:
+                    return record, False
+            raise ValueError('Existe ataque pendente; confirme a prévia ou passe o turno')
+        require_actor_alive(connection, actor_character_id)
+        if attack_id == 'toque-sombrio':
+            from .necromancer_spells import caster, living_touch_target, touch_cost_key
+            _, caster_state, _ = caster(connection)
+            living_touch_target(connection, target.get('type'), target.get('id'), requested_by_role)
+            attack = {**attack, 'resource_cost': touch_cost_key(caster_state, bool(attack.get('use_memorized')))}
         guard = next((e for e in current_snapshot['effects'] if e['id'] == guard_effect_id and e.get('protocol') == 'guard'), None)
+        guarded_id = target.get('id') if target.get('type') == 'character' else None
+        if target.get('type') == 'token':
+            guarded_pin = connection.execute('SELECT character_id FROM session_workspace_tokens WHERE id=?', (target.get('id'),)).fetchone()
+            guarded_id = guarded_pin[0] if guarded_pin else None
         if guard_effect_id and not guard:
             raise ValueError('Guarda consumida ou expirada')
+        guard_ally_id=(guard.get('ally_id') or target.get('guard_ally_id')) if guard else None
+        if guard and guard.get('area_guard'):
+            from .dorn_protocols import protects_ally
+            if not protects_ally(connection,guard,guard_ally_id):raise ValueError('Aliado fora da área de Guarda')
         if attack.get('life_drain'):
+            _require_blood_target(connection, target.get('type'), target.get('id'))
             own = connection.execute('SELECT state_json FROM character_states WHERE profile_id=?', (actor_character_id,)).fetchone()
             if not own or int(json.loads(own['state_json']).get('current_hp') or 0) <= 0:
                 raise ValueError('Raziel não pode morder a 0 PV')
             target_owner = connection.execute('SELECT character_id FROM session_workspace_tokens WHERE id=?', (target.get('id'),)).fetchone() if target.get('type') == 'token' else None
             if target.get('id') == actor_character_id or (target_owner and target_owner['character_id'] == actor_character_id):
                 raise ValueError('Raziel não pode morder a si mesmo')
-        require_battle_turn(connection, current_snapshot, actor_character_id, target.get('type'), target.get('id'), attack_count=attack_count, attack_limit=int(attack.get('attack_count', 1)))
+        # Interception changes who receives the hit, not the attacker's intended
+        # target (e.g. a provoked enemy must still declare the protected ally).
+        require_battle_turn(connection, current_snapshot, actor_character_id,
+            'character' if guard else target.get('type'), guard_ally_id if guard else target.get('id'),
+            attack_count=attack_count, attack_limit=int(attack.get('attack_count', 1)))
+        consume_ammunition(connection,actor_character_id,ammunition,_now().isoformat())
+        from .item_families import reload_movement
+        reload_movement(current_snapshot,ammunition)
+        if guarded_id and not guard_effect_id and any(e.get('protocol') == 'guard' and e.get('ally_id') == guarded_id for e in current_snapshot['effects']):
+            dorn_state = connection.execute("SELECT state_json FROM character_states WHERE profile_id='dorn7'").fetchone()
+            if dorn_state and int(json.loads(dorn_state[0]).get('current_hp') or 0) > 0:
+                raise ValueError('Guarda: este ataque deve ser redirecionado automaticamente para Dorn')
         effects_version = current_snapshot["version"]
         if definition.get("effects_version", effects_version) != effects_version:
             raise ValueError("Os efeitos mudaram durante o cálculo. Tente novamente.")
+        if attack.get('hemomancy'):
+            from .hemomancy import prepare
+            attack = prepare(connection, database_path, current_snapshot, attack, target, requested_by_role)
+            definition = {**definition, 'attacks': [attack]}
         resource_cost = None
         if attack.get("resource_cost"):
             row = connection.execute("SELECT state_json,version FROM character_states WHERE profile_id=?", (actor_character_id,)).fetchone()
@@ -343,13 +495,23 @@ def resolve_attack(
             resource = next((r for r in json.loads(row["state_json"]).get("resources", []) if r.get("key") == cost["key"]), None)
             if not resource or int(resource.get("current", 0)) < cost["amount"]:
                 raise ValueError("Sem usos disponíveis para esta magia")
-            resource_cost = {**cost, "state_version": row["version"]}
+            resource_cost = {**cost, "state_version": row["version"], 'resource_current': int(resource['current'])}
     if roll_mode == "digital":
         dice = [0] if automatic_hit else [int(roll_formula("1d20", rng)["total"]) for _ in range(attack_count)]
         d20 = dice[0]
     attack_spec = resolve_character_roll(definition, inventory, "attack", attack_id)
     attack_bonus = parse_formula(attack_spec.formula).modifier
-    damage_formula = parse_formula(str(attack["damage"])).formula
+    from .raziel_pipeline import attack_context
+    raziel_context=attack_context(connection,actor_character_id)
+    from .spatial_grid import diagonal_bonus
+    tactical=diagonal_bonus(connection,actor_character_id,target.get('type'),target.get('id'))
+    if not automatic_hit:attack_bonus+=tactical['bonus']
+    # Tomo Arcano p.53: attacks against a blinded creature are very easy (+5).
+    if not automatic_hit and any((e.get('condition')=='magical_darkness' or e.get('monster_condition')=='blinded') for e in current_snapshot['effects'] if e.get('target_type')==target.get('type') and e.get('target_id')==target.get('id')):
+        attack_bonus += 5
+    effect_only = bool(attack.get('effect_only')) and not connection.execute('SELECT 1 FROM character_states WHERE profile_id=?', (actor_character_id,)).fetchone()
+    damage_formula = '0' if effect_only else parse_formula(str(attack["damage"])).formula
+    damage_modifier = 0 if effect_only else parse_formula(damage_formula).modifier
 
     target_type = str(target.get("type") or "")
     target_id = str(target.get("id") or "").strip()
@@ -362,22 +524,52 @@ def resolve_attack(
         raise ValueError("O alvo não possui CA válida")
     if isinstance(current_hp, bool) or current_hp is None:
         raise ValueError("O alvo não possui HP configurado")
-    if int(current_hp) <= 0:
+    from .vezemir_skills import survives
+    if int(current_hp) <= 0 and not survives(connection,target_id,int(current_hp)):
         raise ValueError("O alvo já está sem HP")
 
+    if raziel_context:
+        attack_bonus=(attack_bonus+(2 if raziel_context.get('conditional_id') else 0))*raziel_context['multiplier']
     attack_total = d20 + attack_bonus
     result = "hit" if attack_total >= int(target_ac) else "miss"
     strikes = []
     for die in dice:
-        hit = automatic_hit or die + attack_bonus >= int(target_ac)
-        damage = roll_formula(damage_formula, rng) if hit else {
-            "individual_results": [], "modifier": parse_formula(damage_formula).modifier, "total": 0,
+        # Old Dragon SRD: natural 1 misses and natural 20 hits regardless of bonuses.
+        hit = automatic_hit or (die != 1 and (die == 20 or die + attack_bonus >= int(target_ac)))
+        damage = roll_formula(damage_formula, rng) if hit and not effect_only else {
+            "individual_results": [], "modifier": damage_modifier, "total": 0,
         }
         strikes.append({"d20": die, "attack_total": die + attack_bonus, "result": "hit" if hit else "miss",
                         "damage_total": max(0, int(damage["total"])), "damage_rolls": damage["individual_results"]})
+        from .critical_rules import augment_strike
+        player_attack=bool(connection.execute('SELECT 1 FROM character_states WHERE profile_id=?',(actor_character_id,)).fetchone())
+        augment_strike(strikes[-1],attack,inventory,rng,player_attack=player_attack and not automatic_hit)
+        if attack.get('hemomancy'):
+            from .hemomancy import roll_passives
+            roll_passives(attack, strikes[-1], rng)
+        if hit and blood_boost:
+            boost=roll_formula(f'{blood_boost}d4',rng)
+            strikes[-1]['damage_total']+=int(boost['total']);strikes[-1]['damage_rolls']+=boost['individual_results']
+        from .raziel_pipeline import roll_attack as pipeline_roll
+        pipeline_roll(strikes[-1],raziel_context,rng)
+        if player_attack and die==20 and not automatic_hit:strikes[-1]['unavoidable']=True
     result = "hit" if any(s["result"] == "hit" for s in strikes) else "miss"
     damage_roll = {"individual_results": [die for s in strikes for die in s["damage_rolls"]],
-                   "modifier": parse_formula(damage_formula).modifier, "total": sum(s["damage_total"] for s in strikes)}
+                   "modifier": damage_modifier, "total": sum(s["damage_total"] for s in strikes)}
+    hemomancy = attack.get('hemomancy')
+    if isinstance(hemomancy, dict) and result == 'hit':
+        # Base dice, conditional dice and flat modifiers stay separately
+        # auditable. Critical dice never duplicate a flat modifier.
+        if any(strike.get('critical') for strike in strikes):
+            damage_formula += '+' + hemomancy['base_damage']
+        if hemomancy.get('skill_damage'):
+            damage_formula += '+' + hemomancy['skill_damage']
+        if hemomancy['passive_d6']:
+            damage_formula += f"+{hemomancy['passive_d6']}d6"
+        if hemomancy['bonus']:
+            damage_formula += f"+{hemomancy['bonus']}"
+            damage_roll['modifier'] += hemomancy['bonus']
+    if blood_boost:damage_formula+=f'+{blood_boost}d4 (reforço de sangue)'
     equipment = [
         {
             "item_path": str(item.get("item_path") or ""),
@@ -386,16 +578,38 @@ def resolve_attack(
         }
         for item in attack.get("equipment") or []
     ]
+    strength_rider = {}
+    if attack_id == 'toque-sombrio' and result == 'hit':
+        from .necromancer_spells import living_touch_target, touch_rider
+        strength_rider = touch_rider(connection, living_touch_target(connection, target_type, target_id, requested_by_role))
+        explanation = 'Ao confirmar o acerto, ativa Toque Sombrio: no início do turno do alvo, 1–3 em 1d6 causa −1 PV. Sem perda de FOR.'
+        attack = {**attack, 'manual_effects': [*(attack.get('manual_effects') or []), explanation]}
+    from .damage_profiles import attack_profile
+    from .monster_conditions import attack_contract
+    monster_contract=attack_contract(connection,actor_character_id,attack_id)
+    if monster_contract:
+        automated={r['name'].casefold() for r in monster_contract['riders']}
+        attack={**attack,'manual_effects':[name for name in attack.get('manual_effects',[]) if name.casefold() not in automated]}
+    from .inventory_conditions import combat_fingerprint
     breakdown = {
+        'request_intent':request_intent,
+        'ammunition':ammunition,
+        'inventory_condition_fingerprint':combat_fingerprint(connection,actor_character_id,target_type,target_id),
+        'damage_profile':attack_profile(attack,inventory),
+        **({'monster_on_hit':monster_contract} if monster_contract else {}),
+        'combat_turn': combat_turn,
         "guard_effect_id": guard_effect_id,
-        "guard_ally_id": guard.get('ally_id') if guard else None,
-        "life_drain": bool(attack.get('life_drain')),
+        "guard_ally_id": guard_ally_id,
+        "area_guard": bool(guard and guard.get('area_guard')),
+        "life_drain": bool(attack.get('life_drain')) or spectral_drain,
+        "strength_drain": strength_rider,
         "attack_limit": int(attack.get("attack_count", 1)),
         "automatic_hit": automatic_hit,
         "resource_cost": resource_cost,
         "manual_effects": list(attack.get("manual_effects") or []) if result == "hit" else [],
         "strikes": strikes,
         "effects_version": effects_version,
+        "tactical_state": tactical,
         "effect_ids": _participant_effect_state(current_snapshot["effects"], actor_character_id, target_type, target_id),
         "effects": definition.get("active_effects", []),
         "attack": {
@@ -416,12 +630,19 @@ def resolve_attack(
         "equipment": equipment,
     }
     created = now or _now()
+    if isinstance(attack.get('hemomancy'), dict):
+        breakdown['hemomancy'] = attack['hemomancy']
+    if raziel_context:breakdown['raziel_pipeline']=raziel_context
+    from .hemomancy import incoming_shield
+    shield_trigger = incoming_shield(current_snapshot, target, strikes)
+    if shield_trigger:
+        breakdown['hemomancy_shield'] = shield_trigger
+    if tactical['bonus'] and not automatic_hit:
+        breakdown['attack'].update(tactical_bonus=tactical['bonus'],tactical_reason=tactical['reason'])
     if attack.get("effect_attack_bonus"):
         breakdown["attack"]["effect_bonus"] = int(attack["effect_attack_bonus"])
     resolution_id = f"attack:{secrets.token_hex(16)}"
-    init_combat(database_path)
-    with closing(_connect(database_path)) as connection, connection:
-        connection.execute("BEGIN IMMEDIATE")
+    with nullcontext(connection):
         existing = connection.execute(
             "SELECT * FROM combat_attack_resolutions WHERE request_id=?", (request_id,)
         ).fetchone()
@@ -439,7 +660,7 @@ def resolve_attack(
             return record, False
         if effect_snapshot(connection)["version"] != effects_version:
             raise ValueError("Os efeitos mudaram durante o cálculo. Tente novamente.")
-        if guard_effect_id:
+        if guard_effect_id and not (guard and guard.get('area_guard')):
             # Consume atomically with the preview, before any attack is resolved.
             connection.execute('UPDATE combat_effects SET active=0 WHERE id=?', (guard_effect_id,))
             connection.execute('UPDATE combat_effect_clock SET version=version+1 WHERE id=1')
@@ -464,6 +685,10 @@ def resolve_attack(
                 (created + timedelta(minutes=RESOLUTION_TTL_MINUTES)).isoformat(),
             ),
         )
+        if combat_turn is not None:
+            encounter = current_snapshot['encounter']
+            encounter['pending_attack'] = resolution_id
+            connection.execute('UPDATE combat_effect_clock SET encounter_json=?,version=version+1 WHERE id=1', (json.dumps(encounter),))
         row = connection.execute(
             "SELECT * FROM combat_attack_resolutions WHERE resolution_id=?", (resolution_id,)
         ).fetchone()
@@ -491,6 +716,10 @@ def list_pending_attack_resolutions(
         pending = []
         for row in rows:
             record = _resolution_record(row)
+            try:
+                _assert_preview_turn(record, live_snapshot)
+            except CombatExpiredError:
+                continue
             if datetime.fromisoformat(record["expires_at"]) < instant:
                 continue
             try:
@@ -503,8 +732,14 @@ def list_pending_attack_resolutions(
                 continue
             cost = record["breakdown"].get("resource_cost")
             if cost:
-                caster = connection.execute("SELECT version FROM character_states WHERE profile_id=?", (record["actor_character_id"],)).fetchone()
-                if caster is None or caster["version"] != cost["state_version"]:
+                caster = connection.execute("SELECT state_json,version FROM character_states WHERE profile_id=?", (record["actor_character_id"],)).fetchone()
+                resource = next((r for r in json.loads(caster[0]).get('resources', []) if r.get('key') == cost['key']), None) if caster else None
+                if resource is None or int(resource.get('current') or 0) < cost['amount']:
+                    continue
+                if record['breakdown'].get('combat_turn') is None:
+                    if caster['version'] != cost['state_version']:
+                        continue
+                elif int(resource['current']) != cost.get('resource_current', int(resource['current'])):
                     continue
             pending.append(record)
         return pending
@@ -534,24 +769,54 @@ def confirm_attack_resolution(
         if record["status"] == "confirmed":
             return record, False
         current_snapshot = effect_snapshot(connection)
+        _assert_preview_turn(record, current_snapshot)
         strike_count = len(record['breakdown'].get('strikes') or [record])
         attack_limit = int(record['breakdown'].get('attack_limit') or 1)
-        require_battle_turn(connection, current_snapshot, record['actor_character_id'], record['target_type'], record['target_id'], attack_count=strike_count, attack_limit=attack_limit)
+        from .night_form import require_humanoid
+        require_humanoid(connection,record['actor_character_id'])
+        require_battle_turn(connection, current_snapshot, record['actor_character_id'],
+            'character' if record['breakdown'].get('guard_ally_id') else record['target_type'],
+            record['breakdown'].get('guard_ally_id') or record['target_id'],
+            attack_count=strike_count, attack_limit=attack_limit, resolution_id=resolution_id)
+        if record['breakdown'].get('tactical_state') is not None:
+            from .spatial_grid import diagonal_bonus
+            if diagonal_bonus(connection,record['actor_character_id'],record['target_type'],record['target_id'])!=record['breakdown']['tactical_state']:
+                raise CombatExpiredError('A posição ou o bônus diagonal mudou. Resolva o ataque novamente.')
+        if record['attack_id'] == 'mordida':
+            _require_blood_target(connection, record['target_type'], record['target_id'])
         if confirmed_at > datetime.fromisoformat(record["expires_at"]):
             raise CombatExpiredError("A resolução do ataque expirou")
         live_snapshot = effect_snapshot(connection)
+        if record['breakdown'].get('area_guard'):
+            from .dorn_protocols import protects_ally
+            live_guard=next((e for e in live_snapshot['effects'] if e['id']==record['breakdown']['guard_effect_id']),None)
+            if not protects_ally(connection,live_guard,record['breakdown']['guard_ally_id']):
+                raise CombatExpiredError('A área de Guarda mudou; resolva novamente')
         _assert_participant_effects_unchanged(
             live_snapshot["effects"], record["breakdown"],
             record["actor_character_id"], record["target_type"], record["target_id"],
             live_snapshot["version"],
         )
+        from .hemomancy import validate_confirm
+        validate_confirm(connection, current_snapshot, record)
+        from .inventory_conditions import combat_fingerprint
+        saved_inventory=record['breakdown'].get('inventory_condition_fingerprint')
+        if saved_inventory and saved_inventory!=combat_fingerprint(connection,record['actor_character_id'],record['target_type'],record['target_id']):
+            raise ValueError('Equipamento mudou desde a rolagem. Resolva novamente antes de confirmar.')
+        from .monster_conditions import validate_confirm as validate_monster_conditions
+        validate_monster_conditions(connection,record)
         resource_cost = record["breakdown"].get("resource_cost")
         if resource_cost:
             caster = connection.execute("SELECT state_json,version FROM character_states WHERE profile_id=?", (record["actor_character_id"],)).fetchone()
-            if caster is None or caster["version"] != resource_cost["state_version"]:
-                raise CombatExpiredError("A ficha ou os recursos mudaram. Confira a magia novamente.")
+            if caster is None:
+                raise CombatExpiredError("A ficha do conjurador não está disponível")
             caster_state = json.loads(caster["state_json"])
             resource = next((r for r in caster_state.get("resources", []) if r.get("key") == resource_cost["key"]), None)
+            if record['breakdown'].get('combat_turn') is None:
+                if caster['version'] != resource_cost['state_version']:
+                    raise CombatExpiredError('A ficha ou os recursos mudaram. Confira a magia novamente.')
+            elif resource and int(resource['current']) != resource_cost.get('resource_current', int(resource['current'])):
+                raise CombatExpiredError('Os usos desta magia mudaram durante a prévia; passe o turno ou peça adjudicação ao Mestre')
             if not resource or int(resource.get("current", 0)) < resource_cost["amount"]:
                 raise ValueError("Sem usos disponíveis para esta magia")
             resource["current"] -= resource_cost["amount"]
@@ -568,7 +833,8 @@ def confirm_attack_resolution(
             hp_before = target_state.get("current_hp")
             if hp_before is None:
                 raise ValueError("O alvo não possui HP configurado")
-            if int(hp_before) <= 0:
+            from .vezemir_skills import survives
+            if int(hp_before) <= 0 and not survives(connection,record['target_id'],hp_before):
                 raise ValueError("O alvo já está sem HP")
         else:
             target_row = connection.execute(
@@ -581,20 +847,87 @@ def confirm_attack_resolution(
                 raise ValueError("O alvo não possui HP configurado")
             if int(hp_before) <= 0:
                 raise ValueError("O alvo já está sem HP")
-        hp_change = change_hp(connection, record["target_type"], record["target_id"], -int(record["damage_total"]), confirmed_at.isoformat())
+        from .dorn_spell_pack import redirect_hits
+        from .item_families import consume_ammunition
+        from .item_families import reload_movement
+        reload_movement(current_snapshot,record['breakdown'].get('ammunition'),apply=True)
+        consume_ammunition(connection,record['actor_character_id'],record['breakdown'].get('ammunition'),confirmed_at.isoformat(),apply=True)
+        # Legacy initiative also uses the native movement budget; its attack
+        # commit intentionally does not write the battle-mode action counters.
+        if (record['breakdown'].get('ammunition') or {}).get('reload_movement') and current_snapshot.get('encounter',{}).get('active'):
+            connection.execute('UPDATE combat_effect_clock SET encounter_json=? WHERE id=1',(json.dumps(current_snapshot['encounter']),))
+        actual_damage,reflection=redirect_hits(connection,record['target_type'],record['target_id'],record['breakdown'].get('strikes') or [record],confirmed_at.isoformat())
+        if reflection:
+            record['breakdown']['reflection_result']=reflection;record['damage_total']=actual_damage
+            connection.execute('UPDATE combat_attack_resolutions SET damage_total=?,breakdown_json=? WHERE resolution_id=?',(actual_damage,json.dumps(record['breakdown']),resolution_id))
+        from .hemomancy import damage_after_mitigation, confirmed as confirm_hemomancy
+        if record['breakdown'].get('hemomancy'):
+            strikes=record['breakdown'].get('strikes') or []
+            unavoidable=sum(s['damage_total'] for s in strikes if s.get('unavoidable'))
+            record['damage_total'] = unavoidable+damage_after_mitigation(connection, record, max(0,int(record['damage_total'])-unavoidable))
+        if record['breakdown'].get('area_guard'):
+            before=int(record['damage_total'])
+            unavoidable=min(before,sum(s['damage_total'] for s in record['breakdown'].get('strikes',[]) if s.get('unavoidable')))
+            record['damage_total']=unavoidable+(before-unavoidable)//2
+            record['breakdown']['guard_damage']={'before':before,'after':record['damage_total']}
+            connection.execute('UPDATE combat_attack_resolutions SET damage_total=?,breakdown_json=? WHERE resolution_id=?',
+                (record['damage_total'],json.dumps(record['breakdown']),resolution_id))
+        profile=record['breakdown'].get('damage_profile')
+        context={**profile,'unavoidable_damage':sum(s['damage_total'] for s in record['breakdown'].get('strikes',[]) if s.get('unavoidable'))} if profile else None
+        hp_change = change_hp(connection, record["target_type"], record["target_id"], -int(record["damage_total"]), confirmed_at.isoformat(),damage_context=context)
+        from .monster_rust import reverse_contact
+        rust_results=reverse_contact(connection,record,confirmed_at.isoformat())
+        if rust_results:record['breakdown']['rust_contact_results']=rust_results
+        if rust_results:
+            connection.execute('UPDATE combat_attack_resolutions SET breakdown_json=? WHERE resolution_id=?',(json.dumps(record['breakdown'],ensure_ascii=False),resolution_id))
+        if record['breakdown'].get('monster_on_hit'):
+            from .monster_conditions import apply_on_hit
+            riders=apply_on_hit(connection,record,confirmed_at.isoformat())
+            record['breakdown']['monster_rider_results']=riders
+            for rider in riders:
+                if rider.get('hp'):
+                    hp_change['hp_after']=rider['hp']['hp_after']
+                    hp_change['damage_taken']=max(0,hp_change['hp_before']-hp_change['hp_after'])
+                    record['damage_total']+=rider['hp'].get('damage_before_defenses',rider.get('damage_dealt',0))
+        if profile:
+            record['breakdown']['damage_defenses']={key:hp_change[key] for key in ('damage_type','damage_before_defenses','damage_after_defenses') if key in hp_change}
+            connection.execute('UPDATE combat_attack_resolutions SET damage_total=?,breakdown_json=? WHERE resolution_id=?',(record['damage_total'],json.dumps(record['breakdown'],ensure_ascii=False),resolution_id))
+        from .raziel_pipeline import confirmed as pipeline_confirm
+        pipeline_confirm(connection,record,hp_change,confirmed_at.isoformat())
+        if record['breakdown'].get('hemomancy') or record['breakdown'].get('hemomancy_shield'):
+            confirm_hemomancy(connection, current_snapshot, record, hp_change, confirmed_at.isoformat())
+            connection.execute('UPDATE combat_attack_resolutions SET damage_total=?,breakdown_json=? WHERE resolution_id=?',
+                (record['damage_total'], json.dumps(record['breakdown'], ensure_ascii=False), resolution_id))
         hp_after = hp_change["hp_after"]
+        if hp_change.get('damage_reduction_penalty'):
+            record['damage_total']+=hp_change['damage_reduction_penalty']
+            record['breakdown']['damage_reduction_penalty']=hp_change['damage_reduction_penalty']
+            connection.execute('UPDATE combat_attack_resolutions SET damage_total=?,breakdown_json=? WHERE resolution_id=?',(record['damage_total'],json.dumps(record['breakdown']),resolution_id))
+        if hp_after==0:
+            from .vezemir_skills import kill_reward
+            kill_reward(connection,record['actor_character_id'],record['target_type'],record['target_id'],confirmed_at.isoformat())
         if record['breakdown'].get('life_drain'):
-            if record['actor_character_id'] != 'raziel' or record['attack_id'] != 'mordida':
+            spectral = record['attack_id'] in {'melee', 'ranged'} and str(
+                (record['breakdown'].get('attack') or {}).get('weapon_item_path') or ''
+            ).replace('\\', '/') == SPECTRAL_DAGGERS_PATH
+            if record['actor_character_id'] != 'raziel' or not (record['attack_id'] == 'mordida' or spectral):
                 raise ValueError('Drenagem não autorizada para este ataque')
             own = connection.execute("SELECT state_json FROM character_states WHERE profile_id='raziel'").fetchone()
             if not own or int(json.loads(own['state_json']).get('current_hp') or 0) <= 0:
-                raise ValueError('Raziel não pode morder a 0 PV')
-            drained = max(0, int(hp_before) - int(hp_after))
+                raise ValueError('Raziel não pode drenar vida a 0 PV')
+            drained = hp_change.get('damage_taken',max(0, int(hp_before) - int(hp_after)))
             healed = change_hp(connection, 'character', 'raziel', drained, confirmed_at.isoformat())
             record['breakdown']['drain_result'] = {**healed, 'drained': drained,
                 'healed': int(healed['hp_after']) - int(healed['hp_before'])}
             connection.execute('UPDATE combat_attack_resolutions SET breakdown_json=? WHERE resolution_id=?',
                 (json.dumps(record['breakdown'], ensure_ascii=False), resolution_id))
+        if (record['breakdown'].get('strength_drain') or {}).get('dot_hp') and hp_after>0:
+            from .necromancer_spells import add_effect
+            victim={'type':record['target_type'],'id':record['target_id']}
+            existing=connection.execute("SELECT 1 FROM combat_effects WHERE active=1 AND target_type=? AND target_id=? AND json_extract(data_json,'$.dot_hp')=1",(record['target_type'],record['target_id'])).fetchone()
+            if not existing:
+                origin=connection.execute("SELECT data_json FROM character_definition_overrides WHERE profile_id='morthak'").fetchone()
+                add_effect(connection,victim,'Toque Sombrio','Morthak · Toque Sombrio',confirmed_at.isoformat(),necro_spell='toque-sombrio',dot_hp=True,magic_type='arcane',spell_circle=1,caster_level=int(json.loads(origin[0]).get('level') or 5) if origin else 5)
         dorn_disabled = False
         dorn_profile = record["target_id"] if record["target_type"] == "character" else None
         if dorn_profile is None:
@@ -618,13 +951,26 @@ def confirm_attack_resolution(
                     (json.dumps(dorn_state, ensure_ascii=False), confirmed_at.isoformat()),
                 )
                 dorn_disabled = True
+        fumble=sum(s.get('fumble_damage',0) for s in record['breakdown'].get('strikes',[]))
+        if fumble:
+            record['breakdown']['fumble_result']=change_hp(connection,'character',record['actor_character_id'],-fumble,confirmed_at.isoformat(),damage_context={**(profile or {}),'kind':'effect'})
+            record['breakdown']['fumble_result']['damage']=fumble
+            connection.execute('UPDATE combat_attack_resolutions SET breakdown_json=? WHERE resolution_id=?',(json.dumps(record['breakdown']),resolution_id))
+        from .monster_runtime import record_confirmed_attacks
+        record_confirmed_attacks(connection,record,confirmed_at.isoformat())
         commit_battle_action(connection, current_snapshot, attack_count=strike_count, attack_limit=attack_limit)
+        from .battle_mode import retire_defeated
+        retire_defeated(connection, confirmed_at.isoformat())
+        from .dorn_spells import confirmed_ranged
+        confirmed_ranged(connection, record['actor_character_id'], record, current_snapshot['round'])
         consumed = [e["id"] for e in record["breakdown"].get("effects", []) if e["duration"] == "next_attack"]
         for effect_id in consumed:
             connection.execute("UPDATE combat_effects SET active=0 WHERE id=?", (effect_id,))
         if consumed:
             connection.execute("UPDATE combat_effect_clock SET version=version+1 WHERE id=1")
         detail = {
+            "turn_sequence": (current_snapshot.get("encounter") or {}).get("turn_sequence"),
+            "turn_started_at": (current_snapshot.get("encounter") or {}).get("turn_started_at"),
             "temporary_hp_absorbed": hp_change["temporary_hp_absorbed"],
             "consumed_effects": consumed,
             "combat_action_id": record["resolution_id"],
@@ -650,6 +996,12 @@ def confirm_attack_resolution(
             "hp_after": hp_after,
             "dorn_disabled": dorn_disabled,
         }
+        detail['breakdown']=dict(detail['breakdown'])
+        detail['breakdown'].pop('monster_on_hit',None)  # Raw source contract is technical, not table narrative.
+        caster_visibility=connection.execute('SELECT visible_to_players FROM session_workspace_tokens WHERE id=?',(record['actor_character_id'],)).fetchone()
+        from .monster_runtime import public_token
+        private_actor=caster_visibility is not None and not public_token(connection,record['actor_character_id'])
+        private_target=record['target_type']=='token' and not public_token(connection,record['target_id'])
         ledger_id = append_session_ledger_event(
             connection,
             source_type="combat_action",
@@ -661,7 +1013,7 @@ def confirm_attack_resolution(
             character_id=record["actor_character_id"],
             title=f"{record['actor_name']} atacou {record['target_name']} com {record['attack_name']}",
             detail=detail,
-            visibility="table",
+            visibility="gm" if private_actor or private_target else "table",
             created_at=confirmed_at.isoformat(),
         )
         connection.execute(

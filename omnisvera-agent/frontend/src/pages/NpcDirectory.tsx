@@ -1,4 +1,4 @@
-import { FormEvent, useEffect, useMemo, useState } from "react";
+import { FormEvent, ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import {
   contradictNpcMemory,
   createNpc,
@@ -19,7 +19,7 @@ import {
   voidNpcEvent,
 } from "../api";
 
-type Props = { mode: "gm" | "player" };
+type Props = { mode: "gm" | "player"; embedded?: boolean; children?: ReactNode | ((npcs:NpcRecord[])=>ReactNode); isListed?:(npc:NpcRecord)=>boolean; renderActions?:(npc:NpcRecord)=>ReactNode };
 type Tab = "summary" | "relationships" | "memories" | "encounters" | "obligations" | "history" | "gm";
 
 const MEMORY_LABELS: Record<string, string> = {
@@ -40,7 +40,7 @@ function portrait(npc?: NpcRecord | null) {
 
 function formValue(form: FormData, key: string) { return String(form.get(key) || "").trim(); }
 
-export default function NpcDirectory({ mode }: Props) {
+export default function NpcDirectory({ mode, embedded = false, children, isListed=()=>true, renderActions }: Props) {
   const [npcs, setNpcs] = useState<NpcRecord[]>([]);
   const [selected, setSelected] = useState<NpcRecord | null>(null);
   const [tab, setTab] = useState<Tab>("summary");
@@ -48,9 +48,12 @@ export default function NpcDirectory({ mode }: Props) {
   const [faction, setFaction] = useState("");
   const [message, setMessage] = useState("");
   const [busy, setBusy] = useState(false);
+  const requestRef = useRef(0);
+  const mountedRef = useRef(true);
 
   async function refreshList(keepId = selected?.id) {
     const rows = await listNpcs({ query, faction });
+    if (!mountedRef.current) return;
     setNpcs(rows);
     if (keepId) {
       const next = rows.find((item) => item.id === keepId);
@@ -59,10 +62,11 @@ export default function NpcDirectory({ mode }: Props) {
   }
 
   async function openNpc(id: number) {
+    const request = ++requestRef.current;
     setBusy(true); setMessage("");
-    try { setSelected(await getNpc(id)); }
-    catch (error) { setMessage(error instanceof Error ? error.message : "Não foi possível abrir o NPC."); }
-    finally { setBusy(false); }
+    try { const detail = await getNpc(id); if (mountedRef.current && request === requestRef.current) { setSelected(detail); setTab("summary"); } }
+    catch (error) { if (mountedRef.current && request === requestRef.current) setMessage(error instanceof Error ? error.message : "Não foi possível abrir o NPC."); }
+    finally { if (mountedRef.current && request === requestRef.current) setBusy(false); }
   }
 
   async function reloadNpc() {
@@ -73,9 +77,11 @@ export default function NpcDirectory({ mode }: Props) {
   }
 
   useEffect(() => {
-    refreshList().catch((error) => setMessage(String(error)));
+    mountedRef.current = true;
+    refreshList().catch((error) => { if (mountedRef.current) setMessage(String(error)); });
     const stored = Number(localStorage.getItem("omnisvera_selected_npc"));
-    if (Number.isFinite(stored) && stored > 0) openNpc(stored);
+    if (!embedded && Number.isFinite(stored) && stored > 0) openNpc(stored);
+    return () => { mountedRef.current = false; ++requestRef.current; };
   }, []);
   useEffect(() => {
     const listener = (event: Event) => {
@@ -206,24 +212,27 @@ export default function NpcDirectory({ mode }: Props) {
   }
 
   return (
-    <section className="npc-page" aria-busy={busy}>
+    <section className={`npc-page${embedded ? " npc-page-embedded" : ""}`} aria-busy={busy}>
       <header className="npc-hero">
         <div><small>CONTINUIDADE DE CAMPANHA</small><h2>Diretório de NPCs</h2><p>Relações, crenças, encontros e obrigações sem escrever no Vault.</p></div>
         <div className="npc-hero-stats"><span><strong>{npcs.length}</strong><small>registrados</small></span><span><strong>{npcs.filter((npc) => npc.active !== false).length}</strong><small>ativos</small></span></div>
       </header>
       {message && <p className="npc-message" role="status">{message}</p>}
       <div className="npc-layout">
-        <aside className="npc-directory">
+        <aside className="npc-directory" hidden={embedded && Boolean(selected)}>
           <div className="npc-filters">
             <input aria-label="Buscar NPC" placeholder="Buscar por nome ou função" value={query} onChange={(event) => setQuery(event.target.value)} />
             <select aria-label="Filtrar por facção" value={faction} onChange={(event) => setFaction(event.target.value)}><option value="">Todas as facções</option>{factions.map((item) => <option key={item}>{item}</option>)}</select>
-            <button onClick={() => refreshList()} disabled={busy}>Buscar</button>
+            <button onClick={() => refreshList().catch(error => setMessage(String(error)))} disabled={busy}>Buscar / atualizar NPCs</button>
           </div>
-          {npcs.length === 0 ? <p className="empty-state">Nenhum NPC registrado. O Mestre pode criar um perfil local ou importar uma referência do Vault.</p> : <div className="npc-card-list">{npcs.map((npc) => <button key={npc.id} className={selected?.id === npc.id ? "active" : ""} onClick={() => openNpc(npc.id)}>{portrait(npc)}<span><strong>{npc.name}</strong><small>{npc.class_or_role || npc.occupation || "Função não informada"}</small><em>{npc.current_location || "Localização não informada"}</em></span></button>)}</div>}
+          {typeof children==='function'?children(npcs):children}
+          {npcs.length === 0 ? <p className="empty-state">Nenhum NPC registrado. O Mestre pode criar um perfil local ou importar uma referência do Vault.</p> : <div className="npc-card-list">{npcs.filter(isListed).map((npc) => <button key={npc.id} className={selected?.id === npc.id ? "active" : ""} onClick={() => openNpc(npc.id)}>{portrait(npc)}<span><strong>{npc.name}</strong><small>{npc.class_or_role || npc.occupation || "Função não informada"}</small><em>{npc.current_location || "Localização não informada"}</em></span></button>)}</div>}
           {mode === "gm" && <details className="npc-admin"><summary>Criar ou importar NPC</summary><form onSubmit={submitCreate}><input name="name" required placeholder="Nome" /><input name="role" placeholder="Função" /><input name="location" placeholder="Localização" /><textarea name="description" placeholder="Descrição pública" /><input name="status" placeholder="Estado público" /><label><input name="visible" type="checkbox" /> Visível aos jogadores</label><button disabled={busy}>Criar perfil local</button></form><form onSubmit={submitImport}><input name="source_path" required placeholder="Characters/Individual/Nome.md" /><button disabled={busy}>Importar referência do Vault</button></form></details>}
         </aside>
 
-        {!selected ? <article className="npc-empty-detail"><h3>Selecione um NPC</h3><p>O detalhe completo só é carregado quando necessário.</p></article> : <article className="npc-profile">
+        {!selected ? (!embedded && <article className="npc-empty-detail"><h3>Selecione um NPC</h3><p>O detalhe completo só é carregado quando necessário.</p></article>) : <article className="npc-profile">
+          <button type="button" className="workspace-reference-back" onClick={() => { ++requestRef.current; setBusy(false); setSelected(null); setTab("summary"); }}>Voltar para a lista de NPCs</button>
+          {renderActions?.(selected)}
           <header className="npc-profile-header">{portrait(selected)}<div><small>{selected.canonical_status || "Estado canônico não informado"}</small><h2>{selected.name}</h2><p>{[selected.race, selected.class_or_role, selected.occupation].filter(Boolean).join(" · ") || "Perfil em desenvolvimento"}</p><div className="npc-tags">{(selected.faction_names || []).map((item) => <span key={item}>{item}</span>)}</div></div><span className={selected.active === false ? "inactive" : "active"}>{selected.active === false ? "Inativo" : "Ativo"}</span></header>
           <nav className="npc-tabs" aria-label="Seções do NPC">{(["summary","relationships","memories","encounters","obligations","history",...(mode === "gm" ? ["gm"] : [])] as Tab[]).map((item) => <button key={item} className={tab === item ? "active" : ""} onClick={() => setTab(item)}>{({ summary:"Resumo",relationships:"Relações",memories:"Memórias",encounters:"Encontros",obligations:"Promessas e dívidas",history:"Histórico",gm:"Mestre" } as Record<Tab,string>)[item]}</button>)}</nav>
 

@@ -29,7 +29,7 @@ test('attack handler rejects exhausted actions before constructing a zero-count 
   const handler = workspace.slice(start, end);
   assert.ok(handler.indexOf('if (blocked)') < handler.indexOf('resolveCharacterAttack('));
   assert.ok(handler.indexOf('if (count < 1)') < handler.indexOf('resolveCharacterAttack('));
-  assert.ok(workspace.includes('A Adaga de Osso tem seu próprio card'));
+  assert.ok(workspace.includes("ability.id === 'adaga-de-osso'"),'The spell keeps its native action card without the old explanatory paragraph');
 });
 test('battle map retains four rows and a nonzero canvas on portrait phones', () => {
   const css = fs.readFileSync(path.join(__dirname, '../src/styles.css'), 'utf8');

@@ -1,0 +1,24 @@
+{
+  "model": "ollama/gpt-oss:120b-cloud",
+  "small_model": "ollama/gpt-oss:120b-cloud",
+  "provider": {
+    "ollama": {
+      "name": "Ollama Cloud via localhost",
+      "npm": "@ai-sdk/openai-compatible",
+      "options": {
+        "baseURL": "http://127.0.0.1:11434/v1"
+      },
+      "models": {
+        "gpt-oss:120b-cloud": {
+          "name": "GPT-OSS 120B Cloud",
+          "reasoning": true,
+          "tool_call": true,
+          "limit": {
+            "context": 131072,
+            "output": 32768
+          }
+        }
+      }
+    }
+  }
+}

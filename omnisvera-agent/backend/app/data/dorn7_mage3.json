@@ -1,0 +1,253 @@
+{
+  "version": "dorn-mage3-approved-2026-10-07",
+  "source": "Decisão explícita de Sage: nível 3, PV 20, quatro preparações independentes e traços aprovados. BA/JP seguem a tabela de Mago já cadastrada.",
+  "action_contracts": {
+    "forca-arcana": {
+      "schema_version": 1,
+      "revision": "dorn-forca-arcana-campaign-v1",
+      "approval": {"kind": "campaign", "reference": "docs/APPROVED_SKILLS_2026-10-13.md"},
+      "executor": {"binding": "dorn_forca_arcana"},
+      "targeting": {"kind": "living_or_dorn", "min_targets": 1, "max_targets": 1, "unique_by": "entity", "include_self": true},
+      "range": {"mode": "touch", "cells": 1},
+      "area": "selected_target",
+      "duration": "fictional_time",
+      "action_budget": "native_main_action",
+      "costs": [{"type": "resource", "key": "dorn_forca_arcana", "amount": 1, "recharge": "inn_rest"}],
+      "resolution": {
+        "effect": "strength_bonus", "strength_divisor": 5, "rounding": "floor", "source_attribute": "original_strength",
+        "lifetime": {"count": 1, "sides": 6, "add": {"per_level": 1}, "multiplier": 600}
+      }
+    },
+    "teia": {
+      "schema_version": 1,
+      "revision": "dorn-teia-campaign-v1",
+      "approval": {"kind": "campaign", "reference": "docs/APPROVED_SKILLS_2026-10-13.md"},
+      "executor": {"binding": "dorn_teia"},
+      "targeting": {"kind": "token_anchor", "min_targets": 1, "max_targets": 1, "unique_by": "entity", "include_self": true},
+      "range": {"mode": "ranged", "meters": {"base": 3, "per_level": 1}},
+      "area": "anchor_rectangle",
+      "duration": "fictional_time",
+      "action_budget": "native_main_action",
+      "costs": [{"type": "resource", "key": "dorn_teia", "amount": 1, "recharge": "inn_rest"}],
+      "resolution": {
+        "effect": "web_area", "dimensions": {"width_m": 3, "height_m": 3, "vertical_m": 6},
+        "lifetime_seconds": {"base": 3600, "per_level": 600},
+        "penalties": {"movement_multiplier": 3, "armor_class_bonus": -2, "dexterity_save_bonus": -2}
+      }
+    },
+    "dissipar-magia": {
+      "schema_version": 1,
+      "revision": "dorn-dissipar-magia-campaign-v1",
+      "approval": {"kind": "campaign", "reference": "docs/APPROVED_SKILLS_2026-10-13.md"},
+      "executor": {"binding": "dorn_dissipar_magia"},
+      "targeting": {"kind": "active_arcane_effect", "min_targets": 1, "max_targets": 1, "unique_by": "effect", "include_self": true},
+      "range": {"mode": "ranged", "meters": {"base": 10, "per_level": 3}},
+      "area": "selected_effect",
+      "duration": "instant",
+      "action_budget": "native_main_action",
+      "costs": [{"type": "resource", "key": "dorn_dissipar_magia", "amount": 1, "recharge": "inn_rest"}],
+      "resolution": {
+        "effect": "dispel_arcane", "check": {"count": 1, "sides": 20, "add": {"per_level": 1}, "multiplier": 1},
+        "difficulty": {"base": 5, "include_spell_circle": true, "include_caster_level": true}
+      }
+    },
+    "reflexos": {
+      "schema_version": 1,
+      "revision": "dorn-reflexos-campaign-v2",
+      "approval": {"kind": "campaign", "reference": "docs/ACTIVE_SPELL_EFFECTS_2026-10-27.md"},
+      "executor": {"binding": "dorn_reflexos"},
+      "targeting": {"kind": "self", "min_targets": 1, "max_targets": 1, "unique_by": "entity", "include_self": true},
+      "range": {"mode": "self", "meters": 0},
+      "area": "self",
+      "duration": "fictional_time",
+      "action_budget": "native_main_action",
+      "costs": [{"type": "resource", "key": "dorn_reflexos", "amount": 1, "recharge": "inn_rest"}],
+      "resolution": {
+        "effect": "mirror_images",
+        "images": {"count": 1, "sides": 4, "add": {"base": 1}, "multiplier": 1},
+        "lifetime": {"count": 1, "sides": 6, "add": {"per_level": 1}, "multiplier": 600},
+        "intercept_chance_percent": 90,
+        "intercept_area": false
+      }
+    }
+  },
+  "sheet": {
+    "attributes": {
+      "strength": 14,
+      "dexterity": 8,
+      "constitution": 16,
+      "intelligence": 16,
+      "wisdom": 12,
+      "charisma": 6
+    },
+    "race": {
+      "race": "Constructo Arcano",
+      "movement": "9 m",
+      "racial_abilities": "Natureza: não respira, come, bebe ou dorme. Forma Imutável: imune a transformações físicas. Mente Artificial: +4 JP contra sono mágico, encantamento e controle mental. Corpo Artificial: imune a doenças naturais e venenos comuns. Reparo: exige Kit de Reparo; recupera 1d4 PV. Cura mágica convencional não funciona."
+    },
+    "character_class": {
+      "class_name": "Mago",
+      "level": 3,
+      "hit_points": 20,
+      "saving_throw": 14,
+      "base_attack": 1,
+      "class_abilities": "PV 20: override aprovado, sem rolagem retroativa. Núcleo Rúnico é o grimório integrado. Progressão futura utiliza o Dado de Vida de Mago; quatro preparações independentes por override da campanha."
+    },
+    "attacks": {
+      "melee_bonus": 3,
+      "ranged_bonus": 0,
+      "attack_notes": "BA +1. Malha Rúnica: +3 / 1d6+2. Adaga: corpo a corpo +3 / 1d4+2; arremesso +0 / 1d4, sem FOR no dano."
+    },
+    "equipment": {
+      "equipment_list": "Malha Rúnica; Adaga; Escritas Rúnicas; Núcleo Rúnico; Kit de Reparo; Cristal de Memória danificado; Compartimento interno"
+    },
+    "armor": {
+      "armor_class": 11,
+      "armor_breakdown": "Base 10 · DES -1 · Escritas Rúnicas +2"
+    },
+    "magic": {
+      "magic_mode": "spells",
+      "known_magic": "Mísseis Mágicos; Levitação; Escuridão; Relâmpago",
+      "magic_notes": "Três usos de Mísseis Mágicos e uma preparação por outra magia, até o próximo descanso. Progressão especial aprovada; não aplicar slots compartilhados."
+    }
+  },
+  "abilities": [
+    {
+      "id": "misseis-magicos",
+      "name": "Mísseis Mágicos",
+      "kind": "spell",
+      "group": "Magias",
+      "circle": 1,
+      "active": true,
+      "blocked": false,
+      "mechanics_status": "structured",
+      "requires_target": true,
+      "description": "Projétil automático conforme regra cadastrada; selecionar alvo e confirmar.",
+      "uses": {
+        "resource_key": "dorn_misseis_magicos",
+        "label": "Mísseis Mágicos · preparada",
+        "maximum": 3,
+        "recharge": "inn_rest"
+      }
+    },
+    {
+      "id": "levitacao",
+      "name": "Levitação",
+      "kind": "spell",
+      "group": "Magias",
+      "circle": 2,
+      "active": true,
+      "blocked": false,
+      "mechanics_status": "structured",
+      "description": "Tomo Arcano p.58–59: receptor até 50 kg/nível, alcance 20 m/nível, duração 1 turno/nível. JPC para receptor involuntário. Movimento vertical até 2 m/rodada; sem voo horizontal. Arremesso instável: -1 até -5; estabilizar restaura -1.",
+      "uses": {
+        "resource_key": "dorn_levitacao",
+        "label": "Levitação · preparada",
+        "maximum": 1,
+        "recharge": "inn_rest"
+      }
+    },
+    {
+      "id": "escuridao",
+      "name": "Escuridão",
+      "kind": "spell",
+      "group": "Magias",
+      "circle": 2,
+      "active": true,
+      "blocked": false,
+      "mechanics_status": "structured",
+      "description": "Regra de campanha aprovada: raio de 4,5 m, alcance 10 m/nível. Imobiliza os receptores por até 3 turnos individuais, como a Pulseira de Vinhas: JP normal no início de cada turno; sucesso liberta, falha passa o turno. Mestre confirma os ocupantes. Não aplica os antigos modificadores de cegueira.",
+      "uses": {
+        "resource_key": "dorn_escuridao",
+        "label": "Escuridão · preparada",
+        "maximum": 1,
+        "recharge": "inn_rest"
+      }
+    },
+    {
+      "id": "relampago",
+      "name": "Relâmpago",
+      "kind": "spell",
+      "group": "Magias",
+      "circle": 3,
+      "active": true,
+      "blocked": false,
+      "mechanics_status": "structured",
+      "action_contract": {
+        "schema_version": 1,
+        "revision": "dorn-relampago-campaign-v1",
+        "approval": {"kind": "campaign", "reference": "docs/RANGE_MULTI_TARGET_2026-10-14.md"},
+        "executor": {"binding": "dorn_relampago"},
+        "targeting": {"kind": "living", "min_targets": 1, "max_targets": 3, "unique_by": "entity", "include_self": false},
+        "range": {"mode": "ranged", "meters": {"base": 40, "per_level": 10}},
+        "area": "selected_targets",
+        "duration": "instant",
+        "action_budget": "native_main_action",
+        "costs": [{"type": "resource", "key": "dorn_relampago", "amount": 1, "recharge": "inn_rest"}],
+        "resolution": {"damage": {"count": {"per_level": 1, "cap": 10}, "sides": 6, "shared": true}, "save": {"attribute": "dexterity", "on_success": "half_floor"}}
+      },
+      "description": "Regra de campanha aprovada: até três alvos únicos no alcance de 40 + 10 m/nível; uma rolagem de 1d6/nível (máximo 10d6) compartilhada, uma JPD por alvo reduz à metade arredondada para baixo. Sem reflexões automáticas.",
+      "uses": {
+        "resource_key": "dorn_relampago",
+        "label": "Relâmpago · preparada",
+        "maximum": 1,
+        "recharge": "inn_rest"
+      }
+    },
+    {
+      "id": "dorn-reparo",
+      "name": "Reparo",
+      "kind": "ability",
+      "group": "Ações / Protocolos",
+      "active": true,
+      "mechanics_status": "structured",
+      "description": "Consome 1 Kit de Reparo e recupera 1d4 PV até o máximo. Sem limite diário; mesmo timing da poção de HP. Descanso não repõe kits."
+    }
+  ],
+  "items": [
+    {
+      "name": "Malha Rúnica",
+      "type": "arma",
+      "damage": "1d6+2",
+      "equipped": true,
+      "description": "Arma e foco mágico integrados; não é armadura. FOR já incluída no dano."
+    },
+    {
+      "name": "Adaga",
+      "type": "arma",
+      "damage": "1d4+2",
+      "equipment_slots": [
+        "Corpo a corpo",
+        "À distância"
+      ],
+      "thrown_damage": "1d4",
+      "description": "Corpo a corpo +3 / 1d4+2; arremesso +0 / 1d4. Alcance conforme a regra de arremesso existente."
+    },
+    {
+      "name": "Escritas Rúnicas",
+      "type": "item",
+      "description": "Proteção integrada +2 já incluída na CA 11: Base 10 · DES -1 · Escritas Rúnicas +2."
+    },
+    {
+      "name": "Núcleo Rúnico",
+      "type": "item",
+      "description": "Grimório integrado, normalmente não removível. Mísseis Mágicos, Levitação, Escuridão e Relâmpago."
+    },
+    {
+      "name": "Kit de Reparo",
+      "type": "consumível",
+      "quantity": 5,
+      "description": "Reparo: consome 1 kit para recuperar 1d4 PV. Sem limite diário; descanso não repõe kits."
+    },
+    {
+      "name": "Cristal de Memória danificado",
+      "type": "item",
+      "description": "Item narrativo, sem nova mecânica."
+    },
+    {
+      "name": "Compartimento interno",
+      "type": "item",
+      "description": "Equipamento integrado; capacidade não definida, sem carga ilimitada."
+    }
+  ]
+}

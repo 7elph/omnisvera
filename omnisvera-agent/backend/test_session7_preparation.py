@@ -86,13 +86,15 @@ class Session7PreparationTests(unittest.TestCase):
              patch.object(main, 'scene_view', side_effect=view), \
              patch.object(main, 'scene_contract_links', return_value=[]), \
              patch.object(main, '_character_summary', side_effect=lambda character: character), \
-             patch.object(main, '_playable_character', side_effect=lambda cid, access: {'id': cid, 'viewer': access.mode}) as playable:
+             patch.object(main, '_playable_character', side_effect=lambda cid, access, *, read_only=False: {'id': cid, 'viewer': access.mode, 'read_only':read_only}) as playable:
             gm = main.authorized_scenes(main.AccessContext(mode='gm'))
             self.assertEqual(1, playable.call_count)
             player = main.authorized_scenes(main.AccessContext(mode='player', profile_id='morthak'))
             self.assertEqual(2, playable.call_count)
             self.assertEqual('gm', gm[0]['participants'][0]['character']['viewer'])
             self.assertEqual('player', player[0]['participants'][0]['character']['viewer'])
+            self.assertTrue(gm[0]['participants'][0]['character']['read_only'])
+            self.assertTrue(player[0]['participants'][0]['character']['read_only'])
 
 
 if __name__=='__main__':

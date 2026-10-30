@@ -14,7 +14,7 @@ export function LogicalGrid({grid,destination}:{grid:MapGrid;destination:Cell|nu
 
 export function GridConfiguration({mapId,grid,disabled,onChange}:{mapId:string;grid?:MapGrid;disabled:boolean;onChange:()=>Promise<unknown>}) {
   const [error,setError]=useState(''); const [pending,setPending]=useState(false);
-  return <details className="logical-grid-controls"><summary>{grid ? `Grid ${grid.cols}×${grid.rows} · ${grid.cell_size_m} m/célula` : 'Configurar grid lógico'}</summary>
+  return <details className="logical-grid-controls"><summary>{grid ? `Ajustes avançados · grid pronto ${grid.cols}×${grid.rows} · ${grid.cell_size_m} m/célula` : 'Ajustes avançados · configurar outro mapa'}</summary>
     <p>Diagonal provisória, configurável; a imagem não define as regras. Origem em % da imagem. Calibre fora do combate.</p>
     <form key={`${mapId}:${grid?.version}`} onSubmit={async event=>{event.preventDefault();const data=new FormData(event.currentTarget);setPending(true);setError('');try {
       await configureMapGrid(mapId,{cols:Number(data.get('cols')),rows:Number(data.get('rows')),cell_size_m:Number(data.get('scale')),origin_x:Number(data.get('x')),origin_y:Number(data.get('y')),distance_rule:data.get('rule') as MapGrid['distance_rule']},grid?.version || 0);await onChange();

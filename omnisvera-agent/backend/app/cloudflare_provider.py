@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import base64
 import os
+import time
 from io import BytesIO
 from pathlib import Path
 from typing import Protocol
@@ -9,6 +10,38 @@ from typing import Protocol
 class CloudflareProvider:
     def generate(self, prompt: str, output_path: Path, references: list[Path] | None = None) -> Path:
         raise NotImplementedError
+
+class ImageProviderError(RuntimeError):
+    """Only fixed, safe diagnostics may cross into persisted asset jobs."""
+    def __init__(self, message, *, reason='unknown'):
+        super().__init__(message)
+        self.reason = reason
+
+def _http_error(response):
+    codes = []
+    daily_quota = False
+    try:
+        payload = response.json()
+        for error in payload.get('errors', []) if isinstance(payload, dict) else []:
+            code = error.get('code') if isinstance(error, dict) else None
+            if type(code) is int and 0 <= code <= 999999:
+                codes.append(str(code))
+                message = error.get('message', '')
+                # 4006 was observed with this explicit upstream explanation.
+                # Do not classify every 429/4006 as quota or persist raw text.
+                if code == 3036 or (code == 4006 and isinstance(message, str)
+                        and 'you have used up your daily free allocation of 10,000 neurons' in message.lower()):
+                    daily_quota = True
+    except (ValueError, TypeError):
+        pass
+    suffix = (' · código ' + ', '.join(codes[:3])) if codes else ''
+    if response.status_code == 429 and daily_quota:
+        return ImageProviderError(f'Cloudflare Workers AI: HTTP 429{suffix}. '
+                                  'Franquia gratuita diária de 10.000 neurônios esgotada, confirmada pelo provider. '
+                                  'Renova às 21h de Brasília (00:00 UTC). Nenhuma troca de modelo libera a cota compartilhada.', reason='daily_quota')
+    return ImageProviderError(f'Cloudflare Workers AI: HTTP {response.status_code}{suffix}. '
+                              'O provider recusou a geração; a causa não foi confirmada como limite diário.',
+                              reason='upstream' if response.status_code >= 500 else 'capacity' if '3040' in codes else 'unknown')
 
 class MockProvider(CloudflareProvider):
     def __init__(self, fail: bool = False):
@@ -44,13 +77,21 @@ def _load_cloudflare_creds() -> tuple[str | None, str | None]:
     return account_id, token
 
 class FluxKleinProvider(CloudflareProvider):
-    """Real provider for @cf/black-forest-labs/flux-2-klein-4b"""
+    """Klein provider; explicit per-instance selection preserves the default."""
+    def __init__(self, model: str = 'flux-2-klein-9b', timeout_seconds: float = 180):
+        if model not in ('flux-2-klein-4b', 'flux-2-klein-9b'):
+            raise ValueError('Modelo Klein não suportado; nenhum fallback automático')
+        if not 1 <= timeout_seconds <= 300:
+            raise ValueError('Timeout deve estar entre 1 e 300 segundos')
+        self.model = model
+        self.timeout_seconds = timeout_seconds
+
     def generate(self, prompt: str, output_path: Path, references: list[Path] | None = None) -> Path:
         account_id, token = _load_cloudflare_creds()
         if not account_id or not token:
-            raise RuntimeError("CLOUDFLARE_ACCOUNT_ID/TOKEN not configured (env or backend/data/cloudflare.json)")
+            raise ImageProviderError('Workers AI não configurado: credenciais ausentes.')
         import httpx
-        url = f"https://api.cloudflare.com/client/v4/accounts/{account_id}/ai/run/@cf/black-forest-labs/flux-2-klein-4b"
+        url = f"https://api.cloudflare.com/client/v4/accounts/{account_id}/ai/run/@cf/black-forest-labs/{self.model}"
         headers = {"Authorization": f"Bearer {token}"}
         from PIL import Image
         if len(references or []) > 4:
@@ -60,12 +101,9 @@ class FluxKleinProvider(CloudflareProvider):
             try:
                 with Image.open(path) as probe:
                     probe.verify()
-                with Image.open(path) as sized:
-                    if min(sized.size) < 128:
-                        continue
                 usable_refs.append(path)
-            except Exception:
-                continue
+            except Exception as exc:
+                raise ValueError('Referência inválida; geração cancelada para preservar a identidade visual') from exc
         files = {"prompt": (None, prompt)}
         for index, path in enumerate(usable_refs):
             with Image.open(path) as original:
@@ -74,14 +112,24 @@ class FluxKleinProvider(CloudflareProvider):
                 buffer = BytesIO()
                 picture.save(buffer, format='PNG')
             files[f'input_image_{index}'] = (f'reference_{index}.png', buffer.getvalue(), 'image/png')
-        with httpx.Client(timeout=60) as client:
-            resp = client.post(url, headers=headers, files=files)
-            if resp.is_error and resp.status_code == 400 and len(files) > 1:
-                # Referências pequenas ou inválidas fazem o modelo recusar;
-                # o texto do prompt sozinho já foi validado como aceito.
-                resp = client.post(url, headers=headers, files={"prompt": (None, prompt)})
+        with httpx.Client(timeout=self.timeout_seconds) as client:
+            started = time.monotonic()
+            try:
+                resp = client.post(url, headers=headers, files=files)
+                # A received 5xx can be transient (identical real request later
+                # succeeded). Retry once, with the same reference and model.
+                # Do not retry ambiguous timeouts, quota or authorization errors.
+                if 500 <= resp.status_code <= 599:
+                    remaining = self.timeout_seconds - (time.monotonic() - started)
+                    if remaining > 1:
+                        resp = client.post(url, headers=headers, files=files, timeout=remaining)
+            except httpx.TimeoutException as exc:
+                raise ImageProviderError('Workers AI não respondeu dentro do tempo limite.') from exc
+            except httpx.TransportError as exc:
+                raise ImageProviderError('Não foi possível conectar ao Workers AI.') from exc
+            # Never silently drop identity references and retry text-only.
             if resp.is_error:
-                raise RuntimeError(f"Cloudflare Workers AI: HTTP {resp.status_code}. Verifique o formato da solicitação, as permissões e a disponibilidade do modelo.")
+                raise _http_error(resp)
             # Response may be binary image or JSON with image
             content_type = resp.headers.get("content-type", "")
             if "image" in content_type:
@@ -99,14 +147,15 @@ class FluxKleinProvider(CloudflareProvider):
                     else:
                         raise ValueError("Resposta sem imagem")
                 except (ValueError, TypeError, KeyError) as exc:
-                    raise RuntimeError("Cloudflare retornou uma resposta sem imagem válida; nenhum asset foi salvo.") from exc
+                    raise ImageProviderError("Cloudflare retornou uma resposta sem imagem válida; nenhum asset foi salvo.") from exc
             if not (image.startswith(b"\x89PNG\r\n\x1a\n") or image.startswith(b"\xff\xd8\xff") or (image.startswith(b"RIFF") and image[8:12] == b"WEBP")):
-                raise RuntimeError("Cloudflare retornou conteúdo que não é uma imagem; nenhum asset foi salvo.")
+                raise ImageProviderError("Cloudflare retornou conteúdo que não é uma imagem; nenhum asset foi salvo.")
             output_path.parent.mkdir(parents=True, exist_ok=True)
             output_path.write_bytes(image)
         return output_path
 
-def get_provider(mock: bool = False) -> CloudflareProvider:
+def get_provider(mock: bool = False, mode: str = 'official') -> CloudflareProvider:
     if mock or os.getenv("OMNISVERA_ASSET_MOCK") == "1":
         return MockProvider()
-    return FluxKleinProvider()
+    from .image_routing import RoutedImageProvider
+    return RoutedImageProvider(mode)

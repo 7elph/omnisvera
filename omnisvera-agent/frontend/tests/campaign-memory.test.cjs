@@ -43,22 +43,24 @@ test("the view reuses campaign entities instead of a parallel inventory", () => 
   for (const call of ["listCampaignSessions", "listContracts", "listPlayableCharacters"]) {
     assert.match(page, new RegExp(`${call}\\(`));
   }
-  assert.match(app, /view=\{page === "maps" \? "maps" : page === "scenes" \|\| \(page === "conclave"[\s\S]*?\? "memory" : "table"\}/);
+  assert.match(app, /view=\{page === "npcs" \? "npcs" : page === "maps" \? "maps" : \(page === "conclave"[\s\S]*?\? "memory" : mode === "player" && playerSessionView === "sheet" \? "sheet" : "table"\}/);
   assert.doesNotMatch(page, /SessionWorkspace/);
   assert.doesNotMatch(page, /ReadOnlyCampaignMap|campaign-map-stage|const sessions\s*=\s*\[/);
   assert.doesNotMatch(page, /create(Session|Item|Reward|Character)/);
 });
 
-test("Mesa, Mapas, Sessão and Cenas keep one stable SessionWorkspace instance", () => {
+test("Mesa, Mapas and Sessão keep the native workspace; Cenas uses the preparation gallery", () => {
   assert.equal((app.match(/<SessionWorkspace/g) || []).length, 1);
   assert.match(app, /key=\{`workspace-\$\{authVersion\}-\$\{mode\}`\}/);
-  assert.match(app, /page === "scenes" \? "session-workspace unified-workspace scene-workspace-surface"/);
+  assert.match(app, /page === "scenes" \? "workspace-surface scene-preparation-surface"/);
+  assert.match(app, /page !== "scenes" && <SessionWorkspace/);
   assert.doesNotMatch(app, /workspace-\$\{authVersion\}-(gm|player|gm-maps)/);
 });
 
-test("player table exists only inside an active session and keeps only the owner sheet selectable", () => {
+test("player table needs an active session but the owner's sheet remains independently available", () => {
   assert.match(app, /const available = sessions\.some\(\(session\) => session\.status === "active"\)/);
-  assert.match(app, /if \(!available\) setPlayerSessionView\("memory"\)/);
+  assert.match(app, /if \(!available\) setPlayerSessionView\(current => current === "table" \? "sheet" : current\)/);
+  assert.match(page, /disabled=\{!ownerCharacterId\}[^\n]*detail: "sheet"/);
   assert.match(page, /const canOpenTable = mode === "gm" \|\| Boolean\(activeSession\)/);
   assert.match(page, /Aguardando Mestre/);
   assert.match(page, /const liveScene = activeSession \? activeScene : null/);
@@ -73,12 +75,12 @@ test("player table exists only inside an active session and keeps only the owner
   assert.match(workspace, /snapshot = await getSessionWorkspace\(\)/);
 });
 
-test("GM scene preparation uses the Mesa three-column shell and current map", () => {
+test("GM scene preparation is private and live player selection remains tied to the active scene", () => {
   assert.match(app, /<ScenePanel[^>]+mode="gm" surface="admin"/);
   assert.match(scene, /className=\{surface === "admin" \? "scene-workspace-left"/);
   assert.match(scene, /surface === "live" && viewerMode === "player"[\s\S]*?active\?\.id/);
-  assert.match(styles, /\.scene-workspace-surface\s*\{[\s\S]*?grid-template-areas: "header header header" "left map right"/);
-  assert.match(styles, /\.scene-workspace-surface \.workspace-map-panel \{ grid-area: map/);
+  assert.match(scene, /privateAdmin && <ScenePreparationViewer/);
+  assert.match(scene, /getSessionWorkspace\(mapId\)/);
 });
 
 test("campaign status refreshes across clients and on mobile resume", () => {
@@ -90,7 +92,8 @@ test("campaign status refreshes across clients and on mobile resume", () => {
 });
 
 test("recent session cards come only from the backend chronology", () => {
-  assert.match(page, /const latest = memories\.slice\(0, 4\)/);
+  assert.match(page, /const latest = memories;/);
+  assert.doesNotMatch(page, /const latest = memories\.slice/);
   assert.match(page, /public_summary/);
   assert.match(page, /public_chronicle/);
   assert.doesNotMatch(page, /buildMemories\(sessions, scenes/);

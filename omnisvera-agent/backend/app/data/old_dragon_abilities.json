@@ -1,0 +1,393 @@
+{
+ "schema_version": 1,
+ "catalog": {
+  "id": "old-dragon-habilidades",
+  "title": "Old Dragon - Habilidades de Especialistas e Regras de Magia",
+  "sources": [
+   "Mestres do Arcano (PEP/GdM 2018, não-oficial)",
+   "Tomo Arcano OD2",
+   "Tomo Divino OD2"
+  ],
+  "license": "Ver cada fonte (Tomo CC BY-SA 4.0; Mestres material de fã gratuito)",
+  "attribution": "Extraído via pdftotext -raw dos PDFs locais."
+ },
+ "count": 47,
+ "abilities": [
+  {
+   "spec": "Adivinho",
+   "level": 5,
+   "title": "Adivinho nv5",
+   "description": "5º Nível: Uma vez ao dia o abjurante pode invocar sobre si uma aura arcana protetora. Esta aura é invisível, tornando-se visível apenas ao absorver impactos. Ela concede um total de pontos de vida temporários igual ao triplo do nível do abjurante.",
+   "source": "Mestres do Arcano (PEP, GdM, 2018, material não-oficial de fã)",
+   "id": "adivinho-nv5-adivinho-nv5"
+  },
+  {
+   "spec": "Abjurante",
+   "level": 8,
+   "title": "Abjurante nv8",
+   "description": "8º Nível: O abjurante começa a criar defesas contra magia. Recebe +5 nas rolagens para dissipar magias e +2 nas jogadas de proteção contra magias de qualquer tipo.",
+   "source": "Mestres do Arcano (PEP, GdM, 2018, material não-oficial de fã)",
+   "id": "abjurante-nv8-abjurante-nv8"
+  },
+  {
+   "spec": "Abjurante",
+   "level": 16,
+   "title": "Abjurante nv16",
+   "description": "16º Nível: No auge do seu poder, o abjurante se torna imune às magias conjuradas por seres com menos de 8 dados de vida. Para as demais possui 30% de Resistência à magia. Muitos adivinhos são chamados de profetas, mas a realidade é que suas visões são fruto de estudos arcanos e não de epifanias ou algum tipo de revelação divina.",
+   "source": "Mestres do Arcano (PEP, GdM, 2018, material não-oficial de fã)",
+   "id": "abjurante-nv16-abjurante-nv16"
+  },
+  {
+   "spec": "Adivinho",
+   "level": 5,
+   "title": "Adivinho nv5",
+   "description": "5º Nível: Os sentidos se aguçam com o tempo e o adivinho adquire o talento ladino Percepção, podendo também utilizar o modificador de inteligência para surpresa.",
+   "source": "Mestres do Arcano (PEP, GdM, 2018, material não-oficial de fã)",
+   "id": "adivinho-nv5-adivinho-nv5-2"
+  },
+  {
+   "spec": "Adivinho",
+   "level": 8,
+   "title": "Adivinho nv8",
+   "description": "8º Nível: O adivinho consegue se concentrar para ter vislumbres do futuro próximo. No inicio de cada sessão de jogo 2d20 são rolados e seus resultados individuais anotados. Ao longo da sessão o adivinho pode pronunciar uma de suas visões e com isso substituir o resultado de 1d20 rolado por um dos seus d20 proféticos. Esta troca atinge a rolagem de aliados e inimigos, para bem ou para mal.",
+   "source": "Mestres do Arcano (PEP, GdM, 2018, material não-oficial de fã)",
+   "id": "adivinho-nv8-adivinho-nv8"
+  },
+  {
+   "spec": "Adivinho",
+   "level": 16,
+   "title": "Adivinho nv16",
+   "description": "16º Nível: Ao tocar um objeto ou item pessoal de alguém, o adivinho pode fazer uma jogada de proteção para tentar descobrir seu passado, origens, poderes, propósitos ou seu futuro. Se o objeto estiver em sua posse por um período prolongado, pode descobrir uma informação destas por dia. Ao contrário de outros especialistas, os arquimagos não possuem foco numa determinada escola, mas sim em suas preferências e capacidades de conjuração. Com isso, arquimagos possuem grande poder.",
+   "source": "Mestres do Arcano (PEP, GdM, 2018, material não-oficial de fã)",
+   "id": "adivinho-nv16-adivinho-nv16"
+  },
+  {
+   "spec": "Arquimago",
+   "level": 5,
+   "title": "Arquimago nv5",
+   "description": "5º Nível: Um arquimago possui +10% na chance de aprender magias, sendo que sempre que atinge a capacidade de lançar magias de um novo círculo, pode adicionar uma magia deste círculo automaticamente ao seu grimório.",
+   "source": "Mestres do Arcano (PEP, GdM, 2018, material não-oficial de fã)",
+   "id": "arquimago-nv5-arquimago-nv5"
+  },
+  {
+   "spec": "Arquimago",
+   "level": 8,
+   "title": "Arquimago nv8",
+   "description": "8º Nível: O arquimago começa a imprimir sua personalidade em suas magias, dando seus toques pessoais. Escolha uma magia de 3º círculo, ou duas de 2º ou três de 1º para uma obter uma ampliação de efeitos de um círculo grátis, conforme as regras do livro (ODA p.86).",
+   "source": "Mestres do Arcano (PEP, GdM, 2018, material não-oficial de fã)",
+   "id": "arquimago-nv8-arquimago-nv8"
+  },
+  {
+   "spec": "Arquimago",
+   "level": 16,
+   "title": "Arquimago nv16",
+   "description": "16º Nível: Neste ponto o arquimago consegue se imbuir do poder de uma magia de 1º círculo, podendo conjurá-la sem limite. Seu domínio sobre magias é tamanho que a magia Permanência agora passa a abranger magias de 4º e 5º círculos. Caso não tenha a magia Permanência, ela será adicionada ao seu grimório automaticamente. Dividir o tempo de estudos arcanos com treinamento marcial para muitos é uma perda de tempo, mas para outros pode significar uma questão de vida ou morte.",
+   "source": "Mestres do Arcano (PEP, GdM, 2018, material não-oficial de fã)",
+   "id": "arquimago-nv16-arquimago-nv16"
+  },
+  {
+   "spec": "Arquimago",
+   "level": 5,
+   "title": "Arquimago nv5",
+   "description": "5º Nível: A dedicação do cavaleiro arcano lhe impede de aprender as magias de 7º círculo ou maiores, mas lhe garante a capacidade de conjurar magias trajando armaduras e aumenta seus dados de vida para d6.",
+   "source": "Mestres do Arcano (PEP, GdM, 2018, material não-oficial de fã)",
+   "id": "arquimago-nv5-arquimago-nv5-2"
+  },
+  {
+   "spec": "Cavaleiro arcano",
+   "level": 8,
+   "title": "Cavaleiro arcano nv8",
+   "description": "8º Nível: Neste ponto o cavaleiro arcano aprende a utilizar uma arma qualquer e pode conjurar uma magia de 4º círculo para ganhar a capacidade de combate de um guerreiro autêntico. Durante 1d6 rodadas o mago terá o base ataque e número de ataques de um homem de armas do seu mesmo nível.",
+   "source": "Mestres do Arcano (PEP, GdM, 2018, material não-oficial de fã)",
+   "id": "cavaleiro-arcano-nv8-cavaleiro-arcano-nv8"
+  },
+  {
+   "spec": "Cavaleiro arcano",
+   "level": 16,
+   "title": "Cavaleiro arcano nv16",
+   "description": "16º Nível: O cavaleiro arcano pode canalizar energias arcanas através desta arma. Após um processo de uma hora de duração, o cavaleiro pode armazenar suas magias diárias na arma, de modo a conjurá-las sem precisar dos componentes na hora da utilização. Outra opção é queimar energia arcana antes de um ataque, o que causaria 1d6 de dano extra para cada círculo da magia canalizada no ataque. O tempo é uma das dimensões mais fascinantes da realidade. Como tal, não poderia deixar de ser objeto de estudos de magos dedicados. Cronomancer é aquele mago que entende e manipula a malha do tempo como ninguém.",
+   "source": "Mestres do Arcano (PEP, GdM, 2018, material não-oficial de fã)",
+   "id": "cavaleiro-arcano-nv16-cavaleiro-arcano-nv16"
+  },
+  {
+   "spec": "Cronomancer",
+   "level": 5,
+   "title": "Cronomancer nv5",
+   "description": "5º Nível: O cronomancer adiciona seu modificador de inteligência nas jogadas de iniciativa e na sua taxa de movimentação. Caso deseje expandir estes efeitos a outros personagens, o cronomancer pode conjurar uma magia de 3º círculo. Como efeito, este bônus afetará 5 personagens por um número de rodadas igual a metade do seu nível.",
+   "source": "Mestres do Arcano (PEP, GdM, 2018, material não-oficial de fã)",
+   "id": "cronomancer-nv5-cronomancer-nv5"
+  },
+  {
+   "spec": "Cronomancer",
+   "level": 8,
+   "title": "Cronomancer nv8",
+   "description": "8º Nível: Uma vez por dia o cronomancer pode voltar no tempo. Como efeito, você pode ignorar tudo que aconteceu na última hora, mas se utilizar esta habilidade no calor do combate conseguirá ignorar apenas o que aconteceu em uma rodada. Esta habilidade demanda muito esforço, sendo necessário uma jogada de proteção para evitar um atordoamento ou a perda de 1d4 pontos de constituição permanentes, caso alguma vida tenha que ser trazida dos mortos por conta desta manipulação temporal.",
+   "source": "Mestres do Arcano (PEP, GdM, 2018, material não-oficial de fã)",
+   "id": "cronomancer-nv8-cronomancer-nv8"
+  },
+  {
+   "spec": "Cronomancer",
+   "level": 16,
+   "title": "Cronomancer nv16",
+   "description": "16º Nível: Uma vez por dia o cronomancer pode conjurar uma magia de 7º círculo para ter 2 ações padrão por rodada. Este efeito dura 1d6 rodadas e permite até mesmo a conjuração de duas magias na mesma rodada. Após término do efeito você precisará descansar, pois ficará desgastado ao extremo e impossibilitado de andar por 1d6 horas. Os diabolistas são magos que buscam poder através de pactos com Diabos. Um diabolista não é um servo de um demônio, nem possui um patrono infernal, sendo na verdade um grande oportunista que se aproveita do conhecimento dos nomes reais dos diabos, para realizar pactos vantajosos.",
+   "source": "Mestres do Arcano (PEP, GdM, 2018, material não-oficial de fã)",
+   "id": "cronomancer-nv16-cronomancer-nv16"
+  },
+  {
+   "spec": "Diabolista",
+   "level": 5,
+   "title": "Diabolista nv5",
+   "description": "5º Nível: O Diabolista pode invocar e controlar Diabos inferiores a partir do seu próprio sangue. Uma vez por dia, ao custo de 1d8 pontos de dano, o Diabolista pode conjurar um 1d3 Lêmures (bestiário p.131) ou 1 diabrete (bestiário p.55). Todas as suas ordens serão atendidas por 1d6 horas, ou até que os diabos sejam destruídos. Não existe uma distância limite ou a necessidade de contato visual, uma vez que a ordem tenha sido dada os diabos a cumprirão literalmente.",
+   "source": "Mestres do Arcano (PEP, GdM, 2018, material não-oficial de fã)",
+   "id": "diabolista-nv5-diabolista-nv5"
+  },
+  {
+   "spec": "Diabolista",
+   "level": 8,
+   "title": "Diabolista nv8",
+   "description": "8º Nível: Todas as criaturas invocadas pelas magias do Diabolista terão o modelo Diabólico (Bestiário p.211). Além disso, o Diabolista pode fazer um pacto menor (ver tabela) para obter os serviços leais de um Diabrete (bestiário p.55), Cão Infernal (bestiário p.34) ou Montaria Infernal (bestiário p.149). A criatura ficará a sua disposição até ser dispensada ou destruída, necessitando de uma semana de intervalo entre as conjurações. É possível assumir 3 pactos menores para poder conjurar todos os tipos de servos infernais. Pactos menores 1. Realizar algum voto que se quebrado anula o contrato para sempre. 2. Sacrifício anual de 5DV de humanoides. 3. Sacrifício de 5 pontos de vida permanentes. 4. Sacrifício de 10% de toda XP que ganhar. 5. Sacrifício de 1 ponto de atributo físico permanentemente e irrecuperável. 6. Realizar alguma tarefa específica para um Diabo Superior.",
+   "source": "Mestres do Arcano (PEP, GdM, 2018, material não-oficial de fã)",
+   "id": "diabolista-nv8-diabolista-nv8"
+  },
+  {
+   "spec": "Diabolista",
+   "level": 16,
+   "title": "Diabolista nv16",
+   "description": "16º Nível: Ao custo de um pacto maior, o Diabolista consegue tornar-se um ser Pactuado com o Diabo (bestiário p.213), podendo ativar e desativar os efeitos da aura de medo a qualquer momento. Dominando os conhecimentos ocultos, o Diabolista consegue negociar sua própria ressurreição com os Diabos, ao custo de 1 nível de experiência e a certeza de que será um Lêmure atormentado por toda a eternidade. Pactos maiores 1. Sacrifício anual de 15 DV de humanoides inocentes (virgens, crianças, sacerdotes etc). 2. Sacrifício anual de um recém-nascido de sangue nobre. 3. Sacrifício de um ente querido. 4. Sacrifício de 20% de toda XP que ganhar. 5. Deixar-se possuir durante 1 dia do ano enquanto sua alma é atormentada no inferno. 6. Realizar uma tarefa específica para Abbadon. O fascínio pelas forças elementais e os exóticos planos elementais atraem a atenção de alguns magos. Os elementalistas estudam formas de contato e domínio sobre os elementos, ou ao menos um deles.",
+   "source": "Mestres do Arcano (PEP, GdM, 2018, material não-oficial de fã)",
+   "id": "diabolista-nv16-diabolista-nv16"
+  },
+  {
+   "spec": "Elementalista",
+   "level": 5,
+   "title": "Elementalista nv5",
+   "description": "5º Nível: O elementalista pode imbuir suas magias com um elemento específico. Estas magias impõem -2 nas jogadas de proteção dos alvos. O elemento deve ser escolhido na hora da conjuração. Caso o elementalista se limite ao domínio de um único elemento, os efeitos de suas magias serão calculados como se tivesse mais dois níveis de personagem. O jogador deve, portanto, decidir o foco dos estudos de seu personagem neste ponto.",
+   "source": "Mestres do Arcano (PEP, GdM, 2018, material não-oficial de fã)",
+   "id": "elementalista-nv5-elementalista-nv5"
+  },
+  {
+   "spec": "Elementalista",
+   "level": 8,
+   "title": "Elementalista nv8",
+   "description": "8º Nível: Neste ponto o elementalista pode invocar uma criatura elemental extraplanar com a magia Invocar criaturas. O elemental terá os mesmos dos dados de vida permitidos pelo círculo de magia utilizado e todas as vantagens do modelo elemental descrito no Bestiário (p.211). Um elementalista limitado a um único elemento terá a magia Invocar Criaturas automaticamente inscrita no seu grimório de magias.",
+   "source": "Mestres do Arcano (PEP, GdM, 2018, material não-oficial de fã)",
+   "id": "elementalista-nv8-elementalista-nv8"
+  },
+  {
+   "spec": "Elementalista",
+   "level": 16,
+   "title": "Elementalista nv16",
+   "description": "16º Nível: No ápice de seus estudos, o elementalista pode utilizar magias de 6º círculo para se teleportar para um plano elemental e sobreviver lá por um dia. Isso não lhe garante imunidade a ataques, mas apenas capacidade necessária para sobreviver no plano. Um elementalista limitado a um único elemento poderá ficar no plano por uma semana inteira. Os segredos da mente são surpreendentes. Encantadores se dedicam na compreensão e no funcionamento das mentes inteligentes e animais. Sendo os peritos na arte da dominação e encantamento de mentes.",
+   "source": "Mestres do Arcano (PEP, GdM, 2018, material não-oficial de fã)",
+   "id": "elementalista-nv16-elementalista-nv16"
+  },
+  {
+   "spec": "Encantador",
+   "level": 5,
+   "title": "Encantador nv5",
+   "description": "5º Nível: Seus encantamentos impõem -2 nas jogadas de proteção dos alvos e seus efeitos duram 50% mais que o habitual.",
+   "source": "Mestres do Arcano (PEP, GdM, 2018, material não-oficial de fã)",
+   "id": "encantador-nv5-encantador-nv5"
+  },
+  {
+   "spec": "Encantador",
+   "level": 8,
+   "title": "Encantador nv8",
+   "description": "8º Nível: Chegando a entender como algumas magias divinas funcionam, o encantador pode adicionar automaticamente as magias divinas: Cativar, Cativar animais e Santuário ao seu grimório.",
+   "source": "Mestres do Arcano (PEP, GdM, 2018, material não-oficial de fã)",
+   "id": "encantador-nv8-encantador-nv8"
+  },
+  {
+   "spec": "Encantador",
+   "level": 16,
+   "title": "Encantador nv16",
+   "description": "16º Nível: O encantador adiciona a magia divina Enfeitiçar Multidões ao seu grimório e se torna capaz de conjurar uma magia de 7 círculo para tornar uma criatura inteligente em escravo permanente. O alvo pode fazer uma jogada de proteção no ato da conjuração e outro a cada ano. Os escravos podem levar sua vida normalmente, mas com um comando telepático param tudo para obedecer aos caprichos do encantador. O limite de escravos é de 10 dados de vida, mas é possível libertar os escravos para fazer novos, mas eles se lembrarão de tudo que passaram. Piromaníacos, delinquentes, inconsequentes e espalhafatosos são adjetivos comuns dados aos magos que focam seus estudos na arte da manipulação de energia bruta e destrutiva.",
+   "source": "Mestres do Arcano (PEP, GdM, 2018, material não-oficial de fã)",
+   "id": "encantador-nv16-encantador-nv16"
+  },
+  {
+   "spec": "Encantador",
+   "level": 5,
+   "title": "Encantador nv5",
+   "description": "5º Nível: As magias de ataque impõem -2 nas jogadas de proteção dos alvos.",
+   "source": "Mestres do Arcano (PEP, GdM, 2018, material não-oficial de fã)",
+   "id": "encantador-nv5-encantador-nv5-2"
+  },
+  {
+   "spec": "Encantador",
+   "level": 8,
+   "title": "Encantador nv8",
+   "description": "8º Nível: O evocador causa grandes danos com suas magias. Role novamente qualquer dado de dano que tenha resultado em “1” e role um dado de dano extra para cada dado que tenha obtido valor máximo.",
+   "source": "Mestres do Arcano (PEP, GdM, 2018, material não-oficial de fã)",
+   "id": "encantador-nv8-encantador-nv8-2"
+  },
+  {
+   "spec": "Evocador",
+   "level": 16,
+   "title": "Evocador nv16",
+   "description": "16º Nível: Neste ponto, os dados de dano causado pelas magias do evocador aumentam em 2 faces (d6 virá d8), sendo que o nível do conjurador é adicionado aos danos causados. Invocar criaturas é um poder espantoso, mas invocar criaturas do nada é ainda mais espantoso. Os invocadores focam seus estudos na conjuração de criaturas fantásticas para lhes auxiliar nas mais variadas situações.",
+   "source": "Mestres do Arcano (PEP, GdM, 2018, material não-oficial de fã)",
+   "id": "evocador-nv16-evocador-nv16"
+  },
+  {
+   "spec": "Invocador",
+   "level": 5,
+   "title": "Invocador nv5",
+   "description": "5º Nível: O invocador adicionar a magia Invocar criaturas automaticamente em seu grimório e as criaturas que invocar surgirão na rodada seguinte à conjuração da magia. Além disso, é preciso definir um melhoramento na hora da conjuração, podendo assim aumentar o número de criaturas invocadas em 1d4 ou a duração da invocação em 1d6 rodadas.",
+   "source": "Mestres do Arcano (PEP, GdM, 2018, material não-oficial de fã)",
+   "id": "invocador-nv5-invocador-nv5"
+  },
+  {
+   "spec": "Invocador",
+   "level": 8,
+   "title": "Invocador nv8",
+   "description": "8º Nível: Neste ponto o invocador pode invocar uma criatura elemental extraplanar. O elemental terá metade dos dados de vida permitidos pelo círculo de magia utilizado, mas terá as vantagens do modelo elemental descrito no Bestiário (p.211).",
+   "source": "Mestres do Arcano (PEP, GdM, 2018, material não-oficial de fã)",
+   "id": "invocador-nv8-invocador-nv8"
+  },
+  {
+   "spec": "Invocador",
+   "level": 16,
+   "title": "Invocador nv16",
+   "description": "16º Nível: Respeitando o limite de dados de vida impostos pelo círculo de magia utilizada, o mago consegue Invocar qualquer criatura com o seu alinhamento. Criaturas inteligentes podem se negar ou barganhar. Faça uma rolagem de reação para determinar o quão prestativa estará a criatura. Como opção, o conjurador pode invocar uma criatura conhecida, mas ela poderá fazer uma jogada de proteção para evitar a invocação. A transmutação é vista pelos leigos como alquimia, entretanto os transmutadores são magos que manipulam a matéria conforme sua vontade e imaginação.",
+   "source": "Mestres do Arcano (PEP, GdM, 2018, material não-oficial de fã)",
+   "id": "invocador-nv16-invocador-nv16"
+  },
+  {
+   "spec": "Transmutador",
+   "level": 5,
+   "title": "Transmutador nv5",
+   "description": "5º Nível: O transmutador consegue encantar a água para criar poções mágicas. Conjurando uma magia sobre um frasco de água, em um processo que dura 1 hora, a poção está pronta. Entretanto, estas poções possuem uma validade de 1d6 dias.",
+   "source": "Mestres do Arcano (PEP, GdM, 2018, material não-oficial de fã)",
+   "id": "transmutador-nv5-transmutador-nv5"
+  },
+  {
+   "spec": "Transmutador",
+   "level": 8,
+   "title": "Transmutador nv8",
+   "description": "8º Nível: Até três vezes por dia o transmutador consegue alterar sua própria aparência por uma hora, em um efeito semelhante à magia metamorfose.",
+   "source": "Mestres do Arcano (PEP, GdM, 2018, material não-oficial de fã)",
+   "id": "transmutador-nv8-transmutador-nv8"
+  },
+  {
+   "spec": "Transmutador",
+   "level": 16,
+   "title": "Transmutador nv16",
+   "description": "16º Nível: Como lendário mestre da alquimia o mago pode transmutar a matéria conforme sua vontade. Pode fazer água virar vinho, ferro enferrujar ou pedra virar ouro! Ao custo de uma magia de 6º círculo pode-se transmutar 1 metro cúbico de matéria em 1 rodada. Com uma magia de 7º círculo pode fundir animais com inteligência 5 ou menos para criar quimeras (confira nosso artigo sobre criação de quimeras). A criação de quimeras está sujeita a uma jogada de proteção. Com uma magia de 8º círculo pode-se criar golens, com um custo de 500PO por dado de vida do golem em materiais mágicos e preparativos. Assim como os cronomancer dominam o tempo, os teleportadores dominam o espaço.",
+   "source": "Mestres do Arcano (PEP, GdM, 2018, material não-oficial de fã)",
+   "id": "transmutador-nv16-transmutador-nv16"
+  },
+  {
+   "spec": "Teleportador",
+   "level": 5,
+   "title": "Teleportador nv5",
+   "description": "5º Nível: Até três vezes ao dia o mago consegue se teleportar por distâncias curtas (10 metros). Esta habilidade pode ser utilizada mesmo no turno de outro personagem e pode evitar ataques e magias sem problema algum.",
+   "source": "Mestres do Arcano (PEP, GdM, 2018, material não-oficial de fã)",
+   "id": "teleportador-nv5-teleportador-nv5"
+  },
+  {
+   "spec": "Teleportador",
+   "level": 8,
+   "title": "Teleportador nv8",
+   "description": "8º Nível: O teleportador pode adicionar automaticamente a magia divina Palavra da recordação no seu grimório, como uma magia de 4º círculo apenas.",
+   "source": "Mestres do Arcano (PEP, GdM, 2018, material não-oficial de fã)",
+   "id": "teleportador-nv8-teleportador-nv8"
+  },
+  {
+   "spec": "Teleportador",
+   "level": 16,
+   "title": "Teleportador nv16",
+   "description": "16º Nível: Caso não tenha ainda, o teleportador adiciona a magia teleporte automaticamente ao seu grimório. Ao conjurar esta magia seu alcance é dez vezes maior e as chances de sucesso aumentam em uma margem de 20%. Para poupar suas magias memorizadas um mago pode escrever pergaminhos para armazenar as magias mais pontuais, de uso bem específico e limitado. Assim é possível memorizar as mais corriqueiras. No livro temos que um pergaminho mágico custa 100PO por circulo de magia, logo um mago deve gastar menos que isso para sua produção, ou não valeria a venda. Recursos: O mago deve gastar 20PO por círculo de magia em componentes de qualidade, o papel, a tinta e outros pequenos insumos consumidos no preparo do pergaminho mágico. Produção: O mago precisa de um local silencioso e alguma iluminação. A preparação dos materiais leva trinta minutos e a escrita consome mais trinta minutos por círculo da magia conjurada. (1 hora para magias de 1º círculo até 5 horas para 9º círculo). Resultado: Ao final da produção o jogador realiza um teste de Inteligência. Se falhar, todo o processo deu errado. Caso o mestre permita, o mago poderia gastar com os materiais um valor de 50PO por círculo de magia ao invés de 20PO, para descartar esta rolagem de inteligência. Muitos magos encontram conforto e boa companhia na presença de um familiar arcano. Os familiares são animais que possuem um elo místico com magos e compartilham alguma cumplicidade com eles. O mestre pode permitir que uma magia de 1º",
+   "source": "Mestres do Arcano (PEP, GdM, 2018, material não-oficial de fã)",
+   "id": "teleportador-nv16-teleportador-nv16"
+  },
+  {
+   "spec": "Pergaminhos",
+   "level": 0,
+   "title": "Pergaminhos",
+   "description": "Pergaminhos mágicos................................................................................. 10 Familiares..................................................................................................... 10 Foco arcano................................................................................................. 11 Grimórios ancestrais ................................................................................... 11 Rio de janeiro, 04 de fevereiro de 2018 Olá, se você não me conhece eu sou o PEP. Antes de tudo gostaria de agradecer a todos pelos 1000 likes e seguidores que conseguimos conquistar no facebook! O trabalho é duro, mas vale a pena. Agora vamos lá... Para não ser acusado de plagio ou algo do tipo, afirmo que muita coisa que você vai encontrar aqui vem de outros jogos, mídias e literaturas. Então você pode reconhecer coisas que viu em outras versões de D&D, em livros de fantasia e até mesmo jogos eletrônicos (cronomancer que o diga!). Seja como for, isso aqui é um material não oficial, gratuito e feito de um fã para uma comunidade de fãs, por isso, só curta a vibe positiva dos 1000 Likes. Também quero dizer que não adicionei as especializações Necromante e Ilusionista por já estar satisfeito com as versões oficiais encontradas no manual aprimorado de Old Dragon. O mesmo não posso dizer da especialização Adivinho e por isso preferi fazer uma releitura conforme o que já usei em minhas campanhas ao longo destes anos. No mais, espero que você curta es",
+   "source": "Mestres do Arcano (regras gerais)",
+   "id": "pergaminhos-nv0-pergaminhos"
+  },
+  {
+   "spec": "Familiares",
+   "level": 0,
+   "title": "Familiares",
+   "description": "Familiares..................................................................................................... 10 Foco arcano................................................................................................. 11 Grimórios ancestrais ................................................................................... 11 Rio de janeiro, 04 de fevereiro de 2018 Olá, se você não me conhece eu sou o PEP. Antes de tudo gostaria de agradecer a todos pelos 1000 likes e seguidores que conseguimos conquistar no facebook! O trabalho é duro, mas vale a pena. Agora vamos lá... Para não ser acusado de plagio ou algo do tipo, afirmo que muita coisa que você vai encontrar aqui vem de outros jogos, mídias e literaturas. Então você pode reconhecer coisas que viu em outras versões de D&D, em livros de fantasia e até mesmo jogos eletrônicos (cronomancer que o diga!). Seja como for, isso aqui é um material não oficial, gratuito e feito de um fã para uma comunidade de fãs, por isso, só curta a vibe positiva dos 1000 Likes. Também quero dizer que não adicionei as especializações Necromante e Ilusionista por já estar satisfeito com as versões oficiais encontradas no manual aprimorado de Old Dragon. O mesmo não posso dizer da especialização Adivinho e por isso preferi fazer uma releitura conforme o que já usei em minhas campanhas ao longo destes anos. No mais, espero que você curta este material e que ele lhe sirva para alguma coisa, nem que seja de incentivo para compartilhe com a comu",
+   "source": "Mestres do Arcano (regras gerais)",
+   "id": "familiares-nv0-familiares"
+  },
+  {
+   "spec": "Foco arcano",
+   "level": 0,
+   "title": "Foco arcano",
+   "description": "Foco arcano................................................................................................. 11 Grimórios ancestrais ................................................................................... 11 Rio de janeiro, 04 de fevereiro de 2018 Olá, se você não me conhece eu sou o PEP. Antes de tudo gostaria de agradecer a todos pelos 1000 likes e seguidores que conseguimos conquistar no facebook! O trabalho é duro, mas vale a pena. Agora vamos lá... Para não ser acusado de plagio ou algo do tipo, afirmo que muita coisa que você vai encontrar aqui vem de outros jogos, mídias e literaturas. Então você pode reconhecer coisas que viu em outras versões de D&D, em livros de fantasia e até mesmo jogos eletrônicos (cronomancer que o diga!). Seja como for, isso aqui é um material não oficial, gratuito e feito de um fã para uma comunidade de fãs, por isso, só curta a vibe positiva dos 1000 Likes. Também quero dizer que não adicionei as especializações Necromante e Ilusionista por já estar satisfeito com as versões oficiais encontradas no manual aprimorado de Old Dragon. O mesmo não posso dizer da especialização Adivinho e por isso preferi fazer uma releitura conforme o que já usei em minhas campanhas ao longo destes anos. No mais, espero que você curta este material e que ele lhe sirva para alguma coisa, nem que seja de incentivo para compartilhe com a comunidade as preciosidades que vens criando para suas campanhas pessoais. Boas rolagens e muitas sessões de jogo para ",
+   "source": "Mestres do Arcano (regras gerais)",
+   "id": "foco-arcano-nv0-foco-arcano"
+  },
+  {
+   "spec": "Grim",
+   "level": 0,
+   "title": "Grim",
+   "description": "Grimórios ancestrais ................................................................................... 11 Rio de janeiro, 04 de fevereiro de 2018 Olá, se você não me conhece eu sou o PEP. Antes de tudo gostaria de agradecer a todos pelos 1000 likes e seguidores que conseguimos conquistar no facebook! O trabalho é duro, mas vale a pena. Agora vamos lá... Para não ser acusado de plagio ou algo do tipo, afirmo que muita coisa que você vai encontrar aqui vem de outros jogos, mídias e literaturas. Então você pode reconhecer coisas que viu em outras versões de D&D, em livros de fantasia e até mesmo jogos eletrônicos (cronomancer que o diga!). Seja como for, isso aqui é um material não oficial, gratuito e feito de um fã para uma comunidade de fãs, por isso, só curta a vibe positiva dos 1000 Likes. Também quero dizer que não adicionei as especializações Necromante e Ilusionista por já estar satisfeito com as versões oficiais encontradas no manual aprimorado de Old Dragon. O mesmo não posso dizer da especialização Adivinho e por isso preferi fazer uma releitura conforme o que já usei em minhas campanhas ao longo destes anos. No mais, espero que você curta este material e que ele lhe sirva para alguma coisa, nem que seja de incentivo para compartilhe com a comunidade as preciosidades que vens criando para suas campanhas pessoais. Boas rolagens e muitas sessões de jogo para você! PEP, o zelador de amarelo da GdM Alguns magos dedicam suas vidas estudando formas de defesa e proteção, al",
+   "source": "Mestres do Arcano (regras gerais)",
+   "id": "grim-nv0-grim"
+  },
+  {
+   "spec": "Geral",
+   "level": 0,
+   "title": "Magia Selvagem (Tomo Arcano)",
+   "description": "Regras de magia selvagem: conjuração instável com surtos e efeitos imprevisíveis. Ver Tomo da Magia Arcana p.9.",
+   "source": "Tomo da Magia Arcana OD2",
+   "id": "geral-nv0-magia-selvagem-tomo-arcano"
+  },
+  {
+   "spec": "Geral",
+   "level": 0,
+   "title": "Metamágica (Tomo Arcano)",
+   "description": "Ajustes de alcance, duração, tempo de execução, área de efeito e quadratura do círculo. Ver Tomo Arcano p.16.",
+   "source": "Tomo da Magia Arcana OD2",
+   "id": "geral-nv0-metamagica-tomo-arcano"
+  },
+  {
+   "spec": "Geral",
+   "level": 0,
+   "title": "Mago Especialista (Tomo Arcano)",
+   "description": "Foco em escola com oposição e benefícios por nível, incluindo elementalistas. Ver Tomo Arcano p.13-16.",
+   "source": "Tomo da Magia Arcana OD2",
+   "id": "geral-nv0-mago-especialista-tomo-arcano"
+  },
+  {
+   "spec": "Geral",
+   "level": 0,
+   "title": "Pesquisando Magias (Tomo Arcano)",
+   "description": "Criação de novas magias com Mestre, custo e dificuldade por círculo. Ver Tomo Arcano p.22.",
+   "source": "Tomo da Magia Arcana OD2",
+   "id": "geral-nv0-pesquisando-magias-tomo-arcano"
+  },
+  {
+   "spec": "Geral",
+   "level": 0,
+   "title": "Magia de Missão (Tomo Divino)",
+   "description": "Magias poderosas sem círculo, concedidas pelo Mestre em condições especiais. Ver Tomo Divino p.9.",
+   "source": "Tomo da Magia Divina OD2",
+   "id": "geral-nv0-magia-de-missao-tomo-divino"
+  },
+  {
+   "spec": "Geral",
+   "level": 0,
+   "title": "Magia Cooperativa (Tomo Divino)",
+   "description": "Conjuração conjunta por sacerdotes. Ver Tomo Divino p.14.",
+   "source": "Tomo da Magia Divina OD2",
+   "id": "geral-nv0-magia-cooperativa-tomo-divino"
+  },
+  {
+   "spec": "Geral",
+   "level": 0,
+   "title": "Esferas de Magia Divina (Tomo Divino)",
+   "description": "Acesso maior/menor às esferas por divindade; Todas + esferas específicas por círculos 1-7. Ver Tomo Divino p.19.",
+   "source": "Tomo da Magia Divina OD2",
+   "id": "geral-nv0-esferas-de-magia-divina-tomo-divino"
+  }
+ ]
+}

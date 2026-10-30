@@ -1,5 +1,8 @@
+import { readJson, HttpError } from "./readJson";
+import { writeJson } from './writeJson';
 import type { MapGrid, GridPosition } from './spatialGrid';
-import { readJson } from "./readJson";
+import type { CommandRecoveryOptions } from './commandRetry';
+export { HttpError } from "./readJson";
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL || "";
 const TOKEN_KEY = "omnisvera_access_token";
@@ -27,6 +30,26 @@ export function setAccessMode(mode: AccessMode) {
   localStorage.setItem(MODE_KEY, mode);
 }
 
+/** SessionStorage survives reload, stays within this tab, and contains no access token. */
+export function commandRecoveryOptions(channel: string): CommandRecoveryOptions {
+  async function digest(value: string) {
+    if (typeof crypto === 'undefined' || !crypto.subtle) {
+      throw new Error('Abra o Companion pelo endereço HTTPS para recuperar comandos com segurança.');
+    }
+    const bytes = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(value));
+    return Array.from(new Uint8Array(bytes), byte => byte.toString(16).padStart(2, '0')).join('');
+  }
+  return {
+    storage: () => sessionStorage,
+    digest,
+    scope: async () => {
+      const token = getAccessToken();
+      if (!token) throw new Error('Informe o acesso antes de enviar uma ação.');
+      return digest(JSON.stringify([API_BASE, getAccessMode(), token, channel]));
+    },
+  };
+}
+
 export function consumeAccessBootstrapFromUrl(): { token: string; mode: AccessMode } | null {
   if (typeof window === "undefined" || !window.location.hash) return null;
   const params = new URLSearchParams(window.location.hash.slice(1));
@@ -52,8 +75,14 @@ export function consumeAccessBootstrapFromUrl(): { token: string; mode: AccessMo
   return { token, mode };
 }
 
-export function mediaUrlFromVaultPath(path?: string | null) {
+export function mediaUrlFromVaultPath(path?: string | null, previewSize?: 128 | 768) {
   if (!path) return "";
+  if (path.startsWith('companion-assets/')) {
+    const encoded = path.split('/').map(encodeURIComponent).join('/');
+    if (!previewSize) return `${API_BASE}/${encoded}`;
+    const token = getAccessToken();
+    return `${API_BASE}/media/${encoded}?preview_size=${previewSize}${token ? `&token=${encodeURIComponent(token)}` : ''}`;
+  }
   const clean = path
     .trim()
     .replace(/^["']|["']$/g, "")
@@ -72,7 +101,15 @@ export function mediaUrlFromVaultPath(path?: string | null) {
     .join("/");
   const token = getAccessToken();
   const query = token ? `?token=${encodeURIComponent(token)}` : "";
-  return `${API_BASE}/media/${encoded}${query}`;
+  return `${API_BASE}/media/${encoded}${query}${previewSize ? `${query ? '&' : '?'}preview_size=${previewSize}` : ''}`;
+}
+
+/** Keep the full image in the detail dialog; request small bytes for its icon. */
+export function imagePreviewUrl(url: string, size: 128 | 768 = 128): string {
+  const publicPrefix = `${API_BASE}/companion-assets/`;
+  if (url.startsWith(publicPrefix)) return mediaUrlFromVaultPath(`companion-assets/${url.slice(publicPrefix.length).split('/').map(decodeURIComponent).join('/')}`, size);
+  if (url.startsWith(`${API_BASE}/media/`) && !/[?&]preview_size=/.test(url)) return `${url}${url.includes('?') ? '&' : '?'}preview_size=${size}`;
+  return url;
 }
 
 function scoped(path: string) {
@@ -86,6 +123,23 @@ function authHeaders(extra: Record<string, string> = {}) {
     ...extra,
     ...(token ? { "X-Omnisvera-Token": token } : {}),
   };
+}
+
+/** Private proposal metadata only. Bounded native IO, no automatic write retry. */
+export function workshopRequest<T>(path: string, method = 'GET', body?: unknown): Promise<T> {
+  if (!/^\/gm\/ai-workshop(?:\/jobs\/[1-9]\d*(?:\/review)?)?$/.test(path)) throw new Error('Rota de oficina inválida.');
+  if (method === 'GET' && !path.endsWith('/review')) return readJson<T>(`${API_BASE}${path}`, authHeaders(), 'Falha ao carregar a oficina');
+  if (method !== 'POST' || !path.endsWith('/review')) throw new Error('Comando de oficina inválido.');
+  return writeJson<T>(`${API_BASE}${path}`,authHeaders({'Content-Type':'application/json'}),method,body,'Falha ao revisar o bloco');
+}
+
+/** Private proposal metadata only. Bounded native IO, no automatic write retry. */
+export function sceneLabRequest<T>(path: string, method = 'GET', body?: unknown): Promise<T> {
+  if (!/^\/gm\/(?:scenes\/[1-9]\d*\/lab\/proposals|scene-lab\/proposals\/[1-9]\d*(?:\/(?:evidence|decision))?)$/.test(path))
+    throw new Error('Rota de laboratório inválida.');
+  if (method === 'GET') return readJson<T>(`${API_BASE}${path}`, authHeaders(), 'Falha ao carregar o laboratório');
+  if (!['POST', 'PUT'].includes(method)) throw new Error('Comando de laboratório inválido.');
+  return writeJson<T>(`${API_BASE}${path}`, authHeaders({ 'Content-Type': 'application/json' }), method, body, 'Falha ao salvar a proposta');
 }
 
 export type NoteSummary = {
@@ -336,6 +390,9 @@ export type ItemEffectRule = {
   condition?: string | null;
 };
 export type ItemMechanics = {
+  family?: 'weapon' | 'armor' | 'shield' | 'ammunition';
+  damage_type?: string | null; magical?: boolean | null; material?: 'silver' | 'ordinary' | null;
+  attack_modes?: Array<'melee' | 'ranged'>;
   equipment_slots: string[];
   damage_formula?: string | null;
   consume_mode: "none" | "quantity" | "charges";
@@ -403,6 +460,7 @@ export type CharacterResource = {
 };
 
 export type CharacterAttack = {
+  effect_attack_bonus?: number;
   attack_count?: number;
   base_attack_count?: number;
   id: string;
@@ -427,9 +485,12 @@ export type CharacterAttack = {
 };
 
 export type SessionAbility = {
+  hidden?: boolean;
+  action_contract?: NativeActionContract;
+  image_path?: string | null;
   id: string;
   name: string;
-  kind: "ability" | "power" | "technique" | "spell" | "resource" | "attack";
+  kind: "ability" | "power" | "technique" | "spell" | "resource" | "attack" | "passive";
   group: string;
   circle?: number | null;
   description?: string | null;
@@ -449,6 +510,12 @@ export type SessionAbility = {
 };
 
 export type PlayableCharacterDefinition = {
+  hemomancy?: { revision: string; weapons: Array<{
+    weapon: string; name: string; damage: string | null; damage_type: string | null;
+    range_m: number | null; invocation_cost: number;
+    skill: { id: string; name: string; cost: number; description: string };
+    passive: { id: string; name: string; description: string };
+  }> };
   id: string;
   slug: string;
   name: string;
@@ -457,6 +524,8 @@ export type PlayableCharacterDefinition = {
   epithet?: string | null;
   race?: string | null;
   class_name?: string | null;
+  specialization?: string | null;
+  identity_cards?: Record<'race' | 'class', { name: string; description: string; image_path?: string | null }>;
   level?: number | null;
   player_name?: string | null;
   campaign?: string | null;
@@ -480,7 +549,7 @@ export type PlayableCharacterDefinition = {
     armor_modifier_source?: { item_path: string; item_title: string; value: number; kind: string } | null;
     saving_throw?: string | number | null; saving_throw_bonus?: number | null; initiative?: number | null; initiative_configured?: boolean;
   } | null;
-  progression?: { experience?: number | null; base_attack?: number | null; maximum_hp?: number | null; confirmed_level?: number | null } | null;
+  progression?: { experience?: number | null; base_attack?: number | null; maximum_hp?: number | null; confirmed_level?: number | null; approved_build?: string; pending_rolls?: { level: number; request_id: number; die: number; controller: string }[] } | null;
   movement?: string | null;
   base_equipment?: string[] | null;
   public_description?: string | null;
@@ -509,6 +578,10 @@ export type PlayableCharacterState = {
   platinum_coins?: number | null;
   location?: string | null;
   session_notes: string;
+  animal_form?: string | null;
+  night_form?: {animal:string;current_hp:number;maximum_hp:number;armor_class:number;saving_throw:number;movement:string} | null;
+  normal_current_hp?: number;
+  normal_maximum_hp?: number;
   updated_at: string;
   version: number;
 };
@@ -556,10 +629,12 @@ export type WorkspaceMessage = {
   created_at: string;
 };
 
+export type SessionActionCard = { id: string; name: string; description: string; image_path?: string | null };
 export type SessionLedgerEntry = {
   id: number;
   source_type: "workspace_message" | "character_event" | "dice_roll" | string;
   source_id: string;
+  action_cards?: SessionActionCard[];
   event_kind: "message" | "action" | "state" | "roll" | string;
   actor_id: string;
   actor_name: string;
@@ -573,10 +648,18 @@ export type SessionLedgerEntry = {
 };
 
 export type WorkspaceTokenSheet = {
+  embedded_in_location?: string;
+  rank?:string;
+  spell_repertoire?:Array<{spell_id:string;daily_uses:number}>;
+  monster_runtime?:{usage?:Record<string,unknown>};
+  statless?: boolean; disintegrated?:boolean;
+  corpse?: boolean;
   summon?: { caster: string; technique: string; duration?: string; corpse_id?: string | null };
+  reward_items?: Array<{ name: string; description?: string; image_path?: string; equipped?: boolean }>;
   reanimation_allowed?: boolean;
   reanimated_by?: string;
   marker?: string;
+  combat_retired?: boolean;
   role?: string;
   level?: number | null;
   armor_class?: number | null;
@@ -593,6 +676,8 @@ export type WorkspaceTokenSheet = {
   experience_points?: number | null;
   treasure?: string;
   movement?: string;
+  movement_modes?:Record<string,number>;
+  movement_mode?:string;
   category?: string;
   size?: string;
   alignment?: string;
@@ -602,6 +687,7 @@ export type WorkspaceTokenSheet = {
 export type MonsterCatalogAttack = { raw: string; count: number | null; name: string; bonus: number | null; damage: string };
 export type MonsterCatalogAbility = { name: string; description: string };
 export type MonsterCatalogEntry = {
+  encounter_defaults?: { kind: 'campaign_encounter_choices'; label: string; attacks: MonsterCatalogAttack[]; abilities: MonsterCatalogAbility[]; equipment: {id:string;name:string;damage:string;edition:string}[]; spells:{id:string;name:string;circle:number;tradition:string}[] } | null;
   id: string; name: string; source_url: string; category: string; size: string; alignment: string; habitat: string;
   encounter: string; experience: string; experience_points: number | null; treasure: string; movement: string;
   hit_dice: string; hit_points: string; average_hp: number | null; armor_class: number | null; saving_throw: number | null; morale: number | null;
@@ -616,6 +702,8 @@ export type MonsterCatalogResponse = {
 };
 
 export type WorkspaceToken = {
+  sprite?: import("./spriteAnimation").SpriteAsset;
+  tactical_attack_bonus?: number;
   grid_position?: GridPosition;
   id: string;
   token_type: "character" | "monster" | "location";
@@ -656,11 +744,14 @@ export type AttackResolution = {
   damage_modifier: number;
   damage_total: number;
   breakdown: {
+    damage_defenses?: {damage_type?:string|null;damage_before_defenses?:number;damage_after_defenses?:number};
+    monster_rider_results?: Array<{name:string;effect:string;triggered?:boolean;chance_roll?:{total:number;individual_results?:number[]};immune?:string;save?:{total:number;target:number;success:boolean};resisted?:boolean;damage_dealt?:number;remaining_seconds?:number;duration_unit?:string;attribute?:string;attribute_before?:number;attribute_after?:number;delay_seconds?:number;duration_seconds?:number;phase?:string;manual_reason?:string}>;
+    fumble_result?: {damage:number;hp_before:number;hp_after:number};
     life_drain?: boolean;
     drain_result?: { drained: number; healed: number; hp_before: number; hp_after: number };
     automatic_hit?: boolean;
     resource_cost?: { key: string; amount: number; state_version: number } | null;
-    strikes?: Array<{ d20: number; attack_total: number; result: "hit" | "miss"; damage_total: number; damage_rolls: number[] }>;
+    strikes?: Array<{ d20: number; attack_total: number; result: "hit" | "miss"; damage_total: number; damage_rolls: number[]; critical?: boolean; critical_multiplier?: number }>;
     effects?: CombatEffect[];
     manual_effects?: string[];
     attack?: { base_bonus?: number; equipment_bonus?: number; effect_bonus?: number; total_bonus?: number };
@@ -677,20 +768,27 @@ export type AttackResolution = {
   ledger_id?: number | null;
 };
 
-export type CombatEffect = { id: string; target_type: "character" | "token"; target_id: string; label: string; source: string; duration: string; rounds: number | null; modifiers: Record<string, number>; updated_at: string; protocol?: 'guard' | 'vanguard'; ally_id?: string; until?: string };
-export type CombatEffectsState = { round: number; version: number; effects: CombatEffect[]; protocol_result?: { total?: number; difficulty?: number; outcome?: string; adjudication?: string }; encounter?: { movement?: { turn_key: unknown[]; budget_m: number; spent_m: number }; started_at?: string; active?: boolean; battle_mode?: boolean; action_committed?: boolean; attacks_used?: number; attack_limit?: number; title?: string; map_id?: string; turn_index?: number; turn_sequence?: number; participants?: Array<{target_type: string; target_id: string; token_id?: string; controller_id?: string; name: string; initiative: number}> } };
+export type CombatEffect = { monster_condition?:string;blocks_actions?:boolean;source_duration_unit?:string;condition_description?:string; id: string; target_type: "character" | "token"; target_id: string; label: string; source: string; duration: string; rounds: number | null; modifiers: Record<string, number>; updated_at: string; protocol?: 'guard' | 'vanguard'; ally_id?: string; until?: string; spell?: string; remaining_seconds?: number; altitude_meters?: number; necro_spell?:string; turns_remaining?:number; target_turn_duration?:boolean; defy_death?:boolean; skill?:string; dot_hp?:boolean; magic_type?:string;spell_circle?:number;caster_level?:number;environmental?:boolean;images_remaining?:number;immobilized?:boolean;phase?:string };
+export type ActiveEffectIcon = { duration_unit?: 'turns'|'rounds'|'permanent'|'instant'; effect_id: string; target_type: 'character' | 'token'; target_id: string; duration: string; rounds?: number | null; turns_remaining?: number | null; remaining_seconds?: number | null; card: SessionActionCard };
+export type CombatEffectsState = { round: number; version: number; effects: CombatEffect[]; active_effect_icons?: ActiveEffectIcon[]; protocol_result?: { total?: number; difficulty?: number; outcome?: string; adjudication?: string }; encounter?: { pending_attack?: string; consumable_used?: boolean; movement?: { turn_key: unknown[]; budget_m: number; spent_m: number }; active?: boolean; battle_mode?: boolean; action_committed?: boolean; attacks_used?: number; attack_limit?: number; title?: string; map_id?: string; turn_index?: number; turn_sequence?: number; turn_started_at?: string; started_at?: string; participants?: Array<{target_type: string; target_id: string; token_id?: string; controller_id?: string; name: string; initiative: number}> } };
 export type CombatTestView = { profile_id: string; character_name: string; receives_combat: boolean; state: CombatEffectsState };
 export type CombatTestViewsResponse = { enabled: boolean; table_mode: "digital" | "physical" | "test"; views: CombatTestView[] };
 export async function getCombatEffects(): Promise<CombatEffectsState> { return worldRequest("/combat/effects"); }
-export async function getCompanionRoster(): Promise<{ allies: WorkspaceToken[]; archived_character_ids: string[] }> {
+export async function useVineBracelet(targetId: string, requestId: string): Promise<CombatEffectsState> {
+  return sceneRequest('/characters/vezemir/vines', { method: 'POST', body: JSON.stringify({ target_type: 'token', target_id: targetId, request_id: requestId }) });
+}
+export async function getCompanionRoster(): Promise<{ allies: WorkspaceToken[]; archived_character_ids: string[]; gm_character_ids?: string[] }> {
   return readJson(`${API_BASE}/gm/companions`, authHeaders(), "Falha ao carregar aliados do Mestre");
 }
-export async function resolveMonsterAttack(tokenId: string, payload: { request_id: string; attack_id: string; target_type: "character" | "token"; target_id: string; roll_mode: "digital" | "physical"; d20?: number; guard_effect_id?: string }): Promise<AttackResolution> {
-  return worldRequest(`/gm/combat/tokens/${encodeURIComponent(tokenId)}/attacks/resolve`, { method: "POST", body: JSON.stringify(payload) });
+export async function listMasterNpcTokens(): Promise<WorkspaceToken[]> {
+  return readJson(`${API_BASE}/gm/workspace/npc-tokens`, authHeaders(), "Falha ao carregar pins de NPCs do Mestre");
+}
+export async function resolveMonsterAttack(tokenId: string, payload: { request_id: string; attack_id: string; target_type: "character" | "token"; target_id: string; roll_mode: "digital" | "physical"; d20?: number; guard_effect_id?: string; range_m?: number; range_cells?: number }): Promise<AttackResolution> {
+  return writeJson(`${API_BASE}/gm/combat/tokens/${encodeURIComponent(tokenId)}/attacks/resolve`, authHeaders({ 'Content-Type': 'application/json' }), 'POST', payload, 'Falha ao resolver ataque da criatura');
 }
 export async function getCombatTestViews(): Promise<CombatTestViewsResponse> { return worldRequest("/gm/combat/test-views"); }
 export async function sendCombatEffectCommand(payload: { request_id: string; expected_version: number; action: string; payload: Record<string, unknown> }): Promise<CombatEffectsState> {
-  return worldRequest(payload.action === "next_turn" ? "/combat/next-turn" : "/gm/combat/effects", { method: "POST", body: JSON.stringify(payload) });
+  return writeJson(`${API_BASE}${payload.action === 'next_turn' ? '/combat/next-turn' : '/gm/combat/effects'}`, authHeaders({ 'Content-Type': 'application/json' }), 'POST', payload, 'Falha ao confirmar ação de combate');
 }
 
 export type SessionItem = {
@@ -1288,7 +1386,7 @@ export async function reviewCharacterSheet(profileId: string, status: "approved"
 }
 
 export async function listPlayableCharacters(): Promise<PlayableCharacterSummary[]> {
-  return readJson(`${API_BASE}/characters`, authHeaders(), "Falha ao carregar personagens");
+  return readJson(`${API_BASE}/characters?read_only=true`, authHeaders(), "Falha ao carregar personagens", 20_000);
 }
 
 export async function sendPlayerNotification(payload: { profile_id: string; title: string; message: string }): Promise<PlayerEvent> {
@@ -1324,27 +1422,49 @@ export async function connectSessionRealtime(onChange: (ledgerId: number) => voi
   let socket: WebSocket | null = null;
   let reconnectTimer = 0;
   let pingTimer = 0;
+  let connecting = false;
+  let lastPong = 0;
 
   const connect = async () => {
-    if (stopped) return;
+    if (stopped || connecting) return;
+    connecting = true;
     try {
-      const ticketResponse = await fetch(`${API_BASE}/workspace/realtime-ticket`, { method: "POST", headers: authHeaders() });
-      if (!ticketResponse.ok) throw new Error("Ticket em tempo real indisponível");
-      const { ticket } = await ticketResponse.json() as { ticket: string };
+      const controller = new AbortController();
+      let deadlineTimer: ReturnType<typeof setTimeout> | undefined;
+      let ticket: string;
+      try {
+        const result = await Promise.race([
+          (async () => {
+            const response = await fetch(`${API_BASE}/workspace/realtime-ticket`, { method: "POST", headers: authHeaders(), signal: controller.signal });
+            if (!response.ok) throw new Error("Ticket em tempo real indisponível");
+            return await response.json() as { ticket: string };
+          })(),
+          new Promise<never>((_, reject) => {
+            deadlineTimer = setTimeout(() => { controller.abort(); reject(new Error("Conexão em tempo real demorou demais")); }, 10_000);
+          }),
+        ]);
+        ticket = result.ticket;
+      } finally { clearTimeout(deadlineTimer); }
+      if (stopped) return;
       const base = new URL(API_BASE || window.location.origin, window.location.href);
       const protocol = base.protocol === "https:" ? "wss:" : "ws:";
       const prefix = API_BASE ? base.pathname.replace(/\/$/, "") : "";
       socket = new WebSocket(`${protocol}//${base.host}${prefix}/ws/session?ticket=${encodeURIComponent(ticket)}`);
       socket.onopen = () => {
         window.clearInterval(pingTimer);
-        pingTimer = window.setInterval(() => { if (socket?.readyState === WebSocket.OPEN) socket.send("ping"); }, 25_000);
+        lastPong = Date.now();
+        pingTimer = window.setInterval(() => {
+          if (socket?.readyState !== WebSocket.OPEN) return;
+          if (Date.now() - lastPong > 35_000) socket.close();
+          else socket.send("ping");
+        }, 10_000);
       };
       socket.onmessage = (event) => {
-        if (event.data === "pong") return;
+        if (event.data === "pong") { lastPong = Date.now(); return; }
         try {
           const payload = JSON.parse(String(event.data)) as { type?: string; ledger_id?: number };
-          if (payload.type === "session_changed" && Number.isFinite(payload.ledger_id)) {
-            window.dispatchEvent(new CustomEvent("omnisvera-session-changed", { detail: Number(payload.ledger_id) }));
+          if ((payload.type === "connected" || payload.type === "session_changed") && Number.isFinite(payload.ledger_id)) {
+            if (payload.type === "session_changed") window.dispatchEvent(new CustomEvent("omnisvera-session-changed", { detail: Number(payload.ledger_id) }));
             onChange(Number(payload.ledger_id));
           }
         } catch { /* Mensagens desconhecidas não interrompem a sessão. */ }
@@ -1355,7 +1475,7 @@ export async function connectSessionRealtime(onChange: (ledgerId: number) => voi
       };
     } catch {
       if (!stopped) reconnectTimer = window.setTimeout(() => void connect(), 2500);
-    }
+    } finally { connecting = false; }
   };
   await connect();
   return () => {
@@ -1388,13 +1508,7 @@ export async function sendWorkspaceMessage(text: string, messageKind: "message" 
 }
 
 export async function uploadWorkspaceMap(payload: { title: string; filename: string; content_type: string; data_base64: string; visible_to_players: boolean }): Promise<WorkspaceMap> {
-  const response = await fetch(`${API_BASE}/gm/workspace/map`, {
-    method: "POST",
-    headers: authHeaders({ "Content-Type": "application/json" }),
-    body: JSON.stringify(payload),
-  });
-  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao trocar o mapa");
-  return response.json();
+  return writeJson(`${API_BASE}/gm/workspace/map`, authHeaders({ "Content-Type": "application/json" }), 'POST', payload, 'Falha ao enviar imagem');
 }
 
 export async function listWorkspaceMaps(): Promise<WorkspaceMap[]> {
@@ -1403,10 +1517,7 @@ export async function listWorkspaceMaps(): Promise<WorkspaceMap[]> {
 
 export async function editWorkspaceMap(mapId: string, title?: string): Promise<void> {
   const suffix = title === undefined ? "" : `/title?title=${encodeURIComponent(title)}`;
-  const response = await fetch(`${API_BASE}/gm/workspace/maps/${encodeURIComponent(mapId)}${suffix}`, {
-    method: title === undefined ? "DELETE" : "PATCH", headers: authHeaders(),
-  });
-  if (!response.ok) { const error = await response.json(); throw new Error(error.detail || "Falha ao alterar mapa"); }
+  await writeJson(`${API_BASE}/gm/workspace/maps/${encodeURIComponent(mapId)}${suffix}`, authHeaders(), title === undefined ? 'DELETE' : 'PATCH', undefined, 'Falha ao alterar mapa');
 }
 
 export async function promoteCompanion(tokenId: string): Promise<void> {
@@ -1449,19 +1560,11 @@ export async function uploadWorkspaceIconFile(payload: { label: string; category
 }
 
 export async function selectWorkspaceMap(mapId: string): Promise<WorkspaceMap> {
-  const response = await fetch(`${API_BASE}/gm/workspace/maps/active`, { method: "PATCH", headers: authHeaders({ "Content-Type": "application/json" }), body: JSON.stringify({ map_id: mapId }) });
-  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao trocar mapa");
-  return response.json();
+  return writeJson(`${API_BASE}/gm/workspace/maps/active`, authHeaders({ "Content-Type": "application/json" }), 'PATCH', {map_id:mapId}, 'Falha ao trocar mapa');
 }
 
 export async function updateWorkspaceMapVisibility(mapId: string, visibleToPlayers: boolean): Promise<WorkspaceMap> {
-  const response = await fetch(`${API_BASE}/gm/workspace/maps/${encodeURIComponent(mapId)}/visibility`, {
-    method: "PATCH",
-    headers: authHeaders({ "Content-Type": "application/json" }),
-    body: JSON.stringify({ visible_to_players: visibleToPlayers }),
-  });
-  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao alterar a visibilidade do mapa");
-  return response.json();
+  return writeJson(`${API_BASE}/gm/workspace/maps/${encodeURIComponent(mapId)}/visibility`, authHeaders({ "Content-Type": "application/json" }), 'PATCH', {visible_to_players:visibleToPlayers}, 'Falha ao alterar a visibilidade do mapa');
 }
 
 export async function updateWorkspaceView(payload: { zoom: number; scroll_left: number; scroll_top: number }): Promise<{ zoom: number; scroll_left: number; scroll_top: number }> {
@@ -1558,6 +1661,253 @@ export async function listWorkspaceMonsterCatalog(): Promise<MonsterCatalogRespo
   return response.json();
 }
 
+export type CompendiumSpell = {
+  id: string; name: string; school: string; circle: number; tradition: "arcana" | "divina";
+  alcance: string; duracao: string; area_efeito: string; tempo_conjuracao: string; jogada_protecao: string;
+  description: string; source: string;
+  automation?: { family: string; status: 'effect_automated' | 'partial' | 'assisted' | 'blocked'; note: string; mode?: 'normal'; formula?: string };
+};
+export type CompendiumSpellsResponse = { catalog: { id: string; title: string }; count: number; total: number; spells: CompendiumSpell[] };
+export type CompendiumAbility = { id: string; spec: string; level: number; title: string; description: string; source: string };
+export type CompendiumAbilitiesResponse = { catalog: { id: string; title: string }; count: number; total: number; abilities: CompendiumAbility[] };
+export type CompendiumItem = { native_item_path?:string; image_path?:string; catalog_entry_kind?: 'reference' | 'item'; id: string; category: string; name: string; description: string; peso: string; preco: string; preco_po?: number | null; preco_origem?: string; negociavel?: boolean; source: string; alinhamento?: string; dano?: string };
+export type CompendiumItemsResponse = { catalog: { id: string; title: string }; count: number; total: number; items: CompendiumItem[] };
+
+export async function listCompendiumSpells(): Promise<CompendiumSpellsResponse> {
+  const response = await fetch(`${API_BASE}/gm/compendium/spells`, { headers: authHeaders() });
+  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao carregar o grimório");
+  return response.json();
+}
+
+export async function listCompendiumAbilities(): Promise<CompendiumAbilitiesResponse> {
+  const response = await fetch(`${API_BASE}/gm/compendium/abilities`, { headers: authHeaders() });
+  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao carregar habilidades");
+  return response.json();
+}
+
+export async function listCompendiumItems(): Promise<CompendiumItemsResponse> {
+  const response = await fetch(`${API_BASE}/gm/compendium/items`, { headers: authHeaders() });
+  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao carregar o compêndio de itens");
+  return response.json();
+}
+
+export type MonsterActionAttack = {
+  index: number; name: string; bonus: number | null; damage: string; notes?: string | null; count: number;
+  status: "ready" | "incomplete"; execution_kind?: "native_contact" | "passive_grid"; dice?: string; riders?: string[]; damage_bonus?: number | null; reason?: string;
+};
+export type MonsterActionAbility = {
+  name: string; kind: "active" | "passive" | "spellcasting"; description: string;
+  save?: string; frequency?: string; range_m?: number; reference_dice?: string;
+  spellcasting?: { named_spells: { mentioned_as: string; links: { id: string; name: string; tradition: string; circle: number }[] }[]; caster_level: number | null; tradition: string | null; caster_class?: string };
+  spell_refs?: { mentioned_as: string; links: { id: string; name: string; tradition: string; circle: number }[] }[];
+};
+export type MonsterActionMap = {
+  native_breaths?: Record<string, {execution_status: string; revision: string; gaps: string[]; requires_eye_contact?:boolean; attacks_until_ready?:number; ready?:boolean}>;
+  name: string;
+  summary: { attacks: number; attacks_ready: number; attacks_incomplete: number; active_abilities: number; passive_abilities: number; spellcasting: number; blockers: number };
+  attacks: MonsterActionAttack[]; active_abilities: MonsterActionAbility[]; passive_abilities: MonsterActionAbility[];
+  spellcasting: MonsterActionAbility[]; blockers: string[];
+  rulebook?: MonsterRulebook;
+};
+
+export type MonsterRulebook = {
+  schema_version: number; monster_id: string; name: string; revision: string;
+  source: { edition: string | null; url: string | null; license: string | null; license_url: string | null; attribution: string | null };
+  movement: { raw: string | null; modes: Record<string, number>; pending: string[] };
+  art: { path: string | null; origin: string; attribution: string | null; license: string | null; source_url: string | null; catalog_reuse_count?: number | null };
+  source_record: Record<string, unknown>;
+  rules: {
+    id: string; name: string; text: string; category: string; source_pointer: string;
+    clauses: { text: string; kind: string; tags: string[]; start: number; end: number; execution_status: string }[];
+    execution: { status: string; handler: string | null; gaps: string[] };
+    parameters: Record<string, unknown>;
+    action_spec?: { damage_formula: string | null; damage_multiplier?: number; save: string | null; save_effect: string | null;
+      geometry: { shape: string | null; width_m: number | null; depth_m: number | null; radius_m: number | null; height_m?: number | null };
+      uses: { maximum: number | null; recharge: string | null }; reasons: string[] } | null;
+  }[];
+};
+
+export async function getCompendiumMonsterActions(monsterId: string): Promise<MonsterActionMap> {
+  const response = await fetch(`${API_BASE}/gm/compendium/monsters/${encodeURIComponent(monsterId)}/actions`, { headers: authHeaders() });
+  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao carregar as ações da criatura");
+  return response.json();
+}
+
+export async function getWorkspaceTokenActions(tokenId: string): Promise<MonsterActionMap> {
+  const response = await fetch(`${API_BASE}/gm/workspace/tokens/${encodeURIComponent(tokenId)}/actions`, { headers: authHeaders() });
+  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao carregar as ações da criatura");
+  return response.json();
+}
+
+export type MerchantStockLine = {
+  id: string; merchant_id: string; compendium_item_id: string; name: string; quantity: number;
+  price_override_po: number | null; notes: string; book_price_po: number | null; price_po: number | null;
+};
+export type Merchant = { id: string; name: string; location: string; buy_pct: number; stock: MerchantStockLine[] };
+
+export type CommerceOffer = {id:string;name:string;quantity:number;price_copper:number;description?:string;image_path?:string|null;trade_group?:string;readiness?:{effect_status:string;warnings:string[]};kind:'buy'|'sell';individual_appraisal?:boolean};
+export type CommerceService = {id:string;name:string;kind:'delivery'|'lodging'|'appraisal'|'spell';price_copper:number;amount:number;spell_id?:string|null;available?:boolean;unavailable_reason?:string};
+export type CommerceShop = {id:string;name:string;location:string;token_id:string;enabled:boolean;buy_pct:number;npc_id?:number|null;location_id?:number|null;offers:CommerceOffer[];services:CommerceService[];sellable:CommerceOffer[];blocked_offers?:{id:string;name:string;quantity?:number;instance?:{status:string;charges_current?:number|null;charges_max?:number|null;condition?:{kind:string;bonus_remaining?:number}|null}}[];blocked_sales?:{id:string;name:string;quantity:number;reason:string}[];trade_policy?:{buy?:string[];sell?:string[]};responsible_npc?:{name:string;portrait_path:string|null;public_description:string;combat_token_id?:string}};
+export type CommerceQuote = {id:string;name:string;kind:'buy'|'sell'|'service';quantity:number;unit_copper:number;total_copper:number;expires_at:number;bargain:{d20:number;modifier:number;total:number;label:string}|null};
+export type CommerceReceipt = {receipt_id:string;name:string;kind:'buy'|'sell'|'service'|'refund';quantity:number;total_copper:number;service_status:string|null;purse_before?:Record<string,number>;purse_after?:Record<string,number>;title?:string;audit_status?:string;service_effect?:{family:string;hp_before?:number;hp_after?:number;healing_applied?:number;roll?:{total:number;formula?:string};removed_effects?:{id:string;label:string}[];removed_conditions?:string[]};appraisal?:{id:string;name:string;quantity:number;price_copper:number|null;reason:string|null}[]};
+async function commerceRequest<T>(path:string,method='GET',body?:unknown,signal?:AbortSignal):Promise<T> {
+  const message='Não foi possível concluir a negociação';
+  if(method!=='GET')return writeJson<T>(`${API_BASE}${path}`,authHeaders({'Content-Type':'application/json'}),method,body,message);
+  const controller=new AbortController();const cancel=()=>controller.abort();let timer:ReturnType<typeof setTimeout>|undefined;
+  if(signal?.aborted)controller.abort();else signal?.addEventListener('abort',cancel,{once:true});
+  try{return await Promise.race([
+    (async()=>{const response=await fetch(`${API_BASE}${path}`,{headers:authHeaders(),signal:controller.signal});if(!response.ok)throw new Error((await response.json().catch(()=>null))?.detail||message);return response.json() as Promise<T>;})(),
+    new Promise<never>((_,reject)=>{timer=setTimeout(()=>{controller.abort();reject(new Error('O mercado demorou para responder. Abra novamente para atualizar.'));},15000);}),
+  ]);}finally{clearTimeout(timer);signal?.removeEventListener('abort',cancel);}
+}
+
+export const getTradeCatalog=()=>commerceRequest<CompendiumItemsResponse>('/gm/items/trade-catalog');
+export const setItemTradeProfile=(payload:{item_path:string;price_copper:number;trade_group:string;request_id:string})=>commerceRequest('/gm/items/trade-profile','PUT',payload);
+export const getCommerceHistory=(id:string)=>commerceRequest<CommerceReceipt[]>(`/commerce/characters/${encodeURIComponent(id)}/history`);
+export const getPinCommerce=(token:string,character:string,signal?:AbortSignal)=>commerceRequest<CommerceShop[]>(`/workspace/tokens/${encodeURIComponent(token)}/commerce${character?`?character_id=${encodeURIComponent(character)}`:''}`,'GET',undefined,signal);
+export const configureMerchant=(id:string,payload:{token_id:string;npc_id:number|null;location_id:number|null;enabled:boolean;buy_pct:number;policy?:{buy?:string[];sell?:string[]}})=>commerceRequest(`/gm/merchants/${encodeURIComponent(id)}/binding`,'PUT',payload);
+export const addMerchantService=(id:string,payload:{name:string;kind:'delivery'|'lodging'|'appraisal'|'spell';price_copper:number;compendium_item_id?:string;amount:number;stock_id?:string;spell_id?:string})=>commerceRequest(`/gm/merchants/${encodeURIComponent(id)}/services`,'POST',payload);
+export const quoteCommerce=(id:string,payload:{request_id:string;character_id:string;kind:'buy'|'sell'|'service';target_id:string;quantity:number;negotiate:boolean})=>commerceRequest<CommerceQuote>(`/commerce/${encodeURIComponent(id)}/quotes`,'POST',payload);
+export const confirmCommerce=(id:string,request_id:string)=>commerceRequest<CommerceReceipt>(`/commerce/quotes/${encodeURIComponent(id)}/confirm`,'POST',{request_id});
+export const removeMerchantService=(id:string,service:string)=>commerceRequest(`/gm/merchants/${encodeURIComponent(id)}/services/${encodeURIComponent(service)}`,'DELETE');
+
+export async function listMerchants(): Promise<Merchant[]> {
+  const response = await fetch(`${API_BASE}/gm/merchants`, { headers: authHeaders() });
+  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao carregar mercadores");
+  return response.json();
+}
+
+export async function createMerchant(payload: { name: string; location?: string }): Promise<Merchant> {
+  const response = await fetch(`${API_BASE}/gm/merchants`, {
+    method: "POST", headers: authHeaders({ "Content-Type": "application/json" }), body: JSON.stringify(payload),
+  });
+  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao criar mercador");
+  return response.json();
+}
+
+export async function addMerchantStock(merchantId: string, payload: { compendium_item_id: string; quantity?: number; price_override_po?: number | null; notes?: string }): Promise<MerchantStockLine> {
+  const response = await fetch(`${API_BASE}/gm/merchants/${encodeURIComponent(merchantId)}/stock`, {
+    method: "POST", headers: authHeaders({ "Content-Type": "application/json" }), body: JSON.stringify(payload),
+  });
+  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao adicionar ao estoque");
+  return response.json();
+}
+
+export async function removeMerchantStock(merchantId: string, stockId: string): Promise<void> {
+  const response = await fetch(`${API_BASE}/gm/merchants/${encodeURIComponent(merchantId)}/stock/${encodeURIComponent(stockId)}`, {
+    method: "DELETE", headers: authHeaders(),
+  });
+  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao remover do estoque");
+}
+
+export async function haggleMerchant(merchantId: string, payload: { character_id: string; base_price_po: number; roll_mode?: "digital" | "physical"; d20?: number }): Promise<{ d20: number; modifier: number; total: number; tier: string; base_price_po: number; adjusted_price_po: number }> {
+  const response = await fetch(`${API_BASE}/gm/merchants/${encodeURIComponent(merchantId)}/haggle`, {
+    method: "POST", headers: authHeaders({ "Content-Type": "application/json" }), body: JSON.stringify(payload),
+  });
+  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha na pechincha");
+  return response.json();
+}
+
+export async function buyFromMerchant(merchantId: string, payload: { character_id: string; stock_id: string; quantity?: number; final_price_po: number; expected_purse?: Record<string, number> | null }): Promise<{ item: string; quantity: number; paid_po: number; purse_after: Record<string, number> }> {
+  const response = await fetch(`${API_BASE}/gm/merchants/${encodeURIComponent(merchantId)}/buy`, {
+    method: "POST", headers: authHeaders({ "Content-Type": "application/json" }), body: JSON.stringify(payload),
+  });
+  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha na compra");
+  return response.json();
+}
+
+export async function sellToMerchant(merchantId: string, payload: { character_id: string; item_path: string; quantity?: number; unit_price_po: number; expected_purse?: Record<string, number> | null }): Promise<{ item: string; quantity: number; received_po: number; purse_after: Record<string, number> }> {
+  const response = await fetch(`${API_BASE}/gm/merchants/${encodeURIComponent(merchantId)}/sell`, {
+    method: "POST", headers: authHeaders({ "Content-Type": "application/json" }), body: JSON.stringify(payload),
+  });
+  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha na venda");
+  return response.json();
+}
+
+export type SpellCastTarget = { type: "character" | "token"; id: string };
+export type SpellCastResult = {
+  label: string; caster: string; mechanic: { save: string | null; save_effect: string | null; damage: string | null; healing?: string | null };
+  results: { target: string; target_type: string; target_id: string; save?: { d20: number; save_bonus: number; total: number; target: number; success: boolean }; damage_rolled?: number; damage_dealt: number; condition_cure?:string; removed_effects?:{id:string;label:string}[]; removed_conditions?:string[]; healing_rolled?: number; healing_applied?: number; healing_roll?: {total: number; individual_results?: number[]; formula?: string; modifier?: number}; hp?: { before: number; after: number }; resisted: boolean; manual: boolean; immune?:string; condition?:{name:string;effect:string;immune?:string;resisted?:boolean;effect_id?:string;duration_unit?:string} }[];
+  manual_note: string | null;
+};
+
+export async function castCompendiumSpell(spellId: string, payload: { request_id?: string; caster_type: "character" | "token"; caster_id: string; targets: SpellCastTarget[]; roll_mode?: "digital" | "physical"; d20?: number | number[]; damage_override?: string; save_override?: string; range_m?: number; range_cells?: number }): Promise<SpellCastResult> {
+  return writeJson(`${API_BASE}/gm/compendium/spells/${encodeURIComponent(spellId)}/cast`,
+    authHeaders({ "Content-Type": "application/json" }), "POST",
+    { ...payload, request_id: payload.request_id ?? newDiceRequestId("catalog-spell") }, "Falha ao conjurar");
+}
+
+export async function executeTokenAction(tokenId: string, payload: { request_id?: string; ability_name: string; targets: SpellCastTarget[]; roll_mode?: "digital" | "physical"; d20?: number | number[]; damage_override?: string; range_m?: number; range_cells?: number }): Promise<SpellCastResult> {
+  return writeJson(`${API_BASE}/gm/workspace/tokens/${encodeURIComponent(tokenId)}/actions/execute`,
+    authHeaders({ "Content-Type": "application/json" }), "POST",
+    { ...payload, request_id: payload.request_id ?? newDiceRequestId("monster-usable") }, "Falha ao executar a ação");
+}
+
+export type NativeActionContract = {
+  schema_version: 1; ref: string; revision: string; level: number;
+  executor: { binding: 'dorn_relampago' | 'dorn_reflexos' | 'dorn_forca_arcana' | 'dorn_teia' | 'dorn_dissipar_magia' | 'vezemir_forca_arcana' | 'vezemir_velocidade' | 'morthak_clonagem' | 'morthak_magia_da_morte' | 'raziel_sangue_defensivo' };
+  targeting: { min_targets: number; max_targets: number; unique_by: 'entity'; include_self: boolean };
+  range: { mode: 'ranged'; meters: number } | { mode: 'self'; meters: 0 } | { mode: 'touch'; cells: 1 };
+};
+export type GridRingTarget = { type: string; id: string; name: string; cells: number; meters: number; valid: boolean; reason: string; entity_key?: string };export type GridRing = {
+  native_breath?: {token_id:string;ability_name:string} | null;
+  native_contact?: {token_id:string;kind:'disintegration'|'rust'};
+  area_cells?: [number,number][];
+  contract?: NativeActionContract; map_id?: string;
+  gridded: boolean; declared: { mode: string; label: string; range_m?: number; range_cells?: number };
+  reason?: string; mode?: string; slot?: string; range_m?: number | null; range_cells?: number;
+  max_targets?: number;
+  cell_size_m?: number; rule?: string; cols?: number; rows?: number;
+  origin?: { token_id: string; cell_x: number; cell_y: number }; targets?: GridRingTarget[];
+};
+
+export type MonsterBreathPreview = {version:number;map_id:string;contract:{revision:string;area_fingerprint:string;area_cells:[number,number][];requires_eye_contact?:boolean;reflection_allowed?:boolean};targets:{pin_id:string;name:string;target_type:string;target_id:string}[]};
+export async function getMonsterBreathPreview(tokenId:string,abilityName:string,aimTokenId:string):Promise<MonsterBreathPreview> {
+  const query=new URLSearchParams({ability_name:abilityName,aim_token_id:aimTokenId});
+  return readJson(`${API_BASE}/gm/workspace/tokens/${encodeURIComponent(tokenId)}/breath-preview?${query}`,authHeaders(),'Falha ao conferir área da baforada');
+}
+
+export async function getGridRange(actionRef: string, attackerTokenId: string, mapId: string, rangeOverrideM?: number, extra?: { attackerCharacterId?: string; slot?: string; maxRangeM?: number }): Promise<GridRing> {
+  const query = new URLSearchParams({ ref: actionRef, attacker_token_id: attackerTokenId, map_id: mapId });
+  if (rangeOverrideM != null) query.set("range_override_m", String(rangeOverrideM));
+  if (extra?.attackerCharacterId) query.set("attacker_character_id", extra.attackerCharacterId);
+  if (extra?.slot) query.set("slot", extra.slot);
+  if (extra?.maxRangeM != null) query.set("max_range_m", String(extra.maxRangeM));
+  const response = await fetch(`${API_BASE}/gm/grid/range?${query}`, { headers: authHeaders() });
+  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao abrir o alcance");
+  return response.json();
+}
+
+export type GridApproach = {
+  already_in_range: boolean; path: [number, number][]; cost_m: number; remaining_m: number | null;
+  lands_in_range: boolean; cells: number; meters: number;
+};
+
+export async function getGridApproach(mapId: string, tokenId: string, targetId: string, mode: string, rangeM?: number, rangeCells?: number): Promise<GridApproach> {
+  const query = new URLSearchParams({ map_id: mapId, token_id: tokenId, target_type: "token", target_id: targetId, mode });
+  if (rangeM != null) query.set("range_m", String(rangeM));
+  if (rangeCells != null) query.set("range_cells", String(rangeCells));
+  const response = await fetch(`${API_BASE}/gm/grid/approach?${query}`, { headers: authHeaders() });
+  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao calcular aproximação");
+  return response.json();
+}
+
+export type ActionBlock = { type: string; bonus?: number | null; count?: number; jp?: string; effect?: string;
+  dice?: string | null; when?: string; key?: string; label?: string; text?: string };
+export type DescribedAction = { ref: string; name: string; kind: string; owner: { type: string; id: string };
+  blocks: ActionBlock[]; costs: unknown[]; executable: boolean;
+  execute: { endpoint: string | null; method: string; note?: string } | null; note?: string | null };
+
+export async function describeAction(ref: string): Promise<DescribedAction> {
+  const response = await fetch(`${API_BASE}/gm/actions/describe?ref=${encodeURIComponent(ref)}`, { headers: authHeaders() });
+  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao descrever a ação");
+  return response.json();
+}
+
+export async function executeActionRef(ref: string, payload: { request_id?: string; targets?: SpellCastTarget[]; roll_mode?: "digital" | "physical"; d20?: number | number[]; damage_override?: string; save_override?: string; caster_type?: "character" | "token"; caster_id?: string }): Promise<{ action: DescribedAction; result: unknown }> {
+  return writeJson(`${API_BASE}/gm/actions/execute`, authHeaders({ "Content-Type": "application/json" }), 'POST', { ref, targets: payload.targets || [], ...payload }, 'Falha ao executar');
+}
+
 export async function listWorkspaceLoot(): Promise<LootResolution[]> {
   return readJson(`${API_BASE}/workspace/loot`, authHeaders(), "Falha ao carregar espólios");
 }
@@ -1635,8 +1985,20 @@ export async function rechargeSessionItems(cycle: "scene" | "dawn"): Promise<{ c
   return response.json();
 }
 
-export async function getPlayableCharacter(profileId: string): Promise<PlayableCharacter> {
-  return readJson(`${API_BASE}/characters/${encodeURIComponent(profileId)}`, authHeaders(), "Falha ao carregar ficha de jogo");
+export async function getPlayableCharacter(profileId: string, readOnly = true): Promise<PlayableCharacter> {
+  return readJson(`${API_BASE}/characters/${encodeURIComponent(profileId)}${readOnly ? '?read_only=true' : ''}`, authHeaders(), "Falha ao carregar ficha de jogo", 20_000);
+}
+
+export type NativeActionEntry = {
+  ref: string; label: string; kind: string; binding: string | null;
+  automation_scope: 'native' | 'assisted' | 'passive' | 'blocked';
+  availability: { state: string; reason: string }; visible_on_sheet?: boolean;
+  description?: string; image_path?: string | null; group?: string | null;
+  limitations: string[]; certification: string;
+};
+export type NativeActionManifest = { character_id: string; execution_approved: false; actions: NativeActionEntry[] };
+export function getCharacterActionManifest(profileId: string): Promise<NativeActionManifest> {
+  return readJson(`${API_BASE}/gm/actions/manifest/${encodeURIComponent(profileId)}`, authHeaders(), 'Falha ao verificar automação das ações');
 }
 
 export type CharacterNotes = { character_id: string; content: string; version: number; updated_at: string | null };
@@ -1660,14 +2022,11 @@ export async function applyCharacterStateAction(
   action: string,
   payload: Record<string, unknown> = {},
   reason?: string,
+  requestId?: string,
 ): Promise<PlayableCharacter> {
-  const response = await fetch(`${API_BASE}/characters/${encodeURIComponent(profileId)}/actions`, {
-    method: "POST",
-    headers: authHeaders({ "Content-Type": "application/json" }),
-    body: JSON.stringify({ action, payload, reason }),
-  });
-  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao atualizar ficha");
-  return response.json();
+  return writeJson(`${API_BASE}/characters/${encodeURIComponent(profileId)}/actions`,
+    authHeaders({ "Content-Type": "application/json" }), 'POST',
+    { action, payload, reason, request_id: requestId }, 'Falha ao atualizar ficha');
 }
 
 export async function listCharacterEvents(profileId: string): Promise<CharacterEvent[]> {
@@ -1725,7 +2084,15 @@ export async function rollCharacterAction(profileId: string, payload: {
   return response.json();
 }
 
+export async function applyDornApprovedBuild(): Promise<PlayableCharacter> {
+  const response = await fetch(`${API_BASE}/gm/characters/dorn7/approved-build`, { method: 'POST', headers: authHeaders() });
+  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || 'Falha ao conciliar Dorn');
+  return response.json();
+}
+
 export async function resolveCharacterAttack(profileId: string, payload: {
+  grid_automatic?: boolean;
+  blood_boost?: number;
   request_id: string;
   attack_id: string;
   target_type: "character" | "token";
@@ -1736,16 +2103,12 @@ export async function resolveCharacterAttack(profileId: string, payload: {
   d20s?: number[];
   weapon_item_path?: string;
 }): Promise<AttackResolution> {
-  const response = await fetch(`${API_BASE}/characters/${encodeURIComponent(profileId)}/attacks/resolve`, {
-    method: "POST",
-    headers: authHeaders({ "Content-Type": "application/json" }),
-    body: JSON.stringify(payload),
-  });
-  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao resolver o ataque");
-  return response.json();
+  return writeJson(`${API_BASE}/characters/${encodeURIComponent(profileId)}/attacks/resolve`,
+    authHeaders({ 'Content-Type': 'application/json' }), 'POST', payload, 'Falha ao resolver o ataque');
 }
 
 export async function useCharacterTechnique(profileId: string, techniqueId: string, payload: {
+  definition_revision?: string;
   request_id?: string;
   mode?: string;
   charges?: number;
@@ -1760,14 +2123,14 @@ export async function useCharacterTechnique(profileId: string, techniqueId: stri
   latitude?: number;
   longitude?: number;
   map_id?: string;
+    use_memorized?: boolean;
+    position_confirmed?: boolean;
+    target_distance?: number;
+    target_dv?: number;
+    targets?: Array<{type:'character'|'token';id:string;distance_meters:number;dv?:number}>;
 }): Promise<unknown> {
-  const response = await fetch(`${API_BASE}/characters/${encodeURIComponent(profileId)}/techniques/${encodeURIComponent(techniqueId)}`, {
-    method: "POST",
-    headers: authHeaders({ "Content-Type": "application/json" }),
-    body: JSON.stringify(payload),
-  });
-  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao usar a técnica");
-  return response.json();
+  return writeJson(`${API_BASE}/characters/${encodeURIComponent(profileId)}/techniques/${encodeURIComponent(techniqueId)}`,
+    authHeaders({ 'Content-Type': 'application/json' }), 'POST', payload, 'Falha ao usar a técnica');
 }
 
 export async function listPendingAttacks(): Promise<AttackResolution[]> {
@@ -1775,12 +2138,7 @@ export async function listPendingAttacks(): Promise<AttackResolution[]> {
 }
 
 export async function confirmCharacterAttack(resolutionId: string): Promise<AttackResolution> {
-  const response = await fetch(`${API_BASE}/combat/attacks/${encodeURIComponent(resolutionId)}/confirm`, {
-    method: "POST",
-    headers: authHeaders(),
-  });
-  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha ao confirmar o ataque");
-  return response.json();
+  return writeJson(`${API_BASE}/combat/attacks/${encodeURIComponent(resolutionId)}/confirm`, authHeaders(), 'POST', undefined, 'Falha ao confirmar o ataque');
 }
 
 export async function listRollHistory(limit = 30): Promise<DiceRollEvent[]> {
@@ -1852,6 +2210,18 @@ export function previewLevel(id: string, hpRoll?: number, targetLevel?: number, 
 export function confirmLevel(id: string, fingerprint: string, hpRoll?: number, targetLevel?: number, hpPolicy = 'preserve_current'): Promise<{ applied: boolean; character: PlayableCharacter }> {
   return sceneRequest(`/gm/characters/${encodeURIComponent(id)}/level/confirm`, { method: "POST", body: JSON.stringify({ fingerprint, hp_roll: hpRoll, target_level: targetLevel, hp_policy: hpPolicy }) });
 }
+export type SpecializationOption = { id: string; name: string; eligible: boolean; reasons: string[]; benefits: string[]; restrictions: string[]; requires: { weapon_choice?: boolean }; upcoming: string[]; source?: string | null; current: boolean };
+export function listSpecializations(id: string): Promise<{ current: string | null; options: SpecializationOption[] }> {
+  return sceneRequest(`/characters/${encodeURIComponent(id)}/specializations`);
+}
+export function chooseSpecialization(id: string, specialization: string | null, weaponItemPath?: string, reason?: string): Promise<{ applied: boolean; specialization: string | null; abilities?: string[] }> {
+  return sceneRequest(`/characters/${encodeURIComponent(id)}/specialization`, { method: "POST", body: JSON.stringify({ specialization, weapon_item_path: weaponItemPath ?? null, reason: reason ?? null }) });
+}
+export type AttackTargets = { gridded: boolean; slot: string; max_range_m: number | null; targets: { type: string; id: string; name: string; cells: number; meters: number; valid: boolean; reason: string }[] };
+export function attackTargets(profileId: string, attackId: string, slot?: string): Promise<AttackTargets> {
+  const query = slot ? `?slot=${encodeURIComponent(slot)}` : "";
+  return sceneRequest(`/characters/${encodeURIComponent(profileId)}/attacks/${encodeURIComponent(attackId)}/targets${query}`);
+}
 export function newSceneRequestId(prefix = "scene") { return newDiceRequestId(prefix); }
 export async function listGameSessions(): Promise<GameSession[]> { return sceneRequest("/gm/sessions"); }
 export async function listCampaignSessions(): Promise<CampaignSession[]> { return sceneRequest("/sessions"); }
@@ -1889,6 +2259,10 @@ export async function applySceneConsequence(sceneId: number, payload: Record<str
 export async function createSceneEvent(sceneId: number, payload: Record<string, unknown>): Promise<SceneEvent> { return sceneRequest(`/gm/scenes/${sceneId}/events`, { method: "POST", body: JSON.stringify(payload) }); }
 export async function publishScene(sceneId: number, payload: { request_id: string; publication_type: string; title: string; public_text?: string; private_text?: string }): Promise<{ event: SceneEvent; created: boolean }> { return sceneRequest(`/gm/scenes/${sceneId}/publish`, { method: "POST", body: JSON.stringify(payload) }); }
 export async function openSceneOnTable(sceneId: number, requestId: string): Promise<{ scene: GameScene; map?: { id: string; title: string; image_path: string } | null; event: SceneEvent; created: boolean }> { return sceneRequest(`/gm/scenes/${sceneId}/open-on-table`, { method: "POST", body: JSON.stringify({ request_id: requestId }) }); }
+export type SceneTableSelection={element_ids:number[];token_ids:string[];include_map:boolean};
+export async function openSceneSelectionOnTable(sceneId:number,selection:SceneTableSelection,requestId:string):Promise<{scene:GameScene;map:WorkspaceMap|null;event:SceneEvent;created:boolean}>{
+  return sceneRequest(`/gm/scenes/${sceneId}/selection-on-table`,{method:'POST',body:JSON.stringify({...selection,request_id:requestId})});
+}
 export async function voidSceneEvent(eventId: number, reason: string): Promise<SceneEvent> { return sceneRequest(`/gm/scene-events/${eventId}/void`, { method: "POST", body: JSON.stringify({ reason }) }); }
 
 async function contractRequest<T>(path: string, init?: RequestInit): Promise<T> {
@@ -1962,11 +2336,14 @@ export async function listContractNpcs(id: number): Promise<NpcContractLink[]> {
 export async function voidNpcEvent(id: number, reason: string): Promise<NpcEvent> { return npcRequest(`/gm/npc-events/${id}/void`, { method: "POST", body: JSON.stringify({ reason }) }); }
 
 async function worldRequest<T>(path: string, init?: RequestInit): Promise<T> {
+  if (!init || !init.method || init.method === "GET") {
+    return readJson<T>(`${API_BASE}${path}`, authHeaders(), "Falha ao atualizar combate ou mapa");
+  }
   const response = await fetch(`${API_BASE}${path}`, {
     ...init,
     headers: authHeaders(init?.body ? { "Content-Type": "application/json" } : undefined),
   });
-  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha no mapa ou na viagem");
+  if (!response.ok) throw new HttpError(response.status, (await response.json().catch(() => null))?.detail || "Falha no mapa ou na viagem");
   return response.json();
 }
 
@@ -2002,9 +2379,7 @@ export async function linkContractLocation(contractId: number, payload: Record<s
 export async function listContractLocations(contractId: number): Promise<Array<{ link: Record<string, unknown>; location: WorldLocationRecord }>> { return worldRequest(`/contracts/${contractId}/locations`); }
 
 export async function health() {
-  const response = await fetch(`${API_BASE}/health`, { headers: authHeaders() });
-  if (!response.ok) throw new Error("Falha ao consultar /health");
-  return response.json();
+  return readJson<any>(`${API_BASE}/health`, authHeaders(), "Falha ao conectar ao Companion");
 }
 
 export async function rebuildIndex() {
@@ -2199,3 +2574,20 @@ export async function updatePlayerAction(
   }
   return response.json();
 }
+
+export type MonsterContactPreview = {version:number; map_id:string; kind:'disintegration'|'rust'; token_id:string; target_pin_id:string; target_name:string; fingerprint:string; inventory:import('./components/RustContactOptions').RustInventoryOption[]};
+export async function getMonsterContactPreview(tokenId:string,aimTokenId:string):Promise<MonsterContactPreview> {
+  return worldRequest(`/gm/workspace/tokens/${encodeURIComponent(tokenId)}/contact-preview?aim_token_id=${encodeURIComponent(aimTokenId)}`);
+}
+export async function removeMonsterParasite(targetType:string,targetId:string,version:number,requestId:string):Promise<CombatEffectsState> {
+  return worldRequest('/combat/parasite/remove',{method:'POST',body:JSON.stringify({action:'parasite_remove',request_id:requestId,expected_version:version,payload:{target_type:targetType,target_id:targetId}})});
+}
+
+export type DispelPreview = {target_token_id:string;target_name:string;map_id:string;fingerprint:string;version:number;definition_revision:string;
+  effects:{id:string;label:string;kind:'area'|'entity';distance_m:number;spell_circle:number;caster_level:number}[]};
+export async function getGridDispelPreview(targetTokenId:string):Promise<DispelPreview> {
+  return worldRequest('/gm/combat/spells/dispel-preview?target_token_id='+encodeURIComponent(targetTokenId));
+}
+
+export const appraiseMerchantItem=(id:string,payload:{request_id:string;character_id:string;item_path:string;unit_copper:number})=>commerceRequest(`/gm/merchants/${encodeURIComponent(id)}/individual-appraisals`,'POST',payload);
+export const configureMagicServices=(id:string)=>commerceRequest(`/gm/merchants/${encodeURIComponent(id)}/magic-services/defaults`,'POST',{request_id:crypto.randomUUID()});

@@ -7,7 +7,7 @@ import json
 import math
 import re
 import sqlite3
-from contextlib import closing
+from contextlib import closing, nullcontext
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -91,7 +91,62 @@ def enrich_snapshot(path, snapshot):
             if position:
                 token['grid_position'] = dict(position)
                 token.update(visual_position(grid, position))
+        bonus_context={}
+        for token in snapshot['tokens']:
+            identity=token.get('character_id') or token['id']
+            token['tactical_attack_bonus']=diagonal_bonus(db,identity,context=bonus_context)['bonus']
     return snapshot
+
+
+def diagonal_bonus(db, actor_id, target_type=None, target_id=None, *, context=None):
+    """Approved campaign rule: diagonal allies OR opposite-diagonal flank, max +2.
+
+    Only living participants, one-cell footprints and authoritative positions.
+    No persistent buff: movement/death removes the computed bonus immediately.
+    """
+    empty={'bonus':0,'reason':None,'positions':[]}
+    if context is not None and 'units' in context:return _diagonal_from_units(context['units'],actor_id,target_type,target_id)
+    encounter,_=encounter_record(db)
+    if not encounter.get('active') or not encounter.get('battle_mode') or not has_schema(db):
+        if context is not None:context['units']=[]
+        return empty
+    map_id=encounter.get('map_id');members=encounter.get('participants') or []
+    ids={p.get('token_id') or (p['target_id'] if p['target_type']=='token' else None) for p in members}
+    characters={p['target_id'] for p in members if p['target_type']=='character'}
+    rows=db.execute('SELECT t.*,p.cell_x,p.cell_y,p.footprint_w,p.footprint_h,p.version AS position_version FROM session_workspace_tokens t JOIN session_workspace_entity_positions p ON p.token_id=t.id AND p.map_id=t.map_id WHERE t.map_id=? AND t.visible_to_players=1',(map_id,)).fetchall()
+    units=[]
+    for raw in rows:
+        unit=dict(raw);sheet=json.loads(unit['sheet_json'] or '{}')
+        if unit['id'] not in ids and unit.get('character_id') not in characters:continue
+        hp=unit.get('current_hp')
+        if unit.get('character_id'):
+            state=db.execute('SELECT state_json FROM character_states WHERE profile_id=?',(unit['character_id'],)).fetchone()
+            if state:hp=json.loads(state[0]).get('current_hp')
+        from .vezemir_skills import survives
+        if (hp is not None and hp<=0 and not survives(db,unit.get('character_id'),hp)) or unit['footprint_w']!=1 or unit['footprint_h']!=1:continue
+        unit['party']=bool(unit.get('character_id') or sheet.get('summon') or 'aliado' in str(sheet.get('role') or '').casefold())
+        units.append(unit)
+    if context is not None:context['units']=units
+    return _diagonal_from_units(units,actor_id,target_type,target_id)
+
+
+def _diagonal_from_units(units,actor_id,target_type,target_id):
+    empty={'bonus':0,'reason':None,'positions':[]}
+    actor=next((u for u in units if (u.get('character_id') or u['id'])==actor_id),None)
+    if not actor or not actor['party']:return empty
+    others=[u for u in units if u['id']!=actor['id'] and u['party']]
+    stamp=lambda u:[u['id'],u['cell_x'],u['cell_y'],u['position_version']]
+    for ally in others:
+        if abs(actor['cell_x']-ally['cell_x'])==1 and abs(actor['cell_y']-ally['cell_y'])==1:
+            return {'bonus':2,'reason':'Aliados em diagonal','positions':[stamp(actor),stamp(ally)]}
+    enemies=[u for u in units if not u['party'] and (target_id is None or (u['id']==target_id if target_type=='token' else u.get('character_id')==target_id))]
+    for enemy in enemies:
+        dx=actor['cell_x']-enemy['cell_x'];dy=actor['cell_y']-enemy['cell_y']
+        if abs(dx)!=1 or abs(dy)!=1:continue
+        for ally in others:
+            if ally['cell_x']-enemy['cell_x']==-dx and ally['cell_y']-enemy['cell_y']==-dy:
+                return {'bonus':2,'reason':'Flanqueamento diagonal','positions':[stamp(actor),stamp(ally),stamp(enemy)]}
+    return empty
 
 
 def encounter_record(db):
@@ -183,6 +238,8 @@ def configure_grid(path, *, actor_id, role, request_id, map_id, config, expected
                 visual = visual_position(grid, position)
                 db.execute('UPDATE session_workspace_tokens SET latitude=?,longitude=? WHERE id=? AND map_id=?',
                     (visual['latitude'],visual['longitude'],position['token_id'],map_id))
+        from .bat_swarm import sync as sync_bat_swarm
+        sync_bat_swarm(db, datetime.now(timezone.utc).isoformat())
         ledger_id = append_session_ledger_event(db, source_type='spatial_grid', source_id=request_id, event_kind='state',
             actor_id=actor_id,actor_name='Mestre',actor_role='gm',character_id=None,title='Grid lógico configurado',
             detail={'map_id':map_id,'grid':grid},visibility='gm',created_at=datetime.now(timezone.utc).isoformat())
@@ -190,18 +247,8 @@ def configure_grid(path, *, actor_id, role, request_id, map_id, config, expected
 
 
 def movement_m(value):
-    # The native sheet field is number / "9 m" / "9 metros". No invented speed.
-    if type(value) in (int,float):
-        amount = float(value)
-    else:
-        text = str(value or '').strip()
-        match = re.match(r'^(\d+(?:[.,]\d+)?)\s*(?:m(?:etros)?\b|$)', text, re.I)
-        if not match:
-            raise ValueError('Movimento em metros não configurado na ficha')
-        amount = float(match[1].replace(',', '.'))
-    if not math.isfinite(amount) or amount < 0:
-        raise ValueError('Movimento em metros inválido')
-    return amount
+    from .monster_movement import selected_movement
+    return selected_movement(value)
 
 
 def turn_key(encounter, participant):
@@ -214,10 +261,12 @@ def current_participant(encounter):
 
 
 def move_entity(path, *, actor_id, role, request_id, map_id, token_id, mode, cells,
-                expected_position_version, expected_grid_version, expected_combat_version=None, load_movement=None):
+                expected_position_version, expected_grid_version, expected_combat_version=None, load_movement=None, movement_mode=None):
     """One transaction for path, turn budget, pin projection, audit and retry receipt."""
     init_spatial(path)
-    fp = json.dumps([actor_id,role,map_id,token_id,mode,cells,expected_position_version,expected_grid_version,expected_combat_version], sort_keys=True)
+    intent = [actor_id,role,map_id,token_id,mode,cells,expected_position_version,expected_grid_version,expected_combat_version]
+    if movement_mode is not None:intent.append(movement_mode)
+    fp = json.dumps(intent, sort_keys=True)
     # Native character loading may initialize other modules. Do it BEFORE the
     # writer transaction and bind its effect snapshot to the checked version.
     speed = None
@@ -232,7 +281,13 @@ def move_entity(path, *, actor_id, role, request_id, map_id, token_id, mode, cel
             sheet = json.loads(token['sheet_json'] or '{}')
             if role != 'gm' and token['character_id'] != actor_id and sheet.get('summon',{}).get('caster') != actor_id:
                 raise PermissionError('O jogador só move sua entidade ou invocação')
-            speed = movement_m(load_movement(token['character_id']) if token['character_id'] and load_movement else sheet.get('movement'))
+            from .monster_movement import selected_movement, movement_modes
+            raw_movement=load_movement(token['character_id']) if token['character_id'] and load_movement else sheet.get('movement')
+            selected_mode=movement_mode or sheet.get('movement_mode')
+            speed=selected_movement(raw_movement,selected_mode)
+            if selected_mode is None:
+                modes=movement_modes(raw_movement)
+                selected_mode='walk' if 'walk' in modes else next(iter(modes))
     with closing(connect(path)) as db, db:
         db.execute('BEGIN IMMEDIATE')
         map_record = visible_map(db, map_id, role)
@@ -271,6 +326,8 @@ def move_entity(path, *, actor_id, role, request_id, map_id, token_id, mode, cel
             cost = 0
             budget = None
         elif mode == 'COMBAT_MOVE':
+            from .monster_conditions import assert_can_act
+            assert_can_act(db,token['character_id'] or token_id)
             current = current_participant(encounter)
             identity = ('character',token['character_id']) if token['character_id'] else ('token',token_id)
             if not current or encounter.get('map_id') != map_id or identity != (current.get('target_type'),current.get('target_id')):
@@ -285,24 +342,29 @@ def move_entity(path, *, actor_id, role, request_id, map_id, token_id, mode, cel
                 hp = json.loads(state[0]).get('current_hp') if state else None
             else:
                 hp = token['current_hp']
-            if hp is not None and hp <= 0:
+            from .vezemir_skills import survives
+            if hp is not None and hp <= 0 and not survives(db,token['character_id'],hp):
                 raise ValueError('Entidade incapacitada não pode se mover')
             for row in db.execute('SELECT data_json FROM combat_effects WHERE active=1 AND target_type=? AND target_id=?', identity):
                 effect = json.loads(row[0])
-                if effect.get('reward') == 'vines':
-                    raise ValueError('Alvo preso pela Pulseira de Vinhas')
+                if effect.get('reward') == 'vines' or effect.get('immobilized'):
+                    raise ValueError('Alvo imobilizado: '+str(effect.get('label') or 'Pulseira de Vinhas'))
             cost_cells = 0
             for a,b in zip(cells,cells[1:]):
                 dx,dy = abs(a[0]-b[0]),abs(a[1]-b[1])
                 if max(dx,dy) != 1:
                     raise ValueError('Passos devem ser adjacentes; não é permitido teleportar')
-                cost_cells += distance_cells(grid['distance_rule'],a,b)
+                from .dorn_spell_pack import web_step_multiplier
+                cost_cells += distance_cells(grid['distance_rule'],a,b)*web_step_multiplier(db,map_id,b)
             cost = cost_cells * grid['cell_size_m']
             key = turn_key(encounter,current)
             spent = (encounter.get('movement') or {}).get('spent_m',0) if (encounter.get('movement') or {}).get('turn_key') == key else 0
+            previous_mode=(encounter.get('movement') or {}).get('mode','walk')
+            if spent and previous_mode!=selected_mode:
+                raise ValueError('Não é possível trocar o modo de movimento depois de se deslocar neste turno')
             if speed is None or spent + cost > speed + 1e-8:
                 raise ValueError('Movimento acima do limite disponível neste turno')
-            budget = dict(turn_key=key,budget_m=speed,spent_m=round(spent+cost,6))
+            budget = dict(turn_key=key,budget_m=speed,spent_m=round(spent+cost,6),mode=selected_mode)
             encounter['movement'] = budget
             db.execute('UPDATE combat_effect_clock SET encounter_json=?,version=version+1 WHERE id=1', (json.dumps(encounter),))
             version += 1
@@ -313,6 +375,11 @@ def move_entity(path, *, actor_id, role, request_id, map_id, token_id, mode, cel
         projected = visual_position(grid,result_pos)
         now = datetime.now(timezone.utc).isoformat()
         db.execute('UPDATE session_workspace_tokens SET latitude=?,longitude=?,updated_at=? WHERE id=?', (projected['latitude'],projected['longitude'],now,token_id))
+        from .bat_swarm import sync as sync_bat_swarm
+        sync_bat_swarm(db, now)
+        # Conditional effects can advance the same authoritative clock.
+        # Return that version, including in the cached idempotent receipt.
+        _, version = encounter_record(db)
         from .session_workspace import _token_is_visible
         fog = {}
         for row in db.execute('SELECT layer,enabled,revealed_cells_json,mist_density_json FROM session_workspace_map_fog WHERE map_id=?', (map_id,)):
@@ -326,6 +393,93 @@ def move_entity(path, *, actor_id, role, request_id, map_id, token_id, mode, cel
             detail=dict(mode=mode,map_id=map_id,token_id=token_id,path=cells,position=result_pos,cells=cost/grid['cell_size_m'],meters=cost,movement=budget),
             visibility='table' if public else 'gm',created_at=now)
         return finish_command(db, request_id,fp,dict(position=result_pos,movement=budget,combat_version=version,ledger_id=ledger_id,**projected))
+
+
+def check_attack_range(path, *, actor_character_id, target_type, target_id, slot, max_range_m=None, connection=None):
+    """Grid-aware range gate for attacks and combat techniques.
+
+    When attacker and target share a map with a logical grid and both have
+    positions, melee/touch require adjacency (1 cell) and ranged requires
+    ``max_range_m`` when defined. Anything else passes silently: without a
+    grid the Mestre adjudica (assisted), never invented.
+    """
+    with (nullcontext(connection) if connection is not None else closing(connect(path))) as db:
+        cursor = db.cursor()
+        cursor.row_factory = sqlite3.Row
+        if target_type == "token":
+            target = cursor.execute("SELECT * FROM session_workspace_tokens WHERE id=?", (target_id,)).fetchone()
+        else:
+            target = cursor.execute("SELECT * FROM session_workspace_tokens WHERE character_id=? ORDER BY id LIMIT 1",
+                                (target_id,)).fetchone()
+        if target is None:
+            return {"checked": False}
+        actors = cursor.execute("SELECT * FROM session_workspace_tokens WHERE character_id=?",
+                            (actor_character_id,)).fetchall()
+        partner = next((a for a in actors if a["map_id"] == target["map_id"]), None)
+        if partner is None:
+            return {"checked": False}
+        grid = grid_record(cursor, target["map_id"])
+        if not grid:
+            return {"checked": False}
+        pos = lambda token_id: cursor.execute("SELECT cell_x,cell_y FROM session_workspace_entity_positions"
+                                          " WHERE map_id=? AND token_id=?",
+                                          (target["map_id"], token_id)).fetchone()
+        a, b = pos(partner["id"]), pos(target["id"])
+        if not a or not b:
+            return {"checked": False}
+        cells = distance_cells(grid["distance_rule"], [a["cell_x"], a["cell_y"]], [b["cell_x"], b["cell_y"]])
+        meters = cells * grid["cell_size_m"]
+        if slot in {"melee", "touch"} and cells > 1:
+            raise ValueError(f"Fora de alcance corpo a corpo ({cells} células)")
+        if slot == "ranged" and max_range_m is not None and meters > max_range_m + 1e-8:
+            raise ValueError(f"Fora de alcance ({meters:g} m, máximo {max_range_m:g} m)")
+        return {"checked": True, "cells": cells, "meters": meters}
+
+
+def targets_in_range(path, *, actor_character_id, attacker_token_id=None, map_id=None,
+                      slot="melee", max_range_m=None, role="gm"):
+    """List tokens on the same grid with distance and validity for an attack.
+
+    Without a grid or positions, returns gridded False so the UI keeps the
+    manual target picker (assisted). Never invents positions.
+    """
+    from .session_workspace import get_workspace_snapshot
+    snapshot = get_workspace_snapshot(path, map_id=map_id or "default", is_gm=(role == "gm"))
+    grid = (snapshot.get("map") or {}).get("grid")
+    if not grid:
+        return {"gridded": False, "slot": slot, "max_range_m": max_range_m, "targets": []}
+    by_id = {t["id"]: t for t in snapshot.get("tokens", [])}
+    attacker = by_id.get(attacker_token_id or "")
+    if attacker is None:
+        owned = [t for t in snapshot.get("tokens", []) if t.get("character_id") == actor_character_id]
+        attacker = owned[0] if owned else None
+    if attacker is None or not attacker.get("grid_position"):
+        return {"gridded": False, "slot": slot, "max_range_m": max_range_m, "targets": []}
+    origin = attacker["grid_position"]
+    targets = []
+    for token in snapshot.get("tokens", []):
+        if token["id"] == attacker["id"] or token.get("token_type") == "location":
+            continue
+        pos = token.get("grid_position")
+        if not pos:
+            continue
+        cells = distance_cells(grid["distance_rule"], [origin["cell_x"], origin["cell_y"]],
+                               [pos["cell_x"], pos["cell_y"]])
+        meters = cells * grid["cell_size_m"]
+        if slot in {"melee", "touch"}:
+            valid, reason = cells <= 1, "" if cells <= 1 else f"{cells} células (adjacência exigida)"
+        elif max_range_m is not None:
+            valid = meters <= max_range_m + 1e-8
+            reason = "" if valid else f"{meters:g} m (máximo {max_range_m:g} m)"
+        else:
+            valid, reason = True, "alcance a confirmar com o Mestre"
+        targets.append({"type": "token", "id": token["id"], "name": token.get("name"),
+                        "cells": cells, "meters": meters, "valid": valid, "reason": reason,
+                        "current_hp": token.get("current_hp"), "maximum_hp": token.get("maximum_hp")})
+    targets.sort(key=lambda t: (t["cells"], t["name"] or ""))
+    return {"gridded": True, "slot": slot, "max_range_m": max_range_m,
+            "origin": {"token_id": attacker["id"], "cell_x": origin["cell_x"], "cell_y": origin["cell_y"]},
+            "cell_size_m": grid["cell_size_m"], "targets": targets}
 
 
 def distance_between(path, map_id, token_a, token_b, role='gm'):

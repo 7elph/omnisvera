@@ -12,7 +12,7 @@ export default function CompanionAllySheet({ token, characters, targets, physica
   const [busy, setBusy] = useState(false);
   return <section aria-label={`Ficha de ${token.name}`}>
     {error && <p role="alert">{error}</p>}
-    <button type="button" disabled={busy} onClick={async () => {
+    <button type="button" className="workspace-ally-convert" disabled={busy} onClick={async () => {
       if (!window.confirm("Converter Dorn para a mesma ficha dos jogadores, preservando PV, condições e ataques? Nenhum acesso de jogador será criado automaticamente.")) return;
       setBusy(true); setError("");
       try { await promoteCompanion(token.id); await onChange(); window.dispatchEvent(new CustomEvent("omnisvera-companion-promoted")); }
@@ -26,7 +26,7 @@ export default function CompanionAllySheet({ token, characters, targets, physica
     <TokenVitals key={`${token.id}:${token.current_hp}:${token.maximum_hp}`} token={token} editable compact showPortrait={false} onChange={onChange} />
     <section className="workspace-conditions workspace-status-under-vitals"><p>STATUS - {token.conditions.length ? token.conditions.join(" · ") : "Nenhum"}</p></section>
     <section className="workspace-action-catalog"><header><span>DEFESAS E MOVIMENTO</span></header><article><span>Proteção</span><b>{sheet?.saving_throw ?? "—"}</b></article><article><span>Movimento</span><b>{sheet?.movement || "—"}</b></article></section>
-    <MonsterAttackPanel key={token.id} token={token} characters={characters} targets={targets} physical={physical} onChange={onChange} />
+    <MonsterAttackPanel key={token.id} token={token} characters={characters} targets={targets} physical={physical} gridded={Boolean(token.grid_position)} onChange={onChange} />
     <section className="workspace-action-catalog"><header><span>HABILIDADES</span></header>
       {(sheet?.abilities || []).map(ability => <details key={ability}><summary>{ability.split(":")[0]}</summary><p>{ability}</p></details>)}
     </section>

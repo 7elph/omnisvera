@@ -27,9 +27,9 @@ test('maximum HP rules use class hit die and the already racial-adjusted Constit
   assert.equal(maximumHpRule({ class_name: 'Mago', level: 1 }), null);
 });
 
-test('the quick maximum HP editor is GM-only and limited to Vezemir and Raziel', () => {
+test('maximum HP correction remains in GM management, not in the gameplay sheet', () => {
   const source = fs.readFileSync(path.join(__dirname, '../src/pages/SessionWorkspace.tsx'), 'utf8');
-  assert.ok(source.includes('mode === "gm" && (selectedId === "vezemir" || selectedId === "raziel")'));
-  assert.ok(source.includes('<MaximumHpEditor definition={definition} value={state?.maximum_hp}'));
+  assert.ok(!source.includes('<MaximumHpEditor'));
+  assert.ok(source.includes('<NumericEditor label="PV máximo"'));
   assert.ok(source.includes('definitionAction({ maximum_hp: value })'));
 });

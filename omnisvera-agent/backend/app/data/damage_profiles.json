@@ -1,0 +1,8 @@
+{
+  "revision": "approved-2026-10-25",
+  "items": {
+    "Items/Grisalma.md": {"magical": true, "base_weapon": "Machado de batalha"},
+    "Items/Adagas de Espectro Fantasma.md": {"magical": true, "base_weapon": "Adaga"}
+  },
+  "hemomancy": {"magical": true}
+}

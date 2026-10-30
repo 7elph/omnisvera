@@ -79,9 +79,11 @@ test('new scene refresh explicitly uses its returned ID instead of stale React s
   const start = source.indexOf('  async function run(');
   const end = source.indexOf('  async function declare()', start);
   const refreshed = [];
+  let createdPayload;
   const context = {
     busy: false, createDraft: { title: 'Nova cena', session_id: '9', checklist: {} },
-    newSceneRequestId: () => 'scene-request', createScene: async () => ({ id: 42 }),
+    privateAdmin: true,
+    newSceneRequestId: () => 'scene-request', createScene: async payload => { createdPayload = payload; return { id: 42 }; },
     setBusy() {}, setError() {}, setNotice() {}, setCreateDraft() {}, setSelectedId() {},
     EMPTY_CHECKLIST: {}, refresh: async id => refreshed.push(id),
   };
@@ -89,4 +91,5 @@ test('new scene refresh explicitly uses its returned ID instead of stale React s
   vm.runInContext(ts.transpileModule(source.slice(start, end), {}).outputText, context);
   await context.submitScene();
   assert.deepEqual(refreshed, [42]);
+  assert.equal(createdPayload.visibility, 'gm');
 });
