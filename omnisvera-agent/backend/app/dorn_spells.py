@@ -92,6 +92,8 @@ def save(db, victim, attribute):
     from .combat_effects import effect_snapshot
     effects = [e for e in effect_snapshot(db)['effects'] if e['target_type'] == victim['type'] and e['target_id'] == victim['id']]
     penalty = (-2 if any(e.get('necro_spell') == 'aterrorrizar' or e.get('d20_penalty') for e in effects) else 0) + (-2 if attribute == 'dexterity' and any(e.get('environmental') for e in effects) else 0)
+    from .item_specials import test_penalty
+    penalty += test_penalty(effects)
     definition = {'name': victim['name'], 'defenses': {**victim['defenses'], 'saving_throw_bonus': int(victim['defenses'].get('saving_throw_bonus') or 0) + penalty + (-5 if blinded else 0)}}
     spec = resolve_character_roll(definition, [], 'saving_throw', attribute)
     from .monster_poison_runtime import current_attributes

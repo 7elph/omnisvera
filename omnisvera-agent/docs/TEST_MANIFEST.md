@@ -3,6 +3,21 @@
 This file is the inventory of test layers and the commands that may be used for
 verification. It does not certify the whole Companion.
 
+## Atualização de 31/10/2026
+
+O checkout atual tem 188 arquivos `backend/test_*.py`, 107 `*.test.cjs`
+e 179 CJS no frontend. Os números das seções seguintes são o inventário
+histórico de 30/10. Última suíte backend completa: 1.807 casos, 1.806 aprovados,
+zero falhas/erros e um ignorado por privilégio de symlink indisponível no Windows.
+Frontend: 495 aprovados; typecheck/build aprovados. O corte de itens inclui
+27 testes específicos e ensaio isolado com revisão visual explícita.
+
+Dois testes em `friday-readiness.test.cjs` dependem das preparações privadas
+do Mestre, excluídas do GitHub. Sem esses arquivos, indicam SKIP com motivo,
+mantendo os outros testes do arquivo ativos. Os smokes de preparação ainda
+exigem seu conteúdo real em uma fixture isolada; um checkout público não o possui.
+Não confundir esse SKIP com validação do conteúdo da sessão.
+
 ## Layers
 
 | Layer | Files | Command or entry point | Safety |

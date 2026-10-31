@@ -25,8 +25,8 @@ class ItemFamilyTests(unittest.TestCase):
         self.assertIn('ammunition',item['mechanics']['family_gaps'])
 
     def test_special_weapon_keeps_a_visible_gap(self):
-        raw=next(i for i in load_item_catalog()['items'] if i['category'].startswith('arma') and str(i.get('dano','')).lower()=='especial')
-        item=catalog_inventory('compendium:'+raw['id'])
+        # Bagh Naja remains ambiguous (1d6/1d4); Madu now has a reviewed executor.
+        item=catalog_inventory('compendium:arma-corpo-bagh-naja')
         self.assertIn('special_effect',item['mechanics']['family_gaps'])
 
     def test_all_numeric_catalog_weapons_keep_damage_critical_and_slots(self):

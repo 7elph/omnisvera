@@ -9,12 +9,14 @@ import re
 BODY={'Armadura acolchoada':(1,0,None),'Armadura de couro':(2,0,6),
       'Armadura de couro batido':(3,0,6),'Armadura de placas':(6,2,3),
       'Armadura completa':(8,3,1),'Cota de malha':(4,1,2)}
-SHIELDS={'Broquel':1,'Escudo de madeira':1,'Escudo de aço':2}
+SHIELDS={'Broquel':1,'Escudo de madeira':1,'Escudo de aço':2,'Escudo torre':0}
 USE_KINDS={'heal_hp','restore_resource','temporary_hp','add_condition'}
 AMMO={'arma-distancia-dardo-x20':('bolt',20),'arma-distancia-dardo-x20-2':('bolt',20),
+      'arma-distancia-dardo-zarabatana-x20':('dart',20),
       'arma-distancia-flecha-x20':('arrow',20),'arma-distancia-flecha-x20-2':('arrow',20),
       'arma-distancia-flecha-improvisada':('arrow',1)}
 LAUNCHERS={'arma-distancia-arco-curto':'arrow','arma-distancia-arco-longo':'arrow',
+           'arma-distancia-zarabatana':'dart',
            'arma-distancia-besta-de-mao':'bolt','arma-distancia-besta':'bolt'}
 
 def rule(identity,kind,value,target=''):
@@ -35,6 +37,8 @@ def descriptor(item):
     if category in {'arma-corpo','arma-distancia'}:
         family='weapon';damage=re.sub(r'\s+','',str(item.get('dano') or '')).lower()
         formula=damage if re.fullmatch(r'\d{1,2}d\d{1,4}(?:[+-]\d+)?',damage) else None
+        # Expansão de Itens, Madu: the prose explicitly specifies 1d8.
+        if item['id']=='arma-corpo-madu':formula='1d8'
         thrown=re.search(r'Arremesso\s*(\d+(?:[.,]\d+)?)\s*/\s*(\d+(?:[.,]\d+)?)',text,re.I)
         reach=re.search(r'Alcance\s+(\d+(?:[.,]\d+)?)',text,re.I)
         critical=re.search(r'(?:(1[89])\s*[-–/]\s*20\s*)?[xX](\d)\b',text)
@@ -45,20 +49,22 @@ def descriptor(item):
                          approved_equipment_slots=slots,equipment_slots=slots,
                          critical_threshold=int(critical[1]) if critical and critical[1] else 20,
                          critical_multiplier=int(critical[2]) if critical else 2)
+        if item['id'] in {'kit-explorador-rede','arma-corpo-garrote'}:
+            mechanics.update(special_attack='net' if item['id']=='kit-explorador-rede' else 'garrote',effect_only=True)
         if reach:mechanics['melee_reach_m']=float(reach[1].replace(',','.'))
         if thrown:mechanics.update(range_m=float(thrown[2].replace(',','.')),short_range_m=float(thrown[1].replace(',','.')))
         if category=='arma-distancia':
             distance=re.search(r'(\d+(?:[.,]\d+)?)\s*/\s*(\d+(?:[.,]\d+)?)',text)
             if distance:mechanics.update(range_m=float(distance[2].replace(',','.')),short_range_m=float(distance[1].replace(',','.')))
             if not formula:gaps.append('ammunition')
-        if not formula and 'ammunition' not in gaps:gaps.append('special_effect')
+        if not formula and 'ammunition' not in gaps and item['id'] not in {'kit-explorador-rede','arma-corpo-garrote'}:gaps.append('special_effect')
         # Preserve combined damage types without choosing one silently.
         types=[v for k,v in [('Co.','slashing'),('Im.','bludgeoning'),('Pe.','piercing')] if k in text]
         if len(types)==1:mechanics['damage_type']=types[0]
         elif types:
             mechanics['damage_types']=types;gaps.append('damage_type_choice')
         if item['id']=='arma-corpo-madu':rules.append(rule('catalog:'+item['id']+':defense','armor_class_bonus',1))
-        if 'Especial' in text and 'especial' not in gaps:gaps.append('special_effect')
+        if 'Especial' in text and item['id'] not in {'arma-corpo-madu','kit-explorador-rede','arma-corpo-garrote'} and 'special_effect' not in gaps:gaps.append('special_effect')
         result.update(item_type='weapon',damage_formula=formula)
         if item['id'] in AMMO:
             kind,pack=AMMO[item['id']];family='ammunition'
@@ -73,7 +79,7 @@ def descriptor(item):
         cap=re.search(r'DES máx\s+\+(\d+)',text)
         if name.casefold().startswith('escudo'):shield=bonus
         else:armor=(bonus,int(penalty[1]) if penalty else 0,int(cap[1]) if cap else None)
-        if 'ricocheteia' in text:gaps.append('special_effect')
+        if 'ricocheteia' in text and item['id']!='protecao-escudo-de-vibranium':gaps.append('special_effect')
     if armor or shield is not None:
         family='armor' if armor else 'shield';bonus,penalty,cap=armor if armor else (shield,0,None)
         if not armor:
@@ -81,6 +87,12 @@ def descriptor(item):
             penalty=int(penalty_match[1]) if penalty_match else 0
         slots=['Armadura' if armor else 'Mão secundária']
         mechanics.update(kind=family,armor_defense=bonus,equipment_slots=slots,approved_equipment_slots=slots)
+        if name=='Escudo torre':mechanics.update(special_defense='tower',block_chance_percent=25)
+        if item['id']=='protecao-escudo-de-vibranium':
+            mechanics.update(special_attack='vibranium',thrown_damage_formula='1d6',range_m=9,
+                             attack_modes=['ranged'],dexterity_cap=3,damage_type='physical',
+                             critical_threshold=20,critical_multiplier=2,
+                             campaign_rule='Arremesso provisório: 1d6 + FOR, 9 m; retorna ao acertar e cai ao errar')
         if cap is not None:mechanics['dexterity_cap']=cap
         rules.append(rule('catalog:'+item['id']+':armor','armor_class_bonus',bonus))
         if penalty:rules.append(rule('catalog:'+item['id']+':movement','movement_bonus',-penalty))

@@ -289,6 +289,11 @@ def resolve_item_damage_formula(definition: dict[str, Any], item: dict[str, Any]
         + int(totals.get(f"damage_bonus:{category}", 0))
         + int(totals.get("damage_bonus:all", 0))
     )
+    if (item.get('mechanics') or {}).get('special_attack') == 'vibranium' and category == 'ranged':
+        from .combat_effects import _attribute_modifier
+        strength = (definition.get('attributes') or {}).get('strength')
+        if type(strength) is not int: raise ValueError('Arremesso exige Força cadastrada')
+        bonus += _attribute_modifier(strength)
     modifier = parsed.modifier + bonus
     return f"{parsed.count}d{parsed.sides}{modifier:+d}" if modifier else f"{parsed.count}d{parsed.sides}"
 

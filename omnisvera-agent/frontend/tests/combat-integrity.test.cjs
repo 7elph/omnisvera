@@ -54,7 +54,8 @@ test('normal attack retry preserves its dice key and locks before the next rende
   let reject, calls = [], serial = 0;
   const context = { selectedId: 'vezemir', busy: '', mutationLock: { current: false }, attackRequestRef: { current: null },
     battleState: {}, character: { state: { current_hp: 10 }, definition: { attacks: [{ id: 'melee' }] } }, combatActionBlock,
-    attackTargetFor: () => ({ id: 'enemy' }), workspace: { table_mode: 'digital' }, battleActive: false,
+    attackTargetFor: () => ({ id: 'enemy' }), weaponForDamageChoice: () => undefined,
+    weaponDamageChoices: () => [], workspace: { table_mode: 'digital' }, battleActive: false,
     attackCountById: {}, attackPhysicalD20ById: {}, attackWeaponById: {}, newDiceRequestId: () => 'attack-' + ++serial,
     setBusy() {}, setError() {}, setTargetLine() {}, setAttackResolution() {}, setBattleState() {},
     resolveCharacterAttack: (...args) => { calls.push(args); return new Promise((_, fail) => { reject = fail; }); } };

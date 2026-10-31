@@ -41,6 +41,9 @@ _FRONTMATTER_MEDIA = ("image_path", "portrait", "thumbnail", "cover")
 # reference. Copy only this audited fallback set, never the whole catalogue.
 _PACKAGED_ICON_FILES = (
     "zz_media/ui/icons/items/adaga.png",
+    "zz_media/ui/icons/items/rede.png",
+    "zz_media/ui/icons/items/espada-bastarda.png",
+    "zz_media/ui/icons/items/escudo-torre.png",
     "zz_media/ui/icons/items/armadura-de-couro.png",
     "zz_media/ui/icons/items/dados.jpg",
     "zz_media/ui/icons/items/inventario.jpg",

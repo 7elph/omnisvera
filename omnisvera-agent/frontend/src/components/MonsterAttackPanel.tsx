@@ -1,4 +1,6 @@
 import ParasiteControl from './ParasiteControl';
+import TargetConfirmation from './TargetConfirmation';
+import AttackDirectionChoice from './AttackDirectionChoice';
 import type { RustContactChoice } from './RustContactOptions';
 import type { MonsterContactPreview } from '../api';
 import { useEffect, useRef, useState } from "react";
@@ -80,6 +82,7 @@ export default function MonsterAttackPanel({ token, characters, targets = [], ph
   const [result, setResult] = useState<AttackResolution | null>(null);
   const [actions, setActions] = useState<MonsterActionMap | null>(null);
   const [execResult, setExecResult] = useState<{ name: string; result: SpellCastResult; outcome?:ReturnType<typeof monsterBreathOutcomeText> } | null>(null);
+  const [towerPrompt,setTowerPrompt]=useState<{index:number;target:string;range?:RingRange;side?:boolean}|null>(null);
   const [pending, setPending] = useState<null | { kind: "attack"; index: number; label: string; armId: string } | { kind: "usable"; name: string; armId: string } | { kind: "spell"; spellId: string; entryName: string; spellName: string; armId: string }>(null);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
@@ -109,7 +112,7 @@ export default function MonsterAttackPanel({ token, characters, targets = [], ph
     return targetId.startsWith("token:") ? { type: "token", id: targetId.slice(6) } : { type: "character", id: targetId };
   }
   const selectedToken = targets.find(t => `token:${t.id}` === target);
-  async function act(index?: number, targetId?: string, range?: RingRange) {
+  async function act(index?: number, targetId?: string, range?: RingRange,towerProtectedSide?:boolean) {
     if (lock.current || blocked) return;
     lock.current = true; setBusy(true); setError("");
     let applied = false;
@@ -123,7 +126,7 @@ export default function MonsterAttackPanel({ token, characters, targets = [], ph
         const picked = targetId || target;
         const split = splitTarget(picked);
         const manualDice = physical && !range;
-        const payload = { attack_id: String(index), target_type: split.type, target_id: split.id, roll_mode: manualDice ? "physical" as const : "digital" as const, ...(manualDice ? { d20: Number(die) } : {}), ...(range?.mode === "ranged" && range.range_m != null ? { range_m: range.range_m } : {}), ...(range && range.mode !== "ranged" ? { range_cells: 1 } : {}) };
+        const payload = { ...(typeof towerProtectedSide==='boolean'?{tower_protected_side:towerProtectedSide}:{}),attack_id: String(index), target_type: split.type, target_id: split.id, roll_mode: manualDice ? "physical" as const : "digital" as const, ...(manualDice ? { d20: Number(die) } : {}), ...(range?.mode === "ranged" && range.range_m != null ? { range_m: range.range_m } : {}), ...(range && range.mode !== "ranged" ? { range_cells: 1 } : {}) };
         const key = JSON.stringify([token.id, payload]);
         if (retry.current?.key !== key) retry.current = { key, id: newDiceRequestId("monster") };
         const resolution = await resolveMonsterAttack(token.id, { ...payload, request_id: retry.current.id });
@@ -133,7 +136,7 @@ export default function MonsterAttackPanel({ token, characters, targets = [], ph
         await onChange();
       }
       if(applied)setActions(await getWorkspaceTokenActions(token.id));
-    } catch (reason) { setError(applied ? "Ataque confirmado. A atualização da tela falhou; não repita o ataque." : reason instanceof Error ? reason.message : "Falha no ataque"); }
+    } catch (reason) { if(!applied&&index!==undefined&&reason instanceof Error&&reason.message.includes('TOWER_SIDE_REQUIRED'))setTowerPrompt({index,target:targetId||target,range});else setError(applied ? "Ataque confirmado. A atualização da tela falhou; não repita o ataque." : reason instanceof Error ? reason.message : "Falha no ataque"); }
     finally { lock.current = false; setBusy(false); }
   }
   async function conjureNamed(entryName: string, spellId: string, spellName: string, targetId?: string, range?: RingRange) {
@@ -217,7 +220,7 @@ export default function MonsterAttackPanel({ token, characters, targets = [], ph
       const detail = (event as CustomEvent).detail || {};
       if (!pending || !detail.targetId || detail.armId !== pending.armId) return;
       const range = (detail.range || null) as RingRange;
-      if (pending.kind === "attack") { if(detail.contact)void executeContact(detail.contact,detail.rustChoice); else void act(pending.index, detail.targetId, range); }
+      if (pending.kind === "attack") { if(detail.contact)void executeContact(detail.contact,detail.rustChoice); else void act(pending.index, detail.targetId, range,detail.towerProtectedSide); }
       else if (pending.kind === "usable") {
         if(detail.breath)void executeBreath(pending.name,detail.targetId,detail.breath);
         else void executeUsable(pending.name, detail.targetId, range);
@@ -236,6 +239,7 @@ export default function MonsterAttackPanel({ token, characters, targets = [], ph
   });
   const usableEntries=actions?[...actions.active_abilities,...(token.sheet?.spell_repertoire?[]:actions.spellcasting.filter(entry=>!actions.active_abilities.some(other=>other.name===entry.name)))]:[];
   return <section className="workspace-action-catalog workspace-attack-catalog workspace-ally-attacks" aria-label={`Ataques de ${token.name}`}>
+    {towerPrompt&&<TargetConfirmation action="Ataque" target="o alvo escolhido" busy={busy} confirmDisabled={typeof towerPrompt.side!=='boolean'} onNo={()=>setTowerPrompt(null)} onYes={()=>{const prompt=towerPrompt;setTowerPrompt(null);void act(prompt.index,prompt.target,prompt.range,prompt.side);}}><AttackDirectionChoice required value={towerPrompt.side} onChange={side=>setTowerPrompt(current=>current?{...current,side}:null)}/></TargetConfirmation>}
     <header><span>ATAQUES</span><small title="Bônus e dano vêm da ficha; confirme o resultado para aplicar dano.">{physical && !gridded ? "d20 físico" : "Rolagem automática"}</small></header>
     {condition&&<p role="status">{condition.label}: não pode agir neste estado.</p>}
     <fieldset disabled={blocked && !token.sheet?.statless} style={{ border: 0, padding: 0, margin: 0 }}>

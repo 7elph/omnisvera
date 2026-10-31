@@ -377,6 +377,8 @@ def move_entity(path, *, actor_id, role, request_id, map_id, token_id, mode, cel
         db.execute('UPDATE session_workspace_tokens SET latitude=?,longitude=?,updated_at=? WHERE id=?', (projected['latitude'],projected['longitude'],now,token_id))
         from .bat_swarm import sync as sync_bat_swarm
         sync_bat_swarm(db, now)
+        from .item_grapple import prune as prune_item_grapple
+        prune_item_grapple(db,now,moving=(map_id,token_id,cells))
         # Conditional effects can advance the same authoritative clock.
         # Return that version, including in the cached idempotent receipt.
         _, version = encounter_record(db)

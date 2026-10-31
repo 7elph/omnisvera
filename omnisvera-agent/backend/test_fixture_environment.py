@@ -28,3 +28,12 @@ class FixtureEnvironmentTests(TestCase):
     def test_operational_path_is_rejected_before_any_spawn(self):
         from scripts.cf01_probe import fixture_environment
         with self.assertRaises(ValueError):fixture_environment(Path(__file__).resolve())
+
+    def test_unpublished_frontend_build_must_stay_inside_temp(self):
+        from scripts.cf01_probe import fixture_environment
+        with TemporaryDirectory() as folder:
+            build=Path(folder)/'frontend-dist'
+            with patch.dict(os.environ, {'OMNISVERA_FRONTEND_DIST':str(build)}):
+                self.assertEqual(fixture_environment(Path(folder)/'simulation.sqlite3')['OMNISVERA_FRONTEND_DIST'],str(build))
+            with patch.dict(os.environ, {'OMNISVERA_FRONTEND_DIST':str(Path(__file__).resolve().parent.parent/'frontend/dist')}):
+                with self.assertRaises(ValueError):fixture_environment(Path(folder)/'simulation.sqlite3')

@@ -147,7 +147,8 @@ def apply_on_hit(db,record,now):
     contract=record['breakdown'].get('monster_on_hit')
     if not contract:return []
     strikes=record['breakdown'].get('strikes') or [record]
-    redirected={r['strike'] for r in record['breakdown'].get('reflection_result',{}).get('rolls',[]) if r.get('intercepted')}
+    from .item_defense import intercepted_strikes
+    redirected=intercepted_strikes(record)
     hits=[s for i,s in enumerate(strikes) if s.get('result')=='hit' and i not in redirected]
     from .dorn_spells import target
     try:victim=target(db,record['target_type'],record['target_id'])

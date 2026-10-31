@@ -8,6 +8,7 @@ import binascii
 import copy
 import re
 import json
+import os
 import sqlite3
 from contextlib import closing
 import threading
@@ -322,7 +323,6 @@ from .schemas import (
     GameSessionStatusUpdate,
     EditableNoteResponse,
     EditableNoteUpdate,
-    HealthResponse,
     InventoryRecord,
     InventoryUpdate,
     NoteDetail,
@@ -451,7 +451,7 @@ async def no_cache_nimalis_game(request: Request, call_next):
     return response
 
 
-FRONTEND_DIST = Path(__file__).resolve().parents[2] / "frontend" / "dist"
+FRONTEND_DIST = Path(os.environ.get('OMNISVERA_FRONTEND_DIST') or Path(__file__).resolve().parents[2] / "frontend" / "dist")
 NIMALIS_GAME_DIST = FRONTEND_DIST / "nimalis"
 EDITOR_BACKUP_ROOT = Path(__file__).resolve().parents[1] / "data" / "editor_backups"
 _INDEX_REFRESH_LOCK = threading.Lock()
@@ -834,45 +834,6 @@ async def shutdown_realtime() -> None:
         except asyncio.CancelledError:
             pass
         _realtime_watch_task = None
-
-
-@app.get("/health", response_model=HealthResponse)
-async def health(access: AccessContext = Depends(require_any)) -> HealthResponse:
-    try:
-        ollama_accessible = await asyncio.wait_for(check_ollama(settings.ollama_base_url), timeout=1.5)
-    except (TimeoutError, OSError):
-        ollama_accessible = False
-    return HealthResponse(
-        backend="ok",
-        vault_path=str(settings.vault_path),
-        database_path=str(settings.database_path),
-        ollama_base_url=settings.ollama_base_url,
-        ollama_model=settings.ollama_model,
-        fast_model=settings.fast_model,
-        quality_model=settings.quality_model,
-        candidate_model=settings.candidate_model,
-        production_model=settings.production_model,
-        model_mode=settings.model_mode,
-        production_approved=settings.production_approved,
-        embedding_model=settings.embedding_model,
-        response_mode=settings.response_mode,
-        rag_mode=settings.rag_mode,
-        semantic_index_path=str(settings.semantic_index_path),
-        auto_refresh_index=settings.auto_refresh_index,
-        auto_refresh_interval_seconds=settings.auto_refresh_interval_seconds,
-        ollama_accessible=ollama_accessible,
-        access_mode=access.mode,
-        player_mode_available=bool(settings.player_token or settings.player_profiles),
-        player_profile_id=access.profile_id,
-        player_character_path=access.character_path,
-        player_character_title=access.character_title,
-        game_web_available=(NIMALIS_GAME_DIST / "nimalis.html").exists(),
-        game_web_url="/nimalis/nimalis.html" if (NIMALIS_GAME_DIST / "nimalis.html").exists() else None,
-        training_capture_mode=settings.training_capture_mode if access.mode == "gm" else None,
-        behavior_memory_enabled=settings.behavior_memory_enabled,
-        behavior_memory_mode=settings.behavior_memory_mode if access.mode == "gm" else None,
-        behavior_memory_ab_mode=settings.behavior_memory_ab_mode if access.mode == "gm" else None,
-    )
 
 
 def _workspace_identity(access: AccessContext) -> tuple[str, str, str, str | None]:
@@ -1493,6 +1454,7 @@ def gm_get_compendium_monster_actions(
 
 @app.get("/gm/grid/range")
 def gm_grid_range(ref: str = Query(default="", max_length=200),
+                  weapon_item_path: str | None = Query(default=None, max_length=1000),
                   attacker_token_id: str = Query(default="", max_length=120),
                   attacker_character_id: str = Query(default="", max_length=120),
                   map_id: str = Query(default="default", max_length=120),
@@ -1532,7 +1494,7 @@ def gm_grid_range(ref: str = Query(default="", max_length=200),
                 attack_id, slot, character["definition"].get("level"))
             if attack_id in {'melee','ranged'}:
                 from .item_families import weapon_range
-                item_slot,item_max=weapon_range(attack_id,character['inventory'])
+                item_slot,item_max=weapon_range(attack_id,character['inventory'],weapon_item_path)
                 if item_max is not None:resolved_slot,resolved_max=item_slot,item_max
             attacker_character = profile_id
             action_ref = ""
@@ -1588,6 +1550,11 @@ def gm_grid_range(ref: str = Query(default="", max_length=200),
             for candidate in ring.get('targets', []):
                 if by_id.get(candidate['id'], {}).get('character_id') not in members:
                     candidate.update(valid=False, reason='Escolha um aliado participante')
+        if ':attack:' in ref or ref.endswith(':toque-sombrio'):
+            from .item_defense import requires_declaration
+            with closing(sqlite3.connect(settings.database_path)) as db:
+                for candidate in ring.get('targets',[]):
+                    candidate['requires_tower_side_confirmation']=requires_declaration(db,'token',candidate['id'])
         return ring
     except PermissionError as error:
         raise HTTPException(status_code=403, detail=str(error)) from error
@@ -3563,6 +3530,7 @@ def character_dice_roll(
 
 
 def _combat_target(target_type: str, target_id: str) -> dict:
+    from .item_specials import touch_target_fields, net_ac_penalty
     if target_type not in {"character", "token"}:
         raise ValueError("Tipo de alvo inválido")
     if target_type == "character":
@@ -3575,6 +3543,7 @@ def _combat_target(target_type: str, target_id: str) -> dict:
             "armor_class": summary.get("armor_class"),
             "current_hp": summary.get("current_hp"),
             "maximum_hp": summary.get("maximum_hp"),
+            **touch_target_fields(character['definition'], character['inventory']),
         }
     token = next((item for item in list_workspace_tokens(settings.database_path) if item["id"] == target_id), None)
     if token is None:
@@ -3591,17 +3560,24 @@ def _combat_target(target_type: str, target_id: str) -> dict:
             "type": "character",
             "id": character_id,
             "name": str(token.get("name") or summary["name"]),
+            "server_token_id": token["id"],
+            **touch_target_fields(character['definition'], character['inventory']),
             "armor_class": summary.get("armor_class"),
             "current_hp": summary.get("current_hp"),
             "maximum_hp": summary.get("maximum_hp"),
         }
     base_ac = (token.get("sheet") or {}).get("armor_class")
-    effect_ac = sum(e["modifiers"].get("armor_class_bonus", 0) for e in readeffects(settings.database_path)["effects"]
-                    if e["target_type"] == "token" and e["target_id"] == target_id)
+    active_effects = [e for e in readeffects(settings.database_path)['effects'] if e['target_type']=='token' and e['target_id']==target_id]
+    effect_ac = sum(e['modifiers'].get('armor_class_bonus', 0) for e in active_effects)
+    from .monster_poison_runtime import project_attributes
+    attributes = project_attributes((token.get('sheet') or {}).get('attributes') or {}, active_effects)
+    touch = touch_target_fields({'attributes':attributes, 'active_effects':active_effects})
+    effect_ac += net_ac_penalty(active_effects, touch['dexterity_ac_bonus'])
     return {
         "type": "token",
         "id": str(token["id"]),
         "name": str(token.get("name") or "Criatura"),
+        **touch,
         "armor_class": None if base_ac is None else base_ac + effect_ac,
         "current_hp": token.get("current_hp"),
         "maximum_hp": token.get("maximum_hp"),
@@ -3645,7 +3621,8 @@ def resolve_character_attack(
         raise HTTPException(status_code=403, detail="Você não pode atacar por este personagem.")
     from .combat import replay_attack_request
     replay_actor,_replay_role=_roll_actor(access)
-    try:replay=replay_attack_request(settings.database_path,request_id=request.request_id,character_id=profile_id,actor_id=replay_actor,intent=request.model_dump(exclude={'request_id'}))
+    from .item_specials import attack_intent
+    try:replay=replay_attack_request(settings.database_path,request_id=request.request_id,character_id=profile_id,actor_id=replay_actor,intent=attack_intent(request))
     except PermissionError as error:raise HTTPException(403,str(error)) from error
     except ValueError as error:raise HTTPException(400,str(error)) from error
     if replay is not None:return replay
@@ -3688,7 +3665,7 @@ def resolve_character_attack(
         resolution, _created = resolve_attack(
             settings.database_path,
             request_id=request.request_id,
-            request_intent=request.model_dump(exclude={'request_id'}),
+            request_intent=attack_intent(request),
             actor_character_id=profile_id,
             actor_name=str(character["definition"].get("name") or profile_id),
             requested_by_id=actor_id,
@@ -3703,6 +3680,8 @@ def resolve_character_attack(
             attack_count=request.attack_count,
             physical_d20s=request.d20s,
             weapon_item_path=request.weapon_item_path,
+            damage_type=request.damage_type,
+            tower_protected_side=request.tower_protected_side,
             blood_boost=request.blood_boost,
         )
         if request.grid_automatic:
@@ -3852,7 +3831,7 @@ def use_character_technique(
             resolution, _ = resolve_attack(settings.database_path, request_id=request_id,
                 actor_character_id=profile_id, actor_name='Raziel', requested_by_id=actor_id, requested_by_role=actor_role,
                 definition=definition, inventory=[], attack_id='mordida', target=target,
-                roll_mode=request.roll_mode or 'digital', physical_d20=request.d20)
+                roll_mode=request.roll_mode or 'digital', physical_d20=request.d20,tower_protected_side=request.tower_protected_side)
             return resolution
         if technique_id in {"animar-mortos", "levantar-esqueleto", "levantar-um-esqueleto"}:
             from .summons import create_summon
@@ -3935,7 +3914,7 @@ def use_character_technique(
                 requested_by_id=actor_id, requested_by_role=actor_role,
                 definition=definition, inventory=character.get("inventory") or [],
                 attack_id=technique_id, target=target,
-                roll_mode=request.roll_mode or "digital", physical_d20=request.d20)
+                roll_mode=request.roll_mode or "digital", physical_d20=request.d20,tower_protected_side=request.tower_protected_side)
             return resolution
         if technique_id in {"forca-arcana", "velocidade"}:
             from .combat_effects import replay_technique_effect
@@ -4000,7 +3979,7 @@ def use_character_technique(
                     requested_by_id=actor_id, requested_by_role=actor_role,
                     definition=definition, inventory=character.get("inventory") or [],
                     attack_id="toque-sombrio", target=target,
-                    roll_mode=request.roll_mode or "digital", physical_d20=request.d20)
+                    roll_mode=request.roll_mode or "digital", physical_d20=request.d20,tower_protected_side=request.tower_protected_side)
                 if request.mode == 'automatic':
                     resolution, _ = confirm_attack_resolution(settings.database_path,
                         resolution_id=resolution['resolution_id'],requested_by_id=actor_id,requested_by_role=actor_role)
@@ -4167,6 +4146,7 @@ def _combat_snapshot_for_access(snapshot: dict, access: AccessContext) -> dict:
         # remain private until their map/token is visible to players.
         snapshot["effects"] = [e for e in snapshot["effects"] if e["target_type"] == "character" and e["target_id"] == access.profile_id]
         encounter = snapshot.get("encounter") or {}
+        encounter['item_followups'] = {k:v for k,v in (encounter.get('item_followups') or {}).items() if k==access.profile_id}
         encounter.pop('return_tokens', None)
         encounter.pop('return_map_id', None)
         participants = encounter.get("participants") or []
@@ -4318,7 +4298,7 @@ def resolve_monster_attack(token_id: str, request: AttackResolutionCreate, acces
             guard_effect_id=request.guard_effect_id,
             definition=definition, inventory=[], attack_id=request.attack_id, target=target,
             roll_mode=request.roll_mode, physical_d20=request.d20, attack_count=request.attack_count,
-            physical_d20s=request.d20s)
+            physical_d20s=request.d20s,tower_protected_side=request.tower_protected_side)
         return resolution
     except PermissionError as error:
         raise HTTPException(status_code=403, detail=str(error)) from error
@@ -6470,6 +6450,16 @@ app.include_router(build_scene_lab_router(lambda: settings.database_path, requir
 app.include_router(build_workshop_router(
     workshop_database_path,
     lambda: settings.database_path, require_master))
+
+from .architecture_routes import build_architecture_router
+app.include_router(build_architecture_router(require_master))
+
+from .system_routes import build_system_router
+app.include_router(build_system_router(
+    settings, require_any, check_ollama,
+    lambda: (NIMALIS_GAME_DIST / "nimalis.html").exists(),
+    lambda: "/nimalis/nimalis.html",
+))
 
 from .sprite_studio import register as register_sprite_studio
 register_sprite_studio(app, lambda: settings.database_path, require_any)

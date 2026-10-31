@@ -106,6 +106,14 @@ def load_item_catalog() -> dict:
         raise RuntimeError("O catálogo de itens está incompleto.")
     from .hp_potions import catalog_entry
     native = [normalize_catalog_item(item) for item in items]
+    from .item_specials import NET, DART
+    for addition in (NET, DART):
+        if not any(item['id'] == addition['id'] for item in native):
+            native.append(normalize_catalog_item(addition))
+    from .item_specials import NET, DART
+    for addition in (NET, DART):
+        if not any(item['id'] == addition['id'] for item in native):
+            native.append(normalize_catalog_item(addition))
     campaign = catalog_entry()
     if not any(item['id'] == campaign['id'] for item in native):
         native.append(normalize_catalog_item(campaign))

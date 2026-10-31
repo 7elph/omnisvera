@@ -755,6 +755,8 @@ class CharacterRollCreate(BaseModel):
 
 
 class AttackResolutionCreate(BaseModel):
+    tower_protected_side: bool | None = Field(default=None, strict=True)
+    damage_type: Literal['slashing', 'piercing', 'bludgeoning'] | None = None
     grid_automatic: bool = False
     blood_boost: StrictInt=Field(default=0,ge=0,le=999)
     model_config = {"extra": "forbid"}
@@ -781,6 +783,12 @@ class NecromancerTarget(BaseModel):
 
 
 class TechniqueUse(BaseModel):
+    def model_dump(self,*args,**kwargs):
+        result=super().model_dump(*args,**kwargs)
+        if self.tower_protected_side is None:result.pop('tower_protected_side',None)
+        return result
+
+    tower_protected_side: bool | None = Field(default=None, strict=True)
     model_config = {"extra": "forbid"}
     request_id: str | None = Field(default=None, min_length=8, max_length=120)
     definition_revision: str | None = Field(default=None, min_length=1, max_length=100)

@@ -231,7 +231,7 @@ def _run_visual_checks(output, port, actors, *, ui_suite='full', on_progress=Non
     elif ui_suite == 'sprite_studio':
         scripts = ['sprite-studio-smoke.cjs']
     elif ui_suite == 'item_families':
-        scripts=['item-families-smoke.cjs']
+        scripts=['item-families-smoke.cjs','item-specials-smoke.cjs']
     elif ui_suite == 'inventory_summons':
         try:
             from .market_followup_fixture import prepare

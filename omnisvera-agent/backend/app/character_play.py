@@ -413,9 +413,9 @@ def _equipped_effect_summary(inventory: list[dict[str, Any]],actor_class: str | 
 def _equipped_weapons(inventory: list[dict[str, Any]]) -> list[dict[str, Any]]:
     return [
         item for item in inventory
-        if item.get("equipped") and int(item.get("quantity") or 0) > 0 and item.get("damage_formula")
+        if item.get("equipped") and int(item.get("quantity") or 0) > 0 and (item.get("damage_formula") or (item.get('mechanics') or {}).get('special_attack') in {'net','garrote','vibranium'})
         and not item.get("usable")
-        and "escudo" not in _normalize(f"{item.get('item_title')} {item.get('item_type')}")
+        and ("escudo" not in _normalize(f"{item.get('item_title')} {item.get('item_type')}") or (item.get('mechanics') or {}).get('special_attack')=='vibranium')
     ]
 
 
@@ -425,7 +425,7 @@ def available_attack_weapons(inventory: list[dict[str, Any]], attack_id: str) ->
     Explicit slots are authoritative except separately approved attack modes.
     Unslotted legacy weapons may fall back to inferred throwing/ranged mode.
     """
-    weapons = _equipped_weapons(inventory)
+    weapons = [item for item in _equipped_weapons(inventory) if attack_id=='ranged' or (item.get('mechanics') or {}).get('special_attack')!='vibranium']
     wanted_slot = "distancia" if attack_id == "ranged" else "corpo a corpo"
     slotted = [item for item in weapons if wanted_slot in _normalize(item.get("equipment_slot"))]
     approved_modes = [item for item in weapons if attack_id in (item.get('mechanics') or {}).get('attack_modes', [])]
@@ -736,7 +736,8 @@ def build_character_definition(
         mastery_bonus = 0
         if mastery and weapon and mastery.get("weapon_item_path") == weapon.get("item_path"):
             mastery_bonus = int(mastery.get("attack_bonus") or 0)
-        damage = resolve_item_damage_formula({"item_effects": item_effects, 'attack_slot': attack_id}, weapon) if weapon else None
+        damage = '0' if weapon and (weapon.get('mechanics') or {}).get('special_attack') in {'net','garrote'} else resolve_item_damage_formula({"item_effects": item_effects, "attributes": attributes, 'attack_slot': attack_id}, weapon) if weapon and not ((weapon.get("mechanics") or {}).get("special_attack")=="vibranium" and type(attributes.get("strength")) is not int) else None
+        missing_throw_strength = bool(weapon and (weapon.get('mechanics') or {}).get('special_attack')=='vibranium' and type(attributes.get('strength')) is not int)
         if mastery_bonus and damage:
             match = re.search(r"([+-]\d+)\s*$", str(damage))
             bump = int(mastery.get("damage_bonus") or 0)
@@ -752,9 +753,11 @@ def build_character_definition(
                 "base_attack_bonus": base_attack_bonus,
                 "item_attack_bonus": item_attack_bonus,
                 "mastery_attack_bonus": mastery_bonus,
-                "damage": damage,
+                "damage": '0' if weapon and (weapon.get('mechanics') or {}).get('special_attack') in {'net','garrote'} else damage,
+                "effect_only": bool(weapon and (weapon.get('mechanics') or {}).get('effect_only')),
+                "strength_damage": bool(weapon and (weapon.get('mechanics') or {}).get('special_attack')=='vibranium'),
                 "range": None,
-                "notes": None if weapon else "Dano não configurado nas fontes da ficha.",
+                "notes": "Força não cadastrada para arremesso." if missing_throw_strength else None if weapon else "Dano não configurado nas fontes da ficha.",
                 "weapon_item_path": str(weapon.get("item_path") or "") if weapon else None,
                 "equipment": _attack_equipment_sources(inventory, item_effects, attack_id, weapon) if access_level != "public" else [],
             }
@@ -821,6 +824,7 @@ def build_character_definition(
         "attack_notes": _clean_text(attacks.get("attack_notes"), 1800),
         "defenses": {
             "armor_class": effective_armor_class,
+            "dexterity_cap": min((i['mechanics']['dexterity_cap'] for i in inventory if i.get('equipped') and i.get('quantity', 0) > 0 and 'dexterity_cap' in (i.get('mechanics') or {})), default=None),
             "base_armor_class": int(armor_class) if armor_class is not None and armor_class > 0 else None,
             "unmodified_armor_class": unmodified_armor_class,
             "armor_modifier": armor_modifier,
@@ -1500,6 +1504,8 @@ def apply_character_action(
                     override['equipment_defense_anchor']=dict(equipment_defense_anchor)
                     connection.execute('INSERT INTO character_definition_overrides(profile_id,data_json,updated_at) VALUES(?,?,?) ON CONFLICT(profile_id) DO UPDATE SET data_json=excluded.data_json,updated_at=excluded.updated_at',(character_id,json.dumps(override),now))
 
+        from .item_grapple import prune as prune_item_grapple
+        prune_item_grapple(connection, _now())
         event_id = _write_event(
             connection,
             character_id=character_id,

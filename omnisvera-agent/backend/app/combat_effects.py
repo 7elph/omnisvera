@@ -213,6 +213,8 @@ def change_hp(db: sqlite3.Connection, target_type: str, target_id: str, amount: 
         db.execute("UPDATE session_workspace_tokens SET current_hp=?,updated_at=? WHERE id=?", (after, now, target_id))
     from .bat_swarm import sync as sync_swarm
     sync_swarm(db,now)
+    from .item_grapple import prune as prune_item_grapple
+    prune_item_grapple(db,now)
     from .monster_runtime import track_hp
     track_hp(db,target_type,target_id,int(before),after,damage_type,regeneration,now)
     if after==0:
@@ -303,6 +305,9 @@ def effect_command(path: Path, *, actor_id: str, actor_role: str, request_id: st
             if len(saved) != 4 or saved[:2] != [actor_id, action] or saved_intent != intent:
                 raise ValueError("request_id já utilizado com outro conteúdo")
             return json.loads(previous[1])
+        if action in {'dorn_spell_cast','necro_spell_cast'}:
+            from .item_grapple import assert_can_speak
+            assert_can_speak(db,'character','dorn7' if action=='dorn_spell_cast' else 'morthak')
         snapshot = effect_snapshot(db)
         if snapshot["version"] != expected_version:
             raise ValueError("Estado dos efeitos mudou. Atualize antes de continuar.")
@@ -502,8 +507,9 @@ def effect_command(path: Path, *, actor_id: str, actor_role: str, request_id: st
                 from .necromancer_spells import touch_turn
                 from .hemomancy import turn_start as hemomancy_turn
                 target_turn(db,_current_participant(encounter),now,request_id)
+                from .item_grapple import turn_start as grapple_turn
                 from .monster_parasites import turn_start as parasite_turn
-                while parasite_turn(db,_current_participant(encounter),encounter,now,request_id) or hemomancy_turn(db,_current_participant(encounter),encounter,now,request_id+':'+str(encounter.get('turn_sequence',0))) or touch_turn(db,_current_participant(encounter),now,request_id+':'+str(encounter.get('turn_sequence',0)),encounter=encounter) or vine_turn(db, _current_participant(encounter), now, request_id, encounter):
+                while grapple_turn(db,_current_participant(encounter),encounter,now,request_id) or parasite_turn(db,_current_participant(encounter),encounter,now,request_id) or hemomancy_turn(db,_current_participant(encounter),encounter,now,request_id+':'+str(encounter.get('turn_sequence',0))) or touch_turn(db,_current_participant(encounter),now,request_id+':'+str(encounter.get('turn_sequence',0)),encounter=encounter) or vine_turn(db, _current_participant(encounter), now, request_id, encounter):
                     from .necromancer_spells import finish_target_turn
                     finish_target_turn(db,_current_participant(encounter))
                     members = encounter['participants']
@@ -719,6 +725,9 @@ def apply_definition_effects(definition: dict, effects: list[dict]) -> dict:
     result = copy.deepcopy(definition)
     totals = {key: sum(e["modifiers"].get(key, 0) for e in effects) for key in MODIFIERS}
     difficult = any(e.get('difficult_tests') for e in effects)
+    from .item_specials import test_penalty, net_ac_penalty, dexterity_ac_bonus
+    net_penalty = test_penalty(effects)
+    totals['attack_bonus'] += net_penalty
     if difficult:
         totals['attack_bonus'] -= 2
     darkness_count=sum(e.get('condition')=='magical_darkness' for e in effects)
@@ -744,7 +753,8 @@ def apply_definition_effects(definition: dict, effects: list[dict]) -> dict:
         attack["attack_bonus"] = int(attack.get("attack_bonus") or 0) + totals["attack_bonus"] + melee_delta + ranged_delta + levitation_delta
         attack["effect_attack_bonus"] = totals["attack_bonus"] + melee_delta + ranged_delta + levitation_delta
         attack["attack_count"] = max(1, min(10, int(attack.get("attack_count", 1)) + totals["extra_attacks"]))
-        damage_delta = totals["damage_bonus"] + melee_delta
+        attack["effect_flat_damage_bonus"] = totals["damage_bonus"]
+        damage_delta = totals["damage_bonus"] + (strength_delta if attack.get("strength_damage") else melee_delta)
         attack['effect_damage_bonus'] = damage_delta
         if attack.get("damage") and damage_delta and not attack.get("effect_only"):
             parsed = parse_formula(attack["damage"])
@@ -766,6 +776,7 @@ def apply_definition_effects(definition: dict, effects: list[dict]) -> dict:
         result['vision_blocked']=True
     if defenses.get("armor_class") is not None:
         defenses["armor_class"] += totals["armor_class_bonus"]
+        defenses['armor_class'] += net_ac_penalty(effects, dexterity_ac_bonus(projected_attributes, defenses.get('dexterity_cap')))
     if projected_attributes!=original_attributes:
         result['base_attributes']=result.get('base_attributes') or original_attributes
         result['attributes']=projected_attributes
@@ -800,4 +811,15 @@ def apply_definition_effects(definition: dict, effects: list[dict]) -> dict:
             value = float(match.group(0).replace(",", ".")) * movement_multiplier
             shown = str(int(value)) if value.is_integer() else str(value).replace(".", ",")
             result["movement"] = f"{shown} m · Velocidade ×{movement_multiplier}"
+    if net_penalty:
+        defenses['saving_throw_bonus'] = int(defenses.get('saving_throw_bonus') or 0) + net_penalty
+        if defenses.get('initiative') is not None:
+            defenses['initiative'] += net_penalty
+        modifiers = result.setdefault('attribute_modifiers', {})
+        for key, value in projected_attributes.items():
+            if type(value) is int:
+                modifiers[key] = int(modifiers.get(key, _attribute_modifier(value))) + net_penalty
+        skill_modifiers = (result.get('item_effects') or {}).get('skill_modifiers')
+        if skill_modifiers:
+            result['item_effects']['skill_modifiers'] = {key: int(value) + net_penalty for key, value in skill_modifiers.items()}
     return result

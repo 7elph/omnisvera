@@ -23,7 +23,7 @@ const {chromium,request}=require(require.resolve('playwright',{paths:[process.en
   const pin=await call('post','/gm/workspace/tokens',{token_type:'location',name:'Famílias do ensaio',latitude:60,longitude:65,map_id:'official:nimalis',visible_to_players:true});
   const shop=await call('post','/gm/merchants',{name:'Famílias do ensaio',location:'Nimalis - fixture'});
   await call('put',`/gm/merchants/${shop.id}/binding`,{token_id:pin.id,enabled:true,buy_pct:50});
-  const items=[['Cota de malha','arma-armadura-cota-de-malha'],['Escudo de aço','arma-escudo-escudo-de-aco'],['Arco curto','arma-distancia-arco-curto'],['Flecha x20','arma-distancia-flecha-x20'],['Poção do ensaio','vault:Items/__fixture_restorative.md']];
+  const items=[['Cota de malha','arma-armadura-cota-de-malha'],['Escudo de aço','arma-escudo-escudo-de-aco'],['Arco curto','arma-distancia-arco-curto'],['Flecha x20','arma-distancia-flecha-x20'],['Poção do ensaio','vault:Items/__fixture_restorative.md'],['Madu','arma-corpo-madu'],['Espada bastarda','arma-corpo-espada-bastarda'],['Rede','kit-explorador-rede'],['Zarabatana','arma-distancia-zarabatana'],['Dardo de zarabatana x20','arma-distancia-dardo-zarabatana-x20'],['Garrote','arma-corpo-garrote'],['Escudo torre','kit-basico-escudo-torre-20-kg-30-po'],['Escudo de Vibranium','protecao-escudo-de-vibranium']];
   // Resolve actual catalog identities by title, retaining the checked source metadata.
   const catalog=await call('get','/gm/items/trade-catalog');const records=catalog.items;
   for(const entry of items){const row=records.find(r=>r.name===entry[0]);assert.ok(row,entry[0]);entry[1]=row.id;await call('post',`/gm/merchants/${shop.id}/stock`,{compendium_item_id:row.id,quantity:3});}
@@ -38,6 +38,7 @@ const {chromium,request}=require(require.resolve('playwright',{paths:[process.en
    const response=player.page.waitForResponse(r=>r.request().method()==='POST'&&/\/commerce\/quotes\/[^/]+\/confirm$/.test(new URL(r.url()).pathname));void response.catch(()=>{});
    await commerce.getByRole('group',{name:'Confirmar negociação'}).getByRole('button',{name:'Confirmar',exact:true}).click();const r=await response;assert.ok(r.ok(),await r.text());const receipt=await r.json();assert.ok(receipt.total_copper>0);await commerce.locator(`[data-commerce-receipt="${receipt.receipt_id}"]`).waitFor();
   }
+  await offers.locator('.commerce-offers article').filter({has:player.page.getByText(items.at(-1)[0],{exact:true})}).getByText(/2 disponíveis/).waitFor();
   const storeShot=path.join(out,'families-shop-player-390.png');await dialog.screenshot({path:storeShot});screenshots.push(storeShot);
   checks.push('owner buys armor, shield, bow, arrows and declarative potion through native shop UI');
   await dialog.getByRole('button',{name:/^(Fechar ficha|Fechar local)$/}).click();
@@ -56,12 +57,14 @@ const {chromium,request}=require(require.resolve('playwright',{paths:[process.en
   await player.page.getByRole('navigation',{name:'Navegação principal'}).getByRole('button',{name:/Ficha$/}).click();
   const ownerView=await call('get','/characters/vezemir?read_only=true',undefined,playerApi);
   const ownPotion=ownerView.inventory.find(i=>i.item_path==='Items/__fixture_restorative.md');
+  assert.ok(ownPotion?.usable);await player.page.locator('.workspace-resource-catalog').scrollIntoViewIfNeeded();
   fs.writeFileSync(path.join(out,'consumable-view.private.json'),JSON.stringify({item:ownPotion,html:await player.page.locator('.workspace-resource-catalog').evaluateAll(elements=>elements.map(e=>e.outerHTML.slice(0,20000)))}));
-  const potion=player.page.locator('.workspace-resource-catalog article').filter({has:player.page.getByRole('button',{name:'Poção do ensaio',exact:true})});
+  const potion=player.page.locator('.workspace-resource-catalog article').filter({hasText:'Poção do ensaio'});
   const using=player.page.waitForResponse(r=>r.request().method()==='POST'&&new URL(r.url()).pathname==='/characters/vezemir/actions'&&r.request().postDataJSON()?.action==='use_item');void using.catch(()=>{});
-  await potion.getByRole('button',{name:'Usar',exact:true}).click();const used=await using;assert.ok(used.ok(),await used.text());
+  await potion.locator('button[data-card-command]:enabled').waitFor({state:'attached'});
+  await potion.click({position:{x:8,y:8}});const used=await using;assert.ok(used.ok(),await used.text());
   assert.equal((await call('get','/characters/vezemir')).state.current_hp,4);checks.push('Vault-style consumable appears in Resources and heals on native owner button');
-  const sheetShot=path.join(out,'families-sheet-player-390.png');await player.page.locator('.workspace-equipment').first().screenshot({path:sheetShot}).catch(async()=>player.page.screenshot({path:sheetShot,fullPage:true}));screenshots.push(sheetShot);
+  const sheetShot=path.join(out,'families-sheet-player-390.png');await player.page.locator('.workspace-equipment-loadout').screenshot({path:sheetShot});screenshots.push(sheetShot);
   const enemy=await call('post','/gm/workspace/tokens',{token_type:'monster',name:'Alvo de munição',latitude:20,longitude:20,map_id:'official:nimalis',visible_to_players:true,current_hp:200,maximum_hp:200,sheet:{armor_class:10}});
   const shotRequest={request_id:randomUUID(),attack_id:'ranged',weapon_item_path:'compendium:'+items[2][1],target_type:'token',target_id:enemy.id,roll_mode:'physical',d20:20};
   const resolved=await call('post','/characters/vezemir/attacks/resolve',shotRequest,playerApi);
@@ -70,6 +73,9 @@ const {chromium,request}=require(require.resolve('playwright',{paths:[process.en
   const after=await call('get','/characters/vezemir');const arrows=after.inventory.find(i=>i.item_path==='compendium:'+items[3][1]);assert.equal(arrows.charges_current,19);assert.equal(arrows.quantity,1);
   checks.push('owner bow attack uses arrow damage, consumes exactly one arrow, confirmation replay does not duplicate');
   await player.page.reload();await player.page.locator('.app-shell.authenticated').waitFor();const reloaded=await call('get','/characters/vezemir');assert.equal(reloaded.definition.defenses.armor_class,armored.definition.defenses.armor_class);assert.equal(reloaded.inventory.find(i=>i.item_path===arrows.item_path).charges_current,19);
+  await player.page.getByRole('navigation',{name:'Navegação principal'}).getByRole('button',{name:/Ficha$/}).click();
+  await player.page.locator('button[data-character="vezemir"]').click();
+  await player.page.locator('.workspace-inventory-catalog').scrollIntoViewIfNeeded();
   await player.page.locator('.workspace-inventory-catalog').getByRole('button',{name:'Flecha x20',exact:true}).getByLabel('Quantidade',{exact:true}).filter({hasText:/^19$/}).waitFor();
   await gm.page.locator('button[data-character="vezemir"]').click();const gmState=await call('get','/characters/vezemir?read_only=true');assert.equal(gmState.definition.defenses.armor_class,reloaded.definition.defenses.armor_class);
   const width=await player.page.evaluate(()=>({width:document.documentElement.clientWidth,content:document.documentElement.scrollWidth}));assert.ok(width.content<=width.width+2,JSON.stringify(width));

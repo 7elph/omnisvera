@@ -111,6 +111,39 @@ O ChatGPT precisa de acesso GitHub autorizado ou dos arquivos fornecidos;
 este documento não configura nem amplia permissões de contas.
 Não compartilhar tokens da mesa para obter uma análise de código.
 
+## Publicação de 31/10/2026
+
+O snapshot para revisão no GitHub inclui o baseline seletivo de 30/10,
+os routers de arquitetura/saúde e o corte de efeitos especiais dos itens.
+Leia também `CURRENT.md`, `TEST_MANIFEST.md` e
+`ITEM_SPECIAL_EFFECTS_2026-10-31.md`. O SHA exato é o commit da branch indicada
+acima; não use a branch padrão `main` como equivalente ao Companion atual.
+
+Itens especiais: `backend/app/item_specials.py`, `item_grapple.py`,
+`item_defense.py`, `item_throwing.py`; confirmação em `combat.py`,
+`frontend/src/components/WeaponDamageChoice.tsx` e `AttackDirectionChoice.tsx`.
+São extensões do combate, grid, ledger e loot existentes.
+Arquitetura de código: `backend/app/architecture.py`, `architecture_routes.py`
+e `system_routes.py`, com testes de autorização e contratos.
+
+Validação deste código: backend com 1.807 casos, 1.806 aprovados e um ignorado
+por falta de privilégio de symlink no Windows; frontend com 495 aprovados,
+typecheck e build aprovados. O ensaio isolado de itens teve aceitação visual
+Mestre/Jogador. Isso não certifica todas as ações nem uma mesa em redes distintas.
+
+Banco, tokens, uploads locais e `docs/preparation/` privados não fazem parte
+do checkout. Dois testes de preparação verificam esses arquivos quando presentes
+e indicam SKIP quando ausentes; não geram preparações falsas nem certificam
+conteúdo indisponível. As demais verificações continuam executando.
+
+Para revisão pelo ChatGPT, informe:
+
+> Repositório 7elph/omnisvera, branch devin/create-omnisvera-class-standard,
+> diretório omnisvera-agent. Comece por AGENTS.md e
+> docs/CURRENT_COMPANION_CODE.md. Confirme o SHA analisado, preserve os contratos
+> Mestre/Jogador e use dados isolados para testes. O banco operacional não está
+> no GitHub.
+
 ## Fundação de ações e laboratório (16/10/2026)
 
 Os módulos de contrato e `action_components.py` atendem dez ações aprovadas

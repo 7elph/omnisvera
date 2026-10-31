@@ -75,6 +75,9 @@ def fixture_environment(database) -> dict[str, str]:
                'USERPROFILE','LOCALAPPDATA','APPDATA','HOMEDRIVE','HOMEPATH',
                'PROGRAMFILES','PROGRAMFILES(X86)','PROGRAMDATA','PUBLIC','LANG','LC_ALL'}
     env = {key:value for key,value in os.environ.items() if key.upper() in allowed}
+    # A rehearsal can test an unpublished frontend build, only under TEMP.
+    if os.environ.get('OMNISVERA_FRONTEND_DIST'):
+        env['OMNISVERA_FRONTEND_DIST'] = str(checked_database(Path(os.environ['OMNISVERA_FRONTEND_DIST'])))
     env.update({'OMNISVERA_AI_WORKSHOP_DB':str(checked_database(database.with_suffix('.workshop.sqlite3'))), 'AI_WORKSHOP_CONFIG_FILE':str(checked_database(database.with_suffix('.workshop-config.json'))),'OMNISVERA_DB_PATH':str(database),'OMNISVERA_VAULT_PATH':str(vault),
         'OMNISVERA_MASTER_TOKEN':TOKENS['gm'],'OMNISVERA_ACCESS_TOKEN':TOKENS['gm'],
         'OMNISVERA_PLAYER_TOKEN':'cf01-local-generic',

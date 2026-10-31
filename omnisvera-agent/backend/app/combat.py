@@ -279,8 +279,8 @@ def _resolve_weapon_override(
     if weapon is None:
         raise ValueError("Arma não disponível para este ataque (equipe-a e confira o dano)")
     attack = dict(attack)
-    attack["damage"] = resolve_item_damage_formula(
-        {"item_effects": definition.get("item_effects"), 'attack_slot': attack_id}, weapon
+    attack["damage"] = '0' if (weapon.get('mechanics') or {}).get('special_attack') in {'net','garrote'} else resolve_item_damage_formula(
+        {"item_effects": definition.get("item_effects"), "attributes": definition.get("attributes"), 'attack_slot': attack_id}, weapon
     )
     attack["weapon_item_path"] = str(weapon.get("item_path") or "")
     return attack
@@ -316,6 +316,9 @@ def resolve_attack(database_path: Path, **kwargs) -> tuple[dict[str, Any], bool]
     # cannot generate multiple previews before either has reserved the turn.
     init_combat(database_path)
     init_effects(database_path)
+    if any((item.get('mechanics') or {}).get('special_attack')=='vibranium' for item in kwargs.get('inventory',[])):
+        from .loot import init_loot
+        init_loot(database_path)
     with closing(_connect(database_path)) as connection, connection:
         connection.execute('BEGIN IMMEDIATE')
         return _resolve_attack(database_path, connection=connection, **kwargs)
@@ -349,6 +352,8 @@ def _resolve_attack(
     attack_count: int = 1,
     physical_d20s: list[int] | None = None,
     weapon_item_path: str | None = None,
+    damage_type: str | None = None,
+    tower_protected_side: bool | None = None,
     blood_boost: int = 0,
     controlling_character_id: str | None = None,
     request_intent: dict | None = None,
@@ -367,6 +372,11 @@ def _resolve_attack(
     attack_id = str(attack_id or "").strip()
     attack = _attack_entry(definition, attack_id)
     attack = _resolve_weapon_override(definition, inventory, attack, attack_id, weapon_item_path)
+    from .item_specials import select_damage_type
+    attack = select_damage_type(attack, inventory, damage_type)
+    from .item_specials import prepare_attack, validate_net
+    attack = prepare_attack(connection, attack, inventory, target, blood_boost=blood_boost, actor_id=actor_character_id, definition=definition)
+    if attack.get('item_special')=='vibranium' and attack_count!=1:raise ValueError('Arremesse uma vez por confirmação para escolher os alvos do ricochete')
     if type(blood_boost) is not int or not 0<=blood_boost<=999:raise ValueError('Reforço de sangue inválido')
     if blood_boost:
         if actor_character_id!='raziel' or attack_id not in {'melee','ranged'} or attack_count!=1:
@@ -408,13 +418,26 @@ def _resolve_attack(
             record = _resolution_record(row)
             if record['breakdown'].get('guard_effect_id') != guard_effect_id:
                 raise ValueError('request_id já utilizado para outra interposição')
+            if record['breakdown'].get('declared_tower_side') != tower_protected_side:
+                raise ValueError('request_id já utilizado para outro lado do escudo')
+            if record['breakdown'].get('selected_damage_type') != damage_type:
+                raise ValueError('request_id já utilizado para outro tipo de dano')
             expected = (actor_character_id, requested_by_id, attack_id, target.get("type"), target.get("id"), roll_mode, str(attack.get("weapon_item_path") or ""))
             actual = tuple(record[key] for key in ("actor_character_id", "requested_by_id", "attack_id", "target_type", "target_id", "roll_mode")) + (str((record.get("breakdown") or {}).get("attack", {}).get("weapon_item_path") or ""),)
             old_strikes = record["breakdown"].get("strikes", [{"d20": record["d20"]}])
             if actual != expected or len(old_strikes) != attack_count or int((record['breakdown'].get('attack') or {}).get('blood_boost') or 0)!=blood_boost or (roll_mode == "physical" and [s["d20"] for s in old_strikes] != dice):
                 raise ValueError("request_id já utilizado para outra resolução")
             return record, False
+        from .item_defense import has_tower
+        target_tower=has_tower(connection,target['type'],target['id'])
+        if target_tower and type(tower_protected_side) is not bool:
+            raise ValueError('TOWER_SIDE_REQUIRED: declare se o ataque vem do lado protegido do escudo torre')
+        if attack_id in {'toque-sombrio','misseis-magicos'} or attack.get('damage_kind')=='spell':
+            from .item_grapple import assert_can_speak
+            assert_can_speak(connection,'character' if connection.execute('SELECT 1 FROM character_states WHERE profile_id=?',(actor_character_id,)).fetchone() else 'token',actor_character_id)
         current_snapshot = effect_snapshot(connection)
+        if attack.get('item_special') == 'net':
+            validate_net(connection, actor_character_id, attack['weapon_item_path'])
         from .battle_mode import turn_identity, require_actor_alive
         combat_turn = turn_identity(current_snapshot)
         pending_id = (current_snapshot.get('encounter') or {}).get('pending_attack')
@@ -471,7 +494,8 @@ def _resolve_attack(
         # target (e.g. a provoked enemy must still declare the protected ally).
         require_battle_turn(connection, current_snapshot, actor_character_id,
             'character' if guard else target.get('type'), guard_ally_id if guard else target.get('id'),
-            attack_count=attack_count, attack_limit=int(attack.get('attack_count', 1)))
+            attack_count=attack_count, attack_limit=int(attack.get('attack_count', 1)),
+            auxiliary=bool((attack.get('item_special_contract') or {}).get('followup_of')))
         consume_ammunition(connection,actor_character_id,ammunition,_now().isoformat())
         from .item_families import reload_movement
         reload_movement(current_snapshot,ammunition)
@@ -482,6 +506,7 @@ def _resolve_attack(
         effects_version = current_snapshot["version"]
         if definition.get("effects_version", effects_version) != effects_version:
             raise ValueError("Os efeitos mudaram durante o cálculo. Tente novamente.")
+        if attack.get("item_special")=="vibranium":definition={**definition,"attacks":[attack]}
         if attack.get('hemomancy'):
             from .hemomancy import prepare
             attack = prepare(connection, database_path, current_snapshot, attack, target, requested_by_role)
@@ -509,7 +534,7 @@ def _resolve_attack(
     # Tomo Arcano p.53: attacks against a blinded creature are very easy (+5).
     if not automatic_hit and any((e.get('condition')=='magical_darkness' or e.get('monster_condition')=='blinded') for e in current_snapshot['effects'] if e.get('target_type')==target.get('type') and e.get('target_id')==target.get('id')):
         attack_bonus += 5
-    effect_only = bool(attack.get('effect_only')) and not connection.execute('SELECT 1 FROM character_states WHERE profile_id=?', (actor_character_id,)).fetchone()
+    effect_only = bool(attack.get('effect_only')) and (attack.get('item_special') in {'net','garrote'} or not connection.execute('SELECT 1 FROM character_states WHERE profile_id=?', (actor_character_id,)).fetchone())
     damage_formula = '0' if effect_only else parse_formula(str(attack["damage"])).formula
     damage_modifier = 0 if effect_only else parse_formula(damage_formula).modifier
 
@@ -518,7 +543,7 @@ def _resolve_attack(
     target_name = str(target.get("name") or "Alvo").strip() or "Alvo"
     if target_type not in {"character", "token"} or not target_id:
         raise ValueError("Alvo inválido")
-    target_ac = target.get("armor_class")
+    target_ac = target.get('touch_armor_class') if attack.get('item_special') == 'net' else target.get("armor_class")
     current_hp = target.get("current_hp")
     if isinstance(target_ac, bool) or target_ac is None or int(target_ac) <= 0:
         raise ValueError("O alvo não possui CA válida")
@@ -543,7 +568,7 @@ def _resolve_attack(
                         "damage_total": max(0, int(damage["total"])), "damage_rolls": damage["individual_results"]})
         from .critical_rules import augment_strike
         player_attack=bool(connection.execute('SELECT 1 FROM character_states WHERE profile_id=?',(actor_character_id,)).fetchone())
-        augment_strike(strikes[-1],attack,inventory,rng,player_attack=player_attack and not automatic_hit)
+        augment_strike(strikes[-1],attack,inventory,rng,player_attack=player_attack and not automatic_hit and not effect_only)
         if attack.get('hemomancy'):
             from .hemomancy import roll_passives
             roll_passives(attack, strikes[-1], rng)
@@ -593,6 +618,10 @@ def _resolve_attack(
     from .inventory_conditions import combat_fingerprint
     breakdown = {
         'request_intent':request_intent,
+        'selected_damage_type':damage_type,
+        'declared_tower_side':tower_protected_side,
+        'tower_shield':{'protected_side':tower_protected_side} if target_tower else None,
+        'item_special': {'kind':'net', 'item_path':attack['weapon_item_path'], 'dexterity_ac_bonus':target.get('dexterity_ac_bonus') or 0} if attack.get('item_special') == 'net' else attack.get('item_special_contract'),
         'ammunition':ammunition,
         'inventory_condition_fingerprint':combat_fingerprint(connection,actor_character_id,target_type,target_id),
         'damage_profile':attack_profile(attack,inventory),
@@ -777,7 +806,8 @@ def confirm_attack_resolution(
         require_battle_turn(connection, current_snapshot, record['actor_character_id'],
             'character' if record['breakdown'].get('guard_ally_id') else record['target_type'],
             record['breakdown'].get('guard_ally_id') or record['target_id'],
-            attack_count=strike_count, attack_limit=attack_limit, resolution_id=resolution_id)
+            attack_count=strike_count, attack_limit=attack_limit, resolution_id=resolution_id,
+            auxiliary=bool((record['breakdown'].get('item_special') or {}).get('followup_of')))
         if record['breakdown'].get('tactical_state') is not None:
             from .spatial_grid import diagonal_bonus
             if diagonal_bonus(connection,record['actor_character_id'],record['target_type'],record['target_id'])!=record['breakdown']['tactical_state']:
@@ -856,10 +886,15 @@ def confirm_attack_resolution(
         # commit intentionally does not write the battle-mode action counters.
         if (record['breakdown'].get('ammunition') or {}).get('reload_movement') and current_snapshot.get('encounter',{}).get('active'):
             connection.execute('UPDATE combat_effect_clock SET encounter_json=? WHERE id=1',(json.dumps(current_snapshot['encounter']),))
+        from .item_specials import validate_confirmation
+        validate_confirmation(connection,record)
         actual_damage,reflection=redirect_hits(connection,record['target_type'],record['target_id'],record['breakdown'].get('strikes') or [record],confirmed_at.isoformat())
         if reflection:
             record['breakdown']['reflection_result']=reflection;record['damage_total']=actual_damage
             connection.execute('UPDATE combat_attack_resolutions SET damage_total=?,breakdown_json=? WHERE resolution_id=?',(actual_damage,json.dumps(record['breakdown']),resolution_id))
+        from .item_defense import apply_tower
+        tower_result=apply_tower(record)
+        if tower_result:record['breakdown']['item_defense_result']=tower_result
         from .hemomancy import damage_after_mitigation, confirmed as confirm_hemomancy
         if record['breakdown'].get('hemomancy'):
             strikes=record['breakdown'].get('strikes') or []
@@ -876,6 +911,10 @@ def confirm_attack_resolution(
         context={**profile,'unavoidable_damage':sum(s['damage_total'] for s in record['breakdown'].get('strikes',[]) if s.get('unavoidable'))} if profile else None
         hp_change = change_hp(connection, record["target_type"], record["target_id"], -int(record["damage_total"]), confirmed_at.isoformat(),damage_context=context)
         from .monster_rust import reverse_contact
+        from .item_specials import confirm_hit as confirm_item_hit
+        special_result = confirm_item_hit(connection, record, confirmed_at.isoformat())
+        if special_result:
+            record['breakdown']['item_special_result'] = special_result
         rust_results=reverse_contact(connection,record,confirmed_at.isoformat())
         if rust_results:record['breakdown']['rust_contact_results']=rust_results
         if rust_results:
@@ -958,7 +997,13 @@ def confirm_attack_resolution(
             connection.execute('UPDATE combat_attack_resolutions SET breakdown_json=? WHERE resolution_id=?',(json.dumps(record['breakdown']),resolution_id))
         from .monster_runtime import record_confirmed_attacks
         record_confirmed_attacks(connection,record,confirmed_at.isoformat())
-        commit_battle_action(connection, current_snapshot, attack_count=strike_count, attack_limit=attack_limit)
+        from .item_throwing import confirmed as confirm_throw
+        throwing = confirm_throw(connection, record, current_snapshot, confirmed_at.isoformat())
+        if throwing:
+            record['breakdown']['item_special_result'] = throwing
+            connection.execute('UPDATE combat_attack_resolutions SET breakdown_json=? WHERE resolution_id=?',(json.dumps(record['breakdown']),resolution_id))
+        bonus_throw = bool((record['breakdown'].get('item_special') or {}).get('followup_of'))
+        commit_battle_action(connection, current_snapshot, attack_count=0 if bonus_throw else strike_count, attack_limit=attack_limit)
         from .battle_mode import retire_defeated
         retire_defeated(connection, confirmed_at.isoformat())
         from .dorn_spells import confirmed_ranged
@@ -998,6 +1043,7 @@ def confirm_attack_resolution(
         }
         detail['breakdown']=dict(detail['breakdown'])
         detail['breakdown'].pop('monster_on_hit',None)  # Raw source contract is technical, not table narrative.
+        detail['breakdown'].pop('item_special',None)
         caster_visibility=connection.execute('SELECT visible_to_players FROM session_workspace_tokens WHERE id=?',(record['actor_character_id'],)).fetchone()
         from .monster_runtime import public_token
         private_actor=caster_visibility is not None and not public_token(connection,record['actor_character_id'])
@@ -1011,7 +1057,7 @@ def confirm_attack_resolution(
             actor_name=record["actor_name"],
             actor_role=record["requested_by_role"],
             character_id=record["actor_character_id"],
-            title=f"{record['actor_name']} atacou {record['target_name']} com {record['attack_name']}",
+            title=f"{record['actor_name']} atacou {record['target_name']} com {record['attack_name']}" + (' · '+record['breakdown']['item_special_result']['label'] if record['breakdown'].get('item_special_result') else '') + (' · escudo torre bloqueou' if any(r.get('blocked') for r in (record['breakdown'].get('item_defense_result') or {}).get('rolls',[])) else ''),
             detail=detail,
             visibility="gm" if private_actor or private_target else "table",
             created_at=confirmed_at.isoformat(),

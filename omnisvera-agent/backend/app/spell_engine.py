@@ -351,6 +351,8 @@ def cast_spell(database_path: Path, *, spell_id: str, caster_type: str, caster_i
     database_path = Path(database_path or get_settings().database_path)
     with closing(sqlite3.connect(str(database_path), timeout=30)) as connection:
         connection.row_factory = sqlite3.Row
+        from .item_grapple import assert_can_speak
+        assert_can_speak(connection,caster_type,caster_id)
         caster_name = _caster_name(connection, caster_type, caster_id)
         caster_token_id = caster_id if caster_type == "token" else _character_token(connection, caster_id)
         level=_caster_level(connection,caster_type,caster_id,spell.get('tradition'))

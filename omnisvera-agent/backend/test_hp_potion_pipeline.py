@@ -22,7 +22,10 @@ class HpPotionPipelineTests(unittest.TestCase):
         from app.item_catalog import load_item_catalog
         catalog=load_item_catalog()
         self.assertEqual(catalog['source_count'],326)
-        self.assertEqual(catalog['count'],327)
+        self.assertEqual(catalog['count'],329)
+        identities={item['id'] for item in catalog['items']}
+        self.assertEqual(len(identities),len(catalog['items']))
+        self.assertTrue({CATALOG_ID,'kit-explorador-rede','arma-distancia-dardo-zarabatana-x20'}<=identities)
         potion=next(item for item in catalog['items'] if item['id']==CATALOG_ID)
         self.assertEqual(potion['source_kind'],'campaign')
         self.assertEqual(potion['source_ref'],ITEM_PATH)

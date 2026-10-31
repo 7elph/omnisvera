@@ -390,6 +390,8 @@ export type ItemEffectRule = {
   condition?: string | null;
 };
 export type ItemMechanics = {
+  special_attack?: 'net' | 'garrote' | 'vibranium';
+  damage_types?: string[];
   family?: 'weapon' | 'armor' | 'shield' | 'ammunition';
   damage_type?: string | null; magical?: boolean | null; material?: 'silver' | 'ordinary' | null;
   attack_modes?: Array<'melee' | 'ranged'>;
@@ -460,6 +462,7 @@ export type CharacterResource = {
 };
 
 export type CharacterAttack = {
+  effect_only?: boolean;
   effect_attack_bonus?: number;
   attack_count?: number;
   base_attack_count?: number;
@@ -770,7 +773,7 @@ export type AttackResolution = {
 
 export type CombatEffect = { monster_condition?:string;blocks_actions?:boolean;source_duration_unit?:string;condition_description?:string; id: string; target_type: "character" | "token"; target_id: string; label: string; source: string; duration: string; rounds: number | null; modifiers: Record<string, number>; updated_at: string; protocol?: 'guard' | 'vanguard'; ally_id?: string; until?: string; spell?: string; remaining_seconds?: number; altitude_meters?: number; necro_spell?:string; turns_remaining?:number; target_turn_duration?:boolean; defy_death?:boolean; skill?:string; dot_hp?:boolean; magic_type?:string;spell_circle?:number;caster_level?:number;environmental?:boolean;images_remaining?:number;immobilized?:boolean;phase?:string };
 export type ActiveEffectIcon = { duration_unit?: 'turns'|'rounds'|'permanent'|'instant'; effect_id: string; target_type: 'character' | 'token'; target_id: string; duration: string; rounds?: number | null; turns_remaining?: number | null; remaining_seconds?: number | null; card: SessionActionCard };
-export type CombatEffectsState = { round: number; version: number; effects: CombatEffect[]; active_effect_icons?: ActiveEffectIcon[]; protocol_result?: { total?: number; difficulty?: number; outcome?: string; adjudication?: string }; encounter?: { pending_attack?: string; consumable_used?: boolean; movement?: { turn_key: unknown[]; budget_m: number; spent_m: number }; active?: boolean; battle_mode?: boolean; action_committed?: boolean; attacks_used?: number; attack_limit?: number; title?: string; map_id?: string; turn_index?: number; turn_sequence?: number; turn_started_at?: string; started_at?: string; participants?: Array<{target_type: string; target_id: string; token_id?: string; controller_id?: string; name: string; initiative: number}> } };
+export type CombatEffectsState = { round: number; version: number; effects: CombatEffect[]; active_effect_icons?: ActiveEffectIcon[]; protocol_result?: { total?: number; difficulty?: number; outcome?: string; adjudication?: string }; encounter?: { item_followups?: Record<string,{turn: unknown[]; source:string; first_target:string[]; item_path:string}>; pending_attack?: string; consumable_used?: boolean; movement?: { turn_key: unknown[]; budget_m: number; spent_m: number }; active?: boolean; battle_mode?: boolean; action_committed?: boolean; attacks_used?: number; attack_limit?: number; title?: string; map_id?: string; turn_index?: number; turn_sequence?: number; turn_started_at?: string; started_at?: string; participants?: Array<{target_type: string; target_id: string; token_id?: string; controller_id?: string; name: string; initiative: number}> } };
 export type CombatTestView = { profile_id: string; character_name: string; receives_combat: boolean; state: CombatEffectsState };
 export type CombatTestViewsResponse = { enabled: boolean; table_mode: "digital" | "physical" | "test"; views: CombatTestView[] };
 export async function getCombatEffects(): Promise<CombatEffectsState> { return worldRequest("/combat/effects"); }
@@ -783,7 +786,7 @@ export async function getCompanionRoster(): Promise<{ allies: WorkspaceToken[]; 
 export async function listMasterNpcTokens(): Promise<WorkspaceToken[]> {
   return readJson(`${API_BASE}/gm/workspace/npc-tokens`, authHeaders(), "Falha ao carregar pins de NPCs do Mestre");
 }
-export async function resolveMonsterAttack(tokenId: string, payload: { request_id: string; attack_id: string; target_type: "character" | "token"; target_id: string; roll_mode: "digital" | "physical"; d20?: number; guard_effect_id?: string; range_m?: number; range_cells?: number }): Promise<AttackResolution> {
+export async function resolveMonsterAttack(tokenId: string, payload: { tower_protected_side?: boolean; request_id: string; attack_id: string; target_type: "character" | "token"; target_id: string; roll_mode: "digital" | "physical"; d20?: number; guard_effect_id?: string; range_m?: number; range_cells?: number }): Promise<AttackResolution> {
   return writeJson(`${API_BASE}/gm/combat/tokens/${encodeURIComponent(tokenId)}/attacks/resolve`, authHeaders({ 'Content-Type': 'application/json' }), 'POST', payload, 'Falha ao resolver ataque da criatura');
 }
 export async function getCombatTestViews(): Promise<CombatTestViewsResponse> { return worldRequest("/gm/combat/test-views"); }
@@ -1849,7 +1852,7 @@ export type NativeActionContract = {
   targeting: { min_targets: number; max_targets: number; unique_by: 'entity'; include_self: boolean };
   range: { mode: 'ranged'; meters: number } | { mode: 'self'; meters: 0 } | { mode: 'touch'; cells: 1 };
 };
-export type GridRingTarget = { type: string; id: string; name: string; cells: number; meters: number; valid: boolean; reason: string; entity_key?: string };export type GridRing = {
+export type GridRingTarget = { requires_tower_side_confirmation?: boolean; type: string; id: string; name: string; cells: number; meters: number; valid: boolean; reason: string; entity_key?: string };export type GridRing = {
   native_breath?: {token_id:string;ability_name:string} | null;
   native_contact?: {token_id:string;kind:'disintegration'|'rust'};
   area_cells?: [number,number][];
@@ -1867,10 +1870,11 @@ export async function getMonsterBreathPreview(tokenId:string,abilityName:string,
   return readJson(`${API_BASE}/gm/workspace/tokens/${encodeURIComponent(tokenId)}/breath-preview?${query}`,authHeaders(),'Falha ao conferir área da baforada');
 }
 
-export async function getGridRange(actionRef: string, attackerTokenId: string, mapId: string, rangeOverrideM?: number, extra?: { attackerCharacterId?: string; slot?: string; maxRangeM?: number }): Promise<GridRing> {
+export async function getGridRange(actionRef: string, attackerTokenId: string, mapId: string, rangeOverrideM?: number, extra?: { attackerCharacterId?: string; slot?: string; maxRangeM?: number; weaponItemPath?:string }): Promise<GridRing> {
   const query = new URLSearchParams({ ref: actionRef, attacker_token_id: attackerTokenId, map_id: mapId });
   if (rangeOverrideM != null) query.set("range_override_m", String(rangeOverrideM));
   if (extra?.attackerCharacterId) query.set("attacker_character_id", extra.attackerCharacterId);
+  if (extra?.weaponItemPath) query.set("weapon_item_path",extra.weaponItemPath);
   if (extra?.slot) query.set("slot", extra.slot);
   if (extra?.maxRangeM != null) query.set("max_range_m", String(extra.maxRangeM));
   const response = await fetch(`${API_BASE}/gm/grid/range?${query}`, { headers: authHeaders() });
@@ -2091,6 +2095,8 @@ export async function applyDornApprovedBuild(): Promise<PlayableCharacter> {
 }
 
 export async function resolveCharacterAttack(profileId: string, payload: {
+  tower_protected_side?: boolean;
+  damage_type?: 'slashing' | 'piercing' | 'bludgeoning';
   grid_automatic?: boolean;
   blood_boost?: number;
   request_id: string;
@@ -2108,6 +2114,7 @@ export async function resolveCharacterAttack(profileId: string, payload: {
 }
 
 export async function useCharacterTechnique(profileId: string, techniqueId: string, payload: {
+  tower_protected_side?: boolean;
   definition_revision?: string;
   request_id?: string;
   mode?: string;

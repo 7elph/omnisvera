@@ -1,7 +1,11 @@
 const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
 const root=path.resolve(__dirname,'../..');
+const privatePreparation = (...files) => files.every(file=>fs.existsSync(path.join(root,'docs/preparation',file)))
+ ? false : 'Requires private GM preparation, deliberately excluded from GitHub';
 
-test('today preparation has real consistent portraits and captures each scene at both widths',()=>{
+test('today preparation has real consistent portraits and captures each scene at both widths',{
+ skip:privatePreparation('FRIDAY_ASSETS.json'),
+},()=>{
  const manifest=JSON.parse(fs.readFileSync(path.join(root,'docs/preparation/FRIDAY_ASSETS.json'),'utf8'));
  for(const id of ['friday-thoradin-v1','friday-military-role-v1','friday-conclave-role-v1','friday-teren-human-v1']){
   const asset=manifest.assets.find(a=>a.id===id);assert.ok(asset,`Missing portrait: ${id}`);
@@ -23,7 +27,9 @@ test('preparation rehearsal proves native opening and retry only after its read-
  assert.ok(source.includes("assert.equal(replay.created,false)"),'Opening retry must not duplicate its publication');
  assert.ok(source.includes("'ELENCO DE HOJE'"),'Public snapshot must not expose private preparation notes');
 });
-test('Friday cover is a real local image, not a tactical map replacement',()=>{
+test('Friday cover is a real local image, not a tactical map replacement',{
+ skip:privatePreparation('FRIDAY_ASSETS.json','FRIDAY_BLOCKS.json'),
+},()=>{
  const manifest=JSON.parse(fs.readFileSync(path.join(root,'docs/preparation/FRIDAY_ASSETS.json'),'utf8'));
  const asset=manifest.assets.find(a=>a.id==='friday-office-v1');assert.ok(asset);
  assert.equal(asset.changes_tactical_map,false);assert.equal(asset.generator,'built_in_image_gen');

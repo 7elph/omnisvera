@@ -553,6 +553,10 @@ def distribute_loot(
                                    (json.dumps(state, ensure_ascii=False), now, character_id))
                 coin_allocations.append({**allocation, 'currency_field': currency_field})
                 continue
+            if item.get('treasure_code') == 'item-drop' and str(item.get('source_key') or '').endswith(':drop') and reward.get('item_path'):
+                from .item_throwing import restore_reward
+                restore_reward(connection,reward,str(allocation['character_id']),int(allocation['quantity']),now)
+                continue
             if reward_id not in created_items:
                 cursor = connection.execute(
                     """INSERT INTO session_custom_items(name,item_type,description,effects_json,effect_rules_json,mechanics_json,usable,image_path,created_at,updated_at)
@@ -571,6 +575,8 @@ def distribute_loot(
                    VALUES(?,?,?,?,0,?,?) ON CONFLICT(profile_id,item_path) DO UPDATE SET quantity=excluded.quantity,item_title=excluded.item_title,updated_at=excluded.updated_at""",
                 (character_id, item_path, reward["name"], next_quantity, f"Espólio de {item['source_name']}", now),
             )
+        if item.get('treasure_code') == 'item-drop':
+            connection.execute('UPDATE session_workspace_tokens SET visible_to_players=0,updated_at=? WHERE id=?',(now,item['source_id']))
         detail = {"loot_resolution_id": resolution_id, "source_name": item["source_name"], "allocations": allocations, "created_item_ids": created_items, "coin_allocations": coin_allocations}
         ledger_id = append_session_ledger_event(
             connection, source_type="loot_distribution", source_id=resolution_id, event_kind="treasure",

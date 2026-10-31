@@ -1,6 +1,15 @@
 # Current state - OMNISVERA Companion
 
-Snapshot: 2026-10-30
+Atualização para publicação: 2026-10-31
+
+O código atual inclui o baseline abaixo, os routers de arquitetura/saúde e os
+efeitos especiais de itens. O ponto de entrada para revisar o snapshot publicado
+é [CURRENT_COMPANION_CODE.md](CURRENT_COMPANION_CODE.md); testes e limites do
+último corte estão em [ITEM_SPECIAL_EFFECTS_2026-10-31.md](ITEM_SPECIAL_EFFECTS_2026-10-31.md).
+As descrições abaixo registram o baseline histórico de 30/10, não os números
+atuais dos arquivos ou o estado atual da publicação.
+
+Snapshot histórico: 2026-10-30
 
 ## Baseline
 
@@ -9,7 +18,7 @@ Snapshot: 2026-10-30
 - Repository root: `C:\Users\delib\Desktop\OMNISVERA`
 - Application directory: `omnisvera-agent`
 - Commit scope: 765 files, 89.313 insertions, 1.390 deletions, about 62.5 MB of working-tree content.
-- The commit is local. Nothing was pushed.
+- At the time of this baseline, the commit was local and had not been pushed.
 
 The baseline captured source, active tests, catalogs, documentation, app assets and
 scripts needed to inspect the current Companion. It intentionally excluded private

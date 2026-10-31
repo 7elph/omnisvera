@@ -18,6 +18,8 @@ import { selectGridTarget } from '../components/gridTargetSelection';
 import { configuredGridCommand, selectionPinId } from '../components/configuredGridAction';
 import type { NativeActionContract } from '../api';
 import TargetConfirmation from '../components/TargetConfirmation';
+import AttackDirectionChoice from '../components/AttackDirectionChoice';
+import WeaponDamageChoice, {weaponDamageChoices, type PhysicalDamageType} from '../components/WeaponDamageChoice';
 import { cellAt, simplePath, tokenProjection } from '../spatialGrid';
 import type { Cell, MapGrid, GridPosition, SpatialCommand } from '../spatialGrid';
 import { moveGridEntity, SpatialCommandError } from '../spatialCommands';
@@ -520,6 +522,7 @@ export default function SessionWorkspace({ mode, view = "table" }: Props) {
   const [condition, setCondition] = useState("");
   const [attackCountById, setAttackCountById] = useState<Record<string, number>>({});
   const [attackWeaponById, setAttackWeaponById] = useState<Record<string, string>>({});
+  const [damageChoicePrompt, setDamageChoicePrompt] = useState<{attackId:string; targetId:string; automatic:boolean; damageType?:PhysicalDamageType; requiresTower?:boolean; towerProtectedSide?:boolean} | null>(null);
   const [techniqueModeById, setTechniqueModeById] = useState<Record<string, string>>({});
   const [sessionNotes, setSessionNotes] = useState("");
   const [mapTitle, setMapTitle] = useState("");
@@ -576,7 +579,7 @@ export default function SessionWorkspace({ mode, view = "table" }: Props) {
   const [aimedAttackId, setAimedAttackId] = useState('');
   const [battleState, setBattleState] = useState<CombatEffectsState>({ round: 1, version: 0, effects: [] });
   const [gridDestination, setGridDestination] = useState<Cell | null>(null);
-  const [targetConfirmation, setTargetConfirmation] = useState<{armId:string; targetId:string; name:string; repeat?:boolean; breath?:MonsterBreathPreview; contact?:MonsterContactPreview; rustChoice?:RustContactChoice | null;dispel?:DispelPreview;dispelEffectId?:string} | null>(null);
+  const [targetConfirmation, setTargetConfirmation] = useState<{armId:string; targetId:string; name:string; repeat?:boolean; breath?:MonsterBreathPreview; contact?:MonsterContactPreview; rustChoice?:RustContactChoice | null;damageType?:PhysicalDamageType;towerProtectedSide?:boolean;dispel?:DispelPreview;dispelEffectId?:string} | null>(null);
   const areaAbilityRef = useRef<{armId:string; ability:SessionAbility} | null>(null);
   const [pendingGridCommand, setPendingGridCommand] = useState<{mapId:string; command:SpatialCommand} | null>(null);
   type TargetingState = {
@@ -593,7 +596,7 @@ export default function SessionWorkspace({ mode, view = "table" }: Props) {
   const targetingArmRef = useRef('');
   useEffect(()=>{
     targetingArmRef.current='';pcPendingRef.current=null;areaAbilityRef.current=null;
-    setPcPending(null);setTargeting(null);setTargetConfirmation(null);
+    setPcPending(null);setTargeting(null);setTargetConfirmation(null);setDamageChoicePrompt(null);
   },[workspace.map?.id,selectedId]);
   const gridMovingRef = useRef(false);
   const gridClickSuppressRef = useRef(false);
@@ -623,7 +626,7 @@ export default function SessionWorkspace({ mode, view = "table" }: Props) {
     if (battleActive && mode === 'gm' && combatPanelRef.current) combatPanelRef.current.open = true;
     if (battleActive) window.dispatchEvent(new CustomEvent('omnisvera-open-workspace', { detail: 'table' }));
   }, [battleActive, battleState.encounter?.turn_sequence]);
-  async function openTargeting(actionRef: string, actionLabel: string, attackerTokenId: string, rangeOverrideM?: number, tokens = workspace.tokens, map = workspace.map, extra?: { attackerCharacterId?: string; slot?: string }, armId = "") {
+  async function openTargeting(actionRef: string, actionLabel: string, attackerTokenId: string, rangeOverrideM?: number, tokens = workspace.tokens, map = workspace.map, extra?: { attackerCharacterId?: string; slot?: string; weaponItemPath?:string }, armId = "") {
     targetingArmRef.current=armId;
     const attacker = tokens.find(item => item.id === attackerTokenId);
     const mapId = attacker?.map_id || map?.id || "default";
@@ -649,7 +652,7 @@ setTargeting({ actionRef, actionLabel, attackerTokenId, mapId, ring: { gridded: 
       }
       void openTargeting(detail.actionRef, detail.actionLabel || "Ação", detail.attackerTokenId || "",
         detail.rangeOverrideM, workspace.tokens, workspace.map,
-        { attackerCharacterId: detail.attackerCharacterId, slot: detail.slot }, detail.armId);
+        { attackerCharacterId: detail.attackerCharacterId, slot: detail.slot, weaponItemPath:detail.weaponItemPath }, detail.armId);
     };
     const clear = (event: Event) => {
       const detail = (event as CustomEvent).detail || {};
@@ -672,8 +675,8 @@ setTargeting({ actionRef, actionLabel, attackerTokenId, mapId, ring: { gridded: 
       if (!token) return;
       // State updaters may be replayed by React; commands must run outside them.
       pcPendingRef.current = null; setPcPending(null);
-      if (current.kind === "attack") void resolveSelectedAttackRef.current(current.id, token, true);
-      else void useAbilityRef.current(current.ability, token, true);
+      if (current.kind === "attack") void resolveSelectedAttackRef.current(current.id, token, true, detail.damageType,detail.towerProtectedSide);
+      else void useAbilityRef.current(current.ability, token, true,detail.towerProtectedSide);
     };
     window.addEventListener('omnisvera-targeting-arm', arm);
     window.addEventListener('omnisvera-targeting-clear', clear);
@@ -706,7 +709,7 @@ setTargeting({ actionRef, actionLabel, attackerTokenId, mapId, ring: { gridded: 
       void useAbilityRef.current(area.ability,undefined,true);return;
     }
     if (!id || !targeting || !targeting.ring.targets?.some(t => t.id === id && t.valid)) return;
-    window.dispatchEvent(new CustomEvent('omnisvera-targeting-confirm', { detail: { targetId: id, range: targetingRangeSpec(), armId: targeting.armId,breath:targetConfirmation?.breath,contact:targetConfirmation?.contact,rustChoice:targetConfirmation?.rustChoice } }));
+    window.dispatchEvent(new CustomEvent('omnisvera-targeting-confirm', { detail: { targetId: id, range: targetingRangeSpec(), armId: targeting.armId,towerProtectedSide:targetConfirmation?.towerProtectedSide,damageType:targetConfirmation?.damageType,breath:targetConfirmation?.breath,contact:targetConfirmation?.contact,rustChoice:targetConfirmation?.rustChoice } }));
     setTargetConfirmation(null); setTargeting(null);
   }
   function chooseGridTarget(token:WorkspaceToken) {
@@ -851,8 +854,8 @@ setTargeting({ actionRef, actionLabel, attackerTokenId, mapId, ring: { gridded: 
   const timelineRef = useRef<HTMLDivElement>(null);
   const selectedIdRef = useRef(selectedId);
   const attackTargetsRef = useRef<WorkspaceToken[]>([]);
-  const resolveSelectedAttackRef = useRef<(attackId: string, target?: WorkspaceToken, automatic?:boolean) => Promise<void>>(async () => {});
-  const useAbilityRef = useRef<(ability: SessionAbility, target?: WorkspaceToken, automatic?:boolean) => Promise<void>>(async () => {});
+  const resolveSelectedAttackRef = useRef<(attackId: string, target?: WorkspaceToken, automatic?:boolean, damageType?:PhysicalDamageType,towerProtectedSide?:boolean) => Promise<void>>(async () => {});
+  const useAbilityRef = useRef<(ability: SessionAbility, target?: WorkspaceToken, automatic?:boolean,towerProtectedSide?:boolean) => Promise<void>>(async () => {});
   const gmToolsOpenRef = useRef(gmToolsOpen);
   const charactersRef = useRef<PlayableCharacterSummary[]>([]);
   const refreshingRef = useRef(false);
@@ -1212,9 +1215,10 @@ setTargeting({ actionRef, actionLabel, attackerTokenId, mapId, ring: { gridded: 
     finally { setBusy(""); }
   }
 
-  async function resolveSelectedAttack(attackId: string, selectedTarget?: WorkspaceToken, automatic = false) {
+  async function resolveSelectedAttack(attackId: string, selectedTarget?: WorkspaceToken, automatic = false, damageType?: PhysicalDamageType, towerProtectedSide?:boolean) {
     if (!selectedId || busy || mutationLock.current) return;
-    const blocked = combatActionBlock(battleState, selectedId, character?.state?.current_hp);
+    const chosenWeapon=weaponForDamageChoice(attackId);
+    const blocked = combatActionBlock(battleState, selectedId, character?.state?.current_hp, chosenWeapon?.item_path);
     if (blocked) { setError(blocked); return; }
     const target = selectedTarget || attackTargetFor(attackId);
     if (!target) {
@@ -1223,8 +1227,9 @@ setTargeting({ actionRef, actionLabel, attackerTokenId, mapId, ring: { gridded: 
     }
     const rollMode = !automatic && workspace.table_mode === "physical" ? "physical" : "digital";
     const allowed = character?.definition.attacks?.find(a => a.id === attackId)?.attack_count || 1;
-    const remaining = battleActive ? Math.max(0, Math.min(allowed, battleState.encounter?.attack_limit ?? allowed) - (battleState.encounter?.attacks_used || 0)) : allowed;
-    const count = Math.min(remaining, attackCountById[attackId] || 1);
+    const nativeRemaining=battleActive?Math.max(0,Math.min(allowed,battleState.encounter?.attack_limit??allowed)-(battleState.encounter?.attacks_used||0)):allowed;
+    const remaining=nativeRemaining||(!combatActionBlock(battleState,selectedId,character?.state?.current_hp,chosenWeapon?.item_path)?1:0);
+    const count = chosenWeapon?.mechanics?.special_attack==='vibranium'?Math.min(remaining,1):Math.min(remaining, attackCountById[attackId] || 1);
     if (count < 1) { setError("Nenhum ataque restante. Conclua e passe o turno."); return; }
     setTargetLine({ actorId: selectedId, targetId: target.id });
     const physicalValues = (attackPhysicalD20ById[attackId] || "").trim().split(/[ ,;]+/).map(Number);
@@ -1232,14 +1237,19 @@ setTargeting({ actionRef, actionLabel, attackerTokenId, mapId, ring: { gridded: 
       setError(`Informe ${count} resultado(s) bruto(s) de d20, entre 1 e 20, separados por espaço.`);
       return;
     }
+    if (weaponDamageChoices(weaponForDamageChoice(attackId)).length && !damageType) {
+      setDamageChoicePrompt({attackId, targetId:target.id, automatic,towerProtectedSide}); return;
+    }
     setBusy(`attack:${attackId}`); setError("");
     mutationLock.current = true;
-    const boost=selectedId==='raziel'?Math.min(bloodBoost,character?.state?.resources.find(r=>r.key==='reserva_de_sangue')?.current||0):0;
-    const key = `${selectedId}:${attackId}:${target.id}:${rollMode}:${count}:${attackWeaponById[attackId] || ''}:${boost}:${rollMode === 'physical' ? physicalValues.join(',') : ''}`;
+    const boost=selectedId==='raziel'&&!['net','garrote'].includes(weaponForDamageChoice(attackId)?.mechanics?.special_attack||'')?Math.min(bloodBoost,character?.state?.resources.find(r=>r.key==='reserva_de_sangue')?.current||0):0;
+    const key = `${selectedId}:${attackId}:${target.id}:${rollMode}:${count}:${attackWeaponById[attackId] || ''}:${boost}:${damageType || ''}:${String(towerProtectedSide)}:${rollMode === 'physical' ? physicalValues.join(',') : ''}`;
     if (attackRequestRef.current?.key !== key) attackRequestRef.current = { key, id: newDiceRequestId('attack') };
     try {
       const resolution = await resolveCharacterAttack(selectedId, {
         request_id: attackRequestRef.current.id,
+        ...(damageType ? {damage_type:damageType} : {}),
+        ...(typeof towerProtectedSide==='boolean'?{tower_protected_side:towerProtectedSide}:{}),
         attack_id: attackId,
         target_type: "token",
         target_id: target.id,
@@ -1256,7 +1266,8 @@ setTargeting({ actionRef, actionLabel, attackerTokenId, mapId, ring: { gridded: 
         ? { ...current, encounter: { ...current.encounter, pending_attack: resolution.resolution_id } } : current);
       if (resolution.confirmed) await refresh();
     } catch (reason) {
-      setError(reason instanceof Error ? reason.message : "Não foi possível resolver o ataque.");
+      if(reason instanceof Error && reason.message.includes('TOWER_SIDE_REQUIRED'))setDamageChoicePrompt({attackId,targetId:target.id,automatic,damageType,requiresTower:true});
+      else setError(reason instanceof Error ? reason.message : "Não foi possível resolver o ataque.");
     } finally {
       mutationLock.current = false;
       setBusy("");
@@ -1286,15 +1297,17 @@ setTargeting({ actionRef, actionLabel, attackerTokenId, mapId, ring: { gridded: 
 
   useAbilityRef.current = useAbility;
   resolveSelectedAttackRef.current = resolveSelectedAttack;
-  async function useAbility(ability: SessionAbility, target?: WorkspaceToken, automatic = false) {
+  async function useAbility(ability: SessionAbility, target?: WorkspaceToken, automatic = false,towerProtectedSide?:boolean) {
     if (abilityLock.current || mutationLock.current || busy) return;
     abilityLock.current = true;
-    try { await performAbility(ability, target, automatic); }
+    try { await performAbility(ability, target, automatic,towerProtectedSide); }
     finally { abilityLock.current = false; }
   }
 
-  async function performAbility(ability: SessionAbility, target?: WorkspaceToken, automatic = false) {
+  async function performAbility(ability: SessionAbility, target?: WorkspaceToken, automatic = false,towerProtectedSide?:boolean) {
     const actionRollMode = automatic ? 'digital' : defaultAttackRollMode;
+    const direction=typeof towerProtectedSide==='boolean'?{tower_protected_side:towerProtectedSide}:{};
+    const useDirectedTechnique:typeof useCharacterTechnique=(profile,id,payload)=>useCharacterTechnique(profile,id,{...payload,...direction});
     async function showResolution(result: AttackResolution) {
       if (automatic && !result.confirmed) {
         try { setAttackResolution(await confirmCharacterAttack(result.resolution_id)); }
@@ -1320,7 +1333,7 @@ setTargeting({ actionRef, actionLabel, attackerTokenId, mapId, ring: { gridded: 
       if(techniqueRequestRef.current?.key!==key)techniqueRequestRef.current={key,id:newDiceRequestId('hemomancy')};
       setBusy(`ability:${ability.id}`);setError('');
       try {
-        const result=await useCharacterTechnique(selectedId,ability.id,{...payload,request_id:techniqueRequestRef.current.id});
+        const result=await useDirectedTechnique(selectedId,ability.id,{...payload,request_id:techniqueRequestRef.current.id});
         if(attacks)await showResolution(result as AttackResolution);
         await refresh();techniqueRequestRef.current=null;
       } catch(reason){setError(reason instanceof Error?reason.message:'Falha na Hemomancia');}
@@ -1344,7 +1357,7 @@ setTargeting({ actionRef, actionLabel, attackerTokenId, mapId, ring: { gridded: 
       setBusy(`ability:${ability.id}`); setError('');
       let accepted = false;
       try {
-        const result = await useCharacterTechnique(selectedId, ability.id, { ...payload, request_id: techniqueRequestRef.current.id });
+        const result = await useDirectedTechnique(selectedId, ability.id, { ...payload, request_id: techniqueRequestRef.current.id });
         accepted = true;
         if (attacks) await showResolution(result as AttackResolution);
         await refresh();
@@ -1362,7 +1375,7 @@ setTargeting({ actionRef, actionLabel, attackerTokenId, mapId, ring: { gridded: 
       const key = `${selectedId}:${ability.id}:${target?.id || ''}:${defaultAttackRollMode}:${attackPhysicalD20ById.mordida || ''}`;
       if (techniqueRequestRef.current?.key !== key) techniqueRequestRef.current = { key, id: newDiceRequestId('vampire') };
       try {
-        const result = await useCharacterTechnique(selectedId, ability.id, { request_id: techniqueRequestRef.current.id,
+        const result = await useDirectedTechnique(selectedId, ability.id, { request_id: techniqueRequestRef.current.id,
           ...(target ? { target_type: 'token', target_id: target.id, roll_mode: actionRollMode,
             ...(actionRollMode === 'physical' ? { d20: Number(attackPhysicalD20ById.mordida) } : {}) } : {}) });
         if (ability.id === 'mordida') { await showResolution(result as AttackResolution); if(automatic)await refresh(); }
@@ -1386,7 +1399,7 @@ setTargeting({ actionRef, actionLabel, attackerTokenId, mapId, ring: { gridded: 
       const key = `${selectedId}:dorn-reparo`;
       if (techniqueRequestRef.current?.key !== key) techniqueRequestRef.current = { key, id: newDiceRequestId('repair') };
       try {
-        await useCharacterTechnique(selectedId, ability.id, { request_id: techniqueRequestRef.current.id });
+        await useDirectedTechnique(selectedId, ability.id, { request_id: techniqueRequestRef.current.id });
         techniqueRequestRef.current = null;
         await refresh();
       } catch (reason) { setError(reason instanceof Error ? reason.message : 'Falha no reparo'); }
@@ -1398,7 +1411,7 @@ setTargeting({ actionRef, actionLabel, attackerTokenId, mapId, ring: { gridded: 
       const key=`${selectedId}:${ability.id}`;
       if(techniqueRequestRef.current?.key!==key) techniqueRequestRef.current={key,id:newDiceRequestId('fighter-skill')};
       setBusy(`ability:${ability.id}`);setError('');
-      try { await useCharacterTechnique(selectedId,ability.id,{request_id:techniqueRequestRef.current.id});techniqueRequestRef.current=null;await refresh(); }
+      try { await useDirectedTechnique(selectedId,ability.id,{request_id:techniqueRequestRef.current.id});techniqueRequestRef.current=null;await refresh(); }
       catch(reason){setError(reason instanceof Error?reason.message:'Falha na habilidade');}
       finally{setBusy('');}
       return;
@@ -1437,7 +1450,7 @@ setTargeting({ actionRef, actionLabel, attackerTokenId, mapId, ring: { gridded: 
       if(techniqueRequestRef.current?.key!==key)techniqueRequestRef.current={key,id:newDiceRequestId('necro')};
       setBusy(`ability:${ability.id}`);setError('');
       try {
-        const result=await useCharacterTechnique(selectedId,ability.id,{...payload,request_id:techniqueRequestRef.current.id});
+        const result=await useDirectedTechnique(selectedId,ability.id,{...payload,request_id:techniqueRequestRef.current.id});
         if(ability.id==='toque-sombrio')await showResolution(result as AttackResolution);
         techniqueRequestRef.current=null;await refresh();
       } catch(reason){setError(reason instanceof Error?reason.message:'Falha na magia');}
@@ -1460,7 +1473,7 @@ setTargeting({ actionRef, actionLabel, attackerTokenId, mapId, ring: { gridded: 
       const key = `${selectedId}:${ability.id}:${target.id}`;
       if (spellRequestRef.current?.key !== key) spellRequestRef.current = { key, id: newDiceRequestId("spell") };
       try {
-        await showResolution(await resolveCharacterAttack(selectedId, { request_id: spellRequestRef.current.id,
+        await showResolution(await resolveCharacterAttack(selectedId, { ...direction,request_id: spellRequestRef.current.id,
           attack_id: ability.id, target_type: "token", target_id: target.id, roll_mode: "digital", ...(automatic?{grid_automatic:true}:{}) }));
         if(automatic){spellRequestRef.current=null;await refresh();}
         // Resource and damage are applied together by the existing confirmation endpoint.
@@ -1489,7 +1502,7 @@ setTargeting({ actionRef, actionLabel, attackerTokenId, mapId, ring: { gridded: 
           if (actionRollMode === 'physical' && (!Number.isInteger(physicalD20) || physicalD20 < 1 || physicalD20 > 20)) throw new Error('Informe o d20 físico da Lâmina de Sangue (1–20).');
           const key = `${selectedId}:${ability.id}:${target.id}:${parts.join(':')}:${defaultAttackRollMode}:${defaultAttackRollMode === 'physical' ? physicalD20 : ''}`;
           if (techniqueRequestRef.current?.key !== key) techniqueRequestRef.current = { key, id: newDiceRequestId('blood-attack') };
-          const resolution = await useCharacterTechnique(selectedId, ability.id, {
+          const resolution = await useDirectedTechnique(selectedId, ability.id, {
             request_id: techniqueRequestRef.current.id,
             charges: Math.max(1, Number(parts[0]) || 1),
             attack: parts[1] === "melee" ? "melee" : "ranged",
@@ -1505,9 +1518,9 @@ setTargeting({ actionRef, actionLabel, attackerTokenId, mapId, ring: { gridded: 
           const techniqueResult = skeleton
             ? await invokeSkeleton({ actor: selectedId, ability: ability.id, mapId: workspace.map?.id,
                 pending: techniqueRequestRef, newId: () => newDiceRequestId('skeleton'),
-                invoke: payload => useCharacterTechnique(selectedId, ability.id, payload),
+                invoke: payload => useDirectedTechnique(selectedId, ability.id, payload),
                 confirmReplacement: () => selectedIdRef.current === selectedId && window.confirm('Seu esqueleto ainda está ativo fora deste mapa. Dispensá-lo e invocar outro aqui? A nova invocação consome um uso e a ação normal do turno.') })
-            : await useCharacterTechnique(selectedId, ability.id, { request_id: techniqueRequestRef.current!.id, map_id: workspace.map?.id,
+            : await useDirectedTechnique(selectedId, ability.id, { request_id: techniqueRequestRef.current!.id, map_id: workspace.map?.id,
                 ...(target ? { target_type: 'token', target_id: target.id } : {}) });
           if (!techniqueResult || selectedIdRef.current !== selectedId) return;
           if (!skeleton) techniqueRequestRef.current = null;
@@ -1531,7 +1544,7 @@ setTargeting({ actionRef, actionLabel, attackerTokenId, mapId, ring: { gridded: 
           if (!target) { setTargetPickerAbilityId(ability.id); return; }
           const key = `${selectedId}:${ability.id}:${target.id}`;
           if (techniqueRequestRef.current?.key !== key) techniqueRequestRef.current = { key, id: newDiceRequestId('blood-mark') };
-          await useCharacterTechnique(selectedId, ability.id, { request_id: techniqueRequestRef.current.id, target_type: "token", target_id: target.id });
+          await useDirectedTechnique(selectedId, ability.id, { request_id: techniqueRequestRef.current.id, target_type: "token", target_id: target.id });
         }
         await refresh();
         if (ability.id === 'marca-rubra') techniqueRequestRef.current = null;
@@ -2335,10 +2348,10 @@ setTargeting({ actionRef, actionLabel, attackerTokenId, mapId, ring: { gridded: 
   const consumables = character?.inventory.filter(resourceItem).filter(item => item.item_title !== 'Pulseira de Vinhas' || item.equipped) || [];
   const carriedItems = character?.inventory.filter((item) => item.item_title === 'Pulseira de Vinhas' || !resourceItem(item)) || [];
   const equippedItems = carriedItems.filter((item) => item.equipped);
-  const equippedCombatItems = equippedItems.filter((item) => Boolean(item.damage_formula) || itemLooksLikeShield(item));
-  const equippedWeapons = equippedCombatItems.filter((item) => Boolean(item.damage_formula) && !itemLooksLikeShield(item));
-  const meleeSlotWeapons = equippedWeapons.filter((item) => normalizedName(item.equipment_slot || "").includes("corpo a corpo"));
-  const legacyMeleeWeapons = equippedWeapons.filter((item) => !item.equipment_slot && !itemLooksLikeRangedWeapon(item));
+  const equippedCombatItems = equippedItems.filter((item) => Boolean(item.damage_formula) || ['net','garrote'].includes(item.mechanics?.special_attack || '') || itemLooksLikeShield(item));
+  const equippedWeapons = equippedCombatItems.filter((item) => (Boolean(item.damage_formula) || ['net','garrote','vibranium'].includes(item.mechanics?.special_attack || '')) && (!itemLooksLikeShield(item)||item.mechanics?.special_attack==='vibranium'));
+  const meleeSlotWeapons = equippedWeapons.filter((item) => item.mechanics?.special_attack!=="vibranium" && normalizedName(item.equipment_slot || "").includes("corpo a corpo"));
+  const legacyMeleeWeapons = equippedWeapons.filter((item) => item.mechanics?.special_attack!=="vibranium" && !item.equipment_slot && !itemLooksLikeRangedWeapon(item));
   const equippedMeleeWeapon = definition?.id === "vezemir"
     ? meleeSlotWeapons.find((item) => normalizedName(item.item_title).includes("grisalma")) || meleeSlotWeapons[0] || legacyMeleeWeapons.find((item) => normalizedName(item.item_title).includes("grisalma")) || legacyMeleeWeapons[0]
     : meleeSlotWeapons[0] || legacyMeleeWeapons[0];
@@ -2352,7 +2365,7 @@ setTargeting({ actionRef, actionLabel, attackerTokenId, mapId, ring: { gridded: 
       ? equippedWeapons.filter((item) => !item.equipment_slot && item.item_path.replace("\\", "/") === "Items/Adagas de Espectro Fantasma.md")
       : [];
     const approvedModes = equippedWeapons.filter(item => item.mechanics?.attack_modes?.some(mode => mode === attackId));
-    const ordered = attackId === "ranged" ? [...rangedSlotWeapons, ...approvedModes, ...throwingRelic, ...legacyRangedWeapons] : [...meleeSlotWeapons, ...approvedModes, ...legacyMeleeWeapons];
+    const ordered = (attackId === "ranged" ? [...rangedSlotWeapons, ...approvedModes, ...throwingRelic, ...legacyRangedWeapons] : [...meleeSlotWeapons, ...approvedModes, ...legacyMeleeWeapons]).filter(item=>attackId==="ranged"||item.mechanics?.special_attack!=="vibranium");
     const seen = new Set<string>(); const unique: typeof ordered = [];
     for (const item of ordered) { if (!seen.has(item.item_path)) { seen.add(item.item_path); unique.push(item); } }
     return unique;
@@ -2385,6 +2398,12 @@ setTargeting({ actionRef, actionLabel, attackerTokenId, mapId, ring: { gridded: 
   const defaultAttackRollMode: "digital" | "physical" = workspace.table_mode === "physical" ? "physical" : "digital";
   const griddedCombat = Boolean(workspace.map?.grid);
   const characterTokenId = workspace.tokens.find((token) => token.character_id === selectedId)?.id || "";
+  function weaponForDamageChoice(attackId: string) {
+    const attack = definition?.attacks?.find(item => item.id === attackId);
+    return character?.inventory?.find(item => item.item_path === (attackWeaponById[attackId] || attack?.weapon_item_path));
+  }
+  const confirmingTower=Boolean(targeting?.ring.targets?.find(t=>t.id===targetConfirmation?.targetId)?.requires_tower_side_confirmation);
+  const confirmingDamageChoices = weaponDamageChoices(pcPending?.kind === 'attack' ? weaponForDamageChoice(pcPending.id) : undefined);
   function armPcAction(detail: { actionRef: string; actionLabel: string; slot?: string; pcAttack?: string; pcAbility?: SessionAbility }) {
     if (!characterTokenId && !selectedId) return;
     const armId = crypto.randomUUID();
@@ -2393,6 +2412,7 @@ setTargeting({ actionRef, actionLabel, attackerTokenId, mapId, ring: { gridded: 
     window.dispatchEvent(new CustomEvent('omnisvera-targeting-arm', { detail: {
       actionRef: detail.actionRef, actionLabel: detail.actionLabel, attackerTokenId: characterTokenId,
       attackerCharacterId: selectedId, slot: detail.slot, armId,
+      weaponItemPath:detail.pcAttack?weaponForDamageChoice(detail.pcAttack)?.item_path:undefined,
       ...(detail.pcAttack ? { pcAttack: detail.pcAttack } : { pcAbility: detail.pcAbility }),
     } }));
   }
@@ -2473,9 +2493,11 @@ setTargeting({ actionRef, actionLabel, attackerTokenId, mapId, ring: { gridded: 
       const candidates = (attack.id === "melee" || attack.id === "ranged") ? attackWeaponCandidates(attack.id) : [];
       const chosenPath = attackWeaponById[attack.id] || weaponPath;
       const weapon = chosenPath ? ((attack.id === 'melee' || attack.id === 'ranged') ? candidates : character?.inventory)?.find((item) => item.item_path === chosenPath) || fallbackWeapon : fallbackWeapon;
-      const attackEquipment = attack.equipment?.length ? attack.equipment : weapon ? [{ ...weapon, role: "weapon" as const }] : [];
-      const damage = attackDamage(definition?.id, attack, weapon?.damage_formula)+(definition.id==='raziel'&&reinforcementMultiplier>1?` ×${reinforcementMultiplier}`:'');
-      const remainingAttacks = battleActive ? Math.max(0, Math.min(attack.attack_count || 1, battleState.encounter?.attack_limit ?? (attack.attack_count || 1)) - (battleState.encounter?.attacks_used || 0)) : attack.attack_count || 1;
+      const attackEquipment = weapon && weapon.item_path !== attack.weapon_item_path ? [{...weapon,role:"weapon" as const},...(attack.equipment||[]).filter(item=>item.role!=="weapon")] : attack.equipment?.length ? attack.equipment : weapon ? [{ ...weapon, role: "weapon" as const }] : [];
+      const damage = (weapon?.mechanics?.special_attack === 'garrote' ? 'Aperto' : weapon?.mechanics?.special_attack === 'net' ? 'Constrição' : weapon?.mechanics?.special_attack === 'vibranium' ? '1d6 + FOR' : attackDamage(definition?.id, attack, weapon?.damage_formula))+(definition.id==='raziel'&&reinforcementMultiplier>1?` ×${reinforcementMultiplier}`:'');
+      const attackBlock=combatActionBlock(battleState,selectedId,state?.current_hp,weapon?.item_path);
+      const nativeRemaining=battleActive?Math.max(0,Math.min(attack.attack_count||1,battleState.encounter?.attack_limit??(attack.attack_count||1))-(battleState.encounter?.attacks_used||0)):attack.attack_count||1;
+      const remainingAttacks=nativeRemaining||(!attackBlock?1:0);
       const weaponTitle = attackEquipment.find((item) => item.role === "weapon")?.item_title || weapon?.item_title;
       const attackArt = mediaUrlFromVaultPath(abilities.find(ability => ability.id === attack.id)?.image_path);
       return <article tabIndex={0} key={attack.id}>
@@ -2485,12 +2507,12 @@ setTargeting({ actionRef, actionLabel, attackerTokenId, mapId, ring: { gridded: 
         {attack.id !== "ranged" && (!weaponPath || !attack.damage) && <small className="workspace-attack-pending">{attack.id === "ranged" ? "Arma não equipada" : "Ataque sem arma/dano configurado na ficha."}</small>}
         {canOperate && weaponPath && attack.damage && <div className="workspace-inline-actions">
           {griddedCombat
-            ? <><button data-card-command type="button" title="Abre o alcance no grid; clique no alvo e confirme Sim ou Não." disabled={Boolean(busy) || remainingAttacks < 1 || Boolean(combatActionBlock(battleState, selectedId, state?.current_hp))} onClick={() => armPcAction({ actionRef: `character:${selectedId}:attack:${attack.id}`, actionLabel: `${character?.definition.name || selectedId} · ${attack.name}`, pcAttack: attack.id })}>Usar</button></>
+            ? <><button data-card-command type="button" title="Abre o alcance no grid; clique no alvo e confirme Sim ou Não." disabled={Boolean(busy) || remainingAttacks < 1 || Boolean(attackBlock)} onClick={() => armPcAction({ actionRef: `character:${selectedId}:attack:${attack.id}`, actionLabel: `${character?.definition.name || selectedId} · ${attack.name}`, pcAttack: attack.id })}>Usar</button></>
             : <>{attackTargetControl(attack.id)}</>}
           {candidates.length > 1 && <label>Arma<select aria-label={`Arma de ${attack.name}`} value={chosenPath || ""} onChange={(e) => setAttackWeaponById((current) => ({ ...current, [attack.id]: e.target.value }))}>{candidates.map((item) => <option key={item.item_path} value={item.item_path}>{cleanItemDisplayName(item.item_title)}{item.damage_formula ? ` · ${item.damage_formula}` : ""}</option>)}</select></label>}
-          {(attack.attack_count || 1) > 1 && <label>Ataques nesta ação<select aria-label={`Quantidade de ataques de ${attack.name}`} value={Math.min(remainingAttacks, attackCountById[attack.id] || 1)} onChange={e => setAttackCountById(current => ({ ...current, [attack.id]: Number(e.target.value) }))}>{Array.from({ length: remainingAttacks }, (_, i) => <option key={i + 1} value={i + 1}>{i + 1}</option>)}</select><small>{remainingAttacks} restante(s). Use 1 para escolher outro alvo no próximo golpe.</small></label>}
+          {(attack.attack_count || 1) > 1 && weapon?.mechanics?.special_attack!=='vibranium' && <label>Ataques nesta ação<select aria-label={`Quantidade de ataques de ${attack.name}`} value={Math.min(remainingAttacks, attackCountById[attack.id] || 1)} onChange={e => setAttackCountById(current => ({ ...current, [attack.id]: Number(e.target.value) }))}>{Array.from({ length: remainingAttacks }, (_, i) => <option key={i + 1} value={i + 1}>{i + 1}</option>)}</select><small>{remainingAttacks} restante(s). Use 1 para escolher outro alvo no próximo golpe.</small></label>}
           {!griddedCombat && defaultAttackRollMode === "physical" && <input aria-label={`Resultado físico de ${attack.name}`} type="text" inputMode="text" value={attackPhysicalD20ById[attack.id] || ""} onChange={(event) => setAttackPhysicalD20ById((current) => ({ ...current, [attack.id]: event.target.value }))} placeholder={(attackCountById[attack.id] || 1) > 1 ? "d20 de cada golpe · ex.: 15 8" : "d20 físico"} />}
-          {!griddedCombat && <button data-card-command type="button" title={combatActionBlock(battleState, selectedId, state?.current_hp) || "Usa o bônus e dano da ficha; calcula acerto e dano automaticamente."} disabled={Boolean(busy) || !attackTargetFor(attack.id) || remainingAttacks < 1 || Boolean(combatActionBlock(battleState, selectedId, state?.current_hp))} onClick={() => void resolveSelectedAttack(attack.id)}>Atacar</button>}
+          {!griddedCombat && <button data-card-command type="button" title={attackBlock || "Usa o bônus e dano da ficha; calcula acerto e dano automaticamente."} disabled={Boolean(busy) || !attackTargetFor(attack.id) || remainingAttacks < 1 || Boolean(attackBlock)} onClick={() => void resolveSelectedAttack(attack.id)}>Atacar</button>}
         </div>}
       </article>;
     })}
@@ -2991,7 +3013,8 @@ return <button type="button" key={token.id} data-grid-token={token.id} data-grid
       </aside>}
     </div>
     {attackResolution && !attackResolution.confirmed && !attackResolution.breakdown.automatic_hit && <div className="workspace-combat-result-dock" role="presentation" onClick={() => { if (attackResolution.confirmed) setAttackResolution(null); }}><section className="workspace-item-modal" role="dialog" aria-modal="false" aria-label="Resolução do ataque" onClick={(event) => event.stopPropagation()}><header><div><small>RESOLUÇÃO DO ATAQUE</small><h2>{attackResolution.actor_name} → {attackResolution.target_name}</h2></div><button type="button" onClick={() => setAttackResolution(null)} aria-label="Fechar resolução">×</button></header>{!attackResolution.confirmed && <p role="status"><strong>Dano ainda não aplicado.</strong> Confirme abaixo para atualizar a vida do alvo.</p>}<div className="workspace-token-modal-meta"><span>{attackResolution.roll_mode === "physical" ? "Dado físico" : "Rolagem digital"}: {attackResolution.d20}</span><span>Bônus: {attackResolution.attack_bonus >= 0 ? "+" : ""}{attackResolution.attack_bonus}</span><span>Total: {attackResolution.attack_total}</span><span>CA: {attackResolution.target_ac}</span></div><div className="workspace-item-modal-meta"><strong>{attackResolution.result === "hit" ? "ACERTO" : "ERRO"}</strong><span>Dano: {attackResolution.damage_total} ({attackResolution.damage_formula})</span>{attackResolution.confirmed && <span>HP: {attackResolution.hp_before} → {attackResolution.hp_after}</span>}</div>{attackResolution.breakdown.life_drain && <p role="status">{attackResolution.breakdown.drain_result ? `Drenagem: ${attackResolution.breakdown.drain_result.drained} PV · Raziel: ${attackResolution.breakdown.drain_result.hp_before} → ${attackResolution.breakdown.drain_result.hp_after} (+${attackResolution.breakdown.drain_result.healed})` : "Ao confirmar, a cura será limitada ao dano efetivamente drenado e aos PV máximos de Raziel."}</p>}{attackResolution.breakdown.strikes?.map((strike, index) => <p key={index}>Golpe {index + 1}: d20 {strike.d20} + {attackResolution.attack_bonus} = {strike.attack_total} · {strike.result === "hit" ? "Acerto" : "Erro"} · dano {strike.damage_total}</p>)}<p>Base {attackResolution.breakdown.attack?.base_bonus ?? 0} · equipamento {Number(attackResolution.breakdown.attack?.equipment_bonus || 0) >= 0 ? "+" : ""}{attackResolution.breakdown.attack?.equipment_bonus ?? 0} · efeitos {Number(attackResolution.breakdown.attack?.effect_bonus || 0) >= 0 ? "+" : ""}{attackResolution.breakdown.attack?.effect_bonus ?? 0}{attackResolution.breakdown.equipment?.length ? ` · ${attackResolution.breakdown.equipment.map((item) => item.item_title).join(" + ")}` : ""}</p>{attackResolution.confirmed ? <button type="button" onClick={() => setAttackResolution(null)}>Concluído</button> : <button type="button" disabled={Boolean(busy)} onClick={() => void confirmResolvedAttack()}>{busy.startsWith("confirm:") ? "Aplicando…" : "Confirmar resultado e aplicar dano"}</button>}</section></div>}
-    {targetConfirmation && targeting?.armId===targetConfirmation.armId && <TargetConfirmation key={`${targetConfirmation.armId}:${targetConfirmation.targetId}:${Boolean(targetConfirmation.repeat)}`} action={targeting.actionLabel} target={targetConfirmation.name} busy={Boolean(busy)} message={targetConfirmation.dispel?'Confirmar a tentativa de dissipação? O teste será rolado e o efeito encerrado em caso de sucesso.':targetConfirmation.contact?.kind==='disintegration'?'Confirmar contato? O alvo será desintegrado sem ataque nem JP.':targetConfirmation.contact?.kind==='rust'?'Escolha o equipamento que recebe o contato. Acerto e corrosão serão resolvidos automaticamente.':undefined} confirmDisabled={(targetConfirmation.contact?.kind==='rust'&&!targetConfirmation.rustChoice)||Boolean(targetConfirmation.dispel&&!targetConfirmation.dispelEffectId)} onYes={()=>confirmTargeting(targetConfirmation.targetId)} onRemove={targetConfirmation.repeat ? ()=>{const current=targetingRef.current;if(current){const next={...current,selectedIds:current.selectedIds.filter(id=>id!==targetConfirmation.targetId),selectedId:null};targetingRef.current=next;setTargeting(next);}setTargetConfirmation(null);} : undefined} onNo={()=>{setTargetConfirmation(null);if(!targetConfirmation.repeat){targetingRef.current=null;window.dispatchEvent(new CustomEvent("omnisvera-targeting-clear",{detail:{armId:targetConfirmation.armId}}));}}} >{targetConfirmation.dispel&&<DispelEffectOptions effects={targetConfirmation.dispel.effects} selected={targetConfirmation.dispelEffectId} onChange={dispelEffectId=>setTargetConfirmation(previous=>previous?{...previous,dispelEffectId}:previous)} />}{targetConfirmation.contact?.kind==='rust'&&<RustContactOptions items={targetConfirmation.contact.inventory} disabled={Boolean(busy)} onChange={rustChoice=>setTargetConfirmation(previous=>previous?{...previous,rustChoice}:previous)} />}</TargetConfirmation>}
+    {damageChoicePrompt && <TargetConfirmation action="Ataque" target={workspace.tokens.find(t=>t.id===damageChoicePrompt.targetId)?.name || 'Alvo'} busy={Boolean(busy)} confirmDisabled={(weaponDamageChoices(weaponForDamageChoice(damageChoicePrompt.attackId)).length>0&&!damageChoicePrompt.damageType)||Boolean(damageChoicePrompt.requiresTower&&typeof damageChoicePrompt.towerProtectedSide!=='boolean')} onNo={()=>setDamageChoicePrompt(null)} onYes={()=>{const prompt=damageChoicePrompt;setDamageChoicePrompt(null);const target=workspace.tokens.find(t=>t.id===prompt.targetId);if(target)void resolveSelectedAttack(prompt.attackId,target,prompt.automatic,prompt.damageType,prompt.towerProtectedSide);else setError('Alvo indisponível; selecione novamente.');}}><AttackDirectionChoice required={Boolean(damageChoicePrompt.requiresTower)} value={damageChoicePrompt.towerProtectedSide} onChange={towerProtectedSide=>setDamageChoicePrompt(current=>current?{...current,towerProtectedSide}:null)}/><WeaponDamageChoice choices={weaponDamageChoices(weaponForDamageChoice(damageChoicePrompt.attackId))} value={damageChoicePrompt.damageType} onChange={damageType=>setDamageChoicePrompt(current=>current?{...current,damageType}:null)}/></TargetConfirmation>}
+    {targetConfirmation && targeting?.armId===targetConfirmation.armId && <TargetConfirmation key={`${targetConfirmation.armId}:${targetConfirmation.targetId}:${Boolean(targetConfirmation.repeat)}`} action={targeting.actionLabel} target={targetConfirmation.name} busy={Boolean(busy)} message={targetConfirmation.dispel?'Confirmar a tentativa de dissipação? O teste será rolado e o efeito encerrado em caso de sucesso.':targetConfirmation.contact?.kind==='disintegration'?'Confirmar contato? O alvo será desintegrado sem ataque nem JP.':targetConfirmation.contact?.kind==='rust'?'Escolha o equipamento que recebe o contato. Acerto e corrosão serão resolvidos automaticamente.':undefined} confirmDisabled={(confirmingTower && typeof targetConfirmation.towerProtectedSide!=='boolean')||(confirmingDamageChoices.length > 0 && !targetConfirmation.damageType)||(targetConfirmation.contact?.kind==='rust'&&!targetConfirmation.rustChoice)||Boolean(targetConfirmation.dispel&&!targetConfirmation.dispelEffectId)} onYes={()=>confirmTargeting(targetConfirmation.targetId)} onRemove={targetConfirmation.repeat ? ()=>{const current=targetingRef.current;if(current){const next={...current,selectedIds:current.selectedIds.filter(id=>id!==targetConfirmation.targetId),selectedId:null};targetingRef.current=next;setTargeting(next);}setTargetConfirmation(null);} : undefined} onNo={()=>{setTargetConfirmation(null);if(!targetConfirmation.repeat){targetingRef.current=null;window.dispatchEvent(new CustomEvent("omnisvera-targeting-clear",{detail:{armId:targetConfirmation.armId}}));}}} ><AttackDirectionChoice required={confirmingTower} value={targetConfirmation.towerProtectedSide} onChange={towerProtectedSide=>setTargetConfirmation(current=>current?{...current,towerProtectedSide}:null)}/><WeaponDamageChoice choices={confirmingDamageChoices} value={targetConfirmation.damageType} onChange={damageType=>setTargetConfirmation(current=>current?{...current,damageType}:null)}/>{targetConfirmation.dispel&&<DispelEffectOptions effects={targetConfirmation.dispel.effects} selected={targetConfirmation.dispelEffectId} onChange={dispelEffectId=>setTargetConfirmation(previous=>previous?{...previous,dispelEffectId}:previous)} />}{targetConfirmation.contact?.kind==='rust'&&<RustContactOptions items={targetConfirmation.contact.inventory} disabled={Boolean(busy)} onChange={rustChoice=>setTargetConfirmation(previous=>previous?{...previous,rustChoice}:previous)} />}</TargetConfirmation>}
     {attackResolution && !attackResolution.confirmed && attackResolution.breakdown.automatic_hit && <SpellResolution resolution={attackResolution} busy={Boolean(busy)} onConfirm={() => void confirmResolvedAttack()} onClose={() => setAttackResolution(null)} />}
     {effectBreakdownOpen && <EffectBreakdownModal title={effectBreakdownOpen === "armor" ? "Classe de Armadura" : ATTRIBUTES.find(([key]) => key === effectBreakdownOpen)?.[1] || effectBreakdownOpen} base={effectBreakdownOpen === "armor" ? definition?.defenses?.unmodified_armor_class ?? definition?.defenses?.base_armor_class : definition?.base_attributes?.[effectBreakdownOpen]} effective={effectBreakdownOpen === "armor" ? definition?.defenses?.armor_class : definition?.attributes?.[effectBreakdownOpen]} entries={openBreakdownEntries} onClose={() => setEffectBreakdownOpen(null)} onRoll={effectBreakdownOpen !== "armor" ? () => { const key = effectBreakdownOpen; setEffectBreakdownOpen(null); void roll("attribute", key); } : undefined} />}
 {openToken?.token_type === "location" && <div className="workspace-token-modal-backdrop" onClick={() => setOpenTokenId(null)}><section className="workspace-token-modal" role="dialog" aria-label={`Local ${openToken.name}`} onClick={e => e.stopPropagation()}><header><h2>{openToken.name}</h2><button onClick={() => setOpenTokenId(null)}>Fechar local</button></header>{openToken.image_path && <img src={mediaUrlFromVaultPath(openToken.image_path)} alt="" width={96} />}<p>{openToken.sheet?.description}</p>

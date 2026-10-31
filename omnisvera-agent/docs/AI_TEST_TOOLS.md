@@ -33,6 +33,14 @@ instalada em todo chat/conector remoto.
 
 ### Lotes limitados e resultados parciais (16/10)
 
+`ui_suite: "item_families"` usa quatro atores e `ui:true`. Executa compra,
+equipamento, consumível, munição/recarga e os efeitos de itens revisados em
+`ITEM_SPECIAL_EFFECTS_2026-10-31.md`. O segundo script usa seleção pelo grid,
+tipos de dano, Rede, Garrote, escudo torre e arremesso de Vibranium, com jogador
+mobile e Mestre em outro contexto. Inspecionar as imagens explicitamente.
+`OMNISVERA_FRONTEND_DIST` só atravessa o ambiente isolado se estiver em TEMP.
+O lote não certifica todo o catálogo, toda a ficha nem redes externas.
+
 `ui_suite: "sprite_studio"` exige quatro atores e `ui:true`. Executa somente
 `sprite-studio-smoke.cjs`: importação/recortes/sequência, vínculo visual de Dorn,
 idle/caminhada após movimento nativo confirmado, reload, visual jogador mobile,

@@ -323,5 +323,5 @@ def use_weapon(path,technique,request,actor_id,actor_role,load_character,load_ta
     definition={**character['definition'],'attacks':[attack]}
     result,_=resolve_attack(path,request_id=request_id,actor_character_id='raziel',actor_name=definition['name'],
         requested_by_id=actor_id,requested_by_role=actor_role,definition=definition,inventory=character.get('inventory') or [],
-        attack_id=technique,target=load_target(request.target_type,request.target_id),roll_mode=request.roll_mode or 'digital',physical_d20=request.d20)
+        attack_id=technique,target=load_target(request.target_type,request.target_id),roll_mode=request.roll_mode or 'digital',physical_d20=request.d20,tower_protected_side=getattr(request,'tower_protected_side',None))
     return result
