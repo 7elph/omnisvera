@@ -43,7 +43,7 @@ Associação, pins, espólio, permissões, resolução, confirmação, orçament
 
 ## Auditoria posterior à reativação
 
-Depois da comparação inicial aprovada, a auditoria encontrou mudança somente nas coordenadas percentuais dos pins de Dorn e Raziel em Nimalis, às 08:41:28/30 UTC de 31/10. Esses pins são legados sem posição lógica naquela localização; não é correto chamar essa diferença de normalização de células. Fichas, inventários, recursos e demais dados protegidos continuaram iguais na comparação. A rota legada de movimento não mantém autoria no ledger; a origem desses dois movimentos está aguardando confirmação do Mestre. Nenhuma restauração automática de posições foi feita.
+Depois da comparação inicial aprovada, a auditoria encontrou mudança somente nas coordenadas percentuais dos pins de Dorn e Raziel em Nimalis, às 08:41:28/30 UTC de 31/10. Esses pins são legados sem posição lógica naquela localização; não é correto chamar essa diferença de normalização de células. Fichas, inventários, recursos e demais dados protegidos continuaram iguais na comparação. Em 31/10, o Mestre confirmou neste chat que moveu os dois pins no mapa: a ressalva sobre a origem dos movimentos está encerrada por essa confirmação. A rota legada continua sem autoria no ledger, portanto isso não constitui atribuição automática pelo sistema. Nenhuma restauração de posições foi feita.
 
 ## Arquivos deste corte
 
