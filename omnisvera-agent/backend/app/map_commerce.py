@@ -382,16 +382,11 @@ def quote(path,mid,access,*,request_id,character_id,kind,target_id,quantity=1,ne
 
 
 def _give(db,character_id,catalog_id,quantity,index=None):
-    from .item_registry import registry,resolve_item,catalog_item
-    item=catalog_item(resolve_item(index or registry(db),catalog_id))
+    from .item_registry import registry,resolve_item
+    from .item_transfer import grant_item
+    item=resolve_item(index or registry(db),catalog_id)
     if not item:raise ValueError('Item de entrega inexistente')
-    path=item.get('native_item_path') or 'compendium:'+catalog_id
-    owned=_inventory_get(db,character_id,path) or {}
-    _inventory_upsert(db,profile_id=character_id,item_path=path,item_title=item['name'],
-        quantity=owned.get('quantity',0)+quantity,equipped=owned.get('equipped',False),
-        equipment_slot=owned.get('equipment_slot'),notes=owned.get('notes'),
-        charges_current=owned.get('charges_current'),charges_max=owned.get('charges_max'),recharge=owned.get('recharge'))
-    return [{'item_path':path,'before':owned.get('quantity',0),'after':owned.get('quantity',0)+quantity}]
+    return [grant_item(db,item,character_id,quantity,_now(),origin='Compra no mercado')]
 
 
 def confirm(path,quote_id,access,*,request_id):
@@ -478,6 +473,8 @@ def confirm(path,quote_id,access,*,request_id):
             'valuation':q.get('valuation'),'unit_copper':q['unit_copper'],'catalog_id':q.get('catalog_id'),'base_unit_copper':q['base_unit_copper'],
             'individual_appraisal':q.get('individual_appraisal'),'stock_instance':instance,'service_effect':service_effect,
             'service_status':status,'bargain':q.get('bargain')}
+        from .currency import rule_snapshot
+        response['currency_rule'] = rule_snapshot()
         verb={'buy':'comprou','sell':'vendeu','service':'contratou'}[kind]
         title=f'{q["character_id"]} {verb} {qty}× {q["name"]} por {cost/100:g} PO'
         _ledger(db,access,quote_id,q['character_id'],title,response)
@@ -513,7 +510,7 @@ def history(path,access,character_id,limit=40):
     """Owner/GM receipt projection. Old partial receipts remain honestly marked."""
     _owner(access,character_id)
     with closing(_connect(path)) as db:
-        rows=db.execute("SELECT id,title,detail_json,created_at FROM session_ledger WHERE source_type IN ('commerce','commerce_refund') AND character_id=? AND voided_at IS NULL ORDER BY id DESC LIMIT ?",(character_id,min(100,max(1,int(limit))))).fetchall()
+        rows=db.execute("SELECT id,title,detail_json,created_at FROM session_ledger WHERE source_type IN ('commerce','commerce_refund','merchant_buy','merchant_sell') AND character_id=? AND voided_at IS NULL ORDER BY id DESC LIMIT ?",(character_id,min(100,max(1,int(limit))))).fetchall()
         result=[]
         for row in rows:
             receipt=json.loads(row['detail_json'] or '{}')

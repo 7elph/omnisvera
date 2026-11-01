@@ -18,9 +18,8 @@ from typing import Any
 from .dice_rolls import roll_formula
 from .item_catalog import get_catalog_item, is_catalog_reference, require_offerable_item
 from .session_ledger import append_session_ledger_event
+from .currency import COIN_FIELDS, COPPER_PER, rule_snapshot
 
-COIN_FIELDS = ("copper_coins", "silver_coins", "coins", "platinum_coins")
-COPPER_PER = {"copper_coins": 1, "silver_coins": 10, "coins": 100, "platinum_coins": 10000}
 
 # Resultado da pechincha (1d20 + mod Carisma): (piso, multiplicador)
 HAGGLE_TIERS = [(18, 0.8, "-20%"), (14, 0.9, "-10%"), (6, 1.0, "preço cheio")]
@@ -51,6 +50,38 @@ def init_merchants(database_path: Path | None = None) -> None:
             id TEXT PRIMARY KEY, merchant_id TEXT NOT NULL REFERENCES merchants(id) ON DELETE CASCADE,
             compendium_item_id TEXT NOT NULL, name TEXT NOT NULL, quantity INTEGER NOT NULL DEFAULT 1,
             price_override_po REAL, notes TEXT NOT NULL DEFAULT '', created_at TEXT NOT NULL)""")
+        connection.execute('''CREATE TABLE IF NOT EXISTS merchant_commands (
+            actor_id TEXT NOT NULL, request_id TEXT NOT NULL, quote_id TEXT NOT NULL,
+            response_json TEXT NOT NULL, PRIMARY KEY(actor_id,request_id))''')
+
+
+def _command_identity(kind, request_id, fields):
+    from hashlib import sha256
+    if not isinstance(request_id, str) or request_id != request_id.strip() or not 8 <= len(request_id) <= 120:
+        raise ValueError('request_id obrigatório para negociar com segurança; atualize o Companion')
+    encoded = json.dumps([kind, fields], sort_keys=True, ensure_ascii=False, allow_nan=False)
+    return 'legacy:' + kind + ':' + sha256(encoded.encode()).hexdigest()
+
+
+def _command_replay(connection, request_id, identity):
+    row = connection.execute('SELECT quote_id,response_json FROM merchant_commands WHERE actor_id=? AND request_id=?',
+        ('gm:master', request_id)).fetchone()
+    if not row: return None
+    if row['quote_id'] != identity: raise ValueError('Identificador já usado com outra negociação')
+    return json.loads(row['response_json'])
+
+
+def _command_save(connection, request_id, identity, response):
+    connection.execute('INSERT INTO merchant_commands VALUES(?,?,?,?)',
+        ('gm:master', request_id, identity, json.dumps(response, ensure_ascii=False)))
+
+
+def _unit_copper(value):
+    from decimal import Decimal, ROUND_HALF_UP, InvalidOperation
+    try: amount = Decimal(str(value))
+    except InvalidOperation: raise ValueError('Preço inválido') from None
+    if not amount.is_finite() or amount < 0: raise ValueError('Preço inválido')
+    return int((amount * 100).quantize(Decimal('1'), rounding=ROUND_HALF_UP))
 
 
 def _character_state(connection: sqlite3.Connection, character_id: str) -> dict[str, Any]:
@@ -264,72 +295,116 @@ def haggle(database_path: Path, *, character_id: str, base_price_po: float, roll
 
 
 def buy(database_path: Path, *, merchant_id: str, stock_id: str, character_id: str, quantity: int = 1,
-        final_price_po: float, expected_purse: dict[str, Any] | None = None) -> dict[str, Any]:
-    if quantity < 1 or final_price_po < 0:
+        final_price_po: float, expected_purse: dict[str, Any] | None = None, request_id: str | None = None) -> dict[str, Any]:
+    if type(quantity) is not int or quantity < 1:
         raise ValueError("Compra inválida")
+    unit_copper = _unit_copper(final_price_po)
+    identity = _command_identity('buy', request_id, [merchant_id, stock_id, character_id, quantity, unit_copper])
     database_path = Path(database_path)
     init_merchants(database_path)
     with closing(_connect(database_path)) as connection, connection:
         connection.execute("BEGIN IMMEDIATE")
+        previous = _command_replay(connection, request_id, identity)
+        if previous is not None: return previous
         line = connection.execute("SELECT * FROM merchant_stock WHERE id=? AND merchant_id=?", (stock_id, merchant_id)).fetchone()
         if not line:
             raise ValueError("Item do estoque não encontrado")
         line = dict(line)
         if line.get('instance_json'):raise ValueError('Objeto usado: negociação individual; não pode ser comprado como novo')
-        require_offerable_item(get_catalog_item(line['compendium_item_id']),price_override_po=final_price_po)
+        from .item_registry import registry, resolve_item, catalog_item
+        canonical = resolve_item(registry(connection), line['compendium_item_id'])
+        if not canonical or canonical['source_kind'] == 'held': raise ValueError('Item sem identidade de catálogo; use avaliação do Mestre')
+        require_offerable_item(get_catalog_item(line['compendium_item_id']) or catalog_item(canonical),price_override_po=final_price_po)
         if line["quantity"] != -1 and line["quantity"] < quantity:
             raise ValueError("Estoque insuficiente")
         state = _character_state(connection, character_id)
         _check_purse(state, expected_purse)
-        cost_copper = int(round(final_price_po * quantity * 100))
+        cost_copper = unit_copper * quantity
         purse = purse_copper(state)
+        purse_before = {field: int(state.get(field) or 0) for field in COIN_FIELDS}
         if purse < cost_copper:
             raise ValueError(f"Saldo insuficiente: faltam {(cost_copper - purse) / 100:g} PO")
         purse_after = _save_purse(connection, character_id, purse - cost_copper)
         if line["quantity"] != -1:
             connection.execute("UPDATE merchant_stock SET quantity=quantity-? WHERE id=?", (quantity, stock_id))
-        item_path = get_catalog_item(line['compendium_item_id']).get('native_item_path') or f"merchant:{merchant_id}:{line['compendium_item_id']}"
+        item_path = canonical['item_path']
         owned = _inventory_get(connection, character_id, item_path)
-        _inventory_upsert(connection, profile_id=character_id, item_path=item_path, item_title=line["name"],
-                           quantity=int((owned or {}).get("quantity") or 0) + quantity, equipped=False,
-                           notes=f"Comprado de {merchant_id} por {final_price_po:g} PO")
-        append_session_ledger_event(connection, source_type="merchant_buy", source_id=f"{merchant_id}:{stock_id}",
+        from .item_transfer import grant_item
+        inventory_change=grant_item(connection,canonical,character_id,quantity,_now(),
+            origin=f"Comprado de {merchant_id} por {final_price_po:g} PO")
+        response = {'receipt_id':request_id, 'audit_schema_version':1, 'kind':'buy', 'name':line['name'],
+            'character_id':character_id, 'merchant_id':merchant_id, 'item':line['name'], 'quantity':quantity,
+            'paid_po':cost_copper/100, 'total_copper':cost_copper, 'purse_before':purse_before, 'purse_after':purse_after,
+            'balance_before_copper':purse, 'balance_after_copper':purse-cost_copper, 'currency_rule':rule_snapshot(),
+            'stock_before':line['quantity'], 'stock_after':line['quantity']-quantity if line['quantity']!=-1 else -1,
+            'stock_id':stock_id,'catalog_id':canonical['id'],'unit_copper':unit_copper,'pricing_source':'gm_manual',
+            'inventory_changes':[inventory_change]}
+        append_session_ledger_event(connection, source_type="merchant_buy", source_id=request_id,
                                     event_kind="state", actor_id="master", actor_name="Mestre", actor_role="gm",
                                     character_id=character_id, title=f"{character_id} comprou {quantity}× {line['name']}",
-                                    detail={"merchant_id": merchant_id, "item": line["name"], "quantity": quantity,
-                                            "price_po": final_price_po, "purse_after": purse_after},
+                                    detail=response,
                                     visibility="table", created_at=_now())
-    return {"item": line["name"], "quantity": quantity, "paid_po": round(final_price_po * quantity, 2), "purse_after": purse_after}
+        _command_save(connection, request_id, identity, response)
+    return response
 
 
 def sell(database_path: Path, *, merchant_id: str, character_id: str, item_path: str, quantity: int = 1,
-         unit_price_po: float, expected_purse: dict[str, Any] | None = None) -> dict[str, Any]:
-    if quantity < 1 or unit_price_po < 0:
+         unit_price_po: float, expected_purse: dict[str, Any] | None = None, request_id: str | None = None) -> dict[str, Any]:
+    if type(quantity) is not int or quantity < 1:
         raise ValueError("Venda inválida")
+    unit_copper = _unit_copper(unit_price_po)
+    identity = _command_identity('sell', request_id, [merchant_id, character_id, item_path, quantity, unit_copper])
     database_path = Path(database_path)
     init_merchants(database_path)
     with closing(_connect(database_path)) as connection, connection:
         connection.execute("BEGIN IMMEDIATE")
+        previous = _command_replay(connection, request_id, identity)
+        if previous is not None: return previous
         if not connection.execute("SELECT 1 FROM merchants WHERE id=?", (merchant_id,)).fetchone():
             raise ValueError("Mercador não encontrado")
         owned = _inventory_get(connection, character_id, item_path)
         if owned is None or int(owned.get("quantity") or 0) < quantity:
             raise ValueError("Personagem não tem essa quantidade")
+        if owned.get('equipped'): raise ValueError('Guarde o item antes de vender')
+        from .item_registry import registry, resolve_item
+        canonical = resolve_item(registry(connection), item_path)
+        if not canonical or canonical['source_kind'] == 'held' or canonical['catalog_entry_kind'] == 'reference':
+            raise ValueError('Item sem identidade concreta; configure-o no mercado antes de vender')
         from .inventory_conditions import read_condition
-        if read_condition(connection,owned['id']) or (owned.get('charges_max') is not None and owned.get('charges_current') is not None and owned['charges_current']<owned['charges_max']):
+        if read_condition(connection,owned['id']) or any(owned.get(field) is not None for field in ('charges_current','charges_max','recharge')):
             raise ValueError('Objeto usado ou modificado exige avaliação individual no mercado do mapa')
         state = _character_state(connection, character_id)
         _check_purse(state, expected_purse)
-        gain_copper = int(round(unit_price_po * quantity * 100))
+        gain_copper = unit_copper * quantity
+        balance_before = purse_copper(state)
+        purse_before = {field: int(state.get(field) or 0) for field in COIN_FIELDS}
         purse_after = _save_purse(connection, character_id, purse_copper(state) + gain_copper)
         _inventory_upsert(connection, profile_id=character_id, item_path=item_path, item_title=owned["item_title"],
                            quantity=int(owned["quantity"]) - quantity, equipped=bool(owned.get("equipped")),
                            notes=owned.get("notes"), equipment_slot=owned.get("equipment_slot"),
                            charges_current=owned.get("charges_current"), charges_max=owned.get("charges_max"), recharge=owned.get("recharge"))
-        append_session_ledger_event(connection, source_type="merchant_sell", source_id=merchant_id,
+        stock = connection.execute("SELECT id,quantity FROM merchant_stock WHERE merchant_id=? AND compendium_item_id=? AND COALESCE(instance_json,'')='' ORDER BY id LIMIT 1",
+            (merchant_id, canonical['id'])).fetchone() if 'instance_json' in {r[1] for r in connection.execute('PRAGMA table_info(merchant_stock)')} else connection.execute(
+            'SELECT id,quantity FROM merchant_stock WHERE merchant_id=? AND compendium_item_id=? ORDER BY id LIMIT 1',(merchant_id,canonical['id'])).fetchone()
+        stock_before = stock['quantity'] if stock else 0
+        stock_after = stock_before + quantity if stock_before != -1 else -1
+        stock_id = stock['id'] if stock else 'stock-'+uuid.uuid4().hex
+        if stock:
+            if stock_before != -1: connection.execute('UPDATE merchant_stock SET quantity=? WHERE id=?',(stock_after,stock['id']))
+        else:
+            connection.execute('INSERT INTO merchant_stock(id,merchant_id,compendium_item_id,name,quantity,created_at) VALUES(?,?,?,?,?,?)',
+                (stock_id,merchant_id,canonical['id'],canonical['name'],quantity,_now()))
+        response = {'receipt_id':request_id, 'audit_schema_version':1, 'kind':'sell', 'name':owned['item_title'],
+            'character_id':character_id, 'merchant_id':merchant_id, 'item':owned['item_title'], 'quantity':quantity,
+            'received_po':gain_copper/100, 'total_copper':gain_copper, 'purse_before':purse_before, 'purse_after':purse_after,
+            'balance_before_copper':balance_before, 'balance_after_copper':balance_before+gain_copper, 'currency_rule':rule_snapshot(),
+            'stock_before':stock_before,'stock_after':stock_after,
+            'stock_id':stock_id,'catalog_id':canonical['id'],'unit_copper':unit_copper,'pricing_source':'gm_manual',
+            'inventory_changes':[{'item_path':item_path,'before':owned['quantity'],'after':owned['quantity']-quantity}]}
+        append_session_ledger_event(connection, source_type="merchant_sell", source_id=request_id,
                                     event_kind="state", actor_id="master", actor_name="Mestre", actor_role="gm",
                                     character_id=character_id, title=f"{character_id} vendeu {quantity}× {owned['item_title']}",
-                                    detail={"merchant_id": merchant_id, "item": owned["item_title"], "quantity": quantity,
-                                            "unit_price_po": unit_price_po, "purse_after": purse_after},
+                                    detail=response,
                                     visibility="table", created_at=_now())
-    return {"item": owned["item_title"], "quantity": quantity, "received_po": round(unit_price_po * quantity, 2), "purse_after": purse_after}
+        _command_save(connection, request_id, identity, response)
+    return response

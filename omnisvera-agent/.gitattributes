@@ -1,0 +1,9 @@
+# Keep source-based checks reproducible in Windows/Linux clones.
+* text=auto eol=lf
+*.png -text
+*.jpg -text
+*.jpeg -text
+*.webp -text
+*.gif -text
+*.wasm -text
+*.pck -text

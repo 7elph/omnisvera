@@ -4,7 +4,7 @@ import json
 import re
 import secrets
 import sqlite3
-from contextlib import closing
+from contextlib import closing, contextmanager
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Callable
@@ -66,6 +66,7 @@ def init_loot(database_path: Path) -> None:
             CREATE INDEX IF NOT EXISTS idx_loot_status ON loot_resolutions(status,created_at);
             """
         )
+        connection.execute('BEGIN IMMEDIATE')
         columns = {row[1] for row in connection.execute("PRAGMA table_info(loot_resolutions)")}
         if "pending_requests_json" not in columns:
             connection.execute("ALTER TABLE loot_resolutions ADD COLUMN pending_requests_json TEXT NOT NULL DEFAULT '[]'")
@@ -73,6 +74,40 @@ def init_loot(database_path: Path) -> None:
             connection.execute("ALTER TABLE loot_resolutions ADD COLUMN finalized_at TEXT")
         if "input_mode" not in columns:
             connection.execute("ALTER TABLE loot_resolutions ADD COLUMN input_mode TEXT NOT NULL DEFAULT ''")
+        connection.execute('''CREATE TABLE IF NOT EXISTS loot_distribution_commands (
+            request_id TEXT PRIMARY KEY, resolution_id TEXT NOT NULL, fingerprint TEXT NOT NULL)''')
+        connection.execute('''CREATE TABLE IF NOT EXISTS loot_generation_commands (
+            request_id TEXT PRIMARY KEY, resolution_id TEXT NOT NULL, fingerprint TEXT NOT NULL)''')
+
+
+def _generation_replay(db,request_id,source_key,mode,roller=None):
+    intent=json.dumps([source_key,mode,roller])
+    command=db.execute('SELECT * FROM loot_generation_commands WHERE request_id=?',(request_id,)).fetchone()
+    if command:
+        if command['fingerprint']!=intent: raise LootConflictError('Identificador já usado com outra geração de espólio')
+        return db.execute('SELECT * FROM loot_resolutions WHERE resolution_id=?',(command['resolution_id'],)).fetchone(),intent
+    original=db.execute('SELECT * FROM loot_resolutions WHERE request_id=?',(request_id,)).fetchone()
+    if original:
+        old_mode='requested' if original['input_mode']=='requested' else original['roll_mode']
+        rollers={task.get('roller_character_id') for task in json.loads(original['pending_requests_json'] or '[]')}
+        if original['source_key']!=source_key or old_mode!=mode or (mode=='requested' and rollers and rollers!={roller}):
+            raise LootConflictError('Identificador já usado com outra geração de espólio')
+    row=original or db.execute('SELECT * FROM loot_resolutions WHERE source_key=?',(source_key,)).fetchone()
+    if row: db.execute('INSERT INTO loot_generation_commands VALUES(?,?,?)',(request_id,row['resolution_id'],intent))
+    return row,intent
+
+
+@contextmanager
+def _command_connection(path, external=None):
+    """Compose native loot stages in one caller-owned transaction."""
+    if external is not None:
+        if not external.in_transaction:raise ValueError('Transação de espólio ausente')
+        yield external
+    else:
+        init_loot(path)
+        with closing(_connect(path)) as connection, connection:
+            connection.execute('BEGIN IMMEDIATE')
+            yield connection
 
 
 def parse_treasure_code(raw: str) -> list[dict[str, Any]]:
@@ -248,8 +283,14 @@ def resolve_requested_token_loot(
     if not 8 <= len(request_id) <= 120 or not re.fullmatch(r"[A-Za-z0-9._:-]+", request_id):
         raise ValueError("request_id inválido")
     init_loot(database_path)
-    with closing(_connect(database_path)) as connection:
-        existing = connection.execute("SELECT * FROM loot_resolutions WHERE request_id=?", (request_id,)).fetchone()
+    from .dice_rolls import init_dice_rolls
+    init_dice_rolls(database_path)
+    if scope=='lair' and not str(lair_id or '').strip(): raise ValueError('Informe um identificador do covil')
+    source_id=str(lair_id).strip() if scope=='lair' else str(token_id)
+    source_key=f'{scope}:{source_id}'
+    with closing(_connect(database_path)) as connection,connection:
+        connection.execute('BEGIN IMMEDIATE')
+        existing,intent = _generation_replay(connection,request_id,source_key,'requested',roller_character_id)
         if existing:
             return _record(existing), False
         token = connection.execute("SELECT id,name,current_hp,sheet_json FROM session_workspace_tokens WHERE id=? AND token_type='monster'", (token_id,)).fetchone()
@@ -272,27 +313,23 @@ def resolve_requested_token_loot(
         if duplicate:
             return _record(duplicate), False
         source_name = str(token["name"])
-    resolution_id = f"loot:{secrets.token_hex(16)}"
-    plan = _requested_plan(entries)
-    pending: list[dict[str, Any]] = []
-    for index, task in enumerate(plan):
-        roll_request, _created = create_roll_request(
-            database_path,
-            request_id=f"{resolution_id}:roll:{index + 1}", campaign_id="omnisvera",
-            character_id=roller_character_id, requested_by="master",
-            spec=RollSpec(
-                "free", f"Tesouro de {source_name} · {task['code']} · {task['purpose']}",
-                task["formula"], "loot", resolution_id,
-            ),
-            visibility="owner", reason="Rolagem solicitada para gerar o espólio", expires_in_hours=24,
-        )
-        pending.append({**task, "roll_request_id": roll_request["id"], "roller_character_id": roller_character_id})
-    now = _now()
-    with closing(_connect(database_path)) as connection, connection:
-        connection.execute("BEGIN IMMEDIATE")
-        duplicate = connection.execute("SELECT * FROM loot_resolutions WHERE source_key=? OR request_id=?", (source_key, request_id)).fetchone()
-        if duplicate:
-            return _record(duplicate), False
+        resolution_id = f"loot:{secrets.token_hex(16)}"
+        plan = _requested_plan(entries)
+        pending: list[dict[str, Any]] = []
+        for index, task in enumerate(plan):
+            roll_request, _created = create_roll_request(
+                database_path,
+                request_id=f"{resolution_id}:roll:{index + 1}", campaign_id="omnisvera",
+                character_id=roller_character_id, requested_by="master",
+                spec=RollSpec(
+                    "free", f"Tesouro de {source_name} · {task['code']} · {task['purpose']}",
+                    task["formula"], "loot", resolution_id,
+                ),
+                visibility="owner", reason="Rolagem solicitada para gerar o espólio", expires_in_hours=24,
+                _connection=connection,
+            )
+            pending.append({**task, "roll_request_id": roll_request["id"], "roller_character_id": roller_character_id})
+        now = _now()
         connection.execute(
             """INSERT INTO loot_resolutions(
               resolution_id,request_id,source_key,source_type,source_id,source_name,treasure_code,
@@ -301,6 +338,7 @@ def resolve_requested_token_loot(
             (resolution_id, request_id, source_key, "lair" if scope == "lair" else "token", source_id,
              source_name, raw_code, scope, "digital", now, json.dumps(pending, ensure_ascii=False), "requested"),
         )
+        connection.execute('INSERT INTO loot_generation_commands VALUES(?,?,?)',(request_id,resolution_id,intent))
         row = connection.execute("SELECT * FROM loot_resolutions WHERE resolution_id=?", (resolution_id,)).fetchone()
     return _record(row), True
 
@@ -381,7 +419,7 @@ def _record(row: sqlite3.Row) -> dict[str, Any]:
 
 def resolve_token_loot(
     database_path: Path, *, request_id: str, token_id: str, scope: str, roll_mode: str,
-    lair_id: str | None = None, rng: Rng | None = None,
+    lair_id: str | None = None, rng: Rng | None = None, _connection=None,
 ) -> tuple[dict[str, Any], bool]:
     if scope not in {"carried", "lair"}:
         raise ValueError("Escopo de tesouro inválido")
@@ -390,11 +428,11 @@ def resolve_token_loot(
     request_id = str(request_id or "").strip()
     if not 8 <= len(request_id) <= 120 or not re.fullmatch(r"[A-Za-z0-9._:-]+", request_id):
         raise ValueError("request_id inválido")
-    init_loot(database_path)
+    if scope=='lair' and not str(lair_id or '').strip(): raise ValueError('Informe um identificador do covil')
+    source_key=f"{scope}:{str(lair_id).strip() if scope=='lair' else str(token_id)}"
     generator = rng or secrets.SystemRandom().randint
-    with closing(_connect(database_path)) as connection, connection:
-        connection.execute("BEGIN IMMEDIATE")
-        existing = connection.execute("SELECT * FROM loot_resolutions WHERE request_id=?", (request_id,)).fetchone()
+    with _command_connection(database_path,_connection) as connection:
+        existing,intent = _generation_replay(connection,request_id,source_key,roll_mode)
         if existing:
             return _record(existing), False
         token = connection.execute("SELECT id,name,current_hp,sheet_json FROM session_workspace_tokens WHERE id=? AND token_type='monster'", (token_id,)).fetchone()
@@ -428,6 +466,7 @@ def resolve_token_loot(
              str(token["name"]), raw_code, scope, roll_mode, json.dumps(rewards, ensure_ascii=False),
              json.dumps(rolls, ensure_ascii=False), now),
         )
+        connection.execute('INSERT INTO loot_generation_commands VALUES(?,?,?)',(request_id,resolution_id,intent))
         row = connection.execute("SELECT * FROM loot_resolutions WHERE resolution_id=?", (resolution_id,)).fetchone()
     return _record(row), True
 
@@ -459,6 +498,8 @@ def update_loot_rewards(database_path: Path, resolution_id: str, rewards: list[d
         if not name or quantity < 1 or quantity > 999999:
             raise ValueError("Nome ou quantidade de recompensa inválida")
         cleaned.append({**reward_item, "id": str(reward_item.get("id") or f"reward:{index + 1}"), "name": name, "quantity": quantity})
+    if len({item['id'] for item in cleaned}) != len(cleaned):
+        raise ValueError('Identificadores de recompensa duplicados')
     with closing(_connect(database_path)) as connection, connection:
         row = connection.execute("SELECT status,input_mode,finalized_at FROM loot_resolutions WHERE resolution_id=?", (resolution_id,)).fetchone()
         if row is None:
@@ -472,10 +513,8 @@ def update_loot_rewards(database_path: Path, resolution_id: str, rewards: list[d
     return _record(updated)
 
 
-def reveal_loot(database_path: Path, resolution_id: str) -> tuple[dict[str, Any], bool]:
-    init_loot(database_path)
-    with closing(_connect(database_path)) as connection, connection:
-        connection.execute("BEGIN IMMEDIATE")
+def reveal_loot(database_path: Path, resolution_id: str, *, _connection=None, _actor=None) -> tuple[dict[str, Any], bool]:
+    with _command_connection(database_path,_connection) as connection:
         row = connection.execute("SELECT * FROM loot_resolutions WHERE resolution_id=?", (resolution_id,)).fetchone()
         if row is None:
             raise LootNotFoundError("Espólio não encontrado")
@@ -492,7 +531,7 @@ def reveal_loot(database_path: Path, resolution_id: str) -> tuple[dict[str, Any]
         ]
         ledger_id = append_session_ledger_event(
             connection, source_type="loot_reveal", source_id=resolution_id, event_kind="treasure",
-            actor_id="master", actor_name="Mestre", actor_role="gm", character_id=None,
+            actor_id=(_actor.profile_id or 'master') if _actor else 'master', actor_name=(_actor.character_title or _actor.profile_id or 'Mestre') if _actor else 'Mestre', actor_role=_actor.mode if _actor else 'gm', character_id=None,
             title=f"Espólio de {item['source_name']}: {summary}",
             detail={"loot_resolution_id": resolution_id, "source_name": item["source_name"], "rewards": public_rewards},
             visibility="table", created_at=now,
@@ -504,21 +543,36 @@ def reveal_loot(database_path: Path, resolution_id: str) -> tuple[dict[str, Any]
 
 def distribute_loot(
     database_path: Path, *, resolution_id: str, request_id: str, allocations: list[dict[str, Any]],
+    _connection=None, _actor=None,
 ) -> tuple[dict[str, Any], bool]:
     request_id = str(request_id or "").strip()
     if not 8 <= len(request_id) <= 120:
         raise ValueError("request_id inválido")
-    init_loot(database_path)
-    with closing(_connect(database_path)) as connection, connection:
-        connection.execute("BEGIN IMMEDIATE")
+    with _command_connection(database_path,_connection) as connection:
+        def fingerprint(values):
+            totals = {}
+            for value in values:
+                qty=value.get('quantity')
+                if type(qty) is not int or qty < 1: raise ValueError('Distribuição inválida')
+                key=(str(value.get('reward_id') or ''),str(value.get('character_id') or ''))
+                totals[key]=totals.get(key,0)+qty
+            return json.dumps(sorted([*key,qty] for key,qty in totals.items()),ensure_ascii=False)
+        intent=fingerprint(allocations)
+        command=connection.execute('SELECT * FROM loot_distribution_commands WHERE request_id=?',(request_id,)).fetchone()
+        if command and (command['resolution_id']!=resolution_id or command['fingerprint']!=intent):
+            raise LootConflictError('Identificador já usado com outra distribuição')
         repeated = connection.execute("SELECT * FROM loot_resolutions WHERE distribution_request_id=?", (request_id,)).fetchone()
         if repeated:
+            if repeated['resolution_id'] != resolution_id or fingerprint(json.loads(repeated['allocations_json'] or '[]')) != intent:
+                raise LootConflictError('Identificador já usado com outra distribuição')
             return _record(repeated), False
         row = connection.execute("SELECT * FROM loot_resolutions WHERE resolution_id=?", (resolution_id,)).fetchone()
         if row is None:
             raise LootNotFoundError("Espólio não encontrado")
         item = _record(row)
         if item["status"] == "distributed":
+            if fingerprint(item['allocations']) != intent: raise LootConflictError('Distribuição já confirmada com outro conteúdo')
+            connection.execute('INSERT OR IGNORE INTO loot_distribution_commands VALUES(?,?,?)',(request_id,resolution_id,intent))
             return item, False
         if item["status"] != "revealed":
             raise LootConflictError("Revele o espólio antes de distribuí-lo")
@@ -538,6 +592,8 @@ def distribute_loot(
         now = _now()
         created_items: dict[str, int] = {}
         coin_allocations: list[dict[str, Any]] = []
+        item_transfers=[]
+        item_index=None
         for allocation in allocations:
             reward = reward_by_id[str(allocation["reward_id"])]
             reward_id = str(reward["id"])
@@ -557,6 +613,15 @@ def distribute_loot(
                 from .item_throwing import restore_reward
                 restore_reward(connection,reward,str(allocation['character_id']),int(allocation['quantity']),now)
                 continue
+            from .item_registry import registry
+            from .item_transfer import resolve_reward, grant_item
+            if item_index is None: item_index=registry(connection)
+            matched, identity_status=resolve_reward(item_index,reward)
+            if matched:
+                transfer=grant_item(connection,matched,character_id,quantity,now,
+                    origin=f"Espólio de {item['source_name']}",instance=reward)
+                item_transfers.append({**transfer,'reward_id':reward_id,'character_id':character_id,'identity_status':identity_status})
+                continue
             if reward_id not in created_items:
                 cursor = connection.execute(
                     """INSERT INTO session_custom_items(name,item_type,description,effects_json,effect_rules_json,mechanics_json,usable,image_path,created_at,updated_at)
@@ -575,12 +640,16 @@ def distribute_loot(
                    VALUES(?,?,?,?,0,?,?) ON CONFLICT(profile_id,item_path) DO UPDATE SET quantity=excluded.quantity,item_title=excluded.item_title,updated_at=excluded.updated_at""",
                 (character_id, item_path, reward["name"], next_quantity, f"Espólio de {item['source_name']}", now),
             )
+            item_transfers.append({'reward_id':reward_id,'character_id':character_id,'item_path':item_path,
+                'before':int(existing['quantity']) if existing else 0,'after':next_quantity,'identity_status':identity_status})
         if item.get('treasure_code') == 'item-drop':
             connection.execute('UPDATE session_workspace_tokens SET visible_to_players=0,updated_at=? WHERE id=?',(now,item['source_id']))
-        detail = {"loot_resolution_id": resolution_id, "source_name": item["source_name"], "allocations": allocations, "created_item_ids": created_items, "coin_allocations": coin_allocations}
+        from .currency import rule_snapshot
+        detail = {"loot_resolution_id": resolution_id, "source_name": item["source_name"], "allocations": allocations, "created_item_ids": created_items, "coin_allocations": coin_allocations,
+            'item_transfers':item_transfers,'currency_rule':rule_snapshot()}
         ledger_id = append_session_ledger_event(
             connection, source_type="loot_distribution", source_id=resolution_id, event_kind="treasure",
-            actor_id="master", actor_name="Mestre", actor_role="gm", character_id=None,
+            actor_id=(_actor.profile_id or 'master') if _actor else 'master', actor_name=(_actor.character_title or _actor.profile_id or 'Mestre') if _actor else 'Mestre', actor_role=_actor.mode if _actor else 'gm', character_id=None,
             title=f"Espólio de {item['source_name']} distribuído", detail=detail, visibility="table", created_at=now,
         )
         connection.execute(
@@ -588,5 +657,6 @@ def distribute_loot(
                distribution_request_id=?,allocations_json=? WHERE resolution_id=?""",
             (now, ledger_id, request_id, json.dumps(allocations, ensure_ascii=False), resolution_id),
         )
+        connection.execute('INSERT INTO loot_distribution_commands VALUES(?,?,?)',(request_id,resolution_id,intent))
         updated = connection.execute("SELECT * FROM loot_resolutions WHERE resolution_id=?", (resolution_id,)).fetchone()
     return _record(updated), True

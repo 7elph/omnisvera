@@ -69,7 +69,7 @@ class ExistingShopReadinessTests(TestCase):
     def test_legacy_gm_purchase_cannot_bypass_the_reference_guard(self):
         self.legacy_reference(); before = self.purse()
         with self.assertRaisesRegex(ValueError,'referência|tabela'):
-            merchant.buy(self.db,merchant_id=self.mid,stock_id=self.line['id'],character_id='vezemir',final_price_po=0)
+            merchant.buy(self.db,request_id='readiness-buy-001',merchant_id=self.mid,stock_id=self.line['id'],character_id='vezemir',final_price_po=0)
         self.assertEqual(before,self.purse())
 
     def test_native_stock_rejects_nonfinite_prices_but_keeps_explicit_free_offers(self):

@@ -11,6 +11,22 @@ branch e SHA antes de analisar, e use os arquivos reais como autoridade.
 O repositório contém o código, não o banco operacional ou os tokens da mesa.
 Publicar código não concede acesso ao Companion autenticado em execução.
 
+Hospedagem e transferência: `HOSTING.md`, `serve_companion.py` e
+`backend/scripts/transfer_bundle.py`. O código público e o pacote privado de
+campanha são entregas separadas; não exportar credenciais para o Git.
+
+Fundação operacional em trabalho local: `OPERATIONAL_FOUNDATION_P0_2026-10-31.md`
+registra identidade de loot, moeda e contratos de retry; a continuação
+`OPERATIONAL_FOUNDATION_P1_2026-10-31.md` registra reposição de munição,
+composição de viagens/combate/mercado e propostas GM de ataques em
+`backend/app/monster_proposals.py`. Consulte os limites e evidências desses
+cortes antes de tratá-los como ativados ou como certificação de todo o catálogo.
+
+`LIVING_ECONOMY_PIPELINE.md` registra o saque por baú, divisão monetária sem
+perda, rodízio de itens e preservação dos participantes após o combate. Também
+separa esse bloco implementado da produção/demanda diária dos NPCs, ainda não
+ativada, e lista os contratos necessários para a economia por dias reais.
+
 Último corte de passivas/turnos: `PASSIVES_SUMMON_TURNS_2026-10-21.md` registra
 a correção dos turnos invisíveis de clones, checks concluídos e limites de
 aceitação visual/ativação. Não confundir código em disco com runtime publicado.

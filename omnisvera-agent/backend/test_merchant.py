@@ -71,7 +71,7 @@ class MerchantTests(unittest.TestCase):
         line = add_stock(self.db, merchant_id=self.merchant["id"], compendium_item_id="arma-corpo-espada-longa", quantity=2)
         self.assertEqual(line["price_po"], 10.0)
         before = purse_copper(self.purse())
-        result = buy(self.db, merchant_id=self.merchant["id"], stock_id=line["id"], character_id="vezemir",
+        result = buy(self.db, request_id='merchant-buy-001', merchant_id=self.merchant["id"], stock_id=line["id"], character_id="vezemir",
                      quantity=1, final_price_po=10.0, expected_purse={field: self.purse().get(field) or 0 for field in ("copper_coins", "silver_coins", "coins", "platinum_coins")})
         self.assertEqual(result["paid_po"], 10.0)
         self.assertEqual(purse_copper(self.purse()), before - 1000)
@@ -83,10 +83,10 @@ class MerchantTests(unittest.TestCase):
     def test_buy_rejects_insufficient_funds_and_stale_purse(self) -> None:
         line = add_stock(self.db, merchant_id=self.merchant["id"], compendium_item_id="arma-corpo-espada-longa", quantity=5)
         with self.assertRaises(ValueError):
-            buy(self.db, merchant_id=self.merchant["id"], stock_id=line["id"], character_id="vezemir",
+            buy(self.db, request_id='merchant-buy-insufficient', merchant_id=self.merchant["id"], stock_id=line["id"], character_id="vezemir",
                 quantity=5, final_price_po=10.0)
         with self.assertRaises(ValueError):
-            buy(self.db, merchant_id=self.merchant["id"], stock_id=line["id"], character_id="vezemir",
+            buy(self.db, request_id='merchant-buy-stale', merchant_id=self.merchant["id"], stock_id=line["id"], character_id="vezemir",
                 quantity=1, final_price_po=10.0, expected_purse={"copper_coins": 0, "silver_coins": 0, "coins": 0, "platinum_coins": 0})
 
     def test_haggle_tiers_follow_charisma_roll(self) -> None:
@@ -97,13 +97,14 @@ class MerchantTests(unittest.TestCase):
         self.assertEqual(low["adjusted_price_po"], 110.0)
 
     def test_sell_pays_and_removes_inventory(self) -> None:
-        upsert_inventory(self.db, profile_id="vezemir", item_path="loot:adaga", item_title="Adaga", quantity=2, equipped=False, notes=None)
+        item_path='compendium:arma-corpo-espada-longa'
+        upsert_inventory(self.db, profile_id="vezemir", item_path=item_path, item_title="Espada longa", quantity=2, equipped=False, notes=None)
         before = purse_copper(self.purse())
-        result = sell(self.db, merchant_id=self.merchant["id"], character_id="vezemir", item_path="loot:adaga",
+        result = sell(self.db, request_id='merchant-sell-001', merchant_id=self.merchant["id"], character_id="vezemir", item_path=item_path,
                       quantity=1, unit_price_po=1.0)
         self.assertEqual(result["received_po"], 1.0)
         self.assertEqual(purse_copper(self.purse()), before + 100)
-        remaining = next(item for item in list_inventory(self.db, "vezemir", include_empty=True) if item["item_path"] == "loot:adaga")
+        remaining = next(item for item in list_inventory(self.db, "vezemir", include_empty=True) if item["item_path"] == item_path)
         self.assertEqual(remaining["quantity"], 1)
 
     def test_purse_split_round_trips(self) -> None:

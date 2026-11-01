@@ -1,0 +1,6 @@
+.workspace-map-loot-chest{position:absolute;z-index:9;transform:translate(20%,-150%);width:40px;height:40px;min-width:40px;padding:6px;display:grid;place-items:center;border:1px solid #9a8c68;border-radius:5px;color:#eee2bd;background:#17191dee;touch-action:manipulation;box-shadow:0 2px 5px #0008}
+.workspace-map-loot-chest:disabled{opacity:.55}
+.workspace-map-loot-receipt{display:flex;align-items:flex-start;gap:8px;padding:8px 12px;background:#1a221d;border:1px solid #39483c;font-size:.85rem;overflow-wrap:anywhere}
+.workspace-map-loot-receipt>span{flex:1;min-width:0}
+.workspace-map-loot-receipt>button{padding:2px 6px;min-height:28px;flex:none}
+@media(max-width:600px){.workspace-map-loot-chest{width:44px;height:44px;min-width:44px}}

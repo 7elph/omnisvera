@@ -656,6 +656,12 @@ class SessionItemGrant(BaseModel):
     notes: str | None = Field(default=None, max_length=500)
 
 
+class LootCollectCreate(BaseModel):
+    model_config = {'extra':'forbid'}
+    request_id: str = Field(min_length=8,max_length=120,pattern=r'^[A-Za-z0-9._:-]+$')
+    token_id: str = Field(min_length=1,max_length=180)
+
+
 class LootResolveCreate(BaseModel):
     request_id: str = Field(min_length=8, max_length=120)
     token_id: str = Field(min_length=1, max_length=180)
@@ -675,6 +681,12 @@ class LootRewardWrite(BaseModel):
     editable: bool = True
     requires_identification: bool = False
     gm_notes: str | None = Field(default=None, max_length=1000)
+    item_path: str | None = Field(default=None, min_length=1, max_length=500)
+    catalog_id: str | None = Field(default=None, min_length=1, max_length=500)
+    charges_current: StrictInt | None = Field(default=None, ge=0)
+    charges_max: StrictInt | None = Field(default=None, ge=0)
+    recharge: str | None = Field(default=None, max_length=80)
+    inventory_condition: dict[str, Any] | None = None
 
 
 class LootRewardsUpdate(BaseModel):
@@ -1422,6 +1434,7 @@ class MerchantHaggleRequest(BaseModel):
 
 
 class MerchantBuyRequest(BaseModel):
+    request_id: str = Field(min_length=8, max_length=120)
     character_id: str = Field(min_length=1, max_length=80)
     stock_id: str = Field(min_length=1, max_length=80)
     quantity: int = Field(default=1, ge=1)
@@ -1430,6 +1443,7 @@ class MerchantBuyRequest(BaseModel):
 
 
 class MerchantSellRequest(BaseModel):
+    request_id: str = Field(min_length=8, max_length=120)
     character_id: str = Field(min_length=1, max_length=80)
     item_path: str = Field(min_length=1, max_length=300)
     quantity: int = Field(default=1, ge=1)

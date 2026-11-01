@@ -8,7 +8,7 @@ from contextlib import closing
 from decimal import Decimal,ROUND_HALF_UP
 from pathlib import Path
 from .item_catalog import load_item_catalog,is_catalog_reference
-from .merchant import COPPER_PER
+from .currency import COPPER_PER
 
 GROUPS={'equipment','supplies','healing','arcane','transport','livestock','services','unclassified'}
 
@@ -123,6 +123,7 @@ def sale_reason(item,equipped,merchant,owned=None):
     if equipped:return 'equipped'
     if owned and owned.get('_trade_condition'):return 'modified_item'
     if owned and owned.get('charges_max') is not None and owned.get('charges_current') is not None and owned['charges_current']<owned['charges_max']:return 'depleted'
+    if owned and any(owned.get(field) is not None for field in ('charges_current','charges_max','recharge')):return 'modified_item'
     if not item or item['price_copper'] is None:return 'price_missing'
     if item['catalog_entry_kind']=='reference' or item['trade_group']=='services':return 'not_physical'
     if not allowed(merchant,item,'buy'):return 'merchant_category'

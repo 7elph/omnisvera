@@ -195,6 +195,10 @@ def retire_defeated(db, now):
     encounter['participants'] = remaining
     encounter['turn_index'] = remaining.index(next_member) if next_member else 0
     encounter.setdefault('defeated', []).extend(removed)
+    # Keep the encounter's recipients with its corpses after the native map
+    # restoration (or a later encounter) replaces the current turn roster.
+    loot_party = {p['target_id']: {'id': p['target_id'], 'name': p.get('name') or p['target_id']}
+                  for p in members + encounter['defeated'] if p.get('target_type') == 'character'}
     if current in removed:
         encounter['turn_sequence'] = int(encounter.get('turn_sequence') or 0) + 1
         encounter['turn_started_at'] = now
@@ -208,6 +212,8 @@ def retire_defeated(db, now):
         if token:
             sheet = json.loads(token['sheet_json'] or '{}')
             sheet['combat_retired'] = True
+            if member['target_type'] == 'token' and loot_party and not sheet.get('summon'):
+                sheet.setdefault('loot_party', [loot_party[key] for key in sorted(loot_party)])
             db.execute('UPDATE session_workspace_tokens SET sheet_json=?,updated_at=? WHERE id=?', (json.dumps(sheet), now, token_id))
     db.execute('UPDATE combat_effect_clock SET encounter_json=?,version=version+1 WHERE id=1', (json.dumps(encounter),))
     # Losing the last turn in initiative still closes the round. Persist the

@@ -1,5 +1,11 @@
 # Omnisvera Companion
 
+## Instalar em outra máquina
+
+Use [docs/HOSTING.md](docs/HOSTING.md): código publicado, instalação limpa,
+frontend/backend, pacote privado de campanha, HTTPS e inicialização persistente.
+O banco e os acessos reais não ficam neste repositório público.
+
 ## Código atual e orientação para revisão
 
 Para entender o Companion atual (fichas, combate, invocações, protocolos de

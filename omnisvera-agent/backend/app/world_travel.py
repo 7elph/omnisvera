@@ -575,20 +575,20 @@ def _can_view_journey(item: dict[str, Any], access_mode: str, profile_id: str | 
     return bool(profile_id and any(p.get("character_id") == profile_id for p in item.get("participants",[])))
 
 
+def _public_scene_ids(connection: sqlite3.Connection) -> set[int]:
+    try:
+        return {int(row[0]) for row in connection.execute("SELECT id FROM scenes WHERE visibility IN ('public','table')")}
+    except sqlite3.OperationalError:
+        return set()
+
+
 def _sanitize_journey(database_path: Path, item: dict[str, Any], *, access_mode: str,
                       profile_id: str | None) -> dict[str, Any]:
     if access_mode == "gm":
         return item
     item.pop("cancellation_reason", None)
     with closing(_connect(database_path)) as connection:
-        try:
-            visible_scene_ids = {
-                int(row[0]) for row in connection.execute(
-                    "SELECT id FROM scenes WHERE visibility IN ('public','table')"
-                )
-            }
-        except sqlite3.OperationalError:
-            visible_scene_ids = set()
+        visible_scene_ids = _public_scene_ids(connection)
     item["scene_links"] = [
         link for link in item.get("scene_links", [])
         if int(link.get("scene_id") or 0) in visible_scene_ids
@@ -667,16 +667,36 @@ def remove_journey_participant(database_path: Path, participant_id: int, *, requ
         return after
 
 
+def _journey_replay(connection: sqlite3.Connection, event_key: str, journey_id: int,
+                    actor_id: str, *, amount: float | None = None, reason: Any = ...) -> dict[str, Any] | None:
+    """Bind retries to the native journey event, never to an unrelated journey."""
+    event=connection.execute('SELECT * FROM journey_events WHERE event_key=?',(event_key,)).fetchone()
+    if not event:return None
+    if event['journey_id']!=journey_id or event['actor_id']!=actor_id:
+        raise ValueError('Requisição pertence a outra viagem ou autor')
+    if amount is not None:
+        before=json.loads(event['before_json']);after=json.loads(event['after_json'])
+        # New events retain the exact input; legacy events prove the same result.
+        matches=after['amount']==amount if 'amount' in after else after['progress']==before['progress']+amount
+        if not matches:
+            raise ValueError('Requisição já usada com outro avanço')
+    if reason is not ... and event['public_text']!=reason:
+        raise ValueError('Requisição já usada com outro motivo')
+    return _journey_detail(connection,journey_id)
+
+
 def _transition(database_path: Path, journey_id: int, *, request_id: str, actor_id: str, action: str, expected_version: int, reason: str | None = None) -> dict[str, Any]:
     request_id=_request_id(request_id)
     allowed={"start":({"planned"},"active","started"),"pause":({"active"},"paused","paused"),"resume":({"paused"},"active","resumed"),"cancel":({"planned","active","paused"},"cancelled","cancelled"),"fail":({"active","paused"},"failed","failed")}
     if action not in allowed: raise ValueError("Transição inválida")
     sources,target,event_type=allowed[action]
     with closing(_connect(database_path)) as connection,connection:
+        connection.execute('BEGIN IMMEDIATE')
         before=_fetch(connection,"journeys",journey_id)
         if not before: raise ValueError("Viagem inexistente")
-        existing=connection.execute("SELECT * FROM journey_events WHERE event_key=?",(f"journey:{action}:{request_id}",)).fetchone()
-        if existing: return _journey_detail(connection,journey_id)
+        existing=_journey_replay(connection,f'journey:{action}:{request_id}',journey_id,actor_id,
+            reason=reason if action in {'cancel','fail'} else ...)
+        if existing:return existing
         if int(before["version"])!=expected_version: raise RuntimeError("Versão desatualizada")
         if before["status"] not in sources: raise ValueError(f"Não é possível {action} uma viagem {before['status']}")
         now=_now(); columns=["status=?","updated_at=?","version=version+1"]; values=[target,now]
@@ -706,15 +726,17 @@ def transition_journey(database_path: Path, journey_id: int, **kwargs: Any) -> d
 def advance_journey(database_path: Path, journey_id: int, *, request_id: str, actor_id: str, expected_version: int, amount: float) -> dict[str, Any]:
     request_id=_request_id(request_id); amount=_number(amount,"avanço",minimum=0.0001) or 0
     with closing(_connect(database_path)) as connection,connection:
+        connection.execute('BEGIN IMMEDIATE')
         before=_fetch(connection,"journeys",journey_id)
         if not before: raise ValueError("Viagem inexistente")
-        if connection.execute("SELECT 1 FROM journey_events WHERE event_key=?",(f"journey:advance:{request_id}",)).fetchone(): return _journey_detail(connection,journey_id)
+        existing=_journey_replay(connection,f'journey:advance:{request_id}',journey_id,actor_id,amount=amount)
+        if existing:return existing
         if int(before["version"])!=expected_version: raise RuntimeError("Versão desatualizada")
         if before["status"]!="active": raise ValueError("Somente viagem ativa pode avançar")
         current=float(before["progress_current"]); target=float(before["progress_target"]); after_value=current+amount
         if after_value>target: raise ValueError("Progresso ultrapassa o alvo; conclua a viagem")
         connection.execute("UPDATE journeys SET progress_current=?,updated_at=?,version=version+1 WHERE id=? AND version=?",(after_value,_now(),journey_id,expected_version))
-        after=_fetch(connection,"journeys",journey_id) or {}; _event(connection,event_key=f"journey:advance:{request_id}",journey_id=journey_id,actor_id=actor_id,event_type="advanced",title="Viagem avançou",before={"progress":current},after={"progress":after_value})
+        after=_fetch(connection,"journeys",journey_id) or {}; _event(connection,event_key=f"journey:advance:{request_id}",journey_id=journey_id,actor_id=actor_id,event_type="advanced",title="Viagem avançou",before={"progress":current},after={"progress":after_value,"amount":amount})
         return _journey_detail(connection,journey_id)
 
 
@@ -737,9 +759,11 @@ def _move_npc(connection: sqlite3.Connection, npc_id: int, location_id: int, loc
 def complete_journey(database_path: Path, journey_id: int, *, request_id: str, actor_id: str, expected_version: int) -> dict[str, Any]:
     request_id=_request_id(request_id)
     with closing(_connect(database_path)) as connection,connection:
+        connection.execute('BEGIN IMMEDIATE')
         before=_fetch(connection,"journeys",journey_id)
         if not before: raise ValueError("Viagem inexistente")
-        if connection.execute("SELECT 1 FROM journey_events WHERE event_key=?",(f"journey:complete:{request_id}",)).fetchone(): return _journey_detail(connection,journey_id)
+        existing=_journey_replay(connection,f'journey:complete:{request_id}',journey_id,actor_id)
+        if existing:return existing
         if int(before["version"])!=expected_version: raise RuntimeError("Versão desatualizada")
         if before["status"] not in {"active","paused"}: raise ValueError("Viagem não pode ser concluída")
         destination=_fetch(connection,"world_locations",int(before["destination_location_id"])) or {}; name=str(destination.get("name") or "Destino")
@@ -769,10 +793,12 @@ def list_journey_events(database_path: Path, journey_id: int, *, access_mode: st
     init_world_travel(database_path)
     with closing(_connect(database_path)) as connection:
         rows=connection.execute("SELECT * FROM journey_events WHERE journey_id=? ORDER BY id DESC",(journey_id,)).fetchall()
+        visible_scene_ids=_public_scene_ids(connection) if access_mode!='gm' else set()
     result=[]
     for row in rows:
         item=_record(row) or {}
         if access_mode!="gm" and item.get("visibility") not in {"public","table"}: continue
+        if access_mode!='gm' and item.get('scene_id') and int(item['scene_id']) not in visible_scene_ids: continue
         if access_mode!="gm":
             item.pop("private_text",None)
             item.pop("before_json",None)

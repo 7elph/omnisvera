@@ -1,0 +1,16 @@
+[Unit]
+Description=Omnisvera Companion
+After=network.target
+
+[Service]
+Type=simple
+User=companion
+WorkingDirectory=/srv/omnisvera/omnisvera-agent
+ExecStart=/srv/omnisvera/omnisvera-agent/backend/.venv/bin/python /srv/omnisvera/omnisvera-agent/serve_companion.py --host 127.0.0.1 --port 8787
+Restart=on-failure
+RestartSec=5
+UMask=0077
+NoNewPrivileges=true
+
+[Install]
+WantedBy=multi-user.target

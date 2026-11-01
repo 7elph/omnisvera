@@ -73,7 +73,7 @@ class MarketFollowupTests(unittest.TestCase):
         path,_=self.used_item();shop.appraise_item(self.db,self.mid,self.gm,character_id='vezemir',item_path=path,unit_copper=100,request_id='legacy-appraisal-01')
         q=self.quote(key='legacy-used-sale',kind='sell',target_id=path);r=shop.confirm(self.db,q['id'],self.owner,request_id='legacy-used-confirm')
         from app.merchant import buy
-        with self.assertRaises(ValueError):buy(self.db,merchant_id=self.mid,stock_id=r['stock_id'],character_id='vezemir',quantity=1,final_price_po=1)
+        with self.assertRaises(ValueError):buy(self.db,request_id='used-buy-test-001',merchant_id=self.mid,stock_id=r['stock_id'],character_id='vezemir',quantity=1,final_price_po=1)
 
     def test_service_defaults_repeat_without_duplicates_and_keep_owner_money(self):
         from app.merchant_magic import configure_defaults

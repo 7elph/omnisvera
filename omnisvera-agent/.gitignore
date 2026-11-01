@@ -2,3 +2,6 @@
 .observer-runtime/
 .autonomy/runtime/
 .autonomy/history/*.json
+host-data/
+.env.host
+*.private.zip

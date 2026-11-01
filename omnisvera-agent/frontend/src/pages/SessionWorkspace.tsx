@@ -1,4 +1,6 @@
 import SpriteStudio from '../components/SpriteStudio';
+import MapLootChest from '../components/MapLootChest';
+import {collectWorkspaceLoot} from '../api';
 import {showMerchantMapToken} from '../commercePresentation';
 import AnimatedSprite from '../components/AnimatedSprite';
 import DispelEffectOptions from '../components/DispelEffectOptions';
@@ -850,6 +852,7 @@ setTargeting({ actionRef, actionLabel, attackerTokenId, mapId, ring: { gridded: 
   const [loadingTokenDetail, setLoadingTokenDetail] = useState(false);
   const [busy, setBusy] = useState("");
   const [error, setError] = useState("");
+  const [lootNotice,setLootNotice]=useState('');
   const [syncError, setSyncError] = useState("");
   const timelineRef = useRef<HTMLDivElement>(null);
   const selectedIdRef = useRef(selectedId);
@@ -1874,6 +1877,20 @@ setTargeting({ actionRef, actionLabel, attackerTokenId, mapId, ring: { gridded: 
     const resolutions = await listWorkspaceLoot();
     setLootResolutions(resolutions);
     return resolutions;
+  }
+
+  async function collectMapLoot(token:WorkspaceToken) {
+    if(busy)return;
+    setBusy('collect:'+token.id);setError('');
+    try {
+      const receipt=await collectWorkspaceLoot(token.id);
+      const shares=mode==='player'?receipt.shares.filter(s=>s.character_id===selectedIdRef.current):receipt.shares;
+      const text=shares.map(s=>`${s.name}: ${s.rewards.map(r=>`${r.quantity}× ${r.name}`).join(', ')||'sem itens nesta divisão'}`).join('; ');
+      setLootNotice(`Espólio de ${receipt.source_name} repartido. ${text}`);
+      setWorkspace(current=>({...current,tokens:current.tokens.map(t=>t.id===token.id?{...t,sheet:{...t.sheet,loot_collected:true}}:t)}));
+      void loadOverview().catch(()=>{});
+    } catch(cause) {setError(cause instanceof Error?cause.message:'Falha ao recolher espólio');}
+    finally {setBusy('');}
   }
 
   async function generateTokenLoot(token: WorkspaceToken, scope: "carried" | "lair", rollMode: "digital" | "quick" | "requested" = "digital") {
@@ -2911,6 +2928,7 @@ className={ability.id === 'forma-da-noite' ? 'workspace-night-form-card' : undef
       </aside>}
 
       {view !== "sheet" && <main className="workspace-map-panel">
+        {lootNotice && <div className="workspace-map-loot-receipt" role="status"><span>{lootNotice}</span><button type="button" aria-label="Fechar resultado do espólio" onClick={()=>setLootNotice('')}>×</button></div>}
         {battleActive && <div className="workspace-battle-banner" role="status" aria-live="polite"><strong>COMBATE · Rodada {battleState.round}</strong><span>{battleCurrent?.target_id === selectedId && mode === 'player' ? 'É o seu turno' : `${mode === 'gm' && battleCurrent?.target_type === 'token' ? 'Mestre, sua vez' : 'Turno'}: ${battleCurrent?.name || 'participante oculto'}`}</span>{battleState.encounter?.action_committed && <small>Ação confirmada · conclua e passe o turno</small>}</div>}
         <header>
           <div>
@@ -2995,6 +3013,7 @@ return <button type="button" key={token.id} data-grid-token={token.id} data-grid
               <ActiveEffectIcons state={battleState} targetId={token.character_id || token.id} targetType={token.character_id ? 'character' : 'token'} interactive={false} />
               {token.sheet?.corpse && <small className="workspace-pin-corpse-label">Cadáver</small>}
             </button>; })}
+            {renderedMapTokens.map(token=>{const point=tokenProjection(workspace.map?.grid,token.grid_position,token);return <MapLootChest key={'loot:'+token.id} token={token} left={point.longitude} top={point.latitude} disabled={Boolean(busy||targeting||(mode==='gm'&&view==='maps'&&fogEditing))} onCollect={()=>void collectMapLoot(token)}/>;})}
           </div>
         </div>
         <footer><span><i className="online" /> Mesa sincronizada</span><span>{workspace.presence.filter((item) => item.online && item.actor_role === "player").length} jogadores online</span><span>{visibleTimeline.length} eventos exibidos · {ledger.length} carregados</span>{mode === 'gm' && <button onClick={() => setIncludeStateRecords(value => !value)} aria-pressed={includeStateRecords}>{includeStateRecords ? 'Ocultar estados' : 'Incluir estados'}</button>}</footer>

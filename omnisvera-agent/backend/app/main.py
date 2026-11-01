@@ -412,6 +412,7 @@ from .schemas import (
     SessionItemWrite,
     SessionItemGrant,
     LootResolveCreate,
+    LootCollectCreate,
     LootRewardsUpdate,
     LootDistributionCreate,
     WorkspaceInventoryRemove,
@@ -1698,7 +1699,7 @@ def gm_merchant_buy(merchant_id: str, request: MerchantBuyRequest, _: AccessCont
     try:
         return buy(settings.database_path, merchant_id=merchant_id, stock_id=request.stock_id,
                    character_id=request.character_id, quantity=request.quantity,
-                   final_price_po=request.final_price_po, expected_purse=request.expected_purse)
+                   final_price_po=request.final_price_po, expected_purse=request.expected_purse, request_id=request.request_id)
     except (ValueError, PermissionError) as error:
         raise HTTPException(status_code=400, detail=str(error)) from error
 
@@ -1708,7 +1709,7 @@ def gm_merchant_sell(merchant_id: str, request: MerchantSellRequest, _: AccessCo
     try:
         return sell(settings.database_path, merchant_id=merchant_id, character_id=request.character_id,
                     item_path=request.item_path, quantity=request.quantity,
-                    unit_price_po=request.unit_price_po, expected_purse=request.expected_purse)
+                    unit_price_po=request.unit_price_po, expected_purse=request.expected_purse, request_id=request.request_id)
     except (ValueError, PermissionError) as error:
         raise HTTPException(status_code=400, detail=str(error)) from error
 
@@ -1765,6 +1766,21 @@ def gm_execute_action(request: ActionExecuteRequest, _: AccessContext = Depends(
 @app.get("/workspace/loot")
 def workspace_loot(access: AccessContext = Depends(require_any)) -> list[dict]:
     return list_loot(settings.database_path, access)
+
+
+@app.post('/workspace/loot/collect')
+def workspace_collect_loot(request:LootCollectCreate,access:AccessContext=Depends(require_any))->dict:
+    from .loot_collection import collect_group_loot
+    try:
+        return collect_group_loot(settings.database_path,access,**request.model_dump())
+    except PermissionError as error:
+        raise HTTPException(status_code=403,detail=str(error)) from error
+    except LootNotFoundError as error:
+        raise HTTPException(status_code=404,detail=str(error)) from error
+    except LootConflictError as error:
+        raise HTTPException(status_code=409,detail=str(error)) from error
+    except ValueError as error:
+        raise HTTPException(status_code=400,detail=str(error)) from error
 
 
 @app.post("/gm/workspace/loot/resolve")
@@ -4262,6 +4278,15 @@ def _guard_attack_target(request: AttackResolutionCreate, access: AccessContext)
     if target['type'] != 'character' or target['id'] != ally_id:
         raise ValueError('Este ataque não tem como alvo o aliado protegido')
     return {**_combat_target('character', 'dorn7'),'guard_ally_id':ally_id}
+
+
+@app.get('/gm/combat/tokens/{token_id}/action-proposals')
+def gm_monster_action_proposals(token_id:str,target_token_ids:list[str]=Query(),access:AccessContext=Depends(require_master))->dict:
+    from .monster_proposals import propose_actions
+    try:
+        return propose_actions(settings.database_path,access,token_id=token_id,target_token_ids=target_token_ids)
+    except ValueError as error:
+        raise HTTPException(status_code=400,detail=str(error)) from error
 
 
 @app.post("/gm/combat/tokens/{token_id}/attacks/resolve")

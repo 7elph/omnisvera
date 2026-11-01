@@ -257,7 +257,13 @@ def list_workspace_tokens(database_path: Path, map_id: str | None = None) -> lis
     with closing(_connect(database_path)) as connection:
         rows = connection.execute("SELECT * FROM session_workspace_tokens WHERE map_id=? ORDER BY created_at,id", (map_id,)).fetchall() if map_id else connection.execute("SELECT * FROM session_workspace_tokens ORDER BY created_at,id").fetchall()
         from .night_form import apply_pin_visuals
-        return apply_pin_visuals(connection, [_token_record(row) for row in rows])
+        tokens=apply_pin_visuals(connection, [_token_record(row) for row in rows])
+        keys=['carried:'+t['id'] for t in tokens if t.get('sheet',{}).get('corpse') and not t.get('sheet',{}).get('loot_collected')]
+        if keys and table_exists(connection,'loot_resolutions'):
+            collected={r[0] for r in connection.execute("SELECT source_id FROM loot_resolutions WHERE status='distributed' AND source_key IN ("+','.join('?' for _ in keys)+')',keys)}
+            for token in tokens:
+                if token['id'] in collected:token['sheet']['loot_collected']=True
+        return tokens
 
 
 def save_workspace_token(

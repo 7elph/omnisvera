@@ -469,6 +469,7 @@ def create_roll_request(
     target_hidden: bool = False,
     reason: str | None = None,
     expires_in_hours: int = 24,
+    _connection: sqlite3.Connection | None = None,
 ) -> tuple[dict[str, Any], bool]:
     request_id = str(request_id or "").strip()
     if not 8 <= len(request_id) <= 120 or not re.fullmatch(r"[A-Za-z0-9._:-]+", request_id):
@@ -477,8 +478,11 @@ def create_roll_request(
     target = validate_target(target_value if target_value is not None else spec.target_value)
     now = datetime.now(timezone.utc)
     expires = now + timedelta(hours=max(1, min(expires_in_hours, 168)))
-    init_dice_rolls(database_path)
-    with closing(_connect(database_path)) as connection, connection:
+    from contextlib import nullcontext
+    owns_transaction = _connection is None
+    if owns_transaction: init_dice_rolls(database_path)
+    elif not _connection.in_transaction: raise ValueError('A composição exige uma transação ativa')
+    with (closing(_connect(database_path)) if owns_transaction else nullcontext(_connection)) as connection, (connection if owns_transaction else nullcontext()):
         existing = connection.execute("SELECT * FROM dice_roll_requests WHERE request_id=?", (request_id,)).fetchone()
         if existing:
             return _request_record(existing), False

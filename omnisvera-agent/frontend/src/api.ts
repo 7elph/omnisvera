@@ -2,6 +2,7 @@ import { readJson, HttpError } from "./readJson";
 import { writeJson } from './writeJson';
 import type { MapGrid, GridPosition } from './spatialGrid';
 import type { CommandRecoveryOptions } from './commandRetry';
+import { createCommandRetry } from './commandRetry';
 export { HttpError } from "./readJson";
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL || "";
@@ -657,6 +658,7 @@ export type WorkspaceTokenSheet = {
   monster_runtime?:{usage?:Record<string,unknown>};
   statless?: boolean; disintegrated?:boolean;
   corpse?: boolean;
+  loot_collected?: boolean;
   summon?: { caster: string; technique: string; duration?: string; corpse_id?: string | null };
   reward_items?: Array<{ name: string; description?: string; image_path?: string; equipped?: boolean }>;
   reanimation_allowed?: boolean;
@@ -1812,19 +1814,22 @@ export async function haggleMerchant(merchantId: string, payload: { character_id
 }
 
 export async function buyFromMerchant(merchantId: string, payload: { character_id: string; stock_id: string; quantity?: number; final_price_po: number; expected_purse?: Record<string, number> | null }): Promise<{ item: string; quantity: number; paid_po: number; purse_after: Record<string, number> }> {
-  const response = await fetch(`${API_BASE}/gm/merchants/${encodeURIComponent(merchantId)}/buy`, {
-    method: "POST", headers: authHeaders({ "Content-Type": "application/json" }), body: JSON.stringify(payload),
-  });
-  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha na compra");
-  return response.json();
+  return legacyTrade(`${API_BASE}/gm/merchants/${encodeURIComponent(merchantId)}/buy`,payload,'Falha na compra');
 }
 
 export async function sellToMerchant(merchantId: string, payload: { character_id: string; item_path: string; quantity?: number; unit_price_po: number; expected_purse?: Record<string, number> | null }): Promise<{ item: string; quantity: number; received_po: number; purse_after: Record<string, number> }> {
-  const response = await fetch(`${API_BASE}/gm/merchants/${encodeURIComponent(merchantId)}/sell`, {
-    method: "POST", headers: authHeaders({ "Content-Type": "application/json" }), body: JSON.stringify(payload),
-  });
-  if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail || "Falha na venda");
-  return response.json();
+  return legacyTrade(`${API_BASE}/gm/merchants/${encodeURIComponent(merchantId)}/sell`,payload,'Falha na venda');
+}
+
+let legacyTradeRetry: ReturnType<typeof createCommandRetry> | undefined;
+async function legacyTrade<T>(url:string,payload:object,message:string):Promise<T> {
+  legacyTradeRetry ??= createCommandRetry(()=>crypto.randomUUID(),commandRecoveryOptions('legacy-commerce'));
+  const intent={...payload} as Record<string,unknown>;
+  delete intent.expected_purse; // A refreshed precondition does not create a new economic intent.
+  const result=await legacyTradeRetry.run([url,intent],request_id=>
+    writeJson<T>(url,authHeaders({'Content-Type':'application/json'}),'POST',{...payload,request_id},message));
+  if(result===undefined) throw new Error('Uma negociação ainda está sendo confirmada.');
+  return result;
 }
 
 export type SpellCastTarget = { type: "character" | "token"; id: string };
@@ -1914,6 +1919,20 @@ export async function executeActionRef(ref: string, payload: { request_id?: stri
 
 export async function listWorkspaceLoot(): Promise<LootResolution[]> {
   return readJson(`${API_BASE}/workspace/loot`, authHeaders(), "Falha ao carregar espólios");
+}
+
+export type LootCollectionReceipt = {
+  resolution_id:string;source_name:string;policy:string;
+  shares:Array<{character_id:string;name:string;rewards:Array<{name:string;kind:string;quantity:number}>}>;
+};
+let groupLootRetry:ReturnType<typeof createCommandRetry>|undefined;
+export async function collectWorkspaceLoot(tokenId:string):Promise<LootCollectionReceipt> {
+  groupLootRetry??=createCommandRetry(()=>crypto.randomUUID(),commandRecoveryOptions('group-loot'));
+  const receipt=await groupLootRetry.run([tokenId],request_id=>writeJson<LootCollectionReceipt>(
+    `${API_BASE}/workspace/loot/collect`,authHeaders({'Content-Type':'application/json'}),'POST',
+    {token_id:tokenId,request_id},'Falha ao recolher espólio'));
+  if(!receipt)throw new Error('Um saque ainda está sendo confirmado.');
+  return receipt;
 }
 
 export async function resolveWorkspaceLoot(payload: {
