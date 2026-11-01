@@ -49,10 +49,12 @@ integridade/hashes/caminhos e nunca sobrescreve uma instalação operacional.
 Para iniciar em segundo plano a cada login desse usuário, após a instalação:
 
 ```powershell
-./install_host_task.ps1
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File ./install_host_task.ps1
 ```
 
 A tarefa roda sem elevação, com janela oculta e log em `host-data/logs/server.log`.
+O parâmetro de execução vale somente para esse processo, sem alterar a política
+global do Windows; evita o bloqueio de scripts em uma instalação nova.
 Inicia no próximo login; não fecha servidores existentes. Para operar sem login,
 configure uma conta de serviço no host ou use o serviço Linux abaixo. A tarefa
 não é instalada no notebook de origem durante a preparação desta entrega.

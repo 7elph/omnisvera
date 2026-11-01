@@ -5,7 +5,7 @@ $HostPython=Join-Path $PSScriptRoot 'backend/.venv/Scripts/python.exe'
 if ($LASTEXITCODE -ne 0) { throw 'A instalação precisa passar no --check antes do agendamento.' }
 $HostUser=[System.Security.Principal.WindowsIdentity]::GetCurrent().Name
 $HostRunner=Join-Path $PSScriptRoot 'host_run.ps1'
-$HostAction=New-ScheduledTaskAction -Execute 'powershell.exe' -Argument ('-NoProfile -WindowStyle Hidden -File "{0}" -Port {1}' -f $HostRunner,$Port) -WorkingDirectory $PSScriptRoot
+$HostAction=New-ScheduledTaskAction -Execute 'powershell.exe' -Argument ('-NoProfile -WindowStyle Hidden -ExecutionPolicy Bypass -File "{0}" -Port {1}' -f $HostRunner,$Port) -WorkingDirectory $PSScriptRoot
 $HostTrigger=New-ScheduledTaskTrigger -AtLogOn -User $HostUser
 $HostPrincipal=New-ScheduledTaskPrincipal -UserId $HostUser -LogonType Interactive -RunLevel Limited
 $HostSettings=New-ScheduledTaskSettingsSet -MultipleInstances IgnoreNew -RestartCount 3 -RestartInterval (New-TimeSpan -Minutes 1) -ExecutionTimeLimit ([TimeSpan]::Zero) -StartWhenAvailable -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries
