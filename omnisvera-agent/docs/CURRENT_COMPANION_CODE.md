@@ -15,7 +15,12 @@ Hospedagem e transferência: `HOSTING.md`, `serve_companion.py` e
 `backend/scripts/transfer_bundle.py`. O código público e o pacote privado de
 campanha são entregas separadas; não exportar credenciais para o Git.
 
-Fundação operacional em trabalho local: `OPERATIONAL_FOUNDATION_P0_2026-10-31.md`
+Publicação para hospedagem Windows em 31/10/2026: código e instaladores foram
+publicados nesta branch. Os relatórios abaixo descrevem checkpoints anteriores
+à publicação; suas notas de “sem commit/push” são históricas. O runtime do
+notebook original não foi reiniciado durante esta entrega.
+
+Fundação operacional validada: `OPERATIONAL_FOUNDATION_P0_2026-10-31.md`
 registra identidade de loot, moeda e contratos de retry; a continuação
 `OPERATIONAL_FOUNDATION_P1_2026-10-31.md` registra reposição de munição,
 composição de viagens/combate/mercado e propostas GM de ataques em

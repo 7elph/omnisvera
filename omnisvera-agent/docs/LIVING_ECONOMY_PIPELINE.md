@@ -133,4 +133,6 @@ posterior confirmou os PIDs próprios 7404/14796 ausentes e nenhuma escuta em
 Ensaios somente em
 SQLite e credenciais sintéticos;
 nenhuma ficha, moeda, estoque real, token, Vault ou serviço operacional alterado.
-Sem staging, commit, push ou ativação.
+Ao concluir esse checkpoint de validação, ainda não havia staging, commit, push
+ou ativação. Depois, o código foi publicado para hospedagem Windows conforme
+`HOSTING.md`, sem reiniciar o runtime de origem nem ativar a economia diária dos NPCs.
