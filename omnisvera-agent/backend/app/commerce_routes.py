@@ -15,6 +15,7 @@ class QuoteRequest(Command):
     target_id: str = Field(min_length=1,max_length=300)
     quantity: StrictInt = Field(default=1,ge=1,le=999)
     negotiate: bool = False
+    inventory_id: StrictInt | None = Field(default=None,gt=0)
 
 
 class MerchantBinding(BaseModel):
@@ -30,7 +31,7 @@ class MerchantBinding(BaseModel):
 class ServiceCreate(BaseModel):
     model_config=ConfigDict(extra='forbid')
     name: str = Field(min_length=1,max_length=120)
-    kind: Literal['delivery','lodging','appraisal','spell']
+    kind: Literal['delivery','lodging','appraisal','spell','repair']
     price_copper: StrictInt = Field(ge=0,le=100000000)
     compendium_item_id: str | None = None
     amount: StrictInt = Field(default=1,ge=1,le=999)

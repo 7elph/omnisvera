@@ -1,9 +1,8 @@
 """Alcance tático das ações: anel no grid, validação no anel e aproximação.
 
- O anel abre com alcance declarado (magia: alcance da ficha; usável:
- range_m do mapa; ataque corpo a corpo: 1 célula). Desconhecido (arcos de
- monstros sem alcance no livro, magias sem alcance parseável) não inventa:
- o Mestre declara os metros uma vez (range_override_m) e o pipeline segue.
+ O anel usa a fórmula literal da magia com o nível persistido do conjurador,
+ o máximo da arma no catálogo ou a regra específica da habilidade. Alcances
+ realmente ausentes continuam identificados; overrides não ampliam máximos.
 """
 from __future__ import annotations
 
@@ -27,7 +26,7 @@ def _ranged_name_re():
     return _RANGED_NAME_RE
 
 
-def declared_range(database_path: Path, ref: str) -> dict[str, Any]:
+def declared_range(database_path: Path, ref: str, *, caster_level=None) -> dict[str, Any]:
     """Alcance declarado da ação, sem inventar: {mode, range_m?, range_cells?, unknown}."""
     from .action_library import describe_action,parse_action_ref
     library,head,section,key=parse_action_ref(ref)
@@ -60,10 +59,10 @@ def declared_range(database_path: Path, ref: str) -> dict[str, Any]:
         return {'mode':resolved['mode'], 'range_m':resolved['meters'], 'label':f"{resolved['meters']} m (regra aprovada)"}
     if described["kind"] == "spell":
         from .spell_catalog import get_catalog_spell
-        from .spell_engine import derive_spell_mechanic
+        from .spell_engine import scaled_spell_mechanic
         spell_id = ref.split(":", 1)[1]
         spell = get_catalog_spell(spell_id)
-        mechanic = derive_spell_mechanic(spell or {})
+        mechanic = scaled_spell_mechanic(spell or {},caster_level)
         alcance = (mechanic.get("range_text") or "")
         if alcance.strip().lower().startswith("toque"):
             return {"mode": "touch", "range_cells": 1, "label": alcance}
@@ -78,6 +77,13 @@ def declared_range(database_path: Path, ref: str) -> dict[str, Any]:
             return {"mode": "passive", "label": "sempre ligada"}
         return {"mode": "unknown", "label": "alcance a confirmar com o Mestre"}
     if described["kind"] == "attack":
+        from .action_distances import weapon_range
+        if library in {'monster','token'}:
+            from .action_library import _monster_source, _token_source, _find_in_map
+            source=_monster_source(head) if library=='monster' else _token_source(database_path,head)
+            entry=_find_in_map(source['map'],'attack',key)
+            resolved=weapon_range(entry)
+            if resolved:return {**resolved,'label':f"{resolved['range_m']:g} m · alcance máximo da arma"}
         name = described["name"]
         if _ranged_name_re().search(name or ""):
             return {"mode": "unknown", "label": "arma de distância sem alcance no livro — Mestre declara"}
@@ -157,10 +163,23 @@ def ring_for_action(database_path: Path, *, ref: str = "", attacker_token_id: st
     max_m = max_override
     declared: dict[str, Any] = {"mode": "unknown", "label": "alcance a confirmar com o Mestre"}
     if ref and not (slot and max_m is not None):
-        declared = declared_range(database_path, ref)
+        level=None
+        if ref.startswith('spell:'):
+            from .spell_catalog import get_catalog_spell
+            from .spell_engine import _caster_level
+            spell=get_catalog_spell(ref[6:]) or {}
+            with closing(sqlite3.connect(str(database_path))) as db:
+                if attacker_character_id:
+                    level=_caster_level(db,'character',attacker_character_id,spell.get('tradition'))
+                else:
+                    owner=db.execute('SELECT character_id FROM session_workspace_tokens WHERE id=?',(attacker_token_id,)).fetchone()
+                    level=_caster_level(db,'character' if owner and owner[0] else 'token',owner[0] if owner and owner[0] else attacker_token_id,spell.get('tradition'))
+        declared = declared_range(database_path, ref, caster_level=level)
     mode = declared.get("mode", "unknown")
     range_m = range_override_m if range_override_m is not None else declared.get("range_m")
     if range_override_m is not None:
+        if declared.get('range_m') is not None and range_override_m>declared['range_m']:
+            raise ValueError('O alcance não pode exceder o máximo calculado da ação')
         mode = "ranged"
     if slot in ("melee", "touch"):
         mode = slot
@@ -189,7 +208,7 @@ def ring_for_action(database_path: Path, *, ref: str = "", attacker_token_id: st
             range_cells = 0
     listed = targets_in_range(database_path, actor_character_id=attacker_character_id,
                               attacker_token_id=attacker_token_id or None,
-                              map_id=map_id, slot=slot, max_range_m=max_m, role=role)
+                              map_id=map_id, slot=slot, max_range_m=max_m, role=role, include_doors=target_kind=='creature_or_door')
     if not listed.get("gridded"):
         return {"gridded": False, "declared": declared, "reason": "atacante sem posição"}
     if mode == 'self':
@@ -201,15 +220,26 @@ def ring_for_action(database_path: Path, *, ref: str = "", attacker_token_id: st
             'cells':0,'meters':0,'valid':True,'reason':''})
     by_id={t['id']:t for t in visible.get('tokens',[])}
     # Character HP belongs to the sheet; legacy pins can retain an old HP copy.
-    character_hp={}
+    character_hp={};death_dice={}
     with closing(sqlite3.connect(database_path)) as db:
         if db.execute("SELECT 1 FROM sqlite_master WHERE name='character_states'").fetchone():
             character_hp={identity:json.loads(raw or '{}').get('current_hp')
                           for identity,raw in db.execute('SELECT profile_id,state_json FROM character_states')}
+        if ref=='technique:morthak:magia-da-morte':
+            from .necromancer_spells import victim_hit_dice
+            for token in by_id.values():
+                death_dice[token['id']]=victim_hit_dice(db,{'type':'character' if token.get('character_id') else 'token',
+                    'id':token.get('character_id') or token['id']})
     for candidate in listed.get('targets',[]):
         token=by_id[candidate['id']];sheet=token.get('sheet') or {}
         hp=character_hp.get(token.get('character_id'),token.get('current_hp'))
         candidate['current_hp']=hp
+        if ref=='technique:morthak:magia-da-morte':
+            dv=death_dice.get(token['id'])
+            if token.get('character_id')=='morthak' or sheet.get('statless') or sheet.get('combat_retired'):
+                candidate.update(valid=False,reason='Não é alvo desta magia')
+            elif dv is None:candidate.update(valid=False,reason='DV não cadastrado')
+            elif dv>4:candidate.update(valid=False,reason='Não afeta criaturas com mais de 4 DV')
         if declared.get('native_breath'):
             ap=attacker.get('grid_position') or {};bp=token.get('grid_position') or {}
             if ap and bp and range_m is not None:
@@ -235,7 +265,7 @@ def ring_for_action(database_path: Path, *, ref: str = "", attacker_token_id: st
                 if options:candidate['meters']=min(option['distance_m'] for option in options)
     return {"gridded": True, "declared": declared, **({"native_contact":declared["native_contact"]} if declared.get("native_contact") else {}), "mode": mode, "slot": slot,
             "native_breath":declared.get('native_breath') if role=='gm' else None,
-            "range_m": max_m, "range_cells": range_cells, "cell_size_m": cell_size,
+            "range_m": max_m, "range_cells": range_cells, "cell_size_m": cell_size,"grid_version":grid['version'],
             "rule": grid["distance_rule"], "cols": grid["cols"], "rows": grid["rows"],
             "origin": listed.get("origin"), "targets": listed.get("targets", [])}
 
@@ -245,6 +275,9 @@ def enforce_action_range(database_path: Path, *, attacker_token_id: str, target_
     """Garante o alvo dentro do anel. Sem grid/posições, não bloqueia (checked False)."""
     with closing(sqlite3.connect(str(database_path), timeout=30)) as connection:
         connection.row_factory = sqlite3.Row
+        from .portable_hole import assert_exterior
+        assert_exterior(connection,'token',attacker_token_id)
+        assert_exterior(connection,target_type,target_id)
         token = connection.execute("SELECT map_id FROM session_workspace_tokens WHERE id=?", (attacker_token_id,)).fetchone()
         if token is None:
             return {"checked": False}

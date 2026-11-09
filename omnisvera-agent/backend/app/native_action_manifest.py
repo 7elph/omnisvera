@@ -193,7 +193,8 @@ def sheet_action_manifest(character_id: str, definition: dict, state: dict, inve
         charges_max = _number(item.get('charges_max')) or 0
         uses_rules = any(rule.get('trigger') == 'on_use' for rule in item.get('effect_rules') or []
                          if isinstance(rule, dict))
-        if not (item.get('usable') or charges_max > 0 or uses_rules
+        if not (item.get('usable') or charges_max > 0 or uses_rules or (item.get('mechanics') or {}).get('magic_passive_schema')==1
+                or (item.get('mechanics') or {}).get('equipment_check_schema')==1
                 or (owner == 'vezemir' and item.get('item_title') == 'Pulseira de Vinhas')
                 or (owner == 'dorn7' and item.get('item_title') == 'Kit de Reparo')
                 or any(term in item_type for term in ('consum', 'poção', 'potion'))):
@@ -203,15 +204,41 @@ def sheet_action_manifest(character_id: str, definition: dict, state: dict, inve
         entry.update(description=sanitize_player_text(str(item.get('description') or '')),
                      image_path=item.get('image_path') or item.get('thumbnail') or item.get('cover'))
         rules = [rule for rule in item.get('effect_rules') or [] if isinstance(rule, dict) and rule.get('trigger') == 'on_use']
-        if owner == 'vezemir' and item.get('item_title') == 'Pulseira de Vinhas':
+        from .magic_item_uses import spec_for as magic_spec_for
+        from .magic_absorption import ID as BROOCH
+        from .magic_equipment import identity as magic_identity
+        is_brooch=magic_identity({'item_path':path})==BROOCH
+        from .magic_passives import SPECS as PASSIVES,COLLAR,BRACERS
+        passive_id=magic_identity({'item_path':path})
+        from .equipment_checks import SPECS as CHECKS
+        if passive_id in CHECKS:
+            _native(entry,'equipment_check',f'/characters/{path_owner}/rolls',payload={'roll_type':'skill','source_id':'equipment:'+path})
+            entry['limitations'].append('Verificação percentual; não cria altitude, queda ou percepção de NPCs não modeladas.')
+            if not item.get('equipped') or item.get('equipment_slot')!=CHECKS[passive_id]['slot']:
+                _unavailable(entry,'Equipe o item no encaixe indicado.')
+        elif passive_id in PASSIVES or passive_id==COLLAR or passive_id in {BRACERS+'-'+str(n) for n in range(1,5)}:
+            entry.update(kind='passive',binding='equipped_native_passive',automation_scope='passive',
+                availability={'state':'passive','reason':'Aplicação automática pelo contrato do equipamento; não emite comando.'})
+            entry['limitations'].append('O contrato cobre os componentes nativos identificados; não executa descrições livres.')
+            if not item.get('equipped') or (charges_max>0 and item.get('quantity')!=1):
+                _unavailable(entry,'Equipe uma cópia individual no encaixe do item.')
+        elif is_brooch:
+            entry.update(kind='passive',binding='equipped_magic_absorption',automation_scope='passive',
+                availability={'state':'passive','reason':'Absorção automática de Mísseis Mágicos enquanto equipado; não emite comando.'})
+            entry['limitations'].append('Capacidade vitalícia de 101; desintegra-se ao esgotar. Somente eventos nativos identificados de Mísseis Mágicos.')
+            if not item.get('equipped') or item.get('equipment_slot')!='Acessório' or item.get('quantity')!=1:
+                _unavailable(entry,'Equipe uma cópia individual do Broche-escudo em Acessório.')
+        elif owner == 'vezemir' and item.get('item_title') == 'Pulseira de Vinhas':
             _native(entry, 'vine_bracelet', '/characters/vezemir/vines')
             if not item.get('equipped'):
                 _unavailable(entry, 'Pulseira de Vinhas não equipada.')
         elif owner == 'dorn7' and item.get('item_title') == 'Kit de Reparo':
             _native(entry, 'character_technique', '/characters/dorn7/techniques/dorn-reparo')
             entry['limitations'].append('O kit é consumido pelo Reparo nativo; não é um segundo uso independente.')
-        elif item.get('usable') and rules and all(rule.get('kind') in {
-                'heal_hp', 'restore_resource', 'temporary_hp', 'add_condition'} for rule in rules):
+        elif item.get('usable') and rules and (all(rule.get('kind') in {
+                'heal_hp', 'restore_resource', 'temporary_hp', 'add_condition'} for rule in rules)
+                or (magic_spec_for(item) is not None
+                    and all(rule.get('kind')=='magic_activation' for rule in rules))):
             _native(entry, 'inventory_item', f'/characters/{path_owner}/actions',
                     action='use_item', payload={'item_path': path})
             entry['limitations'].append('O comando nativo revalida regras, cura, estoque e orçamento de consumíveis; não consome por consulta.')
@@ -223,6 +250,19 @@ def sheet_action_manifest(character_id: str, definition: dict, state: dict, inve
             _unavailable(entry, 'Item sem estoque no inventário efetivo.')
         elif charges_max > 0 and charges is not None and charges <= 0:
             _unavailable(entry, 'Item sem cargas disponíveis.')
+        if magic_spec_for(item):
+            from .magic_item_uses import SPECS as MAGIC_SPECS
+            spec=MAGIC_SPECS[magic_spec_for(item)]
+            if quantity is None or quantity!=1 and spec['consume_mode']!='quantity':_unavailable(entry,'Cópias com cargas precisam estar individualizadas.')
+            elif (item.get('mechanics') or {}).get('activation_requires_equipped') and not item.get('equipped'):
+                _unavailable(entry,'Equipe o item no encaixe indicado antes de ativar.')
+            elif (item.get('mechanics') or {}).get('charge_unit')=='fictional_seconds' and not item.get('equipped'):
+                _unavailable(entry,'Equipe as botas nos pés antes de ativar.')
+            selection=(item.get('mechanics') or {}).get('activation_target')
+            if selection in {'cell','creature'}:
+                entry['targeting']={'selection':selection,'preview_endpoint':'/gm/grid/range',
+                    'action_ref':f'technique:{owner}:magic-item:{magic_spec_for(item)}',
+                    'options':['map_id','target_cell','expected_grid_version'] if selection=='cell' else ['target_token_id']}
         if not state and entry['availability']['state'] == 'available':
             entry['availability'] = {'state': 'unknown', 'reason': 'Estado persistido ausente; não concede disponibilidade.'}
         result.append(entry)

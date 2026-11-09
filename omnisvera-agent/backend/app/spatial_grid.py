@@ -68,8 +68,10 @@ def has_schema(db):
 
 
 def grid_record(db, map_id):
-    row = db.execute('SELECT * FROM session_workspace_map_grids WHERE map_id=?', (map_id,)).fetchone() if has_schema(db) else None
-    return dict(row) if row else None
+    if not has_schema(db):return None
+    cursor = db.execute('SELECT * FROM session_workspace_map_grids WHERE map_id=?', (map_id,))
+    row = cursor.fetchone()
+    return dict(zip((c[0] for c in cursor.description),row)) if row else None
 
 
 def visual_position(grid, position):
@@ -115,8 +117,11 @@ def diagonal_bonus(db, actor_id, target_type=None, target_id=None, *, context=No
     characters={p['target_id'] for p in members if p['target_type']=='character'}
     rows=db.execute('SELECT t.*,p.cell_x,p.cell_y,p.footprint_w,p.footprint_h,p.version AS position_version FROM session_workspace_tokens t JOIN session_workspace_entity_positions p ON p.token_id=t.id AND p.map_id=t.map_id WHERE t.map_id=? AND t.visible_to_players=1',(map_id,)).fetchall()
     units=[]
+    from .portable_hole import occupants_by_identity
+    contained_units=occupants_by_identity(db)
     for raw in rows:
         unit=dict(raw);sheet=json.loads(unit['sheet_json'] or '{}')
+        if ('character' if unit.get('character_id') else 'token',unit.get('character_id') or unit['id']) in contained_units:continue
         if unit['id'] not in ids and unit.get('character_id') not in characters:continue
         hp=unit.get('current_hp')
         if unit.get('character_id'):
@@ -255,6 +260,18 @@ def turn_key(encounter, participant):
     return [encounter.get('started_at'), encounter.get('turn_sequence'), participant.get('target_type'),participant.get('target_id')]
 
 
+def spend_movement(encounter, participant, speed, cost, mode='walk'):
+    """One native budget for grid steps and approved movement interactions."""
+    key=turn_key(encounter,participant)
+    previous=encounter.get('movement') or {}
+    spent=previous.get('spent_m',0) if previous.get('turn_key')==key else 0
+    if spent and previous.get('mode','walk')!=mode:raise ValueError('Não é possível trocar o modo de movimento depois de se deslocar neste turno')
+    if speed is None or spent+cost>speed+1e-8:raise ValueError('Movimento acima do limite disponível neste turno')
+    budget=dict(turn_key=key,budget_m=speed,spent_m=round(spent+cost,6),mode=mode)
+    encounter['movement']=budget
+    return budget
+
+
 def current_participant(encounter):
     members = encounter.get('participants') or []
     return members[int(encounter.get('turn_index') or 0) % len(members)] if encounter.get('active') and members else None
@@ -277,8 +294,10 @@ def move_entity(path, *, actor_id, role, request_id, map_id, token_id, mode, cel
         cached = replay(db, request_id, fp)
         if cached is not None:
             return cached
-        if token and mode == 'COMBAT_MOVE':
+        if token and mode in {'COMBAT_MOVE', 'EXPLORATION_MOVE'}:
             sheet = json.loads(token['sheet_json'] or '{}')
+            from .summon_profiles import complete_sheet
+            sheet=complete_sheet(sheet)
             if role != 'gm' and token['character_id'] != actor_id and sheet.get('summon',{}).get('caster') != actor_id:
                 raise PermissionError('O jogador só move sua entidade ou invocação')
             from .monster_movement import selected_movement, movement_modes
@@ -318,6 +337,8 @@ def move_entity(path, *, actor_id, role, request_id, map_id, token_id, mode, cel
         if cells[0] != [pos['cell_x'],pos['cell_y']]:
             raise ValueError('O início do caminho não corresponde à posição atual')
         encounter, version = encounter_record(db)
+        from .portable_hole import assert_exterior
+        assert_exterior(db,'character' if token['character_id'] else 'token',token['character_id'] or token_id)
         if mode == 'GM_REPOSITION':
             if role != 'gm':
                 raise PermissionError('Somente o Mestre reposiciona fora do combate')
@@ -325,15 +346,23 @@ def move_entity(path, *, actor_id, role, request_id, map_id, token_id, mode, cel
                 raise ValueError('Reposicionamento administrativo somente fora do combate')
             cost = 0
             budget = None
-        elif mode == 'COMBAT_MOVE':
+        elif mode in {'COMBAT_MOVE', 'EXPLORATION_MOVE'}:
             from .monster_conditions import assert_can_act
-            assert_can_act(db,token['character_id'] or token_id)
+            assert_can_act(db,token['character_id'] or token_id,movement=True)
+            from .magic_item_drums import validate_path
+            validate_path(db,map_id,token_id,cells)
             current = current_participant(encounter)
             identity = ('character',token['character_id']) if token['character_id'] else ('token',token_id)
-            if not current or encounter.get('map_id') != map_id or identity != (current.get('target_type'),current.get('target_id')):
+            if mode == 'EXPLORATION_MOVE' and encounter.get('active'):
+                raise ValueError('Exploração indisponível durante o combate; use o movimento do turno')
+            if mode == 'EXPLORATION_MOVE' and (speed is None or speed <= 0):
+                raise ValueError('Entidade sem deslocamento disponível')
+            if mode == 'COMBAT_MOVE' and (not current or encounter.get('map_id') != map_id or identity != (current.get('target_type'),current.get('target_id'))):
                 raise ValueError('Aguarde o turno desta entidade no mapa de combate')
-            if version != expected_combat_version or version != before_version:
+            if mode == 'COMBAT_MOVE' and (version != expected_combat_version or version != before_version):
                 raise ValueError('O turno ou os efeitos mudaram; atualize antes de mover')
+            if mode == 'COMBAT_MOVE' and encounter.get('pending_attack'):
+                raise ValueError('Conclua o ataque pendente antes de mover')
             summon = json.loads(token['sheet_json'] or '{}').get('summon', {})
             if role != 'gm' and not (token['character_id'] == actor_id or summon.get('caster') == actor_id):
                 raise PermissionError('O jogador só move sua entidade ou invocação')
@@ -357,19 +386,13 @@ def move_entity(path, *, actor_id, role, request_id, map_id, token_id, mode, cel
                 from .dorn_spell_pack import web_step_multiplier
                 cost_cells += distance_cells(grid['distance_rule'],a,b)*web_step_multiplier(db,map_id,b)
             cost = cost_cells * grid['cell_size_m']
-            key = turn_key(encounter,current)
-            spent = (encounter.get('movement') or {}).get('spent_m',0) if (encounter.get('movement') or {}).get('turn_key') == key else 0
-            previous_mode=(encounter.get('movement') or {}).get('mode','walk')
-            if spent and previous_mode!=selected_mode:
-                raise ValueError('Não é possível trocar o modo de movimento depois de se deslocar neste turno')
-            if speed is None or spent + cost > speed + 1e-8:
-                raise ValueError('Movimento acima do limite disponível neste turno')
-            budget = dict(turn_key=key,budget_m=speed,spent_m=round(spent+cost,6),mode=selected_mode)
-            encounter['movement'] = budget
-            db.execute('UPDATE combat_effect_clock SET encounter_json=?,version=version+1 WHERE id=1', (json.dumps(encounter),))
-            version += 1
+            budget = None
+            if mode == 'COMBAT_MOVE':
+                budget = spend_movement(encounter,current,speed,cost,selected_mode)
+                db.execute('UPDATE combat_effect_clock SET encounter_json=?,version=version+1 WHERE id=1', (json.dumps(encounter),))
+                version += 1
         else:
-            raise ValueError('Use COMBAT_MOVE ou GM_REPOSITION')
+            raise ValueError('Use COMBAT_MOVE, EXPLORATION_MOVE ou GM_REPOSITION')
         result_pos = {**dict(pos), 'cell_x':cells[-1][0], 'cell_y':cells[-1][1], 'version':pos['version']+1}
         db.execute('UPDATE session_workspace_entity_positions SET cell_x=?,cell_y=?,version=version+1 WHERE map_id=? AND token_id=?', (*cells[-1],map_id,token_id))
         projected = visual_position(grid,result_pos)
@@ -379,6 +402,8 @@ def move_entity(path, *, actor_id, role, request_id, map_id, token_id, mode, cel
         sync_bat_swarm(db, now)
         from .item_grapple import prune as prune_item_grapple
         prune_item_grapple(db,now,moving=(map_id,token_id,cells))
+        from .magic_item_drums import sync as sync_drums
+        sync_drums(db,now)
         # Conditional effects can advance the same authoritative clock.
         # Return that version, including in the cached idempotent receipt.
         _, version = encounter_record(db)
@@ -391,13 +416,16 @@ def move_entity(path, *, actor_id, role, request_id, map_id, token_id, mode, cel
             _token_is_visible({**dict(token), **visual_position(grid,{**dict(pos),'cell_x':c[0],'cell_y':c[1]})},fog) for c in cells)
         ledger_id = append_session_ledger_event(db, source_type='spatial_move', source_id=request_id,event_kind='action',actor_id=actor_id,
             actor_name='Mestre' if role=='gm' else actor_id,actor_role=role,character_id=token['character_id'],
-            title=f"{token['name']} {'se deslocou' if mode=='COMBAT_MOVE' else 'foi reposicionado'} · {cost:g} m",
+            title=f"{token['name']} {'foi reposicionado' if mode=='GM_REPOSITION' else 'se deslocou'} · {cost:g} m",
             detail=dict(mode=mode,map_id=map_id,token_id=token_id,path=cells,position=result_pos,cells=cost/grid['cell_size_m'],meters=cost,movement=budget),
             visibility='table' if public else 'gm',created_at=now)
+        if mode in {'COMBAT_MOVE','EXPLORATION_MOVE'} and selected_mode == 'walk' and cost > 0:
+            from .magic_field_items import record_tracks
+            record_tracks(db, token, map_id, cells, request_id, now)
         return finish_command(db, request_id,fp,dict(position=result_pos,movement=budget,combat_version=version,ledger_id=ledger_id,**projected))
 
 
-def check_attack_range(path, *, actor_character_id, target_type, target_id, slot, max_range_m=None, connection=None):
+def check_attack_range(path, *, actor_character_id, target_type, target_id, slot, max_range_m=None, connection=None, include_context=False):
     """Grid-aware range gate for attacks and combat techniques.
 
     When attacker and target share a map with a logical grid and both have
@@ -406,8 +434,13 @@ def check_attack_range(path, *, actor_character_id, target_type, target_id, slot
     grid the Mestre adjudica (assisted), never invented.
     """
     with (nullcontext(connection) if connection is not None else closing(connect(path))) as db:
+        from .portable_hole import assert_exterior,assert_actor_exterior
+        assert_exterior(db,'token',target_id) if target_type=='token' else assert_exterior(db,'character',target_id)
+        assert_actor_exterior(db,actor_character_id)
         cursor = db.cursor()
         cursor.row_factory = sqlite3.Row
+        if cursor.execute("SELECT COUNT(*) FROM sqlite_master WHERE name IN ('session_workspace_tokens','session_workspace_map_grids','session_workspace_entity_positions')").fetchone()[0]!=3:
+            return {'checked':False}
         if target_type == "token":
             target = cursor.execute("SELECT * FROM session_workspace_tokens WHERE id=?", (target_id,)).fetchone()
         else:
@@ -417,13 +450,15 @@ def check_attack_range(path, *, actor_character_id, target_type, target_id, slot
             return {"checked": False}
         actors = cursor.execute("SELECT * FROM session_workspace_tokens WHERE character_id=?",
                             (actor_character_id,)).fetchall()
+        if not actors:
+            actors=cursor.execute('SELECT * FROM session_workspace_tokens WHERE id=?',(actor_character_id,)).fetchall()
         partner = next((a for a in actors if a["map_id"] == target["map_id"]), None)
         if partner is None:
             return {"checked": False}
         grid = grid_record(cursor, target["map_id"])
         if not grid:
             return {"checked": False}
-        pos = lambda token_id: cursor.execute("SELECT cell_x,cell_y FROM session_workspace_entity_positions"
+        pos = lambda token_id: cursor.execute("SELECT cell_x,cell_y,version FROM session_workspace_entity_positions"
                                           " WHERE map_id=? AND token_id=?",
                                           (target["map_id"], token_id)).fetchone()
         a, b = pos(partner["id"]), pos(target["id"])
@@ -435,11 +470,16 @@ def check_attack_range(path, *, actor_character_id, target_type, target_id, slot
             raise ValueError(f"Fora de alcance corpo a corpo ({cells} células)")
         if slot == "ranged" and max_range_m is not None and meters > max_range_m + 1e-8:
             raise ValueError(f"Fora de alcance ({meters:g} m, máximo {max_range_m:g} m)")
-        return {"checked": True, "cells": cells, "meters": meters}
+        result={"checked": True, "cells": cells, "meters": meters}
+        if include_context:
+            result['context']={'map_id':target['map_id'],'grid_version':grid['version'],
+                               'actor_token_id':partner['id'],'target_token_id':target['id'],
+                               'actor_position_version':a['version'],'target_position_version':b['version']}
+        return result
 
 
 def targets_in_range(path, *, actor_character_id, attacker_token_id=None, map_id=None,
-                      slot="melee", max_range_m=None, role="gm"):
+                      slot="melee", max_range_m=None, role="gm", include_doors=False):
     """List tokens on the same grid with distance and validity for an attack.
 
     Without a grid or positions, returns gridded False so the UI keeps the
@@ -460,7 +500,8 @@ def targets_in_range(path, *, actor_character_id, attacker_token_id=None, map_id
     origin = attacker["grid_position"]
     targets = []
     for token in snapshot.get("tokens", []):
-        if token["id"] == attacker["id"] or token.get("token_type") == "location":
+        door=(token.get('sheet') or {}).get('door')
+        if token["id"] == attacker["id"] or (token.get("token_type") == "location" and not (include_doors and door and not door.get('open'))):
             continue
         pos = token.get("grid_position")
         if not pos:
@@ -525,6 +566,29 @@ def seed_session7_grids(path):
             if encounter.get('active') and encounter.get('map_id') == item['id']:
                 continue  # Never recalibrate an active battle on application startup.
         configure_grid(path,actor_id='master',role='gm',request_id='grid-s7-'+item['id'],map_id=item['id'],
-            config=dict(cols=32,rows=24,cell_size_m=1.5),expected_version=0)
+            config=dict(cols=32,rows=24,cell_size_m=1),expected_version=0)
         results.append(item['id'])
     return results
+
+
+def set_campaign_cell_scale(path, *, actor_id, role, request_id):
+    """Explicit one-metre campaign maintenance; never invoked by reads/startup.
+
+    Change only scale/version, including active maps. No grid resizing, token
+    relocation, clock advance, HP change or reset/conversion of spent movement.
+    """
+    if role!='gm':raise PermissionError('Somente o Mestre altera a escala da campanha')
+    from .session_ledger import init_session_ledger
+    init_session_ledger(path)
+    init_spatial(path)
+    fp=json.dumps([actor_id,role,'campaign_cell_scale',1],sort_keys=True)
+    with closing(connect(path)) as db,db:
+        db.execute('BEGIN IMMEDIATE')
+        previous=replay(db,request_id,fp)
+        if previous is not None:return previous
+        changes=[dict(row) for row in db.execute('SELECT map_id,cell_size_m,version FROM session_workspace_map_grids WHERE cell_size_m!=1 ORDER BY map_id')]
+        db.execute('UPDATE session_workspace_map_grids SET cell_size_m=1,version=version+1 WHERE cell_size_m!=1')
+        ledger_id=append_session_ledger_event(db,source_type='spatial_grid',source_id=request_id,event_kind='state',
+            actor_id=actor_id,actor_name='Mestre',actor_role='gm',character_id=None,title='Escala da campanha ajustada · 1 m por célula',
+            detail={'maps':changes,'cell_size_m':1},visibility='gm',created_at=datetime.now(timezone.utc).isoformat())
+        return finish_command(db,request_id,fp,{'maps':changes,'cell_size_m':1,'ledger_id':ledger_id})

@@ -115,6 +115,11 @@ class MonsterExposureRuntimeTests(unittest.TestCase):
         from app.monster_runtime import token_monster,action_contracts
         monster=self.actor('golem-de-ferro')
         with closing(sqlite3.connect(self.db)) as db,db:
+            # Recarga testa golpes reais: alvo adjacente ao golem, não a antiga
+            # brecha que permitia ataques corpo a corpo a quatro células.
+            origin=db.execute("SELECT cell_x,cell_y FROM session_workspace_entity_positions WHERE token_id='gob1'").fetchone()
+            db.execute('UPDATE session_workspace_entity_positions SET cell_x=?,cell_y=?,version=version+1 WHERE token_id IN (SELECT id FROM session_workspace_tokens WHERE character_id=?)',
+                (origin[0]+1,origin[1],'vezemir'))
             state=json.loads(db.execute("SELECT state_json FROM character_states WHERE profile_id='vezemir'").fetchone()[0]);state.update(current_hp=1000,maximum_hp=1000)
             db.execute("UPDATE character_states SET state_json=? WHERE profile_id='vezemir'",(json.dumps(state),))
         for n in range(7):

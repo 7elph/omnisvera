@@ -1,0 +1,876 @@
+{
+  "schema_version": 2,
+  "sources": {
+    "dorn-motion.png": {
+      "original": "Imagem do ChatGPT 6 de nov. de 2026, 07_05_15.png",
+      "sha256": "203e2af70cdf964ff40e2a2cedf74599604e72e969e9b683a05553991d034a65"
+    },
+    "dorn-guard.png": {
+      "original": "Imagem do ChatGPT 6 de nov. de 2026, 07_04_55.png",
+      "sha256": "35e077ae7ae4e8ba3e957d953606d4a36fc5cca31bab0ca1c8a22e6577886a96"
+    },
+    "dorn-cast.png": {
+      "original": "Imagem do ChatGPT 6 de nov. de 2026, 07_05_03.png",
+      "sha256": "7d4cff598c0ee7e401cd03b85f6189527c78eb9691a9516e1c764997f32658b3"
+    }
+  },
+  "pivot": "bottom_center",
+  "direction_policy": "explicit_supplied_rows",
+  "animations": {
+    "idle": {
+      "sheet": "dorn-motion.png",
+      "fps": 5,
+      "loop": true,
+      "frames": [
+        [
+          19,
+          22,
+          136,
+          181
+        ],
+        [
+          180,
+          22,
+          137,
+          181
+        ],
+        [
+          339,
+          19,
+          136,
+          184
+        ],
+        [
+          501,
+          18,
+          135,
+          185
+        ],
+        [
+          663,
+          18,
+          135,
+          185
+        ],
+        [
+          823,
+          18,
+          134,
+          185
+        ],
+        [
+          985,
+          24,
+          135,
+          179
+        ],
+        [
+          1145,
+          22,
+          136,
+          181
+        ]
+      ],
+      "calibration": [
+        {
+          "pivot": [
+            67.5,
+            180
+          ],
+          "body_top": 1,
+          "body_height": 179
+        },
+        {
+          "pivot": [
+            66.0,
+            179
+          ],
+          "body_top": 1,
+          "body_height": 178
+        },
+        {
+          "pivot": [
+            67.5,
+            182
+          ],
+          "body_top": 1,
+          "body_height": 181
+        },
+        {
+          "pivot": [
+            67.0,
+            183
+          ],
+          "body_top": 1,
+          "body_height": 182
+        },
+        {
+          "pivot": [
+            66.5,
+            183
+          ],
+          "body_top": 1,
+          "body_height": 182
+        },
+        {
+          "pivot": [
+            67.5,
+            184
+          ],
+          "body_top": 2,
+          "body_height": 182
+        },
+        {
+          "pivot": [
+            66.5,
+            178
+          ],
+          "body_top": 1,
+          "body_height": 177
+        },
+        {
+          "pivot": [
+            68.0,
+            180
+          ],
+          "body_top": 1,
+          "body_height": 179
+        }
+      ],
+      "render_scale": 0.52
+    },
+    "walk_down": {
+      "sheet": "dorn-motion.png",
+      "fps": 8,
+      "loop": true,
+      "frames": [
+        [
+          17,
+          262,
+          134,
+          178
+        ],
+        [
+          180,
+          262,
+          130,
+          181
+        ],
+        [
+          341,
+          263,
+          129,
+          177
+        ],
+        [
+          502,
+          262,
+          130,
+          180
+        ],
+        [
+          664,
+          262,
+          131,
+          178
+        ],
+        [
+          827,
+          262,
+          128,
+          180
+        ],
+        [
+          988,
+          265,
+          131,
+          175
+        ],
+        [
+          1149,
+          265,
+          131,
+          177
+        ]
+      ],
+      "calibration": [
+        {
+          "pivot": [
+            66.5,
+            177
+          ],
+          "body_top": 1,
+          "body_height": 176
+        },
+        {
+          "pivot": [
+            67.5,
+            179
+          ],
+          "body_top": 2,
+          "body_height": 177
+        },
+        {
+          "pivot": [
+            66.5,
+            176
+          ],
+          "body_top": 2,
+          "body_height": 174
+        },
+        {
+          "pivot": [
+            83.5,
+            179
+          ],
+          "body_top": 2,
+          "body_height": 177
+        },
+        {
+          "pivot": [
+            66.0,
+            177
+          ],
+          "body_top": 2,
+          "body_height": 175
+        },
+        {
+          "pivot": [
+            60.5,
+            179
+          ],
+          "body_top": 2,
+          "body_height": 177
+        },
+        {
+          "pivot": [
+            61.5,
+            174
+          ],
+          "body_top": 1,
+          "body_height": 173
+        },
+        {
+          "pivot": [
+            65.0,
+            176
+          ],
+          "body_top": 1,
+          "body_height": 175
+        }
+      ],
+      "render_scale": 0.53333333
+    },
+    "walk_up": {
+      "sheet": "dorn-motion.png",
+      "fps": 8,
+      "loop": true,
+      "frames": [
+        [
+          13,
+          494,
+          143,
+          199
+        ],
+        [
+          177,
+          495,
+          137,
+          197
+        ],
+        [
+          339,
+          495,
+          137,
+          197
+        ],
+        [
+          499,
+          494,
+          138,
+          194
+        ],
+        [
+          659,
+          494,
+          142,
+          199
+        ],
+        [
+          823,
+          494,
+          140,
+          198
+        ],
+        [
+          983,
+          495,
+          137,
+          198
+        ],
+        [
+          1144,
+          494,
+          140,
+          199
+        ]
+      ],
+      "calibration": [
+        {
+          "pivot": [
+            72.0,
+            197
+          ],
+          "body_top": 2,
+          "body_height": 195
+        },
+        {
+          "pivot": [
+            77.0,
+            196
+          ],
+          "body_top": 2,
+          "body_height": 194
+        },
+        {
+          "pivot": [
+            63.0,
+            196
+          ],
+          "body_top": 1,
+          "body_height": 195
+        },
+        {
+          "pivot": [
+            67.0,
+            193
+          ],
+          "body_top": 3,
+          "body_height": 190
+        },
+        {
+          "pivot": [
+            69.5,
+            198
+          ],
+          "body_top": 3,
+          "body_height": 195
+        },
+        {
+          "pivot": [
+            66.5,
+            196
+          ],
+          "body_top": 2,
+          "body_height": 194
+        },
+        {
+          "pivot": [
+            93.5,
+            196
+          ],
+          "body_top": 2,
+          "body_height": 194
+        },
+        {
+          "pivot": [
+            72.0,
+            197
+          ],
+          "body_top": 2,
+          "body_height": 195
+        }
+      ],
+      "render_scale": 0.48123393
+    },
+    "walk_left": {
+      "sheet": "dorn-motion.png",
+      "fps": 8,
+      "loop": true,
+      "frames": [
+        [
+          41,
+          734,
+          85,
+          179
+        ],
+        [
+          195,
+          736,
+          99,
+          172
+        ],
+        [
+          357,
+          735,
+          101,
+          175
+        ],
+        [
+          532,
+          735,
+          82,
+          177
+        ],
+        [
+          695,
+          735,
+          81,
+          177
+        ],
+        [
+          860,
+          734,
+          75,
+          178
+        ],
+        [
+          1002,
+          735,
+          102,
+          177
+        ],
+        [
+          1180,
+          735,
+          80,
+          177
+        ]
+      ],
+      "calibration": [
+        {
+          "pivot": [
+            44.5,
+            177
+          ],
+          "body_top": 2,
+          "body_height": 175
+        },
+        {
+          "pivot": [
+            52.0,
+            171
+          ],
+          "body_top": 1,
+          "body_height": 170
+        },
+        {
+          "pivot": [
+            49.5,
+            174
+          ],
+          "body_top": 1,
+          "body_height": 173
+        },
+        {
+          "pivot": [
+            38.5,
+            176
+          ],
+          "body_top": 1,
+          "body_height": 175
+        },
+        {
+          "pivot": [
+            41.5,
+            176
+          ],
+          "body_top": 1,
+          "body_height": 175
+        },
+        {
+          "pivot": [
+            43.0,
+            177
+          ],
+          "body_top": 1,
+          "body_height": 176
+        },
+        {
+          "pivot": [
+            53.5,
+            176
+          ],
+          "body_top": 2,
+          "body_height": 174
+        },
+        {
+          "pivot": [
+            37.0,
+            176
+          ],
+          "body_top": 1,
+          "body_height": 175
+        }
+      ],
+      "render_scale": 0.53485714
+    },
+    "walk_right": {
+      "sheet": "dorn-motion.png",
+      "fps": 8,
+      "loop": true,
+      "frames": [
+        [
+          40,
+          967,
+          86,
+          178
+        ],
+        [
+          194,
+          969,
+          104,
+          174
+        ],
+        [
+          353,
+          968,
+          109,
+          175
+        ],
+        [
+          524,
+          967,
+          85,
+          178
+        ],
+        [
+          685,
+          968,
+          81,
+          178
+        ],
+        [
+          847,
+          967,
+          76,
+          178
+        ],
+        [
+          999,
+          967,
+          110,
+          177
+        ],
+        [
+          1165,
+          967,
+          93,
+          179
+        ]
+      ],
+      "calibration": [
+        {
+          "pivot": [
+            41.0,
+            177
+          ],
+          "body_top": 2,
+          "body_height": 175
+        },
+        {
+          "pivot": [
+            53.5,
+            172
+          ],
+          "body_top": 1,
+          "body_height": 171
+        },
+        {
+          "pivot": [
+            54.0,
+            174
+          ],
+          "body_top": 2,
+          "body_height": 172
+        },
+        {
+          "pivot": [
+            47.0,
+            177
+          ],
+          "body_top": 2,
+          "body_height": 175
+        },
+        {
+          "pivot": [
+            37.0,
+            176
+          ],
+          "body_top": 1,
+          "body_height": 175
+        },
+        {
+          "pivot": [
+            29.5,
+            177
+          ],
+          "body_top": 1,
+          "body_height": 176
+        },
+        {
+          "pivot": [
+            54.5,
+            175
+          ],
+          "body_top": 2,
+          "body_height": 173
+        },
+        {
+          "pivot": [
+            49.0,
+            178
+          ],
+          "body_top": 1,
+          "body_height": 177
+        }
+      ],
+      "render_scale": 0.53485714
+    },
+    "guard": {
+      "sheet": "dorn-guard.png",
+      "fps": 8,
+      "loop": false,
+      "frames": [
+        [
+          26,
+          215,
+          220,
+          290
+        ],
+        [
+          298,
+          213,
+          224,
+          292
+        ],
+        [
+          580,
+          216,
+          206,
+          289
+        ],
+        [
+          851,
+          215,
+          211,
+          290
+        ],
+        [
+          1121,
+          215,
+          215,
+          290
+        ],
+        [
+          1394,
+          213,
+          214,
+          292
+        ],
+        [
+          1665,
+          213,
+          214,
+          292
+        ],
+        [
+          1927,
+          216,
+          220,
+          289
+        ]
+      ],
+      "calibration": [
+        {
+          "pivot": [
+            109.5,
+            289
+          ],
+          "body_top": 4,
+          "body_height": 285
+        },
+        {
+          "pivot": [
+            111.5,
+            291
+          ],
+          "body_top": 3,
+          "body_height": 288
+        },
+        {
+          "pivot": [
+            101.5,
+            288
+          ],
+          "body_top": 3,
+          "body_height": 285
+        },
+        {
+          "pivot": [
+            103.0,
+            289
+          ],
+          "body_top": 3,
+          "body_height": 286
+        },
+        {
+          "pivot": [
+            106.0,
+            290
+          ],
+          "body_top": 3,
+          "body_height": 287
+        },
+        {
+          "pivot": [
+            106.5,
+            292
+          ],
+          "body_top": 8,
+          "body_height": 284
+        },
+        {
+          "pivot": [
+            105.0,
+            291
+          ],
+          "body_top": 3,
+          "body_height": 288
+        },
+        {
+          "pivot": [
+            108.5,
+            288
+          ],
+          "body_top": 3,
+          "body_height": 285
+        }
+      ],
+      "render_scale": 0.32784588
+    },
+    "cast": {
+      "sheet": "dorn-cast.png",
+      "fps": 8,
+      "loop": false,
+      "frames": [
+        [
+          47,
+          98,
+          273,
+          355
+        ],
+        [
+          389,
+          98,
+          286,
+          355
+        ],
+        [
+          745,
+          98,
+          308,
+          355
+        ],
+        [
+          1107,
+          91,
+          314,
+          362
+        ],
+        [
+          21,
+          640,
+          338,
+          355
+        ],
+        [
+          386,
+          616,
+          338,
+          379
+        ],
+        [
+          724,
+          641,
+          348,
+          354
+        ],
+        [
+          1128,
+          641,
+          276,
+          354
+        ]
+      ],
+      "calibration": [
+        {
+          "pivot": [
+            137.5,
+            354
+          ],
+          "body_top": 4,
+          "body_height": 350
+        },
+        {
+          "pivot": [
+            150.0,
+            354
+          ],
+          "body_top": 3,
+          "body_height": 351
+        },
+        {
+          "pivot": [
+            155.0,
+            354
+          ],
+          "body_top": 4,
+          "body_height": 350
+        },
+        {
+          "pivot": [
+            154.5,
+            361
+          ],
+          "body_top": 11,
+          "body_height": 350
+        },
+        {
+          "pivot": [
+            155.0,
+            354
+          ],
+          "body_top": 4,
+          "body_height": 350
+        },
+        {
+          "pivot": [
+            154.0,
+            378
+          ],
+          "body_top": 28,
+          "body_height": 350
+        },
+        {
+          "pivot": [
+            179.5,
+            353
+          ],
+          "body_top": 3,
+          "body_height": 350
+        },
+        {
+          "pivot": [
+            142.0,
+            353
+          ],
+          "body_top": 3,
+          "body_height": 350
+        }
+      ],
+      "render_scale": 0.26742857
+    }
+  },
+  "calibration_method": "opaque_soles_bronze_body_v1"
+}

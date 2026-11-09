@@ -33,7 +33,11 @@ _WEAPONS = [
 
 
 def weapons():
-    return copy.deepcopy(_WEAPONS)
+    from pathlib import Path
+    try:
+        images=json.loads((Path(__file__).with_name('data')/'spell_images.json').read_text(encoding='utf-8'))
+    except (OSError,ValueError):images={}
+    return [{**copy.deepcopy(weapon),'image_path':images.get('hemomancia-'+weapon['weapon'])} for weapon in _WEAPONS]
 
 def blood_cost(spec,skill,held):
     return 1 if skill or spec['weapon']=='escudo' or not held else 0
@@ -314,7 +318,7 @@ def use_weapon(path,technique,request,actor_id,actor_role,load_character,load_ta
     base=next((a for a in character['definition']['attacks'] if a['id']==slot),None)
     if base is None:raise ValueError('Ataque humanoide indisponível; desative a forma animal ou confira o bônus da ficha')
     bonus=int(base.get('base_attack_bonus',base.get('attack_bonus') or 0))+int(base.get('effect_attack_bonus') or 0)
-    damage_bonus=int(base.get('effect_damage_bonus') or 0)
+    damage_bonus=int(base.get('effect_damage_bonus') or 0)+int(base.get('item_attribute_damage_bonus') or 0)
     damage=spec['damage']+(f'{damage_bonus:+d}' if damage_bonus else '')
     attack=dict(id=technique,name=spec['skill']['name'] if skill else spec['name'],attack_bonus=bonus,
                 attack_count=int(base.get('attack_count') or 1),

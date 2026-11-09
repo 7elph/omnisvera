@@ -52,15 +52,32 @@ def victim_hit_dice(db, victim):
     if victim['type'] == 'character':
         row = db.execute("SELECT data_json FROM character_definition_overrides WHERE profile_id=?",
                          (victim['id'],)).fetchone()
-        if not row:
+        overrides=json.loads(row[0]) if row else {}
+        level=overrides.get('level')
+        if level is None:
+            sheet=db.execute('SELECT data_json FROM character_sheets WHERE profile_id=?',(victim['id'],)).fetchone()
+            from .character_play import _step_fields
+            data=json.loads(sheet[0]) if sheet else {}
+            fields=_step_fields(data,'character_class') or data.get('character_class') or {}
+            level=fields.get('level')
+        try:
+            if isinstance(level,bool):return None
+            number=float(level)
+            return int(number) if number.is_integer() and number>0 else None
+        except (TypeError,ValueError,OverflowError):
             return None
-        return int(json.loads(row[0]).get('level') or 1)
     row = db.execute("SELECT sheet_json FROM session_workspace_tokens WHERE id=?", (victim['id'],)).fetchone()
     if not row:
         return None
     sheet = json.loads(row[0] or '{}')
-    for key in ('hit_dice', 'dv'):
-        value = sheet.get(key)
+    from .summon_profiles import complete_sheet
+    sheet=complete_sheet(sheet)
+    values=[sheet.get('hit_dice'),sheet.get('dv')]
+    if all(value in (None,'') for value in values) and isinstance(sheet.get('source'),dict):
+        from .monster_catalog import get_catalog_monster
+        source=get_catalog_monster(sheet['source'].get('monster_id',''))
+        if source:values.append(source.get('hit_dice'))
+    for value in values:
         if isinstance(value, bool):
             continue
         try:
@@ -239,6 +256,8 @@ def command(db, snapshot, action, payload, now, actor_id, actor_role):
     if spell not in SPELLS:
         raise ValueError('Magia não suportada')
     overrides, state, level = caster(db)
+    from .magic_item_drums import assert_action
+    assert_action(db,'morthak')
     from .battle_mode import require_actor_alive
     require_actor_alive(db, 'morthak')
     encounter = snapshot.get('encounter') or {}
@@ -321,6 +340,11 @@ def command(db, snapshot, action, payload, now, actor_id, actor_role):
             continue
         if dv >= 2:
             results.append({'target': victim['name'], 'skipped': f'DV {dv} imune (alvos: menos de 2 DV)'})
+            continue
+        from .magic_passives import block_mental
+        ward=block_mental(db,victim,'fear',now)
+        if ward:
+            results.append({'target':victim['name'],'saving_throw':None,'effect':None,'mental_ward':ward})
             continue
         saving = save_difficult(db, victim, 'wisdom')
         if saving['success']:

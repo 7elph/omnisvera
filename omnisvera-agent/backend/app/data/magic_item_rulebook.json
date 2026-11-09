@@ -1,0 +1,521 @@
+{
+  "schema_version": 1,
+  "scope": "28 previously assisted built-in items; structured facts do not imply execution",
+  "attribution": {
+    "author": "Caio Mouriz",
+    "work": "Expansão de Itens",
+    "license": "CC-BY-SA-4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "source_url": "https://pt.scribd.com/document/655216129/Expansao-de-Itens-Old-Dragon",
+    "modifications": "Five short descriptions paraphrased; mechanical parameters separated from missing engine capabilities. Adapted textual data retain CC-BY-SA-4.0; no external code reused."
+  },
+  "items": {
+    "item-magico-bola-de-cristal": {
+      "family": "remote_observation",
+      "parameters": {
+        "daily_uses": 3,
+        "duration_exploration_turns": 1,
+        "chaotic_false_image_percent": 30
+      },
+      "blocking_gaps": [],
+      "source": "Old Dragon 1, pp.141–148",
+      "native_adapter": "native_private_crystal_vision"
+    },
+    "item-magico-botas-elficas": {
+      "family": "percentile_check",
+      "parameters": {
+        "chance_percent": 60
+      },
+      "blocking_gaps": [],
+      "source": "Old Dragon 1, pp.141–148",
+      "native_adapter": "equipment_checks_v1"
+    },
+    "item-magico-buraco-portatil": {
+      "family": "container",
+      "parameters": {
+        "diameter_m": 1.5,
+        "depth_m": 3,
+        "closed_air_supply": false,
+        "closed_air_seconds": 60,
+        "asphyxia_outcome": "death",
+        "reopening_stops_asphyxia": true,
+        "voluntary_entry": true,
+        "combat_entry_exit_movement_m": 3
+      },
+      "blocking_gaps": [],
+      "source": "Old Dragon 1, pp.141–148",
+      "native_adapter": "native_inventory_container",
+      "campaign_decision": "Entrada voluntária, 3 m de deslocamento por entrada/saída sem gastar ataque. Fechado: 60 s ficcionais de ar; reabrir encerra contagem."
+    },
+    "item-magico-botas-sem-pegadas": {
+      "family": "tracking",
+      "parameters": {
+        "leaves_tracks": false
+      },
+      "blocking_gaps": [
+        "exploration_tracks_and_tracking_ui"
+      ],
+      "source": "Old Dragon 1, pp.141–148",
+      "native_adapter": "native_combat_grid_footprints"
+    },
+    "item-magico-espelho-de-oposicao": {
+      "family": "hostile_replica",
+      "parameters": {
+        "copies_equipment": true,
+        "copies_magic_equipment": true,
+        "opposite_alignment": true
+      },
+      "blocking_gaps": [
+        "actor_snapshot",
+        "replica_ai",
+        "equipment_economy_isolation"
+      ],
+      "source": "Old Dragon 1, pp.141–148",
+      "native_adapter": null
+    },
+    "item-magico-espelho-do-teleporte": {
+      "family": "linked_transport",
+      "parameters": {
+        "range_m": 1000,
+        "requires_keyword": true,
+        "destination_kinds": [
+          "mirror",
+          "still_water"
+        ]
+      },
+      "blocking_gaps": [
+        "linked_destinations",
+        "keyword_permissions",
+        "transport_command"
+      ],
+      "source": "Old Dragon 1, pp.141–148",
+      "native_adapter": null
+    },
+    "item-magico-fivela-das-irmas": {
+      "family": "conditional_damage_reduction",
+      "parameters": {
+        "day": {
+          "fire": 5
+        },
+        "night": {
+          "lightning": 5
+        }
+      },
+      "blocking_gaps": [],
+      "source": "Old Dragon 1, pp.141–148",
+      "native_adapter": "native_campaign_phase_damage_reduction",
+      "campaign_decision": "Mestre, 02/11/2026: fase dia/noite controlada pelo Mestre; sem nova regra de eclipse."
+    },
+    "item-magico-manto-da-aranha": {
+      "family": "percentile_check",
+      "parameters": {
+        "chance_percent": 95,
+        "distance_per_check_m": 3
+      },
+      "blocking_gaps": [],
+      "source": "Old Dragon 1, pp.141–148",
+      "native_adapter": "equipment_checks_v1"
+    },
+    "item-magico-medalhao-de-adaptacao": {
+      "family": "environment",
+      "parameters": {
+        "breathes_in_any_environment": true
+      },
+      "blocking_gaps": [],
+      "source": "Old Dragon 1, pp.141–148",
+      "native_adapter": "native_environment_breathing_protection"
+    },
+    "item-magico-po-do-aparecimento": {
+      "family": "dispel_optical_effects",
+      "parameters": {
+        "effects": [
+          "invisibility",
+          "confusion",
+          "camouflage"
+        ],
+        "range_cells": 1,
+        "passive_optics_suppression": "until_next_rest",
+        "reequip_bypasses_suppression": false
+      },
+      "blocking_gaps": [],
+      "source": "Old Dragon 1, pp.141–148",
+      "native_adapter": "native_optical_effect_and_equipment_suppression",
+      "campaign_decision": "Mestre, 02/11/2026: toque; suprimir apenas efeitos ópticos até o próximo descanso, preservar outros bônus; reequipar não contorna.",
+      "campaign_rule_status": "provisional"
+    },
+    "item-magico-po-do-desaparecimento": {
+      "family": "spell_item",
+      "parameters": {
+        "spell_ref": "invisibilidade"
+      },
+      "blocking_gaps": [
+        "spell_invisibility_executor",
+        "hostility_break_conditions"
+      ],
+      "source": "Old Dragon 1, pp.141–148",
+      "native_adapter": null
+    },
+    "item-magico-sacola-magica": {
+      "family": "container",
+      "parameters": {
+        "orderly_capacity_kg": 1000,
+        "chaotic_loss_percent": 50,
+        "opening_diameter_cm": 30
+      },
+      "blocking_gaps": [],
+      "source": "Old Dragon 1, pp.141–148",
+      "native_adapter": "native_inventory_containers",
+      "campaign_decision": "Mestre, 02/11/2026: abertura de 30 cm; manter capacidades e variantes da fonte. Aprovadas medidas físicas estimadas por família, identificadas como provisórias e preservando dados explícitos.",
+      "campaign_rule_status": "provisional"
+    },
+    "item-magico-tambores-do-panico": {
+      "family": "fear_aura",
+      "parameters": {
+        "radius_m": 10,
+        "save": "wisdom",
+        "targets": "all_creatures",
+        "duration": "while_playing",
+        "exclude_performer": true,
+        "saves_per_creature_per_activation": 1,
+        "performer_can_attack_or_cast": false,
+        "flee_mode": "restrict_actions_and_each_step_away"
+      },
+      "blocking_gaps": [],
+      "source": "Old Dragon 1, pp.141–148",
+      "native_adapter": "native_grid_fear_instrument",
+      "campaign_decision": "Mestre, 02/11/2026: enquanto tocar; aliados e inimigos em 10 m, exceto músico; uma JPS por criatura por ativação; tocar impede atacar/conjurar; fuga restringe ações e exige cada passo afastando, sem movimento automático."
+    },
+    "item-magico-tapete-voador": {
+      "family": "vehicle",
+      "parameters": {
+        "capacity_people": 3,
+        "single_passenger_m_per_exploration_turn": 30,
+        "multiple_passenger_m_per_exploration_turn": 18
+      },
+      "blocking_gaps": [
+        "passenger_bindings",
+        "flight_mode",
+        "exploration_movement"
+      ],
+      "source": "Old Dragon 1, pp.141–148",
+      "native_adapter": null
+    },
+    "item-magico-anel-ariete": {
+      "family": "charged_force",
+      "parameters": {
+        "daily_charges": 3,
+        "range_m": 30,
+        "damage_per_charge": "1d6",
+        "door_strength_by_charges": [
+          14,
+          17,
+          24
+        ],
+        "door_check": {
+          "formula": "1d20 + strength_modifier",
+          "default_dc": 12,
+          "gm_editable": true,
+          "spend_on_failure": true,
+          "campaign_provisional": true
+        }
+      },
+      "blocking_gaps": [],
+      "source": "Old Dragon 1, pp.141–148",
+      "native_adapter": "native_grid_force_damage",
+      "campaign_decision": "Arrombamento provisório aprovado: FOR 14/17/24 por 1/2/3 cargas, 1d20 + modificador contra DC editável; porta comum DC 12."
+    },
+    "item-magico-anel-inquisidor": {
+      "family": "detect_magic_capability",
+      "parameters": {
+        "target_notified": true,
+        "range_m": 9
+      },
+      "blocking_gaps": [],
+      "source": "Old Dragon 1, pp.141–148",
+      "native_adapter": "native_private_magic_detection",
+      "campaign_decision": "Mestre, 02/11/2026: base provisória aprovada; alcance e efeito explicitados nos parâmetros."
+    },
+    "item-magico-baralho-das-maravilhas": {
+      "family": "random_permanent_effect",
+      "parameters": {
+        "reshuffles_after_each_draw": true,
+        "vanishes_when_drawing_stops": true,
+        "cards": [
+          {
+            "id": "clubs-ace",
+            "effect": "change_alignment"
+          },
+          {
+            "id": "clubs-king",
+            "effect": "destroy_most_powerful_magic_item"
+          },
+          {
+            "id": "clubs-queen",
+            "effect": "change_sex"
+          },
+          {
+            "id": "clubs-jack",
+            "effect": "highest_attribute_minus_one"
+          },
+          {
+            "id": "diamonds-ace",
+            "effect": "substantial_treasure_map"
+          },
+          {
+            "id": "diamonds-king",
+            "effect": "random_gems",
+            "quantity": "5d6",
+            "table": "T9-1"
+          },
+          {
+            "id": "diamonds-queen",
+            "effect": "seven_spell_circles_scroll"
+          },
+          {
+            "id": "diamonds-jack",
+            "effect": "chosen_attribute_plus_one"
+          },
+          {
+            "id": "hearts-ace",
+            "effect": "lose_one_level"
+          },
+          {
+            "id": "hearts-king",
+            "effect": "hostile_warrior",
+            "hit_dice": 9,
+            "weapon_bonus": 4,
+            "shield_bonus": 4,
+            "armor_bonus": 4,
+            "vanishes_on_death": true
+          },
+          {
+            "id": "hearts-queen",
+            "effect": "random_character_decapitation",
+            "radius_m": 20
+          },
+          {
+            "id": "hearts-jack",
+            "effect": "surprise_monster",
+            "hit_dice": "1d4+6"
+          },
+          {
+            "id": "spades-ace",
+            "effect": "xp_to_next_level"
+          },
+          {
+            "id": "spades-king",
+            "effect": "random_magic_item",
+            "table": "T9-2"
+          },
+          {
+            "id": "spades-queen",
+            "effect": "grant_wish",
+            "quantity": 1
+          },
+          {
+            "id": "spades-jack",
+            "effect": "friendly_warrior",
+            "hit_dice": 8,
+            "weapon_bonus": 3,
+            "shield": true,
+            "duration_seconds": 3600
+          },
+          {
+            "id": "joker",
+            "effect": "choose_xp_next_level_or_two_draws"
+          }
+        ],
+        "free_narrative_results": "private_gm_proposal",
+        "defined_mechanical_results": "automatic"
+      },
+      "blocking_gaps": [
+        "permanent_changes",
+        "treasure_and_quest_assets"
+      ],
+      "source": "Old Dragon 1, p.144",
+      "native_adapter": null,
+      "campaign_decision": "Mestre, 02/11/2026: Desejo e conteúdo de mapa de tesouro geram propostas ao Mestre; consequências de regra definida seguem automáticas.",
+      "campaign_rule_status": "provisional"
+    },
+    "item-magico-espada-adamas": {
+      "family": "adaptive_weapon",
+      "parameters": {
+        "default_form": "short_sword",
+        "allowed_forms": "basic_book_swords",
+        "damage_bonus": 4,
+        "critical_threshold": 18,
+        "critical_multiplier": 2
+      },
+      "blocking_gaps": [],
+      "source": "Caio Mouriz, Expansão de Itens, pp.16–18",
+      "native_adapter": "native_inventory_weapon_forms"
+    },
+    "item-magico-maca-de-sangue": {
+      "family": "cursed_weapon",
+      "parameters": {
+        "damage": "1d8",
+        "bloodied_damage_bonus": 3,
+        "critical_multiplier": 3,
+        "identify_consecutive_checks": 3,
+        "checks_per_day": 1,
+        "daily_save": "constitution",
+        "failure_streak": 3,
+        "rage_chance_formula": "1d4",
+        "rage_success_max": 2,
+        "rage_duration_exploration_turns": "1d6",
+        "release_saves": [
+          "wisdom",
+          "wisdom",
+          "constitution",
+          "constitution"
+        ],
+        "recovery_weeks": "1d8+1",
+        "bloodied_duration": "until_combat_end"
+      },
+      "blocking_gaps": [
+        "curse_day_state",
+        "alignment_change",
+        "forced_attacks",
+        "rest_and_spell_restrictions"
+      ],
+      "source": "Caio Mouriz, Expansão de Itens, pp.16–18",
+      "native_adapter": null,
+      "campaign_decision": "Mestre, 02/11/2026: bônus de sangue até encerrar combate; maldição preservada."
+    },
+    "item-magico-espada-cerimonial-da-leoa": {
+      "family": "protective_weapon",
+      "parameters": {
+        "damage": "1d10+4",
+        "critical_multiplier": 3,
+        "daily_uses": 3,
+        "protection_rounds": 1,
+        "critical_failure_aggro_rounds": 1,
+        "indestructible": true,
+        "return_action_cost": 1
+      },
+      "blocking_gaps": [
+        "hostile_target_gate",
+        "victim_round_expiry",
+        "return_item_position"
+      ],
+      "source": "Caio Mouriz, Expansão de Itens, pp.16–18",
+      "native_adapter": null
+    },
+    "item-magico-armadura-leve-da-rapina": {
+      "family": "reflective_armor",
+      "parameters": {
+        "armor_class_bonus": 7,
+        "reflect_fraction": 0.5,
+        "daily_uses": 3,
+        "temporary_armor_class_bonus": 3,
+        "duration_rounds": "1d4",
+        "reflection_trigger": "attack_hit",
+        "reflection_reduces_incoming": false,
+        "reflection_rounding": "floor"
+      },
+      "blocking_gaps": [],
+      "source": "Caio Mouriz, Expansão de Itens, pp.16–18",
+      "recovered_description": "CA +7; reflete metade do dano recebido. Três ativações diárias acrescentam +3 CA por 1d4 rodadas.",
+      "native_adapter": "magic_item_combat_and_native_inventory_use",
+      "campaign_decision": "Mestre, 02/11/2026: recebe dano inteiro e devolve metade arredondada para baixo."
+    },
+    "item-magico-vaso-da-agua-ungueal": {
+      "family": "water_and_natural_weapon",
+      "parameters": {
+        "capacity_liters": 1,
+        "unlimited_water": true,
+        "nail_damage": "1d4",
+        "break_chance_percent": 25,
+        "self_damage_on_break": 1
+      },
+      "blocking_gaps": [
+        "easy_identification_difficulty"
+      ],
+      "source": "Caio Mouriz, Expansão de Itens, pp.16–18",
+      "recovered_description": "Produz água ilimitada. Beber faz crescer unhas: dano 1d4; chance de quebra de 25%, causando 1 PV ao usuário. Sabedoria fácil ou identificação revela ambas as magias.",
+      "native_adapter": "native_ungual_attack"
+    },
+    "item-magico-oculos-da-rapida-leitura": {
+      "family": "reading",
+      "parameters": {
+        "maximum_pages": 100,
+        "maximum_read_seconds_exclusive": 120,
+        "learn_spells": false,
+        "triggers_reading_magic": true
+      },
+      "blocking_gaps": [
+        "reading_magic_trigger_and_exploration_clock"
+      ],
+      "source": "Caio Mouriz, Expansão de Itens, pp.16–18",
+      "recovered_description": "Permite ler até cem páginas em menos de dois minutos; não ensina magias, mas mantém efeitos mágicos disparados pela leitura.",
+      "native_adapter": "native_private_document_reading"
+    },
+    "item-magico-bracelete-do-aracnideo": {
+      "family": "spell_item",
+      "parameters": {
+        "spell_ref": "teia",
+        "duration_seconds": 7200,
+        "daily_uses": 3,
+        "caster_level": 6,
+        "range_m": 9
+      },
+      "blocking_gaps": [],
+      "source": "Caio Mouriz, Expansão de Itens, pp.16–18",
+      "native_adapter": "native_web_item",
+      "campaign_decision": "Mestre, 02/11/2026: conjurador de nível 6, alcance 9 m, duração 2h e três usos por descanso."
+    },
+    "item-magico-bomba-de-ilusao": {
+      "family": "spell_item",
+      "parameters": {
+        "spell_ref": "ilusao",
+        "duration_rounds": "1d4",
+        "range_cells": 1,
+        "physical_collision": false,
+        "damage": 0
+      },
+      "blocking_gaps": [],
+      "source": "Caio Mouriz, Expansão de Itens, pp.16–18",
+      "native_adapter": "native_visual_illusion_item",
+      "campaign_decision": "Mestre, 02/11/2026: base provisória aprovada; alcance e efeito explicitados nos parâmetros."
+    },
+    "item-magico-copos-de-mensagem": {
+      "family": "paired_communication",
+      "parameters": {
+        "range_m": 15,
+        "duration": "while_in_use",
+        "vessels": 2
+      },
+      "blocking_gaps": [],
+      "source": "Caio Mouriz, Expansão de Itens, pp.16–18",
+      "native_adapter": "native_paired_grid_communication"
+    },
+    "item-magico-cinto-da-mudanca-de-sexo": {
+      "family": "permanent_appearance_curse",
+      "parameters": {
+        "triggers": "equip",
+        "permanent": true,
+        "maximum_activations_per_wearer": 2,
+        "second_activation": "permanent_mixed_physical_traits",
+        "after_second_activation": "no_further_effect_on_same_wearer"
+      },
+      "blocking_gaps": [],
+      "source": "Caio Mouriz, Expansão de Itens, pp.16–18",
+      "recovered_description": "Alteração permanente ao equipar; uma segunda utilização mistura características e encerra o efeito desse cinto no portador.",
+      "native_adapter": "native_permanent_appearance_equip_history",
+      "campaign_decision": "Mestre, 02/11/2026: segunda utilização deixa características físicas mistas permanentes; esse cinto não altera mais o portador.",
+      "campaign_rule_status": "provisional"
+    },
+    "item-magico-livro-das-linguas": {
+      "family": "permanent_language_curse",
+      "parameters": {
+        "triggers": "read",
+        "forgets_previous_language": true,
+        "new_language": "random"
+      },
+      "blocking_gaps": [],
+      "source": "Caio Mouriz, Expansão de Itens, pp.16–18",
+      "recovered_description": "A leitura troca permanentemente o idioma do leitor por outro aleatório e faz esquecer o anterior.",
+      "native_adapter": "native_permanent_sheet_language_replacement"
+    }
+  }
+}

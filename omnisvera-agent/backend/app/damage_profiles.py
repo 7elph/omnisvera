@@ -73,7 +73,8 @@ def attack_profile(attack,inventory):
     material=mechanics.get('material') or attack.get('material')
     if material is None and re.search(r'\b(?:prata|pratead[oa])\b',normalized(item.get('item_title'))):material='silver'
     return {'damage_type':damage_type,'kind':kind,'magical':bool(magical),'material':material,
-            'source':'approved-2026-10-25' if approved or hemomancy else 'declared_or_catalog'}
+            'source':'approved-2026-10-25' if approved or hemomancy else 'declared_or_catalog',
+            **({'spell_id':'misseis-magicos'} if kind=='spell' and path=='spell:misseis-magicos' else {})}
 
 
 def weapon_defense(monster,context):

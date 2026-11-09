@@ -24,13 +24,21 @@ def active_effect_icons(effects, load_cards, profiles):
         matches = [card for cards in catalogs.values() for card in cards
                    if not card.get('hidden') and card.get('name') and re.search(
                        r'(?<!\w)' + re.escape(card['name']) + r'(?!\w)', text, re.IGNORECASE)]
-        if not matches and effect.get('hemomancy_kind'):
+        if effect.get('magic_item') in {'item-magico-armadura-leve-da-rapina','item-magico-tambores-do-panico','item-magico-bracelete-do-aracnideo','item-magico-bomba-de-ilusao','item-magico-po-do-aparecimento'}:
+            from .item_catalog import get_catalog_item
+            item=get_catalog_item(effect['magic_item'])
+            if item:
+                image=next((c.get('image_path') for c in matches if c.get('image_path')),None) or item.get('image_path')
+                matches=[{'id':effect['magic_item']+(':fear' if effect.get('drum_fear') else ':active'),
+                    'name':effect.get('label') or item['name'],
+                    'description':effect.get('condition_description') or item.get('description',''),'image_path':image}]
+        if effect.get('hemomancy_kind'):
             from .hemomancy import weapons
             kind=effect['hemomancy_kind']
             weapon=next((w for w in weapons() if w['weapon']=={'bleed':'foice','exposed':'marreta','revenge':'escudo','shield':'escudo'}.get(kind,effect.get('weapon'))),None)
             if weapon:
                 source=weapon['skill'] if kind=='bleed' else weapon['passive'] if kind in {'exposed','revenge'} else weapon
-                matches=[{'id':'hemomancia-'+weapon['weapon'],'name':source['name'],'description':source.get('description',''),'image_path':'zz_media/ui/icons/uploads/lamina_de_sangue_ea48fc7f8a.jpg'}]
+                matches=[{'id':'hemomancia-'+weapon['weapon'],'name':source['name'],'description':source.get('description',''),'image_path':weapon.get('image_path')}]
         if effect.get('monster_condition'):
             matches=[{'id':'condition:'+effect['monster_condition'],'name':effect['label'],
                 'description':effect.get('condition_description',''),'image_path':None}]
@@ -40,7 +48,7 @@ def active_effect_icons(effects, load_cards, profiles):
             card = attach_action_cards([{'character_id': 'raziel', 'event_kind': 'action',
                 'title': f"Forma da Noite: {effect['animal']}"}], lambda _: [card])[0]['action_cards'][0]
         remaining=effect.get('turns_remaining',effect.get('remaining_turns'))
-        unit=effect.get('source_duration_unit') if effect.get('monster_condition') else None
+        unit=effect.get('source_duration_unit') if effect.get('monster_condition') or effect.get('magic_item') else None
         if unit in {'turns','rounds'} and effect.get('remaining_seconds') is not None:
             remaining=math.ceil(effect['remaining_seconds']/(600 if unit=='turns' else 10))
         icons.append({'effect_id': effect['id'], 'target_type': effect['target_type'],

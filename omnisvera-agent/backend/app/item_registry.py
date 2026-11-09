@@ -176,6 +176,23 @@ def set_trade_profile(path,access,*,item_path,price_copper,trade_group,request_i
         db.execute('INSERT INTO item_trade_commands VALUES(?,?,?)',(request_id,fingerprint,json.dumps(result)))
         return result
 
+def mechanical_coverage(item):
+    """Describe actual adapters, independently of certification/test evidence."""
+    mechanics=item.get('mechanics') or {}
+    reviewed=mechanics.get('magic_readiness')
+    if reviewed:
+        gaps=list(reviewed.get('blocking_gaps') or [])
+        native=str(reviewed.get('status','')).startswith('native_')
+        return {'status':'partial' if native and gaps else 'native' if native else 'unmapped',
+                'adapter':reviewed.get('status'),'limitations':gaps,'coverage':reviewed.get('coverage')}
+    if mechanics.get('family_schema')==1:
+        gaps=list(mechanics.get('family_gaps') or [])
+        return {'status':'partial' if gaps else 'native','adapter':mechanics.get('family'),'limitations':gaps}
+    if item.get('effect_rules'):
+        return {'status':'partial','adapter':'effect_rules','limitations':['remaining_prose_not_reviewed']}
+    return {'status':'unmapped','adapter':None,'limitations':['no_reviewed_adapter']}
+
+
 def audit_items(path,*,vault_root=None):
     with closing(sqlite3.connect(Path(path).resolve().as_uri()+'?mode=ro',uri=True)) as db:
         db.row_factory=sqlite3.Row;index=registry(db,vault_root=vault_root)
@@ -183,18 +200,20 @@ def audit_items(path,*,vault_root=None):
     for item in index['entries'].values():
         reference=item['catalog_entry_kind']=='reference' or item['trade_group']=='services'
         gaps=[]
+        coverage=mechanical_coverage(item)
         if not reference:
             if item['price_copper'] is None:gaps.append('valuation')
             if item['trade_group']=='unclassified':gaps.append('classification')
             if not item['image_path']:gaps.append('image')
             # Descriptive text/damage is not proof that every rule is executable.
-            if item['description'] and not item['effect_rules']:gaps.append('mechanics_review')
+            if item['description'] and coverage['status']!='native':gaps.append('mechanics_review')
             gaps.append('test_evidence')
-        record={k:v for k,v in item.items() if k!='source_snapshot'};record.update(gaps=gaps,automation_status='not_certified',requires_generation=bool(gaps));items.append(record)
+        record={k:v for k,v in item.items() if k!='source_snapshot'};record.update(gaps=gaps,automation_status='not_certified',mechanical_coverage=coverage,requires_generation=bool(gaps));items.append(record)
         mechanics=item.get('mechanics') or {}
         if mechanics.get('family_schema')==1:
             record['runtime_support']={'schema_version':1,'family':mechanics['family'],
-                'status':'native_base_rules','limitations':list(mechanics.get('family_gaps') or [])}
+                'status':'native_base_rules' if coverage['status']=='native' else coverage['status'],
+                'limitations':coverage['limitations']}
         for gap in gaps:
             plan.append({'item_id':item['id'],'revision':item['revision'],'gap':gap,'queue':'image' if gap=='image' else 'code' if gap in {'mechanics_review','test_evidence'} else 'text'})
     return {'schema_version':1,'total':len(items),'items':items,'gap_count':len(plan),'generation_plan':plan,'coverage':{'inventoried':len(items),'planned_gaps':len(plan)},'counts_by_source':dict(Counter(r['source_kind'] for r in items)),'production_modified':False}

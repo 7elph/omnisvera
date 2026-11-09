@@ -33,10 +33,21 @@ def grant_item(db, item, character_id, quantity, now, *, origin, instance=None):
     if (charges[0] is None) != (charges[1] is None) or (charges[0] is not None and charges[0] > charges[1]):
         raise ValueError('Informe as cargas atuais e máximas válidas')
     condition = instance.get('inventory_condition') or None
+    if ((condition or {}).get('magic_container') or {}).get('occupants'):
+        raise ValueError('Retire os ocupantes antes de transferir o Buraco Portátil')
+    if ((condition or {}).get('magic_container') or {}).get('portal_id'):
+        if condition['magic_container'].get('open'):raise ValueError('Feche o Buraco Portátil antes de transferir')
+        from copy import deepcopy
+        condition=deepcopy(condition);condition['magic_container'].pop('portal_id',None)
     recharge = instance.get('recharge')
     row = db.execute('SELECT * FROM player_inventory WHERE profile_id=? AND item_path=?',
         (character_id, item['item_path'])).fetchone()
     mechanics=item.get('mechanics') or {}
+    if mechanics.get('magic_container_schema') or mechanics.get('magic_appearance_schema'):
+        if quantity!=1 or (row and row['quantity']>0):
+            raise ValueError('Recipientes e cintos amaldiçoados precisam de instâncias individuais')
+    if (mechanics.get('magic_activation_schema')==1 or mechanics.get('magic_absorption_schema')==1 or (mechanics.get('magic_passive_schema')==1 and mechanics.get('charges_max'))) and (quantity!=1 or (row and row['quantity']>0)):
+        raise ValueError('Para preservar cargas individuais, entregue apenas uma cópia deste item por ficha')
     if charges[1] is not None and mechanics.get('family')=='ammunition' and charges[1]!=mechanics.get('pack_size'):
         raise ValueError('Cargas incompatíveis com o tamanho do pacote de munição')
     # Native stacks represent full remaining copies plus one partially used copy.

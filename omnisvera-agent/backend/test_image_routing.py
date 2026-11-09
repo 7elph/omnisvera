@@ -33,12 +33,32 @@ class RoutingTests(unittest.TestCase):
 
     def test_capacity_and_upstream_fallback_but_no_recursive_retries(self):
         for reason in ['capacity', 'upstream']:
-            with patch('app.image_routing.FluxKleinProvider') as cf, patch('app.image_routing.ZeroGPUProvider') as hf:
+            with patch('app.image_routing.FluxKleinProvider') as cf, patch('app.image_routing.ZeroGPUProvider') as hf, patch('app.image_routing.PollinationsProvider') as po:
                 cf.return_value.generate.side_effect = ImageProviderError('primary', reason=reason)
                 hf.return_value.generate.side_effect = ImageProviderError('fallback quota')
-                with self.assertRaisesRegex(ImageProviderError, 'Fallback: fallback quota'):
+                po.return_value.generate.side_effect = ImageProviderError('third down')
+                with self.assertRaisesRegex(ImageProviderError, 'Fallback: fallback quota Pollinations: third down'):
                     RoutedImageProvider().generate('prompt', Path('output.png'))
                 hf.return_value.generate.assert_called_once()
+                po.return_value.generate.assert_called_once()
+
+    def test_pollinations_draws_text_only_requests_when_both_free_routes_fail(self):
+        with patch('app.image_routing.FluxKleinProvider') as cf, patch('app.image_routing.ZeroGPUProvider') as hf, patch('app.image_routing.PollinationsProvider') as po:
+            cf.return_value.generate.side_effect = ImageProviderError('quota', reason='daily_quota')
+            hf.return_value.generate.side_effect = ImageProviderError('space down', reason='remote_runtime')
+            po.return_value.generate.return_value = Path('output.png')
+            provider = RoutedImageProvider()
+            provider.generate('a map', Path('output.png'))
+            po.return_value.generate.assert_called_once_with('a map', Path('output.png'))
+            self.assertEqual(provider.last_run['used_provider'], 'pollinations')
+
+    def test_reference_edits_never_go_to_pollinations(self):
+        with patch('app.image_routing.FluxKleinProvider') as cf, patch('app.image_routing.ZeroGPUProvider') as hf, patch('app.image_routing.PollinationsProvider') as po:
+            cf.return_value.generate.side_effect = ImageProviderError('quota', reason='daily_quota')
+            hf.return_value.generate.side_effect = ImageProviderError('space down')
+            with self.assertRaises(ImageProviderError):
+                RoutedImageProvider().generate('edit', Path('output.png'), [Path('reference.png')])
+            po.assert_not_called()
 
 
 class ZeroGPUTests(unittest.TestCase):

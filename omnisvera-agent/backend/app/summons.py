@@ -143,6 +143,8 @@ def create_summon(path, *, caster, technique, spec, request_id, actor_id, actor_
             'attacks': [{'name': spec['attack_name'], 'bonus': spec['attack_bonus'], 'damage': spec['damage']}],
             'treasure': '-', 'summon': {'caster': caster, 'technique': technique, 'corpse_id': corpse_id,
                 'duration': spec['duration'], 'defaults_note': spec['note']}}
+        from .summon_profiles import complete_sheet
+        sheet=complete_sheet(sheet)
         from .spatial_grid import grid_record,visual_position,has_schema
         grid=grid_record(db,map_id) if has_schema(db) else None
         origin=db.execute('SELECT * FROM session_workspace_entity_positions WHERE map_id=? AND token_id=?',

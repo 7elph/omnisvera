@@ -117,7 +117,9 @@ def death_targets(db,snapshot,level,contract=None):
         row=db.execute('SELECT map_id FROM session_workspace_state WHERE id=1').fetchone();map_id=row[0] if row else None
     targets=[];seen=set()
     # Literal supplied rule: eligible creatures, including allies; never caster.
-    for identity,character in db.execute("SELECT id,character_id FROM session_workspace_tokens WHERE map_id=? AND token_type!='location' AND visible_to_players=1 AND current_hp>0 ORDER BY id",(map_id,)).fetchall():
+    for identity,character,raw in db.execute("SELECT id,character_id,sheet_json FROM session_workspace_tokens WHERE map_id=? AND token_type!='location' AND visible_to_players=1 AND current_hp>0 ORDER BY id",(map_id,)).fetchall():
+        sheet=json.loads(raw or '{}')
+        if sheet.get('statless') or sheet.get('combat_retired') or (sheet.get('summon') or {}).get('dismissed'):continue
         kind,target=('character',character) if character else ('token',identity)
         if target=='morthak' or (kind,target) in seen:continue
         distance=grid_distance_m(db,kind,target)
@@ -152,7 +154,7 @@ def command(db,snapshot,payload,now):
     resource_cost=contract['costs'][0];key=resource_cost['key'];cost=resource_cost['amount']
     resource=next((r for r in state.get('resources',[]) if r['key']==key),None)
     if not resource or int(resource.get('current') or 0)<cost:raise ValueError('Sem uso diário de '+SPELLS[spell])
-    results=[]
+    results=[];death_info={}
     if spell=='clonagem':
         if sum(e.get('necro_spell')=='clonagem' for e in snapshot['effects'])>=contract['resolution']['max_active_groups']:raise ValueError('Já há Clonagem ativa ou em execução')
         component=contract['costs'][1]
@@ -172,7 +174,11 @@ def command(db,snapshot,payload,now):
     else:
         victims=death_targets(db,snapshot,level,contract)
         if not victims:raise ValueError('Nenhuma criatura elegível no alcance')
-        limit=roll_native_component(contract['resolution']['victim_limit'],roll_formula)
+        limit_roll={}
+        def roll_limit(formula):
+            rolled=roll_formula(formula);limit_roll.update(rolled);return rolled
+        limit=roll_native_component(contract['resolution']['victim_limit'],roll_limit)
+        death_info={'victim_limit':limit,'victim_limit_roll':limit_roll,'eligible_count':len(victims)}
         # Validate JP before any mutation; the transaction also rolls back failures.
         from .dice_rolls import resolve_character_roll
         attribute=contract['resolution']['save']['attribute']
@@ -183,7 +189,10 @@ def command(db,snapshot,payload,now):
                 hp=db.execute('SELECT '+('state_json FROM character_states WHERE profile_id=?' if victim['type']=='character' else 'current_hp FROM session_workspace_tokens WHERE id=?'),(victim['id'],)).fetchone()[0]
                 hp=int(json.loads(hp)['current_hp']) if victim['type']=='character' else int(hp)
                 outcome=change_hp(db,victim['type'],victim['id'],-hp-(10 if victim['type']=='character' and victim['id']=='vezemir' else 0),now,ignore_temporary_hp=True)
-            results.append({'target':victim['name'],'saving_throw':saving,**(outcome or {})})
+            results.append({'target':victim['name'],'saving_throw':saving,
+                            'execution':'Resistiu' if saving['success'] else 'Morte instantânea',**(outcome or {})})
+        death_info.update(defeated=sum(not r['saving_throw']['success'] for r in results),
+                          resisted=sum(bool(r['saving_throw']['success']) for r in results))
     remaining=spend_native_resource(db,'morthak',key,cost,now)
     hp_result={}
     if spell=='magia-da-morte':
@@ -191,7 +200,11 @@ def command(db,snapshot,payload,now):
         latest=json.loads(db.execute("SELECT state_json FROM character_states WHERE profile_id='morthak'").fetchone()[0])
         current_hp=int(latest['current_hp'])
         hp_result=change_hp(db,'character','morthak',-(current_hp-current_hp//hp_cost['retained_divisor']),now,ignore_temporary_hp=hp_cost['ignore_temporary_hp'])
+        death_info.update(caster_hp_before=current_hp,caster_hp_after=hp_result['hp_after'],
+                          hp_cost=current_hp-hp_result['hp_after'])
     commit_battle_action(db,snapshot)
-    append_session_ledger_event(db,source_type='necro_high_spell',source_id=uuid.uuid4().hex,event_kind='action',actor_id='morthak',actor_name='Morthak',actor_role='player',character_id='morthak',title=SPELLS[spell]+' — '+('; '.join(r['target']+(': resistiu' if r.get('saving_throw',{}).get('success') else ': efeito aplicado') for r in results)),detail={'results':results,**hp_result},visibility='table',created_at=now)
+    title=(f"Magia da Morte — {death_info['defeated']} derrotados · {death_info['resisted']} resistiram · PV {death_info['caster_hp_before']} → {death_info['caster_hp_after']}"
+           if death_info else SPELLS[spell]+' — '+('; '.join(r['target']+': efeito aplicado' for r in results)))
+    append_session_ledger_event(db,source_type='necro_high_spell',source_id=uuid.uuid4().hex,event_kind='action',actor_id='morthak',actor_name='Morthak',actor_role='player',character_id='morthak',title=title,detail={'spell':SPELLS[spell],'results':results,**hp_result,**death_info},visibility='table',created_at=now)
     return {'spell':SPELLS[spell],'results':results,'resource_remaining':remaining,
-            'action_contract':{'ref':contract['ref'],'revision':contract['revision'],'level':level},**hp_result}
+            'action_contract':{'ref':contract['ref'],'revision':contract['revision'],'level':level},**hp_result,**death_info}

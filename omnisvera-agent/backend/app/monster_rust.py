@@ -31,6 +31,12 @@ def _owner(db,kind,identity):
 
 def _source(db,path):
     front={};rules=[];mechanics={}
+    if path.startswith(('compendium:','merchant:')):
+        from .item_catalog import get_catalog_item
+        item=get_catalog_item(path.split(':',1)[1] if path.startswith('compendium:') else path.split(':',2)[-1])
+        if item:
+            mechanics=deepcopy(item.get('mechanics') or {})
+            return {'rules':deepcopy(item.get('effect_rules') or [])+deepcopy(mechanics.get('embedded_enhancement_rules') or []),'mechanics':mechanics}
     if db.execute("SELECT 1 FROM sqlite_master WHERE name='notes'").fetchone():
         row=db.execute('SELECT frontmatter FROM notes WHERE path=?',(path,)).fetchone()
         if row:
@@ -58,6 +64,7 @@ def _selection(source,selection,old):
         if selection is not None and selection!=old['selection']:
             raise ValueError('Os metadados de corrosão já foram identificados para esta instância')
         return deepcopy(old['selection'])
+    if selection is None:selection=deepcopy((source.get('mechanics') or {}).get('rust_profile'))
     if selection is None:return None
     if not isinstance(selection,dict) or set(selection)!={'material','magical','enchantment_bonus','enhancement_rule_ids'}:
         raise ValueError('Confirme os metadados de material e encantamento do item')

@@ -50,6 +50,44 @@ def stage_battle(db, encounter, now, *, participants=None):
     switch_map(db, arena['id'], now)
 
 
+def apply_formation(db, encounter, formation):
+    """Opening cells for a face-to-face battle. Start-only; validated against the arena grid.
+
+    Each entry: {"target_type", "target_id", "cell": [x, y]}. Only staged participants of
+    this encounter can be placed; two entries cannot share a cell. Movement budgets and
+    turns are untouched: this happens before the first turn exists in play."""
+    if not isinstance(formation, list) or len(formation) > 100:
+        raise ValueError('Formação inválida')
+    if not formation:
+        return
+    from .spatial_grid import grid_record, validate_cell, visual_position
+    grid = grid_record(db, encounter['map_id'])
+    if grid is None:
+        raise ValueError('A arena precisa de grid para receber a formação')
+    tokens = {(p['target_type'], p['target_id']): p.get('token_id') for p in encounter['participants']}
+    used = set()
+    for entry in formation:
+        if not isinstance(entry, dict):
+            raise ValueError('Formação inválida')
+        key = (entry.get('target_type'), entry.get('target_id'))
+        token_id = tokens.get(key)
+        if not token_id:
+            raise ValueError('Formação contém quem não participa do combate')
+        cell = entry.get('cell')
+        validate_cell(grid, cell)
+        if tuple(cell) in used:
+            raise ValueError('Dois participantes na mesma célula da formação')
+        used.add(tuple(cell))
+        position = row(db, 'SELECT * FROM session_workspace_entity_positions WHERE map_id=? AND token_id=?', (grid['map_id'], token_id))
+        if position is None:
+            db.execute('INSERT INTO session_workspace_entity_positions(map_id,token_id,cell_x,cell_y) VALUES(?,?,?,?)', (grid['map_id'], token_id, cell[0], cell[1]))
+            position = row(db, 'SELECT * FROM session_workspace_entity_positions WHERE map_id=? AND token_id=?', (grid['map_id'], token_id))
+        else:
+            db.execute('UPDATE session_workspace_entity_positions SET cell_x=?,cell_y=?,version=version+1 WHERE map_id=? AND token_id=?', (cell[0], cell[1], grid['map_id'], token_id))
+        projected = visual_position(grid, {**dict(position), 'cell_x': cell[0], 'cell_y': cell[1]})
+        db.execute('UPDATE session_workspace_tokens SET latitude=?,longitude=? WHERE id=?', (projected['latitude'], projected['longitude'], token_id))
+
+
 def switch_map(db, map_id, now):
     selected = row(db, 'SELECT * FROM session_workspace_maps WHERE id=?', (map_id,))
     if selected:
@@ -90,7 +128,7 @@ def turn_identity(snapshot):
 
 def require_consumable_turn(db, snapshot, actor_id):
     from .monster_conditions import assert_can_act
-    assert_can_act(db,actor_id)
+    assert_can_act(db,actor_id,noncombat=True)
     encounter = snapshot.get('encounter') or {}
     if turn_identity(snapshot) is None:
         return
@@ -136,6 +174,9 @@ def require_battle_turn(db, snapshot, actor_id, target_type=None, target_id=None
 
 
 def require_battle_target(db, snapshot, target_type, target_id):
+    if target_id is not None:
+        from .portable_hole import assert_exterior
+        assert_exterior(db,target_type,target_id)
     encounter = snapshot.get('encounter') or {}
     if encounter.get('active') and encounter.get('battle_mode') and target_id is not None:
         participants = encounter.get('participants') or []

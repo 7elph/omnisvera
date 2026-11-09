@@ -1,8 +1,9 @@
-"""Official 9B -> independent ZeroGPU; explicit 4B test never silently upgrades."""
+"""Official 9B -> independent ZeroGPU -> Pollinations (free, text only); explicit 4B test never silently upgrades."""
 from contextlib import closing
 import json
 from .cloudflare_provider import FluxKleinProvider, ImageProviderError
 from .zerogpu_provider import ZeroGPUProvider, SPACE
+from .pollinations_provider import PollinationsProvider
 
 
 class RoutedImageProvider:
@@ -29,7 +30,15 @@ class RoutedImageProvider:
                 return result
             except ImageProviderError as fallback_error:
                 self.last_run['fallback_error_reason'] = fallback_error.reason
-                raise ImageProviderError(f'{exc} Fallback: {fallback_error}', reason=fallback_error.reason) from fallback_error
+                if references:  # Pollinations can't edit a reference image: keep the honest error
+                    raise ImageProviderError(f'{exc} Fallback: {fallback_error}', reason=fallback_error.reason) from fallback_error
+                try:
+                    result = PollinationsProvider().generate(prompt, output_path)
+                    self.last_run['used_provider'] = 'pollinations'
+                    return result
+                except ImageProviderError as last_error:
+                    self.last_run['second_fallback_error_reason'] = last_error.reason
+                    raise ImageProviderError(f'{exc} Fallback: {fallback_error} Pollinations: {last_error}', reason=last_error.reason) from last_error
 
 
 def record_image_route(database_path, job_id, provider):

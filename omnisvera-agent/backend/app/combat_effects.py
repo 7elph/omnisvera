@@ -65,6 +65,8 @@ def init_effects(path: Path) -> None:
         db.execute("BEGIN IMMEDIATE")
         if "encounter_json" not in {row[1] for row in db.execute("PRAGMA table_info(combat_effect_clock)")}:
             db.execute("ALTER TABLE combat_effect_clock ADD COLUMN encounter_json TEXT NOT NULL DEFAULT '{}'")
+        if 'world_phase' not in {row[1] for row in db.execute('PRAGMA table_info(combat_effect_clock)')}:
+            db.execute("ALTER TABLE combat_effect_clock ADD COLUMN world_phase TEXT NOT NULL DEFAULT 'unset'")
 
 
 def effect_snapshot(db: sqlite3.Connection) -> dict:
@@ -73,14 +75,15 @@ def effect_snapshot(db: sqlite3.Connection) -> dict:
     effects=[
         json.loads(row[0]) for row in db.execute("SELECT data_json FROM combat_effects WHERE active=1 ORDER BY id")
     ]
-    if any(effect.get('hemomancy_kind') for effect in effects):
+    if any(effect.get('hemomancy_kind') or effect.get('drum_fear') for effect in effects):
         # Keep map-bound riders persisted, but never apply their bonuses on a
         # different map. Legacy effects retain their existing projection.
         selected = db.execute('SELECT map_id FROM session_workspace_state WHERE id=1').fetchone()
         active_map = encounter.get('map_id') if encounter.get('active') else selected[0] if selected else 'default'
-        effects = [effect for effect in effects if not effect.get('hemomancy_kind') or effect.get('map_id') == active_map]
+        effects = [effect for effect in effects if not (effect.get('hemomancy_kind') or effect.get('drum_fear')) or effect.get('map_id') == active_map]
     from .dorn_spell_pack import expand_web_effects
-    return {"round":clock[0],"version":clock[1],"encounter":encounter,"effects":expand_web_effects(db,effects)}
+    from .magic_world_phase import phase
+    return {"round":clock[0],"version":clock[1],"world_phase":phase(db),"encounter":encounter,"effects":expand_web_effects(db,effects)}
 
 
 def readeffects(path: Path) -> dict:
@@ -105,7 +108,7 @@ def readeffects(path: Path) -> dict:
 def expire_rest_effects(db: sqlite3.Connection, character_id: str, *, complete: bool = False) -> None:
     # A GM full rest ends every temporary status, not just rest-bound buffs.
     # Equipment/passive bonuses remain derived from the equipped inventory.
-    duration_filter = "" if complete else " AND json_extract(data_json,'$.duration')='rest'"
+    duration_filter = " AND COALESCE(json_extract(data_json,'$.air_exposure'),0)!=1" if complete else " AND json_extract(data_json,'$.duration')='rest'"
     cursor = db.execute("UPDATE combat_effects SET active=0 WHERE active=1 AND target_type='character' AND target_id=?" + duration_filter, (character_id,))
     if complete and character_id == 'raziel':
         from .hemomancy import end_combat as end_hemomancy
@@ -135,6 +138,10 @@ def expire_session_effects(db: sqlite3.Connection, session_id: int, now: str, *,
         return
     changes = []
     for effect in snapshot['effects']:
+        if effect.get('item_special') == 'dart':
+            db.execute('UPDATE combat_effects SET active=0 WHERE id=?', (effect['id'],))
+            changes.append({'expired': effect['id']})
+            continue
         if effect.get('monster_condition'):
             continue  # Bodily conditions follow their clock/cure, not session closure.
         if effect.get('duration') in {'rounds', 'scene', 'next_attack', 'fictional_time'} or effect.get('protocol') == 'guard' or effect.get('immobilized') or effect.get('reward')=='vines' or effect.get('necro_spell') in {'clonagem','aterrorrizar'} or effect.get('dot_hp') or effect.get('skill')=='provocacao':
@@ -162,6 +169,9 @@ def change_hp(db: sqlite3.Connection, target_type: str, target_id: str, amount: 
     """Signed HP change, honoring temporary HP for damage and maximum HP for healing."""
     if damage_context and not damage_type:damage_type=damage_context.get('damage_type')
     before_defenses=-amount if amount<0 else 0
+    from .magic_absorption import absorb as absorb_magic_item
+    magic_absorption=absorb_magic_item(db,target_type,target_id,before_defenses,damage_context,now)
+    if magic_absorption:amount+=magic_absorption['absorbed']
     if amount < 0 and (damage_type or damage_context):
         from .monster_runtime import damage_response
         amount = -damage_response(db, target_type, target_id, -amount, damage_type,damage_context)
@@ -178,7 +188,7 @@ def change_hp(db: sqlite3.Connection, target_type: str, target_id: str, amount: 
                        (json.dumps(state,ensure_ascii=False),now,target_id))
             db.execute('UPDATE session_workspace_tokens SET current_hp=?,updated_at=? WHERE character_id=?',
                        (state['current_hp'],now,target_id))
-            return result
+            return {**result,**({'magic_item_absorption':magic_absorption} if magic_absorption else {})}
         before, maximum = state.get("current_hp"), state.get("maximum_hp")
         temporary = int(state.get("temporary_hp") or 0)
         absorbed = min(temporary, -amount) if amount < 0 and not ignore_temporary_hp else 0
@@ -213,6 +223,8 @@ def change_hp(db: sqlite3.Connection, target_type: str, target_id: str, amount: 
         db.execute("UPDATE session_workspace_tokens SET current_hp=?,updated_at=? WHERE id=?", (after, now, target_id))
     from .bat_swarm import sync as sync_swarm
     sync_swarm(db,now)
+    from .magic_item_drums import prune as prune_drums
+    prune_drums(db,now)
     from .item_grapple import prune as prune_item_grapple
     prune_item_grapple(db,now)
     from .monster_runtime import track_hp
@@ -221,7 +233,7 @@ def change_hp(db: sqlite3.Connection, target_type: str, target_id: str, amount: 
         from .morthak_high_spells import cleanup
         cleanup(db,now)
     return {"hp_before": before, "hp_after": after, "temporary_hp_absorbed": absorbed, "damage_reduction_penalty":penalty,
-            "damage_taken":max(0,int(before)-after),**({'damage_type':damage_type,'damage_before_defenses':before_defenses,'damage_after_defenses':after_defenses} if damage_type or damage_context else {})}
+            "damage_taken":max(0,int(before)-after),**({'magic_item_absorption':magic_absorption} if magic_absorption else {}),**({'damage_type':damage_type,'damage_before_defenses':before_defenses,'damage_after_defenses':after_defenses} if damage_type or damage_context else {})}
 
 
 def _current_participant(encounter: dict) -> dict | None:
@@ -286,6 +298,7 @@ def effect_command(path: Path, *, actor_id: str, actor_role: str, request_id: st
         raise PermissionError('Somente o Mestre controla os protocolos de Dorn')
     if action in {'monster_breath','monster_contact'} and actor_role != 'gm':
         raise PermissionError('Somente o Mestre controla baforadas do bestiário')
+    if action=='world_phase' and actor_role!='gm':raise PermissionError('Somente o Mestre define dia/noite')
     if not 8 <= len(request_id) <= 120:
         raise ValueError("request_id inválido")
     # A version is a precondition for a NEW command, not its identity. A retry
@@ -314,7 +327,10 @@ def effect_command(path: Path, *, actor_id: str, actor_role: str, request_id: st
         now = datetime.now(timezone.utc).isoformat()
         changes = []
         protocol_result = None
-        if action == 'monster_contact':
+        if action == 'world_phase':
+            from .magic_world_phase import command as phase_command
+            changes.append(phase_command(db,payload))
+        elif action == 'monster_contact':
             from .monster_contacts import command
             protocol_result=command(db,snapshot,payload,now,request_id)
             changes.append(protocol_result)
@@ -382,6 +398,8 @@ def effect_command(path: Path, *, actor_id: str, actor_role: str, request_id: st
                 requested_actor = payload.get("actor")
                 from .necromancer_spells import finish_target_turn
                 finish_target_turn(db,current)
+                from .item_darts import finish_turn as finish_dart_turn
+                finish_dart_turn(db,current,encounter,now)
                 if actor_role == "player":
                     owns_turn = current is not None and current.get("target_type") == "character" and current.get("target_id") == actor_id
                     if current and current.get('target_type') == 'token':
@@ -487,6 +505,9 @@ def effect_command(path: Path, *, actor_id: str, actor_role: str, request_id: st
                     if payload.get('battle_mode'):
                         encounter['battle_mode'] = True
                         stage_battle(db, encounter, now)
+                        if payload.get('formation') is not None:
+                            from .battle_mode import apply_formation
+                            apply_formation(db, encounter, payload['formation'])
                     db.execute("UPDATE combat_effect_clock SET round=1 WHERE id=1")
                 elif encounter.get('battle_mode'):
                     additions = [p for p in ordered if (p['target_type'], p['target_id']) not in previous_members]
@@ -509,9 +530,12 @@ def effect_command(path: Path, *, actor_id: str, actor_role: str, request_id: st
                 target_turn(db,_current_participant(encounter),now,request_id)
                 from .item_grapple import turn_start as grapple_turn
                 from .monster_parasites import turn_start as parasite_turn
-                while grapple_turn(db,_current_participant(encounter),encounter,now,request_id) or parasite_turn(db,_current_participant(encounter),encounter,now,request_id) or hemomancy_turn(db,_current_participant(encounter),encounter,now,request_id+':'+str(encounter.get('turn_sequence',0))) or touch_turn(db,_current_participant(encounter),now,request_id+':'+str(encounter.get('turn_sequence',0)),encounter=encounter) or vine_turn(db, _current_participant(encounter), now, request_id, encounter):
+                from .item_darts import turn_start as dart_turn
+                while dart_turn(db,_current_participant(encounter),encounter,now,request_id) or grapple_turn(db,_current_participant(encounter),encounter,now,request_id) or parasite_turn(db,_current_participant(encounter),encounter,now,request_id) or hemomancy_turn(db,_current_participant(encounter),encounter,now,request_id+':'+str(encounter.get('turn_sequence',0))) or touch_turn(db,_current_participant(encounter),now,request_id+':'+str(encounter.get('turn_sequence',0)),encounter=encounter) or vine_turn(db, _current_participant(encounter), now, request_id, encounter):
                     from .necromancer_spells import finish_target_turn
                     finish_target_turn(db,_current_participant(encounter))
+                    from .item_darts import finish_turn as finish_dart_turn
+                    finish_dart_turn(db,_current_participant(encounter),encounter,now)
                     members = encounter['participants']
                     encounter['turn_index'] = (encounter['turn_index'] + 1) % len(members)
                     encounter['turn_sequence'] = int(encounter.get('turn_sequence') or 0) + 1
@@ -523,6 +547,8 @@ def effect_command(path: Path, *, actor_id: str, actor_role: str, request_id: st
                     raziel_turn(db,_current_participant(encounter),encounter,now,request_id)
                     dorn_turn(db,_current_participant(encounter),encounter,now,request_id)
             if action == 'end':
+                from .item_darts import end_combat as end_darts
+                end_darts(db)
                 from .hemomancy import end_combat as end_hemomancy
                 end_hemomancy(db)
                 db.execute("UPDATE combat_effects SET active=0 WHERE json_extract(data_json,'$.necro_spell')='clonagem'")
@@ -684,6 +710,8 @@ def effect_command(path: Path, *, actor_id: str, actor_role: str, request_id: st
             changes.append({'defeated': retired})
         from .bat_swarm import sync as sync_swarm
         sync_swarm(db,now)
+        from .magic_item_drums import sync as sync_drums
+        sync_drums(db,now)
         result = effect_snapshot(db)
         public_character = None
         public_label = None

@@ -60,6 +60,27 @@ class SpatialGridTests(unittest.TestCase):
         self.assertIsNone(result['movement'])
         self.assertFalse(readeffects(self.db).get('encounter',{}).get('movement'))
 
+    def test_exploration_click_move_is_owned_adjacent_and_idempotent(self):
+        before = readeffects(self.db)['version']
+        result = self.command('EXPLORATION_MOVE', [[1,1],[2,1],[3,2]], role='player', actor_id='vezemir', request_id='explore-click-001')
+        self.assertEqual(3, self.position()['cell_x'])
+        self.assertIsNone(result['movement'])
+        self.assertEqual(before, readeffects(self.db)['version'])
+        replayed = move_entity(self.db, actor_id='vezemir', role='player', request_id='explore-click-001',
+            map_id=self.map, token_id=self.token['id'], mode='EXPLORATION_MOVE', cells=[[1,1],[2,1],[3,2]],
+            expected_position_version=1, expected_grid_version=1, expected_combat_version=before, load_movement=lambda _: '9 m')
+        self.assertEqual(result, replayed)
+
+    def test_exploration_cannot_move_others_teleport_or_bypass_combat(self):
+        with self.assertRaises(PermissionError):
+            self.command('EXPLORATION_MOVE', [[1,1],[2,1]], role='player', actor_id='raziel')
+        with self.assertRaisesRegex(ValueError, 'adjacentes'):
+            self.command('EXPLORATION_MOVE', [[1,1],[4,1]])
+        self.start()
+        with self.assertRaisesRegex(ValueError, 'combate'):
+            self.command('EXPLORATION_MOVE', [[1,1],[2,1]])
+        self.assertEqual(1, self.position()['version'])
+
     def test_bounds_and_source_rejected_atomically(self):
         for cells in ([[1,1],[10,1]], [[0,1],[1,1]], [[1,1],[1.5,2]]):
             with self.subTest(cells=cells), self.assertRaises(ValueError): self.command(cells=cells)
@@ -130,7 +151,7 @@ class SpatialGridTests(unittest.TestCase):
         self.assertEqual([],seed_session7_grids(self.db))
         for map_id in maps:
             snapshot=get_workspace_snapshot(self.db,map_id=map_id,is_gm=True)
-            self.assertEqual(1.5,snapshot['map']['grid']['cell_size_m'])
+            self.assertEqual(1,snapshot['map']['grid']['cell_size_m'])
             self.assertEqual('original.svg',snapshot['map']['image_path'])
 
     def test_http_auth_command_conflict_and_legacy_bypass(self):

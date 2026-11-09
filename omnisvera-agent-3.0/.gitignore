@@ -1,0 +1,9 @@
+.godot/
+build/
+*.tmp
+*.log
+__pycache__/
+*.pyc
+
+addons/godot_ai/
+assets/rom2_local/

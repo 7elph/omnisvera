@@ -42,6 +42,7 @@ class RollSpec:
     source: str
     source_id: str | None = None
     target_value: int | None = None
+    target_comparison: str = 'at_least'
 
 
 def _now() -> str:
@@ -152,6 +153,9 @@ def init_dice_rolls(database_path: Path) -> None:
                 "ALTER TABLE dice_roll_requests ADD COLUMN game_session_id INTEGER"
                 + (" REFERENCES game_sessions(id)" if table_exists(connection, "game_sessions") else "")
             )
+        for table,columns in [('dice_roll_events',event_columns),('dice_roll_requests',request_columns)]:
+            if 'target_comparison' not in columns:
+                connection.execute(f"ALTER TABLE {table} ADD COLUMN target_comparison TEXT NOT NULL DEFAULT 'at_least'")
         connection.execute(
             "CREATE INDEX IF NOT EXISTS idx_dice_roll_events_game_session ON dice_roll_events(game_session_id,id DESC)"
         )
@@ -235,6 +239,8 @@ def resolve_character_roll(
         modifier = (definition.get("attribute_modifiers") or {}).get(key)
         if modifier is None:
             raise ValueError("Este teste de atributo não está configurado")
+        bonuses=(definition.get('item_effects') or {}).get('skill_modifiers') or {}
+        modifier+=int(bonuses.get(key) or 0)+int(bonuses.get('all') or 0)
         return RollSpec("attribute", f"{character_name} — Teste de {labels[key]}", _signed_formula("1d20", modifier), "character_attribute", key)
 
     if roll_type == "saving_throw":
@@ -246,6 +252,10 @@ def resolve_character_roll(
         return RollSpec("saving_throw", f"{character_name} — Jogada de Proteção", _signed_formula("1d20", bonus), "character_saving_throw", "saving_throw", target)
 
     if roll_type == "skill":
+        if str(source_id or '').startswith('equipment:'):
+            from .equipment_checks import resolve
+            path,spec=resolve(inventory,source_id)
+            return RollSpec('skill',f"{character_name} — {spec['label']} (≤{spec['chance']}%)",'1d100','equipment_check',path,spec['chance'],'at_most')
         skill = str(source_id or "").strip()
         modifiers = (definition.get("item_effects") or {}).get("skill_modifiers") or {}
         if not skill or skill not in modifiers:
@@ -364,6 +374,7 @@ def create_roll(
     reason: str | None = None,
     rng: Rng | None = None,
     target_hidden_authorized: bool = False,
+    target_comparison: str = 'at_least',
 ) -> tuple[dict[str, Any], bool]:
     request_id = str(request_id or "").strip()
     if not 8 <= len(request_id) <= 120 or not re.fullmatch(r"[A-Za-z0-9._:-]+", request_id):
@@ -375,6 +386,7 @@ def create_roll(
     clean_label = str(label or "Rolagem").strip()[:160] or "Rolagem"
     clean_reason = str(reason or "").strip()[:500] or None
     parsed_formula = parse_formula(formula).formula
+    if target_comparison not in {'at_least','at_most'}:raise ValueError('Comparação de alvo inválida')
     init_dice_rolls(database_path)
     with closing(_connect(database_path)) as connection, connection:
         connection.execute("BEGIN IMMEDIATE")
@@ -383,25 +395,37 @@ def create_roll(
             record = _roll_record(existing)
             if record["actor_id"] != actor_id:
                 raise ValueError("request_id já utilizado")
+            if source=='equipment_check' or record['source']=='equipment_check':
+                expected={'character_id':character_id,'source':source,'source_id':source_id,'formula':parsed_formula,
+                    'target_value':target,'target_comparison':target_comparison,'label':clean_label,'visibility':visibility,
+                    'session_id':session_id,'scene_id':scene_id,'action_id':action_id,'reason':clean_reason,'target_hidden':bool(target_hidden)}
+                if any(record.get(k)!=v for k,v in expected.items()):raise ValueError('request_id já utilizado com outra intenção de teste')
             return record, False
+        check_path=source_id if source=='equipment_check' else None
+        if source=='roll_request' and str(source_id).isdecimal():
+            origin=connection.execute('SELECT source,source_id FROM dice_roll_requests WHERE id=?',(int(source_id),)).fetchone()
+            if origin and origin['source']=='equipment_check':check_path=origin['source_id']
+        if check_path:
+            from .equipment_checks import validate
+            validate(connection,character_id,check_path,parsed_formula,target,target_comparison)
         if game_session_id is None:
             game_session_id = active_game_session_id(connection, campaign_id)
         rolled = roll_formula(parsed_formula, rng)
-        outcome = None if target is None else ("success" if rolled["total"] >= target else "failure")
+        outcome = None if target is None else ('success' if (rolled['total']<=target if target_comparison=='at_most' else rolled['total']>=target) else 'failure')
         cursor = connection.execute(
             """
             INSERT INTO dice_roll_events(
               request_id,session_id,game_session_id,campaign_id,character_id,actor_id,actor_role,roll_type,label,
               formula,dice,modifier,individual_results_json,subtotal,total,target_value,target_hidden,outcome,
-              visibility,source,source_id,scene_id,action_id,reason,created_at
-            ) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+              visibility,source,source_id,scene_id,action_id,reason,created_at,target_comparison
+            ) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
             """,
             (
                 request_id, session_id, game_session_id, campaign_id, character_id, actor_id, actor_role, roll_type,
                 clean_label, rolled["formula"], rolled["dice"], rolled["modifier"],
                 json.dumps(rolled["individual_results"]), rolled["subtotal"], rolled["total"],
                 target, int(bool(target_hidden)), outcome, visibility, source, source_id,
-                scene_id, action_id, clean_reason, _now(),
+                scene_id, action_id, clean_reason, _now(), target_comparison,
             ),
         )
         row = connection.execute("SELECT * FROM dice_roll_events WHERE id=?", (cursor.lastrowid,)).fetchone()
@@ -476,6 +500,7 @@ def create_roll_request(
         raise ValueError("request_id inválido")
     visibility = validate_visibility(visibility, "gm", character_id)
     target = validate_target(target_value if target_value is not None else spec.target_value)
+    if spec.target_comparison not in {'at_least','at_most'}:raise ValueError('Comparação de alvo inválida')
     now = datetime.now(timezone.utc)
     expires = now + timedelta(hours=max(1, min(expires_in_hours, 168)))
     from contextlib import nullcontext
@@ -486,20 +511,23 @@ def create_roll_request(
         existing = connection.execute("SELECT * FROM dice_roll_requests WHERE request_id=?", (request_id,)).fetchone()
         if existing:
             return _request_record(existing), False
+        if spec.source=='equipment_check':
+            from .equipment_checks import validate
+            validate(connection,character_id,spec.source_id,parse_formula(spec.formula).formula,target,spec.target_comparison)
         if game_session_id is None:
             game_session_id = active_game_session_id(connection, campaign_id)
         cursor = connection.execute(
             """
             INSERT INTO dice_roll_requests(
               request_id,session_id,game_session_id,campaign_id,character_id,requested_by,roll_type,label,formula,
-              visibility,source,source_id,scene_id,action_id,target_value,target_hidden,reason,status,created_at,expires_at
-            ) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,'pending',?,?)
+              visibility,source,source_id,scene_id,action_id,target_value,target_hidden,reason,status,created_at,expires_at,target_comparison
+            ) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,'pending',?,?,?)
             """,
             (
                 request_id, session_id, game_session_id, campaign_id, character_id, requested_by, spec.roll_type,
                 spec.label, parse_formula(spec.formula).formula, visibility, spec.source, spec.source_id,
                 scene_id, action_id, target, int(bool(target_hidden)), str(reason or "").strip()[:500] or None,
-                now.isoformat(), expires.isoformat(),
+                now.isoformat(), expires.isoformat(), spec.target_comparison,
             ),
         )
         row = connection.execute("SELECT * FROM dice_roll_requests WHERE id=?", (cursor.lastrowid,)).fetchone()
@@ -601,6 +629,7 @@ def complete_roll_request(
             reason=request.get("reason"),
             rng=rng,
             target_hidden_authorized=True,
+            target_comparison=request.get('target_comparison','at_least'),
         )
         if event["source"] != "roll_request" or event["source_id"] != str(request_id):
             raise ValueError("Esta chave de conclusão pertence a outra rolagem")

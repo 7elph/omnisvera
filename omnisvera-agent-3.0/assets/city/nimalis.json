@@ -1,0 +1,232 @@
+{
+ "schema": "omnisvera.city.v1",
+ "notes": "Tela de cidade. 'variant' escolhe a arte: 'original' (gerada no Flux, publicável) ou 'rom2' (arte local do jogo, uso privado). Cada hotspot usa 'polygon' (coordenadas da imagem) ou 'mask' (cor da máscara em tons de cinza). 'pin' liga ao marcador real; 'art' é o interior da loja.",
+ "map_id": "official:nimalis",
+ "title": "Nimalis",
+ "exit_map_id": "map:fdba4a6d68c94b66",
+ "exit_title": "Arredores de Nimalis",
+ "variant": "original",
+ "variants": {
+  "original": {
+   "background": "res://assets/original/city.jpg",
+   "frames": "gothic",
+   "hotspots": [
+    {
+     "id": "gate",
+     "label": "Portões · sair para os Arredores",
+     "kind": "exit",
+     "polygon": [
+      [
+       345,
+       40
+      ],
+      [
+       540,
+       40
+      ],
+      [
+       540,
+       315
+      ],
+      [
+       345,
+       315
+      ]
+     ]
+    },
+    {
+     "id": "shop",
+     "label": "Equipamentos de Thoradin",
+     "kind": "merchant",
+     "pin": "monster:6624c761ea5b4cbf8062de90dfc40521",
+     "art": "res://assets/original/armorer.jpg",
+     "polygon": [
+      [
+       270,
+       330
+      ],
+      [
+       500,
+       320
+      ],
+      [
+       565,
+       430
+      ],
+      [
+       580,
+       560
+      ],
+      [
+       560,
+       640
+      ],
+      [
+       300,
+       640
+      ],
+      [
+       280,
+       470
+      ]
+     ]
+    },
+    {
+     "id": "potions",
+     "label": "O Frasco Afogado · poções",
+     "kind": "merchant",
+     "pin": "location:78a1e0fd2f904ccbbb23b959e3401a33",
+     "art": "res://assets/original/potions.jpg",
+     "polygon": [
+      [
+       0,
+       220
+      ],
+      [
+       110,
+       210
+      ],
+      [
+       290,
+       500
+      ],
+      [
+       270,
+       760
+      ],
+      [
+       60,
+       800
+      ],
+      [
+       0,
+       780
+      ]
+     ]
+    },
+    {
+     "id": "temple",
+     "label": "Conclave dos Errantes · guilda e pouso",
+     "kind": "tavern",
+     "pin": "location:f910fe95a11e478e8e8e4f29e9acd53c",
+     "art": "res://assets/original/guild.jpg",
+     "polygon": [
+      [
+       675,
+       260
+      ],
+      [
+       800,
+       90
+      ],
+      [
+       970,
+       170
+      ],
+      [
+       1024,
+       260
+      ],
+      [
+       1024,
+       640
+      ],
+      [
+       830,
+       610
+      ],
+      [
+       680,
+       560
+      ]
+     ]
+    },
+    {
+     "id": "square",
+     "label": "Praça · mapa de Nimalis",
+     "kind": "city_map",
+     "polygon": [
+      [
+       430,
+       630
+      ],
+      [
+       560,
+       630
+      ],
+      [
+       590,
+       950
+      ],
+      [
+       430,
+       950
+      ]
+     ]
+    }
+   ]
+  },
+  "rom2": {
+   "background": "res://assets/rom2_local/town/townmain.png",
+   "mask": "res://assets/rom2_local/town/townmask.png",
+   "frames": "rom2",
+   "hotspots": [
+    {
+     "id": "shop",
+     "mask": 144,
+     "label": "Equipamentos de Thoradin",
+     "kind": "merchant",
+     "pin": "monster:6624c761ea5b4cbf8062de90dfc40521",
+     "highlight": {
+      "texture": "res://assets/rom2_local/town/shop_l.png",
+      "position": [
+       264,
+       264
+      ]
+     }
+    },
+    {
+     "id": "potions",
+     "mask": 128,
+     "label": "O Frasco Afogado · poções",
+     "kind": "merchant",
+     "pin": "location:78a1e0fd2f904ccbbb23b959e3401a33",
+     "highlight": {
+      "texture": "res://assets/rom2_local/town/tavern_l.png",
+      "position": [
+       144,
+       332
+      ]
+     }
+    },
+    {
+     "id": "temple",
+     "mask": 192,
+     "label": "Conclave dos Errantes · guilda e pouso",
+     "kind": "tavern",
+     "pin": "location:f910fe95a11e478e8e8e4f29e9acd53c",
+     "highlight": {
+      "texture": "res://assets/rom2_local/town/trener_l.png",
+      "position": [
+       436,
+       300
+      ]
+     },
+     "art": "res://assets/rom2_local/inn/centerarea.png"
+    },
+    {
+     "id": "square",
+     "mask": 176,
+     "label": "Praça · mapa de Nimalis",
+     "kind": "city_map"
+    },
+    {
+     "id": "gate",
+     "mask": 160,
+     "label": "Portões · sair para os Arredores",
+     "kind": "exit"
+    }
+   ]
+  }
+ }
+}

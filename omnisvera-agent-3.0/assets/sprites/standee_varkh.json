@@ -1,0 +1,118 @@
+{
+ "schema_version": 1,
+ "character_id": "varkh",
+ "display_name": "Varkh",
+ "standee": true,
+ "animations": {
+  "idle": {
+   "sheet": "standee_varkh.png",
+   "fps": 1,
+   "loop": true,
+   "render_scale": 0.36,
+   "frames": [
+    [
+     0,
+     0,
+     103,
+     256
+    ]
+   ],
+   "calibration": [
+    {
+     "pivot": [
+      51,
+      252
+     ]
+    }
+   ]
+  },
+  "walk_down": {
+   "sheet": "standee_varkh.png",
+   "fps": 1,
+   "loop": true,
+   "render_scale": 0.36,
+   "frames": [
+    [
+     0,
+     0,
+     103,
+     256
+    ]
+   ],
+   "calibration": [
+    {
+     "pivot": [
+      51,
+      252
+     ]
+    }
+   ]
+  },
+  "walk_up": {
+   "sheet": "standee_varkh.png",
+   "fps": 1,
+   "loop": true,
+   "render_scale": 0.36,
+   "frames": [
+    [
+     0,
+     0,
+     103,
+     256
+    ]
+   ],
+   "calibration": [
+    {
+     "pivot": [
+      51,
+      252
+     ]
+    }
+   ]
+  },
+  "walk_left": {
+   "sheet": "standee_varkh.png",
+   "fps": 1,
+   "loop": true,
+   "render_scale": 0.36,
+   "frames": [
+    [
+     0,
+     0,
+     103,
+     256
+    ]
+   ],
+   "calibration": [
+    {
+     "pivot": [
+      51,
+      252
+     ]
+    }
+   ]
+  },
+  "walk_right": {
+   "sheet": "standee_varkh.png",
+   "fps": 1,
+   "loop": true,
+   "render_scale": 0.36,
+   "frames": [
+    [
+     0,
+     0,
+     103,
+     256
+    ]
+   ],
+   "calibration": [
+    {
+     "pivot": [
+      51,
+      252
+     ]
+    }
+   ]
+  }
+ }
+}

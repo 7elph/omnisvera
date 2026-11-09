@@ -61,6 +61,8 @@ def target(db, kind, identity):
         columns = [r[1] for r in db.execute('PRAGMA table_info(session_workspace_tokens)')]
         record = dict(zip(columns, row))
         sheet = json.loads(record['sheet_json'] or '{}')
+        from .summon_profiles import complete_sheet
+        sheet=complete_sheet(sheet)
         from .monster_contacts import identity as monster_identity
         if monster_identity(sheet)=='esfera-da-aniquilacao':raise ValueError('Perigo de cenário sem PV: use o comando de contato')
         if record.get('character_id'):
@@ -136,7 +138,11 @@ def _elapse_plain(db, snapshot, seconds, changes, now=None):
     for effect in snapshot['effects']:
         if effect.get('duration') != 'fictional_time':
             continue
+        from .environment_breathing import step as step_air
+        if step_air(db,effect,seconds,now):continue
         effect['remaining_seconds'] = max(0, effect['remaining_seconds'] - seconds)
+        from .magic_item_uses import persist_remaining
+        persist_remaining(db,effect,now)
         db.execute('UPDATE combat_effects SET data_json=?,active=? WHERE id=?', (json.dumps(effect), int(effect['remaining_seconds'] > 0), effect['id']))
         if not effect['remaining_seconds']:
             from .monster_conditions import expire
@@ -211,6 +217,8 @@ def command(db,snapshot,action,payload,now):
         db.execute('UPDATE combat_effects SET data_json=? WHERE id=?',(json.dumps(effect),effect['id']))
         return {'effect':effect}
     spell=payload.get('spell_id')
+    from .magic_item_drums import assert_action
+    assert_action(db,'dorn7')
     if spell not in SPELLS:
         raise ValueError('Magia nao suportada')
     if spell in APPROVED_SPELLS:

@@ -15,6 +15,7 @@ FOG_COLUMNS = 32
 FOG_ROWS = 24
 FOG_LAYERS = ("exploration", "battle")
 PRESENCE_TIMEOUT_SECONDS = 70
+_UNSET=object()
 OFFICIAL_WORKSPACE_MAPS = (
     ("official:nimalis", "Nimalis", "zz_media/maps/mapa_de_nimalis.png"),
     ("official:nimalia", "Nimalia", "zz_media/maps/mapa_de_nimalia.png"),
@@ -204,6 +205,8 @@ def _token_record(row: sqlite3.Row) -> dict[str, Any]:
     item = dict(row)
     item["conditions"] = json.loads(item.pop("conditions_json") or "[]")
     item["sheet"] = json.loads(item.pop("sheet_json") or "{}")
+    from .summon_profiles import complete_sheet
+    item['sheet']=complete_sheet(item['sheet'])
     from .monster_movement import movement_modes
     item['sheet']['movement_modes']=movement_modes(item['sheet'].get('movement'))
     item["visible_to_players"] = bool(item.get("visible_to_players", 1))
@@ -283,6 +286,8 @@ def save_workspace_token(
     sheet: dict[str, Any] | None = None,
     map_id: str = "default",
 ) -> dict[str, Any]:
+    from .magic_capability import validate_sheet
+    validate_sheet(sheet or {})
     init_session_workspace(database_path)
     if token_type == "character" and character_id:
         token_id = f"character:{character_id}" if map_id == "default" else f"character:{map_id}:{character_id}"
@@ -312,6 +317,8 @@ def save_workspace_token(
         )
         from .bat_swarm import sync as sync_bat_swarm
         sync_bat_swarm(connection, now)
+        from .magic_item_drums import sync as sync_drums
+        sync_drums(connection,now)
         row = connection.execute("SELECT * FROM session_workspace_tokens WHERE id=?", (token_id,)).fetchone()
     if row is None:
         raise RuntimeError("Marcador não pôde ser salvo")
@@ -333,6 +340,8 @@ def update_workspace_token_position(
         )
         from .bat_swarm import sync as sync_bat_swarm
         sync_bat_swarm(connection, _now())
+        from .magic_item_drums import sync as sync_drums
+        sync_drums(connection,_now())
         row = connection.execute("SELECT * FROM session_workspace_tokens WHERE id=?", (token_id,)).fetchone()
     return _token_record(row) if row else None
 
@@ -349,7 +358,11 @@ def update_workspace_token(
     maximum_hp: int | None = None,
     conditions: list[str] | None = None,
     sheet: dict[str, Any] | None = None,
+    magic_capability: Any = _UNSET,
 ) -> dict[str, Any] | None:
+    from .magic_capability import validate_sheet
+    if sheet is not None:validate_sheet(sheet)
+    if magic_capability is not _UNSET:validate_sheet({'magic_capability':magic_capability})
     init_session_workspace(database_path)
     updates: dict[str, Any] = {"updated_at": _now()}
     if name is not None: updates["name"] = name.strip()
@@ -361,10 +374,18 @@ def update_workspace_token(
     if conditions is not None: updates["conditions_json"] = json.dumps(conditions, ensure_ascii=False)
     if sheet is not None: updates["sheet_json"] = json.dumps(sheet, ensure_ascii=False)
     assignments = ",".join(f"{key}=?" for key in updates)
+    values=list(updates.values())
+    if magic_capability is not _UNSET:
+        if sheet is not None:
+            updates['sheet_json']=json.dumps({**sheet,'magic_capability':magic_capability},ensure_ascii=False)
+            values=list(updates.values())
+        else:
+            assignments+=",sheet_json=json_set(COALESCE(sheet_json,'{}'),'$.magic_capability',json(?))"
+            values.append(json.dumps(magic_capability))
     with closing(_connect(database_path)) as connection, connection:
         cursor = connection.execute(
             f"UPDATE session_workspace_tokens SET {assignments} WHERE id=?",
-            (*updates.values(), token_id),
+            (*values, token_id),
         )
         from .battle_mode import retire_defeated
         retire_defeated(connection, _now())
@@ -377,6 +398,8 @@ def update_workspace_token(
 def delete_workspace_token(database_path: Path, token_id: str) -> bool:
     init_session_workspace(database_path)
     with closing(_connect(database_path)) as connection, connection:
+        from .portable_hole import protect_pin
+        protect_pin(connection,token_id)
         cursor = connection.execute("DELETE FROM session_workspace_tokens WHERE id=?", (token_id,))
         from .bat_swarm import sync as sync_bat_swarm
         sync_bat_swarm(connection, _now())
@@ -1035,6 +1058,10 @@ def get_workspace_snapshot(
         }
     fog = get_workspace_fog(database_path, str(map_record["id"]) if map_record else "default")
     tokens = list_workspace_tokens(database_path, str(map_record["id"])) if map_record else []
+    from .portable_hole import occupants_by_identity
+    with closing(_connect(database_path)) as contained_db:
+        occupants=occupants_by_identity(contained_db)
+        tokens=[token for token in tokens if ('character' if token.get('character_id') else 'token',token.get('character_id') or token['id']) not in occupants]
     from .spatial_grid import enrich_snapshot
     enrich_snapshot(database_path, {'map': map_record, 'tokens': tokens})
     if not is_gm:
@@ -1048,6 +1075,9 @@ def get_workspace_snapshot(
                 if battle.get('active') and battle.get('battle_mode') and battle.get('map_id') == (map_record or {}).get('id'):
                     revealed_battle_tokens = {p.get('token_id') or p['target_id'] for p in [*battle.get('participants', []),*battle.get('defeated', [])] if p['target_type'] == 'token' or p.get('token_id')}
         tokens = [token for token in tokens if _token_is_visible(token, fog) or (token['id'] in revealed_battle_tokens and token['visible_to_players'])]
+        for token in tokens:
+            token['sheet']={key:value for key,value in token.get('sheet',{}).items() if key!='magic_capability'}
+            if token['sheet'].get('door'):token['sheet']['door']={'open':bool(token['sheet']['door'].get('open'))}
     # Only the granted reward's public card metadata, never the caster's inventory.
     essence = None
     with closing(_connect(database_path)) as connection:

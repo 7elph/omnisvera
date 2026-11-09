@@ -176,10 +176,24 @@ class DiseaseRuntime(unittest.TestCase):
         spec = self.prepare()
         with closing(sqlite3.connect(self.db)) as db, db:
             db.execute("UPDATE character_definition_overrides SET data_json='{}' WHERE profile_id='vezemir'")
+            data=json.loads(db.execute("SELECT data_json FROM character_sheets WHERE profile_id='vezemir'").fetchone()[0])
+            data['attributes'].pop('constitution')
+            db.execute("UPDATE character_sheets SET data_json=? WHERE profile_id='vezemir'",(json.dumps(data),))
+        self.assertNotIn('constitution',self.state()[0])
         result, _, _, duration = self.apply(spec)
         self.assertTrue(result['manual'])
         self.assertEqual(duration, 0)
         self.assertEqual(self.state()[1]['effects'], [])
+
+    def test_missing_override_keeps_real_base_attribute_for_disease(self):
+        spec=self.prepare()
+        with closing(sqlite3.connect(self.db)) as db,db:
+            db.execute("UPDATE character_definition_overrides SET data_json='{}' WHERE profile_id='vezemir'")
+        self.assertEqual(self.state()[0]['constitution'],12)
+        result,_,_,duration=self.apply(spec,days=2)
+        self.assertNotIn('manual',result)
+        self.assertEqual(duration,1)
+        self.assertEqual(self.state()[0]['constitution'],1)
 
 
 if __name__ == '__main__':

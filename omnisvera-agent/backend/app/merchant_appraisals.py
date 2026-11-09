@@ -61,6 +61,10 @@ def appraise(path,mid,access,*,character_id,item_path,unit_copper,request_id):
 
 def hold_instance(db,merchant_id,q,owned,now):
     """NPC acquired the object as-is. It never merges into retail stock as new."""
+    if ((owned.get('_trade_condition') or {}).get('magic_container') or {}).get('occupants'):
+        raise ValueError('Retire os ocupantes antes de vender o Buraco Portátil')
+    if ((owned.get('_trade_condition') or {}).get('magic_container') or {}).get('open'):
+        raise ValueError('Feche o recipiente antes de vender')
     stock_id='stock-'+uuid.uuid4().hex
     data={'status':'individual_review','item_path':owned['item_path'],'origin_inventory_id':owned['id'],
           'condition':owned.get('_trade_condition'),'charges_current':owned.get('charges_current'),

@@ -6,6 +6,26 @@ from app.native_action_manifest import sheet_action_manifest, token_action_manif
 
 
 class NativeActionManifestTests(unittest.TestCase):
+    def test_quantity_magic_items_are_available_and_describe_cell_targeting(self):
+        from app.map_commerce import catalog_inventory
+        path='compendium:item-magico-bomba-de-ilusao'
+        item={**catalog_inventory(path),'item_path':path,'item_title':'Bomba de Ilusão','quantity':2,'equipped':False}
+        entry=self.sheet('vezemir',[],inventory=[item])[0]
+        self.assertEqual('available',entry['availability']['state'])
+        self.assertEqual('cell',entry['targeting']['selection'])
+        self.assertEqual(['map_id','target_cell','expected_grid_version'],entry['targeting']['options'])
+        self.assertEqual('technique:vezemir:magic-item:item-magico-bomba-de-ilusao',entry['targeting']['action_ref'])
+
+    def test_magic_activation_availability_matches_equipment_and_instance_guards(self):
+        from app.map_commerce import catalog_inventory
+        path='compendium:item-magico-botas-da-velocidade'
+        item={**catalog_inventory(path),'item_path':path,'item_title':'Botas da velocidade','quantity':1,'equipped':False}
+        entry=self.sheet('vezemir',[],inventory=[item])[0]
+        self.assertEqual(entry['binding'],'inventory_item')
+        self.assertEqual(entry['availability']['state'],'unavailable')
+        item['equipped']=True;item['quantity']=2
+        self.assertEqual(self.sheet('vezemir',[],inventory=[item])[0]['availability']['state'],'unavailable')
+
     def test_shield_shared_command_is_listed_as_the_fifth_current_skill(self):
         from app.hemomancy import pack
         definition=dict(id='raziel',hemomancy=pack())

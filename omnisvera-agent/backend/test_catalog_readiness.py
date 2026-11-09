@@ -275,7 +275,7 @@ class CatalogReadinessRealLoaderTests(TestCase):
     def test_real_catalog_totals(self):
         self.assertEqual(self.report["counts"]["monsters"]["total"], 255)
         self.assertEqual(self.report["counts"]["spells"]["total"], 854)
-        self.assertEqual(self.report["counts"]["items"]["total"], 329)
+        self.assertEqual(self.report["counts"]["items"]["total"], 338)
         self.assertEqual(self.report["catalogs"]["monsters"]["edition"], "OD2")
         self.assertEqual(self.report["catalogs"]["spells"]["edition"], "OD2")
         self.assertEqual(self.report["catalogs"]["items"]["edition"], "OD1")
@@ -298,4 +298,7 @@ class CatalogReadinessRealLoaderTests(TestCase):
     def test_real_lists_are_complete(self):
         self.assertEqual(len(self.report["monsters"]), 255)
         self.assertEqual(len(self.report["spells"]), 854)
-        self.assertEqual(len(self.report["items"]), 329)
+        self.assertEqual(len(self.report["items"]), 338)
+        self.assertIn('item-magico-broche-escudo',{item['id'] for item in self.report['items']})
+        self.assertTrue({'item-magico-bola-de-cristal-ordeira','item-magico-bola-de-cristal-caotica'} <= {item['id'] for item in self.report['items']})
+        self.assertTrue({'item-magico-sacola-magica-ordeira','item-magico-sacola-magica-caotica'} <= {item['id'] for item in self.report['items']})

@@ -1,0 +1,627 @@
+{
+  "schema_version": 2,
+  "character_id": "morthak",
+  "display_name": "Morthak",
+  "row_boundaries": [
+    0,
+    166,
+    328,
+    492,
+    667,
+    853
+  ],
+  "background_filter": "baked_light_checkerboard",
+  "source_sha256": "dee6363cc1b5a2cd10d4c7477e66c2eea555eba588e93498fa7d049ddd330669",
+  "animations": {
+    "idle": {
+      "sheet": "morthak-motion.jpg",
+      "fps": 5,
+      "loop": true,
+      "frames": [
+        [
+          25,
+          6,
+          111,
+          151
+        ],
+        [
+          179,
+          8,
+          115,
+          151
+        ],
+        [
+          332,
+          6,
+          117,
+          153
+        ],
+        [
+          488,
+          7,
+          117,
+          150
+        ],
+        [
+          650,
+          6,
+          113,
+          151
+        ],
+        [
+          806,
+          6,
+          116,
+          153
+        ],
+        [
+          966,
+          6,
+          114,
+          153
+        ],
+        [
+          1127,
+          6,
+          115,
+          151
+        ]
+      ],
+      "calibration": [
+        {
+          "pivot": [
+            66.0,
+            151
+          ],
+          "body_top": 18,
+          "body_height": 133
+        },
+        {
+          "pivot": [
+            68.0,
+            151
+          ],
+          "body_top": 18,
+          "body_height": 133
+        },
+        {
+          "pivot": [
+            74.0,
+            152
+          ],
+          "body_top": 19,
+          "body_height": 133
+        },
+        {
+          "pivot": [
+            76.5,
+            150
+          ],
+          "body_top": 19,
+          "body_height": 131
+        },
+        {
+          "pivot": [
+            74.5,
+            151
+          ],
+          "body_top": 19,
+          "body_height": 132
+        },
+        {
+          "pivot": [
+            76.0,
+            152
+          ],
+          "body_top": 18,
+          "body_height": 134
+        },
+        {
+          "pivot": [
+            71.0,
+            153
+          ],
+          "body_top": 18,
+          "body_height": 135
+        },
+        {
+          "pivot": [
+            75.5,
+            151
+          ],
+          "body_top": 18,
+          "body_height": 133
+        }
+      ],
+      "render_scale": 0.70180451
+    },
+    "walk_down": {
+      "sheet": "morthak-motion.jpg",
+      "fps": 8,
+      "loop": true,
+      "frames": [
+        [
+          21,
+          175,
+          120,
+          149
+        ],
+        [
+          178,
+          175,
+          115,
+          150
+        ],
+        [
+          333,
+          175,
+          117,
+          148
+        ],
+        [
+          491,
+          175,
+          116,
+          145
+        ],
+        [
+          651,
+          176,
+          114,
+          148
+        ],
+        [
+          809,
+          173,
+          112,
+          148
+        ],
+        [
+          969,
+          174,
+          107,
+          148
+        ],
+        [
+          1128,
+          176,
+          115,
+          147
+        ]
+      ],
+      "calibration": [
+        {
+          "pivot": [
+            68.0,
+            149
+          ],
+          "body_top": 7,
+          "body_height": 142
+        },
+        {
+          "pivot": [
+            57.5,
+            150
+          ],
+          "body_top": 10,
+          "body_height": 140
+        },
+        {
+          "pivot": [
+            69.5,
+            148
+          ],
+          "body_top": 11,
+          "body_height": 137
+        },
+        {
+          "pivot": [
+            62.5,
+            145
+          ],
+          "body_top": 11,
+          "body_height": 134
+        },
+        {
+          "pivot": [
+            63.5,
+            147
+          ],
+          "body_top": 9,
+          "body_height": 138
+        },
+        {
+          "pivot": [
+            63.5,
+            148
+          ],
+          "body_top": 11,
+          "body_height": 137
+        },
+        {
+          "pivot": [
+            63.0,
+            147
+          ],
+          "body_top": 10,
+          "body_height": 137
+        },
+        {
+          "pivot": [
+            65.5,
+            146
+          ],
+          "body_top": 9,
+          "body_height": 137
+        }
+      ],
+      "render_scale": 0.68131387
+    },
+    "walk_up": {
+      "sheet": "morthak-motion.jpg",
+      "fps": 8,
+      "loop": true,
+      "frames": [
+        [
+          22,
+          336,
+          112,
+          150
+        ],
+        [
+          178,
+          340,
+          118,
+          143
+        ],
+        [
+          336,
+          336,
+          115,
+          148
+        ],
+        [
+          495,
+          332,
+          122,
+          150
+        ],
+        [
+          654,
+          334,
+          125,
+          149
+        ],
+        [
+          813,
+          333,
+          125,
+          150
+        ],
+        [
+          973,
+          340,
+          128,
+          143
+        ],
+        [
+          1131,
+          332,
+          129,
+          151
+        ]
+      ],
+      "calibration": [
+        {
+          "pivot": [
+            69.0,
+            150
+          ],
+          "body_top": 10,
+          "body_height": 140
+        },
+        {
+          "pivot": [
+            76.5,
+            143
+          ],
+          "body_top": 10,
+          "body_height": 133
+        },
+        {
+          "pivot": [
+            63.5,
+            148
+          ],
+          "body_top": 12,
+          "body_height": 136
+        },
+        {
+          "pivot": [
+            70.0,
+            150
+          ],
+          "body_top": 13,
+          "body_height": 137
+        },
+        {
+          "pivot": [
+            64.0,
+            149
+          ],
+          "body_top": 11,
+          "body_height": 138
+        },
+        {
+          "pivot": [
+            63.5,
+            150
+          ],
+          "body_top": 12,
+          "body_height": 138
+        },
+        {
+          "pivot": [
+            72.0,
+            143
+          ],
+          "body_top": 5,
+          "body_height": 138
+        },
+        {
+          "pivot": [
+            67.0,
+            151
+          ],
+          "body_top": 13,
+          "body_height": 138
+        }
+      ],
+      "render_scale": 0.67637681
+    },
+    "walk_left": {
+      "sheet": "morthak-motion.jpg",
+      "fps": 8,
+      "loop": true,
+      "frames": [
+        [
+          13,
+          499,
+          139,
+          157
+        ],
+        [
+          177,
+          504,
+          133,
+          154
+        ],
+        [
+          330,
+          500,
+          143,
+          156
+        ],
+        [
+          486,
+          507,
+          134,
+          149
+        ],
+        [
+          651,
+          503,
+          142,
+          155
+        ],
+        [
+          809,
+          501,
+          142,
+          155
+        ],
+        [
+          969,
+          505,
+          133,
+          152
+        ],
+        [
+          1127,
+          503,
+          140,
+          152
+        ]
+      ],
+      "calibration": [
+        {
+          "pivot": [
+            78.0,
+            157
+          ],
+          "body_top": 12,
+          "body_height": 145
+        },
+        {
+          "pivot": [
+            70.0,
+            154
+          ],
+          "body_top": 7,
+          "body_height": 147
+        },
+        {
+          "pivot": [
+            75.5,
+            156
+          ],
+          "body_top": 14,
+          "body_height": 142
+        },
+        {
+          "pivot": [
+            76.0,
+            149
+          ],
+          "body_top": 10,
+          "body_height": 139
+        },
+        {
+          "pivot": [
+            67.5,
+            155
+          ],
+          "body_top": 11,
+          "body_height": 144
+        },
+        {
+          "pivot": [
+            73.0,
+            155
+          ],
+          "body_top": 13,
+          "body_height": 142
+        },
+        {
+          "pivot": [
+            71.0,
+            152
+          ],
+          "body_top": 9,
+          "body_height": 143
+        },
+        {
+          "pivot": [
+            80.5,
+            152
+          ],
+          "body_top": 12,
+          "body_height": 140
+        }
+      ],
+      "render_scale": 0.65501754
+    },
+    "walk_right": {
+      "sheet": "morthak-motion.jpg",
+      "fps": 8,
+      "loop": true,
+      "frames": [
+        [
+          23,
+          677,
+          94,
+          159
+        ],
+        [
+          179,
+          680,
+          95,
+          157
+        ],
+        [
+          336,
+          683,
+          98,
+          154
+        ],
+        [
+          493,
+          686,
+          102,
+          151
+        ],
+        [
+          653,
+          684,
+          100,
+          151
+        ],
+        [
+          812,
+          684,
+          103,
+          151
+        ],
+        [
+          971,
+          686,
+          102,
+          149
+        ],
+        [
+          1132,
+          683,
+          102,
+          152
+        ]
+      ],
+      "calibration": [
+        {
+          "pivot": [
+            61.5,
+            158
+          ],
+          "body_top": 10,
+          "body_height": 148
+        },
+        {
+          "pivot": [
+            64.0,
+            156
+          ],
+          "body_top": 9,
+          "body_height": 147
+        },
+        {
+          "pivot": [
+            68.0,
+            153
+          ],
+          "body_top": 5,
+          "body_height": 148
+        },
+        {
+          "pivot": [
+            71.5,
+            151
+          ],
+          "body_top": 8,
+          "body_height": 143
+        },
+        {
+          "pivot": [
+            70.5,
+            151
+          ],
+          "body_top": 7,
+          "body_height": 144
+        },
+        {
+          "pivot": [
+            73.5,
+            151
+          ],
+          "body_top": 7,
+          "body_height": 144
+        },
+        {
+          "pivot": [
+            73.5,
+            149
+          ],
+          "body_top": 5,
+          "body_height": 144
+        },
+        {
+          "pivot": [
+            71.0,
+            152
+          ],
+          "body_top": 5,
+          "body_height": 147
+        }
+      ],
+      "render_scale": 0.64151203
+    }
+  }
+}

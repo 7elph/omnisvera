@@ -20,7 +20,7 @@ _KIT_NAMES=('Armadura de couro batido','Armadura de couro','Armadura de placas',
 def is_catalog_reference(item: dict) -> bool:
     """Keep source paragraphs/table fragments inspectable, never sell them as items."""
     name=str(item.get('name') or '').strip().lstrip('–—-*/ ')
-    return (item.get('category') in _REFERENCE_CATEGORIES
+    return (item.get('id') in {'item-magico-braceletes-de-armadura','item-magico-sacola-magica'} or item.get('category') in _REFERENCE_CATEGORIES
             or bool(re.match(r'^(?:\d+[.,]?\d*\s*(?:kg|g|PO|PP|PC)|Preço do Kit:|Efeito \d+|T9\s)',name,re.I)))
 
 
@@ -48,7 +48,32 @@ def item_offer_readiness(item: dict | None, *, price_override_po=None,
         except (TypeError, ValueError, OverflowError):
             gaps.append('preco_invalido'); price = None
     category = str(item.get('category') or '')
-    if category in {'arma-corpo','arma-distancia'} and re.fullmatch(r'\d{1,2}d\d{1,4}(?:[+-]\d+)?', re.sub(r'\s+','',str(item.get('dano') or ''))):
+    if (item.get('mechanics') or {}).get('requires_variant'):
+        effect_status='variant_template'
+        warnings.append('escolha_variante_concreta')
+    elif (item.get('mechanics') or {}).get('magic_container_schema')==1:
+        effect_status='native_inventory_container'
+        warnings.append('recipiente_com_validacao_de_medidas')
+    elif (item.get('mechanics') or {}).get('magic_appearance_schema')==1:
+        effect_status='native_on_equip'
+        warnings.append('efeito_permanente_ao_equipar')
+    elif (item.get('mechanics') or {}).get('equipment_check_schema')==1:
+        effect_status='native_on_check'
+        warnings.append('teste_percentual_nativo')
+    elif (item.get('mechanics') or {}).get('magic_activation_schema')==1:
+        effect_status='native_on_use'
+        warnings.append('efeito_automatico_ao_usar')
+    elif (item.get('mechanics') or {}).get('magic_absorption_schema')==1 or (item.get('mechanics') or {}).get('magic_passive_schema')==1:
+        effect_status='native_while_equipped'
+        warnings.append('efeito_automatico_ao_equipar')
+    elif (item.get('mechanics') or {}).get('magic_contract_schema')==1:
+        effect_status='native_while_equipped'
+        warnings.append('efeito_automatico_ao_equipar')
+    elif (item.get('mechanics') or {}).get('magic_readiness', {}).get('status') == 'native_field_interaction':
+        effect_status='native_field_interaction'
+        if item['mechanics']['magic_readiness'].get('blocking_gaps'):
+            warnings.append('efeito_parcial')
+    elif category in {'arma-corpo','arma-distancia'} and re.fullmatch(r'\d{1,2}d\d{1,4}(?:[+-]\d+)?', re.sub(r'\s+','',str(item.get('dano') or ''))):
         effect_status = 'weapon_damage_only'
         warnings.append('somente_dano_base_cadastrado')
     elif category in {'protecao','item-classe','servico-magico'} or category.startswith('item-magico') or item.get('usos'):
@@ -78,6 +103,11 @@ def require_offerable_item(item: dict | None, *, price_override_po=None) -> dict
 
 def normalize_catalog_item(item: dict) -> dict:
     result=dict(item)
+    if item.get('category')=='item-magico':
+        from .magic_equipment import normalize_source
+        result=normalize_source(result)
+        from .magic_item_rulebook import enrich
+        result=enrich(result)
     if str(item.get('category','')).startswith('kit-'):
         original=str(item.get('name') or '')
         title=next((n for n in _KIT_NAMES if original==n or original.startswith(n+' ')),None)
@@ -91,7 +121,12 @@ def normalize_catalog_item(item: dict) -> dict:
     compiled=descriptor(result)
     if (compiled.get('mechanics') or {}).get('family_schema')==1:
         result.update(mechanics=compiled['mechanics'],effect_rules=compiled['effect_rules'],damage_formula=compiled.get('damage_formula'))
-    return result
+        if result['mechanics'].get('magic_activation_schema')==1:result['usable']=True
+    if item.get('category')=='item-magico':
+        from .magic_equipment import readiness
+        result['mechanics']={**(result.get('mechanics') or {}),'magic_readiness':readiness(result)}
+    from .item_dimensions import enrich as enrich_dimensions
+    return enrich_dimensions(result)
 
 
 def _search_key(value: str) -> str:
@@ -106,6 +141,24 @@ def load_item_catalog() -> dict:
         raise RuntimeError("O catálogo de itens está incompleto.")
     from .hp_potions import catalog_entry
     native = [normalize_catalog_item(item) for item in items]
+    from .magic_passives import BRACERS,variants
+    parent=next((item for item in items if item['id']==BRACERS),None)
+    if parent:
+        native.extend(normalize_catalog_item(item) for item in variants(parent)
+                      if not any(existing['id']==item['id'] for existing in native))
+    from .magic_absorption import CATALOG_ENTRY as BROOCH
+    from .magic_containers import BAG,variants as container_variants
+    bag=next((item for item in items if item['id']==BAG),None)
+    if bag:
+        native.extend(normalize_catalog_item(item) for item in container_variants(bag)
+                      if not any(existing['id']==item['id'] for existing in native))
+    from .magic_field_items import CRYSTAL, variants as crystal_variants
+    crystal=next((item for item in items if item['id']==CRYSTAL),None)
+    if crystal:
+        native.extend(normalize_catalog_item(item) for item in crystal_variants(crystal)
+                      if not any(existing['id']==item['id'] for existing in native))
+    if not any(item['id']==BROOCH['id'] for item in native):
+        native.append(normalize_catalog_item(BROOCH))
     from .item_specials import NET, DART
     for addition in (NET, DART):
         if not any(item['id'] == addition['id'] for item in native):

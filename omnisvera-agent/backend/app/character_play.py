@@ -365,7 +365,7 @@ def _equipped_rules(inventory: list[dict[str, Any]], kind: str) -> list[tuple[di
 
 
 def _equipped_effect_summary(inventory: list[dict[str, Any]],actor_class: str | None = None) -> dict[str, Any]:
-    groups: dict[tuple[str, str], list[tuple[dict[str, Any], dict[str, Any]]]] = {}
+    groups: dict[tuple[str, str, str], list[tuple[dict[str, Any], dict[str, Any]]]] = {}
     breakdown: list[dict[str, Any]] = []
     for item in inventory:
         if not item.get("equipped") or int(item.get("quantity") or 0) <= 0:
@@ -389,15 +389,16 @@ def _equipped_effect_summary(inventory: list[dict[str, Any]],actor_class: str | 
                 "formula": str(rule.get("formula") or "").strip() or None,
                 "label": str(rule.get("label") or "").strip() or None,
                 "stacking": str(rule.get("stacking") or "stack"),
+                **({'stacking_group':rule['stacking_group']} if rule.get('stacking_group') else {}),
                 "condition": condition or None,
                 "active": family_active if family_active is not None else not condition,
             }
             breakdown.append(entry)
             if (family_active if family_active is not None else not condition):
-                groups.setdefault((kind, target), []).append((item, rule))
+                groups.setdefault((kind, target, str(rule.get('stacking_group') or '')), []).append((item, rule))
 
     totals: dict[str, int] = {}
-    for (kind, target), entries in groups.items():
+    for (kind, target, _stacking_group), entries in groups.items():
         values = [int(rule.get("value") or 0) for _item, rule in entries]
         strategies = {str(rule.get("stacking") or "stack") for _item, rule in entries}
         if "replace" in strategies:
@@ -406,14 +407,14 @@ def _equipped_effect_summary(inventory: list[dict[str, Any]],actor_class: str | 
             selected = max(values, key=lambda value: abs(value), default=0)
         else:
             selected = sum(values)
-        totals[f"{kind}:{target}"] = selected
+        totals[f"{kind}:{target}"] = totals.get(f"{kind}:{target}",0)+selected
     return {"totals": totals, "breakdown": breakdown}
 
 
 def _equipped_weapons(inventory: list[dict[str, Any]]) -> list[dict[str, Any]]:
     return [
         item for item in inventory
-        if item.get("equipped") and int(item.get("quantity") or 0) > 0 and (item.get("damage_formula") or (item.get('mechanics') or {}).get('special_attack') in {'net','garrote','vibranium'})
+        if item.get("equipped") and int(item.get("quantity") or 0) > 0 and (item.get("damage_formula") or (item.get('mechanics') or {}).get('special_attack') in {'net','garrote','vibranium','dart'})
         and not item.get("usable")
         and ("escudo" not in _normalize(f"{item.get('item_title')} {item.get('item_type')}") or (item.get('mechanics') or {}).get('special_attack')=='vibranium')
     ]
@@ -504,6 +505,10 @@ def _equipped_armor_modifier(inventory: list[dict[str, Any]], effect_summary: di
     included_candidates: list[dict[str, Any]] = []
     for item in inventory:
         if not item.get("equipped") or int(item.get("quantity") or 0) <= 0 or str(item.get("item_path") or "") in structured_paths:
+            continue
+        # Reviewed checks supply no armor bonus; retain title-based defaults
+        # only for the existing legacy equipment, not these source contracts.
+        if (item.get('mechanics') or {}).get('equipment_check_schema')==1:
             continue
         title = str(item.get("item_title") or "").strip()
         item_type = str(item.get("item_type") or "").strip()
@@ -678,6 +683,16 @@ def build_character_definition(
     for target in attributes:
         if _number(attributes.get(target)) is not None:
             attributes[target] = int(_number(attributes[target]) or 0) + _effect_total(item_effects, "attribute_bonus", target)
+    from .magic_equipment import modifier_deltas
+    magic_attribute_deltas=modifier_deltas(attributes,inventory)
+    strength_item_delta=magic_attribute_deltas.get('strength',0)
+    if strength_item_delta:
+        key='damage_bonus:melee'
+        item_effects['totals'][key]=item_effects['totals'].get(key,0)+strength_item_delta
+        item_effects['breakdown'].append({'rule_id':'magic-equipment:strength-derived',
+            'item_path':'compendium:item-magico-cinto-da-forca-do-ogro','item_title':'Cinto da força do ogro',
+            'kind':'damage_bonus','target':'melee','value':strength_item_delta,'stacking':'stack',
+            'label':'Mudança do modificador de Força; derivada do atributo equipado','active':True})
     class_fields = _step_fields(sheet, "character_class")
     race_fields = _step_fields(sheet, "race")
     attacks = _step_fields(sheet, "attacks")
@@ -703,6 +718,14 @@ def build_character_definition(
         from .item_families import anchored_defense
         effective_armor_class=anchored_defense(overrides['equipment_defense_anchor'],armor_class,armor_modifier,attributes,inventory)
         unmodified_armor_class=effective_armor_class-armor_modifier
+    elif effective_armor_class is not None and magic_attribute_deltas.get('dexterity'):
+        caps=[i['mechanics']['dexterity_cap'] for i in inventory if i.get('equipped') and i.get('quantity',0)>0 and 'dexterity_cap' in (i.get('mechanics') or {})]
+        from .magic_equipment import attribute_bonuses
+        added=attribute_bonuses(inventory).get('dexterity',0)
+        old_mod=attribute_modifier(attributes['dexterity']-added);new_mod=attribute_modifier(attributes['dexterity'])
+        delta=(min(new_mod,min(caps))-min(old_mod,min(caps))) if caps else new_mod-old_mod
+        effective_armor_class+=delta
+        unmodified_armor_class=effective_armor_class-armor_modifier
     if armor_modifier_source and not any(entry.get("kind") == "armor_class_bonus" and entry.get("item_path") == armor_modifier_source.get("item_path") for entry in item_effects["breakdown"]):
         item_effects["breakdown"].append({
             "rule_id": "legacy-armor", "item_path": armor_modifier_source.get("item_path"), "item_title": armor_modifier_source.get("item_title"),
@@ -710,6 +733,7 @@ def build_character_definition(
             "stacking": "non_stack", "condition": None, "active": True, "included_in_sheet": bool(armor_modifier_source.get("included_in_sheet")),
         })
     initiative = _number(overrides.get("initiative"))
+    if initiative is not None:initiative+=magic_attribute_deltas.get('dexterity',0)
     movement = overrides.get("movement") or race_fields.get("movement")
     movement_bonus = _effect_total(item_effects, "movement_bonus")
     if movement_bonus:
@@ -731,12 +755,16 @@ def build_character_definition(
             ba = int(overrides.get('advancement_base_attack', class_fields.get('base_attack', level)) or 0)
             base_attack_bonus = ba + attribute_modifier(int(attributes.get('strength' if attack_id == 'melee' else 'dexterity') or 10))
         item_attack_bonus = _effect_total(item_effects, "attack_bonus", attack_id)
+        if not (profile_id=='vezemir' and level>=5):
+            # This is the attribute component of BA, also reused by native
+            # derived attacks (e.g. Hemomancia), not a flat weapon enhancement.
+            base_attack_bonus+=magic_attribute_deltas.get('strength' if attack_id=='melee' else 'dexterity',0)
         weapon = _equipped_weapon_for_attack(inventory, attack_id)
         mastery = overrides.get("specialization_mastery") or {}
         mastery_bonus = 0
         if mastery and weapon and mastery.get("weapon_item_path") == weapon.get("item_path"):
             mastery_bonus = int(mastery.get("attack_bonus") or 0)
-        damage = '0' if weapon and (weapon.get('mechanics') or {}).get('special_attack') in {'net','garrote'} else resolve_item_damage_formula({"item_effects": item_effects, "attributes": attributes, 'attack_slot': attack_id}, weapon) if weapon and not ((weapon.get("mechanics") or {}).get("special_attack")=="vibranium" and type(attributes.get("strength")) is not int) else None
+        damage = '0' if weapon and (weapon.get('mechanics') or {}).get('special_attack') in {'net','garrote','dart'} else resolve_item_damage_formula({"item_effects": item_effects, "attributes": attributes, 'attack_slot': attack_id}, weapon) if weapon and not ((weapon.get("mechanics") or {}).get("special_attack")=="vibranium" and type(attributes.get("strength")) is not int) else None
         missing_throw_strength = bool(weapon and (weapon.get('mechanics') or {}).get('special_attack')=='vibranium' and type(attributes.get('strength')) is not int)
         if mastery_bonus and damage:
             match = re.search(r"([+-]\d+)\s*$", str(damage))
@@ -752,8 +780,9 @@ def build_character_definition(
                 "attack_bonus": base_attack_bonus + item_attack_bonus + mastery_bonus,
                 "base_attack_bonus": base_attack_bonus,
                 "item_attack_bonus": item_attack_bonus,
+                "item_attribute_damage_bonus": strength_item_delta if attack_id=='melee' else 0,
                 "mastery_attack_bonus": mastery_bonus,
-                "damage": '0' if weapon and (weapon.get('mechanics') or {}).get('special_attack') in {'net','garrote'} else damage,
+                "damage": '0' if weapon and (weapon.get('mechanics') or {}).get('special_attack') in {'net','garrote','dart'} else damage,
                 "effect_only": bool(weapon and (weapon.get('mechanics') or {}).get('effect_only')),
                 "strength_damage": bool(weapon and (weapon.get('mechanics') or {}).get('special_attack')=='vibranium'),
                 "range": None,
@@ -1275,10 +1304,15 @@ def apply_character_action(
             if inventory_table and not coffin:
                 # inn_rest is the Master's rest cycle. The personal coffin
                 # restores Raziel, not an extra daily use of charged items.
+                from .magic_passives import lifetime_inventory_ids
+                excluded=lifetime_inventory_ids(connection,character_id)
+                exclusion=' AND id NOT IN ('+','.join('?' for _ in excluded)+')' if excluded else ''
                 connection.execute(
-                    "UPDATE player_inventory SET charges_current=charges_max,updated_at=? WHERE profile_id=? AND recharge='inn_rest' AND charges_max IS NOT NULL",
-                    (_now(), character_id),
+                    "UPDATE player_inventory SET charges_current=charges_max,updated_at=? WHERE profile_id=? AND recharge='inn_rest' AND charges_max IS NOT NULL"+exclusion,
+                    (_now(), character_id,*excluded),
                 )
+                from .magic_containers import recharge_contents
+                recharge_contents(connection,character_id,_now())
 
         elif action in {"damage", "heal", "set_hp", "grant_temporary_hp"}:
             from .night_form import current_form, change_animal_hp
@@ -1439,6 +1473,8 @@ def apply_character_action(
                     raise ValueError("Item não encontrado no inventário")
                 after = dict(existing)
                 if action == "equip_item":
+                    if int(existing.get('quantity') or 0)<=0:
+                        raise ValueError('Item indisponível no inventário carregado')
                     from .player_inventory import currency_item_field
                     if currency_item_field(existing):
                         raise ValueError("Moedas pertencem à bolsa, não podem ser equipadas")
@@ -1472,6 +1508,10 @@ def apply_character_action(
                     if actor_role == 'gm':
                         after["recharge"] = str(payload.get("recharge") or after.get("recharge") or "none")
             now = _now()
+            previous_inventory=_inventory_row(connection,character_id,item_path)
+            if previous_inventory:
+                from .portable_hole import protect_quantity
+                protect_quantity(connection,previous_inventory['id'],after['quantity'])
             connection.execute(
                 """
                 INSERT INTO player_inventory(profile_id,item_path,item_title,quantity,equipped,equipment_slot,charges_current,charges_max,recharge,notes,updated_at)
@@ -1496,6 +1536,9 @@ def apply_character_action(
                 ),
             )
             after = _inventory_row(connection, character_id, item_path)
+            if action=='equip_item':
+                from .magic_appearance import equipped_transition
+                equipped_transition(connection,character_id,before,after,request_id,now)
             field = f"inventory.{item_path}"
             if equipment_defense_anchor is not None and action in {'equip_item','unequip_item'}:
                 stored=connection.execute('SELECT data_json FROM character_definition_overrides WHERE profile_id=?',(character_id,)).fetchone()
@@ -1506,6 +1549,8 @@ def apply_character_action(
 
         from .item_grapple import prune as prune_item_grapple
         prune_item_grapple(connection, _now())
+        from .magic_item_uses import prune as prune_magic_items
+        prune_magic_items(connection,_now())
         event_id = _write_event(
             connection,
             character_id=character_id,
@@ -1773,11 +1818,16 @@ def revert_character_event(
             if current != after:
                 raise ValueError("O item mudou depois deste evento; reverta o evento mais recente primeiro")
             if before is None:
+                from .portable_hole import protect_quantity
+                if current:protect_quantity(connection,current['id'],0)
                 connection.execute(
                     "DELETE FROM player_inventory WHERE profile_id=? AND item_path=?",
                     (character_id, item_path),
                 )
             else:
+                if current:
+                    from .portable_hole import protect_quantity
+                    protect_quantity(connection,current['id'],before.get('quantity',0))
                 connection.execute(
                     """
                     INSERT INTO player_inventory(profile_id,item_path,item_title,quantity,equipped,equipment_slot,charges_current,charges_max,recharge,notes,updated_at)

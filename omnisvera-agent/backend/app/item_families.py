@@ -13,17 +13,54 @@ SHIELDS={'Broquel':1,'Escudo de madeira':1,'Escudo de aço':2,'Escudo torre':0}
 USE_KINDS={'heal_hp','restore_resource','temporary_hp','add_condition'}
 AMMO={'arma-distancia-dardo-x20':('bolt',20),'arma-distancia-dardo-x20-2':('bolt',20),
       'arma-distancia-dardo-zarabatana-x20':('dart',20),
+      'arma-distancia-dardo-x20-expansao':('dart',20),
       'arma-distancia-flecha-x20':('arrow',20),'arma-distancia-flecha-x20-2':('arrow',20),
       'arma-distancia-flecha-improvisada':('arrow',1)}
 LAUNCHERS={'arma-distancia-arco-curto':'arrow','arma-distancia-arco-longo':'arrow',
            'arma-distancia-zarabatana':'dart',
            'arma-distancia-besta-de-mao':'bolt','arma-distancia-besta':'bolt'}
+from .item_darts import SPECS as DART_SPECS
+AMMO.update({identity: ('dart', 10) for identity in DART_SPECS})
 
 def rule(identity,kind,value,target=''):
     return {'id':identity,'trigger':'while_equipped','kind':kind,'value':value,
             'target':target,'stacking':'stack','condition':'','label':'Equipamento · tabela de origem'}
 
 def descriptor(item):
+    from .item_dimensions import enrich, METADATA_FIELDS
+    result = _descriptor(item)
+    prepared = enrich({**item, 'mechanics': {**(item.get('mechanics') or {}), **(result.get('mechanics') or {})}})
+    physical = {key: value for key, value in (prepared.get('mechanics') or {}).items() if key in METADATA_FIELDS}
+    if physical:
+        result['mechanics'] = {**(result.get('mechanics') or {}), **physical}
+    return result
+
+
+def _descriptor(item):
+    from .magic_appearance import compile_item as compile_appearance
+    appearance=compile_appearance(item)
+    if appearance is not None:return appearance
+    from .magic_containers import compile_item as compile_container
+    container=compile_container(item)
+    if container is not None:return container
+    from .magic_weapon_forms import compile_item as compile_forms
+    forms=compile_forms(item)
+    if forms is not None:return forms
+    from .equipment_checks import compile_item as compile_check
+    check=compile_check(item)
+    if check:return check
+    from .magic_passives import compile_item as compile_passive
+    passive=compile_passive(item)
+    if passive is not None:return passive
+    from .magic_absorption import compile_item as compile_absorption
+    absorption=compile_absorption(item)
+    if absorption is not None:return absorption
+    from .magic_item_uses import compile_item as compile_activation
+    activation=compile_activation(item)
+    if activation is not None:return activation
+    from .magic_equipment import compile_item
+    magic=compile_item(item)
+    if magic is not None:return magic
     category=item.get('category','');name=item['name'];text=item.get('description','')
     mechanics=deepcopy(item.get('mechanics') or {});rules=deepcopy(item.get('effect_rules') or [])
     result={'catalog_id':item['id'],'item_type':category,'description':text,'damage_formula':None,
@@ -39,6 +76,9 @@ def descriptor(item):
         formula=damage if re.fullmatch(r'\d{1,2}d\d{1,4}(?:[+-]\d+)?',damage) else None
         # Expansão de Itens, Madu: the prose explicitly specifies 1d8.
         if item['id']=='arma-corpo-madu':formula='1d8'
+        if item['id']=='arma-corpo-bagh-naja':
+            formula='1d6'
+            mechanics['campaign_rule']='Bagh Naja provisória (01/11/2026): 1d6 base, sem ataque extra; tabela original 1d6/1d4 preservada'
         thrown=re.search(r'Arremesso\s*(\d+(?:[.,]\d+)?)\s*/\s*(\d+(?:[.,]\d+)?)',text,re.I)
         reach=re.search(r'Alcance\s+(\d+(?:[.,]\d+)?)',text,re.I)
         critical=re.search(r'(?:(1[89])\s*[-–/]\s*20\s*)?[xX](\d)\b',text)
@@ -54,7 +94,8 @@ def descriptor(item):
         if reach:mechanics['melee_reach_m']=float(reach[1].replace(',','.'))
         if thrown:mechanics.update(range_m=float(thrown[2].replace(',','.')),short_range_m=float(thrown[1].replace(',','.')))
         if category=='arma-distancia':
-            distance=re.search(r'(\d+(?:[.,]\d+)?)\s*/\s*(\d+(?:[.,]\d+)?)',text)
+            distance=(re.search(r'\bAlcance\s+(?:Arremesso\s*)?(\d+(?:[.,]\d+)?)\s*/\s*(\d+(?:[.,]\d+)?)',text,re.I)
+                      or re.search(r'^\s*(?:[–—-]\s*)?(\d+(?:[.,]\d+)?)\s*/\s*(\d+(?:[.,]\d+)?)',text))
             if distance:mechanics.update(range_m=float(distance[2].replace(',','.')),short_range_m=float(distance[1].replace(',','.')))
             if not formula:gaps.append('ammunition')
         if not formula and 'ammunition' not in gaps and item['id'] not in {'kit-explorador-rede','arma-corpo-garrote'}:gaps.append('special_effect')
@@ -70,6 +111,9 @@ def descriptor(item):
             kind,pack=AMMO[item['id']];family='ammunition'
             mechanics.update(kind='ammunition',ammunition_kind=kind,pack_size=pack,charges_max=pack,equipment_slots=[],approved_equipment_slots=[],consume_mode='charges')
             result.update(item_type='ammunition',damage_formula=None)
+            gaps = []
+            if item['id'] in DART_SPECS:
+                mechanics['ammunition_effect'] = deepcopy(DART_SPECS[item['id']])
         if item['id'] in LAUNCHERS:
             mechanics['requires_ammunition']=LAUNCHERS[item['id']]
             mechanics['reload_movement']=item['id'].startswith('arma-distancia-besta')
@@ -103,7 +147,17 @@ def descriptor(item):
     if family:mechanics.update(family_schema=1,family=family,family_gaps=gaps,source=item.get('source'),weight=item.get('peso'))
     return result
 
-def project_ammunition(inventory):
+def ammunition_choices(inventory, weapon):
+    kind = (weapon.get('mechanics') or {}).get('requires_ammunition')
+    if not kind:
+        return []
+    return sorted([i for i in inventory if (i.get('mechanics') or {}).get('ammunition_kind') == kind
+        and i.get('quantity', 0) > 0 and ((i['quantity'] - 1) * i['mechanics']['pack_size']
+        + (i.get('charges_current') if i.get('charges_current') is not None else i['mechanics']['pack_size'])) > 0],
+        key=lambda i: (bool(i['mechanics'].get('ammunition_effect')), 'improvisada' in i['item_path'], i['item_path']))
+
+
+def project_ammunition(inventory, selections=None):
     """One inventory, packs as quantity and remaining projectiles as charges."""
     for item in inventory:
         m=item.get('mechanics') or {}
@@ -113,22 +167,33 @@ def project_ammunition(inventory):
     for item in inventory:
         m=item.get('mechanics') or {};kind=m.get('requires_ammunition')
         if not kind:continue
-        candidates=[i for i in inventory if (i.get('mechanics') or {}).get('ammunition_kind')==kind and i.get('quantity',0)>0 and ((i['quantity']-1)*i['mechanics']['pack_size']+(i.get('charges_current') or 0))>0]
-        candidates.sort(key=lambda i:('improvisada' in i['item_path'],i['item_path']))
-        ammo=next(iter(candidates),None)
+        candidates=ammunition_choices(inventory, item)
+        selected=(selections or {}).get(item.get('item_path'))
+        ammo=next((i for i in candidates if i['item_path']==selected),None) if selected else next(iter(candidates),None)
+        if selected and not ammo:raise ValueError('Munição indisponível ou incompatível com a arma equipada')
+        for key in ('ammunition_path','ammunition_pack_size','ammunition_effect'):
+            m.pop(key, None)
+        if m.get('special_attack')=='dart':m.pop('special_attack')
         item['damage_formula']=(ammo['mechanics'].get('damage_formula')) if ammo else None
         m['damage_formula']=item['damage_formula']
         if ammo:
             m['ammunition_path']=ammo['item_path'];m['ammunition_pack_size']=ammo['mechanics']['pack_size'];m['damage_type']='piercing'
+            if ammo['mechanics'].get('ammunition_effect'):
+                m['special_attack']='dart'
+                m['ammunition_effect']=deepcopy(ammo['mechanics']['ammunition_effect'])
             m['family_gaps']=[g for g in m.get('family_gaps',[]) if g!='ammunition']
     return inventory
 
-def ammunition_contract(inventory,weapon_path,count,movement=None):
+def ammunition_contract(inventory,weapon_path,count,movement=None,selected_path=None):
     item=next((i for i in inventory if i.get('item_path')==weapon_path),{})
     m=item.get('mechanics') or {}
     if not m.get('requires_ammunition'):return None
+    choices=ammunition_choices(inventory,item)
+    if selected_path is None and len(choices)>1 and any(i['mechanics'].get('ammunition_effect') for i in choices):
+        raise ValueError('Escolha a munição na confirmação do alvo')
     if not m.get('ammunition_path'):raise ValueError('Sem munição compatível para esta arma')
     contract={'item_path':m['ammunition_path'],'pack_size':m['ammunition_pack_size'],'amount':count}
+    if m.get('ammunition_effect'):contract['effect']=deepcopy(m['ammunition_effect'])
     if m.get('reload_movement'):
         if count!=1:raise ValueError('A besta precisa recarregar entre disparos; escolha um único ataque')
         from .spatial_grid import movement_m

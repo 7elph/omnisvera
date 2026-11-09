@@ -33,7 +33,11 @@ def save_condition(db,inventory_id,state,now):
 
 
 def project_condition(item):
+    from .magic_optics import project as project_optics
+    item=project_optics(item)
     condition=item.get('_instance_condition')
+    from .magic_weapon_forms import project
+    item=project(item,condition)
     if not condition or condition.get('kind')!='rust':return item
     result=deepcopy(item)
     loss=max(0,int(condition.get('original_bonus',0))-int(condition.get('bonus_remaining',0)))

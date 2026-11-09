@@ -99,6 +99,7 @@ def parse_attack_entry(attack: dict, index: int) -> dict:
     entry: dict = {"index": index, "name": name, "bonus": bonus, "damage": damage,
                    "notes": str(attack.get("notes") or "").strip() or None,
                    "count": attack.get("count") or 1}
+    entry.update({key:attack[key] for key in ('range_m','max_range_m','slot') if key in attack})
     riders: list[str] = []
     dice = damage
     match = re.fullmatch(r"(\d+\s*[dD]\s*\d+(?:\s*[+-]\s*\d+)?)\s*\+\s*(.+)", damage)

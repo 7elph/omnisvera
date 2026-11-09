@@ -15,7 +15,9 @@ import threading
 import time
 import unicodedata
 import uuid
-from typing import Any
+from typing import Any, Literal
+
+from pydantic import BaseModel
 
 from fastapi import Depends, FastAPI, Header, HTTPException, Query, Request, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
@@ -1343,6 +1345,43 @@ def gm_move_workspace_token(
     return token
 
 
+@app.post('/gm/workspace/doors/{token_id:path}')
+def gm_configure_door(token_id: str, request: CharacterStateAction, access: AccessContext = Depends(require_master)) -> dict:
+    from .map_doors import configure
+    try:
+        return configure(settings.database_path,token_id=token_id,actor='master',role=access.mode,
+            request_id=request.request_id,payload=request.payload)
+    except PermissionError as error:raise HTTPException(403,str(error)) from error
+    except ValueError as error:raise HTTPException(400,str(error)) from error
+
+
+class TokenDisposition(BaseModel):
+    model_config = {"extra": "forbid"}
+    disposition: Literal["hostile", "neutral", "ally"] | None = None
+
+
+@app.patch("/gm/workspace/tokens/{token_id:path}/disposition")
+def gm_set_token_disposition(token_id: str, request: TokenDisposition, _: AccessContext = Depends(require_master)) -> dict:
+    """Companion 3.0: GM marks a creature pin hostile/neutral/ally (None clears).
+
+    Server-side merge into the stored sheet; nothing else in the sheet changes."""
+    with closing(sqlite3.connect(settings.database_path)) as connection:
+        row = connection.execute("SELECT sheet_json FROM session_workspace_tokens WHERE id=?", (token_id,)).fetchone()
+    if row is None:
+        raise HTTPException(status_code=404, detail="Marcador não encontrado.")
+    sheet = json.loads(row[0] or "{}") if row[0] else {}
+    if not isinstance(sheet, dict):
+        sheet = {}
+    if request.disposition is None:
+        sheet.pop("disposition", None)
+    else:
+        sheet["disposition"] = request.disposition
+    token = update_workspace_token(settings.database_path, token_id=token_id, sheet=sheet)
+    if token is None:
+        raise HTTPException(status_code=404, detail="Marcador não encontrado.")
+    return token
+
+
 @app.patch("/gm/workspace/tokens/{token_id:path}")
 def gm_update_workspace_token(
     token_id: str,
@@ -1377,7 +1416,9 @@ def _record_private_pin_update(token: dict, access: AccessContext) -> None:
 
 @app.delete("/gm/workspace/tokens/{token_id:path}", status_code=204)
 def gm_remove_workspace_token(token_id: str, _: AccessContext = Depends(require_master)) -> Response:
-    if not delete_workspace_token(settings.database_path, token_id):
+    try:deleted=delete_workspace_token(settings.database_path, token_id)
+    except ValueError as error:raise HTTPException(409,str(error)) from error
+    if not deleted:
         raise HTTPException(status_code=404, detail="Marcador não encontrado.")
     return Response(status_code=204)
 
@@ -1451,6 +1492,12 @@ def gm_get_compendium_monster_actions(
     art_usage = sum(1 for item in catalog["monsters"] if monster.get("image_path") and item.get("image_path") == monster["image_path"])
     result["rulebook"] = compile_monster_rules(monster, catalog["catalog"], art_usage_count=art_usage)
     return result
+
+
+@app.get('/gm/compendium/magic-items/audit')
+def gm_magic_item_audit(access: AccessContext = Depends(require_master)) -> dict:
+    from .magic_item_rulebook import remaining_audit
+    return remaining_audit()
 
 
 @app.get("/gm/grid/range")
@@ -1531,6 +1578,16 @@ def gm_grid_range(ref: str = Query(default="", max_length=200),
                 resolved_slot, resolved_max=attack_slot_and_max(ability_id,'ranged')
             if profile_id=='morthak' and ability_id=='animar-mortos':
                 resolved_slot,resolved_max='ranged',None  # Preserve the existing same-map corpse selection.
+            if ability_id.startswith('magic-item:'):
+                key=ability_id.removeprefix('magic-item:')
+                from .magic_targeted_items import range_spec,SPECS
+                if key not in SPECS or not any(
+                    (entry.get('mechanics') or {}).get('magic_activation_id')==key and entry.get('quantity',0)>0
+                    for entry in character['inventory']):raise PermissionError('Item não pertence ao portador')
+                resolved_slot,resolved_max=range_spec(key)
+                include_self=key in {'item-magico-po-do-aparecimento','item-magico-bomba-de-ilusao'}
+                if key=='item-magico-anel-ariete':target_kind='creature_or_door'
+                range_override_m=None
             attacker_character = attacker_character or profile_id
             action_ref = ""
         ring=ring_for_action(settings.database_path, ref=action_ref,
@@ -1538,6 +1595,8 @@ def gm_grid_range(ref: str = Query(default="", max_length=200),
                                attacker_character_id=attacker_character,
                                slot_override=resolved_slot, max_override=resolved_max,
                                range_override_m=range_override_m, role=access.mode, include_self=include_self,target_kind=target_kind)
+        if ref.endswith(':magic-item:item-magico-bomba-de-ilusao'):
+            ring.update(selection_mode='cell',targets=[])
         ring['max_targets']=native_contract['targeting']['max_targets'] if native_contract else 1
         if native_contract:
             ring['contract']=native_contract
@@ -2887,6 +2946,12 @@ def _inventory_with_media(items: list[dict], *, access_mode: str) -> list[dict]:
         catalog = catalog_inventory(str(record.get('item_path') or ''))
         if catalog and not record.get('mechanics'):
             record.update(catalog)
+        magic_mechanics=record.get('mechanics') or {}
+        if magic_mechanics.get('magic_activation_schema')==1 or magic_mechanics.get('magic_absorption_schema')==1 or (magic_mechanics.get('magic_passive_schema')==1 and magic_mechanics.get('charges_max')):
+            record['charges_max']=int(magic_mechanics['charges_max'])
+            if record.get('charges_current') is None:record['charges_current']=record['charges_max']
+            else:record['charges_current']=max(0,min(record['charges_max'],record['charges_current']))
+            record['recharge']=magic_mechanics['recharge']
         enriched.append(normalize_inventory_item_mechanics(record))
     from .hp_potions import coalesce_inventory
     from .item_families import project_ammunition
@@ -3055,6 +3120,9 @@ def _playable_character(profile_id: str, access: AccessContext, *, read_only: bo
         if profile_id=='raziel' and state is not None:
             from .night_form import project
             definition,state=project(definition,state)
+        if not (state and state.get('animal_form')):
+            from .magic_field_items import project_nails
+            definition=project_nails(definition,effects)
     return compose_character_view(
         definition=definition,
         state=state,
@@ -3117,11 +3185,59 @@ def playable_character(profile_id: str, access: AccessContext = Depends(require_
     return _playable_character(profile_id, access, read_only=read_only)
 
 
+@app.get("/characters/{profile_id}/action-manifest")
+def character_action_manifest(profile_id: str, access: AccessContext = Depends(require_any)) -> dict:
+    """Owner/GM read of the native action inventory (Companion 3.0 battle menu).
+
+    Same allowlisted manifest as /gm/actions/manifest; read-only sheet load, no
+    execution approval. Each binding's handler still revalidates everything."""
+    if _character_access_level(access, profile_id) == "public":
+        raise HTTPException(status_code=403, detail="Ações disponíveis apenas ao dono da ficha e ao Mestre.")
+    from .native_action_manifest import sheet_action_manifest
+    record = _playable_character(profile_id, access, read_only=True)
+    definition = record.get("definition") if isinstance(record, dict) else None
+    if not isinstance(definition, dict) or definition.get("id") != profile_id:
+        raise HTTPException(status_code=404, detail="Personagem não encontrado")
+    return {"character_id": profile_id, "source": "effective_sheet", "execution_approved": False,
+            "actions": sheet_action_manifest(profile_id, definition, record.get("state") or {}, record.get("inventory") or [])}
+
+
 def _authorize_character_notes(profile_id: str, access: AccessContext) -> None:
     if _character_access_level(access, profile_id) == "public":
         raise HTTPException(status_code=403, detail="Anotações disponíveis apenas ao dono da ficha e ao Mestre.")
     if profile_id not in _character_ids():
         raise HTTPException(status_code=404, detail="Personagem não encontrado.")
+
+
+@app.get('/workspace/portals/{portal_id:path}')
+def read_portable_hole(portal_id: str, response: Response, token_id: str = '', character_id: str = '', access: AccessContext = Depends(require_any)) -> dict:
+    response.headers['Cache-Control']='private, no-store'
+    from .portable_hole import portal_view,character_pin
+    try:
+        if not token_id:token_id=character_pin(settings.database_path,portal_id,character_id or access.profile_id)
+        return portal_view(settings.database_path,portal_id=portal_id,actor=access.profile_id or 'master',role=access.mode,token_id=token_id)
+    except PermissionError as error:raise HTTPException(403,str(error)) from error
+    except ValueError as error:raise HTTPException(400,str(error)) from error
+
+
+@app.post('/workspace/portals/{portal_id:path}')
+def use_portable_hole(portal_id: str, request: CharacterStateAction, access: AccessContext = Depends(require_any)) -> dict:
+    from .portable_hole import command
+    try:return command(settings.database_path,portal_id=portal_id,actor=access.profile_id or 'master',role=access.mode,
+        request_id=request.request_id,payload=request.payload,
+        load_movement=lambda profile_id:_playable_character(profile_id,AccessContext(mode='gm'),read_only=True)['definition'].get('movement'))
+    except PermissionError as error:raise HTTPException(403,str(error)) from error
+    except ValueError as error:raise HTTPException(409,str(error)) from error
+
+
+@app.get('/characters/{profile_id}/container')
+def character_container_read(profile_id: str, item_path: str, response: Response, access: AccessContext = Depends(require_any)) -> dict:
+    if _character_access_level(access,profile_id)=='public':raise HTTPException(403,'Conteúdo disponível somente ao portador e ao Mestre')
+    response.headers['Cache-Control']='private, no-store'
+    from .magic_containers import inspect as inspect_container
+    try:return inspect_container(settings.database_path,owner=profile_id,actor='master' if access.mode=='gm' else str(access.profile_id),role=access.mode,item_path=item_path)
+    except PermissionError as error:raise HTTPException(403,str(error)) from error
+    except ValueError as error:raise HTTPException(400,str(error)) from error
 
 
 @app.get("/characters/{profile_id}/notes")
@@ -3152,6 +3268,24 @@ def playable_character_action(
         raise HTTPException(status_code=403, detail="Você só pode alterar o próprio personagem.")
     current_character = _playable_character(profile_id, access)
     payload = dict(request.payload)
+    if request.action=='container':
+        from .magic_containers import command as container_command
+        try:
+            container_command(settings.database_path,owner=profile_id,
+                actor='master' if access.mode=='gm' else str(access.profile_id),role=access.mode,
+                request_id=request.request_id,payload=payload)
+        except PermissionError as error:raise HTTPException(403,str(error)) from error
+        except ValueError as error:raise HTTPException(400,str(error)) from error
+        return _playable_character(profile_id,access)
+    if request.action=='weapon_form':
+        from .magic_weapon_forms import command as weapon_form
+        try:
+            weapon_form(settings.database_path,owner=profile_id,
+                actor='master' if access.mode=='gm' else str(access.profile_id),role=access.mode,
+                request_id=request.request_id,payload=payload)
+        except PermissionError as error:raise HTTPException(403,str(error)) from error
+        except ValueError as error:raise HTTPException(400,str(error)) from error
+        return _playable_character(profile_id,access)
     if request.action == "equip_item":
         item_path = str(payload.get("item_path") or "").strip()
         equipment_slot = str(payload.get("equipment_slot") or "").strip()
@@ -3160,6 +3294,9 @@ def playable_character_action(
             None,
         )
         mechanics = dict((inventory_item or {}).get("mechanics") or {})
+        from .magic_equipment import validate_equipping as validate_magic_equipping
+        try:validate_magic_equipping(inventory_item or {},current_character['definition'].get('attributes') or {})
+        except ValueError as error:raise HTTPException(400,str(error)) from error
         if mechanics.get('family')=='ammunition':raise HTTPException(400,'Munição é usada pelo lançador; não pode ser equipada como arma')
         from .player_inventory import currency_item_field
         if currency_item_field(inventory_item or {}):
@@ -3192,7 +3329,7 @@ def playable_character_action(
         try:
             replay=replay_inventory_use(settings.database_path,character_id=profile_id,
                 actor_id='master' if access.mode=='gm' else str(access.profile_id),actor_role=access.mode,
-                request_id=request.request_id,item_path=item_path)
+                request_id=request.request_id,item_path=item_path,options=payload.get('magic_options'))
         except ValueError as error:raise HTTPException(400,str(error)) from error
         if replay is not None:return _playable_character(profile_id,access)
         item = get_session_item_by_path(settings.database_path, item_path)
@@ -3212,7 +3349,7 @@ def playable_character_action(
                 actor_id="master" if access.mode == "gm" else str(access.profile_id),
                 actor_role="gm" if access.mode == "gm" else "player",
                 request_id=request.request_id or 'item:' + uuid.uuid4().hex,
-                item={**item, 'item_path': item_path}, session_id=request.session_id)
+                item={**item, 'item_path': item_path}, session_id=request.session_id,options=payload.get('magic_options'))
         except PermissionError as error:
             raise HTTPException(status_code=403, detail=str(error)) from error
         except (TypeError, ValueError) as error:
@@ -3507,6 +3644,13 @@ def character_dice_roll(
     access_level = _character_access_level(access, profile_id)
     if access_level == "public":
         raise HTTPException(status_code=403, detail="Você não pode rolar por este personagem.")
+    if str(request.source_id or '').startswith('equipment:'):
+        from .equipment_checks import replay
+        actor_id,_=_roll_actor(access)
+        try:
+            previous=replay(settings.database_path,profile_id,actor_id,request)
+            if previous is not None:return previous
+        except ValueError as error:raise HTTPException(400,str(error)) from error
     character = _playable_character(profile_id, access)
     _validate_player_target(access, request.target_value, request.visibility)
     try:
@@ -3518,6 +3662,8 @@ def character_dice_roll(
         )
         actor_id, actor_role = _roll_actor(access)
         target = request.target_value if request.target_value is not None else spec.target_value
+        if spec.source=='equipment_check' and target!=spec.target_value:
+            raise ValueError('Chance do equipamento não pode ser substituída')
         record, _created = create_roll(
             settings.database_path,
             request_id=request.request_id,
@@ -3534,6 +3680,7 @@ def character_dice_roll(
             target_hidden=request.hide_target,
             source=spec.source,
             source_id=spec.source_id,
+            target_comparison=spec.target_comparison,
             scene_id=request.scene_id,
             action_id=request.action_id,
             reason=request.reason,
@@ -3696,6 +3843,7 @@ def resolve_character_attack(
             attack_count=request.attack_count,
             physical_d20s=request.d20s,
             weapon_item_path=request.weapon_item_path,
+            ammunition_item_path=request.ammunition_item_path,
             damage_type=request.damage_type,
             tower_protected_side=request.tower_protected_side,
             blood_boost=request.blood_boost,
@@ -4194,7 +4342,7 @@ def _combat_snapshot_for_access(snapshot: dict, access: AccessContext) -> dict:
         icon_targets.update(('character', token['character_id']) for token in public_map['tokens'] if token.get('character_id'))
         from .monster_conditions import public_effect
         controlled={token['id'] for token in public_map['tokens'] if ((token.get('sheet') or {}).get('summon') or {}).get('caster')==access.profile_id}
-        snapshot['effects'].extend(e for e in active_effects if e.get('monster_condition') and e['target_type']=='token' and e['target_id'] in controlled)
+        snapshot['effects'].extend(e for e in active_effects if (e.get('monster_condition') or e.get('drum_fear')) and e['target_type']=='token' and e['target_id'] in controlled)
         snapshot['effects']=[public_effect(e) if e.get('monster_condition') else e for e in snapshot['effects']]
     from .action_cards import active_effect_icons
     if access.mode == 'gm' or ('character', 'raziel') in icon_targets:
@@ -4211,7 +4359,7 @@ def _combat_snapshot_for_access(snapshot: dict, access: AccessContext) -> dict:
     snapshot['active_effect_icons'] = active_effect_icons(
         [e for e in active_effects if (e['target_type'], e['target_id']) in icon_targets],
         _session_action_catalog, _character_ids())
-    map_effects=[e for e in active_effects if e.get('web_area') or e.get('spell')=='reflexos']
+    map_effects=[e for e in active_effects if e.get('web_area') or e.get('visual_area') or e.get('spell')=='reflexos']
     if not map_effects:
         snapshot['map_spell_effects']=[]
         return snapshot
@@ -4219,9 +4367,9 @@ def _combat_snapshot_for_access(snapshot: dict, access: AccessContext) -> dict:
     visible_map=(view.get('map') or {}).get('id')
     visible_actors={('token',t['id']) for t in view['tokens']}
     visible_actors.update(('character',t['character_id']) for t in view['tokens'] if t.get('character_id'))
-    snapshot['map_spell_effects']=[{k:e.get(k) for k in ('id','target_type','target_id','spell','images_remaining','web_area')}
+    snapshot['map_spell_effects']=[{k:e.get(k) for k in ('id','target_type','target_id','spell','images_remaining','web_area','visual_area')}
         for e in map_effects if (e['target_type'],e['target_id']) in visible_actors
-        and ((e.get('web_area') or {}).get('map_id')==visible_map or (e.get('spell')=='reflexos' and e.get('map_id',visible_map)==visible_map))]
+        and ((e.get('web_area') or e.get('visual_area') or {}).get('map_id')==visible_map or (e.get('spell')=='reflexos' and e.get('map_id',visible_map)==visible_map))]
     return snapshot
 
 
@@ -5055,6 +5203,248 @@ async def gm_upload_game_session_image(session_id: int, request: Request, _: Acc
     temporary.replace(target)
     relative_path = target.relative_to(settings.vault_path).as_posix()
     return update_session_metadata(settings.database_path, session_id, {"image_path": relative_path})
+
+
+
+# --- Estúdio de preparação (Cenas com IA) -------------------------------------------
+# Drafts only: the AI never touches the table. The GM applies each draft explicitly.
+from pydantic import Field as _PrepField
+from .prep_studio import (
+    create_draft as prep_create_draft, discard_draft as prep_discard_draft, get_context as prep_get_context,
+    get_draft as prep_get_draft, init_prep_studio, list_drafts as prep_list_drafts, ollama_chat as prep_ollama_chat,
+    record_applied as prep_record_applied, set_context as prep_set_context, start_generation as prep_start_generation,
+    get_plan as prep_get_plan, list_session_plans as prep_list_session_plans, start_plan as prep_start_plan,
+    write_plan as prep_write_plan, write_session_record as prep_write_session_record,
+)
+
+_prep_initialized = False
+
+
+def _prep_db() -> Path:
+    global _prep_initialized
+    if not _prep_initialized:
+        init_prep_studio(settings.database_path)
+        _prep_initialized = True
+    return settings.database_path
+
+
+class PrepGenerateRequest(BaseModel):
+    model_config = {"extra": "forbid"}
+    request_id: str = _PrepField(min_length=8, max_length=120, pattern=r"^[A-Za-z0-9._:-]+$")
+    kind: Literal["monster", "npc", "item", "map"]
+    prompt: str = _PrepField(min_length=3, max_length=1200)
+    session_id: int | None = _PrepField(default=None, ge=1)
+
+
+class PrepPlanWrite(BaseModel):
+    model_config = {"extra": "forbid"}
+    outline: str = _PrepField(default="", max_length=24000)
+    version: int = _PrepField(ge=0)
+
+
+class PrepPlanGenerate(BaseModel):
+    model_config = {"extra": "forbid"}
+    request_id: str = _PrepField(min_length=8, max_length=120, pattern=r"^[A-Za-z0-9._:-]+$")
+    brief: str = _PrepField(default="", max_length=1200)
+
+
+class PrepSessionRecord(BaseModel):
+    model_config = {"extra": "forbid"}
+    version: int = _PrepField(ge=0)
+    title: str | None = _PrepField(default=None, max_length=180)
+    status: Literal["planned", "completed"] | None = None
+    public_summary: str | None = _PrepField(default=None, max_length=4000)
+    gm_summary: str | None = _PrepField(default=None, max_length=4000)
+    public_chronicle: str | None = _PrepField(default=None, max_length=12000)
+
+
+class PrepAppliedRequest(BaseModel):
+    model_config = {"extra": "forbid"}
+    request_id: str = _PrepField(min_length=8, max_length=120, pattern=r"^[A-Za-z0-9._:-]+$")
+    target: Literal["map", "scene", "item", "grant"]
+    ref: str = _PrepField(default="", max_length=200)
+
+
+class PrepApplyMapRequest(BaseModel):
+    model_config = {"extra": "forbid"}
+    request_id: str = _PrepField(min_length=8, max_length=120, pattern=r"^[A-Za-z0-9._:-]+$")
+
+
+class PrepContextWrite(BaseModel):
+    model_config = {"extra": "forbid"}
+    content: str = _PrepField(default="", max_length=24000)
+    version: int = _PrepField(ge=0)
+
+
+@app.get("/gm/prep/drafts")
+def gm_prep_drafts(session_id: int | None = None, _: AccessContext = Depends(require_master)) -> list[dict]:
+    return prep_list_drafts(_prep_db(), session_id=session_id)
+
+
+def _prep_generation_kwargs(database: Path) -> tuple[dict, list]:
+    try:
+        party = [{k: row.get(k) for k in ("name", "class_name", "race", "level")}
+                 for row in playable_characters(AccessContext(mode="gm"), read_only=True)]
+    except Exception:  # noqa: BLE001 - the party summary is context, not a requirement
+        party = []
+    existing = [d["title"] for d in prep_list_drafts(database, limit=200) if d["status"] in ("ready", "applied")]
+    existing += [str(t.get("name", "")) for t in list_workspace_tokens(database)]
+
+    def image(prompt: str, path: Path) -> None:
+        from .image_routing import RoutedImageProvider  # Flux first, free Hugging Face ZeroGPU when the quota is out
+        RoutedImageProvider("official").generate(prompt, path)
+
+    model = os.getenv("PREP_MODEL", "gpt-oss:120b-cloud")
+    fallback = os.getenv("PREP_FALLBACK_MODEL", "gpt-oss:20b-cloud")
+    return {"chat": prep_ollama_chat(settings.ollama_base_url, model, fallback), "image": image,
+            "media_root": settings.vault_path, "campaign": prep_get_context(database)["content"],
+            "party": party, "existing": sorted(set(filter(None, existing)))}, party
+
+
+class TerrainSave(BaseModel):
+    tiles: list
+    heights: list
+    props: list
+    expected_version: int = 0
+
+
+@app.get("/workspace/terrain/{name}")
+def workspace_terrain(name: str, since: int = -1, _: AccessContext = Depends(require_any)) -> dict:
+    from .terrain_store import get_terrain, terrain_version
+    if not re.fullmatch(r"[a-z0-9_-]{1,40}", name):
+        raise HTTPException(status_code=404, detail="Terreno inexistente.")
+    if since >= 0 and terrain_version(settings.database_path, name) == since:
+        return {"name": name, "version": since, "unchanged": True}
+    return get_terrain(settings.database_path, name)
+
+
+@app.put("/gm/workspace/terrain/{name}")
+def gm_save_terrain(name: str, request: TerrainSave, _: AccessContext = Depends(require_master)) -> dict:
+    from .terrain_store import TerrainConflict, save_terrain
+    if not re.fullmatch(r"[a-z0-9_-]{1,40}", name):
+        raise HTTPException(status_code=404, detail="Terreno inexistente.")
+    try:
+        return save_terrain(settings.database_path, name, request.model_dump(exclude={"expected_version"}), request.expected_version)
+    except TerrainConflict as error:
+        raise HTTPException(status_code=409, detail=str(error)) from error
+    except (ValueError, KeyError, TypeError) as error:
+        raise HTTPException(status_code=400, detail=str(error) or "Terreno inválido.") from error
+
+
+@app.delete("/gm/workspace/terrain/{name}")
+def gm_reset_terrain(name: str, _: AccessContext = Depends(require_master)) -> dict:
+    from .terrain_store import reset_terrain
+    if not re.fullmatch(r"[a-z0-9_-]{1,40}", name):
+        raise HTTPException(status_code=404, detail="Terreno inexistente.")
+    return reset_terrain(settings.database_path, name)
+
+
+@app.get("/gm/prep/sessions")
+def gm_prep_sessions(_: AccessContext = Depends(require_master)) -> list[dict]:
+    return prep_list_session_plans(_prep_db())
+
+
+@app.put("/gm/prep/sessions/{session_id}/plan")
+def gm_prep_plan_write(session_id: int, request: PrepPlanWrite, _: AccessContext = Depends(require_master)) -> dict:
+    try:
+        return prep_write_plan(_prep_db(), session_id, outline=request.outline, version=request.version)
+    except LookupError as error:
+        raise HTTPException(status_code=404, detail=str(error)) from error
+    except ValueError as error:
+        raise HTTPException(status_code=409, detail=str(error)) from error
+
+
+@app.post("/gm/prep/sessions/{session_id}/plan/generate")
+def gm_prep_plan_generate(session_id: int, request: PrepPlanGenerate, _: AccessContext = Depends(require_master)) -> dict:
+    database = _prep_db()
+    kwargs, party = _prep_generation_kwargs(database)
+    chat = kwargs.pop("chat")
+    kwargs.pop("party")
+    try:
+        started = prep_start_plan(database, session_id, request_id=request.request_id, brief=request.brief, chat=chat,
+                                  generate_kwargs={"chat": chat, "party": party, **kwargs}, party=party)
+    except LookupError as error:
+        raise HTTPException(status_code=404, detail=str(error)) from error
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+    return started or prep_get_plan(database, session_id)
+
+
+@app.put("/gm/prep/sessions/{session_id}/record")
+def gm_prep_session_record(session_id: int, request: PrepSessionRecord, _: AccessContext = Depends(require_master)) -> dict:
+    try:
+        return prep_write_session_record(_prep_db(), session_id, request.model_dump(exclude={"version"}, exclude_unset=True),
+                                         version=request.version)
+    except LookupError as error:
+        raise HTTPException(status_code=404, detail=str(error)) from error
+    except ValueError as error:
+        raise HTTPException(status_code=409, detail=str(error)) from error
+
+
+@app.post("/gm/prep/generate")
+def gm_prep_generate(request: PrepGenerateRequest, _: AccessContext = Depends(require_master)) -> dict:
+    database = _prep_db()
+    try:
+        draft, created = prep_create_draft(database, request_id=request.request_id, kind=request.kind, prompt=request.prompt,
+                                           session_id=request.session_id)
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+    if created:
+        kwargs, _party = _prep_generation_kwargs(database)
+        prep_start_generation(database, draft["id"], **kwargs)
+    return draft
+
+
+@app.post("/gm/prep/drafts/{draft_id}/discard")
+def gm_prep_discard(draft_id: int, _: AccessContext = Depends(require_master)) -> dict:
+    try:
+        return prep_discard_draft(_prep_db(), draft_id)
+    except LookupError as error:
+        raise HTTPException(status_code=404, detail=str(error)) from error
+
+
+@app.post("/gm/prep/drafts/{draft_id}/applied")
+def gm_prep_applied(draft_id: int, request: PrepAppliedRequest, _: AccessContext = Depends(require_master)) -> dict:
+    try:
+        return prep_record_applied(_prep_db(), draft_id, request_id=request.request_id, target=request.target, ref=request.ref)
+    except LookupError as error:
+        raise HTTPException(status_code=404, detail=str(error)) from error
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.post("/gm/prep/drafts/{draft_id}/apply-map")
+def gm_prep_apply_map(draft_id: int, request: PrepApplyMapRequest, _: AccessContext = Depends(require_master)) -> dict:
+    database = _prep_db()
+    try:
+        draft = prep_get_draft(database, draft_id)
+    except LookupError as error:
+        raise HTTPException(status_code=404, detail=str(error)) from error
+    if draft["kind"] != "map" or draft["status"] not in ("ready", "applied") or not draft["preview_path"]:
+        raise HTTPException(status_code=400, detail="Este rascunho não é um mapa pronto.")
+    done = next((entry for entry in draft["applied"] if entry.get("request_id") == request.request_id), None)
+    if done:
+        return {"draft": draft, "map_id": done.get("ref")}
+    payload = draft["payload"] or {}
+    record = set_workspace_map(database, title=str(payload.get("title") or draft["title"])[:180],
+                               image_path=draft["preview_path"], visible_to_players=False)
+    updated = prep_record_applied(database, draft_id, request_id=request.request_id, target="map", ref=str(record.get("id", "")))
+    return {"draft": updated, "map_id": record.get("id")}
+
+
+@app.get("/gm/prep/context")
+def gm_prep_context(_: AccessContext = Depends(require_master)) -> dict:
+    return prep_get_context(_prep_db())
+
+
+@app.put("/gm/prep/context")
+def gm_prep_context_write(request: PrepContextWrite, _: AccessContext = Depends(require_master)) -> dict:
+    try:
+        return prep_set_context(_prep_db(), request.content, request.version)
+    except LookupError as error:
+        raise HTTPException(status_code=409, detail=str(error)) from error
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
 
 
 @app.post("/gm/scenes")
@@ -6455,7 +6845,9 @@ def frontend_root():
 
 from .spatial_routes import register_spatial_routes
 from .commerce_routes import register as register_commerce_routes
+from .magic_field_routes import register as register_magic_field_routes
 register_commerce_routes(app, lambda: settings.database_path, require_any)
+register_magic_field_routes(app, lambda: settings.database_path, require_any)
 register_spatial_routes(app, lambda: settings.database_path, require_any,
     lambda profile_id: _playable_character(profile_id, AccessContext(mode='gm'))['definition'].get('movement'))
 

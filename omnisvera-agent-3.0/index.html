@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Omnisvera Companion 3.0</title>
+<style>
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#0b0806;color:#e9d9b4;font-family:Georgia,"Times New Roman",serif}
+#canvas{display:block;width:100%;height:100%;touch-action:none}
+#loading{position:fixed;inset:0;display:grid;place-content:center;text-align:center;background:radial-gradient(circle at 50% 40%,#2a1f16,#0b0806 70%);z-index:4}
+#loading h1{margin:0 0 6px;font-size:26px;letter-spacing:4px;color:#d4a85a;font-weight:normal}
+#detail{display:block;margin-top:8px;font-size:13px;color:#a9977a;font-family:system-ui}
+progress{width:260px;margin-top:16px;accent-color:#a3261f}
+#landscape-guide{display:none;position:fixed;inset:0;z-index:10;background:#0b0806;align-items:center;justify-content:center;text-align:center;padding:24px;box-sizing:border-box}
+#landscape-guide section{max-width:320px}
+#landscape-guide h1{font-size:22px;font-weight:600}
+#landscape-guide p{line-height:1.5;color:#c9b894}
+#enter-landscape{font:inherit;border:1px solid #7a5c2c;border-radius:4px;padding:12px 20px;background:#1d1510;color:inherit}
+@media (orientation:portrait) and (max-width:1024px) and (pointer:coarse){#landscape-guide{display:flex}}
+</style>
+$GODOT_HEAD_INCLUDE
+<script>
+(function(){
+ const fragment=new URLSearchParams(location.hash.slice(1));
+ const token=fragment.get('token')||fragment.get('companion_token')||localStorage.getItem('omnisvera_access_token')||'';
+ window.omniBootstrap={token,base_url:location.origin};
+ if(fragment.has('token')||fragment.has('companion_token'))history.replaceState(null,'',location.pathname+location.search);
+})();
+</script>
+</head>
+<body>
+<div id="landscape-guide" role="dialog" aria-modal="true" aria-labelledby="landscape-title">
+ <section><h1 id="landscape-title">Jogue na horizontal</h1>
+ <p id="landscape-hint">Gire o celular para abrir a mesa e os controles.</p>
+ <button id="enter-landscape" type="button">Tela cheia horizontal</button></section>
+</div>
+<script id="landscape-policy">
+const landscapeButton=document.getElementById('enter-landscape');
+landscapeButton.addEventListener('click',async()=>{
+ landscapeButton.disabled=true;
+ try{
+  if(!document.fullscreenElement && document.documentElement.requestFullscreen) await document.documentElement.requestFullscreen();
+  if(screen.orientation && screen.orientation.lock) await screen.orientation.lock('landscape');
+ }catch(_error){/* Some mobile browsers require physical rotation. */}
+ finally{
+  document.getElementById('landscape-hint').textContent='Gire o celular para abrir a mesa. Se necessário, ative a rotação automática do aparelho.';
+  landscapeButton.disabled=false;
+ }
+});
+</script>
+<div id="loading"><h1>OMNISVERA</h1><span id="notice">Abrindo os portões…</span><progress id="progress"></progress><span id="detail">Primeira visita baixa o jogo; depois ele abre do aparelho.</span></div>
+<canvas id="canvas" tabindex="0" aria-label="Mapa isométrico do Omnisvera Companion"></canvas>
+<script src="$GODOT_URL"></script>
+<script>
+const engine=new Engine($GODOT_CONFIG);
+const notice=document.getElementById('notice');
+const missing=Engine.getMissingFeatures({threads:$GODOT_THREADS_ENABLED});
+if(missing.length){notice.textContent='Este navegador precisa de WebGL 2 e WebAssembly.';}
+else engine.startGame({onProgress:(current,total)=>{const p=document.getElementById('progress');p.max=total||1;p.value=current;const mb=v=>(v/1048576).toFixed(1);document.getElementById('detail').textContent=total?mb(current)+' de '+mb(total)+' MB':mb(current)+' MB';}})
+ .then(()=>{document.getElementById('loading').remove();document.getElementById('canvas').focus();watchUpdates();})
+ .catch(()=>{notice.textContent='Falha ao iniciar. Atualize a página ou tente outro navegador.';});
+// The game files live in the service-worker cache: a refresh reuses them instead of downloading ~24 MB again.
+// A new publication is downloaded in the background; it is applied right away at startup, or by tapping the banner.
+function watchUpdates(){
+ if(!('serviceWorker' in navigator))return;
+ const startedAt=Date.now();
+ // Register (or reuse) Godot's worker: it caches index.wasm/index.pck for the next visits.
+ navigator.serviceWorker.register('index.service.worker.js').then(reg=>{
+  if(!reg)return;
+  const offer=()=>{
+   if(!reg.waiting||!navigator.serviceWorker.controller)return;
+   if(Date.now()-startedAt<8000){reg.waiting.postMessage('update');return;}
+   const bar=document.getElementById('update-bar');bar.style.display='block';
+   bar.onclick=()=>{bar.textContent='Atualizando…';reg.waiting&&reg.waiting.postMessage('update');};
+  };
+  offer();
+  reg.addEventListener('updatefound',()=>{const w=reg.installing;if(w)w.addEventListener('statechange',()=>{if(w.state==='installed')offer();});});
+  setInterval(()=>reg.update().catch(()=>{}),10*60*1000);
+ }).catch(()=>{});
+}
+</script>
+<div id="update-bar" role="button" style="display:none;position:fixed;top:8px;left:50%;transform:translateX(-50%);z-index:20;padding:8px 14px;background:#1d1510;border:1px solid #7a5c2c;border-radius:4px;color:#e9d9b4;font:13px system-ui;cursor:pointer">Nova versão do Companion pronta · toque para atualizar</div>
+</body>
+</html>

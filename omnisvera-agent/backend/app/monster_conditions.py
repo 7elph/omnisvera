@@ -108,6 +108,10 @@ def apply_spec(db,victim,spec,actor_id,now):
     kind,identity=victim['type'],victim['id']
     immune=_immune(db,kind,identity,spec)
     if immune:return {'name':spec['name'],'effect':spec['effect'],'immune':immune}
+    from .magic_passives import block_mental
+    mental_kind=spec.get('mental_kind')
+    ward=block_mental(db,victim,mental_kind,now) if mental_kind else None
+    if ward:return {'name':spec['name'],'effect':spec['effect'],'mental_ward':ward,'resisted':True}
     chance_result={}
     if spec['effect']=='disease_attribute':
         active=db.execute("SELECT 1 FROM combat_effects WHERE active=1 AND target_type=? AND target_id=? AND json_extract(data_json,'$.monster_condition')='diseased' AND json_extract(data_json,'$.label')=?",(kind,identity,spec['name'])).fetchone()
@@ -162,10 +166,15 @@ def apply_on_hit(db,record,now):
     return results
 
 
-def assert_can_act(db,actor_id):
+def assert_can_act(db,actor_id,*,movement=False,noncombat=False):
+    if not noncombat:
+        from .portable_hole import assert_actor_exterior
+        assert_actor_exterior(db,actor_id)
     if not db.execute("SELECT 1 FROM sqlite_master WHERE name='combat_effects'").fetchone():return
     row=db.execute('SELECT 1 FROM character_states WHERE profile_id=?',(actor_id,)).fetchone()
     kind,identity=_canonical(db,'character' if row else 'token',actor_id)
+    from .magic_item_drums import assert_action
+    assert_action(db,actor_id,movement=movement,noncombat=noncombat)
     for raw in db.execute('SELECT data_json FROM combat_effects WHERE active=1 AND target_type=? AND target_id=?',(kind,identity)):
         effect=json.loads(raw[0])
         if effect.get('monster_condition') and effect.get('blocks_actions'):

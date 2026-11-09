@@ -5,6 +5,12 @@ from app.monster_movement import movement_modes, movement_pending, selected_move
 
 
 class MovementModesTests(TestCase):
+    def test_native_speed_annotation_is_already_scaled_not_an_unknown_mode(self):
+        for text,speed in [('36 m · Velocidade ×4',36),('18 m · Velocidade ×2',18),('27 m · Velocidade ×3',27)]:
+            with self.subTest(text=text):self.assertEqual(selected_movement(text),speed)
+        self.assertTrue(movement_pending('36 m · Velocidade ×99'))
+        self.assertTrue(movement_pending('36 m · modo inventado ×4'))
+
     def test_numeric_and_metric_walk(self):
         self.assertEqual({"walk": 9.0}, movement_modes(9))
         self.assertEqual({"walk": 9.0}, movement_modes(9.0))

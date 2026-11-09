@@ -1,0 +1,34 @@
+{
+ "city": {
+  "file": "assets/original/city.jpg",
+  "model": "@cf/black-forest-labs/flux-2-klein-9b",
+  "prompt": "A medieval harbor capital town square called Nimalis seen from above at dusk. Exactly five clear landmarks: far back center a tall stone city gate tower with an open arch; left foreground a crooked narrow potion shop with green glowing bottles in its round window and a lantern; center a dwarven armorer shop with an anvil sign, shields and axes on display and a warm forge glow in the doorway; right a large guild hall with blue banners, a domed roof and wide open double doors; front center a weathered bronze statue of a robed sage on a pedestal. Cobblestone plaza connecting all of them, a few market crates, seagulls. hand-painted dark fantasy illustration, isometric three-quarter view, late 1990s classic RPG town screen mood, warm lantern light against blue dusk, rich textures, crisp silhouettes, no text, no letters, no logos, no watermark",
+  "references": [],
+  "generated_at": "2026-11-08T14:24:24.576987+00:00",
+  "note": "Arte original gerada para o Companion; sem imagens de referência."
+ },
+ "armorer": {
+  "file": "assets/original/armorer.jpg",
+  "model": "@cf/black-forest-labs/flux-2-klein-9b",
+  "prompt": "Interior of a dwarven armorer and weapon shop, a stout bearded dwarf smith with a leather apron behind a heavy oak counter, racks of swords, axes, helmets and round shields on stone walls, forge embers glowing, shelves with tools, cozy cramped space. hand-painted dark fantasy illustration, isometric three-quarter view, late 1990s classic RPG town screen mood, warm lantern light against blue dusk, rich textures, crisp silhouettes, no text, no letters, no logos, no watermark",
+  "references": [],
+  "generated_at": "2026-11-08T14:24:27.938813+00:00",
+  "note": "Arte original gerada para o Companion; sem imagens de referência."
+ },
+ "potions": {
+  "file": "assets/original/potions.jpg",
+  "model": "@cf/black-forest-labs/flux-2-klein-9b",
+  "prompt": "Interior of a cramped harbor-slum potion shop, shelves full of colorful glass flasks and bottles, a hooded alchemist woman mixing a green liquid over a small burner, hanging dried herbs, damp wooden beams, a drowned-flask carved sign. hand-painted dark fantasy illustration, isometric three-quarter view, late 1990s classic RPG town screen mood, warm lantern light against blue dusk, rich textures, crisp silhouettes, no text, no letters, no logos, no watermark",
+  "references": [],
+  "generated_at": "2026-11-08T14:24:31.126775+00:00",
+  "note": "Arte original gerada para o Companion; sem imagens de referência."
+ },
+ "guild": {
+  "file": "assets/original/guild.jpg",
+  "model": "@cf/black-forest-labs/flux-2-klein-9b",
+  "prompt": "Interior of an adventurers guild hall and inn, a long polished counter with a friendly half-orc innkeeper, quest notices pinned on a board, a large fireplace, wooden tables with mugs, stairs to rooms upstairs, blue banners. hand-painted dark fantasy illustration, isometric three-quarter view, late 1990s classic RPG town screen mood, warm lantern light against blue dusk, rich textures, crisp silhouettes, no text, no letters, no logos, no watermark",
+  "references": [],
+  "generated_at": "2026-11-08T14:24:33.993543+00:00",
+  "note": "Arte original gerada para o Companion; sem imagens de referência."
+ }
+}

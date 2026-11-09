@@ -190,9 +190,13 @@ def monster_attack_definition(token: dict, attack_id: str) -> dict:
     slot=attack.get('slot')
     if slot not in {'melee','ranged','touch'}:
         slot='ranged' if _ranged_name_re().search(str(attack.get('name') or '')) else 'melee'
+    from .action_distances import weapon_range
+    reach=weapon_range(attack)
+    if reach:slot='ranged'
     return {"name": token["name"], "attributes": dict((token.get('sheet') or {}).get('attributes') or {}), "attacks": [{
         "id": attack_id, "name": attack.get("name") or "Ataque", "damage": damage,
         "slot":slot,
+        "native_range":{'slot':slot,'max_range_m':reach.get('range_m')},
         "attack_bonus": bonus, "base_attack_bonus": bonus,
         "weapon_item_path": f"token:{token['id']}:attack:{attack_id}",
         "manual_effects": manual_effects,
@@ -279,7 +283,7 @@ def _resolve_weapon_override(
     if weapon is None:
         raise ValueError("Arma não disponível para este ataque (equipe-a e confira o dano)")
     attack = dict(attack)
-    attack["damage"] = '0' if (weapon.get('mechanics') or {}).get('special_attack') in {'net','garrote'} else resolve_item_damage_formula(
+    attack["damage"] = '0' if (weapon.get('mechanics') or {}).get('special_attack') in {'net','garrote','dart'} else resolve_item_damage_formula(
         {"item_effects": definition.get("item_effects"), "attributes": definition.get("attributes"), 'attack_slot': attack_id}, weapon
     )
     attack["weapon_item_path"] = str(weapon.get("item_path") or "")
@@ -352,6 +356,7 @@ def _resolve_attack(
     attack_count: int = 1,
     physical_d20s: list[int] | None = None,
     weapon_item_path: str | None = None,
+    ammunition_item_path: str | None = None,
     damage_type: str | None = None,
     tower_protected_side: bool | None = None,
     blood_boost: int = 0,
@@ -371,6 +376,16 @@ def _resolve_attack(
     request_id = _validate_request_id(request_id)
     attack_id = str(attack_id or "").strip()
     attack = _attack_entry(definition, attack_id)
+    if ammunition_item_path is not None:
+        from copy import deepcopy
+        from .item_families import project_ammunition
+        inventory = deepcopy(inventory)
+        selected_weapon = weapon_item_path or attack.get('weapon_item_path')
+        weapon = next((i for i in inventory if i.get('item_path') == selected_weapon), {})
+        if attack_id != 'ranged' or not (weapon.get('mechanics') or {}).get('requires_ammunition'):
+            raise ValueError('Este ataque não utiliza munição selecionável')
+        project_ammunition(inventory, {selected_weapon: ammunition_item_path})
+        weapon_item_path = selected_weapon
     attack = _resolve_weapon_override(definition, inventory, attack, attack_id, weapon_item_path)
     from .item_specials import select_damage_type
     attack = select_damage_type(attack, inventory, damage_type)
@@ -393,7 +408,7 @@ def _resolve_attack(
     )
     automatic_hit = bool(attack.get("automatic_hit"))
     from .item_families import ammunition_contract,consume_ammunition
-    ammunition=ammunition_contract(inventory,attack.get('weapon_item_path'),attack_count,definition.get('movement'))
+    ammunition=ammunition_contract(inventory,attack.get('weapon_item_path'),attack_count,definition.get('movement'),ammunition_item_path)
     if automatic_hit and roll_mode != "digital":
         raise ValueError("Esta magia automatizada requer modo Digital; no modo Físico use a resolução assistida")
     if type(attack_count) is not int or not 1 <= attack_count <= min(10, int(attack.get("attack_count", 1))):
@@ -422,6 +437,8 @@ def _resolve_attack(
                 raise ValueError('request_id já utilizado para outro lado do escudo')
             if record['breakdown'].get('selected_damage_type') != damage_type:
                 raise ValueError('request_id já utilizado para outro tipo de dano')
+            if (record['breakdown'].get('ammunition') or {}).get('item_path') != (ammunition or {}).get('item_path'):
+                raise ValueError('request_id já utilizado para outra munição')
             expected = (actor_character_id, requested_by_id, attack_id, target.get("type"), target.get("id"), roll_mode, str(attack.get("weapon_item_path") or ""))
             actual = tuple(record[key] for key in ("actor_character_id", "requested_by_id", "attack_id", "target_type", "target_id", "roll_mode")) + (str((record.get("breakdown") or {}).get("attack", {}).get("weapon_item_path") or ""),)
             old_strikes = record["breakdown"].get("strikes", [{"d20": record["d20"]}])
@@ -460,6 +477,7 @@ def _resolve_attack(
                     and record['target_id'] == target.get('id') and record['roll_mode'] == roll_mode
                     and record['breakdown'].get('guard_effect_id') == guard_effect_id
                     and str(record['breakdown'].get('attack', {}).get('weapon_item_path') or '') == str(attack.get('weapon_item_path') or '')
+                    and (record['breakdown'].get('ammunition') or {}).get('item_path') == (ammunition or {}).get('item_path')
                     and int(record['breakdown'].get('attack',{}).get('blood_boost') or 0)==blood_boost
                     and len(record['breakdown'].get('strikes') or [record]) == attack_count)
                 if same:
@@ -521,11 +539,23 @@ def _resolve_attack(
             if not resource or int(resource.get("current", 0)) < cost["amount"]:
                 raise ValueError("Sem usos disponíveis para esta magia")
             resource_cost = {**cost, "state_version": row["version"], 'resource_current': int(resource['current'])}
+    native_range=None
+    if attack.get('native_range'):
+        from .spatial_grid import check_attack_range
+        spec=attack['native_range']
+        intended_type,intended_id=('character',guard_ally_id) if guard else (target['type'],target['id'])
+        native_range={**spec,'target_type':intended_type,'target_id':intended_id,
+            **check_attack_range(database_path,actor_character_id=actor_character_id,
+                target_type=intended_type,target_id=intended_id,slot=spec['slot'],
+                max_range_m=spec['max_range_m'],connection=connection,include_context=True)}
+    from .item_range import range_context
+    item_range = None if automatic_hit else range_context(connection,database_path,actor_character_id,attack,inventory,target)
     if roll_mode == "digital":
         dice = [0] if automatic_hit else [int(roll_formula("1d20", rng)["total"]) for _ in range(attack_count)]
         d20 = dice[0]
     attack_spec = resolve_character_roll(definition, inventory, "attack", attack_id)
     attack_bonus = parse_formula(attack_spec.formula).modifier
+    if item_range:attack_bonus+=item_range['bonus']
     from .raziel_pipeline import attack_context
     raziel_context=attack_context(connection,actor_character_id)
     from .spatial_grid import diagonal_bonus
@@ -534,7 +564,7 @@ def _resolve_attack(
     # Tomo Arcano p.53: attacks against a blinded creature are very easy (+5).
     if not automatic_hit and any((e.get('condition')=='magical_darkness' or e.get('monster_condition')=='blinded') for e in current_snapshot['effects'] if e.get('target_type')==target.get('type') and e.get('target_id')==target.get('id')):
         attack_bonus += 5
-    effect_only = bool(attack.get('effect_only')) and (attack.get('item_special') in {'net','garrote'} or not connection.execute('SELECT 1 FROM character_states WHERE profile_id=?', (actor_character_id,)).fetchone())
+    effect_only = bool(attack.get('effect_only')) and (attack.get('item_special') in {'net','garrote','dart'} or not connection.execute('SELECT 1 FROM character_states WHERE profile_id=?', (actor_character_id,)).fetchone())
     damage_formula = '0' if effect_only else parse_formula(str(attack["damage"])).formula
     damage_modifier = 0 if effect_only else parse_formula(damage_formula).modifier
 
@@ -544,6 +574,9 @@ def _resolve_attack(
     if target_type not in {"character", "token"} or not target_id:
         raise ValueError("Alvo inválido")
     target_ac = target.get('touch_armor_class') if attack.get('item_special') == 'net' else target.get("armor_class")
+    from .magic_passives import illusion_ac_ignored
+    ignored_illusion_ac=illusion_ac_ignored(connection,actor_character_id,target_type,target_id) if attack.get('item_special')!='net' else 0
+    if ignored_illusion_ac and target_ac is not None:target_ac=int(target_ac)-ignored_illusion_ac
     current_hp = target.get("current_hp")
     if isinstance(target_ac, bool) or target_ac is None or int(target_ac) <= 0:
         raise ValueError("O alvo não possui CA válida")
@@ -555,6 +588,8 @@ def _resolve_attack(
 
     if raziel_context:
         attack_bonus=(attack_bonus+(2 if raziel_context.get('conditional_id') else 0))*raziel_context['multiplier']
+        if item_range:
+            item_range={**item_range,'base_bonus':item_range['bonus'],'bonus':item_range['bonus']*raziel_context['multiplier']}
     attack_total = d20 + attack_bonus
     result = "hit" if attack_total >= int(target_ac) else "miss"
     strikes = []
@@ -576,7 +611,7 @@ def _resolve_attack(
             boost=roll_formula(f'{blood_boost}d4',rng)
             strikes[-1]['damage_total']+=int(boost['total']);strikes[-1]['damage_rolls']+=boost['individual_results']
         from .raziel_pipeline import roll_attack as pipeline_roll
-        pipeline_roll(strikes[-1],raziel_context,rng)
+        if not effect_only:pipeline_roll(strikes[-1],raziel_context,rng)
         if player_attack and die==20 and not automatic_hit:strikes[-1]['unavoidable']=True
     result = "hit" if any(s["result"] == "hit" for s in strikes) else "miss"
     damage_roll = {"individual_results": [die for s in strikes for die in s["damage_rolls"]],
@@ -623,8 +658,10 @@ def _resolve_attack(
         'tower_shield':{'protected_side':tower_protected_side} if target_tower else None,
         'item_special': {'kind':'net', 'item_path':attack['weapon_item_path'], 'dexterity_ac_bonus':target.get('dexterity_ac_bonus') or 0} if attack.get('item_special') == 'net' else attack.get('item_special_contract'),
         'ammunition':ammunition,
+        'item_range':item_range,
         'inventory_condition_fingerprint':combat_fingerprint(connection,actor_character_id,target_type,target_id),
         'damage_profile':attack_profile(attack,inventory),
+        **({'illusion_ac_ignored':ignored_illusion_ac} if ignored_illusion_ac else {}),
         **({'monster_on_hit':monster_contract} if monster_contract else {}),
         'combat_turn': combat_turn,
         "guard_effect_id": guard_effect_id,
@@ -659,6 +696,7 @@ def _resolve_attack(
         "equipment": equipment,
     }
     created = now or _now()
+    if native_range is not None:breakdown['native_range']=native_range
     if isinstance(attack.get('hemomancy'), dict):
         breakdown['hemomancy'] = attack['hemomancy']
     if raziel_context:breakdown['raziel_pipeline']=raziel_context
@@ -747,7 +785,9 @@ def list_pending_attack_resolutions(
             record = _resolution_record(row)
             try:
                 _assert_preview_turn(record, live_snapshot)
-            except CombatExpiredError:
+                from .item_range import validate_confirm as validate_pending_range
+                validate_pending_range(connection,database_path,record)
+            except (CombatExpiredError,ValueError):
                 continue
             if datetime.fromisoformat(record["expires_at"]) < instant:
                 continue
@@ -797,6 +837,19 @@ def confirm_attack_resolution(
             raise PermissionError("Você não pode confirmar esta resolução")
         if record["status"] == "confirmed":
             return record, False
+        native_range=record['breakdown'].get('native_range')
+        if native_range:
+            from .spatial_grid import check_attack_range
+            try:
+                checked=check_attack_range(database_path,actor_character_id=record['actor_character_id'],
+                    target_type=native_range['target_type'],target_id=native_range['target_id'],
+                    slot=native_range['slot'],max_range_m=native_range['max_range_m'],connection=connection,include_context=True)
+                if any(checked.get(key)!=native_range.get(key) for key in ('checked','cells','meters','context')):
+                    raise ValueError('A distância mudou desde a rolagem; resolva novamente')
+            except ValueError as error:raise CombatExpiredError(str(error)) from error
+        from .item_range import validate_confirm as validate_item_range
+        try:validate_item_range(connection,database_path,record)
+        except ValueError as error:raise CombatExpiredError(str(error)) from error
         current_snapshot = effect_snapshot(connection)
         _assert_preview_turn(record, current_snapshot)
         strike_count = len(record['breakdown'].get('strikes') or [record])
@@ -888,7 +941,7 @@ def confirm_attack_resolution(
             connection.execute('UPDATE combat_effect_clock SET encounter_json=? WHERE id=1',(json.dumps(current_snapshot['encounter']),))
         from .item_specials import validate_confirmation
         validate_confirmation(connection,record)
-        actual_damage,reflection=redirect_hits(connection,record['target_type'],record['target_id'],record['breakdown'].get('strikes') or [record],confirmed_at.isoformat())
+        actual_damage,reflection=redirect_hits(connection,record['target_type'],record['target_id'],record['breakdown'].get('strikes') or [record],confirmed_at.isoformat(),observer_id=record['actor_character_id'])
         if reflection:
             record['breakdown']['reflection_result']=reflection;record['damage_total']=actual_damage
             connection.execute('UPDATE combat_attack_resolutions SET damage_total=?,breakdown_json=? WHERE resolution_id=?',(actual_damage,json.dumps(record['breakdown']),resolution_id))
@@ -910,11 +963,25 @@ def confirm_attack_resolution(
         profile=record['breakdown'].get('damage_profile')
         context={**profile,'unavoidable_damage':sum(s['damage_total'] for s in record['breakdown'].get('strikes',[]) if s.get('unavoidable'))} if profile else None
         hp_change = change_hp(connection, record["target_type"], record["target_id"], -int(record["damage_total"]), confirmed_at.isoformat(),damage_context=context)
+        rapina_received=max(0,int(hp_change.get('damage_after_defenses',record['damage_total']))
+            +int(hp_change.get('damage_reduction_penalty') or 0))
+        if hp_change.get('magic_item_absorption'):
+            absorption=hp_change['magic_item_absorption']
+            record['breakdown']['magic_item_absorption']=absorption
+            record['damage_total']=max(0,int(record['damage_total'])-absorption['absorbed'])
+            connection.execute('UPDATE combat_attack_resolutions SET damage_total=?,breakdown_json=? WHERE resolution_id=?',
+                (record['damage_total'],json.dumps(record['breakdown'],ensure_ascii=False),resolution_id))
         from .monster_rust import reverse_contact
         from .item_specials import confirm_hit as confirm_item_hit
         special_result = confirm_item_hit(connection, record, confirmed_at.isoformat())
         if special_result:
             record['breakdown']['item_special_result'] = special_result
+        from .item_darts import confirm_hit as confirm_dart_hit
+        dart_results = confirm_dart_hit(connection, record, confirmed_at.isoformat())
+        if dart_results:
+            record['breakdown']['item_dart_results'] = dart_results
+            connection.execute('UPDATE combat_attack_resolutions SET breakdown_json=? WHERE resolution_id=?',
+                (json.dumps(record['breakdown'],ensure_ascii=False),resolution_id))
         rust_results=reverse_contact(connection,record,confirmed_at.isoformat())
         if rust_results:record['breakdown']['rust_contact_results']=rust_results
         if rust_results:
@@ -990,12 +1057,23 @@ def confirm_attack_resolution(
                     (json.dumps(dorn_state, ensure_ascii=False), confirmed_at.isoformat()),
                 )
                 dorn_disabled = True
+        from .magic_item_combat import reflect_rapina
+        rapina=reflect_rapina(connection,record,rapina_received,confirmed_at.isoformat())
+        if rapina:
+            record['breakdown']['rapina_reflection']=rapina
+            connection.execute('UPDATE combat_attack_resolutions SET breakdown_json=? WHERE resolution_id=?',
+                (json.dumps(record['breakdown'],ensure_ascii=False),resolution_id))
         fumble=sum(s.get('fumble_damage',0) for s in record['breakdown'].get('strikes',[]))
         if fumble:
             record['breakdown']['fumble_result']=change_hp(connection,'character',record['actor_character_id'],-fumble,confirmed_at.isoformat(),damage_context={**(profile or {}),'kind':'effect'})
             record['breakdown']['fumble_result']['damage']=fumble
             connection.execute('UPDATE combat_attack_resolutions SET breakdown_json=? WHERE resolution_id=?',(json.dumps(record['breakdown']),resolution_id))
         from .monster_runtime import record_confirmed_attacks
+        from .magic_field_items import NAILS, confirm_nails
+        if record['attack_id'] == NAILS:
+            record['breakdown']['ungual_nails'] = confirm_nails(connection, record, confirmed_at.isoformat())
+            connection.execute('UPDATE combat_attack_resolutions SET breakdown_json=? WHERE resolution_id=?',
+                (json.dumps(record['breakdown'], ensure_ascii=False), resolution_id))
         record_confirmed_attacks(connection,record,confirmed_at.isoformat())
         from .item_throwing import confirmed as confirm_throw
         throwing = confirm_throw(connection, record, current_snapshot, confirmed_at.isoformat())
@@ -1057,7 +1135,7 @@ def confirm_attack_resolution(
             actor_name=record["actor_name"],
             actor_role=record["requested_by_role"],
             character_id=record["actor_character_id"],
-            title=f"{record['actor_name']} atacou {record['target_name']} com {record['attack_name']}" + (' · '+record['breakdown']['item_special_result']['label'] if record['breakdown'].get('item_special_result') else '') + (' · escudo torre bloqueou' if any(r.get('blocked') for r in (record['breakdown'].get('item_defense_result') or {}).get('rolls',[])) else ''),
+            title=f"{record['actor_name']} atacou {record['target_name']} com {record['attack_name']}" + (' · '+record['breakdown']['item_special_result']['label'] if record['breakdown'].get('item_special_result') else '') + (' · escudo torre bloqueou' if any(r.get('blocked') for r in (record['breakdown'].get('item_defense_result') or {}).get('rolls',[])) else '') + (f" · Rapina devolveu {rapina['damage']} de dano" if rapina else ''),
             detail=detail,
             visibility="gm" if private_actor or private_target else "table",
             created_at=confirmed_at.isoformat(),

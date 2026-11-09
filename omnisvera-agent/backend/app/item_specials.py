@@ -52,6 +52,9 @@ def touch_target_fields(definition: dict, inventory: list[dict] = ()) -> dict:
 def prepare_attack(db, attack: dict, inventory: list[dict], target: dict, *, blood_boost: int = 0, actor_id: str = '', definition: dict | None = None) -> dict:
     item = next((i for i in inventory if i.get('item_path') == attack.get('weapon_item_path')), {})
     special=(item.get('mechanics') or {}).get('special_attack')
+    if special=='dart':
+        if blood_boost:raise ValueError('Dardo especial não possui dano base para reforçar')
+        return {**attack,'damage':'0','effect_only':True,'item_special':'dart'}
     if special=='vibranium':
         from .item_throwing import prepare
         return prepare(db,actor_id,item,target,definition or {},attack)
@@ -120,7 +123,7 @@ def validate_confirmation(db, record):
 def attack_intent(request) -> dict:
     intent = request.model_dump(exclude={'request_id'})
     # Preserve retry fingerprints created before this optional field existed.
-    for key in ('damage_type','tower_protected_side'):
+    for key in ('damage_type','tower_protected_side','ammunition_item_path'):
         if intent.get(key) is None:intent.pop(key,None)
     return intent
 

@@ -1,0 +1,118 @@
+{
+ "schema_version": 1,
+ "character_id": "vezemir",
+ "display_name": "Vezemir",
+ "standee": true,
+ "animations": {
+  "idle": {
+   "sheet": "standee_vezemir.png",
+   "fps": 1,
+   "loop": true,
+   "render_scale": 0.36,
+   "frames": [
+    [
+     0,
+     0,
+     185,
+     256
+    ]
+   ],
+   "calibration": [
+    {
+     "pivot": [
+      92,
+      252
+     ]
+    }
+   ]
+  },
+  "walk_down": {
+   "sheet": "standee_vezemir.png",
+   "fps": 1,
+   "loop": true,
+   "render_scale": 0.36,
+   "frames": [
+    [
+     0,
+     0,
+     185,
+     256
+    ]
+   ],
+   "calibration": [
+    {
+     "pivot": [
+      92,
+      252
+     ]
+    }
+   ]
+  },
+  "walk_up": {
+   "sheet": "standee_vezemir.png",
+   "fps": 1,
+   "loop": true,
+   "render_scale": 0.36,
+   "frames": [
+    [
+     0,
+     0,
+     185,
+     256
+    ]
+   ],
+   "calibration": [
+    {
+     "pivot": [
+      92,
+      252
+     ]
+    }
+   ]
+  },
+  "walk_left": {
+   "sheet": "standee_vezemir.png",
+   "fps": 1,
+   "loop": true,
+   "render_scale": 0.36,
+   "frames": [
+    [
+     0,
+     0,
+     185,
+     256
+    ]
+   ],
+   "calibration": [
+    {
+     "pivot": [
+      92,
+      252
+     ]
+    }
+   ]
+  },
+  "walk_right": {
+   "sheet": "standee_vezemir.png",
+   "fps": 1,
+   "loop": true,
+   "render_scale": 0.36,
+   "frames": [
+    [
+     0,
+     0,
+     185,
+     256
+    ]
+   ],
+   "calibration": [
+    {
+     "pivot": [
+      92,
+      252
+     ]
+    }
+   ]
+  }
+ }
+}

@@ -286,7 +286,8 @@ def damage_response(db,kind,identity,amount,damage_type,context=None):
         mapping=spec.get(key) or {}
         factor=mapping.get(damage_type) if isinstance(mapping,dict) else next((item.get('factor') for item in mapping if isinstance(item,dict) and item.get('type')==damage_type),None)
         if isinstance(factor,(int,float)) and not isinstance(factor,bool) and 0<=factor<=10:amount=math.floor(amount*factor)
-    return max(0,amount)+unavoidable
+    from .magic_world_phase import reduce_damage
+    return max(0,reduce_damage(db,kind,identity,amount,damage_type))+unavoidable
 
 
 def track_hp(db,kind,identity,before,after,damage_type,regeneration,now):

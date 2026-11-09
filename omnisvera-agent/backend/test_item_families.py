@@ -25,8 +25,11 @@ class ItemFamilyTests(unittest.TestCase):
         self.assertIn('ammunition',item['mechanics']['family_gaps'])
 
     def test_special_weapon_keeps_a_visible_gap(self):
-        # Bagh Naja remains ambiguous (1d6/1d4); Madu now has a reviewed executor.
-        item=catalog_inventory('compendium:arma-corpo-bagh-naja')
+        # Unknown multi-formula weapons must remain pending. Bagh Naja now
+        # has a separately approved, explicitly marked campaign override.
+        from app.item_families import descriptor
+        item=descriptor({'id':'fixture-unreviewed-weapon','name':'Arma indefinida',
+                         'category':'arma-corpo','dano':'1d6/1d4','description':''})
         self.assertIn('special_effect',item['mechanics']['family_gaps'])
 
     def test_all_numeric_catalog_weapons_keep_damage_critical_and_slots(self):

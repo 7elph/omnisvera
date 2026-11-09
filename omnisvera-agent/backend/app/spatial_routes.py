@@ -21,7 +21,7 @@ class MoveCommand(BaseModel):
     model_config = ConfigDict(extra='forbid')
     request_id: str = Field(min_length=8, max_length=120)
     token_id: str
-    mode: Literal['COMBAT_MOVE','GM_REPOSITION']
+    mode: Literal['COMBAT_MOVE','EXPLORATION_MOVE','GM_REPOSITION']
     path: list[tuple[StrictInt, StrictInt]] = Field(min_length=1,max_length=401)
     expected_position_version: int
     expected_grid_version: int

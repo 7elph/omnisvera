@@ -117,8 +117,10 @@ def configure(path, mid, access, *, token_id, npc_id=None, location_id=None, ena
 
 def add_service(path,mid,access,*,name,kind,price_copper,compendium_item_id=None,amount=1,stock_id=None,spell_id=None):
     if access.mode!='gm': raise PermissionError('Somente o Mestre configura serviços')
-    if kind not in {'delivery','lodging','appraisal','spell'} or not name.strip() or type(price_copper)!=int or price_copper<0 or not 1<=amount<=999:
+    if kind not in {'delivery','lodging','appraisal','spell','repair'} or not name.strip() or type(price_copper)!=int or price_copper<0 or not 1<=amount<=999:
         raise ValueError('Serviço inválido')
+    if kind=='repair' and (amount!=1 or compendium_item_id or stock_id or spell_id):
+        raise ValueError('Reparo atende um item por orçamento, sem entrega ou recarga')
     initialize(path)
     with closing(_connect(path)) as db,db:
         merchant=_merchant(db,mid,access)
@@ -146,6 +148,8 @@ def _price_line(row,index=None):
 def _service_readiness(row,index=None,merchant=None):
     from .item_registry import resolve_item,catalog_item,allowed
     price=row['price_copper'];valid_price=type(price) is int and 0<=price<=100000000
+    if row['kind']=='repair':
+        return {'commerce_ready':valid_price,'blocking_gaps':[] if valid_price else ['preco_invalido'],'effect_status':'rust_repair'}
     if row['kind']=='spell':
         from .merchant_magic import specification
         try:spec=specification(row['spell_id'])
@@ -232,6 +236,11 @@ def for_pin(path,token_id,access,character_id=None):
                     from .merchant_magic import require_target,specification
                     try:require_target(db,character_id,specification(service['spell_id']))
                     except ValueError as error:availability={'available':False,'unavailable_reason':str(error)}
+                if service['kind']=='repair':
+                    from .merchant_repairs import available
+                    repair_items=available(db,character_id)
+                    availability={'repair_items':repair_items,'available':bool(repair_items)}
+                    if not repair_items:availability['unavailable_reason']='Sem item com encantamento corroído verificado; não repara em combate'
                 services.append({**{key:service[key] for key in ('id','name','kind','price_copper','amount','spell_id')},'readiness':readiness,**availability})
             sellable=[];blocked_sales=[]
             if character_id:
@@ -258,7 +267,7 @@ def for_pin(path,token_id,access,character_id=None):
         return result
 
 
-def _offer(db,m,character_id,kind,target_id,index=None):
+def _offer(db,m,character_id,kind,target_id,index=None,inventory_id=None):
     from .item_registry import registry,resolve_item,catalog_item,allowed,owned_stock,sale_reason
     index=index or registry(db)
     if kind=='buy':
@@ -284,13 +293,19 @@ def _offer(db,m,character_id,kind,target_id,index=None):
         row=db.execute('SELECT * FROM merchant_services WHERE id=? AND merchant_id=? AND active=1',(target_id,m['id'])).fetchone()
         if not row: raise ValueError('Serviço indisponível')
         _require_service(row,index,m)
+        repair_target=None
+        if inventory_id is not None and row['kind']!='repair':
+            raise ValueError('Este serviço não recebe item para reparar')
+        if row['kind']=='repair':
+            from .merchant_repairs import preview
+            repair_target=preview(db,character_id,inventory_id)
         if row['kind']=='spell':
             from .merchant_magic import require_target,specification
             require_target(db,character_id,specification(row['spell_id']))
         if row['stock_id']:
             stock=db.execute('SELECT quantity,instance_json FROM merchant_stock WHERE id=? AND merchant_id=?',(row['stock_id'],m['id'])).fetchone()
             if not stock or stock['instance_json'] or stock['quantity']!=-1 and stock['quantity']<row['amount']:raise ValueError('Estoque do serviço insuficiente')
-        return {'name':row['name'],'base_unit_copper':row['price_copper'],'service':dict(row)}
+        return {'name':row['name'],'base_unit_copper':row['price_copper'],'service':dict(row),**({'repair_target':repair_target} if repair_target else {})}
     raise ValueError('Operação inválida')
 
 
@@ -328,12 +343,13 @@ def _ledger(db,access,key,character_id,title,detail,visibility='table'):
         actor_role=access.mode,character_id=character_id,title=title,detail=detail,visibility=visibility,created_at=_now())
 
 
-def quote(path,mid,access,*,request_id,character_id,kind,target_id,quantity=1,negotiate=False):
+def quote(path,mid,access,*,request_id,character_id,kind,target_id,quantity=1,negotiate=False,inventory_id=None):
     _owner(access,character_id)
     if not 8<=len(request_id)<=120 or type(quantity)!=int or not 1<=quantity<=999: raise ValueError('Quantidade/identificador inválido')
+    if inventory_id is not None and (kind!='service' or type(inventory_id) is not int or inventory_id<=0):raise ValueError('Item de reparo inválido')
     initialize(path)
     actor=_actor(access)
-    fingerprint=json.dumps([mid,character_id,kind,target_id,quantity,negotiate])
+    fingerprint=json.dumps([mid,character_id,kind,target_id,quantity,negotiate]+([inventory_id] if inventory_id is not None else []))
     with closing(_connect(path)) as db, db:
         db.execute('BEGIN IMMEDIATE')
         m=_merchant(db,mid,access)
@@ -342,7 +358,9 @@ def quote(path,mid,access,*,request_id,character_id,kind,target_id,quantity=1,ne
         if previous:
             if previous['fingerprint']!=fingerprint: raise ValueError('Identificador já usado com outro conteúdo')
             return json.loads(previous['data_json'])
-        offer=_offer(db,m,character_id,kind,target_id)
+        from .item_registry import registry
+        bargain_index=registry(db) if negotiate else None
+        offer=_offer(db,m,character_id,kind,target_id,index=bargain_index,inventory_id=inventory_id)
         if kind=='sell':
             from .item_registry import owned_stock
             available=next((r['quantity'] for r in owned_stock(db,character_id) if r['item_path']==target_id),0)
@@ -361,8 +379,8 @@ def quote(path,mid,access,*,request_id,character_id,kind,target_id,quantity=1,ne
                 from .character_play import attribute_modifier
                 data=_character_sheet(db,character_id)
                 attrs={**data['sheet'].get('attributes',{}),**data['overrides'].get('attributes',{})}
-                charisma=next((v for k,v in attrs.items() if k.lower() in {'charisma','carisma'}),10)
-                mod=attribute_modifier(charisma) or 0
+                from .magic_passives import attribute_check_modifier
+                mod=attribute_check_modifier(db,character_id,attrs,'charisma',index=bargain_index)
                 roll=int(roll_formula('1d20')['total']); total=roll+mod
                 multiplier,label=next(((mult,label) for floor,mult,label in HAGGLE_TIERS if total>=floor),(1.1,'+10%'))
                 bargain={'d20':roll,'modifier':mod,'total':total,'multiplier':multiplier,'label':label}
@@ -409,8 +427,8 @@ def confirm(path,quote_id,access,*,request_id):
         m=_merchant(db,q['merchant_id'],access)
         from .item_registry import registry
         index=registry(db)
-        offer=_offer(db,m,q['character_id'],q['kind'],q['target_id'],index)
-        if any(offer.get(k)!=q.get(k) for k in ('base_unit_copper','catalog_id','service','item_revision','valuation','individual_appraisal')):
+        offer=_offer(db,m,q['character_id'],q['kind'],q['target_id'],index,inventory_id=(q.get('repair_target') or {}).get('inventory_id'))
+        if any(offer.get(k)!=q.get(k) for k in ('base_unit_copper','catalog_id','service','item_revision','valuation','individual_appraisal','repair_target')):
             raise ValueError('Oferta alterada; consulte o novo preço')
         state=_character_state(db,q['character_id']); balance=purse_copper(state)
         purse_before={key:int(state.get(key) or 0) for key in ('copper_coins','silver_coins','coins','platinum_coins')}
@@ -448,6 +466,9 @@ def confirm(path,quote_id,access,*,request_id):
             if service['kind']=='spell':
                 from .merchant_magic import apply
                 service_effect=apply(db,q['character_id'],service['spell_id'],_now());status='completed'
+            elif service['kind']=='repair':
+                from .merchant_repairs import apply
+                service_effect=apply(db,q['character_id'],offer['repair_target'],_now());status='completed'
             elif service['kind']=='delivery':
                 if service.get('stock_id'):
                     stock_id=service['stock_id'];stock=db.execute('SELECT quantity FROM merchant_stock WHERE id=?',(stock_id,)).fetchone()
@@ -466,7 +487,7 @@ def confirm(path,quote_id,access,*,request_id):
                     raise ValueError('Você já tem hospedagem reservada para o próximo descanso')
                 db.execute('INSERT INTO merchant_service_orders VALUES(?,?,?,?,?,?,NULL)',(quote_id,m['id'],q['character_id'],q['name'],'reserved',_now()))
                 status='reserved'
-        purse=_save_purse(db,q['character_id'],balance+cost if kind=='sell' else balance-cost) if cost else purse_before
+        purse=_save_purse(db,q['character_id'],balance+cost if kind=='sell' else balance-cost) if cost or (service_effect or {}).get('family')=='rust_repair' else purse_before
         response={'receipt_id':quote_id,'merchant_id':m['id'],'character_id':q['character_id'],'audit_schema_version':1,'kind':kind,'name':q['name'],'quantity':qty,'total_copper':cost,
             'purse_before':purse_before,'purse_after':purse,'balance_before_copper':balance,'balance_after_copper':purse_copper(purse),
             'appraisal':appraisal,'stock_id':stock_id,'inventory_changes':inventory_changes,'stock_before':stock_before,'stock_after':stock_after,'item_revision':q.get('item_revision'),
@@ -477,6 +498,8 @@ def confirm(path,quote_id,access,*,request_id):
         response['currency_rule'] = rule_snapshot()
         verb={'buy':'comprou','sell':'vendeu','service':'contratou'}[kind]
         title=f'{q["character_id"]} {verb} {qty}× {q["name"]} por {cost/100:g} PO'
+        if (service_effect or {}).get('family')=='rust_repair':
+            title+=f" · {service_effect['name']}: encantamento +{service_effect['bonus_before']} → +{service_effect['bonus_after']}"
         _ledger(db,access,quote_id,q['character_id'],title,response)
         if m['npc_id']:
             from .npc_memory import _event

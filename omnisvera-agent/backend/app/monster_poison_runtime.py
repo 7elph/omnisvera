@@ -30,13 +30,20 @@ def current_attributes(db,kind,identity):
         from .character_play import _step_fields
         raw=db.execute('SELECT data_json FROM character_sheets WHERE profile_id=?',(identity,)).fetchone()
         overrides=db.execute('SELECT data_json FROM character_definition_overrides WHERE profile_id=?',(identity,)).fetchone()
-        attributes=dict(_step_fields(json.loads(raw[0]),'attributes')) if raw else {}
+        data=json.loads(raw[0]) if raw else {}
+        attributes=dict(data.get('attributes') or _step_fields(data,'attributes'))
         attributes.update(json.loads(overrides[0] or '{}').get('attributes') or {} if overrides else {})
     else:
         raw=db.execute('SELECT sheet_json FROM session_workspace_tokens WHERE id=?',(identity,)).fetchone()
         attributes=dict(json.loads(raw[0] or '{}').get('attributes') or {}) if raw else {}
     from .character_play import _number
     attributes={k:int(_number(v)) for k,v in attributes.items() if _number(v) is not None}
+    if kind=='character' and db.execute("SELECT 1 FROM sqlite_master WHERE name='player_inventory'").fetchone():
+        from .magic_equipment import attribute_bonuses
+        inventory=[dict(zip(('item_path','quantity','equipped'),row)) for row in db.execute(
+            'SELECT item_path,quantity,equipped FROM player_inventory WHERE profile_id=?',(identity,))]
+        for key,bonus in attribute_bonuses(inventory).items():
+            if key in attributes:attributes[key]+=bonus
     effects=[]
     if db.execute("SELECT 1 FROM sqlite_master WHERE name='combat_effects'").fetchone():
         effects=[json.loads(r[0]) for r in db.execute('SELECT data_json FROM combat_effects WHERE active=1 AND target_type=? AND target_id=?',(kind,identity))]

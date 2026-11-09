@@ -180,6 +180,10 @@ def _consume_clause(clause: str, modes: dict[str, float], pending: list[str]) ->
 
 
 def _parse(raw: Any) -> tuple[dict[str, float], list[str]]:
+    if isinstance(raw,str):
+        # Native effect projection already scaled the numeric speed. Its UI
+        # suffix is not a second movement mode or another multiplication.
+        raw=re.sub(r'\s*·\s*Velocidade\s*×[234]\s*$', '', raw)
     if isinstance(raw, bool):
         raise ValueError("Movimento inválido na ficha")
     if isinstance(raw, (int, float)):

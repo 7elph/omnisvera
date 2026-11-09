@@ -34,6 +34,13 @@ def normalize_inventory_item_mechanics(item: dict[str, Any]) -> dict[str, Any]:
         record['mechanics'] = {**mechanics, 'equipment_slots': []}
         record['usable'] = False
         return record
+    if mechanics.get('family_schema')==1 and mechanics.get('family') in {'magic_activation','magic_equipment'}:
+        # A duration, save die or drinking table is not a weapon damage formula.
+        record['damage_formula']=None
+        mechanics.pop('damage_formula',None)
+        record['mechanics']=mechanics
+        from .inventory_conditions import project_condition
+        return project_condition(record)
     text = _normalized_item_text(f"{record.get('item_title') or record.get('name') or ''} {record.get('item_type') or ''}")
 
     damage_formula = str(record.get("damage_formula") or mechanics.get("damage_formula") or "").strip()
@@ -139,6 +146,9 @@ def upsert_inventory(database_path: Path, *, profile_id: str, item_path: str, it
     now = datetime.now(timezone.utc).isoformat()
     with closing(_connect(database_path)) as connection, connection:
         previous=connection.execute('SELECT id,quantity FROM player_inventory WHERE profile_id=? AND item_path=?',(profile_id,item_path)).fetchone()
+        if previous:
+            from .portable_hole import protect_quantity
+            protect_quantity(connection,previous['id'],quantity)
         if previous and quantity>0:
             from .inventory_conditions import read_condition
             condition=read_condition(connection,previous['id'])
@@ -171,14 +181,21 @@ def list_inventory(database_path: Path, profile_id: str, *, include_empty: bool 
     init_player_inventory(database_path)
     with closing(_connect(database_path)) as connection, connection:
         quantity_filter = '' if include_empty else ' AND i.quantity>0'
+        from .magic_optics import suppressed
+        optical_suppressed=suppressed(connection,'character',profile_id) or suppressed(connection,'token',profile_id)
         rows = connection.execute(f'''SELECT i.*,c.data_json AS condition_json,c.version AS condition_version
             FROM player_inventory i LEFT JOIN inventory_item_conditions c ON c.inventory_id=i.id
             WHERE i.profile_id=?{quantity_filter} ORDER BY i.equipped DESC,i.item_title''',(profile_id,)).fetchall()
     result = [dict(row) for row in rows]
     for item in result:
+        if optical_suppressed:item['_optical_suppressed']=True
         item["equipped"] = bool(item["equipped"])
         raw=item.pop('condition_json');version=item.pop('condition_version')
-        if raw:item['_instance_condition']={**json.loads(raw),'version':int(version)}
+        if raw:
+            condition = json.loads(raw)
+            condition.pop('field_item', None)  # Private GM configuration is served only by the field-item route.
+            if condition:
+                item['_instance_condition'] = {**condition, 'version': int(version)}
     return result
 
 
@@ -188,8 +205,17 @@ def recharge_inventory(database_path: Path, recharge: str, profile_id: str | Non
         raise ValueError("Tipo de recarga inválido")
     now = datetime.now(timezone.utc).isoformat()
     with closing(_connect(database_path)) as connection, connection:
+        from .magic_passives import lifetime_inventory_ids
+        excluded=lifetime_inventory_ids(connection,profile_id)
+        exclusion=' AND id NOT IN ('+','.join('?' for _ in excluded)+')' if excluded else ''
         if profile_id:
-            cursor = connection.execute("UPDATE player_inventory SET charges_current=charges_max,updated_at=? WHERE profile_id=? AND recharge=? AND charges_max IS NOT NULL", (now, profile_id, recharge))
+            cursor = connection.execute("UPDATE player_inventory SET charges_current=charges_max,updated_at=? WHERE profile_id=? AND recharge=? AND charges_max IS NOT NULL"+exclusion, (now, profile_id, recharge,*excluded))
         else:
-            cursor = connection.execute("UPDATE player_inventory SET charges_current=charges_max,updated_at=? WHERE recharge=? AND charges_max IS NOT NULL", (now, recharge))
+            cursor = connection.execute("UPDATE player_inventory SET charges_current=charges_max,updated_at=? WHERE recharge=? AND charges_max IS NOT NULL"+exclusion, (now, recharge,*excluded))
+        from .magic_item_uses import recharge_active
+        recharge_active(connection,recharge,profile_id,now)
+        if recharge=='inn_rest':
+            from .magic_containers import recharge_contents
+            owners=[profile_id] if profile_id else [r[0] for r in connection.execute('SELECT DISTINCT profile_id FROM player_inventory')]
+            for owner in owners:recharge_contents(connection,owner,now)
     return int(cursor.rowcount)

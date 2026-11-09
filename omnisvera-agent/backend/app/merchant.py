@@ -271,9 +271,9 @@ def haggle(database_path: Path, *, character_id: str, base_price_po: float, roll
         raise ValueError("Preço inválido para pechinchar")
     with closing(_connect(Path(database_path))) as connection:
         data = _character_sheet(connection, character_id)
-    attributes = {**(data["sheet"].get("attributes") or {}), **(data["overrides"].get("attributes") or {})}
-    charisma = next((value for key, value in attributes.items() if str(key).lower() in ("charisma", "carisma")), 10)
-    modifier = attribute_modifier(charisma) or 0
+        attributes = {**(data["sheet"].get("attributes") or {}), **(data["overrides"].get("attributes") or {})}
+        from .magic_passives import attribute_check_modifier
+        modifier = attribute_check_modifier(connection,character_id,attributes,'charisma')
     if roll_mode == "physical":
         if d20 is None or not 1 <= int(d20) <= 20:
             raise ValueError("Informe o d20 físico (1-20)")

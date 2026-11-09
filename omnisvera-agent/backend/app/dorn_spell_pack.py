@@ -110,13 +110,16 @@ def command(db,snapshot,payload,now):
             **({'action_contract':{'ref':contract['ref'],'revision':contract['revision'],'level':level}} if contract else {})}
 
 
-def redirect_hits(db,kind,identity,strikes,now,area=False):
+def redirect_hits(db,kind,identity,strikes,now,area=False,observer_id=None):
     amount=sum(int(s.get('damage_total') or 0) for s in strikes)
     if area:
         return amount,{}
     row=db.execute("SELECT id,data_json FROM combat_effects WHERE active=1 AND target_type=? AND target_id=? AND json_extract(data_json,'$.spell')='reflexos'",(kind,identity)).fetchone()
     if not row:
         return amount,{}
+    from .magic_passives import equipped,HELM
+    if equipped(db,observer_id,HELM):
+        return amount,{'true_sight':True,'effect_id':row[0],'images_remaining':json.loads(row[1]).get('images_remaining'),'rolls':[]}
     effect=json.loads(row[1])
     remaining=int(effect.get('images_remaining') or 0)
     redirected=[]

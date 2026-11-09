@@ -4,7 +4,7 @@ from datetime import date
 from datetime import date
 from typing import Any, Literal
 
-from pydantic import BaseModel, Field, StrictInt
+from pydantic import BaseModel, Field, StrictInt, StrictBool
 
 
 class HealthResponse(BaseModel):
@@ -397,6 +397,7 @@ class CharacterResource(BaseModel):
 
 
 class CharacterStateResponse(BaseModel):
+    appearance: dict[str, Any] | None = None
     animal_form: str | None = None
     night_form: dict[str, Any] | None = None
     normal_current_hp: int | None = None
@@ -591,6 +592,7 @@ class WorkspaceTableModeUpdate(BaseModel):
 
 
 class WorkspaceTokenUpdate(BaseModel):
+    magic_capability: StrictBool | None = None
     name: str | None = Field(default=None, min_length=1, max_length=120)
     image_path: str | None = Field(default=None, max_length=500)
     visible_to_players: bool | None = None
@@ -613,17 +615,22 @@ class SessionItemEffectRule(BaseModel):
     effect_category: str | None = Field(default=None, max_length=80)
     id: str = Field(min_length=1, max_length=80)
     trigger: str = Field(pattern="^(on_use|while_equipped)$")
-    kind: str = Field(pattern="^(heal_hp|restore_resource|add_condition|temporary_hp|attribute_bonus|skill_bonus|saving_throw_bonus|armor_class_bonus|attack_bonus|damage_bonus|movement_bonus|maximum_hp_bonus|grant_ability|resistance|immunity|vulnerability)$")
+    kind: str = Field(pattern="^(heal_hp|restore_resource|add_condition|temporary_hp|attribute_bonus|skill_bonus|saving_throw_bonus|armor_class_bonus|attack_bonus|damage_bonus|movement_bonus|maximum_hp_bonus|grant_ability|resistance|immunity|vulnerability|magic_activation)$")
     target: str | None = Field(default=None, max_length=120)
     value: int = Field(default=0, ge=-999, le=999)
     formula: str | None = Field(default=None, max_length=32, pattern=r"^(?:\d{1,2}d\d{1,4}(?:[+-]\d{1,4})?|)$")
     label: str | None = Field(default=None, max_length=500)
     stacking: str = Field(default="stack", pattern="^(stack|highest|non_stack|replace)$")
+    stacking_group: str | None = Field(default=None,max_length=80)
     duration: str = Field(default="instant", pattern="^(instant|round|scene|rest|equipped)$")
     condition: str | None = Field(default=None, max_length=180)
 
 
 class SessionItemMechanics(BaseModel):
+    weight_kg: float | None = Field(default=None, ge=0, le=1000000, allow_inf_nan=False)
+    container_entry_cm: float | None = Field(default=None, gt=0, le=10000, allow_inf_nan=False)
+    storage_volume_m3: float | None = Field(default=None, gt=0, le=1000000, allow_inf_nan=False)
+    container_packed_length_cm: float | None = Field(default=None, gt=0, le=100000, allow_inf_nan=False)
     damage_type: Literal['physical','slashing','piercing','bludgeoning','fire','cold','acid','lightning','poison','necrotic'] | None = None
     magical: bool | None = None
     material: Literal['silver','ordinary'] | None = None
@@ -767,6 +774,7 @@ class CharacterRollCreate(BaseModel):
 
 
 class AttackResolutionCreate(BaseModel):
+    ammunition_item_path: str | None = Field(default=None, min_length=1, max_length=280)
     tower_protected_side: bool | None = Field(default=None, strict=True)
     damage_type: Literal['slashing', 'piercing', 'bludgeoning'] | None = None
     grid_automatic: bool = False
@@ -828,11 +836,12 @@ class CombatEffectCommand(BaseModel):
     model_config = {"extra": "forbid"}
     request_id: str = Field(min_length=8, max_length=120)
     expected_version: int = Field(ge=0)
-    action: str = Field(pattern="^(apply|remove|round|scene|rest|start|initiative|next_turn|end|monster_breath|monster_contact|parasite_remove|dorn_guard|dorn_vanguard|dorn_diagnose|dorn_spell_cast|dorn_spell_time|dorn_spell_end|dorn_levitate_move|dorn_levitate_stabilize|necro_spell_cast|necro_spell_end|necro_spell_time)$")
+    action: str = Field(pattern="^(world_phase|apply|remove|round|scene|rest|start|initiative|next_turn|end|monster_breath|monster_contact|parasite_remove|dorn_guard|dorn_vanguard|dorn_diagnose|dorn_spell_cast|dorn_spell_time|dorn_spell_end|dorn_levitate_move|dorn_levitate_stabilize|necro_spell_cast|necro_spell_end|necro_spell_time)$")
     payload: dict = Field(default_factory=dict)
 
 
 class DiceRollEventResponse(BaseModel):
+    target_comparison: Literal['at_least','at_most'] = 'at_least'
     id: int
     request_id: str
     session_id: str | None = None
@@ -886,6 +895,7 @@ class DiceRollRequestCreate(BaseModel):
 
 
 class DiceRollRequestResponse(BaseModel):
+    target_comparison: Literal['at_least','at_most'] = 'at_least'
     id: int
     request_id: str
     session_id: str | None = None

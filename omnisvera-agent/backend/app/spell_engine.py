@@ -65,12 +65,13 @@ def derive_spell_mechanic(spell: dict[str, Any]) -> dict[str, Any]:
     if per_level and damage==f'1d{per_level.group(1)}':
         cap=re.search(r'm[aá]ximo\s+(?:de\s+)?(\d+)d'+per_level.group(1)+r'\b',text,re.I)
         progression={'die_size':int(per_level.group(1)),'maximum_dice':int(cap.group(1)) if cap else None}
-    range_match = re.search(r"(\d+)\s*metros?", f"{spell.get('alcance') or ''}")
+    from .action_distances import metre_formula
+    range_formula = metre_formula(spell.get('alcance'))
     return {"save": save, "save_effect": save_effect,"damage_type":infer_damage_type(spell.get('name'),spell.get('description')),
             "damage": None if healing else damage, "healing": healing['formula'] if healing else None,
             "damage_per_level":progression,
             "range_text": (spell.get("alcance") or "").strip() or None,
-            "range_m": None if condition_cure else int(range_match.group(1)) if range_match else None,
+            "range_m": None if condition_cure or not range_formula else range_formula[0] if not range_formula[1] else None,
             "range_m_per_level": condition_cure['range_m_per_level'] if condition_cure else None,
             "area": (spell.get("area_efeito") or "").strip() or None,
             "duration": (spell.get("duracao") or "").strip() or None}
@@ -84,9 +85,11 @@ def scaled_spell_mechanic(spell, level):
             raise ValueError('Defina o nível de conjurador para calcular o alcance desta magia.')
         mechanic['range_m'] = mechanic['range_m_per_level'] * level
         return mechanic
-    expression=re.fullmatch(r'\s*(\d+)\s*metros?\s*\+\s*(\d+)\s*metros?\s*/\s*n[íi]vel\s*',spell.get('alcance',''),re.I)
+    from .action_distances import metre_formula, resolved_metres
+    expression=metre_formula(spell.get('alcance'))
+    if expression:mechanic['range_m']=resolved_metres(spell.get('alcance'),level)
     explicit_spell = spell.get('id') in {'arcana-dardos-misticos', 'divina-dardo-de-brasa', 'arcana-toque-chocante'}
-    if not mechanic['damage_per_level'] and not expression and not explicit_spell:return mechanic
+    if not mechanic['damage_per_level'] and not explicit_spell:return mechanic
     if type(level) is not int or not 1<=level<=100:raise ValueError('Defina o nível de conjurador; não é derivado dos DV nem presumido como 1')
     if mechanic['damage_per_level']:
         spec=mechanic['damage_per_level'];count=min(level,spec['maximum_dice']) if spec['maximum_dice'] else level
@@ -99,7 +102,6 @@ def scaled_spell_mechanic(spell, level):
         bonus = count if spell['id'] == 'arcana-dardos-misticos' else count * min(level, 5)
         mechanic.update(damage=f'{count}d4+{bonus}', projectiles=count,
                         projectile_allocation='all_to_one_target')
-    if expression:mechanic['range_m']=int(expression.group(1))+int(expression.group(2))*level
     return mechanic
 
 
@@ -213,6 +215,8 @@ def _resolve_targets(database_path: Path, *, label: str, source: str, save: str 
             require_battle_turn(connection, snapshot, caster_id)
             for item in targets:
                 require_battle_target(connection, snapshot, item["type"], item["id"])
+        from .magic_item_drums import assert_action
+        assert_action(connection,caster_id)
         shared_roll=None
         for position, item in enumerate(targets):
             if range_spec is not None and caster_token_id is not None:
@@ -358,10 +362,12 @@ def cast_spell(database_path: Path, *, spell_id: str, caster_type: str, caster_i
         level=_caster_level(connection,caster_type,caster_id,spell.get('tradition'))
     if condition_cure and (type(level) is not int or not 1 <= level <= 100):
         raise ValueError('Defina o nível de conjurador para calcular o alcance de Remover Paralisia.')
-    if level is not None or (damage_override is None and (mechanic['damage_per_level'] or spell_id in {'arcana-dardos-misticos', 'divina-dardo-de-brasa', 'arcana-toque-chocante'})):
+    from .action_distances import metre_formula
+    formula=metre_formula(spell.get('alcance'))
+    if level is not None or formula and formula[1] or (damage_override is None and (mechanic['damage_per_level'] or spell_id in {'arcana-dardos-misticos', 'divina-dardo-de-brasa', 'arcana-toque-chocante'})):
         mechanic=scaled_spell_mechanic(spell,level)
         if damage_override is None:damage=mechanic['damage']
-    elif range_m is None and range_cells is None and '/nível' in (spell.get('alcance') or ''):
+    elif range_m is None and range_cells is None:
         mechanic=scaled_spell_mechanic(spell,None)
     if mechanic.get('projectiles') and len(targets) != 1:
         raise ValueError('Este modo concentra todos os dardos em um alvo; distribuição entre alvos ainda não configurada')
@@ -371,6 +377,10 @@ def cast_spell(database_path: Path, *, spell_id: str, caster_type: str, caster_i
         damage = None
     elif healing:
         range_spec = {'mode':'touch','range_cells':1}
+    elif mechanic.get('range_m') is not None:
+        if range_m is not None and range_m>mechanic['range_m']:
+            raise ValueError('O alcance não pode exceder o máximo calculado da magia')
+        range_spec = {'mode':'ranged','range_m':mechanic['range_m']}
     elif range_m is not None or range_cells is not None:
         range_spec: dict[str, Any] | None = {"mode": "ranged" if range_cells != 1 else "melee",
                                              "range_m": range_m, "range_cells": range_cells}
